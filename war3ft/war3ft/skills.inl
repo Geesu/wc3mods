@@ -408,7 +408,7 @@ public _Skill_Healing_Wave(parm[2]){
 	}
 
 	new players[32], numberofplayers, teamname[32]
-	new i, targetid, distancebetween, targetorigin[3], heal = 1
+	new i, targetid, distancebetween, targetorigin[3]
 	new origin[3]
 
 	get_user_origin(id, origin)
@@ -431,15 +431,12 @@ public _Skill_Healing_Wave(parm[2]){
 
 				get_user_origin(targetid,origin)
 				
-				// Create effect, but only if the user needs to be healed
-				if( get_user_actualhealth(targetid) != get_user_maxhealth(targetid) )
+				if( get_user_actualhealth(targetid) + 1 <= get_user_maxhealth(targetid) ){
+
+					set_user_health(targetid, get_user_health(targetid) + 1)
+
 					Create_TE_IMPLOSION(origin, 100, 8, 1)
 
-				while(heal!=0){
-					if( get_user_actualhealth(targetid) + heal <= get_user_maxhealth(targetid) ){
-						set_user_health(targetid, get_user_health(targetid) + heal)
-					}
-					heal--
 				}
 			}
 		}

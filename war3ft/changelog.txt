@@ -7,6 +7,7 @@ v2.1.6
  - Change: Stopped using cs_get_user_buyzone, cs_get_user_defuse
  - Change: When a player first joins a team, they will no longer be given XP for winning that round if they weren't on that team
  - Change: Percentage chance of impale being activated was lowered
+ - Change: The effect for healing wards will no longer be seen unless it is actually healing someone
  - Addition: FT_entangle_drop
  - Improvement: Code for Healing Wards
 
