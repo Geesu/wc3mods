@@ -418,15 +418,8 @@ public cmd_Ultimate(id){
 	if ( Verify_Skill(id, RACE_UNDEAD, SKILL4) ){
 		if (iCvar[FT_WARN_SUICIDE]){
 			if( p_data_b[id][PB_SUICIDEATTEMPT] ){
-				set_msg_block(gmsgDeathMsg,BLOCK_ONCE)
-			#if MOD == 0
-				user_kill(id)
-			#endif
-			#if MOD == 1
-				dod_user_kill(id)
-				on_Death(id, 0, 0, 0)
-				//client_cmd(id,"kill")
-			#endif
+
+				WAR3_Kill(id, 0)
 			
 				p_data_b[id][PB_SUICIDEATTEMPT] = false
 			}
@@ -453,7 +446,7 @@ public cmd_Ultimate(id){
 		#endif
 		#if MOD == 1
 			//client_cmd(id,"kill")
-			dod_user_kill(id)
+			war3ft_kill(id)
 			on_Death(id, 0, 0, 0)
 		#endif
 

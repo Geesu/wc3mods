@@ -1,3 +1,13 @@
+v2.2.1
+ - Languages updated
+ - Bug Fix: get_user_attacker native error on line 55
+ - Addition: Autobalance option (short term only)
+
+v2.2.0
+ - Bug Fix: Where it would determine if an enemy with immunity was near
+ - Bug Fix: Where the alien model would stay even after the player died
+ - Removed: CSHack module for now until I investigate some problems
+
 v2.1.9
  - Change: (DOD) GREATLY Improved the hackish way of discovering spectators
  - Improvement: Min models check

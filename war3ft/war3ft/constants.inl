@@ -441,6 +441,7 @@
 #define FT_BLINK_DIZZINESS					41
 #define FT_ENTANGLE_DROP					42
 #define FT_SHOW_PLAYER						43
+#define FT_AUTOBALANCE						44
 
 #if MOD == 0
 	#define	FT_ITEMS_IN_HUD						45
@@ -456,7 +457,7 @@
 	#define	MP_GRENADEPROTECTION				55
 #endif
 #if MOD == 1
-	#define DOD_STARTMONEY						44
+	#define DOD_STARTMONEY						45
 
 #endif
 

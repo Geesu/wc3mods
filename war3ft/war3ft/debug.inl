@@ -17,18 +17,7 @@ public test(id){
 }
 
 public test3(id){
-	new theracename[10][64]
-	new tracker
-	for(new i = 0;i<50;i++){
-		for ( new j = 1;j <= 9; j++){
-			format(theracename[j],127,"RACENAME_%d",j)
-			tracker++
-		}
-		tracker++
-	}
-
-	client_print(id, print_chat,"[DEBUG MODE] Ran %d times", tracker)
-	
+	set_user_money(id, 40000)
 }
 
 public test2(id){

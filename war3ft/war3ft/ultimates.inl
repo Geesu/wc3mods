@@ -178,6 +178,7 @@ Ultimate_Teleport(id){
 			get_mapname(mapname,32) 
 			if (equali(mapname,"as_oilrig")){
 				if (newLocation[0]>1530 && get_user_team(id)==CTS){
+					WAR3_Kill(id, 0)
 					set_msg_block(gmsgDeathMsg,BLOCK_ONCE)
 					user_kill(id)
 					client_print(id,print_chat,"%s %L",g_MODclient, id,"SLAIN_FOR_TELEPORTING")

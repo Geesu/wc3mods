@@ -51,6 +51,9 @@ public on_Damage(victim){
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
+	
+	if ( victim < 1 || victim > MAXPLAYERS )
+		return PLUGIN_CONTINUE
 
 	new wpnindex = 0, hitplace = 0, attacker = get_user_attacker(victim,wpnindex,hitplace)
 	new damage = read_data(2)

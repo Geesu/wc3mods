@@ -405,8 +405,10 @@ public WAR3_death_victim(victim_id, killer_id){
 
 	// Remove task that makes the victim jump
 
-	if (task_exists(TASK_JUMPER+victim_id))		// Remove the function that makes you jump from Hex
+	if (task_exists(TASK_JUMPER+victim_id)){		// Remove the function that makes you jump from Hex
 		remove_task(TASK_JUMPER+victim_id)
+		changeskin(victim_id,SKIN_RESET)
+	}
 
 	// Clear Item Information because the player just died
 
@@ -622,14 +624,7 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 	if(is_user_alive(victim_id)){
 
         // Kill Victim
-		set_msg_block(gmsgDeathMsg,BLOCK_ONCE)
-		#if MOD == 0
-			user_kill(victim_id)
-		#endif
-		#if MOD == 1
-			dod_user_kill(victim_id)
-			on_Death(victim_id, 0, weapon, 0)
-		#endif
+		WAR3_Kill(victim_id, weapon)
 
 		// Update frags ( realtime )
 		new iVictimFrags = get_user_frags(victim_id) + 1
@@ -1177,7 +1172,7 @@ WAR3_Immunity_Found_Near(id, origin[3]){
 	for (new i=0; i<numplayers; ++i){
 		targetid=players[i]
 
-		if( get_user_team(targetid) != team && p_data[targetid][P_ITEM] == ITEM_NECKLACE || p_data_b[targetid][PB_WARDENBLINK] ){
+		if( get_user_team(targetid) != team && ( p_data[targetid][P_ITEM] == ITEM_NECKLACE || p_data_b[targetid][PB_WARDENBLINK] ) ){
 			get_user_origin(targetid, targetorigin)
 
 			if (get_distance(origin, targetorigin) <= iCvar[FT_BLINK_RADIUS])
@@ -1241,6 +1236,7 @@ public WAR3_Set_Variables(){
 	iCvar[FT_BLINK_PROTECTION		] = get_cvar_num("FT_blink_protection")
 	iCvar[FT_ENTANGLE_DROP			] = get_cvar_num("FT_entangle_drop")
 	iCvar[FT_SHOW_PLAYER			] = get_cvar_num("FT_show_player")
+	iCvar[FT_AUTOBALANCE			] = get_cvar_num("FT_autobalance")
 
 	fCvar[FT_BOT_BUY_ITEM			] = get_cvar_float("FT_bot_buy_item")
 	fCvar[FT_FROST_SPEED			] = get_cvar_float("FT_frost_speed")
@@ -1314,4 +1310,16 @@ public WAR3_Check(){
 		warcraft3=false
 	else
 		warcraft3=true
+}
+
+public WAR3_Kill(id, weapon){
+	#if MOD == 0
+		set_msg_block(gmsgDeathMsg,BLOCK_ONCE)
+		user_kill(id)
+	#endif
+	#if MOD == 1
+		dod_block_deathmsg(id)
+		war3ft_kill(id)
+		on_Death(id, 0, weapon, 0)
+	#endif
 }

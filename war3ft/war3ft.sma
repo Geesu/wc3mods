@@ -27,9 +27,11 @@
 
 //#pragma dynamic 4096 
 
+// Death animations for alien4: 56-65
+
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Pimp Daddy (OoTOAoO)"
-new const WC3VERSION[] =	"2.1.9"
+new const WC3VERSION[] =	"2.2.1"
 
 #include <amxmodx>
 #include <dbi>
@@ -41,8 +43,8 @@ new const WC3VERSION[] =	"2.1.9"
 #define MOD 1							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
-#define DISABLE_CSHACK 0				// Set this to 1 if you are using FreeBSD (default is 0)
 #define PRECACHE_WAR3FTSOUNDS 1
+#define USE_CSHACK 1					// Set this to 1 to use CSHack (this is safe for windows, not so sure about linux)
 
 // Debugging Options
 #define DEBUG 0 						// Only use this when coding.. you normally don't want it
@@ -51,9 +53,6 @@ new const WC3VERSION[] =	"2.1.9"
 
 #if MOD == 0
 	#include <cstrike>
-	#if !DISABLE_CSHACK
-		#include <cshack>
-	#endif
 #else
 	#include <dodfun>
 	#include <dodx>
@@ -204,10 +203,6 @@ public plugin_init(){
 
 		register_menucmd(register_menuid("Team_Select",1),(1<<0)|(1<<1)|(1<<4),"cmd_Teamselect")
 
-		#if !DISABLE_CSHACK
-			cs_set_startmoney_max(2147483583)
-		#endif
-
 		set_task(0.7, "WAR3_Mole_Fix",TASK_MOLEFIX,"",0,"b")
 	#endif
 
@@ -231,6 +226,7 @@ public plugin_init(){
 	}
 
 	// For an explanation of these variables, please see war3ft.cfg
+	register_cvar("FT_autobalance",				"0")
 	register_cvar("FT_show_player",				"1")
 	register_cvar("FT_Race9_Random",			"1")
 	register_cvar("FT_Race9_Skill1",			"1")
@@ -326,6 +322,9 @@ public plugin_init(){
 		register_concmd("test3","test3")
 	#endif
 
+	#if USE_CSHACK == 1 && MOD == 0
+		set_maxmoney(2147483583)
+	#endif
 }
 
 public plugin_end(){
@@ -377,6 +376,7 @@ public plugin_modules(){
 
 	require_module("engine")
 	require_module("dbi")
+	require_module("war3ft")
 	#if MOD == 0
 		require_module("cstrike")
 		require_module("csx")
@@ -434,6 +434,20 @@ public client_connect(id){
 	p_data_b[id][PB_ISBURNING] = false
 	p_data[id][P_SPECMODE] = 0 
 	p_data_b[id][PB_JUSTJOINED] = true
+
+	if ( iCvar[FT_AUTOBALANCE] && !iCvar[MP_SAVEXP] ){
+		new iTotalXP
+		new iNum
+		for(new i = 1; i <= MAXPLAYERS; i++){
+			if ( p_data[i][P_XP] > 0 ){
+				iNum++
+				iTotalXP += p_data[i][P_XP]
+			}
+		}
+		if ( iNum > 0 && iTotalXP > 0 ){
+			p_data[id][P_XP] = iTotalXP/iNum
+		}
+	}
 
 #if MOD == 1
 	reincarnation[id][ZPOS] = -99999
