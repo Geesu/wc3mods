@@ -1,16 +1,16 @@
-v2.2.3
+v2.2.2
  - Addition: Effect during Big Bad Voodoo
+ - Addition: FT_cshack variable
+ - Change: Pheonix will now revive players if they were TKed (thanks -]ST|Ghost[-)
  - Module: Fixed 100% CPU spike for real
  - Module: Fixed bomb explosion crash bug on some servers
- - Bug Fix: Mask of Death giving back an unpredictable amout of health
- - Bug Fix: Warden's Blink not blocking Big Bad Voodoo (thanks Rawh)
- - Bug Fix: Being able to buy rings outside of the buyzone
- - Removed: Warden's being protected from moles
-
-v2.2.2
- - Addition: FT_cshack variable
- - Module: Fixed bug where CPU would spike to 100% on windows servers
  - Module: Support for linux/amd64 removed for the CSHack portion of the module
+ - Bug Fix: Mask of Death giving back an unpredictable amout of health (thanks Goldenstrike peeps)
+ - Bug Fix: Warden's Blink not blocking Big Bad Voodoo (thanks Rawh)
+ - Bug Fix: Being able to buy rings outside of the buyzone (thanks Goldenstrike peeps)
+ - Bug Fix: Level 1 impale had a 50% chance of occuring on each shot (should have been 5%, thanks Alphabet Soup)
+ - Removed: Warden's being protected from moles
+ - Balance: Undead's Vampiric Aura lowered, mask of death lowered (update your war3ft.cfg files)
 
 v2.2.1
  - Languages updated

@@ -652,7 +652,7 @@ new bool:warcraft3
 new bool:endround
 
 // Constants for Abilities
-new const Float:p_vampiric[3] =			{0.15,0.30,0.45}		// Vampiric Aura			(skill 1)
+new const Float:p_vampiric[3] =			{0.10,0.20,0.30}		// Vampiric Aura			(skill 1)
 #if MOD == 0
 	new const Float:p_unholy[3] =		{265.0,285.0,300.0}		// Unholy Aura				(skill 2)
 #endif
@@ -693,7 +693,7 @@ new const Float:p_blink[3] =			{0.333,0.666,1.0}		// Blink					(skill 2)
 new const Float:p_shadow[3] =			{0.15,0.30,0.45}		// Shadow Strike			(skill 3)
 new const Float:p_harden[11] =			{0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50}	// Hardened Skin		(Skill 4)
 
-new const Float:p_impale[3] =			{0.5,0.10,0.15}			// Impale					(skill 1)
+new const Float:p_impale[3] =			{0.05,0.10,0.15}			// Impale					(skill 1)
 new const Float:p_spiked[3] =			{0.05,0.1,0.15}			// Spiked Carapace			(skill 2)
 new const Float:p_carrion[3] =			{0.15,0.25,0.45}		// Carrion Beetle			(skill 3)
 new const Float:p_orb[11] =				{0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.15}	// Orb of Annihilation	(Skill 4)

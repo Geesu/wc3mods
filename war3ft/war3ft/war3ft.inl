@@ -414,19 +414,6 @@ public WAR3_death_victim(victim_id, killer_id){
 
 	Item_Clear(victim_id)
 
-
-#if MOD == 1
-	// Save origin for use with Orc's Reincarnation or ankh of reincarnation (DOD only)
-	get_user_origin(victim_id,reincarnation[victim_id])
-	entity_get_vector(victim_id, EV_VEC_v_angle, reinc_v_angles[victim_id])
-	entity_get_vector(victim_id, EV_VEC_angles, reinc_angles[victim_id])
-	console_print(victim_id, "Getting Angles:")
-	for(new i=0;i<3;i++)
-		console_print(victim_id, "v %d:%f", i, reinc_v_angles[victim_id][i])
-	for(new j=0;j<3;j++)
-		console_print(victim_id, "%d:%f", j, reinc_angles[victim_id][j])
-#endif
-
 	// Check for Ultimate abilities
 
 	if (Verify_Skill(victim_id, RACE_UNDEAD, SKILL4) && !p_data_b[victim_id][PB_CHANGINGTEAM] && !g_ultimateDelay && !p_data_b[victim_id][PB_ULTIMATEUSED]){	// Suicide Bomber
@@ -496,7 +483,7 @@ public WAR3_death_victim(victim_id, killer_id){
 	if(get_user_team(victim_id)==TS && g_pheonixExistsT>0){
 		for (y = 0; y < numberofplayers; ++y){
 			new id = players[y]
-			if (p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && get_user_team(id)==get_user_team(victim_id) && !is_user_alive(victim_id) && (get_user_team(victim_id) == CTS || get_user_team(victim_id) == TS)){
+			if (p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && !is_user_alive(victim_id) && (get_user_team(victim_id) == CTS || get_user_team(victim_id) == TS)){
 				p_data_b[id][PB_PHEONIXCASTER] = false
 				new parm[2], name[32], victimName[32], message[128]
 
@@ -523,7 +510,7 @@ public WAR3_death_victim(victim_id, killer_id){
 	else if(get_user_team(victim_id)==CTS && g_pheonixExistsCT>0){
 		for (y = 0; y < numberofplayers; ++y){
 			new id = players[y]
-			if (p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && get_user_team(id)==get_user_team(victim_id) && !is_user_alive(victim_id) && (get_user_team(victim_id) == CTS || get_user_team(victim_id) == TS)){
+			if (p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && !is_user_alive(victim_id) && (get_user_team(victim_id) == CTS || get_user_team(victim_id) == TS)){
 				p_data_b[id][PB_PHEONIXCASTER] = false
 				new parm[2], name[32], victimName[32], message[128]
 				parm[0]=victim_id
