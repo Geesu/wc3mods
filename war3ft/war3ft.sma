@@ -49,7 +49,7 @@ new const WC3VERSION[] =	"2.1.6"
 #define MOD 0							// 0 = cstrike or czero, 1 = dod
 
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
-#define DEBUG 0							// Only use this when coding.. you normally don't want it
+#define DEBUG 1							// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 1				// Prints debug information to a log file when every function is called, VERY LAGGY
 #define ADVANCED_DEBUG_BOTS 1			// Print info for bots too?
 #define PRECACHE_WAR3FTSOUNDS 1
@@ -121,7 +121,7 @@ public plugin_init(){
 	register_clcmd("changerace","change_race",-1,"changerace")
 	register_clcmd("selectskill","menu_Select_Skill",-1,"selectskill")
 	register_clcmd("skillsinfo","MOTD_Skillsinfo",-1,"skillsinfo")
-	register_clcmd("resetskills","resetSkills",-1,"resetskills")
+	register_clcmd("resetskills","cmd_ResetSkill",-1,"resetskills")
 	register_clcmd("resetxp","amx_resetxp",-1,"resetxp")
 	register_clcmd("itemsinfo","MOTD_Itemsinfo",-1,"itemsinfo")
 	register_clcmd("itemsinfo2","MOTD_Itemsinfo2",-1,"itemsinfo2")
@@ -169,6 +169,8 @@ public plugin_init(){
 
 		register_event("SendAudio", "on_TerroristWin", "a", "2=%!MRAD_terwin")
 		register_event("SendAudio", "on_CTWin", "a", "2=%!MRAD_ctwin")
+
+		register_event("23", "on_TargetBombed", "a", "1=17", "6=-105", "7=17")
 
 		register_event("ArmorType", "on_ArmorType", "be")
 		register_event("WeapPickup","on_WeapPickup","b") 

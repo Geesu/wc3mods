@@ -24,6 +24,11 @@ public on_PlayerAction(){
 #if MOD == 0
 	// Bomb planted 
 	if (equal(sAction,"Planted_The_Bomb")) {  
+
+		g_fBombTime = get_gametime() + get_cvar_float("mp_c4timer")
+		
+		set_task((get_cvar_float("mp_c4timer") - 0.7), "on_B4TargetBombed",TASK_BOMBTIMER)
+
 		new origin[3]
 		new teamname[32]
 		new player[32]
@@ -285,6 +290,42 @@ public on_PlayerAction(){
 }
 
 #if MOD == 0
+	public on_TargetBombed() {
+
+		if (!warcraft3)
+			return PLUGIN_CONTINUE
+
+		set_task(0.1,"_on_TargetBombed",TASK_TARGETBOMBED)
+
+		return PLUGIN_CONTINUE;
+	}
+
+	public _on_TargetBombed(){
+		if (get_gametime() - g_fBombTime < 1.0){
+			new players[32], numberofplayers, id, i
+			get_players(players, numberofplayers)
+			for(i=0;i<numberofplayers;i++){
+				id = players[i]
+				
+				if( !p_data_b[id][PB_JUSTJOINED] && !is_user_alive(id) ){
+					p_data_b[id][PB_DIEDLASTROUND] = true
+				}
+			}
+		}
+	}
+
+	public on_B4TargetBombed(){
+		new players[32], numberofplayers, id, i
+		get_players(players, numberofplayers)
+		for(i=0;i<numberofplayers;i++){
+			id = players[i]
+			if(is_user_alive(id)){
+				saveweapons(id)
+			}
+		}
+	}
+
+
 	public on_FreezeTimeComplete() {
 		#if ADVANCED_DEBUG == 1
 			writeDebugInfo("on_FreezeTimeComplete",0)
@@ -324,6 +365,10 @@ public on_PlayerAction(){
 					give = false
 				}
 			}
+
+			if(p_data_b[players[a]][PB_JUSTJOINED] || p_data_b[players[a]][PB_CHANGINGTEAM])
+				give = false
+
 			if(give){
 				new iXP = (iCvar[FT_ROUND_WIN_XP] + xpgiven[p_data[players[a]][P_LEVEL]])
 				iXP = XP_give(players[a], iXP)
@@ -351,6 +396,10 @@ public on_PlayerAction(){
 					give = false
 				}
 			}
+
+			if(p_data_b[players[a]][PB_JUSTJOINED] || p_data_b[players[a]][PB_CHANGINGTEAM])
+				give = false
+
 			if(give){
 				new iXP = (iCvar[FT_ROUND_WIN_XP] + xpgiven[p_data[players[a]][P_LEVEL]])
 				iXP = XP_give(players[a], iXP)
@@ -1036,20 +1085,6 @@ public on_DeathMsg(){
 
 		return PLUGIN_CONTINUE
 	}
-
-	public on_TargetBombed() {
-		#if ADVANCED_DEBUG == 1
-			writeDebugInfo("on_TargetBombed",0)
-		#endif
-
-		/*new players[32]
-		new numberofplayers, i
-		get_players(players, numberofplayers)
-		for (i = 0; i < numberofplayers; ++i){
-			client_print(players[i],print_chat,"[%s] Target Bombed...", g_MOD)
-		}*/
-		return PLUGIN_CONTINUE
-	}
 #endif
 
 
@@ -1239,6 +1274,9 @@ public on_ResetHud(id){
 
 	new parm[2]
 	parm[0] = id
+
+	if( task_exists(TASK_BOMBTIMER) )
+		remove_task(TASK_BOMBTIMER)
 
 	if(is_user_alive(id)){
 		p_data_b[id][PB_JUSTJOINED] = false

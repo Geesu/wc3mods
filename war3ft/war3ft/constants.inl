@@ -67,6 +67,8 @@
 #define	TASK_CLONETHINK		2010
 //#define	TASK_CHECKMAP		2011
 #define TASK_BOIDTHINK		2012
+#define TASK_TARGETBOMBED	2013
+#define TASK_BOMBTIMER		2014
 
 #define TE_BEAMPOINTS		0
 #define TE_EXPLOSION		3
@@ -580,6 +582,8 @@ new savedweapons[33][32]
 new bool:warcraft3
 new bool:endround
 
+new Float:g_fBombTime
+
 // Constants for Abilities
 new const Float:p_vampiric[3] =			{0.15,0.30,0.45}		// Vampiric Aura			(skill 1)
 #if MOD == 0
@@ -614,7 +618,7 @@ new const Float:p_fan[3] =				{0.05,0.10,0.15}		// Fan of Knives			(skill 1)
 new const Float:p_blink[3] =			{0.333,0.666,1.0}		// Blink					(skill 2)
 new const Float:p_shadow[3] =			{0.15,0.30,0.45}		// Shadow Strike			(skill 3)
 
-new const Float:p_impale[3] =			{0.15,0.30,0.45}		// Impale					(skill 1)
+new const Float:p_impale[3] =			{0.5,0.10,0.20}			// Impale					(skill 1)
 new const Float:p_spiked[3] =			{0.05,0.1,0.15}			// Spiked Carapace			(skill 2)
 new const Float:p_carrion[3] =			{0.15,0.25,0.45}		// Carrion Beetle			(skill 3)
 

@@ -136,7 +136,7 @@ public MOTD_War3help(id){
 
 public MOTD_Playerskills(id, saychat){
 	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("player_skills",id)
+		writeDebugInfo("MOTD_Playerskills",id)
 	#endif
 
 	if (warcraft3==false)

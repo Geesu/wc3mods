@@ -78,7 +78,7 @@ public Item_Buy(id, key){
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_CONTINUE
 		}
-		else if(iCvar[FT_BUYZONE] && !p_data_b[id][PB_BUYZONE]){
+		else if(iCvar[FT_BUYZONE] && !p_data_b[id][PB_BUYZONE] && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_CONTINUE
 		}
@@ -166,7 +166,7 @@ public Item_Buy2(id, key){
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_CONTINUE
 		}
-		else if(iCvar[FT_BUYZONE] && !p_data_b[id][PB_BUYZONE]){
+		else if(iCvar[FT_BUYZONE] && !p_data_b[id][PB_BUYZONE] && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_CONTINUE
 		}

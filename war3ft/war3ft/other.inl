@@ -330,8 +330,10 @@ public saveweapons(id){
 	for (new i=0; i<32; ++i){		// Equipment Reincarnation
 		savedweapons[id][i]=0
 	}
+
 	p_data[id][P_SAVEDNUMBER]=0
 	get_user_weapons(id,savedweapons[id],p_data[id][P_SAVEDNUMBER])
+
 	return PLUGIN_CONTINUE
 }
 
@@ -437,11 +439,11 @@ public unholyspeed(parm[1]){
 	}
 #endif
 #if MOD == 0
-	else if (get_user_maxspeed(id)>5 && Verify_Skill(id, RACE_UNDEAD, SKILL2) && !g_freezetime){              // Unholy Aura
+	else if (Verify_Skill(id, RACE_UNDEAD, SKILL2) && !g_freezetime){              // Unholy Aura
 		if (get_user_maxspeed(id)>5 && get_user_maxspeed(id)!=p_unholy[p_data[id][P_SKILL2]-1])
 			set_user_maxspeed(id,(p_unholy[p_data[id][P_SKILL2]-1]))
 	}
-	else if (get_user_maxspeed(id)>5 && p_data[id][P_ITEM]==ITEM_BOOTS && !g_freezetime){			// Boots of Speed
+	else if (p_data[id][P_ITEM]==ITEM_BOOTS && !g_freezetime){			// Boots of Speed
 		if (get_user_maxspeed(id)!=fCvar[FT_BOOTSPEED])
 			set_user_maxspeed(id,fCvar[FT_BOOTSPEED])
 	}
