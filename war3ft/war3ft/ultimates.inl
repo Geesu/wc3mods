@@ -1,3 +1,15 @@
+public _Ultimate_End(){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("_Ultimate_End",0)
+	#endif
+
+	new players[32], num
+	get_players(players, num, "c")
+
+	for(new i = 0; i < num; i++){
+		p_data_b[players[i]][PB_ULTIMATEUSED] = true
+	}
+}
 
 // ****************************************
 // Undead's Suicide Bomber
@@ -211,33 +223,36 @@ Ultimate_Teleport(id){
 		new numberofplayers
 		new targetid
 		new targetid2
-		new teamname[32]
 		new distancebetween
 		new distancebetween2
 		new origin[3]
 		new targetorigin[3]
 		new targetorigin2[3]
-		get_user_team(id, teamname, 31)
-		get_players(teleportid[id],numberofplayers,"ae",teamname)
+		get_players(teleportid[id],numberofplayers,"a")
 		get_user_origin(id,origin)
+		new team = get_user_team(id)
 		for (i=0; i<numberofplayers; i++) {	// Sort by closest to furthest
-			for (j=i+1; j<numberofplayers; j++){
-				targetid=teleportid[id][i]
-				get_user_origin(targetid,targetorigin)
-				distancebetween = get_distance(origin,targetorigin)
-				targetid2=teleportid[id][j]
-				get_user_origin(targetid2,targetorigin2)
-				distancebetween2 = get_distance(origin,targetorigin2)
+			if( get_user_team(teleportid[id][i]) == team ){
+				for (j=i+1; j<numberofplayers; j++){
+					if( get_user_team(teleportid[id][j]) == team ){
+						targetid=teleportid[id][i]
+						get_user_origin(targetid,targetorigin)
+						distancebetween = get_distance(origin,targetorigin)
+						targetid2=teleportid[id][j]
+						get_user_origin(targetid2,targetorigin2)
+						distancebetween2 = get_distance(origin,targetorigin2)
 
-				if (distancebetween2 < distancebetween && targetid2!=id) {	// Don't put self first
-					tmp = teleportid[id][i]
-					teleportid[id][i] = teleportid[id][j]
-					teleportid[id][j] = tmp
-				}
-				else if (targetid==id) {	// Put self last
-					tmp = teleportid[id][i]
-					teleportid[id][i] = teleportid[id][j]
-					teleportid[id][j] = tmp
+						if (distancebetween2 < distancebetween && targetid2!=id) {	// Don't put self first
+							tmp = teleportid[id][i]
+							teleportid[id][i] = teleportid[id][j]
+							teleportid[id][j] = tmp
+						}
+						else if (targetid==id) {	// Put self last
+							tmp = teleportid[id][i]
+							teleportid[id][i] = teleportid[id][j]
+							teleportid[id][j] = tmp
+						}
+					}
 				}
 			}
 		}
@@ -828,11 +843,9 @@ public lightningnext(parm[5]){		// Chain Lightning
 	new bodypart=parm[4]
 	new origin[3]
 	get_user_origin(id, origin)
-	new players[32]
-	new teamname[32]
-	get_user_team(id, teamname, 31)
-	new numberofplayers
-	get_players(players, numberofplayers,"ae",teamname)
+	new players[32], numberofplayers
+	new team = get_user_team(id)
+	get_players(players, numberofplayers,"a")
 	new i
 	new targetid = 0
 	new distancebetween = 0
@@ -843,7 +856,7 @@ public lightningnext(parm[5]){		// Chain Lightning
 	new closestid = 0
 	for (i = 0; i < numberofplayers; ++i){
 		targetid=players[i]
-		if (get_user_team(id)==get_user_team(targetid) && is_user_alive(targetid) && is_user_alive(id)){
+		if ( get_user_team(targetid) == team && is_user_alive(targetid) ){
 			get_user_origin(targetid,targetorigin)
 			distancebetween=get_distance(origin,targetorigin)
 			if (distancebetween < LIGHTNING_RANGE && !p_data_b[targetid][PB_LIGHTNINGHIT] && p_data[targetid][P_ITEM]!=ITEM_NECKLACE && !p_data_b[targetid][PB_WARDENBLINK]){

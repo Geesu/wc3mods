@@ -140,6 +140,10 @@ public MOTD_Playerskills(id, saychat){
 		writeDebugInfo("MOTD_Playerskills",id)
 	#endif
 
+#if DEBUG
+	writeDebugInfo("Called", -1)
+#endif
+
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 		
@@ -189,13 +193,20 @@ public MOTD_Playerskills(id, saychat){
 						get_user_name(playerid,name,31)
 						
 						if ( saychat ) {
-							replace(name, 127, "<", "")
-							replace(name, 127, ">", "")
-
+							//replace(name, 127, "<", "|")
+							//replace(name, 127, ">", "|")
+						#if MOD == 0
 							if(get_user_team(playerid) == CTS)
 								pos += format(message[pos],2047-pos,"<li><font color='#99CCFF'>(%d) %s",p_data[playerid][P_LEVEL],name)
 							else if (get_user_team(playerid) == TS)
 								pos += format(message[pos],2047-pos,"<li><font color='#FF3F3F'>(%d) %s",p_data[playerid][P_LEVEL],name)
+						#endif
+						#if MOD == 1
+							if(get_user_team(playerid) == ALLIES)
+								pos += format(message[pos],2047-pos,"<li><font color='#4A654A'>(%d) %s",p_data[playerid][P_LEVEL],name)
+							else if(get_user_team(playerid) == AXIS)
+								pos += format(message[pos],2047-pos,"<li><font color='#FF3C42'>(%d) %s",p_data[playerid][P_LEVEL],name)
+						#endif
 							else
 								pos += format(message[pos],2047-pos,"<li><font color='#FFFFFF'>(%d) %s",p_data[playerid][P_LEVEL],name)
 						}
@@ -213,13 +224,18 @@ public MOTD_Playerskills(id, saychat){
 				pos += format(message[pos],2047-pos,"</ul>")
 		}
 	}
-
+#if DEBUG
+	writeDebugInfo("Build Complete", strlen(message))
+#endif
 	if( saychat ) {
 		new motdmessage[128]
-		format(motdmessage, 127, "%L",id,"PLAYER_SKILLS","","")
+		format(motdmessage, 127, "%L",id,"PLAYER_SKILLS")
 		show_motd(id,message,motdmessage)
+		#if DEBUG
+			writeDebugInfo("End", strlen(motdmessage))
+		#endif
 	}
-
+	
 	return PLUGIN_HANDLED
 }
 

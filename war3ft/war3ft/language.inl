@@ -260,7 +260,12 @@ public Lang_Skill_Info(race, skill, id, skill_description[], iDescLen){
 		}
 		case RACE_BLOOD :{
 			switch(skill){
+			#if MOD == 0
 				case SKILL1: format(skill_description,iDescLen-1,"%L",id,"RACE5_SKILL1_INFO",floatround(p_pheonix[0]*100),floatround(p_pheonix[1]*100),floatround(p_pheonix[2]*100))
+			#endif
+			#if MOD == 1
+				case SKILL1: format(skill_description,iDescLen-1,"%L",id,"DOD_RACE5_SKILL1_INFO",p_pheonix[0],p_pheonix[1],p_pheonix[2])
+			#endif
 				case SKILL2: format(skill_description,iDescLen-1,"%L",id,"RACE5_SKILL2_INFO",floatround(p_banish[0]*100),floatround(p_banish[1]*100),floatround(p_banish[2]*100))
 				case SKILL3: format(skill_description,iDescLen-1,"%L",id,"RACE5_SKILL3_INFO",floatround(p_mana[0]*100),floatround(p_mana[1]*100),floatround(p_mana[2]*100))
 				case SKILL4: format(skill_description,iDescLen-1,"%L",id,"RACE5_SKILL4_INFO")

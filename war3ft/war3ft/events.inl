@@ -77,16 +77,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 
 #if MOD == 0
 	new inflictor = entity_get_edict(victim, EV_ENT_dmg_inflictor)
-#endif
-	
-	#if DEBUG
-		new attackerName[32]
-		get_user_name(attacker, attackerName, 31)
 
-		console_print(victim, "### on_Damage : %d by %s(%d:%d) from %d", damage, attackerName, attacker, entity_get_edict(victim, EV_ENT_dmg_inflictor), wpnindex)
-	#endif
-
-#if MOD == 0
 	// Check to see if the damage was from the bomb
 	if( attacker != inflictor && wpnindex != 4 && attacker != victim && inflictor > 0 ){
 		
@@ -159,9 +150,6 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 			new iHealth = get_user_health(victim)
 
 			set_user_health(victim, iHealth + damage + healthadjustment)
-			#if DEBUG
-				client_print(victim, print_chat,"### You just evaded %d damage", damage)
-			#endif
 
 			if (iglow[victim][2] < 1){
 				new parm[2]
@@ -629,21 +617,12 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 			new Float:randomnumber = random_float(0.0,1.0)
 			new iHealth = get_user_health(victim)
 			
-			#if DEBUG
-				console_print(victim, "##### Evasion Chance: %f", randomnumber*100)
-			#endif
-
 			if (randomnumber <= p_evasion[p_data[victim][P_SKILL1]-1]){
 				healthadjustment = 1024
 
 				p_data_b[victim][PB_EVADENEXTSHOT] = true
 
 				set_user_health(victim, iHealth + healthadjustment)
-
-				#if DEBUG
-					client_print(victim, print_chat,"### You will evade the next shot", damage)
-					console_print(victim,"### You will evade the next shot", damage)
-				#endif
 
 			}
 		}
@@ -706,15 +685,12 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 			}
 
 			new players[32], numberofplayers, targetorigin[3], i
-
-			if (get_user_team(victim) == CTS)
-				get_players(players, numberofplayers, "ae", "TERRORIST")
-			else
-				get_players(players, numberofplayers, "ae", "CT")
+			get_players(players, numberofplayers, "a")
+			new team = get_user_team(victim)
 			
 			for(i=0;i<numberofplayers;i++){
 				get_user_origin(players[i], targetorigin)
-				if( get_distance(origin, targetorigin) <= CONCOCTION_RADIUS ){
+				if( get_distance(origin, targetorigin) <= CONCOCTION_RADIUS && get_user_team(players[i]) != team ){
 					WAR3_damage(players[i], victim, CONCOCTION_DAMAGE, CSW_CONCOCTION, hitplace)
 					emit_sound(victim,CHAN_STATIC, SOUND_CONCOCTION_HIT, 1.0, ATTN_NORM, 0, PITCH_NORM)
 				}
@@ -772,15 +748,8 @@ public on_Death(victim, killer, wpnindex, headshot){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	#if DEBUG
-		client_print(victim, print_chat,"*** Regular Death : %d", p_data_b[victim][PB_DIEDLASTROUND])
-	#endif
-
 	if(p_data_b[victim][PB_DIEDLASTROUND])
 		return PLUGIN_CONTINUE
-
-	if(killer > 0 )
-		set_user_money(killer, get_user_money(killer)+300,1)
 
 	WAR3_death_victim(victim, killer)
 	

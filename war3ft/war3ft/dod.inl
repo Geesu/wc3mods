@@ -8,6 +8,8 @@ public client_score(index,score,total){
 
 	set_user_money(index,get_user_money(index)+(score*1000),1)
 
+	new iXP = XP_give(index, (score * xpgiven[p_data[index][P_LEVEL]]))
+	client_print(index, print_chat, "%s %L", g_MODclient, index, "DOD_AWARDED_XP_OBJECTIVE", iXP)
 	return PLUGIN_CONTINUE
 }
 
@@ -75,7 +77,8 @@ public on_EndRound(){
 	for (a = 0; a < numberofplayers; ++a){
 		id = players[a]
 		give = false
-	
+		p_data_b[id][PB_REINCARNATION_DELAY] = false
+
 		// Skip reincarnation
 		if( Verify_Skill(id, RACE_ORC, SKILL3) || p_data[id][P_ITEM] == ITEM_ANKH )
 			p_data_b[id][PB_REINCARNATION_SKIP] = true

@@ -27,13 +27,9 @@ public cmd_Teamselect(id,key) {
 
 	// key+1 is the team they choose
 	p_data_b[id][PB_CHANGINGTEAM] = true
-	if(!p_data_b[id][PB_JUSTJOINED])
+
+	if(!p_data_b[id][PB_JUSTJOINED] && !is_user_alive(id))
 		p_data_b[id][PB_DIEDLASTROUND] = true
-
-	#if DEBUG
-		client_print(id, print_chat, "Team Chosen2: %s", (key+1))
-	#endif
-
 
 }
 
@@ -42,16 +38,13 @@ public cmd_Jointeam(id){
 		writeDebugInfo("cmd_Jointeam",id)
 	#endif
 
-	new szTeam[2]
-	read_argv(1,szTeam,1)
+/*	new szTeam[4]
+	read_argv(1,szTeam,3)
 
 	if ( str_to_num(szTeam) == 1 || str_to_num(szTeam) == 2 || str_to_num(szTeam) == 5 )
-		p_data_b[id][PB_CHANGINGTEAM] = true
+		p_data_b[id][PB_CHANGINGTEAM] = true*/
 
-	#if DEBUG
-		client_print(id, print_chat, "Team Chosen: %s", szTeam)
-	#endif
-	if(!p_data_b[id][PB_JUSTJOINED])
+	if(!p_data_b[id][PB_JUSTJOINED] && !is_user_alive(id))
 		p_data_b[id][PB_DIEDLASTROUND] = true
 }
 

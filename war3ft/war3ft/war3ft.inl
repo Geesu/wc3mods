@@ -215,10 +215,6 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-#if DEBUG
-	console_print(victim, "### WAR3_Damage: %d by %d from %d", damage, attacker, weapon)
-#endif
-
 	if( attacker==0 || victim==0 )
 		return PLUGIN_CONTINUE
 
@@ -298,9 +294,6 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 			new Float:randomnumber = random_float(0.0,1.0)
 
 			if (randomnumber <= p_evasion[p_data[victim][P_SKILL1]-1]){
-				#if DEBUG
-					client_print(victim, print_chat,"### You just evaded %d WAR3 damage", damage)
-				#endif
 
 				if (iglow[victim][2] < 1){
 					new parm[2]
@@ -328,15 +321,6 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 	else if ( health - damage <= 1024 && health > 500 )
 		userkilled = true
 
-#if DEBUG
-	new victimName[32]
-	new attackerName[32]
-	get_user_name(victim, victimName, 31)
-	get_user_name(attacker, attackerName, 31)
-	console_print(attacker,"You did %d damage to %s from weapon:%d", damage, victimName, weapon)
-	console_print(victim,"You received %d damage from %s by weapon:%d", damage, attackerName, weapon)
-#endif
-
 #if MOD == 1
 	if (userkilled && !p_data_b[victim][PB_DIEDLASTROUND])
 #else
@@ -357,9 +341,23 @@ public WAR3_death_victim(victim_id, killer_id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
+#if MOD == 1
+	if ( killer_id == 0 || get_user_team(victim_id) != get_user_team(killer_id) && killer_id != victim_id )
+		set_user_money(victim_id, get_user_money(victim_id)+300, 1)
+
+	if( victim_id != killer_id )
+		set_user_money(killer_id, get_user_money(killer_id) + 600,1)
+
+	if ( Verify_Skill(killer_id, RACE_BLOOD, SKILL1) && killer_id != victim_id ){
+		Skill_Pheonix(killer_id)
+	}
+#endif
+
+#if MOD == 0
 	if( !Verify_Skill(killer_id, RACE_BLOOD, SKILL3) && get_user_money(killer_id) > 16000 ){
 		set_user_money(killer_id, 16000)
 	}
+#endif
 
 	// In case they respawn, continue ultimate delay check
 	if(!task_exists(TASK_UDELAY+victim_id)){
@@ -417,6 +415,13 @@ public WAR3_death_victim(victim_id, killer_id){
 #if MOD == 1
 	// Save origin for use with Orc's Reincarnation or ankh of reincarnation (DOD only)
 	get_user_origin(victim_id,reincarnation[victim_id])
+	entity_get_vector(victim_id, EV_VEC_v_angle, reinc_v_angles[victim_id])
+	entity_get_vector(victim_id, EV_VEC_angles, reinc_angles[victim_id])
+	console_print(victim_id, "Getting Angles:")
+	for(new i=0;i<3;i++)
+		console_print(victim_id, "v %d:%f", i, reinc_v_angles[victim_id][i])
+	for(new j=0;j<3;j++)
+		console_print(victim_id, "%d:%f", j, reinc_angles[victim_id][j])
 #endif
 
 	// Check for Ultimate abilities
@@ -556,20 +561,6 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 		return PLUGIN_CONTINUE
 
 	new weaponname[32]
-	
-	#if DEBUG
-		client_print(victim_id, print_chat,"*** WAR3 Death")
-
-		new victimName[32], attackerName[32]
-		get_user_name(victim_id, victimName, 31)
-		get_user_name(killer_id, attackerName, 31)
-
-		new players[32], numberofplayers
-		get_players(players, numberofplayers)
-		for(new i=0;i<numberofplayers;i++)
-			console_print(players[i], "### %s killed by %s with weapon: %d", victimName, attackerName, weapon)
-	#endif
-
 
 #if ADVANCED_STATS
 	if ( CSW_WAR3_MIN <= weapon <= CSW_WAR3_MAX ) {
@@ -595,10 +586,11 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 
 	XP_onDeath(victim_id, killer_id, weapon, headshot)
 
+#if MOD == 0
 	// Award $300 for a Kill
 	if (get_user_team(killer_id)!=get_user_team(victim_id))
 		set_user_money(killer_id,get_user_money(killer_id)+300,1)
-
+#endif
 
 	if(get_user_team(killer_id) == get_user_team(victim_id) && killer_id != victim_id){		// Team Kill
         new iKillerFrags = get_user_frags(killer_id) - 1
@@ -1176,16 +1168,15 @@ WAR3_Immunity_Found_Near(id, origin[3]){
 	#endif
 
 	new players[32], numplayers, targetid, targetorigin[3]
+	
+	new team = get_user_team(id)
 
-	if(get_user_team(id) == CTS)
-		get_players(players, numplayers, "ae", "TERRORIST")
-	else
-		get_players(players, numplayers, "ae", "CT")
+	get_players(players, numplayers, "a")
 
 	for (new i=0; i<numplayers; ++i){
 		targetid=players[i]
 
-		if(p_data[targetid][P_ITEM] == ITEM_NECKLACE || p_data_b[targetid][PB_WARDENBLINK]){
+		if( get_user_team(targetid) != team && p_data[targetid][P_ITEM] == ITEM_NECKLACE || p_data_b[targetid][PB_WARDENBLINK] ){
 			get_user_origin(targetid, targetorigin)
 
 			if (get_distance(origin, targetorigin) <= iCvar[FT_BLINK_RADIUS])
@@ -1323,10 +1314,12 @@ public WAR3_Check(){
 	else
 		warcraft3=true
 
+#if MOD == 0
 	new players[32], num
 	get_players(players, num, "c")
 
 	for(new i = 0; i < num; i++){
 		client_cmd(players[i], "cl_minmodels 0")
 	}
+#endif
 }

@@ -1,6 +1,6 @@
 public on_SetSpecMode(id) {
 	#if ADVANCED_DEBUG
-		writeDebugInfo("setSpecMode",0)
+		writeDebugInfo("on_SetSpecMode",id)
 	#endif
 
 	if (!warcraft3)
@@ -15,7 +15,7 @@ public on_SetSpecMode(id) {
 
 public on_Spectate(id){
 	#if ADVANCED_DEBUG
-		writeDebugInfo("showRank",id)
+		writeDebugInfo("on_Spectate",id)
 	#endif
 
 
@@ -45,6 +45,8 @@ public on_EndRound(){
 		return PLUGIN_CONTINUE
 
 	endround=true
+
+	set_task(4.9, "_Ultimate_End",TASK_ENDULTIMATE)
 
 	new players[32], numberofplayers
 	new y, id
@@ -84,6 +86,9 @@ public on_EndRound(){
 }
 
 public on_StatusIcon(id) {
+	#if ADVANCED_DEBUG
+		writeDebugInfo("on_StatusIcon",id)
+	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -619,13 +624,13 @@ public on_ShowStatus(id){
 		get_user_name(pid,name,31)
 		
 		if ( team == TS ){
-			if ( p_data_b[pid][PB_MOLE] )
+			if ( p_data_b[pid][PB_MOLE] && p_data[id][P_ITEM2] != ITEM_PROTECTANT )
 				blue = 255
 			else
 				red = 255
 		}
 		else if ( team == CTS ){
-			if ( p_data_b[pid][PB_MOLE] )
+			if ( p_data_b[pid][PB_MOLE] && p_data[id][P_ITEM2] != ITEM_PROTECTANT )
 				red = 255
 			else
 				blue = 255

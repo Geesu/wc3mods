@@ -1,12 +1,26 @@
 v2.1.8
  - Bug Fix: You could gain extra abilities using resetskills
  - Bug Fix: Healign Wards would continue healing teammates even after the caster died
+ - Bug Fix: (DOD) Where you would buy boots and deploying the rocket launcher would make you move slow
+ - Bug Fix: (DOD) Healing Wave would not work at all
+ - Bug Fix: (DOD) Chain Lightning Would not jump from player to player
+ - Bug Fix: (DOD) Teleport (not blink) would now show the players correctly on the telemenu
+ - Bug Fix: (DOD) Where Periapt of Health would award 800 health
+ - Bug Fix: Where you could use your ultimate at the start of the round (you had like a .1 second interval to do it)
+ - Bug Fix: Server crash when joining a team from spectator
  - Change: Playerskills now will show spectators if they have a race
  - Change: Blood Mage's with Siphon Mana can get as much money as they want (16K is no longer a limit, requires cshack module)
+ - Change: (DOD) XP is now awarded for completing objectives
+ - Change: (DOD) 600$ is now awarded per kill
+ - Change: (DOD) 300$ is awarded when you are killed by an enemy
+ - Change: (DOD) Pheonix ability actually does something now (relating to money)
+ - Change: (DOD) Tome of Experience now awards roughly twice as much XP
  - Special thanks to Damaged Soul for the CSHack module and for taking the time to get the one native to function on czero
  - Addition: /level will show the hero abilities
  - Addition: FT_show_player, this will show teammate/enemy info on the center of the screen
  - Addition: Fix for cl_minmodels (I removed this a few versions ago for efficiencies sake)
+ - Language: Various updates
+ - Language: Hungarian added (thanks almasrates, please replace the languages.txt file with mine)
 
 v2.1.7
  - Bug Fix: (DOD) StatusIcon event unknown error

@@ -37,12 +37,12 @@ new const WC3VERSION[] =	"2.1.8"
 #include <amxmisc>
 #include <fun>
 
-#define MOD 0							// 0 = cstrike or czero, 1 = dod
+#define MOD 1							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
-#define DEBUG 0							// Only use this when coding.. you normally don't want it
+#define DEBUG 0 						// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
-#define ADVANCED_DEBUG_BOTS 0			// Print info for bots too?
+#define ADVANCED_DEBUG_BOTS 1			// Print info for bots too?
 #define PRECACHE_WAR3FTSOUNDS 1
 
 #if MOD == 0
@@ -576,7 +576,7 @@ public client_PreThink(id){
 			}
 		}*/
 	#if MOD == 1
-		if( Verify_Skill(id, RACE_UNDEAD, SKILL2) ){
+		if( Verify_Skill(id, RACE_UNDEAD, SKILL2) || p_data[id][P_ITEM] == ITEM_BOOTS){
 			// They have a rocket launcher "deployed" or are using their stamina
 			new prone = entity_get_int(id,EV_INT_iuser3)
 			new Float:maxspeed = entity_get_float(id,EV_FL_maxspeed)
@@ -585,8 +585,10 @@ public client_PreThink(id){
 				parm[0] = id
 				unholyspeed(parm)
 			}
-			if(entity_get_float(id,EV_FL_fuser4) < p_unholy[p_data[id][P_SKILL2]-1]){
-				entity_set_float(id,EV_FL_fuser4, p_unholy[p_data[id][P_SKILL2]-1])
+			if ( Verify_Skill(id, RACE_UNDEAD, SKILL2) ){
+				if(entity_get_float(id,EV_FL_fuser4) < p_unholy[p_data[id][P_SKILL2]-1]){
+					entity_set_float(id,EV_FL_fuser4, p_unholy[p_data[id][P_SKILL2]-1])
+				}
 			}
 		}
 		if(p_data[id][P_ITEM] == ITEM_BOOTS && entity_get_float(id,EV_FL_fuser4) < fCvar[DOD_BOOTSPEED]){

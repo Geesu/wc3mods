@@ -10,17 +10,22 @@ public test(id){
 		}
 	}
 
-	client_print(id,print_chat,"Max Speed: %f", get_user_maxspeed(id))
-	client_print(id,print_chat,"Health: %d", get_user_health(id))
-	client_print(id,print_chat,"Evade next shot: %d", p_data_b[id][PB_EVADENEXTSHOT])
-	client_print(id,print_chat,"Max health: %d", get_user_maxhealth(id))
-
 	return PLUGIN_HANDLED
 }
 
 public test3(id){
-	p_data_b[id][PB_EVADENEXTSHOT] = true
-	set_user_health(id, 1124)
+	new theracename[10][64]
+	new tracker
+	for(new i = 0;i<50;i++){
+		for ( new j = 1;j <= 9; j++){
+			format(theracename[j],127,"RACENAME_%d",j)
+			tracker++
+		}
+		tracker++
+	}
+
+	client_print(id, print_chat,"[DEBUG MODE] Ran %d times", tracker)
+	
 }
 
 public test2(id){
@@ -65,7 +70,7 @@ public writeDebugInfo(info[], id){
 		}
 	}
 	
-	format(string,127,"[%-24s] [%-2d] [%-32s] [%-32s]",info, id, name, raceInfo)
+	format(string,127,"[%-24s] [%-3d] [%-32s] [%-32s]",info, id, name, raceInfo)
 
 	if (keepTrack == 0){
 		new mapname[32], saveString[128]

@@ -177,9 +177,11 @@ public weapon_controller( parm[2]  ){
 		if(!p_data_b[id][PB_ISCONNECTED])
 			return PLUGIN_CONTINUE
 
+#if MOD == 0
 		if( !Verify_Skill(id, RACE_BLOOD, SKILL3) && get_user_money(id) > 16000 ){
 			set_user_money(id, 16000)
 		}
+#endif
 
 		new bool:reincarnate = false
 		
@@ -352,7 +354,7 @@ public unholyspeed(parm[1]){
 
 		return PLUGIN_HANDLED
 	}
-	else if(get_user_maxspeed(id) == 50.0){		// User has a rocket launcher "mounted"
+	else if(get_user_maxspeed(id) == 50.0 && ( p_data[id][P_ITEM] == ITEM_BOOTS || Verify_Skill(id, RACE_UNDEAD, SKILL2) ) ){		// User has a rocket launcher "mounted"
 		set_user_maxspeed(id, 600.0)
 	}
 #endif

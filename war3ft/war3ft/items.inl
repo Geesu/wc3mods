@@ -85,7 +85,12 @@ public Item_Message(id, item, shopmenu){
 			case ITEM_NECKLACE:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_6")
 			case ITEM_FROST:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_7", (100.0 * (fCvar[FT_FROST_SPEED]/260.0)))
 			case ITEM_HEALTH:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_8", iCvar[FT_HEALTH_BONUS])
+		#if MOD == 0
 			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (iCvar[FT_XPBONUS] + xpgiven[p_data[id][P_LEVEL]]))
+		#endif
+		#if MOD == 1
+			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (2 * (iCvar[FT_XPBONUS] + xpgiven[p_data[id][P_LEVEL]])))
+		#endif
 		}
 	}
 	else if(shopmenu==SHOPMENU_TWO){
@@ -222,15 +227,9 @@ public Item_Set_Helm(id, status){
 
 	if(status==1){		// Give helm
 		zone = 253
-		#if DEBUG
-			client_print(id,print_chat, "### Helm enabled")
-		#endif
 	}
 	else{				// Reset zones to normal
 		zone = 255
-		#if DEBUG
-			client_print(id,print_chat, "### Helm disabled")
-		#endif
 	}
 
 	set_user_hitzones(0, id, zone)

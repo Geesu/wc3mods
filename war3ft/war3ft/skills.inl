@@ -65,7 +65,8 @@ public Skill_Check(id){
 		p_data[id][P_SERPENTCOUNT]=0
 
 	Skills_Blink(id)
-		
+
+#if MOD == 0
 	// Blood Mage's Pheonix
 	if ( Verify_Skill(id, RACE_BLOOD, SKILL1) ){			
 		new Float:randomnumber = random_float(0.0,1.0)
@@ -78,6 +79,7 @@ public Skill_Check(id){
 				g_pheonixExistsCT++
 		}
 	}
+#endif
 
 	Ultimate_Icon(id,ICON_SHOW)
 
@@ -149,6 +151,14 @@ public Skill_Check(id){
 		new id = parm[0]
 		new origin[3]
 		get_user_origin(id,origin)
+		entity_set_vector(id, EV_VEC_v_angle, reinc_v_angles[id])
+		entity_set_vector(id, EV_VEC_angles, reinc_angles[id])
+		
+		console_print(id, "Setting Angles:")
+		for(new z=0;z<3;z++)
+			console_print(id, "v %d:%f", z, reinc_v_angles[id][z])
+		for(new j=0;j<3;j++)
+			console_print(id, "%d:%f", j, reinc_angles[id][j])
 
 		// Failure, stuck somewhere, but them back
 		if(origin[2] == reincarnation[id][2]){
@@ -183,6 +193,7 @@ public Skill_Check(id){
 					origin[i] = floatround(spawnOrigin[i])
 
 				set_user_origin(id, origin)
+
 				client_print(id,print_chat,"%s %L", g_MODclient, id, "SKILL_REINCARNATION_FAILED")
 			}
 			else
@@ -209,6 +220,39 @@ public Skill_Check(id){
 			p_data_b[id][PB_REINCARNATION_DELAY] = false
 
 		return PLUGIN_CONTINUE
+	}
+
+	// ****************************************
+	// Blood Mage's Pheonix Ability in DOD
+	// ****************************************
+
+	public Skill_Pheonix(id){
+		set_user_money(id, get_user_money(id) + p_pheonix[p_data[id][P_SKILL1]-1])
+
+		new name[32], team
+		get_user_name(id, name, 31)
+		team = get_user_team(id)
+
+		new players[32], numberofplayers
+		new i, targetid, distancebetween, targetorigin[3], origin[3]
+
+		get_user_origin(id, origin)
+		get_players(players, numberofplayers,"a")
+
+		new money = p_pheonix[p_data[id][P_SKILL1]-1] / 2
+		for (i = 0; i < numberofplayers; ++i){
+			targetid=players[i]
+
+			if ( targetid != id && p_data_b[targetid][PB_ISCONNECTED] && get_user_team(targetid) == team){
+				get_user_origin(targetid, targetorigin)
+				distancebetween = get_distance(origin, targetorigin)
+
+				if (distancebetween < iCvar[FT_HEALING_RANGE]){
+					set_user_money(targetid, get_user_money(targetid) + money)
+					client_print(targetid, print_chat, "%s %L", g_MODclient, targetid, "DOD_PHEONIX", money, name)
+				}
+			}
+		}
 	}
 #endif
 #if MOD == 0
@@ -460,24 +504,20 @@ public _Skill_Healing_Wave(parm[2]){
 		set_task(p_heal[p_data[id][P_SKILL1]-1],"_Skill_Healing_Wave",TASK_WAVE+id,parm,2)
 	}
 
-	new players[32], numberofplayers, teamname[32]
+	new team = get_user_team(id)
+
+	new players[32], numberofplayers
 	new i, targetid, distancebetween, targetorigin[3]
 	new origin[3]
 
 	get_user_origin(id, origin)
-
-	get_user_team(id, teamname, 31)
-
-	get_players(players, numberofplayers,"ae",teamname)
+	get_players(players, numberofplayers,"a")
 
 	for (i = 0; i < numberofplayers; ++i){
-
 		targetid=players[i]
 
-		if (is_user_alive(targetid) && p_data_b[targetid][PB_ISCONNECTED]){
-
+		if (p_data_b[targetid][PB_ISCONNECTED] && get_user_team(targetid) == team){
 			get_user_origin(targetid, targetorigin)
-
 			distancebetween = get_distance(origin, targetorigin)
 
 			if (distancebetween < iCvar[FT_HEALING_RANGE]){
@@ -590,25 +630,21 @@ public _Skill_SerpentWard(parm[5]){
 	if(!g_mapDisabled)
 		Create_TE_BEAMPOINTS(start, end, g_sLightning, 1, 5, 2, 500, 20, red, green, blue, 100, 100)
 
-
 	new players[32], numberofplayers
 	new i, targetid, distancebetween, targetorigin[3]
 
-	get_players(players, numberofplayers)
+	get_players(players, numberofplayers, "a")
 	
 	for (i = 0; i < numberofplayers; ++i){
 		targetid=players[i]
-		if ( parm[4]!=get_user_team(targetid) && is_user_alive(targetid) ){
+		if ( parm[4]!=get_user_team(targetid) ){
 			get_user_origin(targetid,targetorigin)
 			distancebetween = get_distance(origin, targetorigin)
-			//distancebetween=sqroot((origin[1]-targetorigin[1])*(origin[1]-targetorigin[1])+(origin[0]-targetorigin[0])*(origin[0]-targetorigin[0]))
+
 			if ( distancebetween < 85 ){
 				damage = 10
-
 				WAR3_damage(targetid, id, damage, CSW_SERPENTWARD, -1)
-
 				client_cmd(targetid, "speak ambience/thunder_clap.wav")
-
 				Create_ScreenFade(targetid, (1<<10), (1<<10), (1<<12), red, green, blue, 255)
 			}
 		}

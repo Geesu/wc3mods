@@ -13,23 +13,23 @@ public menu_Shopmenu_One(id){
 	if (iCvar[FT_CD]) {
 		if (!WAR3_CD_installed(id)){
 			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MOD)
-			return PLUGIN_CONTINUE
+			return PLUGIN_HANDLED
 		}
 	}
 
 	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
-		return PLUGIN_CONTINUE
+		return PLUGIN_HANDLED
 	}
 	#if MOD == 0
 		else if(iCvar[FT_BUYTIME] && !g_buyTime){
 			new Float:thetime = get_cvar_float("mp_buytime")*60.0
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
-			return PLUGIN_CONTINUE
+			return PLUGIN_HANDLED
 		}
 		else if(iCvar[FT_BUYZONE] && !p_data_b[id][PB_BUYZONE] && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
-			return PLUGIN_CONTINUE
+			return PLUGIN_HANDLED
 		}
 	#endif
 	
@@ -102,8 +102,12 @@ public _menu_Shopmenu_One(id, key){
 	else if (iShopmenuItem==ITEM_TOME){
 		set_user_money(id,get_user_money(id)-itemcost[key],1)
 
-		XP_give(id,iCvar[FT_XPBONUS] + xpgiven[p_data[id][P_LEVEL]])
-
+	#if MOD == 0
+		XP_give(id, iCvar[FT_XPBONUS] + xpgiven[p_data[id][P_LEVEL]])
+	#endif
+	#if MOD == 1
+		XP_give(id, 2 * (iCvar[FT_XPBONUS] + xpgiven[p_data[id][P_LEVEL]]))
+	#endif
 		emit_sound(id,CHAN_STATIC, "warcraft3/Tomes.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)
 
 
@@ -147,6 +151,67 @@ public _menu_Shopmenu_One(id, key){
 // **************************************************
 // Shopmenu Two
 // **************************************************
+
+public menu_Shopmenu_Two(id){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("menu_Shopmenu_Two",id)
+	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
+	if(iCvar[FT_RACES] < 5)
+		return PLUGIN_HANDLED
+
+	if (iCvar[FT_CD]) {
+		if (!WAR3_CD_installed(id)){
+			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MOD)
+			return PLUGIN_HANDLED
+		}
+	}
+
+	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
+		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
+		return PLUGIN_HANDLED
+	}
+	#if MOD == 0
+		else if(iCvar[FT_BUYTIME] && !g_buyTime){
+			new Float:thetime = get_cvar_float("mp_buytime")*60.0
+			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
+			return PLUGIN_HANDLED
+		}
+		else if(iCvar[FT_BUYZONE] && !p_data_b[id][PB_BUYZONE] && is_user_alive(id)){
+			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
+			return PLUGIN_HANDLED
+		}
+	#endif
+	new pos = 0
+	new keys = (1<<9)
+	new menu_body[512]
+
+	pos += format(menu_body[pos], 511-pos, "%L",id,"MENU_BUY_ITEM2")
+
+	new item_name2[9][ITEM_NAME_LENGTH]
+	for(new i=0;i<9;i++){
+		itemname2(i+1,id,item_name2[i],ITEM_NAME_LENGTH_F)
+
+	#if MOD == 1
+		if(i==ITEM_CHAMELEON-1 || i==ITEM_SCROLL-1)
+			pos += format(menu_body[pos], 511-pos, "\d%d. %s\y\R%d^n",i+1,item_name2[i],itemcost2[i])
+		else{
+	#endif
+		pos += format(menu_body[pos], 511-pos, "\w%d. %s\y\R%d^n",i+1,item_name2[i],itemcost2[i])
+		keys |= (1<<i)
+	#if MOD == 1
+		}
+	#endif
+	}
+
+	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
+
+	show_menu(id,keys,menu_body,-1)
+	return PLUGIN_HANDLED
+}
 
 public _menu_Shopmenu_Two(id, key){
 	#if ADVANCED_DEBUG
@@ -277,67 +342,6 @@ public _menu_Shopmenu_Two(id, key){
 
 	WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
 
-	return PLUGIN_HANDLED
-}
-
-public menu_Shopmenu_Two(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("menu_Shopmenu_Two",id)
-	#endif
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if(iCvar[FT_RACES] < 5)
-		return PLUGIN_CONTINUE
-
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MOD)
-			return PLUGIN_CONTINUE
-		}
-	}
-
-	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
-		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
-		return PLUGIN_CONTINUE
-	}
-	#if MOD == 0
-		else if(iCvar[FT_BUYTIME] && !g_buyTime){
-			new Float:thetime = get_cvar_float("mp_buytime")*60.0
-			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
-			return PLUGIN_CONTINUE
-		}
-		else if(iCvar[FT_BUYZONE] && !p_data_b[id][PB_BUYZONE] && is_user_alive(id)){
-			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
-			return PLUGIN_CONTINUE
-		}
-	#endif
-	new pos = 0
-	new keys = (1<<9)
-	new menu_body[512]
-
-	pos += format(menu_body[pos], 511-pos, "%L",id,"MENU_BUY_ITEM2")
-
-	new item_name2[9][ITEM_NAME_LENGTH]
-	for(new i=0;i<9;i++){
-		itemname2(i+1,id,item_name2[i],ITEM_NAME_LENGTH_F)
-
-	#if MOD == 1
-		if(i==ITEM_CHAMELEON-1 || i==ITEM_SCROLL-1)
-			pos += format(menu_body[pos], 511-pos, "\d%d. %s\y\R%d^n",i+1,item_name2[i],itemcost2[i])
-		else{
-	#endif
-		pos += format(menu_body[pos], 511-pos, "\w%d. %s\y\R%d^n",i+1,item_name2[i],itemcost2[i])
-		keys |= (1<<i)
-	#if MOD == 1
-		}
-	#endif
-	}
-
-	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
-
-	show_menu(id,keys,menu_body,-1)
 	return PLUGIN_HANDLED
 }
 

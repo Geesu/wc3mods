@@ -71,6 +71,7 @@
 #define TASK_BOMBTIMER		2014
 #define TASK_WAR3CHECK		2015	// Checks the value of sv_warcraft3 every 5 seconds (better than checking it on every function call)
 #define TASK_SIPHON			2016
+#define TASK_ENDULTIMATE	2017
 
 // From ../multiplayer source/dlls/player.cpp
 #define ARMOR_RATIO	 0.7	// Armor Takes 30% of the damage (was .2 in the SDK)
@@ -454,7 +455,8 @@
 	#define	MP_GRENADEPROTECTION				55
 #endif
 #if MOD == 1
-	#define FT_DOD_START_MONEY					45
+	#define DOD_STARTMONEY						44
+
 #endif
 
 // Float Array Defines
@@ -470,7 +472,6 @@
 #endif
 #if MOD == 1
 	#define DOD_BOOTSPEED						7
-	#define DOD_STARTMONEY						8
 #endif
 
 
@@ -582,6 +583,8 @@ new g_menuSettings[33]
 	new spawnEntString[2][] = {"info_player_axis","info_player_allies"}
 
 	new reincarnation[33][3]
+	new Float:reinc_angles[33][3]
+	new Float:reinc_v_angles[33][3]
 #endif
 
 // Captured Messages
@@ -598,8 +601,10 @@ new Float:g_ultimateDelay = 0.0
 new g_lastAnnounce = -1
 
 // Abilities
-new g_pheonixExistsT = 0
-new g_pheonixExistsCT = 0
+#if MOD == 0
+	new g_pheonixExistsT = 0
+	new g_pheonixExistsCT = 0
+#endif
 new bool:spawnPointsused[33] = false
 
 // Sprites
@@ -663,7 +668,12 @@ new const Float:p_evasion[3] =			{0.1,0.2,0.3}			// Evasion					(skill 1)
 new const Float:p_thorns[3] =			{0.05,0.1,0.15}			// Thorns Aura				(skill 2)
 new const Float:p_trueshot[3] =			{0.15,0.3,0.45}			// Trueshot Aura			(skill 3)
 
-new const Float:p_pheonix[3] =			{0.333,0.666,1.0}		// Pheonix					(skill 1)
+#if MOD == 0
+	new const Float:p_pheonix[3] =			{0.333,0.666,1.0}	// Pheonix					(skill 1)
+#endif
+#if MOD == 1
+	new const p_pheonix[3] =			{300,600,900}				// Pheonix					(skill 1)
+#endif
 new const Float:p_banish[3] =			{0.07,0.13,0.20}		// Banish					(skill 2)
 new const Float:p_mana[3] =				{0.02,0.04,0.08}		// Siphon Mana				(skill 3)
 new const Float:p_resistant[11] =		{0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50}	// Resistant Skin		(Skill 4)

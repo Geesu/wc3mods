@@ -211,6 +211,7 @@ stock set_user_money(id, money, show = 1){
 		cs_set_user_money(id,money,show)
 	#endif
 	#if MOD == 1
+		show--
 		new parm[3]
 		parm[0] = id
 		parm[1] = 1
