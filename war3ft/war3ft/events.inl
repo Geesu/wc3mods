@@ -1264,6 +1264,10 @@ public on_ResetHud(id){
 		remove_task(TASK_RESETSPEED+id)
 	}
 
+	// The user should not be frozen at the start of the round	
+	p_data_b[id][PB_STUNNED] = false
+	p_data_b[id][PB_SLOWED] = false
+
 	if (task_exists(TASK_LIGHTSEARCH+id)){
 		remove_task(TASK_LIGHTSEARCH+id)
 		p_data_b[id][PB_ISSEARCHING]=false
