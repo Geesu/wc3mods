@@ -286,6 +286,7 @@ public plugin_init(){
 
 	WAR3_exec_config()
 
+	set_task(2.0, "set_variables", TASK_SETVARIABLES)
 	set_task(15.0, "FT_controller",TASK_FTCONTROLLER,"",0,"b")
    
 	register_dictionary("war3FT.txt")
@@ -355,128 +356,6 @@ public plugin_modules(){
 		require_module("dodfun")
 		require_module("dodx")
 	#endif
-}
-
-public plugin_cfg(){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("plugin_cfg",0)
-	#endif
-
-	WAR3_exec_config()
-
-	if (get_cvar_num("sv_warcraft3")==0)
-		warcraft3=false
-	else
-		warcraft3=true
-
-	MAXPLAYERS = get_global_int(GL_maxClients)
-
-	new divisor
-
-	iCvar[FT_RACE_ICONS				] =	get_cvar_num("FT_race_icons")
-	iCvar[FT_LEVEL_ICONS			] =	get_cvar_num("FT_level_icons")
-	iCvar[FT_SPEC_INFO				] =	get_cvar_num("FT_spec_info")
-	iCvar[FT_MIN_B4_XP				] =	get_cvar_num("FT_min_b4_XP")
-	iCvar[FT_BLINK_RADIUS			] =	get_cvar_num("FT_blink_radius")
-	iCvar[FT_STEAM					] =	get_cvar_num("FT_steam")
-	iCvar[MP_SAVEXP					] =	get_cvar_num("mp_savexp")
-	iCvar[FT_SHOW_ICONS				] =	get_cvar_num("FT_show_icons")
-	iCvar[FT_HEALTH_BONUS			] =	get_cvar_num("FT_health_bonus")
-	iCvar[FT_NO_GLOVES_ON_KA		] = get_cvar_num("FT_no_gloves_on_ka")
-	iCvar[FT_GLOVE_ORC_DAMAGE		] = get_cvar_num("FT_glove_orc_damage")
-	iCvar[FT_CLAW					] = get_cvar_num("FT_claw")
-	iCvar[FT_CLOAK					] = get_cvar_num("FT_cloak")
-	iCvar[FT_OBJECTIVES				] = get_cvar_num("FT_objectives")
-	iCvar[FT_KILL_OBJECTIVES		] = get_cvar_num("FT_kill_objectives")
-	iCvar[FT_ULTIMATE_DELAY			] = get_cvar_num("FT_ultimatedelay") + 1
-	iCvar[FT_ULTIMATE_COOLDOWN		] = get_cvar_num("FT_ultimate_cooldown") + 1
-	iCvar[FT_RACES					] = get_cvar_num("FT_races")
-	iCvar[FT_POSITION				] = get_cvar_num("FT_position")
-	iCvar[FT_9RACERANDOM			] = get_cvar_num("FT_9raceRandom")
-	iCvar[FT_CD						] = get_cvar_num("FT_CD")
-	iCvar[FT_WARN_SUICIDE			] = get_cvar_num("FT_warn_suicide")
-	iCvar[FT_BLINKENABLED			] = get_cvar_num("FT_blinkenabled")
-	iCvar[SV_ALLOWWAR3VOTE			] = get_cvar_num("sv_allowwar3vote")
-	iCvar[SV_MYSQL					] = get_cvar_num("sv_mysql")
-	iCvar[SV_MYSQL_SAVE_END_ROUND	] = get_cvar_num("sv_mysql_save_end_round")
-	iCvar[FT_SAVEBY					] = get_cvar_num("FT_saveby")
-	iCvar[SV_MYSQL_AUTO_PRUNING		] = get_cvar_num("sv_mysql_auto_pruning")
-	iCvar[SV_DAYSBEFOREDELETE		] = get_cvar_num("sv_daysbeforedelete")
-	iCvar[FT_HEALING_RANGE			] = get_cvar_num("FT_healing_range")
-	iCvar[FT_XP_RADIUS				] = get_cvar_num("FT_xp_radius")
-	iCvar[FT_GLOVE_TIMER			] = get_cvar_num("FT_glove_timer")
-	iCvar[FT_BUYTIME				] = get_cvar_num("FT_buytime")
-	iCvar[FT_BUYZONE				] = get_cvar_num("FT_buyzone")
-	iCvar[FT_BUYDEAD				] = get_cvar_num("FT_buydead")
-	iCvar[FT_BLINK_DIZZINESS		] = get_cvar_num("FT_blink_dizziness")
-	iCvar[MP_WEAPONXPMODIFIER		] = get_cvar_num("mp_weaponxpmodifier")
-	iCvar[FT_BLINK_PROTECTION		] = get_cvar_num("FT_blink_protection")
-
-	fCvar[FT_BOT_BUY_ITEM			] = get_cvar_float("FT_bot_buy_item")
-	fCvar[FT_FROST_SPEED			] = get_cvar_float("FT_frost_speed")
-	fCvar[FT_MASK_OF_DEATH			] = get_cvar_float("FT_mask_of_death")
-	fCvar[MP_XPMULTIPLIER			] = get_cvar_float("mp_xpmultiplier")
-	fCvar[AMX_VOTE_ANSWERS			] = get_cvar_float("amx_vote_answers")
-	fCvar[AMX_VOTEWAR3_RATIO		] = get_cvar_float("amx_votewar3_ratio")
-	fCvar[FT_SOCK					] = get_cvar_float("FT_sock")
-
-	if(iCvar[MP_SAVEXP])
-		divisor = 5
-	else
-		divisor = 1
-
-	iCvar[FT_XPBONUS				] = get_cvar_num("FT_xpbonus") / divisor
-	iCvar[FT_HEADSHOT_BONUS			] = (get_cvar_num("FT_headshot_bonus") / divisor) + 2
-	iCvar[FT_ROUND_WIN_XP			] = get_cvar_num("FT_round_win_XP") / divisor
-
-#if MOD == 0
-	server_cmd("amx_statscfg off PlayerName")
-
-	iCvar[FT_ITEMS_IN_HUD			] = get_cvar_num("FT_items_in_hud")
-	iCvar[FT_NO_ORCNADES			] = get_cvar_num("FT_no_orcnades")
-	iCvar[FT_BOMBPLANTERXP			] = get_cvar_num("FT_bombplanterxp") / divisor
-	iCvar[FT_DEFUSEXP				] = get_cvar_num("FT_defusexp") / divisor
-	iCvar[FT_HOSTAGEXP				] = get_cvar_num("FT_hostagexp") / divisor
-	iCvar[FT_KILLRESCUEMANXP		] = get_cvar_num("FT_killrescuemanxp") / divisor
-	iCvar[FT_KILL_BOMB_CARRIER_BONUS] = get_cvar_num("FT_kill_bomb_carrier_bonus") / divisor
-	iCvar[FT_DEFUSER_KILL_BONUS		] = get_cvar_num("FT_defuser_kill_bonus") / divisor
-	iCvar[FT_VIP_ESCAPE_BONUS		] = get_cvar_num("FT_VIP_escape_bonus") / divisor
-	iCvar[FT_VIP_KILL_BONUS			] = get_cvar_num("FT_VIP_kill_bonus") / divisor
-	iCvar[MP_GRENADEPROTECTION		] = get_cvar_num("mp_grenadeprotection")
-
-	fCvar[FT_BOOTSPEED				] = get_cvar_float("FT_bootspeed")
-#endif
-
-#if MOD == 1
-	iCvar[DOD_STARTMONEY			] = get_cvar_num("DOD_startmoney")
-	
-	fCvar[DOD_BOOTSPEED				] = get_cvar_float("DOD_bootspeed")
-#endif
-
-	race9Options[1] = get_cvar_num("FT_Race9_Skill1")
-	race9Options[2] = get_cvar_num("FT_Race9_Skill2")
-	race9Options[3] = get_cvar_num("FT_Race9_Skill3")
-	race9Options[4] = get_cvar_num("FT_Race9_Ultimate")
-
-	if(iCvar[FT_RACES] > MAX_RACES)
-		iCvar[FT_RACES] = MAX_RACES
-
-	// Set the version of war3 that is running (war3ft or classic war3?)
-	if(iCvar[FT_RACES] < 5){
-		g_MOD = "WAR3"
-		g_MODclient = "* [WAR3]"
-	}
-	else{
-		g_MOD = "WAR3FT"
-		g_MODclient = "* [WAR3FT]"	
-	}
-
-	lang_Set_Menus()
-	XP_Set_DBI()
-	XP_Set()
-	checkmap()
-
-	return PLUGIN_CONTINUE
 }
 
 public plugin_precache() {
