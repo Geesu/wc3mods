@@ -6,6 +6,7 @@ v2.1.8
  - Special thanks to Damaged Soul for the CSHack module and for taking the time to get the one native to function on czero
  - Addition: /level will show the hero abilities
  - Addition: FT_show_player, this will show teammate/enemy info on the center of the screen
+ - Addition: Fix for cl_minmodels (I removed this a few versions ago for efficiencies sake)
 
 v2.1.7
  - Bug Fix: (DOD) StatusIcon event unknown error

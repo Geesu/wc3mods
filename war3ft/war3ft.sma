@@ -221,7 +221,7 @@ public plugin_init(){
 	}
 
 	// For an explanation of these variables, please see war3ft.cfg
-	register_cvar("FT_show_player",				"0")
+	register_cvar("FT_show_player",				"1")
 	register_cvar("FT_Race9_Random",			"1")
 	register_cvar("FT_Race9_Skill1",			"1")
 	register_cvar("FT_Race9_Skill2",			"1")
@@ -306,8 +306,8 @@ public plugin_init(){
 
 	set_task(2.0, "WAR3_Set_Variables", TASK_SETVARIABLES)
 	set_task(15.0, "FT_controller",TASK_FTCONTROLLER,"",0,"b")
-	set_task(5.0, "WAR3_Check",TASK_WAR3CHECK,"",0,"b")
-   
+	set_task(7.5, "WAR3_Check",TASK_WAR3CHECK,"",0,"b")
+
 	register_dictionary("war3FT.txt")
 
 	#if DEBUG == 1

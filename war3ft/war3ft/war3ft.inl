@@ -1322,4 +1322,11 @@ public WAR3_Check(){
 		warcraft3=false
 	else
 		warcraft3=true
+
+	new players[32], num
+	get_players(players, num, "c")
+
+	for(new i = 0; i < num; i++){
+		client_cmd(players[i], "cl_minmodels 0")
+	}
 }
