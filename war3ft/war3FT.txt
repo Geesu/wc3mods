@@ -1106,7 +1106,6 @@ RACE8_SKILL5_NAME = Kugel der Vernichtung
 CENTER_CHANGED_NEXT = Deine Rasse wird am Anfang der naechste Runde gewechselt
 DOD_AWARDED_XP_OBJECTIVE = Du erhaelst %d XP, weil dein Ziel erreicht wurde
 DOD_RACE5_SKILL1_INFO = Du erhaelst einen Bonus von (%d €, %d €, %d €) bei jedem getoeteten Gegner.
-Die Haelfte dieses Bonus erhalten Teammates, die sich in der Naehe aufhalten.
 DOD_PHEONIX = Du erhaelst einen Bonus von %d €, weil ein nahe gelegenes Teammate (%s) einen Gegner mit Phoenix getoetet hat
 
 [es]
