@@ -394,6 +394,7 @@ public _Skill_Reincarnation_Give(id){
 			give_item(id,ammoname)
 			give_item(id,ammoname)
 			give_item(id,ammoname)
+			give_item(id,ammoname)
 		}
 	}
 
@@ -598,7 +599,7 @@ public _Skill_SerpentWard(parm[5]){
 			if ( distancebetween < 85 ){
 				damage = 10
 
-				WAR3_damage(targetid, id, damage, CSW_SERPENTWARD, 0)
+				WAR3_damage(targetid, id, damage, CSW_SERPENTWARD, -1)
 
 				client_cmd(targetid, "speak ambience/thunder_clap.wav")
 

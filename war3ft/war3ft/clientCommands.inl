@@ -30,6 +30,11 @@ public cmd_Teamselect(id,key) {
 	if(!p_data_b[id][PB_JUSTJOINED])
 		p_data_b[id][PB_DIEDLASTROUND] = true
 
+	#if DEBUG
+		client_print(id, print_chat, "Team Chosen2: %s", (key+1))
+	#endif
+
+
 }
 
 public cmd_Jointeam(id){
@@ -37,10 +42,15 @@ public cmd_Jointeam(id){
 		writeDebugInfo("cmd_Jointeam",id)
 	#endif
 
-	//new arg[2]
-	//read_argv(1,arg,1)	//This is the command they pressed
-	p_data_b[id][PB_CHANGINGTEAM] = true
+	new szTeam[2]
+	read_argv(1,szTeam,1)
 
+	if ( str_to_num(szTeam) == 1 || str_to_num(szTeam) == 2 || str_to_num(szTeam) == 5 )
+		p_data_b[id][PB_CHANGINGTEAM] = true
+
+	#if DEBUG
+		client_print(id, print_chat, "Team Chosen: %s", szTeam)
+	#endif
 	if(!p_data_b[id][PB_JUSTJOINED])
 		p_data_b[id][PB_DIEDLASTROUND] = true
 }
@@ -475,6 +485,10 @@ public cmd_Ultimate(id){
 
 	// Flame Strike
 	else if ( Verify_Skill(id, RACE_BLOOD, SKILL4) ){
+		#if ADVANCED_STATS
+			new WEAPON = CSW_FLAME - CSW_WAR3_MIN
+			iStatsShots[id][WEAPON]++
+		#endif
 		Ultimate_FlameStrike(id) 
 		p_data[id][P_FLAMECOUNT]++
 		if(p_data[id][P_FLAMECOUNT]>5){
@@ -499,6 +513,10 @@ public cmd_Ultimate(id){
 
 	// Locust Swarm
 	else if ( Verify_Skill(id, RACE_CRYPT, SKILL4) ){
+		#if ADVANCED_STATS
+			new WEAPON = CSW_LOCUSTS - CSW_WAR3_MIN
+			iStatsShots[id][WEAPON]++
+		#endif
 		Ultimate_LocustSwarm(id)
 	}
 

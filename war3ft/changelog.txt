@@ -7,6 +7,7 @@ v2.1.7
  - Bug Fix: If you're ultimate became ready while you were dead you couldn't use it if you respawned
  - Bug Fix: Changing sv_warcraft3 wouldn't disable war3
  - Bug Fix: Wardens can now damage Shadow Hunters that are in godmode
+ - Bug Fix: Where Flame thrower could kill the player someone was spectating (relating to evasion)
  - Change: You will no longer hear the banish sound when you banish someone
  - Change: Armor ratio when dealing with magical damage
  - Change: Stopped using client_damage from the CSX/DODX module
@@ -15,6 +16,8 @@ v2.1.7
  - Change: Elves can now evade war3 damage
  - Change: Stopped using server_cmd when giving XP via the admin menu
  - Change: FT_9raceRandom to FT_Race9_Random
+ - Change: If you buy a necklace while on fire from Blood Mage's Flame Strike the damage will stop
+ - Addition: Detailed stats information for war3 abilities (this will appear on psychostats)
 
 v2.1.6
  - Bug Fix: An extra number appeared in war3menu, it was removed

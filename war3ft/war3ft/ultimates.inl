@@ -7,6 +7,11 @@ public apacheexplode(parm[5]){		// Suicide Bomber
 	new id = parm[0]
 	// random explosions
 
+#if ADVANCED_STATS
+	new WEAPON = CSW_SUICIDE - CSW_WAR3_MIN
+	iStatsShots[id][WEAPON]++
+#endif
+
 	new origin[3], origin2[3]
 	origin[0] = parm[2]
 	origin[1] = parm[3]
@@ -43,7 +48,7 @@ public apacheexplode(parm[5]){		// Suicide Bomber
 			damage=(EXPLOSION_RANGE-distancebetween)*multiplier
 			damage=sqroot(damage)
 			if(is_user_alive(targetid))
-				WAR3_damage(targetid, id, damage, CSW_SUICIDE, 0)
+				WAR3_damage(targetid, id, damage, CSW_SUICIDE, -1)
 
 		}
 		if (distancebetween < EXPLOSION_RANGE){
@@ -753,8 +758,8 @@ public lightsearchtarget(parm[2]){
 		return PLUGIN_CONTINUE
 	}
 
-	new enemy, body
-	get_user_aiming(id,enemy,body)
+	new enemy, bodypart
+	get_user_aiming(id,enemy,bodypart)
 
 	if ( 0<enemy<=MAXPLAYERS && get_user_team(id)!=get_user_team(enemy) && p_data[enemy][P_ITEM]!=ITEM_NECKLACE && !p_data_b[enemy][PB_WARDENBLINK] && is_user_alive(id) && is_user_alive(enemy)){
 		p_data_b[id][PB_ULTIMATEUSED]=true
@@ -763,13 +768,14 @@ public lightsearchtarget(parm[2]){
 		new damage = 50
 
 		p_data_b[id][PB_ISSEARCHING]=false
-		lightningeffect(id,enemy,linewidth,damage,id)
-		new lightparm[4]
+		lightningeffect(id,enemy,linewidth,damage,id,bodypart)
+		new lightparm[5]
 		lightparm[0]=enemy
 		lightparm[1]=damage
 		lightparm[2]=linewidth
 		lightparm[3]=id
-		set_task(0.2,"lightningnext",TASK_LIGHTNING+enemy,lightparm,4)
+		lightparm[4]=bodypart
+		set_task(0.2,"lightningnext",TASK_LIGHTNING+enemy,lightparm,5)
 		new cooldownparm[2]
 		cooldownparm[0]=id
 
@@ -782,8 +788,14 @@ public lightsearchtarget(parm[2]){
 		new counter = parm[1]
 		while (counter >= 0){
 			counter -= 10
-			if (counter==0)
+			if (counter==0){
+				#if ADVANCED_STATS
+					new WEAPON = CSW_LIGHTNING - CSW_WAR3_MIN
+					iStatsShots[id][WEAPON]++
+				#endif
+
 				emit_sound(id,CHAN_STATIC, "turret/tu_ping.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)
+			}
 		}
 		--parm[1]	
 		if(!p_data_b[id][PB_ULTIMATEUSED]){
@@ -802,7 +814,7 @@ public lightsearchtarget(parm[2]){
 }
 
 
-public lightningnext(parm[4]){		// Chain Lightning
+public lightningnext(parm[5]){		// Chain Lightning
 	#if ADVANCED_DEBUG
 		writeDebugInfo("lightningnext",parm[0])
 	#endif
@@ -813,6 +825,7 @@ public lightningnext(parm[4]){		// Chain Lightning
 		return PLUGIN_CONTINUE
 
 	new caster=parm[3]
+	new bodypart=parm[4]
 	new origin[3]
 	get_user_origin(id, origin)
 	new players[32]
@@ -843,7 +856,7 @@ public lightningnext(parm[4]){		// Chain Lightning
 	}
 
 	if (closestid){
-		lightningeffect(id,closestid,linewidth,damage,caster)
+		lightningeffect(id,closestid,linewidth,damage,caster,bodypart)
 		parm[0]=targetid
 		parm[1]=damage
 		parm[2]=linewidth
@@ -859,7 +872,7 @@ public lightningnext(parm[4]){		// Chain Lightning
 	return PLUGIN_CONTINUE
 }
 
-public lightningeffect(id,targetid,linewidth,damage,caster){
+public lightningeffect(id,targetid,linewidth,damage,caster,bodypart){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("lightningeffect",id)
 	#endif
@@ -870,7 +883,7 @@ public lightningeffect(id,targetid,linewidth,damage,caster){
 	parm[0]=id
 	icon_controller(id,ICON_HIDE)
 
-	WAR3_damage(targetid, caster, damage, CSW_LIGHTNING, 0)
+	WAR3_damage(targetid, caster, damage, CSW_LIGHTNING, bodypart)
 
 	if(!g_mapDisabled)
 		Create_TE_BEAMENTS(id, targetid, g_sLightning, 0, 15, 10, linewidth, 10, 255, 255, 255, 255, 0)
@@ -1086,7 +1099,7 @@ Ultimate_FlameStrike(id){
    new vec[3] 
    new aimvec[3] 
    new velocityvec[3] 
-   new length     
+   new length
    new speed = 10 
    get_user_origin(id,vec) 
    get_user_origin(id,aimvec,2) 
@@ -1198,7 +1211,7 @@ check_burnzone(id,vec[],aimvec[],speed1,speed2,radius){
 
 	if( victim > 0 && victim <= maxplayers ){
 		if( get_user_team(victim)!=get_user_team(id) )
-			burn_victim(victim,id)
+			burn_victim(victim,id,bodypart)
 	}
     
 	new burnvec1[3],burnvec2[3],length1 
@@ -1229,15 +1242,15 @@ check_burnzone(id,vec[],aimvec[],speed1,speed2,radius){
 		if( is_user_alive(victim) && get_user_team(victim)!=get_user_team(id) ){ 
 			get_user_origin(victim,origin) 
 			if(get_distance(origin, burnvec1) < radius) 
-				burn_victim(victim,id) 
+				burn_victim(victim,id,bodypart) 
 			else if(get_distance(origin, burnvec2) < radius) 
-				burn_victim(victim,id) 
+				burn_victim(victim,id,bodypart) 
 		} 
 	} 
 	return PLUGIN_CONTINUE       
 } 
 
-burn_victim(victim,attacker){ 
+burn_victim(victim,attacker,bodypart){ 
 	#if ADVANCED_DEBUG
 		writeDebugInfo("burn_victim",victim)
 	#endif
@@ -1250,12 +1263,13 @@ burn_victim(victim,attacker){
 
 	p_data_b[victim][PB_ISBURNING] = true
 
-	new hp,args[2] 
-	hp = get_user_health(victim) 
+	new hp,args[3] 
+	hp = get_user_actualhealth(victim) 
 
 	args[0] = victim 
 	args[1] = attacker  
-	set_task(0.3,"on_fire",TASK_ONFIRE,args,2,"a",hp / 10) 
+	args[2] = bodypart
+	set_task(0.3,"on_fire",TASK_ONFIRE,args,3,"a",hp / 10) 
 
 	return PLUGIN_CONTINUE 
 } 
@@ -1267,6 +1281,10 @@ public on_fire(args[]){
 
 	new victim = args[0]
 	new attacker = args[1] 
+	new bodypart = args[2]
+
+	if (!bodypart)
+		bodypart = random_num(1,8)
 
 	if(!p_data_b[victim][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
@@ -1299,10 +1317,10 @@ public on_fire(args[]){
 		Create_TE_Smoke(position, position, g_sSmoke, 60, 15)
 #endif
 
-	if(!is_user_alive(victim)) 
+	if( !is_user_alive(victim) && p_data[victim][P_ITEM] == ITEM_NECKLACE ) 
 		return PLUGIN_CONTINUE 
 
-	WAR3_damage(victim, attacker, 10, CSW_FLAME, 0)
+	WAR3_damage(victim, attacker, 10, CSW_FLAME, bodypart)
 
 	return PLUGIN_CONTINUE 
 }
@@ -1534,7 +1552,7 @@ public drawfunnels(parm[]){
 			set_task(0.1,"drawfunnels",caster+TASK_FUNNELS,parm,11)
 		}
 		else{
-			WAR3_damage(id, caster, 45, CSW_LOCUSTS, 0)
+			WAR3_damage(id, caster, 45, CSW_LOCUSTS, -1)
 
 			emit_sound(id,CHAN_STATIC, SOUND_LOCUSTSWARM, 1.0, ATTN_NORM, 0, PITCH_NORM)
 

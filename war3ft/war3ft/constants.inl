@@ -149,6 +149,8 @@
 	#define CSW_FAMAS			15
 #endif
 
+#define CSW_WAR3_MIN			51
+
 #define	CSW_LIGHTNING			51
 #define	CSW_SUICIDE				52
 #define	CSW_FLAME				53
@@ -161,6 +163,12 @@
 #define CSW_ORB					60
 #define CSW_CONCOCTION			61
 
+#define CSW_WAR3_MAX			61
+
+// Should be equal to (CSW_WAR3_MIN - CSW_WAR3_MAX) + 1
+#define MAX_CSW_S				11
+
+// Race numbers
 #define RACE_UNDEAD				1
 #define RACE_HUMAN				2
 #define RACE_ORC				3
@@ -506,15 +514,32 @@ new SOUND_ULTIMATESCAN[64]
 new SOUND_ULTIMATEREADY[64]
 
 // Race9 Setup 
-new race9Options[5] = {0,1,1,1,1}	// the value is what race that skill should be copied from so race9Options[1] = 1 means that skill1 is undead skill1 this means you can not have skill 1 form more than one race.
-									// this default setting of 0,1,1,1,1 will make the 9th race have all the undead skills 
-									// note that the first value does not do anything.
+new race9Options[5] = {0,1,1,1,1}		// the value is what race that skill should be copied from so race9Options[1] = 1 means that skill1 is undead skill1 this means you can not have skill 1 form more than one race.
+										// this default setting of 0,1,1,1,1 will make the 9th race have all the undead skills 
+										// note that the first value does not do anything.
 
 new p_data[33][P_LAST]					// Contains player data
 new bool:p_data_b[33][PB_LAST]			// Contains player data of type boolean
 
-new iCvar[56]						// Contains integer CVAR data (loaded at plugin start)
+new iCvar[56]							// Contains integer CVAR data (loaded at plugin start)
 new Float:fCvar[9]						// Contains float CVAR data (loaded at plugin start)
+
+#if ADVANCED_STATS
+	new iStatsHead[33][MAX_CSW_S]
+	new iStatsChest[33][MAX_CSW_S]
+	new iStatsStomach[33][MAX_CSW_S]
+	new iStatsLeftArm[33][MAX_CSW_S]
+	new iStatsRightArm[33][MAX_CSW_S]
+	new iStatsLeftLeg[33][MAX_CSW_S]
+	new iStatsRightLeg[33][MAX_CSW_S]
+	new iStatsKills[33][MAX_CSW_S]
+	new iStatsDeaths[33][MAX_CSW_S]
+	new iStatsHS[33][MAX_CSW_S]
+	new iStatsTKS[33][MAX_CSW_S]
+	new iStatsShots[33][MAX_CSW_S]
+	new iStatsHits[33][MAX_CSW_S]
+	new iStatsDamage[33][MAX_CSW_S]
+#endif
 
 new MAXPLAYERS
 

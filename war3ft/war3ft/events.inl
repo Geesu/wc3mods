@@ -27,13 +27,44 @@ public grenade_throw(index,greindex,wId){
 	return PLUGIN_CONTINUE
 }
 
-public on_Damage(victim){
+#if MOD == 1
+public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("client_damage",victim)
 	#endif
 
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
+
+	call_damage(victim, attacker, damage, wpnindex, hitplace)
+
+	return PLUGIN_CONTINUE
+}
+#endif
+
+#if MOD == 0
+public on_Damage(victim){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("on_Damage",victim)
+	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
 	new wpnindex = 0, hitplace = 0, attacker = get_user_attacker(victim,wpnindex,hitplace)
 	new damage = read_data(2)
+
+	call_damage(victim, attacker, damage, wpnindex, hitplace)
+
+	return PLUGIN_CONTINUE
+}
+#endif
+
+public call_damage(victim, attacker, damage, wpnindex, hitplace){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("call_damage",victim)
+	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -406,23 +437,31 @@ public on_Damage(victim){
 		// Shadow Strike
 		if ( Verify_Skill(attacker, RACE_WARDEN, SKILL3) ){
 			new Float:randomnumber = random_float(0.0,1.0)
-			if (randomnumber <= p_shadow[p_data[attacker][P_SKILL3]-1] && p_data[attacker][P_SHADOWCOUNT]>0 && is_user_alive(victim)){
-				new origin[3], attackerorigin[3]
-				get_user_origin(victim,origin)
-				get_user_origin(attacker,attackerorigin)
-				
-				if(!g_mapDisabled)
-					Create_TE_SPRITETRAIL(attackerorigin, origin, g_sShadow, 50, 15, 1, 2, 6 )
+			if (randomnumber <= p_shadow[p_data[attacker][P_SKILL3]-1]){
+				if ( p_data[attacker][P_SHADOWCOUNT]>0 && is_user_alive(victim) ){
+					new origin[3], attackerorigin[3]
+					get_user_origin(victim,origin)
+					get_user_origin(attacker,attackerorigin)
+					
+					if(!g_mapDisabled)
+						Create_TE_SPRITETRAIL(attackerorigin, origin, g_sShadow, 50, 15, 1, 2, 6 )
 
-				Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[victim][2])
+					Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[victim][2])
 
-				emit_sound(victim,CHAN_STATIC, SOUND_SHADOWSTRIKE, 1.0, ATTN_NORM, 0, PITCH_NORM)
+					emit_sound(victim,CHAN_STATIC, SOUND_SHADOWSTRIKE, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
-				p_data[attacker][P_SHADOWCOUNT]--
+					p_data[attacker][P_SHADOWCOUNT]--
 
-				tempdamage = 10
-				WAR3_damage(victim, attacker,tempdamage,CSW_SHADOW, hitplace)
+					tempdamage = 10
+					WAR3_damage(victim, attacker,tempdamage,CSW_SHADOW, hitplace)
+				}
 			}
+		#if ADVANCED_STATS
+			else{
+				new WEAPON = CSW_SHADOW - CSW_WAR3_MIN
+				iStatsShots[attacker][WEAPON]++
+			}
+		#endif
 		}
 	}
 
@@ -443,25 +482,38 @@ public on_Damage(victim){
 
 			WAR3_damage(victim, attacker, ORB_DAMAGE, CSW_ORB, hitplace)
 		}
+	#if ADVANCED_STATS
+		else{
+			new WEAPON = CSW_ORB - CSW_WAR3_MIN
+			iStatsShots[attacker][WEAPON]++
+		}
+	#endif
 
 		// Carrion Beetle
 		if ( Verify_Skill(attacker, RACE_CRYPT, SKILL3) ){
-			if (random_float(0.0,1.0) <= p_carrion[p_data[attacker][P_SKILL3]-1]&& p_data[attacker][P_CARRIONCOUNT]>0 && is_user_alive(victim)){
-				new origin[3], attackerorigin[3]
-				get_user_origin(victim,origin)
-				get_user_origin(attacker,attackerorigin)
+			if (random_float(0.0,1.0) <= p_carrion[p_data[attacker][P_SKILL3]-1]){
+				if ( p_data[attacker][P_CARRIONCOUNT]>0 && is_user_alive(victim) ){
+					new origin[3], attackerorigin[3]
+					get_user_origin(victim,origin)
+					get_user_origin(attacker,attackerorigin)
 
-				if(!g_mapDisabled)
-					Create_TE_SPRITETRAIL(attackerorigin, origin, g_sBeetle, 15, 15, 1, 2, 6 )
+					if(!g_mapDisabled)
+						Create_TE_SPRITETRAIL(attackerorigin, origin, g_sBeetle, 15, 15, 1, 2, 6 )
 
-				emit_sound(victim,CHAN_STATIC, SOUND_CARRION, 1.0, ATTN_NORM, 0, PITCH_NORM)
+					emit_sound(victim,CHAN_STATIC, SOUND_CARRION, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
-				p_data[attacker][P_CARRIONCOUNT]--
+					p_data[attacker][P_CARRIONCOUNT]--
 
-				tempdamage = 10
-				WAR3_damage(victim, attacker,tempdamage, CSW_CARRION, hitplace)
+					tempdamage = 10
+					WAR3_damage(victim, attacker,tempdamage, CSW_CARRION, hitplace)
+				}
 			}
-			
+		#if ADVANCED_STATS
+			else{
+				new WEAPON = CSW_CARRION - CSW_WAR3_MIN
+				iStatsShots[attacker][WEAPON]++
+			}
+		#endif
 		}
 		
 		// Impale
@@ -668,6 +720,12 @@ public on_Damage(victim){
 				}
 			}
 		}
+	#if ADVANCED_STATS
+		else{
+			new WEAPON = CSW_CONCOCTION - CSW_WAR3_MIN
+			iStatsShots[victim][WEAPON]++
+		}
+	#endif
 
 	}
 

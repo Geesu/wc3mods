@@ -233,6 +233,8 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 		damage -= floatround(float(damage) * p_harden[p_data[victim][P_LEVEL]])
 	}
 
+	if ( bodypart == -1 )
+		bodypart = random_num(1,7)
 #if MOD == 0
 	// Damage calculation due to armor from: ../multiplayer source/dlls/player.cpp
 
@@ -258,6 +260,34 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 #if MOD == 0
 	if (bodypart == 1)
 		headshot = 1
+#endif
+
+#if ADVANCED_STATS
+	if ( CSW_WAR3_MIN <= weapon <= CSW_WAR3_MAX ) {
+		new WEAPON = weapon-CSW_WAR3_MIN
+		
+		if ( bodypart == -1 )
+			bodypart = HIT_STOMACH
+	
+		if ( bodypart == HIT_HEAD )
+			iStatsHead[attacker][WEAPON]++
+		else if ( bodypart == HIT_CHEST )
+			iStatsChest[attacker][WEAPON]++
+		else if ( bodypart == HIT_STOMACH )
+			iStatsStomach[attacker][WEAPON]++
+		else if ( bodypart == HIT_LEFTARM )
+			iStatsLeftArm[attacker][WEAPON]++
+		else if ( bodypart == HIT_RIGHTARM )
+			iStatsRightArm[attacker][WEAPON]++
+		else if ( bodypart == HIT_LEFTLEG )
+			iStatsLeftLeg[attacker][WEAPON]++
+		else if ( bodypart == HIT_RIGHTLEG )
+			iStatsRightLeg[attacker][WEAPON]++
+
+		iStatsHits[attacker][WEAPON]++
+		iStatsShots[attacker][WEAPON]++
+		iStatsDamage[attacker][WEAPON] += damage
+	}
 #endif
 
 	// Check for Night Elf's Evasion
@@ -523,7 +553,7 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 
 	new weaponname[32]
 	
-	#if DEBUG == 1
+	#if DEBUG
 		client_print(victim_id, print_chat,"*** WAR3 Death")
 
 		new victimName[32], attackerName[32]
@@ -535,6 +565,23 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 		for(new i=0;i<numberofplayers;i++)
 			console_print(players[i], "### %s killed by %s with weapon: %d", victimName, attackerName, weapon)
 	#endif
+
+
+#if ADVANCED_STATS
+	if ( CSW_WAR3_MIN >= weapon <= CSW_WAR3_MAX ) {
+		new WEAPON = weapon-CSW_WAR3_MIN
+		
+		if ( get_user_team(victim_id) == get_user_team(killer_id) )
+			iStatsTKS[killer_id][WEAPON]++
+		
+		if ( headshot )
+			iStatsHS[killer_id][WEAPON]++
+
+		iStatsKills[killer_id][WEAPON]++
+
+		iStatsDeaths[victim_id][WEAPON]++
+	}
+#endif
 
 	clear_all_icons(victim_id)
 	
@@ -597,7 +644,7 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 	#endif
 	switch (weapon){
 
-	case CSW_WORLDSPAWN:    copy(weaponname, 31, "worldspawn")
+	case CSW_WORLDSPAWN:    copy(weaponname, 31, "world")
 
 #if MOD == 0
 	case CSW_KNIFE:			copy(weaponname, 31, "knife")

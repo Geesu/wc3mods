@@ -38,7 +38,8 @@ new const WC3VERSION[] =	"2.1.7"
 
 #define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
-#define DEBUG 1						// Only use this when coding.. you normally don't want it
+#define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
+#define DEBUG 1							// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
 #define ADVANCED_DEBUG_BOTS 0			// Print info for bots too?
 #define PRECACHE_WAR3FTSOUNDS 1
@@ -95,9 +96,9 @@ public plugin_init(){
 	#endif
 	#if MOD == 1
 		gmsgHudText = get_user_msgid("HudText")
+		register_message(get_user_msgid("Death"), "testing")
 	#endif
 
-	//register_message(get_user_msgid("Health"), "testing")
 
 
 	register_plugin(WC3NAME,WC3VERSION,WC3AUTHOR)
@@ -141,6 +142,7 @@ public plugin_init(){
 
 	#if MOD == 1
 		register_statsfwd(XMF_SCORE)
+		register_statsfwd(XMF_DAMAGE)
 
 		register_event("RoundState","on_EndRound","a","1=3","1=4")
 
@@ -172,6 +174,8 @@ public plugin_init(){
 
 		register_event("TextMsg","on_SetSpecMode","bd","2&ec_Mod")
 
+		register_event("Damage", "on_Damage", "b", "2!0")
+
 		register_event("StatusValue","on_Spectate","bd","1=2")
 
 		register_menucmd(-34,(1<<8),"cmd_Shield")
@@ -193,7 +197,6 @@ public plugin_init(){
 	#endif
 
 	register_event("DeathMsg","on_DeathMsg","a")
-	register_event("Damage", "on_Damage", "b", "2!0")
 
 	register_event("CurWeapon","on_CurWeapon","be","1=1")
 	register_event("HideWeapon", "on_CurWeapon", "b")
@@ -470,6 +473,67 @@ public client_disconnect(id){
 
 	if (iCvar[MP_SAVEXP] && !is_user_bot(id) && p_data[id][P_RACE] && p_data[id][P_XP])
 		XP_Save(id)
+
+#if ADVANCED_STATS
+	new szWeapon[64]
+
+	new szTeam[16], szName[32], szAuthid[32]
+	new iUserid = get_user_userid( id )
+	get_user_team(id, szTeam, 15 )
+	get_user_name(id, szName ,31 )
+	get_user_authid(id, szAuthid , 31 )
+
+	for(new weap = CSW_WAR3_MIN; weap <=CSW_WAR3_MAX; weap++){
+		format(szWeapon, 63, "")
+
+		switch( weap ){
+			case CSW_LIGHTNING:     raceskill(3,4,LANG_SERVER,szWeapon,63)
+			case CSW_SUICIDE:		raceskill(1,4,LANG_SERVER,szWeapon,63)
+			case CSW_FLAME:			raceskill(5,4,LANG_SERVER,szWeapon,63)
+			case CSW_LOCUSTS:		raceskill(8,4,LANG_SERVER,szWeapon,63)
+			case CSW_SERPENTWARD:   raceskill(6,3,LANG_SERVER,szWeapon,63)
+			case CSW_SHADOW:		raceskill(7,3,LANG_SERVER,szWeapon,63)
+			case CSW_THORNS:		raceskill(4,2,LANG_SERVER,szWeapon,63)
+			case CSW_CARAPACE:		raceskill(8,2,LANG_SERVER,szWeapon,63)
+			case CSW_CARRION:		raceskill(8,3,LANG_SERVER,szWeapon,63)
+			case CSW_ORB:			Lang_Hero_Skill_Name(RACE_CRYPT,SKILL_HERO,LANG_SERVER,szWeapon,63)
+			case CSW_CONCOCTION:	Lang_Hero_Skill_Name(RACE_SHADOW,SKILL_HERO,LANG_SERVER,szWeapon,63)
+		}
+		
+		replace(szWeapon, 63, " ", "_")
+
+		new WEAPON = weap - CSW_WAR3_MIN
+		
+		if ( iStatsShots[id][WEAPON] || iStatsHits[id][WEAPON] || iStatsKills[id][WEAPON] ||  iStatsHS[id][WEAPON] || iStatsTKS[id][WEAPON] || iStatsDamage[id][WEAPON] || iStatsDeaths[id][WEAPON] || iStatsHead[id][WEAPON] || iStatsChest[id][WEAPON] || iStatsStomach[id][WEAPON] || iStatsLeftArm[id][WEAPON] || iStatsRightArm[id][WEAPON] || iStatsLeftLeg[id][WEAPON] || iStatsRightLeg[id][WEAPON] ){
+			// Save Statistics For War3 Abilities (allows for detailed reports with psychostats)
+			#if MOD == 0
+				log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^")",
+					szName,iUserid,szAuthid,szTeam,szWeapon,iStatsShots[id][WEAPON],iStatsHits[id][WEAPON],iStatsKills[id][WEAPON], iStatsHS[id][WEAPON],iStatsTKS[id][WEAPON],iStatsDamage[id][WEAPON],iStatsDeaths[id][WEAPON])
+			#endif
+			#if MOD == 1
+				log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^") (score ^"%d^")",
+					szName,iUserid,szAuthid,szTeam,szWeapon,iStatsShots[id][WEAPON],iStatsHits[id][WEAPON],iStatsKills[id][WEAPON], iStatsHS[id][WEAPON],iStatsTKS[id][WEAPON],iStatsDamage[id][WEAPON],iStatsDeaths[id][WEAPON],0)
+			#endif
+			log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats2^" (weapon ^"%s^") (head ^"%d^") (chest ^"%d^") (stomach ^"%d^") (leftarm ^"%d^") (rightarm ^"%d^") (leftleg ^"%d^") (rightleg ^"%d^")",
+				szName,iUserid,szAuthid,szTeam,szWeapon,iStatsHead[id][WEAPON],iStatsChest[id][WEAPON],iStatsStomach[id][WEAPON],  iStatsLeftArm[id][WEAPON],iStatsRightArm[id][WEAPON],iStatsLeftLeg[id][WEAPON],iStatsRightLeg[id][WEAPON])
+		
+			iStatsShots[id][WEAPON] = 0
+			iStatsHits[id][WEAPON] = 0
+			iStatsKills[id][WEAPON] = 0
+			iStatsHS[id][WEAPON] = 0
+			iStatsTKS[id][WEAPON] = 0
+			iStatsDamage[id][WEAPON] = 0
+			iStatsDeaths[id][WEAPON] = 0
+			iStatsHead[id][WEAPON] = 0
+			iStatsChest[id][WEAPON] = 0
+			iStatsStomach[id][WEAPON] = 0
+			iStatsLeftArm[id][WEAPON] = 0
+			iStatsRightArm[id][WEAPON] = 0
+			iStatsLeftLeg[id][WEAPON] = 0
+			iStatsRightLeg[id][WEAPON] = 0
+		}
+	}
+#endif
 
 	return PLUGIN_CONTINUE
 }
