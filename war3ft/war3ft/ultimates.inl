@@ -1310,7 +1310,7 @@ public on_fire(args[]){
 public _Ultimate_BigBadVoodoo(parm[2]){
 
 	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("reset_godmode",parm[0])
+		writeDebugInfo("_Ultimate_BigBadVoodoo",parm[0])
 	#endif
 
 	new id = parm[0]
@@ -1343,7 +1343,8 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 	
 		p_data_b[id][PB_GODMODE] = false
 		
-		set_user_health(id, get_user_health(id) - 2048)
+		if( is_user_alive(id) )
+			set_user_health(id, get_user_health(id) - 2048)
 	
 		icon_controller(id,ICON_HIDE)
 

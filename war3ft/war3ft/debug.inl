@@ -14,6 +14,9 @@ public test(id){
 	client_print(id,print_chat,"Health: %d", get_user_health(id))
 	client_print(id,print_chat,"Evade next shot: %d", p_data_b[id][PB_EVADENEXTSHOT])
 	client_print(id,print_chat,"Max health: %d", get_user_maxhealth(id))
+	new parm[1]
+	parm[0] = id
+	_WAR3_Ultimate_Delay(parm)
 
 	return PLUGIN_HANDLED
 }

@@ -289,7 +289,7 @@
 	#define P_SERPENTCOUNT			23		// Number of serpent wards the player has left
 	#define P_RINGS					24
 //	#define P_NADETIME				25
-	#define P_SERPENTTEAM			26
+//	#define P_SERPENTTEAM			26
 	#define P_SKINCHANGED			27		// Did the user's skin change?
 	#define P_ULTIMATEDELAY			30
 

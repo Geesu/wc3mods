@@ -258,6 +258,8 @@ public XP_Save(id){
 		get_user_authid(id,playerid,31)
 		get_user_ip(id,ip,31) 
 
+		replace(playername, 31, "'", "")
+
 		if(iCvar[FT_SAVEBY]==0)						// Save by steam ID
 			format(mquery, 1023, "REPLACE INTO `%s` SET playerid='%s',playername='%s',xp='%d',race='%d',skill1='%d',skill2='%d',skill3='%d',skill4='%d'",mysqltablename,playerid,playername,p_data[id][P_XP], p_data[id][P_RACE],p_data[id][P_SKILL1],p_data[id][P_SKILL2],p_data[id][P_SKILL3],p_data[id][P_ULTIMATE])
 		else if(iCvar[FT_SAVEBY]==1)					// Save by IP address
@@ -281,6 +283,7 @@ public XP_Save(id){
 		get_user_authid(id,playerid,31)
 		get_user_name(id,playername,31)
 		get_user_ip(id,ip,31)
+
 		format(string,511,"%s %d %d %d %d %d %d %s %s %s",playerid,p_data[id][P_XP],p_data[id][P_RACE],p_data[id][P_SKILL1],p_data[id][P_SKILL2],p_data[id][P_SKILL3],p_data[id][P_ULTIMATE],playername,ip,timet)
 
 		if(iCvar[FT_SAVEBY]==0)						// Save by steam ID

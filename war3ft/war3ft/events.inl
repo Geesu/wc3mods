@@ -1193,48 +1193,35 @@ public on_EndRound(){
 		writeDebugInfo("on_EndRound",0)
 	#endif
 
-	if (warcraft3==false)
+	if ( !warcraft3 )
 		return PLUGIN_CONTINUE
+
 	endround=true
-	g_randomizeCalled = false
 
-	new players[32]
-	new numberofplayers
-	get_players(players, numberofplayers)
+	new players[32], numberofplayers
 	new y, id
+	get_players(players, numberofplayers)
 
-	if(task_exists(TASK_BUYTIME))
-		remove_task(TASK_BUYTIME)
-		
 	for (y = 0; y < numberofplayers; ++y){
 		id = players[y]
-		if (task_exists(TASK_WAVE+id))					// Removes any current healing processes
-			remove_task(TASK_WAVE+id)
-		if (task_exists(TASK_ITEM_RINGERATE+id))		// Remove any rings that are regenerating
-			remove_task(TASK_ITEM_RINGERATE+id)			
-		if (task_exists(TASK_RESETSPEED+id)){			// Remove any reset_maxspeeds occuring (could cause a person to move during freezetime)
-			remove_task(TASK_RESETSPEED+id)
-			new parm[2]
-			parm[0]=id
-			reset_maxspeed(parm)
-		}
-
 		p_data_b[id][PB_SPAWNEDFROMITEM]=false
 		p_data_b[id][PB_PLAYERSPAWNED]=false
 
-		p_data[id][P_CARRIONCOUNT]=2
-		p_data[id][P_SHADOWCOUNT]=2
 		p_data_b[id][PB_MOLE] = false
 		p_data[id][P_DEFUSERINDEX] = 0
-		p_data[id][P_HECOUNT]=0
-		p_data[id][P_FLASHCOUNT]=0
 	}
 
 	g_freezecalled = 0
 	g_buyCalled=false
 	g_pheonixExistsT=0
 	g_pheonixExistsCT=0
+	g_randomizeCalled = false
 
+	if( task_exists(TASK_BUYTIME) )
+		remove_task(TASK_BUYTIME)
+
+	if( task_exists(TASK_BOMBTIMER) )
+		remove_task(TASK_BOMBTIMER)
 
 	if (iCvar[MP_SAVEXP])
 		XP_Save_All()
@@ -1275,8 +1262,10 @@ public on_ResetHud(id){
 	new parm[2]
 	parm[0] = id
 
-	if( task_exists(TASK_BOMBTIMER) )
-		remove_task(TASK_BOMBTIMER)
+	// Remove any reset_maxspeeds occuring (could cause a person to move during freezetime)
+	if (task_exists(TASK_RESETSPEED+id)){			
+		remove_task(TASK_RESETSPEED+id)
+	}
 
 	if(is_user_alive(id)){
 		p_data_b[id][PB_JUSTJOINED] = false
@@ -1355,6 +1344,9 @@ public on_ResetHud(id){
 			return PLUGIN_HANDLED
 		}
 	#endif
+
+	p_data[id][P_HECOUNT]=0
+	p_data[id][P_FLASHCOUNT]=0
 
 	// Stop any cooldowns in effect	
 

@@ -12,28 +12,44 @@ public Skill_Check(id){
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
-	// Evasion
+
+	// Crypt Lord's Carrion Beetles
+	if ( Verify_Skill(id, RACE_CRYPT, SKILL3) ){
+		p_data[id][P_CARRIONCOUNT]=2
+	}
+	
+	// Warden's Shadow Strike
+	if ( Verify_Skill(id, RACE_WARDEN, SKILL3) ){
+		p_data[id][P_SHADOWCOUNT]=2
+	}
+
+	// Night Elf's Evasion
 	if ( Verify_Skill(id, RACE_ELF, SKILL1) && p_data_b[id][PB_EVADENEXTSHOT] ){
 		set_user_health(id,1124)
 	}
 
-	// Devotion Aura
-	else if ( Verify_Skill(id, RACE_HUMAN, SKILL2) ){
+	// Human's Devotion Aura
+	if ( Verify_Skill(id, RACE_HUMAN, SKILL2) ){
 		set_user_health(id,p_devotion[p_data[id][P_SKILL2]-1])
 	}
 
-	// Healing Wave
+	// God mode, removing the reset task will prevent death (health is reset to 100 at the start of the round, so we don't want to set the health to 100-2048)
+	if ( task_exists( TASK_RESETGOD+id ) && p_data_b[id][PB_GODMODE] ){
+		remove_task( TASK_RESETGOD+id )
+		p_data_b[id][PB_GODMODE] = false
+	}
+
+	// Shadow Hunter's Healing Wave
 	if ( Verify_Skill(id, RACE_SHADOW, SKILL1) ){
-		if (task_exists(id+TASK_WAVE))
-			remove_task(id+TASK_WAVE)
-		set_task(1.0,"_Skill_Healing_Wave",TASK_WAVE+id,parm,2)
+		if (!task_exists(id+TASK_WAVE))
+			set_task(1.0,"_Skill_Healing_Wave",TASK_WAVE+id,parm,2)
 	}
 	else{
 		if (task_exists(id+TASK_WAVE))
 			remove_task(id+TASK_WAVE)
 	}
 
-	// Serpent Ward
+	// Shadow Hunter's Serpent Ward
 	if ( Verify_Skill(id, RACE_SHADOW, SKILL3) )
 		p_data[id][P_SERPENTCOUNT]=p_serpent[p_data[id][P_SKILL3]-1]
 	else
@@ -41,8 +57,7 @@ public Skill_Check(id){
 
 	Skills_Blink(id)
 		
-	// Pheonix
-
+	// Blood Mage's Pheonix
 	if ( Verify_Skill(id, RACE_BLOOD, SKILL1) ){			
 		new Float:randomnumber = random_float(0.0,1.0)
 		new teamnumber = get_user_team(id)
@@ -403,7 +418,7 @@ public _Skill_Healing_Wave(parm[2]){
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
-	if (Verify_Skill(id, RACE_SHADOW, SKILL1) && !endround && is_user_alive(id)){
+	if (Verify_Skill(id, RACE_SHADOW, SKILL1) && is_user_alive(id)){
 		set_task(p_heal[p_data[id][P_SKILL1]-1],"_Skill_Healing_Wave",TASK_HEALNOW+id,parm,2)
 	}
 
@@ -477,12 +492,12 @@ public _Skill_Hex(parm[2]){
 // Shadow Hunter's Serpent Ward
 // ****************************************
 
-public _Skill_SerpentWard(parm[6]){
+public _Skill_SerpentWard(parm[5]){
 	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("_Skill_SerpentWard",parm[5])
+		writeDebugInfo("_Skill_SerpentWard",parm[3])
 	#endif
 
-	new id = parm[5]
+	new id = parm[3]
 
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
@@ -503,7 +518,7 @@ public _Skill_SerpentWard(parm[6]){
 	end[2] = origin[2] - 600
 
 #if MOD == 0
-	if(p_data[id][P_SERPENTTEAM]==TS){
+	if(parm[4]==TS){
 		red = 255
 		blue = 0
 		green = 0
@@ -515,7 +530,7 @@ public _Skill_SerpentWard(parm[6]){
 	}
 #endif
 #if MOD == 1
-	if(p_data[id][P_SERPENTTEAM]==AXIS){
+	if(parm[4]==AXIS){
 		red = 255
 		blue = 63
 		green = 63
@@ -530,21 +545,20 @@ public _Skill_SerpentWard(parm[6]){
 		Create_TE_BEAMPOINTS(start, end, g_sLightning, 1, 5, 2, 500, 20, red, green, blue, 100, 100)
 
 
-	new players[32]
-	new numberofplayers
+	new players[32], numberofplayers
+	new i, targetid, distancebetween, targetorigin[3]
+
 	get_players(players, numberofplayers)
-	new i
-	new targetid = 0
-	new distancebetween = 0
-	new targetorigin[3]
 	
 	for (i = 0; i < numberofplayers; ++i){
 		targetid=players[i]
-		if (p_data[id][P_SERPENTTEAM]!=get_user_team(targetid) &&is_user_alive(targetid)){
+		if ( parm[4]!=get_user_team(targetid) && is_user_alive(targetid) ){
 			get_user_origin(targetid,targetorigin)
-			distancebetween=sqroot((origin[1]-targetorigin[1])*(origin[1]-targetorigin[1])+(origin[0]-targetorigin[0])*(origin[0]-targetorigin[0]))
-			if ((distancebetween < 85)){
+			distancebetween = get_distance(origin, targetorigin)
+			//distancebetween=sqroot((origin[1]-targetorigin[1])*(origin[1]-targetorigin[1])+(origin[0]-targetorigin[0])*(origin[0]-targetorigin[0]))
+			if ( distancebetween < 85 ){
 				damage = 10
+
 				WAR3_damage(targetid, id, damage, CSW_SERPENTWARD, 0)
 
 				client_cmd(targetid, "speak ambience/thunder_clap.wav")
@@ -555,7 +569,7 @@ public _Skill_SerpentWard(parm[6]){
 	}
 
 	if (!endround)
-		set_task(0.5,"_Skill_SerpentWard",TASK_LIGHT+id,parm,6)
+		set_task(0.5,"_Skill_SerpentWard",TASK_LIGHT+id,parm,5)
 
 	return PLUGIN_CONTINUE
 }

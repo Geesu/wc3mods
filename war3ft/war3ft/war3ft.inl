@@ -258,6 +258,10 @@ public WAR3_death_victim(victim_id, killer_id){
 		_WAR3_Ultimate_Delay(parm)
 	}
 
+	// Remove the bar time if the user dies during god mode
+	if( p_data_b[victim_id][PB_GODMODE] )
+		Create_BarTime(victim_id, 0, 0)
+
 	// Remove icon because you don't have an ultimate when you're dead
 	icon_controller(victim_id,ICON_HIDE)	
 
@@ -619,7 +623,12 @@ public _WAR3_Ultimate_Delay(parm[]){
 	
 	new id = parm[0]
 
+	if(!p_data_b[id][PB_ISCONNECTED])
+		return PLUGIN_CONTINUE
+
 	p_data[id][P_ULTIMATEDELAY]--
+
+	console_print(id, "_WAR3_Ultimate_Delay Called: %d", p_data[id][P_ULTIMATEDELAY])
 
 	if (p_data[id][P_ULTIMATEDELAY] > 0)
 		set_task(1.0,"_WAR3_Ultimate_Delay",TASK_UDELAY+id, parm, 1)

@@ -4,12 +4,16 @@ v2.1.6
  - Bug Fix: FT_buyzone would display a message if you attempted to buy an item when dead
  - Bug Fix: When the bomb would kill you, ankh/reincarnation would not work
  - Bug Fix: Where you couldn't purchase more than one ring through shopmenu 2
+ - Bug Fix: Player names with a ' would not save
+ - Bug Fix: If you used big bad voodoo, then a new round started during its use, you would die
  - Change: Stopped using cs_get_user_buyzone, cs_get_user_defuse
  - Change: When a player first joins a team, they will no longer be given XP for winning that round if they weren't on that team
  - Change: Percentage chance of impale being activated was lowered
  - Change: The effect for healing wards will no longer be seen unless it is actually healing someone
+ - Change: Ring of regeneration and healing ward will no longer stop at the end of the round
  - Addition: FT_entangle_drop
  - Improvement: Code for Healing Wards
+ - Improvement: Code for Serpent Wards
 
 v2.1.5
  - Bug Fix: Human's being able to get 255 health

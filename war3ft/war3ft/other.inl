@@ -399,10 +399,10 @@ public reset_maxspeed(parm[]){
 	if(!p_data_b[enemy][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
-	new normalspeed = parm[1]
 	p_data_b[enemy][PB_STUNNED]=false
 	p_data_b[enemy][PB_SLOWED]=false
-	set_user_maxspeed(enemy, float(normalspeed))
+
+	set_user_maxspeed( enemy, float(parm[1]) )
 	return PLUGIN_CONTINUE
 }
 

@@ -195,16 +195,15 @@ public cmd_ability(id){
 
 	if(is_user_alive(id)){
 		if ( Verify_Skill(id, RACE_SHADOW, SKILL3) && p_data[id][P_SERPENTCOUNT]>0 && !endround){	 //Serpent Ward
-			
-			p_data[id][P_SERPENTTEAM] = get_user_team(id)
 
-			new parm[6], origin[3]
+			new parm[5], origin[3]
 
 			get_user_origin(id,origin)
 			parm[0]=origin[0]
 			parm[1]=origin[1]
 			parm[2]=origin[2]
-			parm[5]=id
+			parm[3]=id
+			parm[4]=get_user_team(id)
 
 			_Skill_SerpentWard(parm)
 			p_data[id][P_SERPENTCOUNT]--
