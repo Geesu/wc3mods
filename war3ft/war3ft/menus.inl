@@ -1,9 +1,13 @@
+// **************************************************
+// Shopmenu One
+// **************************************************
+
 public menu_Shopmenu_One(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("menu_Shopmenu_One",id)
 	#endif
 
-	if (warcraft3==false)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	if (iCvar[FT_CD]) {
@@ -51,12 +55,237 @@ public menu_Shopmenu_One(id){
 	return PLUGIN_HANDLED
 }
 
+public _menu_Shopmenu_One(id, key){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("_menu_Shopmenu_One",id)
+	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
+	if (key==9)
+		return PLUGIN_CONTINUE
+
+	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
+		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
+		return PLUGIN_CONTINUE
+	}
+	#if MOD == 0
+		else if(iCvar[FT_BUYTIME] && !g_buyTime){
+			new Float:thetime = get_cvar_float("mp_buytime")*60.0
+			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
+			return PLUGIN_CONTINUE
+		}
+		else if(iCvar[FT_BUYZONE] && !p_data_b[id][PB_BUYZONE] && is_user_alive(id)){
+			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
+			return PLUGIN_CONTINUE
+		}
+	#endif
+
+	new iShopmenuItem = key+1
+
+	if (!is_user_alive(id) && (iShopmenuItem==ITEM_BOOTS || iShopmenuItem==ITEM_CLAWS || iShopmenuItem==ITEM_CLOAK || iShopmenuItem==ITEM_MASK || iShopmenuItem==ITEM_NECKLACE || iShopmenuItem==ITEM_FROST || iShopmenuItem==ITEM_HEALTH)){
+		client_print(id,print_center,"%L",id,"NOT_PURCHASE_WHEN_DEAD")
+		return PLUGIN_CONTINUE
+	}
+
+	if(iShopmenuItem==p_data[id][P_ITEM] && iShopmenuItem!=ITEM_TOME){
+		client_print(id,print_center,"%L",id,"ALREADY_OWN_THAT_ITEM")
+
+		return PLUGIN_CONTINUE
+	}
+	else if (get_user_money(id)<itemcost[key]){
+		client_print(id,print_center,"%L",id,"INSUFFICIENT_FUNDS")
+
+		return PLUGIN_CONTINUE
+	}
+	else if (iShopmenuItem==ITEM_TOME){
+		set_user_money(id,get_user_money(id)-itemcost[key],1)
+
+		XP_give(id,iCvar[FT_XPBONUS])
+
+		emit_sound(id,CHAN_STATIC, "warcraft3/Tomes.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)
+
+
+		// Display a message regarding what the item does
+
+		Item_Message(id, iShopmenuItem, SHOPMENU_ONE)
+
+		return PLUGIN_CONTINUE
+	}
+	else{
+		set_user_money(id,get_user_money(id)-itemcost[key],1)
+
+
+		// Remove health bonus after buying new item
+
+		if (p_data[id][P_ITEM]==ITEM_HEALTH)
+			set_user_actualhealth(id,get_user_health(id)-iCvar[FT_HEALTH_BONUS], "Item_Buy, remove health")
+
+		p_data[id][P_ITEM]=iShopmenuItem
+
+
+		// Give health bonus for buying periapt of health
+
+		if (p_data[id][P_ITEM]==ITEM_HEALTH)		
+			set_user_actualhealth(id,get_user_health(id)+iCvar[FT_HEALTH_BONUS], "Item_Buy, add health")
+
+
+		// Display a message regarding what the item does
+
+		Item_Message(id, iShopmenuItem, SHOPMENU_ONE)
+	}
+
+	emit_sound(id,CHAN_STATIC, SOUND_PICKUPITEM, 1.0, ATTN_NORM, 0, PITCH_NORM)
+
+	WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
+
+	return PLUGIN_HANDLED
+}
+
+
+// **************************************************
+// Shopmenu Two
+// **************************************************
+
+public _menu_Shopmenu_Two(id, key){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("_menu_Shopmenu_Two",id)
+	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
+	if (key==9)
+		return PLUGIN_CONTINUE
+
+	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
+		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
+		return PLUGIN_CONTINUE
+	}
+	#if MOD == 0
+		else if(iCvar[FT_BUYTIME] && !g_buyTime){
+			new Float:thetime = get_cvar_float("mp_buytime")*60.0
+			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
+			return PLUGIN_CONTINUE
+		}
+		else if(iCvar[FT_BUYZONE] && !p_data_b[id][PB_BUYZONE] && is_user_alive(id)){
+			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
+			return PLUGIN_CONTINUE
+		}
+	#endif
+
+	new iShopmenuItem = key+1
+
+	if (!is_user_alive(id) && (iShopmenuItem==ITEM_PROTECTANT || iShopmenuItem==ITEM_HELM || iShopmenuItem==ITEM_HELM || iShopmenuItem==ITEM_AMULET || iShopmenuItem==ITEM_SOCK || iShopmenuItem==ITEM_GLOVES || iShopmenuItem==ITEM_RING || iShopmenuItem==ITEM_CHAMELEON)){
+		client_print(id,print_center,"%L",id,"NOT_PURCHASE_WHEN_DEAD")
+		return PLUGIN_CONTINUE
+	}
+	else if(iShopmenuItem==p_data[id][P_ITEM2] && iShopmenuItem!=ITEM_RING){
+		client_print(id,print_center,"%L",id,"ALREADY_OWN_THAT_ITEM")
+		return PLUGIN_CONTINUE
+	}
+#if MOD == 0
+	else if(iShopmenuItem==ITEM_SCROLL && endround){
+		client_print(id,print_center,"%L",id,"NOT_PURCHASE_AFTER_ENDROUND")
+		return PLUGIN_CONTINUE
+	}
+	else if(!g_giveHE && iCvar[FT_NO_GLOVES_ON_KA] && iShopmenuItem==ITEM_GLOVES){
+		client_print(id,print_center,"%L",id,"FLAMING_GLOVES_RESTRICTED_ON_THIS_MAP")
+		return PLUGIN_CONTINUE
+	}
+#endif
+	else if(p_data[id][P_RINGS] > 4 && iShopmenuItem==ITEM_RING){
+		client_print(id,print_center,"%L",id,"NOT_PURCHASE_MORE_THAN_FIVE_RINGS")
+		return PLUGIN_CONTINUE
+	}
+
+	if (get_user_money(id)<itemcost2[key]){
+		client_print(id,print_center,"%L",id,"INSUFFICIENT_FUNDS")
+		return PLUGIN_CONTINUE
+	}
+	else{
+		if (p_data[id][P_ITEM2]==ITEM_AMULET){
+			p_data_b[id][PB_SILENT] = false
+		}
+		else if (p_data[id][P_ITEM2]==ITEM_HELM){
+			Item_Set_Helm(id,0)
+		}		
+		else if (p_data[id][P_ITEM2]==ITEM_CHAMELEON){
+			changeskin(id,SKIN_SWITCH)
+		}
+		else if (p_data[id][P_ITEM2]==ITEM_RING && iShopmenuItem!=ITEM_RING){
+			if(task_exists(TASK_ITEM_RINGERATE+id))
+				remove_task(TASK_ITEM_RINGERATE+id)
+			p_data[id][P_RINGS]=0
+		}
+		else if (p_data[id][P_ITEM2]==ITEM_GLOVES){
+			if(task_exists(TASK_ITEM_GLOVES+id))
+				remove_task(TASK_ITEM_GLOVES+id)
+		}
+		else if (p_data[id][P_ITEM2] == ITEM_SOCK)
+			set_user_gravity(id, 1.0)
+
+
+		p_data[id][P_ITEM2]=iShopmenuItem
+
+		if (p_data[id][P_ITEM2]==ITEM_CHAMELEON){
+			changeskin(id,SKIN_RESET)
+		}
+		else if (p_data[id][P_ITEM2]==ITEM_HELM){
+			Item_Set_Helm(id,1)
+		}
+		else if (p_data[id][P_ITEM2]==ITEM_AMULET){
+			p_data_b[id][PB_SILENT] = true
+		}
+		else if (p_data[id][P_ITEM2] == ITEM_SOCK)
+			set_user_gravity(id, fCvar[FT_SOCK])
+#if MOD == 0
+		else if (p_data[id][P_ITEM2]==ITEM_SCROLL && !is_user_alive(id) && !endround){	
+			if(get_user_team(id)==TS || get_user_team(id)==CTS){
+				new parm[2]
+				parm[0]=id
+				parm[1]=6
+				set_task(0.2,"func_spawn",TASK_ITEM_SCROLL+id,parm,2)
+				p_data_b[id][PB_SPAWNEDFROMITEM]=true
+				p_data[id][P_ITEM2]=0
+				p_data[id][P_ITEM]=0
+			}
+		}
+#endif
+		else if (p_data[id][P_ITEM2]==ITEM_GLOVES){
+			//new parm[2]
+			//parm[0]=id
+			//parm[1] = iCvar[FT_GLOVE_TIMER]
+			Item_Glove_Give(id)
+		}
+		else if (p_data[id][P_ITEM2]==ITEM_RING){
+
+			++p_data[id][P_RINGS]
+			if(!task_exists(TASK_ITEM_RINGERATE+id)){
+				new parm[1]
+				parm[0]=id
+				_Item_Ring(parm)
+			}
+		}
+		set_user_money(id,get_user_money(id)-itemcost2[key],1)
+
+		Item_Message(id, iShopmenuItem, SHOPMENU_TWO)
+	}
+
+	emit_sound(id,CHAN_STATIC, SOUND_PICKUPITEM, 1.0, ATTN_NORM, 0, PITCH_NORM)
+
+	WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
+
+	return PLUGIN_HANDLED
+}
+
 public menu_Shopmenu_Two(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("menu_Shopmenu_Two",id)
 	#endif
 
-	if (warcraft3==false)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	if(iCvar[FT_RACES] < 5)
@@ -113,11 +342,11 @@ public menu_Shopmenu_Two(id){
 }
 
 public menu_Select_Skill(id,saychat){
-	 #if ADVANCED_DEBUG == 1
+	 #if ADVANCED_DEBUG
 		writeDebugInfo("select_skill",id)
 	#endif
 
-	if (warcraft3==false)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	if (iCvar[FT_CD]) {
@@ -229,9 +458,12 @@ public menu_Select_Skill(id,saychat){
 }
 
 public _menu_Select_Skill(id,key){
-	 #if ADVANCED_DEBUG == 1
+	 #if ADVANCED_DEBUG
 		writeDebugInfo("set_skill",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]+p_data[id][P_ULTIMATE]
 
@@ -262,10 +494,10 @@ public _menu_Select_Skill(id,key){
 		parm[0] = id
 
 		p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
-		_WAR3_Ultimate_Delay(parm)
+		_Ultimate_Delay(parm)
 	}
 	else if ( key == KEY_4 && !p_data[id][P_ULTIMATEDELAY] && !p_data_b[id][PB_ULTIMATEUSED]){
-		WAR3_Ultimate_Ready(id)
+		Ultimate_Ready(id)
 	}
 
 	// Serpent Ward Chosen
@@ -298,9 +530,12 @@ public _menu_Select_Skill(id,key){
 }
 
 public menu_Select_Race(id, racexp[9]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("menu_Select_Race",0)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	if(g_mapDisabled){
 		client_print(id,print_chat,"%s %L", g_MODclient, id, "MAP_DISABLED")
@@ -375,9 +610,12 @@ public menu_Select_Race(id, racexp[9]){
 }
 
 public _menu_Select_Race(id,key){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_menu_Select_Race",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	if(iCvar[FT_RACES]<9 && key-1 == iCvar[FT_RACES])
 		return PLUGIN_HANDLED
@@ -409,11 +647,11 @@ public _menu_Select_Race(id,key){
 }
 
 public menu_War3menu(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("menu_War3menu",id)
 	#endif
 
-	if (warcraft3==false)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	if (iCvar[FT_CD]) {
@@ -443,7 +681,7 @@ public menu_War3menu(id){
 }
 
 public _menu_War3menu(id,key){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_menu_War3menu",id)
 	#endif
 
@@ -460,9 +698,12 @@ public _menu_War3menu(id,key){
 }
 
 public menu_Skill_Options(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("menu_Skill_Options",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new pos = 0, i, menu_body[512], menu_items[3][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<8)|(1<<9)
@@ -484,7 +725,7 @@ public menu_Skill_Options(id){
 }
 
 public _menu_Skill_Options(id,key){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_menu_Skill_Options",id)
 	#endif
 
@@ -499,9 +740,12 @@ public _menu_Skill_Options(id,key){
 }
 
 public menu_Race_Options(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("menu_Race_Options",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new pos = 0, i, menu_body[512], menu_items[4][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<8)|(1<<9)
@@ -523,14 +767,14 @@ public menu_Race_Options(id){
 }
 
 public _menu_Race_Options(id,key){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_menu_Race_Options",id)
 	#endif
 
 	switch (key){
 		case 0:	change_race(id,1)
 		case 1:	WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
-		case 2:	amx_resetxp(id,1)
+		case 2:	XP_Reset(id,1)
 		case 3:	MOTD_Playerskills(id, 1)
 		case 8: menu_War3menu(id)
 		default: return PLUGIN_HANDLED
@@ -539,9 +783,12 @@ public _menu_Race_Options(id,key){
 }
 
 public menu_Item_Options(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("menu_Item_Options",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new pos = 0, i, menu_body[512], menu_items[4][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<8)|(1<<9)
@@ -563,7 +810,7 @@ public menu_Item_Options(id){
 }
 
 public _menu_Item_Options(id,key){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_menu_Item_Options",id)
 	#endif
 
@@ -579,9 +826,12 @@ public _menu_Item_Options(id,key){
 }
 
 public menu_Admin_Options(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("menu_Admin_Options",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	if (!(get_user_flags(id)&ADMIN_LEVEL_WC3)) { 
 		if(id != 0){
@@ -609,7 +859,7 @@ public menu_Admin_Options(id){
 }
 
 public _menu_Admin_Options(id,key){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_menu_Admin_Options",id)
 	#endif
 
@@ -632,9 +882,12 @@ public _menu_Admin_Options(id,key){
 }
 
 public menu_PlayerXP_Options(id,pos){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("menu_PlayerXP_Options",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	if (pos < 0){
 		menu_Admin_Options(id)
@@ -686,7 +939,7 @@ public menu_PlayerXP_Options(id,pos){
 }
 
 public _menu_PlayerXP_Options(id,key){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_menu_PlayerXP_Options",id)
 	#endif
 
@@ -722,9 +975,12 @@ public _menu_PlayerXP_Options(id,key){
 }
 
 public menu_TeamXP_Options(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("menu_TeamXP_Options",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new pos = 0, i, menu_body[512], menu_items[3][32], give[16]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<7)|(1<<8)|(1<<9)
@@ -747,21 +1003,21 @@ public menu_TeamXP_Options(id){
 }
 
 public _menu_TeamXP_Options(id,key){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_menu_TeamXP_Options",id)
 	#endif
 
 	switch(key){
 		case 0:{
-			server_cmd("amx_givexp @TERRORIST %d",g_menuSettings[id])
+			_Admin_GiveXP(id, "@TERRORIST", g_menuSettings[id])
 			menu_TeamXP_Options(id)
 		}
 		case 1:{
-			server_cmd("amx_givexp @CT %d",g_menuSettings[id])
+			_Admin_GiveXP(id, "@CT", g_menuSettings[id])
 			menu_TeamXP_Options(id)
 		}
 		case 2:{
-			server_cmd("amx_givexp @ALL %d",g_menuSettings[id])
+			_Admin_GiveXP(id, "@ALL", g_menuSettings[id])
 			menu_TeamXP_Options(id)
 		}
 		case 7:{

@@ -1,28 +1,33 @@
-/*
-	This file is a part of Warcraft 3 Frozen Throne
 
-	It contains functions that are used by admins
-*/
-
-
-public amx_takexp(){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("amx_takexp",0)
+// Advanced Swear Filter and Punishment plugin uses this function
+public Admin_TakeXP(){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("Admin_TakeXP",0)
 	#endif
 
-	new arg[32], arg2[32]
-	read_argv(1,arg,31)
-	read_argv(2,arg2,31)
-	new id = str_to_num(arg)
-	p_data[id][P_XP] -= str_to_num(arg2)
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
+	new argID[3], argXP[8]
+	read_argv(1,argID,2)
+	read_argv(2,argXP,31)
+
+	new id = str_to_num(argID)
+
+	p_data[id][P_XP] -= str_to_num(argXP)
+
 	WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
+
 	return PLUGIN_HANDLED
 }
 
-public amx_givemole(id, level, cid){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("amx_givemole",id)
+public Admin_GiveMole(id, level, cid){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("Admin_GiveMole",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	if (!(get_user_flags(id)&ADMIN_LEVEL_A)) { 
 		if(id != 0){
@@ -54,7 +59,7 @@ public amx_givemole(id, level, cid){
 		} 
 	}
 	else { 
-		new player = cmd_target2(id,arg) 
+		new player = find_target(id,arg) 
 		if (!player) return PLUGIN_HANDLED 
 		p_data[player][P_ITEM2]=ITEM_MOLE
 		WAR3_Display_Level(player,DISPLAYLEVEL_NONE)
@@ -64,9 +69,12 @@ public amx_givemole(id, level, cid){
 }
 
 public changeXP(){ 
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("changeXP",0)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new arg1[4]
 	new arg2[8]
@@ -82,11 +90,13 @@ public changeXP(){
 		p_data[id][P_XP] += xp
 	
 	WAR3_Display_Level(id, DISPLAYLEVEL_NONE)
+
+	return PLUGIN_CONTINUE
 }
 
 //amx_wc3 command
 public amx_wc3_launch(id, level, cid){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("amx_wc3_launch",id)
 	#endif
 
@@ -103,6 +113,7 @@ public amx_wc3_launch(id, level, cid){
 	{
 		set_cvar_num("FT_control",0)
 		set_cvar_num("sv_warcraft3",1)
+		warcraft3 = true
 		show_hudmessage(0,"%L",id,"IS_ACTIVATED_NOW",WC3NAME,WC3VERSION)
 		return PLUGIN_HANDLED
 	}
@@ -110,6 +121,7 @@ public amx_wc3_launch(id, level, cid){
 	{
 		set_cvar_num("FT_control",0)
 		set_cvar_num("sv_warcraft3",0)
+		warcraft3 = false
 		show_hudmessage(0,"%L",id,"IS_NO_LONGER_ACTIVE",WC3NAME,WC3VERSION)
 		return PLUGIN_HANDLED
 	}
@@ -127,10 +139,13 @@ public amx_wc3_launch(id, level, cid){
 	return PLUGIN_HANDLED
 }
 
-public amx_savexp(id, level, cid){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("amx_savexp",id)
+public Admin_SaveXP(id, level, cid){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("Admin_SaveXP",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	if (!(get_user_flags(id)&ADMIN_LEVEL_WC3)) { 
 		if(id != 0){
@@ -138,59 +153,62 @@ public amx_savexp(id, level, cid){
 			return PLUGIN_HANDLED
 		}
 	}
-	new arg[32], xp[10] 
-	read_argv(1,arg,31) 
-	read_argv(2,xp,9) 
-	if(equali(arg,"@ALL")){
+
+	new target[32]
+	read_argv(1,target,31) 
+
+	_Admin_SaveXP(id, target)
+
+	return PLUGIN_HANDLED
+}
+
+_Admin_SaveXP(id, target[]){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("_Admin_SaveXP",id)
+	#endif
+
+
+	if(equali(target,"@ALL")){
 		new players[32], inum
-		get_players(players,inum) 
+		get_players(players,inum,"c") 
+
 		for(new a=0;a<inum;++a){
 			XP_Save(players[a])
 		} 
-		return PLUGIN_HANDLED
+
+		return PLUGIN_CONTINUE
 	}
-	if (arg[0]=='@'){ 
+	else if (target[0]=='@'){ 
 		new players[32], inum
-		get_players(players,inum,"e",arg[1]) 
+		get_players(players,inum,"ce",target) 
+
 		if (inum==0){ 
 			console_print(id,"%L",id,"NO_CLIENTS_IN_TEAM") 
-			return PLUGIN_HANDLED 
+			return PLUGIN_CONTINUE 
 		} 
+
 		for(new a=0;a<inum;++a){
 			XP_Save(players[a])
 		} 
 	}
 	else { 
-		new player = cmd_target2(id,arg) 
-		if (!player) return PLUGIN_HANDLED 
+		new player = find_target(id,target)
+
+		if (!player)
+			return PLUGIN_CONTINUE 
+
 		XP_Save(player)
 	} 
-	return PLUGIN_HANDLED 
+	return PLUGIN_CONTINUE 
 } 
 
-public amx_resetxp(id,saychat){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("amx_resetxp",id)
+public Admin_GiveXP(id, level, cid){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("Admin_GiveXP",id)
 	#endif
 
-	p_data[id][P_LEVEL]=0
-	p_data[id][P_XP]=0
-	p_data[id][P_SKILL1]=0
-	p_data[id][P_SKILL2]=0
-	p_data[id][P_SKILL3]=0
-	p_data[id][P_ULTIMATE]=0
-	WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
-	XP_Save(id)
-	if(saychat==1)
-		client_print(id,print_chat,"%s %L",g_MODclient, id,"YOUR_XP_HAS_BEEN_RESET")
-	else
-		console_print(id,"%L",id,"YOUR_XP_HAS_BEEN_RESET",g_MOD)
-}
-
-public amx_givexp(id, level, cid){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("amx_givexp",id)
-	#endif
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	if (!(get_user_flags(id)&ADMIN_LEVEL_WC3)) {
 		if(id != 0){
@@ -198,39 +216,65 @@ public amx_givexp(id, level, cid){
 			return PLUGIN_HANDLED
 		}
 	}
-	new arg[32], xp[10]
-	read_argv(1,arg,31) 
-	read_argv(2,xp,9)
-	if(equali(arg,"@ALL")){
+
+	new target[32], xp[10] 
+	read_argv(1,target,31) 
+	read_argv(2,xp,9) 
+
+	_Admin_GiveXP(id, target, str_to_num(xp))
+
+	return PLUGIN_HANDLED
+}
+
+public _Admin_GiveXP(id, target[], iXP){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("_Admin_GiveXP",id)
+	#endif
+
+
+	if(equali(target,"@ALL")){
 		new players[32], inum
 		get_players(players,inum)
+
 		for(new a=0;a<inum;++a){
-			client_print(players[a],print_chat,"%s %L",g_MODclient, id,"THE_ADMIN_GAVE_YOU_EXPERIENCE", str_to_num(xp))
-			p_data[players[a]][P_XP] += str_to_num(xp)
+			client_print(players[a],print_chat,"%s %L",g_MODclient, id,"THE_ADMIN_GAVE_YOU_EXPERIENCE", iXP)
+
+			p_data[players[a]][P_XP] += iXP
+
 			WAR3_Display_Level(players[a],DISPLAYLEVEL_NONE)
 		}
-		return PLUGIN_HANDLED
+
+		return PLUGIN_CONTINUE
 	}
-	if (arg[0]=='@'){ 
+	else if (target[0]=='@'){ 
 		new players[32], inum
-		get_players(players,inum,"e",arg[1]) 
+		get_players(players,inum,"e",target[1]) 
+
 		if (inum==0){ 
 			console_print(id,"%L",id,"NO_CLIENTS_IN_TEAM") 
-			return PLUGIN_HANDLED 
-			
+
+			return PLUGIN_CONTINUE 
 		} 
+
 		for(new a=0;a<inum;++a){
-			client_print(players[a],print_chat,"%s %L",g_MODclient, id,"THE_ADMIN_GAVE_YOU_EXPERIENCE", str_to_num(xp))
-			p_data[players[a]][P_XP] += str_to_num(xp)
+			client_print(players[a],print_chat,"%s %L",g_MODclient, id,"THE_ADMIN_GAVE_YOU_EXPERIENCE", iXP)
+
+			p_data[players[a]][P_XP] += iXP
+
 			WAR3_Display_Level(players[a],DISPLAYLEVEL_NONE)
 		}
 	}
 	else { 
-		new player = cmd_target2(id,arg) 
-		if (!player) return PLUGIN_HANDLED 
-		client_print(player,print_chat,"%s %L",g_MODclient, id,"THE_ADMIN_GAVE_YOU_EXPERIENCE", str_to_num(xp))
-		p_data[player][P_XP] += str_to_num(xp)
+		new player = find_target(id,target) 
+
+		if (!player)
+			return PLUGIN_CONTINUE 
+
+		client_print(player,print_chat,"%s %L",g_MODclient, id,"THE_ADMIN_GAVE_YOU_EXPERIENCE", iXP)
+
+		p_data[player][P_XP] += iXP
+
 		WAR3_Display_Level(player,DISPLAYLEVEL_NONE)
 	}
-	return PLUGIN_HANDLED 
+	return PLUGIN_CONTINUE 
 } 

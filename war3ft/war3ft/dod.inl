@@ -1,16 +1,24 @@
 
 public client_score(index,score,total){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("client_score",index)
 	#endif
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
 	set_user_money(index,get_user_money(index)+(score*1000),1)
+
+	return PLUGIN_CONTINUE
 }
 
 public _DOD_showMoney(parm[3]){
-/*	#if ADVANCED_DEBUG == 1
+/*	#if ADVANCED_DEBUG
 		writeDebugInfo("_DOD_showMoney",parm[0])
 	#endif*/
 
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+	
 	new id = parm[0]
 	new Float:timer = 0.7
 
@@ -48,9 +56,12 @@ public _DOD_showMoney(parm[3]){
 }
 
 public on_EndRound(){
-	 #if ADVANCED_DEBUG == 1
+	 #if ADVANCED_DEBUG
 		writeDebugInfo("on_EndRound",0)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new winner = read_data(1)		// Allies = 3, Axis = 4
 
@@ -84,10 +95,12 @@ public on_EndRound(){
 				client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_WINNING_ROUND",iXP)
 		}
 	}
+
+	return PLUGIN_CONTINUE
 }
 // DOD Specific stocks
 stock Create_HudText(id,message[], flag){
-#if ADVANCED_DEBUG == 1
+#if ADVANCED_DEBUG
 	writeDebugInfo("Create_HudText",id)
 #endif
 
@@ -98,7 +111,7 @@ stock Create_HudText(id,message[], flag){
 }
 
 stock Create_DeathMsg_DOD(killer_id,victim_id,weapon){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_DeathMsg_DOD",weapon)
 	#endif
 
@@ -110,6 +123,14 @@ stock Create_DeathMsg_DOD(killer_id,victim_id,weapon){
 }
 
 public on_Spectate(){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("on_Spectate",0)
+	#endif
+
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
 	new name[32], team[32]
 	read_data(4,team,31)
 	read_data(3,name,31)
@@ -122,13 +143,21 @@ public on_Spectate(){
 	else{
 		p_data[id][P_SPECMODE] = 0
 	}
+
+	return PLUGIN_CONTINUE
 }
 
 public on_SetSpecMode(id){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("on_SetSpecMode",id)
+	#endif
 
 	// #Spec_Mode2 = 3rd person
 	// #Spec_Mode4 = 1st person
 	// #Spec_Mode3 = free look
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new specMode[32]
 	read_data(2, specMode, 31)
@@ -142,6 +171,8 @@ public on_SetSpecMode(id){
 	else if( equal(specMode, "#Spec_Mode4") ){
 		p_data[id][P_SPECMODE] = 4
 	}
+
+	return PLUGIN_CONTINUE
 }
 
 public on_StatusValue(id){	

@@ -1,9 +1,9 @@
 public MOTD_Itemsinfo(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("MOTD_Itemsinfo",id)
 	#endif
 
-	if (warcraft3==false)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	if (iCvar[FT_CD]) {
@@ -49,12 +49,13 @@ public MOTD_Itemsinfo(id){
 }
 
 public MOTD_Itemsinfo2(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("MOTD_Itemsinfo2",id)
 	#endif
 
-	if (warcraft3==false)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
+
 	if(iCvar[FT_RACES] < 5)
 		return PLUGIN_CONTINUE
 
@@ -95,11 +96,11 @@ public MOTD_Itemsinfo2(id){
 }
 
 public MOTD_War3help(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("war3_info",id)
 	#endif
 
-	if (warcraft3==false)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	if (iCvar[FT_CD]) {
@@ -135,11 +136,11 @@ public MOTD_War3help(id){
 }
 
 public MOTD_Playerskills(id, saychat){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("MOTD_Playerskills",id)
 	#endif
 
-	if (warcraft3==false)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 		
 	if (iCvar[FT_CD]) {
@@ -156,23 +157,14 @@ public MOTD_Playerskills(id, saychat){
 	new iTotalRace[MAX_RACES+1]
 	get_players(players, numberofplayers)
 
-#if DEBUG == 1
-	writeDebugInfo("MOTD_Playerskills",101)
-#endif
 	for(k=0;k<numberofplayers;k++){
 		iTotalRace[p_data[players[k]][P_RACE]]++
 	}
-#if DEBUG == 1
-	writeDebugInfo("MOTD_Playerskills",102)
-#endif
 
 	for(k=1;k<iCvar[FT_RACES]+1;k++){
 		if( iTotalRace[k] > 0 )
 			racename(k,id,race_name[k],64)
 	}
-#if DEBUG == 1
-	writeDebugInfo("MOTD_Playerskills",103)
-#endif
 
 	if(saychat)
 		pos += format(message[pos],2048-pos, "<body bgcolor=#000000><font color=#FFB000>")
@@ -218,9 +210,6 @@ public MOTD_Playerskills(id, saychat){
 				pos += format(message[pos],2048-pos,"</ul>")
 		}
 	}
-#if DEBUG == 1
-	writeDebugInfo("MOTD_Playerskills",104)
-#endif
 
 	if( saychat ) {
 		new motdmessage[128]
@@ -228,19 +217,15 @@ public MOTD_Playerskills(id, saychat){
 		show_motd(id,message,motdmessage)
 	}
 
-#if DEBUG == 1
-	writeDebugInfo("MOTD_Playerskills",105)
-#endif
-
 	return PLUGIN_HANDLED
 }
 
 public MOTD_Skillsinfo(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("MOTD_Skillsinfo",id)
 	#endif
 
-	if (warcraft3==false)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	if (iCvar[FT_CD]) {

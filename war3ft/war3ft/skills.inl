@@ -2,9 +2,12 @@
 
 // Gives skill abilities at beginning of round and when skills are selected
 public Skill_Check(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Skill_Check",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new parm[2]
 	parm[0]=id
@@ -83,9 +86,12 @@ public Skill_Check(id){
 // ****************************************
 
 	public SKILL_Reincarnation(id){
-		#if ADVANCED_DEBUG == 1
+		#if ADVANCED_DEBUG
 			writeDebugInfo("SKILL_Reincarnation",id)
 		#endif
+
+		if (!warcraft3)
+			return PLUGIN_CONTINUE
 
 		if(reincarnation[id][ZPOS] == -99999){}		// Player just joined, so lets not teleport them
 		else if(p_data_b[id][PB_REINCARNATION_SKIP]){
@@ -122,12 +128,17 @@ public Skill_Check(id){
 			set_task(0.1,"_SKILL_Reincarnation", TASK_REINCARNATION+id,parm,1)
 			set_task(2.5,"_SKILL_Reincarnation_Status", TASK_REINCCHECK+id,parm,1)
 		}
+
+		return PLUGIN_CONTINUE
 	}
 
 	public _SKILL_Reincarnation(parm[]){
-		#if ADVANCED_DEBUG == 1
+		#if ADVANCED_DEBUG
 			writeDebugInfo("_SKILL_Reincarnation",parm[0])
 		#endif
+		
+		if (!warcraft3)
+			return PLUGIN_CONTINUE
 
 		new id = parm[0]
 		new origin[3]
@@ -172,12 +183,17 @@ public Skill_Check(id){
 				set_task(0.1,"_SKILL_Reincarnation", TASK_REINCARNATION+id,parm,1)
 
 		}
+
+		return PLUGIN_CONTINUE
 	}
 
 	public _SKILL_Reincarnation_Status(parm[]){
-		#if ADVANCED_DEBUG == 1
+		#if ADVANCED_DEBUG
 			writeDebugInfo("_SKILL_Reincarnation_Status",parm[0])
 		#endif
+
+		if (!warcraft3)
+			return PLUGIN_CONTINUE
 
 		new id = parm[0]
 
@@ -185,6 +201,8 @@ public Skill_Check(id){
 			p_data_b[id][PB_REINCARNATION_DELAY] = true
 		else
 			p_data_b[id][PB_REINCARNATION_DELAY] = false
+
+		return PLUGIN_CONTINUE
 	}
 #endif
 #if MOD == 0
@@ -194,9 +212,12 @@ public Skill_Check(id){
 // ****************************************
 
 public _Skill_Reincarnation_Drop(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_Skill_Reincarnation_Drop",0)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new origin[3]
 	new iweapons[32] = 0, wpname[32] = 0, inum = 0
@@ -213,12 +234,17 @@ public _Skill_Reincarnation_Drop(id){
 		}
 	}
 	client_cmd(id,"weapon_knife")
+
+	return PLUGIN_CONTINUE
 }
 
 public _Skill_Reincarnation_Give(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_Skill_Reincarnation_Give",0)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new origin[3]
 	new weaponname[20] = 0, ammoname[20] = 0
@@ -400,6 +426,8 @@ public _Skill_Reincarnation_Give(id){
 			}
 		}
 	}	
+
+	return PLUGIN_CONTINUE
 }
 #endif
 
@@ -409,9 +437,12 @@ public _Skill_Reincarnation_Give(id){
 // ****************************************
 
 public _Skill_Healing_Wave(parm[2]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_Skill_Healing_Wave",parm[0])
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new id = parm[0]
 
@@ -466,9 +497,12 @@ public _Skill_Healing_Wave(parm[2]){
 // ****************************************
 
 public _Skill_Hex(parm[2]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_Skill_Hex",parm[0])
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new id = parm[0]
 
@@ -495,9 +529,12 @@ public _Skill_Hex(parm[2]){
 // ****************************************
 
 public _Skill_SerpentWard(parm[5]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_Skill_SerpentWard",parm[3])
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new id = parm[3]
 
@@ -582,9 +619,12 @@ public _Skill_SerpentWard(parm[5]){
 // ****************************************
 
 public Skills_Blink(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Skills_Blink",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	if ( Verify_Skill(id, RACE_WARDEN, SKILL2) ){			// Blink
 		new Float:randomnumber = random_float(0.0,1.0)
@@ -595,6 +635,8 @@ public Skills_Blink(id){
 	}
 	else
 		p_data_b[id][PB_WARDENBLINK]=false
+
+	return PLUGIN_CONTINUE
 }
 
 
@@ -603,9 +645,12 @@ public Skills_Blink(id){
 // ****************************************
 
 public _Skill_Impale(parm[2]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_Skill_Impale",parm[0])
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new id = parm[0]
 

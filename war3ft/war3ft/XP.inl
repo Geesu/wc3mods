@@ -2,10 +2,13 @@
 		XP FUNCTIONS (idea from war3x)
 ***********************************************************************/
 stock XP_give(id, iXP){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("XP_give",id)
 	#endif
-	
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
 	if(id==0)
 		return 0
 
@@ -23,9 +26,12 @@ stock XP_give(id, iXP){
 }
 
 stock XP_onDeath(victim_id, killer_id, weapon, headshot){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("XP_onDeath",victim_id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	// Don't award XP to world
 	if(killer_id==0)
@@ -33,6 +39,8 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot){
 
 	new victimName[32], iXP, XP
 	get_user_name(victim_id,victimName,31)
+
+	headshot--
 
 	if (killer_id && killer_id!=victim_id && victim_id){
 
@@ -105,7 +113,7 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot){
 }
 
 stock XP_Set(){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("XP_set",0)
 	#endif
 
@@ -121,7 +129,7 @@ stock XP_Set(){
 }
 
 stock XP_Set_Multiplier(){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("set_xpmultiplier", 0)
 	#endif
 
@@ -229,9 +237,12 @@ stock XP_Set_Multiplier(){
 }
 
 public XP_Save(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("XP_Save",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	if (is_user_bot(id) || !iCvar[MP_SAVEXP])
 		return PLUGIN_CONTINUE
@@ -301,9 +312,12 @@ public XP_Save(id){
 }
 
 public XP_Retreive(id,returnrace){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("XP_Retreive",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	if (!iCvar[MP_SAVEXP])
 		return PLUGIN_CONTINUE
@@ -472,9 +486,12 @@ public XP_Retreive(id,returnrace){
 }
 
 public XP_Save_All(){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("XP_Save_All",0)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	if (warcraft3){
 		new players[32], numofplayers, id, i
@@ -498,9 +515,12 @@ public XP_Save_All(){
 }
 
 public XP_Client_Save(id,show){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("XP_client_save",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	if (iCvar[MP_SAVEXP]){
 		if(show)
@@ -514,7 +534,7 @@ public XP_Client_Save(id,show){
 }
 
 public XP_Set_DBI(){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("XP_Set_DBI",0)
 	#endif
 
@@ -533,7 +553,7 @@ public XP_Set_DBI(){
 		mysql = dbi_connect(mhost,muser,mpass,mdb)
 		if (mysql < SQL_OK) {
 			errNum = dbi_error(mysql, err, 254)
-			log_amx("[%s] DBI XP_Set_DBI error: %s|%d", g_MOD, err, errNum)
+			log_amx("[%s] DBI XP_Set_DBI error: %s (%d)", g_MOD, err, errNum)
 
 			if(iSQLAttempts < SQL_ATTEMPTS){
 				new Float:delay = 25.0
@@ -550,7 +570,7 @@ public XP_Set_DBI(){
 
 		if (ret < RESULT_NONE) {
 			errNum = dbi_error(mysql, err, 254)
-			log_amx("[%s] DBI XP_Set_DBI error: %s|%d", g_MOD, err, errNum)
+			log_amx("[%s] DBI XP_Set_DBI error: %s (%d)", g_MOD, err, errNum)
 			return 1
 		}
 
@@ -560,7 +580,7 @@ public XP_Set_DBI(){
 
 		if (res <= RESULT_NONE) {
 			errNum = dbi_error(mysql, err, 254)
-			log_amx("[%s] DBI XP_Set_DBI error: %s|%d", g_MOD, err, errNum)
+			log_amx("[%s] DBI XP_Set_DBI error: %s (%d)", g_MOD, err, errNum)
 			return 1
 		}
 
@@ -575,7 +595,7 @@ public XP_Set_DBI(){
 			new Result:ret2 = dbi_query(mysql, mquery)
 			if (ret2 < RESULT_NONE) {
 				errNum = dbi_error(mysql, err, 254)
-				log_amx("[%s] DBI XP_Set_DBI error: %s|%d", g_MOD, err, errNum)
+				log_amx("[%s] DBI XP_Set_DBI error: %s (%d)", g_MOD, err, errNum)
 				return 1
 			}
 		}
@@ -583,3 +603,30 @@ public XP_Set_DBI(){
 
 	return PLUGIN_CONTINUE
 }
+
+public XP_Reset(id,saychat){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("XP_Reset",id)
+	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
+	p_data[id][P_LEVEL]=0
+	p_data[id][P_XP]=0
+	p_data[id][P_SKILL1]=0
+	p_data[id][P_SKILL2]=0
+	p_data[id][P_SKILL3]=0
+	p_data[id][P_ULTIMATE]=0
+
+	WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
+
+	XP_Save(id)
+
+	if(saychat==1)
+		client_print(id,print_chat,"%s %L",g_MODclient, id,"YOUR_XP_HAS_BEEN_RESET")
+	else
+		console_print(id,"%L",id,"YOUR_XP_HAS_BEEN_RESET",g_MOD)
+
+	return PLUGIN_CONTINUE
+}	

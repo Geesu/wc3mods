@@ -3,7 +3,7 @@
 ***********************************************************************/
 
 public WAR3_precache() {
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_precache",0)
 	#endif
 
@@ -161,7 +161,7 @@ public WAR3_precache() {
 }
 
 public WAR3_exec_config(){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_exec_config",0)
 	#endif
 
@@ -171,7 +171,7 @@ public WAR3_exec_config(){
 }
 
 public WAR3_CD_installed(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("has_CD",id)
 	#endif
 
@@ -190,7 +190,7 @@ public WAR3_CD_installed(id){
 }
 
 public WAR3_chooserace(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_chooserace",id)
 	#endif
 
@@ -208,7 +208,7 @@ public WAR3_chooserace(id){
 }
 
 public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is attacked, attacker ,damage
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_damage",victim)
 	#endif
 
@@ -289,7 +289,7 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 
 	new health = get_user_health(victim)
 
-	if ( health - damage <= 2048 &&  p_data_b[victim][PB_GODMODE] && p_data[attacker][P_ITEM] == ITEM_NECKLACE )
+	if ( health - damage <= 2048 &&  p_data_b[victim][PB_GODMODE] && (p_data[attacker][P_ITEM] == ITEM_NECKLACE || p_data_b[attacker][PB_WARDENBLINK]))
 		userkilled = true
 	if ( health - damage <= 0 )
 		userkilled = true
@@ -320,11 +320,11 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 }
 
 public WAR3_death_victim(victim_id, killer_id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_death_victim",victim_id)
 	#endif
 
-	if (warcraft3==false)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	// In case they respawn, continue ultimate delay check
@@ -333,7 +333,7 @@ public WAR3_death_victim(victim_id, killer_id){
 		parm[0] = victim_id
 
 		p_data[victim_id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
-		_WAR3_Ultimate_Delay(parm)
+		_Ultimate_Delay(parm)
 	}
 
 #if MOD == 0
@@ -345,7 +345,7 @@ public WAR3_death_victim(victim_id, killer_id){
 	if(is_user_bot(victim_id)){
 		new Float:randomnumber = random_float(0.0,1.0)
 		if (randomnumber <= 0.10){
-			Item_Buy2(victim_id, ITEM_SCROLL-1)
+			_menu_Shopmenu_Two(victim_id, ITEM_SCROLL-1)
 		}
 	}
 
@@ -408,7 +408,7 @@ public WAR3_death_victim(victim_id, killer_id){
 		if(task_exists(TASK_UDELAY+victim_id))
 			remove_task(TASK_UDELAY+victim_id)
 
-		_WAR3_Ultimate_Delay(parm)
+		_Ultimate_Delay(parm)
 	}
 #if MOD == 0
 	else if (Verify_Skill(victim_id, RACE_WARDEN, SKILL4) && !p_data_b[victim_id][PB_CHANGINGTEAM] && (!p_data_b[killer_id][PB_WARDENBLINK] || killer_id==victim_id) && !g_ultimateDelay && !p_data_b[victim_id][PB_ULTIMATEUSED] && !endround){	// Vengeance
@@ -423,7 +423,7 @@ public WAR3_death_victim(victim_id, killer_id){
 		if(task_exists(TASK_UDELAY+victim_id))
 			remove_task(TASK_UDELAY+victim_id)
 		
-		_WAR3_Ultimate_Delay(parm)
+		_Ultimate_Delay(parm)
 
 		set_task(1.2,"func_spawn",TASK_VENGEANCE+victim_id,parm,2)
 
@@ -514,11 +514,11 @@ public WAR3_death_victim(victim_id, killer_id){
 }
 
 public WAR3_death(victim_id, killer_id, weapon, headshot) {
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_death",victim_id)
 	#endif
 
-	if (warcraft3==false)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	new weaponname[32]
@@ -714,55 +714,13 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 	return PLUGIN_CONTINUE
 }
 
-public _WAR3_Ultimate_Delay(parm[]){
-/*	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("_WAR3_Ultimate_Delay",p_data[parm[0]][P_ULTIMATEDELAY])
-	#endif*/
-
-	
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	p_data[id][P_ULTIMATEDELAY]--
-
-	if (p_data[id][P_ULTIMATEDELAY] > 0)
-		set_task(1.0,"_WAR3_Ultimate_Delay",TASK_UDELAY+id, parm, 1)
-	else{
-		WAR3_Ultimate_Ready(id)
-	}
-
-	return PLUGIN_CONTINUE
-}
-
-public WAR3_Ultimate_Ready(id){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("WAR3_Ultimate_Ready",id)
-	#endif
-
-	if(is_user_alive(id) && p_data_b[id][PB_ISCONNECTED] && p_data[id][P_ULTIMATE]){
-
-		new szCommand[32]
-		format(szCommand, 31, "speak %s", SOUND_ULTIMATEREADY)
-
-		p_data_b[id][PB_ULTIMATEUSED] = false
-
-		client_cmd(id, szCommand)
-
-		new szMessage[128]
-		format(szMessage, 127, "%L", id, "ULTIMATE_READY")
-
-		Status_Text(id, szMessage, 2.0, HUDMESSAGE_POS_STATUS)
-
-		icon_controller(id, ICON_SHOW)
-	}
-}
-
 public WAR3_set_race(id,race){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_set_race",0)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	clear_all_icons(id)
 
@@ -810,11 +768,13 @@ public WAR3_set_race(id,race){
 	}
 
 	WAR3_Display_Level(id, DISPLAYLEVEL_SHOWRACE)
+
+	return PLUGIN_CONTINUE
 }
 
 #if MOD == 0
 	public _WAR3_set_buytime(){
-		#if ADVANCED_DEBUG == 1
+		#if ADVANCED_DEBUG
 			writeDebugInfo("_WAR3_set_buytime",0)
 		#endif
 
@@ -824,9 +784,12 @@ public WAR3_set_race(id,race){
 
 
 public WAR3_Display_Level(id, flag){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_Display_Level",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	if (iCvar[FT_CD]) {
 		if (!WAR3_CD_installed(id)){
@@ -843,7 +806,7 @@ public WAR3_Display_Level(id, flag){
 		new parm2[2]
 		parm2[0] = id
 		if(!task_exists(TASK_ITEMS+id)){
-			_WAR3_showHUDItems(parm2)
+			Item_ShowHUD(parm2)
 		}
 	}
 #endif
@@ -1082,7 +1045,7 @@ public WAR3_Display_Level(id, flag){
 }
 
 WAR3_Show_Spectator_Info(id, targetid){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_Show_Spectator_Info",id)
 	#endif
 
@@ -1129,9 +1092,7 @@ WAR3_Show_Spectator_Info(id, targetid){
 
 	new thehealth = get_user_health(targetid)
 	
-	if ( thehealth > 2500 )
-		thehealth -= 3048
-	else if ( thehealth > 1500 )
+	if ( thehealth > 1500 )
 		thehealth -= 2048
 	else if ( thehealth > 500 )
 		thehealth -= 1024
@@ -1151,7 +1112,7 @@ WAR3_Show_Spectator_Info(id, targetid){
 }
 
 WAR3_Immunity_Found_Near(id, origin[3]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_Immunity_Found_Near",id)
 	#endif
 
@@ -1177,7 +1138,7 @@ WAR3_Immunity_Found_Near(id, origin[3]){
 }
 
 public WAR3_Set_Variables(){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_Set_Variables",0)
 	#endif
 
@@ -1208,7 +1169,7 @@ public WAR3_Set_Variables(){
 	iCvar[FT_ULTIMATE_COOLDOWN		] = get_cvar_num("FT_ultimate_cooldown") + 1
 	iCvar[FT_RACES					] = get_cvar_num("FT_races")
 	iCvar[FT_POSITION				] = get_cvar_num("FT_position")
-	iCvar[FT_9RACERANDOM			] = get_cvar_num("FT_9raceRandom")
+	iCvar[FT_RACE9_RANDOM			] = get_cvar_num("FT_Race9_Random")
 	iCvar[FT_CD						] = get_cvar_num("FT_CD")
 	iCvar[FT_WARN_SUICIDE			] = get_cvar_num("FT_warn_suicide")
 	iCvar[FT_BLINKENABLED			] = get_cvar_num("FT_blinkenabled")
@@ -1294,4 +1255,11 @@ public WAR3_Set_Variables(){
 	checkmap()
 
 	return PLUGIN_CONTINUE
+}
+
+public WAR3_Check(){
+	if (get_cvar_num("sv_warcraft3")==0)
+		warcraft3=false
+	else
+		warcraft3=true
 }

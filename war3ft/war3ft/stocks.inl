@@ -6,21 +6,22 @@ stock diff(num,num2){
 	return 0
 }
 
-stock cmd_target2(id,const arg[]) {
-  new player = find_player("bl",arg)
-  if (player){
-    if ( player != find_player("blj",arg) ){
-      console_print(id,"%L",id,"THERE_ARE_MORE")
-      return 0    
-    }
-  }
-  else if ( ( player = find_player("c",arg) )==0 && arg[0]=='#' && arg[1] )
-    player = find_player("k",str_to_num(arg[1]))    
-  if (!player){
-    console_print(id,"%L",id,"CLIENT_NOT_FOUND")
-    return 0
-  }
-  return player
+stock find_target(id,const arg[]) {
+new player = find_player("bl",arg)
+if(player){
+if ( player != find_player("blj",arg) ){
+console_print(id,"%L",id,"THERE_ARE_MORE")
+return 0
+}
+}
+else if((player = find_player("c",arg) )==0 && arg[0]=='#' && arg[1] )
+player = find_player("k",str_to_num(arg[1]))
+if(!player){
+console_print(id,"%L",id,"CLIENT_NOT_FOUND")
+return 0
+}
+
+return player
 }
 
 stock isPrimary(weapon){
@@ -99,6 +100,9 @@ stock set_user_actualhealth(id, health, fromFunction[]){
 		write_Health_Info(info, id)
 	#endif
 	
+	new z = strlen(fromFunction)
+	z--
+
 	set_user_health(id, health)
 }
 
@@ -129,7 +133,6 @@ stock get_user_maxhealth(id){
 	if ( Verify_Skill(id, RACE_HUMAN, SKILL2) ){
 		maxHealth += (p_devotion[p_data[id][P_SKILL2]-1] - 100)
 	}
-
 
 	// Player has a health bonus from the Periapt of Health
 
@@ -174,7 +177,7 @@ stock Verify_Skill(id, race, skill){
 }
 
 stock Status_Text(id, szMessage[], Float:fDuration, Float:iYPos){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_status_text",0)
 	#endif
 
@@ -193,12 +196,12 @@ stock Status_Text(id, szMessage[], Float:fDuration, Float:iYPos){
 }
 
 stock race9_randomize(){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("race9_randomize",0)
 	#endif
 
 	if (iCvar[FT_RACES] == 9){
-		if (iCvar[FT_9RACERANDOM]){
+		if (iCvar[FT_RACE9_RANDOM]){
 			new myintvallocal = 0
 			// loop through all four skill options (3 + ultimate) pick a new race at random and update the skill
 			while (myintvallocal < 4){

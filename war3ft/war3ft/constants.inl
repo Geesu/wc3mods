@@ -69,7 +69,7 @@
 #define TASK_BOIDTHINK		2012
 #define TASK_TARGETBOMBED	2013
 #define TASK_BOMBTIMER		2014
-
+#define TASK_WAR3CHECK		2015	// Checks the value of sv_warcraft3 every 5 seconds (better than checking it on every function call)
 
 // From ../multiplayer source/dlls/player.cpp
 #define ARMOR_RATIO	 0.7	// Armor Takes 30% of the damage (was .2 in the SDK)
@@ -407,7 +407,7 @@
 #define FT_GLOVE_TIMER						18
 #define FT_XPBONUS							19
 #define FT_POSITION							20
-#define FT_9RACERANDOM						21
+#define FT_RACE9_RANDOM						21
 #define FT_CD								22
 #define FT_WARN_SUICIDE						23
 #define FT_BLINKENABLED						24

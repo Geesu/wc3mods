@@ -66,16 +66,20 @@ new const WC3VERSION[] =	"2.1.7"
 #include "war3ft/other.inl"
 #include "war3ft/admin.inl"
 
+#if MOD == 0
+	#include "war3ft/cstrike.inl"
+#endif
+
 #if MOD == 1
 	#include "war3ft/dod.inl"
 #endif
 
-#if DEBUG == 1 || ADVANCED_DEBUG == 1
+#if DEBUG || ADVANCED_DEBUG
 	#include "war3ft/debug.inl"
 #endif
 
 public plugin_init(){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("plugin_init",0)
 	#endif
 
@@ -108,7 +112,7 @@ public plugin_init(){
 	register_clcmd("selectskill","menu_Select_Skill",-1,"selectskill")
 	register_clcmd("skillsinfo","MOTD_Skillsinfo",-1,"skillsinfo")
 	register_clcmd("resetskills","cmd_ResetSkill",-1,"resetskills")
-	register_clcmd("resetxp","amx_resetxp",-1,"resetxp")
+	register_clcmd("resetxp","XP_Reset",-1,"resetxp")
 	register_clcmd("itemsinfo","MOTD_Itemsinfo",-1,"itemsinfo")
 	register_clcmd("itemsinfo2","MOTD_Itemsinfo2",-1,"itemsinfo2")
 	register_clcmd("war3help","MOTD_War3help",-1,"war3help")
@@ -124,19 +128,20 @@ public plugin_init(){
 	register_clcmd("jointeam","cmd_Jointeam") 
 	register_clcmd("level","cmd_Level")
 
-	register_concmd("amx_givexp","amx_givexp",-1,"amx_givexp")
-	register_concmd("amx_savexp","amx_savexp",-1,"amx_savexp")
-	register_concmd("amx_givemole","amx_givemole",-1,"amx_givemole")
-
 	register_concmd("playerskills","MOTD_Playerskills",-1,"playerskills")
 
-	register_srvcmd("amx_takexp","amx_takexp")							// For internal use only (don't use this command)
-	register_srvcmd("changexp","changeXP")								// For internal use only (don't use this command)
-
+	// Admin Commands
+	register_concmd("amx_givexp","Admin_GiveXP",-1,"amx_givexp")
+	register_concmd("amx_savexp","Admin_SaveXP",-1,"amx_savexp")
+	register_concmd("amx_givemole","Admin_GiveMole",-1,"amx_givemole")
+	
+	// Server Admin Commands (used by external plugins)
+	register_srvcmd("amx_takexp","Admin_TakeXP")
+	register_srvcmd("changexp","changeXP")
 
 	#if MOD == 1
-		//register_statsfwd(XMF_DAMAGE)
 		register_statsfwd(XMF_SCORE)
+
 		register_event("RoundState","on_EndRound","a","1=3","1=4")
 
 		register_event("TextMsg","on_Spectate","a","2=#game_joined_team")
@@ -165,9 +170,9 @@ public plugin_init(){
 
 		register_event("StatusIcon", "on_StatusIcon",  "be")
 
-		register_event("TextMsg","setSpecMode","bd","2&ec_Mod")
+		register_event("TextMsg","on_SetSpecMode","bd","2&ec_Mod")
 
-		register_event("StatusValue","showRank","bd","1=2")
+		register_event("StatusValue","on_Spectate","bd","1=2")
 
 		register_menucmd(-34,(1<<8),"cmd_Shield")
 
@@ -208,11 +213,11 @@ public plugin_init(){
 	}
 
 	// For an explanation of these variables, please see war3ft.cfg
+	register_cvar("FT_Race9_Random",				"1")
 	register_cvar("FT_Race9_Skill1",			"1")
 	register_cvar("FT_Race9_Skill2",			"1")
 	register_cvar("FT_Race9_Skill3",			"1")
 	register_cvar("FT_Race9_Ultimate",			"1")
-
 	register_cvar("FT_entangle_drop",			"0")
 	register_cvar("FT_sock",					"0.5")
 	register_cvar("FT_buydead",					"1")
@@ -246,7 +251,6 @@ public plugin_init(){
 	register_cvar("FT_centerhud",				"1")
 	register_cvar("FT_saveby",					"0")
 	register_cvar("FT_position",				"0")
-	register_cvar("FT_9raceRandom",				"1")
 	register_cvar("FT_glove_timer",				"10")
 	register_cvar("FT_glove_orc_damage",		"0")
 	register_cvar("FT_round_win_XP",			"35")
@@ -293,6 +297,7 @@ public plugin_init(){
 
 	set_task(2.0, "WAR3_Set_Variables", TASK_SETVARIABLES)
 	set_task(15.0, "FT_controller",TASK_FTCONTROLLER,"",0,"b")
+	set_task(5.0, "WAR3_Check",TASK_WAR3CHECK,"",0,"b")
    
 	register_dictionary("war3FT.txt")
 
@@ -305,7 +310,7 @@ public plugin_init(){
 }
 
 public plugin_end(){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("plugin_end",0)
 	#endif
 
@@ -334,8 +339,7 @@ public plugin_end(){
 			if (ret < RESULT_NONE) {
 				new err[255]
 				new errNum = dbi_error(mysql, err, 254)
-				server_print("[%s] DBI prune error: %s|%d", g_MOD, err, errNum)
-				log_amx("[%s] DBI prune error: %s|%d", g_MOD, err, errNum)
+				log_amx("[%s] DBI prune error: %s (%d)", g_MOD, err, errNum)
 				return 1
 			} 		
 		}
@@ -348,7 +352,7 @@ public plugin_end(){
 }
 
 public plugin_modules(){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("plugin_modules",0)
 	#endif
 
@@ -366,7 +370,7 @@ public plugin_modules(){
 }
 
 public plugin_precache() {
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("plugin_precache",0)
 	#endif
 
@@ -376,7 +380,7 @@ public plugin_precache() {
 }
 
 public client_putinserver(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("client_putinserver",id)
 	#endif
 
@@ -393,11 +397,12 @@ public client_putinserver(id){
 }
 
 public client_connect(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("client_connect",id)
 	#endif
 
 	client_cmd(id, "hud_centerid 0")
+
 	p_data[id][P_RACE] = 0
 	p_data[id][P_SKILL1] = 0
 	p_data[id][P_SKILL2] = 0
@@ -410,6 +415,7 @@ public client_connect(id){
 	p_data_b[id][PB_ISBURNING] = false
 	p_data[id][P_SPECMODE] = 0 
 	p_data_b[id][PB_JUSTJOINED] = true
+
 #if MOD == 1
 	reincarnation[id][ZPOS] = -99999
 #endif
@@ -417,8 +423,9 @@ public client_connect(id){
 	// If a player has a helm, the new player shouldn't be able to hit him in the head
 	for (new j = 1; j <= MAXPLAYERS; j++){
 		if(p_data_b[j][PB_ISCONNECTED]){
-			if(p_data[P_ITEM2][j] == ITEM_HELM)
+			if(p_data[P_ITEM2][j] == ITEM_HELM && get_user_hitzones(id, j) != 253){
 				set_user_hitzones(id, j, 253)
+			}
 		}
 	}
 
@@ -426,6 +433,7 @@ public client_connect(id){
 		p_data[id][P_HECOUNT] = 0
 		p_data[id][P_FLASHCOUNT]=0
 	#endif
+
 	if (is_user_bot(id) && iCvar[MP_SAVEXP]){
 		p_data[id][P_XP]=xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))]
 		p_data[id][P_RACE] = random_num(1,iCvar[FT_RACES])
@@ -436,7 +444,7 @@ public client_connect(id){
 
 
 public client_disconnect(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("client_disconnect",id)
 	#endif
 

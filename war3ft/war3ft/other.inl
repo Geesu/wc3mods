@@ -1,39 +1,5 @@
-public showRank(id){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("showRank",id)
-	#endif
-
-	if(!p_data[id][P_SPECMODE] || !warcraft3 || !iCvar[FT_SPEC_INFO])
-		return PLUGIN_CONTINUE
-
-	new a = read_data(2)
-
-	if ( is_user_bot(id) )
-		return PLUGIN_CONTINUE
-
-	// Not a valid target
-	if (!p_data_b[a][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	WAR3_Show_Spectator_Info(id, a)
-	
-	return PLUGIN_CONTINUE
-}
-
-#if MOD == 0
-	public setSpecMode(id) {
-		#if ADVANCED_DEBUG == 1
-			writeDebugInfo("setSpecMode",0)
-		#endif
-
-		new arg[12] 
-		read_data( 2 , arg , 11 ) 
-		p_data[id][P_SPECMODE] = ( arg[10] == '2' ) ? 1 : 0 
-	}
-#endif
-
 public checkmap(){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("checkmap",0)
 	#endif
 
@@ -63,9 +29,13 @@ public checkmap(){
 }
 
 public changeskin(id,reset){							// Function changes your skin for ITEM_MOLE and Chameleon
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("changeskin",id)
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
 #if MOD == 0
 	new num = 0, newSkin[32]
 	if (is_running("cstrike"))
@@ -98,7 +68,7 @@ public changeskin(id,reset){							// Function changes your skin for ITEM_MOLE a
 
 
 public clear_all_icons(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("clear_all_icons",id)
 	#endif
 	#if MOD == 0
@@ -114,10 +84,12 @@ public clear_all_icons(id){
 }
 
 public icon_controller(id, value){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("icon_controller",id)
 	#endif
 
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 	if (!iCvar[FT_SHOW_ICONS])
 		return PLUGIN_HANDLED
 	if(!p_data[id][P_ULTIMATE])
@@ -160,7 +132,7 @@ public icon_controller(id, value){
 }
 
 public FT_controller(){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("FT_controller",0)
 	#endif
 
@@ -221,10 +193,10 @@ public FT_controller(){
 	}
 	else
 	{
-		if (warcraft3==false && FT_message)	{	
+		if (!warcraft3 && FT_message)	{	
 			show_hudmessage(0,"%L",LANG_PLAYER,"INACTIVE_ELSE",WC3NAME,WC3VERSION,hours,minutes,timeleft / 60, timeleft % 60,nextmap)	
 		}
-		if (warcraft3==true && FT_message){
+		if (warcraft3 && FT_message){
 			show_hudmessage(0,"%L",LANG_PLAYER,"ACTIVE_ELSE",WC3NAME,WC3VERSION,hours,minutes,timeleft / 60, timeleft % 60,nextmap)
 		}
 	}		
@@ -232,9 +204,12 @@ public FT_controller(){
 }
 
 public getuserinput(parm[1]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("getuserinput",parm[0])
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new id = parm[0]
 
@@ -254,11 +229,11 @@ public getuserinput(parm[1]){
 }
 
 public weapon_controller( parm[2]  ){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("weapon_controller",parm[0])
 	#endif
 
-	if (warcraft3==false)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	#if MOD == 0
@@ -321,7 +296,7 @@ public weapon_controller( parm[2]  ){
 }	
 
 public saveweapons(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("saveweapons",id)
 	#endif
 
@@ -339,9 +314,12 @@ public saveweapons(id){
 }
 
 public glow_change(parm[]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("glow_change",parm[0])
 	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
 
 	new id = parm[0]
 
@@ -391,7 +369,7 @@ public glow_change(parm[]){
 }
 
 public reset_maxspeed(parm[]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("reset_maxspeed",parm[0])
 	#endif
 
@@ -408,11 +386,11 @@ public reset_maxspeed(parm[]){
 }
 
 public unholyspeed(parm[1]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("unholyspeed",parm[0])
 	#endif
 
-	if (warcraft3==false)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	new id = parm[0]
@@ -454,7 +432,7 @@ public unholyspeed(parm[1]){
 }
 
 public func_spawn(parm[2]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("func_spawn",parm[0])
 	#endif
 
@@ -508,7 +486,7 @@ public func_spawn(parm[2]){
 
 
 public player_giveitems(parm[2]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("player_giveitems",parm[0])
 	#endif
 
@@ -582,7 +560,7 @@ public player_giveitems(parm[2]){
 }
 
 public spawn_player(parm[2]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("spawn_player",parm[0])
 	#endif
 
@@ -602,7 +580,7 @@ public spawn_player(parm[2]){
 }
 
 public set_user_money(id,money,show){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("set_user_money",id)
 	#endif
 
@@ -625,7 +603,7 @@ public set_user_money(id,money,show){
 }
 
 public get_user_money(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("get_user_money",id)
 	#endif
 

@@ -5,7 +5,7 @@
 // ***************************************************************************
 
 stock Create_TE_Smoke(originSight[3], position[3], iSprite, scale, framerate){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_Smoke",0)
 	#endif
 
@@ -21,7 +21,7 @@ stock Create_TE_Smoke(originSight[3], position[3], iSprite, scale, framerate){
 }
 
 stock Create_DeathMsg_CS(killer_id,victim_id,headshot,weaponname[]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_DeathMsg_CS",victim_id)
 	#endif
 
@@ -34,7 +34,7 @@ stock Create_DeathMsg_CS(killer_id,victim_id,headshot,weaponname[]){
 }
 
 stock Create_TE_IMPLOSION(position[3], radius, count, life){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_IMPLOSION",0)
 	#endif
 
@@ -50,7 +50,7 @@ stock Create_TE_IMPLOSION(position[3], radius, count, life){
 }
 
 stock Create_TE_BEAMCYLINDER(origin[3], center[3], axis[3], iSprite, startFrame, frameRate, life, width, amplitude, red, green, blue, brightness, speed){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_BEAMCYLINDER",0)
 	#endif
 
@@ -77,7 +77,7 @@ stock Create_TE_BEAMCYLINDER(origin[3], center[3], axis[3], iSprite, startFrame,
 }
 
 stock Create_TE_EXPLOSION( origin[3], origin2[3], iSprite, scale, frameRate, flags ){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_EXPLOSION",0)
 	#endif
 
@@ -94,7 +94,7 @@ stock Create_TE_EXPLOSION( origin[3], origin2[3], iSprite, scale, frameRate, fla
 }
 
 stock Create_ScreenShake(id, amount, duration, frequency){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_ScreenShake",id)
 	#endif
 
@@ -106,7 +106,7 @@ stock Create_ScreenShake(id, amount, duration, frequency){
 }
 
 stock Create_ScreenFade(id, duration, holdtime, fadetype, red, green, blue, alpha){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_ScreenFade",id)
 	#endif
 
@@ -122,7 +122,7 @@ stock Create_ScreenFade(id, duration, holdtime, fadetype, red, green, blue, alph
 }
 
 stock Create_ScoreInfo(id,frags,deaths,playerClass,team ){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_ScoreInfo",id)
 	#endif
 
@@ -136,7 +136,7 @@ stock Create_ScoreInfo(id,frags,deaths,playerClass,team ){
 }
 
 stock Create_TE_SPRITETRAIL(start[3], end[3], iSprite, count, life, scale, velocity, random ){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_SPRITETRAIL",0)
 	#endif
 
@@ -158,7 +158,7 @@ stock Create_TE_SPRITETRAIL(start[3], end[3], iSprite, count, life, scale, veloc
 }
 
 stock Create_StatusText(id, linenumber, text[]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_StatusText",id)
 	#endif
 
@@ -169,7 +169,7 @@ stock Create_StatusText(id, linenumber, text[]){
 }
 
 stock Create_BarTime(id, duration, flag){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_BarTime",id)
 	#endif
 
@@ -180,7 +180,7 @@ stock Create_BarTime(id, duration, flag){
 }
 
 stock Create_TE_BEAMFOLLOW(entity, iSprite, life, width, red, green, blue, alpha){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_BEAMFOLLOW",entity)
 	#endif
 
@@ -198,7 +198,7 @@ stock Create_TE_BEAMFOLLOW(entity, iSprite, life, width, red, green, blue, alpha
 }
 
 stock Create_TE_BEAMPOINTS(start[3], end[3], iSprite, startFrame, frameRate, life, width, noise, red, green, blue, alpha, speed){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_BEAMPOINTS",0)
 	#endif
 
@@ -225,7 +225,7 @@ stock Create_TE_BEAMPOINTS(start[3], end[3], iSprite, startFrame, frameRate, lif
 }
 
 stock Create_TE_BEAMENTS(startEntity, endEntity, iSprite, startFrame, frameRate, life, width, noise, red, green, blue, alpha, speed){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_BEAMENTS",startEntity)
 	#endif
 
@@ -248,7 +248,7 @@ stock Create_TE_BEAMENTS(startEntity, endEntity, iSprite, startFrame, frameRate,
 }
 
 stock Create_TE_ELIGHT(entity, start[3], radius, red, green, blue, life, decayRate){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_ELIGHT",entity)
 	#endif
 
@@ -268,7 +268,7 @@ stock Create_TE_ELIGHT(entity, start[3], radius, red, green, blue, life, decayRa
 }
 
 stock Create_TE_SPRAY(position[3], direction[3], iSprite, count, speed, noise, rendermode){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_SPRAY",0)
 	#endif
 
@@ -289,7 +289,7 @@ stock Create_TE_SPRAY(position[3], direction[3], iSprite, count, speed, noise, r
 }
 
 stock Create_TE_SPRITE(position[3], iSprite, scale, alpha){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_SPRITE",0)
 	#endif
 
@@ -305,7 +305,7 @@ stock Create_TE_SPRITE(position[3], iSprite, scale, alpha){
 }
 
 stock Create_StatusIcon(id, status, sprite[], red, green, blue){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_StatusIcon",id)
 	#endif
 
@@ -319,7 +319,7 @@ stock Create_StatusIcon(id, status, sprite[], red, green, blue){
 }
 
 stock Create_TE_LARGEFUNNEL(position[3], iSprite, flags){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_LARGEFUNNEL",0)
 	#endif
 
@@ -334,7 +334,7 @@ stock Create_TE_LARGEFUNNEL(position[3], iSprite, flags){
 }
 
 stock Create_TE_PLAYERATTACHMENT(id, entity, vOffset, iSprite, life){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_PLAYERATTACHMENT",id)
 	#endif
 
@@ -348,7 +348,7 @@ stock Create_TE_PLAYERATTACHMENT(id, entity, vOffset, iSprite, life){
 }
 
 stock Create_TE_TELEPORT(position[3]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_TELEPORT",0)
 	#endif
 
@@ -361,7 +361,7 @@ stock Create_TE_TELEPORT(position[3]){
 }
 
 stock Create_TE_LAVASPLASH(position[3]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_LAVASPLASH",0)
 	#endif
 
@@ -374,7 +374,7 @@ stock Create_TE_LAVASPLASH(position[3]){
 }
 
 stock Create_TE_TAREXPLOSION(position[3]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_TAREXPLOSION",0)
 	#endif
 
@@ -387,7 +387,7 @@ stock Create_TE_TAREXPLOSION(position[3]){
 }
 
 stock Create_TE_BUBBLES(start[3], end[3], height, iSprite, count, speed){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_TE_BUBBLES",0)
 	#endif
 

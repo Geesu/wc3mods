@@ -1,5 +1,5 @@
 public Lang_Set_Menus(){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("lang_Set_Menus",0)
 	#endif
 
@@ -14,14 +14,14 @@ public Lang_Set_Menus(){
 			format(menu,127,"%L",lang,"MENU_BUY_ITEM")
 			curMenuId = register_menuid(menu)
 			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"Item_Buy")
+				register_menucmd(curMenuId,1023,"_menu_Shopmenu_One")
 				highestMenuId = curMenuId
 			}
 
 			format(menu,127,"%L",lang,"MENU_BUY_ITEM2")
 			curMenuId = register_menuid(menu)
 			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"Item_Buy2")
+				register_menucmd(curMenuId,1023,"_menu_Shopmenu_Two")
 				highestMenuId = curMenuId
 			}
 
@@ -99,7 +99,7 @@ public Lang_Set_Menus(){
 }
 
 public racename(race,id,race_name[],length){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("racename",id)
 	#endif
 
@@ -109,7 +109,7 @@ public racename(race,id,race_name[],length){
 }
 
 public shortracename(race,id,short_race_name[],length){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("shortracename",id)
 	#endif
 
@@ -119,7 +119,7 @@ public shortracename(race,id,short_race_name[],length){
 }
 
 public itemname(item,id,item_name[],length){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("itemname",id)
 	#endif
 
@@ -129,7 +129,7 @@ public itemname(item,id,item_name[],length){
 }
 
 public shortitemname(item,id,short_item_name[],length){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("shortitemname",id)
 	#endif
 
@@ -139,7 +139,7 @@ public shortitemname(item,id,short_item_name[],length){
 }
 
 public itemname2(item,id,item_name2[],length){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("itemname2",id)
 	#endif
 
@@ -149,7 +149,7 @@ public itemname2(item,id,item_name2[],length){
 }
 
 public shortitemname2(item,id,short_item_name[],length){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("shortitemname2",id)
 	#endif
 
@@ -161,7 +161,7 @@ public shortitemname2(item,id,short_item_name[],length){
 
 // This function will return the skill NAME, not info
 public raceskill(race, skill, id, skill_name[],length){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("raceskill",id)
 	#endif
 

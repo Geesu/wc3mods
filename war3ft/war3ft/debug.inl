@@ -1,5 +1,5 @@
 public test(id){
-/*	new const MAXPLAYERS = get_global_int(GL_maxClients)
+	//new const MAXPLAYERS = get_global_int(GL_maxClients)
 	new zone = 0
 	new name[32]
 	for (new j = 1; j <= MAXPLAYERS; j++){
@@ -8,7 +8,7 @@ public test(id){
 			get_user_name(j, name, 31)
 			console_print(id,"Player: %d, Zone: %d, Name:%s", j, zone, name)
 		}
-	}*/
+	}
 
 	client_print(id,print_chat,"Max Speed: %f", get_user_maxspeed(id))
 	client_print(id,print_chat,"Health: %d", get_user_health(id))

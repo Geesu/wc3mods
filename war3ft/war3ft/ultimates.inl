@@ -1,5 +1,4 @@
 
-
 // ****************************************
 // Undead's Suicide Bomber
 // ****************************************
@@ -88,7 +87,7 @@ public blastcircles(parm[5]){
 // ****************************************
 
 Ultimate_Teleport(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Ultimate_Teleport",id)
 	#endif
 
@@ -134,7 +133,7 @@ Ultimate_Teleport(id){
 
 			p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
 
-			_WAR3_Ultimate_Delay(coolparm)
+			_Ultimate_Delay(coolparm)
 
 			emit_sound(id,CHAN_STATIC, SOUND_BLINK, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
@@ -260,7 +259,7 @@ Ultimate_Teleport(id){
 }
 
 public _Ultimate_Blink_Controller(parm[]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_Ultimate_Blink_Controller",parm[0])
 	#endif
 
@@ -292,13 +291,13 @@ public _Ultimate_Blink_Controller(parm[]){
 
 		p_data[id][P_ULTIMATEDELAY] = floatround(BLINK_COOLDOWN + 1.0)
 
-		_WAR3_Ultimate_Delay(coolparm)
+		_Ultimate_Delay(coolparm)
 
 	}
 	else{
 		
 		p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
-		_WAR3_Ultimate_Delay(coolparm)
+		_Ultimate_Delay(coolparm)
 
 		// Sprays white bubbles everywhere
 		new origin2[3]
@@ -320,7 +319,7 @@ public _Ultimate_Blink_Controller(parm[]){
 }
 
 public _Ultimate_Telemenu(parm[2]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_Ultimate_Telemenu",parm[0])
 	#endif
 
@@ -369,7 +368,7 @@ public _Ultimate_Telemenu(parm[2]){
 }
 
 public _menu_Teleport(id,key){		// Teleport
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_menu_Teleport",id)
 	#endif
 
@@ -402,14 +401,14 @@ public _menu_Teleport(id,key){		// Teleport
 		parm[0]=id
 
 		p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
-		_WAR3_Ultimate_Delay(parm)
+		_Ultimate_Delay(parm)
 	}
 
 	return PLUGIN_HANDLED
 }
 
 public telewaitstop(parm[6]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("telewaitstop",parm[0])
 	#endif
 
@@ -441,7 +440,7 @@ public telewaitstop(parm[6]){
 }
 
 public teleport(parm[6]){		// Teleport
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("teleport",parm[0])
 	#endif
 
@@ -523,7 +522,7 @@ public teleport(parm[6]){		// Teleport
 }
 
 public teleportfadein(parm[3]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("teleportfadein",parm[0])
 	#endif
 
@@ -559,7 +558,7 @@ public teleportfadein(parm[3]){
 }
 
 public unstickit(unstickparm[]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("unstickit",unstickparm[0])
 	#endif
 
@@ -600,7 +599,7 @@ public unstickit(unstickparm[]){
 }
 
 public ceiling_check(parm[2]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("ceiling_check",parm[0])
 	#endif
 
@@ -740,7 +739,7 @@ public ceiling_check(parm[2]){
 // ****************************************
 
 public lightsearchtarget(parm[2]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("lightsearchtarget",parm[0])
 	#endif
 
@@ -775,7 +774,7 @@ public lightsearchtarget(parm[2]){
 		cooldownparm[0]=id
 
 		p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
-		_WAR3_Ultimate_Delay(cooldownparm)
+		_Ultimate_Delay(cooldownparm)
 	}
 	else{
 		p_data_b[id][PB_ISSEARCHING]=true
@@ -804,7 +803,7 @@ public lightsearchtarget(parm[2]){
 
 
 public lightningnext(parm[4]){		// Chain Lightning
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("lightningnext",parm[0])
 	#endif
 
@@ -861,7 +860,7 @@ public lightningnext(parm[4]){		// Chain Lightning
 }
 
 public lightningeffect(id,targetid,linewidth,damage,caster){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("lightningeffect",id)
 	#endif
 
@@ -892,7 +891,7 @@ public lightningeffect(id,targetid,linewidth,damage,caster){
 // ****************************************
 
 public searchtarget(parm[2]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("searchtarget",parm[0])
 	#endif
 
@@ -939,7 +938,7 @@ public searchtarget(parm[2]){
 		cooldownparm[0]=id
 
 		p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
-		_WAR3_Ultimate_Delay(cooldownparm)	
+		_Ultimate_Delay(cooldownparm)	
 	}
 	else{
 		p_data_b[id][PB_ISSEARCHING]=true
@@ -968,7 +967,7 @@ public searchtarget(parm[2]){
 }
 
 public waitstop(parm[6]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("waitstop",parm[0])
 	#endif
 
@@ -1000,7 +999,7 @@ public waitstop(parm[6]){
 }
 
 public entangle(parm[2]){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("entangle",parm[0])
 	#endif
 
@@ -1078,7 +1077,7 @@ public entangle(parm[2]){
 // ****************************************
 
 Ultimate_FlameStrike(id){ 
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("fire_flamethrower",id)
 	#endif
 
@@ -1098,7 +1097,7 @@ Ultimate_FlameStrike(id){
       parm[0]=id
 
       p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
-      _WAR3_Ultimate_Delay(parm)
+      _Ultimate_Delay(parm)
    }
    new speed1 = 160 
    new speed2 = 350 
@@ -1169,7 +1168,7 @@ Ultimate_FlameStrike(id){
 } 
 
 public te_spray(args[]){ 
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("te_spray",0)
 	#endif
 
@@ -1188,7 +1187,7 @@ public te_spray(args[]){
 } 
 
 check_burnzone(id,vec[],aimvec[],speed1,speed2,radius){ 
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("check_burnzone",id)
 	#endif
 
@@ -1239,7 +1238,7 @@ check_burnzone(id,vec[],aimvec[],speed1,speed2,radius){
 } 
 
 burn_victim(victim,attacker){ 
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("burn_victim",victim)
 	#endif
 
@@ -1262,7 +1261,7 @@ burn_victim(victim,attacker){
 } 
 
 public on_fire(args[]){ 
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("on_fire",args[0])
 	#endif
 
@@ -1315,7 +1314,7 @@ public on_fire(args[]){
 
 public _Ultimate_BigBadVoodoo(parm[2]){
 
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("_Ultimate_BigBadVoodoo",parm[0])
 	#endif
 
@@ -1355,7 +1354,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 		icon_controller(id,ICON_HIDE)
 
 		p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
-		_WAR3_Ultimate_Delay(parm)
+		_Ultimate_Delay(parm)
 	}
 
 	return PLUGIN_CONTINUE
@@ -1367,7 +1366,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 // ****************************************
 
 Ultimate_Vengeance(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("Ultimate_Warden",id)
 	#endif
 
@@ -1432,7 +1431,7 @@ Ultimate_Vengeance(id){
 		parm[0]=id
 		
 		p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
-		_WAR3_Ultimate_Delay(parm)
+		_Ultimate_Delay(parm)
 	}
 }
 
@@ -1442,7 +1441,7 @@ Ultimate_Vengeance(id){
 // ****************************************
 
 Ultimate_LocustSwarm(id){
-	#if ADVANCED_DEBUG == 1
+	#if ADVANCED_DEBUG
 		writeDebugInfo("calllocustfunction",id)
 	#endif
 
@@ -1545,8 +1544,60 @@ public drawfunnels(parm[]){
 			cooldownparm[0]=caster
 			
 			p_data[caster][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
-			_WAR3_Ultimate_Delay(cooldownparm)
+			_Ultimate_Delay(cooldownparm)
 		}
 	}
 	return PLUGIN_HANDLED
+}
+
+public _Ultimate_Delay(parm[]){
+/*	#if ADVANCED_DEBUG
+		writeDebugInfo("_Ultimate_Delay",p_data[parm[0]][P_ULTIMATEDELAY])
+	#endif*/
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
+	new id = parm[0]
+
+	if(!p_data_b[id][PB_ISCONNECTED])
+		return PLUGIN_CONTINUE
+
+	p_data[id][P_ULTIMATEDELAY]--
+
+	if (p_data[id][P_ULTIMATEDELAY] > 0)
+		set_task(1.0,"_Ultimate_Delay",TASK_UDELAY+id, parm, 1)
+	else{
+		Ultimate_Ready(id)
+	}
+
+	return PLUGIN_CONTINUE
+}
+
+public Ultimate_Ready(id){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("Ultimate_Ready",id)
+	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
+	p_data_b[id][PB_ULTIMATEUSED] = false
+
+	if(is_user_alive(id) && p_data_b[id][PB_ISCONNECTED] && p_data[id][P_ULTIMATE]){
+
+		new szCommand[32]
+		format(szCommand, 31, "speak %s", SOUND_ULTIMATEREADY)
+
+		client_cmd(id, szCommand)
+
+		new szMessage[128]
+		format(szMessage, 127, "%L", id, "ULTIMATE_READY")
+
+		Status_Text(id, szMessage, 2.0, HUDMESSAGE_POS_STATUS)
+
+		icon_controller(id, ICON_SHOW)
+	}
+	
+	return PLUGIN_CONTINUE
 }
