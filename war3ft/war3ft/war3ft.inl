@@ -241,7 +241,7 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 	if(!is_user_alive(victim))
 		return PLUGIN_CONTINUE
 
-	if(p_data_b[victim][PB_WARDENBLINK] && (weapon == CSW_LIGHTNING || weapon == CSW_SUICIDE || weapon == CSW_FLAME || weapon == CSW_LOCUSTS))
+	if( p_data_b[victim][PB_WARDENBLINK] && (weapon == CSW_LIGHTNING || weapon == CSW_SUICIDE || weapon == CSW_FLAME || weapon == CSW_LOCUSTS))
 		return PLUGIN_CONTINUE
 
 	new bool:userkilled = false
@@ -1217,8 +1217,9 @@ public WAR3_Display_Level(id, flag){
 		set_user_rendering(id)
 
 	if (((p_data[id][P_RACE] == 9 && race9Options[1] != 4) || p_data[id][P_RACE] != 4 || !p_data[id][P_SKILL1])){	// Evasion
-		if (get_user_health(id)>=500)
-			set_user_health(id,get_user_health(id)-1024)
+		new userhealth = get_user_health(id)
+		if (userhealth > 500 && userhealth < 1500)
+			set_user_health(id, userhealth-1024)
 	}
 
 	new parm4[1]

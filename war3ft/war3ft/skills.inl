@@ -134,6 +134,9 @@ public _Skill_Impale(parm[2]){
 
 	new id = parm[0]
 
+	if(!p_data_b[id][PB_ISCONNECTED])
+		return PLUGIN_CONTINUE
+
 	if(parm[1]<4){
 		new Float:vec_angle[3], Float:vec_v_angle[3]
 		new i
@@ -155,4 +158,6 @@ public _Skill_Impale(parm[2]){
 	else{
 		entity_set_int(id, EV_INT_fixangle, 1)
 	}
+
+	return PLUGIN_CONTINUE
 }

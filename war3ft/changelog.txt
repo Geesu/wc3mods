@@ -4,6 +4,8 @@ v2.1.4
  - Bug Fix: Run time error with set_user_frags
  - Bug Fix: Where selecting multiple skills would execute the ultimate ready command every time
  - Bug Fix: Hex wasn't causing the screen color to change
+ - Bug Fix: player not in game w/in the _Skill_Impale function
+ - Bug Fix: God mode sometimes killing you when done (display level function caused this)
  - Change: Bots now have a 6% chance of changing their race each round
 
 v2.1.3

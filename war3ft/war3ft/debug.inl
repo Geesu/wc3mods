@@ -14,10 +14,6 @@ public test(id){
 	client_print(id,print_chat,"Health: %d", get_user_health(id))
 	client_print(id,print_chat,"Evade next shot: %d", p_data_b[id][PB_EVADENEXTSHOT])
 
-	for(new i=0;i<10;i++){
-		console_print(id, "%d: %d", i, xplevel[i])
-	}
-
 	return PLUGIN_HANDLED
 }
 

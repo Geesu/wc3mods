@@ -413,18 +413,8 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 		return PLUGIN_HANDLED
 	}
 
-	if (victim==attacker)
-		return PLUGIN_HANDLED
-
-	if (victim==attacker && wpnindex==0){
-		return PLUGIN_CONTINUE
-	}
-	else if (attacker==0){
-		return PLUGIN_CONTINUE
-	}
-
 	if( p_data_b[victim][PB_GODMODE] ){
-		if( p_data[attacker][P_ITEM] == ITEM_NECKLACE ){
+		if( p_data[attacker][P_ITEM] == ITEM_NECKLACE && attacker != victim ){
 			if( get_user_health(victim) - damage <= 2048 ){
 				WAR3_damage(victim, attacker, 3000, wpnindex, hitplace)
 			}
@@ -433,6 +423,16 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 			set_user_health(victim, get_user_health(victim) + damage)
 		}
 
+		return PLUGIN_CONTINUE
+	}
+
+	if (victim==attacker)
+		return PLUGIN_HANDLED
+
+	if (victim==attacker && wpnindex==0){
+		return PLUGIN_CONTINUE
+	}
+	else if (attacker==0){
 		return PLUGIN_CONTINUE
 	}
 
