@@ -1,0 +1,241 @@
+v2.1.3
+ - Bug Fix: You couldn't buy an item from shopmenu 2 if the no gloves on ka maps was enabled
+ - Bug Fix: runtime error 4 relating to mole (entity_get_vector)
+ - Bug Fix: Playerskills not always working
+ - Bug Fix: Death was being called twice when undead initiated it's ultimate
+ - Bug Fix: Race 9 options not always functioning correctly
+ - Bug Fix: Race 9 level information will no longer be displayed each round if random skills are not enabled
+ - Bug Fix: Runtime error regarding chain lightning and entangling roots
+ - Addition: A similar blue flash bang effect added for blink, it's less intense
+ - Addition: (DOD) Spectating Info added
+ - Change: Returned to old method of Big Bad Voodoo
+ - Removed: war3vote
+ - Improvement: Code for ring of regeneration and healing ward
+ - Improvement: GREATLY improved damage calculations for abilities
+
+v2.1.2
+ - Bug Fix: Runtime error regarding cs_set_user_money
+ - Bug Fix: Experience not always being displayed correctly when admins give xp(thanks ol)
+ - Bug Fix: (DOD) You could run fast while prone w/a bazooka
+ - Bug Fix: Function is not present (function "Item_mole") (thanks b4db0y)
+ - Bug Fix: Sometimes the flaming glove task was not removed properly
+ - Bug Fix: Fixed a bug where you couldn't buy an item if you had 5 rings (thanks ol)
+ - Bug Fix: ML_NOTFOUND for LEVEL
+ - Change: Hex will now only last for 40 seconds instead of until the player dies
+ - Change: Your screen will "fade" during each jump for Hex
+ - Language: Update for the dutch language file (thanks devilion)
+
+v2.1.1
+ - Bug Fix: skillsinfo wouldn't display correctly
+ - Bug Fix: Paramter formatted incorrectly for AWARD_FOR_WINNING_ROUND (thanks content)
+ - Bug Fix: If changing a team would kill you, ankh and mole wouldn't function the next round
+ - Bug Fix: runtime error with get_user_team in searchtarget functions
+ - Improvement: (DOD) All effects and sounds should work on all default dod maps, but NO race icons
+ - Change: (DOD) Serpent Ward colors changed to match team colors
+ - Change: Wand of Illusion removed, Sock of the Feather added
+ - Optimization: global array used instead of is_user_connected() (thanks EKS)
+
+v2.1.0
+ - Bug Fix: Line formatting error on line 1839 (thanks content)
+ - Bug Fix: (cstrike/czero) multiple death messages showing
+ - Bug Fix: Undead would still explode when the ultimate was not ready
+ - Bug Fix: Ultimate delays would suddenly stop
+ - Bug Fix: Menu's being called more than once (thanks PM)
+ - Bug Fix: changerace would show XP for short term mode
+ - Addition: (DOD) When you gain money it now shows +money under your total
+ - Addition: (DOD) You are now awarded XP for winning the round
+ - Addition: added a cancel button to the changerace menu
+ - Addition: added a check so some1 can't put more than 9 races in the war3ft.cfg file
+ - Change: It will no longer say "you gained a level" if you're race is 0
+ - Change: Crypt Lord's ultimate does more damage
+ - Change: (DOD) Scroll changed to Ankh, scroll is disabled
+ - Known Bugs: (DOD) Multiple deaths being shown
+
+v2.0.9
+ - Bug Fix: (DOD) When killed by an ability, it would always be weapon 0
+ - Bug Fix: Pheonix sometimes reporting the wrong name
+ - Bug Fix: run time error 4 on maxHealth (thanks striker)
+ - Addition: Clones now hold weapons =P
+ - Addition: If the map is disabled due to the half-life precache limit, war3ft is still playable but no sounds will be heard and limited effects will be shown
+ - Addition: If the map is disabled a message is shown to the player explaining why
+ - Addition: (DOD) Added a check for reincarnation so the player wouldn't be stuck
+ - Addition: (DOD) Added a check for reincarnation so the player wouldn't continue to spawn if he/she kept dying
+ - Addition: (DOD) If you "deploy" a rocket launcher and have unholy aura your speed will no longer decrease
+ - Addition: After purchasing an item, a message is displayed explaining what the user gains
+ - Change: Reverted to old XP system
+ - Change: (DOD) display for /level message changed
+ - Change: (DOD) display for message with gloves changed
+
+v2.0.8
+ - Bug Fix: String formatted incorrectly error with NO_SPOT_TO_MOLE (thanks content)
+ - Bug Fix: Glove's giving nades instantly
+ - Bug Fix: Where race info would appear after every kill
+ - Bug Fix: Run time error on gravity functions w/in WAR3_Display_Level
+ - Addition: If it cannot connect to the mysql database after 10 tries, it will automatically switch to short-term mode
+ - Change: (DOD) _ex grenade names changed to match standard log names
+
+v2.0.7
+ - Bug Fix: Claw's damage not registering correctly
+ - Bug Fix: Glove damage variable not registering correctly
+ - Bug Fix: Mask variable not registering correctly
+ - Bug Fix: Bot's chance of buying an item registering correctly
+ - Bug Fix: Ultimate delay not registering correctly at all times
+ - Bug Fix: Blink radius not registering correctly
+ - Bug Fix: Cloak variable not registering correctly
+
+v2.0.6
+ - Bug Fix: Cloak being practically invisible at all timess
+ - Bug Fix: Flame Strike would injur teammates
+ - Bug Fix: Run time error 4 in playerskills
+ - Addition: (DOD) Weapon Reincarnation changed to Reincarnation, this will spawn you where you died (thanks for the idea ryan)
+
+v2.0.5
+ - Bug Fix: Playerskills runtime error 4
+ - Bug Fix: Runtime error 4 in events.inl (thanks Striker)
+ - Bug Fix: (DOD) Items not displaying
+ - Bug Fix: (DOD) Smoke would appear as big black boxes (undead explosion, flame strike)
+ - Bug Fix: (DOD) CS weapon names appearing in logs instead of the proper DOD weapon names
+ - Bug Fix: Unholyspeed (thanks Kamikaze)
+ - Addition: Polish language added (thanks Lobo)
+ - Removed: sv_restrictultimate
+ - Improvement: Continuous CVAR calls removed, all are loaded at the start of the map
+ - Improvement: (DOD) Money will not appear at the top until you have selected a team
+
+v2.0.4
+ - Bug Fix: Fixed ScoreInfo crash on DOD (removed ScoreInfo messages for now)
+ - Bug Fix: Run time error 3, changed temp from 2048 to 1024 in playerskills
+ - Bug Fix: After reincarnating weapons your knife would be selected
+ - Bug Fix "This weapon cannot be dropped" message removed after reincarnating weapons
+ - Bug Fix: ML Language not found errors with moling
+ - Bug Fix: You would get negative kills when war3_death was called on your behalf (killed by an ability)
+ - Bug Fix: Fixed /icons not functioning
+ - Bug Fix: FT_spec_info 0 not working
+ - Bug Fix: Lost the bomb carrying bonus would say "you lost -40 xp"
+ - Bug Fix: Warden changing team while vengenace is ready
+ - Addition: Warden's Ultimate can now also be used to teleport you back to your spawn, if your health is less than 50 it will give you 50 :)
+ - Addition: If icons are disable and a player types /icons it will alert them that the server has them disabled
+ - Improvement: The function that displays race information, and showing "You gained a level" at the wrong time
+ - Change: The effect when a clone dies (from wand of illusion)
+ - Possible Fix: Helm
+
+v2.0.3
+ - Bug Fix: Fixed race selection menu not working correctly
+ - Bug Fix: Cooldowns would continue into the new round
+ - Bug Fix: Crypt Lord getting to use their ultimate for an unlimited period of time
+ - Bug Fix: Crypt Lord's Ultimate icon would no longer flash
+ - Bug Fix: Blood Mage's Ultimate was not functional
+ - Bug Fix: Shopmenu2 was working with standard war3 mod (4 races)
+ - Bug Fix: amx_givexp would set your xp, not give additional
+ - Bug Fix: Picking up and dropping bomb would give you a net positive XP gain
+ - Bug Fix: Human's Ultimate icon not appearing
+ - Bug Fix: Ultimate cooldowns could carry over from the previous round
+ - Bug Fix: Message that says "dont shoot" (at a chameleon) was not being displayed when it should
+ - Bug Fix: Where your would respawn but weapons wouldn't reincarnate until the next round
+ - Bug Fix: When you would respawn and have no ultimate (b/c it never started counting down)
+ - Bug Fix: Blood Mage's ultimate would work on teammates
+ - Bug Fix: Where you would be slayed after teleporting to a restricted area and the death would not be printed correctly (thanks Kamikaze)
+ - Bug Fix: Runtime error dealing with playerskills (when there are a lot of players) (thanks Striker)
+ - Addition: Dutch language, YOU MUST REPLACE the languages.txt file with the one included w/war3ft
+ - Addition: Danish language
+ - Addition: Impale now changes where the victim is aiming
+ - Removed: FT_blink_cooldown
+ - Removed: FT_blink_diziness, default is a *light* flashbang after teleportation
+ - Improvement: Teleport (Blink) code cleaned up
+ - Improvement: If war3ft cannot connect to the mysql server initially, it tries again every 25 seconds
+
+v2.0.2b
+ - Bug Fix: Fixed a bug where pressing 1 on the changerace menu would choose auto-select (only w/9 races, thanks striker)
+
+v2.0.2
+ - Bug Fix: Fixed multiple bugs where tasks were being ran for users that disconnected
+ - Bug Fix: Removed the debug code that was displayed everytime a user's XP was saved with the vault
+ - Bug Fix: ML_NOTFOUND GOD_g_MODE_GONE (thanks Kamikaze)
+ - Bug Fix: Invalid entity in function clone_check_dist (thanks Kamikaze)
+ - Bug Fix: You will no longer kill your teammates with suicide bomber when changing teams
+ - Bug Fix: Ultimate ping not working
+ - Bug Fix: When hiding the shield you no longer lose your speed boost (from unholy aura/boots)
+ - Bug Fix: Ultimate delays could occur in the middle of the round
+ - Bug Fix: Ultimate delay message displayed the wrong delay time
+ - Bug Fix: If you would revive during an undead explosion, an explosion would occur where you revived
+ - Bug Fix: Where you could get a shield on maps that doesn't allow buying weapons
+ - Addition: Effects for when clones die (wand of illusion)
+ - Addition: All tasks are given a unique ID (from war3x)
+ - Addition: Effect for big bad voodoo
+ - Addition: Debugging option to print info to a file on every function call
+ - Addition: Bots now have a change to buy items each round (see warft.cfg)
+ - Addition: FT_ultimatedelay is default at 15.0 seconds
+ - Addition: Ultimate not found message/sound (from war3x)
+ - Addition: Ultimate ready message/sound (from war3x)
+ - Addition: You can now specify EXACTLY how many races you would like (FT_races)
+ - Addition: Playerskills is now divided by race (similar to war3x)
+ - Removed: Walker function, put it's code in client_prethink
+ - Removed: Individual cooldown cvars, now it's FT_ultimate_cooldown
+ - Removed: Explosion cvars for undead
+ - Removed: FT_show_player (feature removed)
+ - Removed: FT_reset_skills (option is always on)
+ - Removed: FT_showblood (feature removed)
+ - Removed: CSSTATS_ENABLED define
+ - Removed: Ultimate Freezetime restriction
+ - Removed: FT_9race, FT_8race, FT_5race, FT_4race
+ - Removed: Blink delay options
+ - Improvement: Code that determines if undead is walking
+ - Improvement: Code for Big Bad Voodoo now uses set_user_hitzones
+ - Improvement: Clones will walk on the floor instead of sometimes in the air
+ - Improvement: get_cvar_num/float is not used as frequently
+ - Improvement: XP system changed, mp_xpmultiplier will no longer change xplevel
+ - Improvement: Race selection system, display_race_select removed
+ - Improvement: Check for minimum players, all done in the XP_give function
+ - Improvement: Changing Race screen will always appear, but the change only occurs at the start of the new round (idea from war3x)
+ - Improvement: Shield Detection
+ - Change: Orc Nade damage reduced from 2,4,6 to 2,3,4
+
+v2.0.1
+ - Bug Fix: Fixed bug with entity_get_string(entId, EV_SZ_model, modelName, 31)
+ - Bug Fix: Fixed bug with changeskin(id,1) in new_round
+
+v2.0
+ - Wacraft 3 Frozen Throne "promoted" to v2.0, MAJOR CHANGES
+    - AMX no longer supported, many new functions....
+    - new language options, dod support, more details below
+ - goomba message not shown anymore, now you glow white when you turn into a goomba
+ - Added support for amxx language module
+ - fixed bug where game commencing function wouldn't get called with czero
+ - improved code that will determine if you were killed by the bomb, thanks SAWCE (should now be flawless)
+ - support for amx removed
+ - nightvision is now given with equipment reincarnation
+ - defuse kits should always be given now
+ - now if you buy a respawn scroll and the round ends w/in .2 seconds and you don't respawn, you will be given your money back
+ - database errors are now added to the amxx log file
+ - this command is executed on map change: "amx_statscfg off PlayerName" to disable showing team colors during freezetime(finding a mole)
+ - icons will no longer load with de_inferno_cz, but they will with other maps
+ - added FT_steam, this must be 1 for steam, 0 for 1.5 (you don't have to recompile now)
+ - FT_8race is now default
+ - skillsinfo for race 9 now works, other race9 code changed up a bit
+ - fixed bug where warden would spawn with 50 health if revived (should spawn with 100)
+ - added support for dod
+ - in dod, unholy aura gives unlimited stamina, not speed
+ - fixed an invalid entity error on line 40... THANKS BAILOPAN!!!
+ - orc grenades on dod do more damage, and the fuse is shortened to 2.0 seconds
+ - fixed bug where g_bombDefuserIndex was never reset
+ - FT_claw, FT_bootspeed, FT_bootspeed_dod, FT_health_bonus, FT_frost_speed, FT_mask_of_death, FT_cloak added to war3ft.cfg
+ - added skill checks during set_skill, so if you choose devotion aura, you'll gain the health that round
+ - in dod, you receive money for kills and completing objectives
+ - fixed vault not saving, not sure when/why this happened
+
+v2.01
+ - added a check for maps that will not work in dod, war3FT will be disabled for those maps (see list below)
+
+Non-fixable bugs:
+ - /icons does not work with de_inferno_cz, this is not fixable, it's a limitation of the HL engine
+ - The following maps will not work b/c of the 512 items precached limit:
+	dod_caen, dod_charlie, dod_escape, dod_falaise, dod_forest, dod_kalt, dod_vicenza
+ - The following maps will not have all sounds b/c of the 512 items precached limit:
+	dod_anzio
+
+Fixable bugs:
+ - clear all huds
+
+To dos:
+ - use set_user_hitzones for mole protectant
+ - DOD: Assign a skill for weapon reincarnation
+ - DOD: Assign something for helm of excellence
