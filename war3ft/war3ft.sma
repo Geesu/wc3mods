@@ -24,30 +24,23 @@
 *  ryannotfound (war3x.net) for some of the naming conventions used (function names, constants, etc...) and functions
 */
 
+//#pragma dynamic 4096 
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Pimp Daddy (OoTOAoO)"
 new const WC3VERSION[] =	"2.1.6"
 
-#define AMX_ENABLED 0					// Compile for AMX? (currently doesn't work, don't get your hopes up)
-
-
-#if AMX_ENABLED
-	#include <amxmod>
-#else
-	#include <amxmodx>
-	#include <dbi>
-	#include <engine>
-#endif
-
+#include <amxmodx>
+#include <dbi>
+#include <engine>
 #include <amxmisc>
 #include <fun>
 
 #define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
-#define DEBUG 1							// Only use this when coding.. you normally don't want it
-#define ADVANCED_DEBUG 1				// Prints debug information to a log file when every function is called, VERY LAGGY
-#define ADVANCED_DEBUG_BOTS 1			// Print info for bots too?
+#define DEBUG 0							// Only use this when coding.. you normally don't want it
+#define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
+#define ADVANCED_DEBUG_BOTS 0			// Print info for bots too?
 #define PRECACHE_WAR3FTSOUNDS 1
 
 #if MOD == 0
@@ -72,9 +65,6 @@ new const WC3VERSION[] =	"2.1.6"
 #include "war3ft/language.inl"
 #include "war3ft/other.inl"
 #include "war3ft/admin.inl"
-
-// AMXX Functions that do not exist in AMX
-#include "war3ft/amx_inc.inl"
 
 #if MOD == 1
 	#include "war3ft/dod.inl"

@@ -868,13 +868,6 @@ public lightningeffect(id,targetid,linewidth,damage,caster){
 
 	WAR3_damage(targetid, caster, damage, CSW_LIGHTNING, 0)
 
-#if MOD == 0
-	if (get_user_armor(targetid)-damage<=0)
-		set_user_armor(targetid,0)
-	else
-		set_user_armor(targetid,get_user_armor(targetid)-damage)
-#endif
-
 	if(!g_mapDisabled)
 		Create_TE_BEAMENTS(id, targetid, g_sLightning, 0, 15, 10, linewidth, 10, 255, 255, 255, 255, 0)
 

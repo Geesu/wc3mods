@@ -26,6 +26,9 @@ public WAR3_precache() {
 		copy( SOUND_ITEM_TOME, 63,				"warcraft3/Tomes.wav"							)  // Tome of Experience
 		copy( SOUND_ULTIMATESCAN, 63,		"turret/tu_ping.wav"							)  // Ultimate Beep
 		copy( SOUND_ULTIMATEREADY, 63,		"warcraft3/ResurrectTarget.wav"					)  // Ultimate Beep
+		copy( SOUND_ANNIHILATION, 63,		"warcraft3/PurgeTarget1.wav"					)	// Orb of Annihilation
+		copy( SOUND_CONCOCTION_CAST, 63,	"warcraft3/PossessionMissileLaunch1.wav"		)	// Unstable Concoction Cast
+		copy( SOUND_CONCOCTION_HIT, 63,		"warcraft3/PossessionMissileHit1.wav"			)	// Unstable Concoction Hit
 	#else
 		copy( SOUND_VENGEANCE, 63,			"ambience/des_wind2.wav"						)  // Warden's Ultimate
 		copy( SOUND_SUICIDE, 63,			"ambience/particle_suck1.wav"					)  // Undead's Ultimate
@@ -45,6 +48,10 @@ public WAR3_precache() {
 		copy( SOUND_ITEM_TOME, 63,				"items/suitchargeok1.wav"						)  // Tome of Experience
 		copy( SOUND_ULTIMATESCAN, 63,		"turret/tu_ping.wav"							)  // Ultimate Beep
 		copy( SOUND_ULTIMATEREADY, 63,		"buttons/bell1.wav"								)  // Ultimate Beep
+//		copy( SOUND_ANNIHILATION, 63,		"warcraft3/PurgeTarget1.wav"					)	// Orb of Annihilation
+//		copy( SOUND_CONCOCTION_CAST, 63,	"warcraft3/PossessionMissileLaunch1.wav"		)	// Unstable Concoction Cast
+//		copy( SOUND_CONCOCTION_HIT, 63,		"warcraft3/PossessionMissileHit1.wav"			)	// Unstable Concoction Hit
+
 	#endif
 
 	// Skills / Ultimates
@@ -61,6 +68,9 @@ public WAR3_precache() {
 	precache_sound(SOUND_LIGHTNING) 
 	precache_sound(SOUND_TELEPORT) 
 	precache_sound(SOUND_BLINK) 
+	precache_sound(SOUND_ANNIHILATION) 
+	precache_sound(SOUND_CONCOCTION_CAST) 
+	precache_sound(SOUND_CONCOCTION_HIT) 
 
 	// Miscellaneous
 	precache_sound(SOUND_LEVELUP) 
@@ -86,6 +96,7 @@ public WAR3_precache() {
 	g_siTrail = precache_model("sprites/smoke.spr") 
 	g_sSnow = precache_model("sprites/snow.spr")  
 	g_sFlare = precache_model( "sprites/blueflare2.spr") 
+	g_sWave = precache_model("sprites/gwave1.spr")
 
 #if MOD == 0
 	g_sSmoke = precache_model("sprites/steam1.spr")
@@ -210,18 +221,55 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 	if( p_data_b[victim][PB_WARDENBLINK] && (weapon == CSW_LIGHTNING || weapon == CSW_SUICIDE || weapon == CSW_FLAME || weapon == CSW_LOCUSTS))
 		return PLUGIN_CONTINUE
 
+	// Warden's Hardened Skin
+	if( Verify_Race(victim, RACE_WARDEN) ){
+		damage -= floatround(float(damage) * p_harden[p_data[victim][P_LEVEL]])
+	}
+
+	#if DEBUG == 1
+		console_print(victim, "### WAR3 Damage: %d", damage)
+	#endif 
+
+#if MOD == 0
+	// Damage calculation due to armor from: ../multiplayer source/dlls/player.cpp
+
+	new Float:flNew = float(damage) * ARMOR_RATIO
+	new Float:flArmor = (float(damage) - flNew) * ARMOR_BONUS
+	new Float:armor = float(get_user_armor(victim))
+
+	// Does this use more armor than we have?
+	if( flArmor > armor ){
+		flArmor = armor;
+		flArmor *= (1/ARMOR_BONUS)
+		flNew = float(damage) - flArmor
+		set_user_armor(victim, 0)
+	}
+	else
+		set_user_armor(victim, floatround(armor - flArmor))
+
+	damage = floatround(flNew)
+#endif
+
+	#if DEBUG == 1
+		console_print(victim, "### WAR3 Damage After Armor: %d", damage)
+	#endif 
+
 	new bool:userkilled = false
 	new headshot = 0
 #if MOD == 0
 	if (bodypart == 1)
 		headshot = 1
 #endif
+	
+	new health = get_user_health(victim)
 
-	if ( (get_user_health(victim) - damage) <= 2048 &&  p_data_b[victim][PB_GODMODE] && p_data[attacker][P_ITEM] == ITEM_NECKLACE )
+	if ( health - damage <= 2048 &&  p_data_b[victim][PB_GODMODE] && p_data[attacker][P_ITEM] == ITEM_NECKLACE )
 		userkilled = true
-	if ( get_user_health(victim) - damage<=0 )
+	if ( health - damage <= 0 )
 		userkilled = true
-	else if ( get_user_health(victim) - damage <= 1024 && get_user_health(victim)>500 )	// Evasion Kill
+
+	// Evasion Kill
+	else if ( health - damage <= 1024 && health > 500 )
 		userkilled = true
 
 #if DEBUG
@@ -236,7 +284,7 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 #endif
 		WAR3_death(victim, attacker, weapon, headshot)
 	else
-		set_user_health(victim, get_user_health(victim) - damage)
+		set_user_health(victim, health - damage)
 
 	return PLUGIN_CONTINUE
 }
@@ -600,6 +648,9 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 	case CSW_THORNS:		raceskill(4,2,LANG_SERVER,weaponname,31)
 	case CSW_CARAPACE:		raceskill(8,2,LANG_SERVER,weaponname,31)
 	case CSW_CARRION:		raceskill(8,3,LANG_SERVER,weaponname,31)
+	case CSW_ORB:			Lang_Hero_Skill_Name(RACE_CRYPT,SKILL_HERO,LANG_SERVER,weaponname,31)
+	case CSW_CONCOCTION:	Lang_Hero_Skill_Name(RACE_SHADOW,SKILL_HERO,LANG_SERVER,weaponname,31)
+
 		}
 	#if MOD == 0
 		Create_DeathMsg_CS(killer_id, victim_id, headshot, weaponname)
@@ -637,7 +688,7 @@ public _WAR3_Ultimate_Delay(parm[]){
 
 	p_data[id][P_ULTIMATEDELAY]--
 
-	console_print(id, "_WAR3_Ultimate_Delay Called: %d", p_data[id][P_ULTIMATEDELAY])
+	//console_print(id, "_WAR3_Ultimate_Delay Called: %d", p_data[id][P_ULTIMATEDELAY])
 
 	if (p_data[id][P_ULTIMATEDELAY] > 0)
 		set_task(1.0,"_WAR3_Ultimate_Delay",TASK_UDELAY+id, parm, 1)
@@ -1037,12 +1088,14 @@ WAR3_Show_Spectator_Info(id, targetid){
 	add(message,1047,temp)
 
 	new thehealth = get_user_health(targetid)
-	if (thehealth>500){
-		if(p_data_b[targetid][PB_GODMODE])
-			thehealth-=2048
-		else
-			thehealth-=1024
-	}
+	
+	if ( thehealth > 2500 )
+		thehealth -= 3048
+	else if ( thehealth > 1500 )
+		thehealth -= 2048
+	else if ( thehealth > 500 )
+		thehealth -= 1024
+
 	#if MOD == 0
 		format(temp,511,"%L",id,"CURRENT_HEALTH",thehealth,get_user_armor(targetid))
 	#else

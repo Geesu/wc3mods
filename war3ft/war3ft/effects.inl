@@ -372,3 +372,56 @@ stock Create_TE_LAVASPLASH(position[3]){
 	write_coord( position[2] ) 
 	message_end()
 }
+
+stock Create_TE_TAREXPLOSION(position[3]){
+	#if ADVANCED_DEBUG == 1
+		writeDebugInfo("Create_TE_TAREXPLOSION",0)
+	#endif
+
+	message_begin( MSG_BROADCAST,SVC_TEMPENTITY) 
+	write_byte( TE_TAREXPLOSION ) 
+	write_coord( position[0] ) 
+	write_coord( position[1] ) 
+	write_coord( position[2] ) 
+	message_end()
+}
+
+stock Create_TE_BUBBLES(start[3], end[3], height, iSprite, count, speed){
+	#if ADVANCED_DEBUG == 1
+		writeDebugInfo("Create_TE_BUBBLES",0)
+	#endif
+
+/*			
+	Example:
+
+	g_sBubble = precache_model("sprites/bubble.spr")
+
+	new origin[3], start[3], end[3]
+
+	get_user_origin(victim, origin)
+
+	start[0] = origin[0] - 64
+	start[1] = origin[1] - 64
+	start[2] = origin[2] - 64
+
+	end[0] = origin[0] + 64
+	end[1] = origin[1] + 64
+	end[2] = origin[2] + 64
+
+	Create_TE_BUBBLES(start, end, 96, g_sBubble, 100, 8)
+*/
+
+	message_begin( MSG_BROADCAST,SVC_TEMPENTITY) 
+	write_byte( TE_BUBBLES )
+	write_coord( start[0] )				// start position
+	write_coord( start[1] ) 
+	write_coord( start[2] ) 
+	write_coord( end[0] )				// end position
+	write_coord( end[1] ) 
+	write_coord( end[2] ) 
+	write_coord( height )				// float height
+	write_short( iSprite )				// Sprite Index
+	write_byte( count )					// count
+	write_coord( speed )				// speed
+	message_end()
+}

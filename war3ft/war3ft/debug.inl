@@ -14,21 +14,22 @@ public test(id){
 	client_print(id,print_chat,"Health: %d", get_user_health(id))
 	client_print(id,print_chat,"Evade next shot: %d", p_data_b[id][PB_EVADENEXTSHOT])
 	client_print(id,print_chat,"Max health: %d", get_user_maxhealth(id))
-	new parm[1]
-	parm[0] = id
-	_WAR3_Ultimate_Delay(parm)
 
 	return PLUGIN_HANDLED
 }
 
 public test2(id){
+
+	new iNum[8]
+	read_argv(1,iNum,7)
+
 	new players[32], num
 	get_players(players, num)
 
 	for(new i=0;i<num;i++){
 		if(is_user_bot(players[i])){
 			p_data[players[i]][P_XP] = 100000
-			p_data[players[i]][P_RACE] = RACE_SHADOW
+			p_data[players[i]][P_RACE] = str_to_num(iNum)
 		}
 	}
 }

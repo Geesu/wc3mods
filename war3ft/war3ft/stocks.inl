@@ -85,24 +85,25 @@ stock find_free_spawn(iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]){
 
 stock get_user_actualhealth(id){
 
+	new health = get_user_health(id)
+
 	// Player has god mode
 
-	if ( get_user_health(id) > 1500 )
-		return get_user_health(id)-2048
-
+	if ( health > 1500 )
+		return health - 2048
 
 	// Player will evade the next shot
 
-	if ( get_user_health(id) > 500 )
-		return get_user_health(id)-1024
+	if ( health > 500 )
+		return health - 1024
 
 
-	return get_user_health(id)
+	return health
 }
 
 stock get_user_maxhealth(id){
-	new maxHealth = 100
 
+	new maxHealth = 100
 
 	// Human Devotion Skill
 
@@ -124,6 +125,7 @@ stock Verify_Race(id, race){
 
 	if( p_data[id][P_RACE] == race )
 		return true
+
 	else if( (p_data[id][P_RACE] == 9) ){
 		if ( race9Options[1] == race )
 			return true

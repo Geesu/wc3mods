@@ -707,6 +707,7 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 			Create_ScreenFade(attacker, (1<<10), (1<<10), (1<<12), 144, 58, 255, iglow[attacker][1])	// Purplish color
 		}
 	}
+
 	// Shadow Hunter
 	else if ( Verify_Race(attacker, RACE_SHADOW) ){
 
@@ -736,6 +737,7 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 			}
 		}
 	}
+
 	// Warden
 	else if ( Verify_Race(attacker, RACE_WARDEN) ){
 		
@@ -765,10 +767,24 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 	// Crypt Lord
 	else if ( Verify_Race(attacker, RACE_CRYPT) ){
 		
+		// Orb of Annihilation
+		new Float:randomnumber = random_float(0.0,1.0)
+		if (randomnumber <= p_orb[p_data[attacker][P_LEVEL]]){
+			new origin[3]
+			get_user_origin(victim, origin)
+			
+			origin[2] -= 20
+	
+			Create_TE_SPRITE(origin, g_sWave, 10, 200)
+
+			emit_sound(victim, CHAN_STATIC, SOUND_ANNIHILATION, 1.0, ATTN_NORM, 0, PITCH_NORM)
+
+			WAR3_damage(victim, attacker, ORB_DAMAGE, CSW_ORB, hitplace)
+		}
+
 		// Carrion Beetle
 		if ( Verify_Skill(attacker, RACE_CRYPT, SKILL3) ){
-			new Float:randomnumber = random_float(0.0,1.0)
-			if (randomnumber <= p_carrion[p_data[attacker][P_SKILL3]-1]&& p_data[attacker][P_CARRIONCOUNT]>0 && is_user_alive(victim)){
+			if (random_float(0.0,1.0) <= p_carrion[p_data[attacker][P_SKILL3]-1]&& p_data[attacker][P_CARRIONCOUNT]>0 && is_user_alive(victim)){
 				new origin[3], attackerorigin[3]
 				get_user_origin(victim,origin)
 				get_user_origin(attacker,attackerorigin)
@@ -783,12 +799,13 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 				tempdamage = 10
 				WAR3_damage(victim, attacker,tempdamage, CSW_CARRION, hitplace)
 			}
+			
 		}
 		
 		// Impale
 		if ( Verify_Skill(attacker, RACE_CRYPT, SKILL1) ){
-			new Float:randomnumber = random_float(0.0,1.0)
-			if (randomnumber <= p_impale[p_data[attacker][P_SKILL1]-1]){
+
+			if (random_float(0.0,1.0) <= p_impale[p_data[attacker][P_SKILL1]-1]){
 				emit_sound(victim,CHAN_STATIC, SOUND_IMPALE, 1.0, ATTN_NORM, 0, PITCH_NORM)
 				
 				new param[2]
@@ -942,6 +959,66 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 		}
 	}
 
+	// Blood Mage
+	else if ( Verify_Race(victim, RACE_BLOOD) ){
+
+		// Resistant Skin
+		tempdamage = floatround(float(damage) * p_resistant[p_data[victim][P_LEVEL]])
+		#if DEBUG == 1
+			console_print(victim, "### Damage: %d", damage)
+			console_print(victim, "### Final Damage: %d", damage - tempdamage)
+		#endif 
+
+		set_user_health(victim, get_user_health(victim) + tempdamage)
+
+	}
+
+	// Shadow Hunter
+	else if ( Verify_Race(victim, RACE_SHADOW) ){
+
+		// Unstable Concoction
+		new Float:randomnumber = random_float(0.0,1.0)
+
+		if (randomnumber <= p_concoction[p_data[victim][P_LEVEL]]){
+			new origin[3], k, initorigin[3], axisorigin[3]
+				
+			get_user_origin(victim, origin)
+
+			emit_sound(victim,CHAN_STATIC, SOUND_CONCOCTION_CAST, 1.0, ATTN_NORM, 0, PITCH_NORM)
+
+			initorigin[0] = origin[0]
+			initorigin[1] = origin[1]
+			initorigin[2] = origin[2] - 16
+
+			axisorigin[0] = origin[0]
+			axisorigin[1] = origin[1]
+			axisorigin[2] = origin[2] + CONCOCTION_RADIUS
+
+			for (k=0;k<200;k=k+25){
+				Create_TE_BEAMCYLINDER(origin, initorigin, axisorigin, g_sSpriteTexture, 0, 0, 9, 20, 0, 188, 220, 255, 255, 0)
+
+				initorigin[2] += 25
+			}
+
+			new players[32], numberofplayers, targetorigin[3], i
+
+			if (get_user_team(victim) == CTS)
+				get_players(players, numberofplayers, "ae", "TERRORIST")
+			else
+				get_players(players, numberofplayers, "ae", "CT")
+			
+			for(i=0;i<numberofplayers;i++){
+				get_user_origin(players[i], targetorigin)
+				if( get_distance(origin, targetorigin) <= CONCOCTION_RADIUS ){
+					WAR3_damage(players[i], victim, CONCOCTION_DAMAGE, CSW_CONCOCTION, hitplace)
+					emit_sound(victim,CHAN_STATIC, SOUND_CONCOCTION_HIT, 1.0, ATTN_NORM, 0, PITCH_NORM)
+				}
+			}
+		}
+
+	}
+
+
 	// Crypt Lord
 	else if ( Verify_Race(victim, RACE_CRYPT) ){
 
@@ -1088,6 +1165,9 @@ public on_CurWeapon(id) {
 		writeDebugInfo("on_CurWeapon",id)
 	#endif
 
+	// read_data(1) = isActive?
+	// read_data(2) = weapon index
+	// read_data(3) = ammo
 	if (warcraft3==false)
 		return PLUGIN_CONTINUE
 

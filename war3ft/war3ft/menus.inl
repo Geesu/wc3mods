@@ -394,8 +394,12 @@ public _menu_Select_Race(id,key){
 		race = (key+1)
 
 	if(p_data[id][P_RACE]!=0){
-		if(race != p_data[id][P_RACE])
+		if(race != p_data[id][P_RACE]){
+			client_print(id, print_center,"%L", id, "CENTER_CHANGED_NEXT")
 			p_data[id][P_CHANGERACE] = race
+		}
+		else
+			p_data[id][P_CHANGERACE] = 0
 	}
 	else
 		WAR3_set_race(id, race)

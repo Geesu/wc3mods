@@ -174,16 +174,34 @@ public raceskill(race, skill, id, skill_name[],length){
 #if MOD == 0
 	if(race > 0 && race < 9){
 #endif
-		new skill_lookup[128]
-		format(skill_lookup,127,"RACE%d_SKILL%d",race,skill)
+		new skill_lookup[64]
+		format(skill_lookup,63,"RACE%d_SKILL%d",race,skill)
 		format(skill_name,length-1,"%L",id,skill_lookup)
 	}else if(race == RACE_CHAMELEON){
-		new skill_lookup[128]
-		format(skill_lookup,127,"RACE%d_SKILL%d",race9Options[skill],skill)
+		new skill_lookup[64]
+		format(skill_lookup,63,"RACE%d_SKILL%d",race9Options[skill],skill)
 		format(skill_name,length-1,"%L",id,skill_lookup)
 	}else if(race != 0 ){
 		log_amx("[%s] ERROR, Race: %d, skill: %d not found in raceskill function",g_MOD,race,skill)
 		format(skill_name,length-1,"")
+	}
+}
+
+public Lang_Hero_Skill_Name(race, skill, id, skill_name[], iDescLen){
+	new skill_lookup[64]
+	format(skill_lookup,63,"RACE%d_SKILL5_NAME",race)
+	format(skill_name,iDescLen-1,"%L",id,skill_lookup)
+}
+
+public Lang_Hero_Skill_Info(race, skill, id, skill_description[], iDescLen){
+	new skill_lookup[64]
+	format(skill_lookup,63,"RACE%d_SKILL5_INFO",race)
+
+	switch(race){
+		case RACE_BLOOD:	format(skill_description,iDescLen-1,"%L",id,skill_lookup,(100.0 * p_resistant[p_data[id][P_LEVEL]]))
+		case RACE_SHADOW:	format(skill_description,iDescLen-1,"%L",id,skill_lookup,(100.0 * p_concoction[p_data[id][P_LEVEL]]), CONCOCTION_DAMAGE)
+		case RACE_WARDEN:	format(skill_description,iDescLen-1,"%L",id,skill_lookup,(100.0 * p_harden[p_data[id][P_LEVEL]]))
+		case RACE_CRYPT:	format(skill_description,iDescLen-1,"%L",id,skill_lookup,(100.0 * p_orb[p_data[id][P_LEVEL]]), ORB_DAMAGE)
 	}
 }
 

@@ -343,7 +343,11 @@ public Item_Clear(id){
 
 	// Reset Skin
 	if (p_data[id][P_ITEM2]==ITEM_CHAMELEON)
-		changeskin(id,1)		
+		changeskin(id,1)	
+
+	// Amulet of the Cat
+	if (p_data[id][P_ITEM2] == ITEM_AMULET)
+		p_data_b[id][PB_SILENT] = false
 
 	// Reset rings and footsteps
 	p_data[id][P_RINGS]=0
@@ -401,6 +405,11 @@ public Item_Check(parm[]){
 
 	if (p_data[id][P_ITEM2]==ITEM_CHAMELEON && is_user_alive(id))
 		changeskin(id,SKIN_SWITCH)
+
+	if (p_data[id][P_ITEM2] == ITEM_AMULET)
+		p_data_b[id][PB_SILENT] = true
+	else
+		p_data_b[id][PB_SILENT] = false
 
 	return PLUGIN_CONTINUE
 }

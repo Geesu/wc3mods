@@ -7,14 +7,10 @@ stock XP_give(id, iXP){
 	#endif
 
 	// Check for min. players here
-	console_print(id,"### Could Gained: %d", iXP)
-
 	new numberofplayers = get_playersnum() 
 
 	if(numberofplayers < iCvar[FT_MIN_B4_XP])
 		return 0
-
-	console_print(id,"### XP Gained: %d", iXP)
 
 	p_data[id][P_XP] += iXP
 
@@ -61,6 +57,7 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot){
 					client_print(killer_id,print_chat,"%L",killer_id,"AWARDED_FOR_KILLING",g_MOD,XP,victimName)
 				}
 			}
+		#if MOD == 0
 			if( headshot && killer_id!=victim_id){
 				iXP = iCvar[FT_HEADSHOT_BONUS]
 				XP = XP_give(killer_id,iXP)
@@ -68,7 +65,6 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot){
 					client_print(killer_id,print_chat,"%s %L",g_MODclient, killer_id,"AWARDED_FOR_HEADSHOT", XP)			
 				}
 			}
-		#if MOD == 0
 			if (victim_id==g_hostageSaver){
 				iXP = iCvar[FT_KILLRESCUEMANXP]
 				XP = XP_give(killer_id,iXP)
@@ -223,6 +219,8 @@ stock XP_Set_Multiplier(){
 	weaponxpmultiplier[CSW_THORNS]			= 1.0
 	weaponxpmultiplier[CSW_CARAPACE]		= 1.0
 	weaponxpmultiplier[CSW_CARRION]			= 1.0
+	weaponxpmultiplier[CSW_ORB]				= 1.0
+	weaponxpmultiplier[CSW_CONCOCTION]		= 1.0
 
 	return PLUGIN_CONTINUE
 }

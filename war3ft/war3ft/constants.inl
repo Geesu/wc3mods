@@ -70,9 +70,14 @@
 #define TASK_TARGETBOMBED	2013
 #define TASK_BOMBTIMER		2014
 
+
+// From ../multiplayer source/dlls/player.cpp
+#define ARMOR_RATIO	 0.5	// Armor Takes 50% of the damage (was .2 in the SDK)
+#define ARMOR_BONUS  0.5	// Each Point of Armor is work 1/x points of health
+
 #define TE_BEAMPOINTS		0
 #define TE_EXPLOSION		3
-#define TE_EXPLFLAG_NONE	0
+#define	TE_TAREXPLOSION		4
 #define TE_SMOKE			5
 #define TE_BEAMENTS			8
 #define	TE_LAVASPLASH		10
@@ -82,12 +87,17 @@
 #define TE_SPRITE			17
 #define TE_BEAMCYLINDER		21
 #define TE_BEAMFOLLOW		22
+#define TE_STREAK_SPLASH	25
 #define TE_ELIGHT			28
-#define TE_PLAYERATTACHMENT 124
 #define TE_LARGEFUNNEL		100
+#define TE_FIZZ				105		// create alpha sprites inside of entity, float upwards
+#define TE_BUBBLES			113		// create alpha sprites inside of box, float upwards
 #define TE_SPRAY			120
+#define TE_PLAYERATTACHMENT 124
 
 #define	EF_BRIGHTFIELD		1
+
+#define TE_EXPLFLAG_NONE	0
 
 #define MAX_NAME_LENGTH 32
 #define MAX_VAR_LENGTH 64 
@@ -110,6 +120,9 @@
 #define EXPLOSION_RANGE			300
 #define EXPLOSION_BLAST_RADIUS	250
 #define BLINK_COOLDOWN			2.0
+#define ORB_DAMAGE				20			// Damage done by Orb of Annihilation
+#define CONCOCTION_DAMAGE		15			// Damage done by Unstable Concoction
+#define CONCOCTION_RADIUS		300
 
 // CS AmmoX Types
 #define AMMOX_338MAGNUM			1     // AWP
@@ -145,6 +158,8 @@
 #define	CSW_THORNS				57
 #define	CSW_CARAPACE			58
 #define CSW_CARRION				59
+#define CSW_ORB					60
+#define CSW_CONCOCTION			61
 
 #define RACE_UNDEAD				1
 #define RACE_HUMAN				2
@@ -241,7 +256,15 @@
 #define SKILL3						3
 #define SKILL4						4
 
+#define SKILL_1						1
+#define SKILL_2						2
+#define SKILL_3						3
+#define SKILL_ULTIMATE				4
+#define SKILL_HERO					5
+
 #define MAX_RACES					9
+
+#define MAX_LEVELS					10
 
 // Number of attempts to make to connect to the database if it fails (only if sv_mysql is 1)
 #define	SQL_ATTEMPTS				10
@@ -457,6 +480,10 @@
 
 /* Variables for precaching sounds */
 
+new SOUND_ANNIHILATION[64]
+new SOUND_CONCOCTION_CAST[64]
+new SOUND_CONCOCTION_HIT[64]
+
 new SOUND_VENGEANCE[64]
 new SOUND_SUICIDE[64]
 new SOUND_BANISH[64]
@@ -557,6 +584,7 @@ new g_siTrail
 new g_sSpriteTexture
 new g_sLightning
 new g_sFlare
+new g_sWave
 
 #if MOD != 1
 	new g_sRace[10]
@@ -608,23 +636,28 @@ new const Float:p_trueshot[3] =			{0.15,0.3,0.45}			// Trueshot Aura			(skill 3)
 new const Float:p_pheonix[3] =			{0.333,0.666,1.0}		// Pheonix					(skill 1)
 new const Float:p_banish[3] =			{0.07,0.13,0.20}		// Banish					(skill 2)
 new const Float:p_mana[3] =				{0.02,0.04,0.08}		// Siphon Mana				(skill 3)
+new const Float:p_resistant[11] =		{0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50}	// Resistant Skin		(Skill 4)
 
 new const Float:p_heal[3] =				{6.0,4.0,2.0}			// Healing Wave				(skill 1)
 new const Float:p_hex[3] =				{0.05,0.10,0.15}		// Hex						(skill 2)
 new const p_serpent[3] =				{1,2,3}					// Serpent Ward				(skill 3)
+new const Float:p_concoction[11] =		{0.0, 0.01, 0.02, 0.04, 0.06, 0.08, 0.10, 0.13, 0.15, 0.17, 0.20}	// Unstable Concoction	(Skill 4)
 
 new const Float:p_fan[3] =				{0.05,0.10,0.15}		// Fan of Knives			(skill 1)
 new const Float:p_blink[3] =			{0.333,0.666,1.0}		// Blink					(skill 2)
 new const Float:p_shadow[3] =			{0.15,0.30,0.45}		// Shadow Strike			(skill 3)
+new const Float:p_harden[11] =			{0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50}	// Hardened Skin		(Skill 4)
 
 new const Float:p_impale[3] =			{0.5,0.10,0.20}			// Impale					(skill 1)
 new const Float:p_spiked[3] =			{0.05,0.1,0.15}			// Spiked Carapace			(skill 2)
 new const Float:p_carrion[3] =			{0.15,0.25,0.45}		// Carrion Beetle			(skill 3)
+new const Float:p_orb[11] =				{0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.15}	// Orb of Annihilation	(Skill 4)
+
 
 new xplevel[11] =						{0,150,300,600,1000,1500,2100,2800,3400,4500,5500}
 new xpgiven[11] =						{10,15,25,35,40,50,60,70,80,90,95}
 
-new Float:weaponxpmultiplier[60] =		{1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0}
+new Float:weaponxpmultiplier[62] =		{1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0}
 
 new const itemcost[9] =					{1500,1500,1000,800,2000,800,2000,1000,4000}
 #if MOD == 0
@@ -634,4 +667,4 @@ new const itemcost[9] =					{1500,1500,1000,800,2000,800,2000,1000,4000}
 	new const itemcost2[9] =				{800,1500,550,1500,1500,1750,1000,9000,16000}
 #endif
 
-new MOTD_header[] = "<html><head><style type=^"text/css^">#s{text-indent:35px;width:500px;}</style></head><body bgcolor=#000000 text=#FFB000>"
+new MOTD_header[] = "<html><head><style type=^"text/css^">#title{font-family:^"Verdana, Arial, Helvetica, sans-serif^";color:#00FF00;text-align:center;font-weight:bold;}#s{text-indent:35px;width:650px;}ul{margin-top:0px;margin-bottom:10px;}</style></head><body bgcolor=#000000 text=#FFB000>"

@@ -6,16 +6,28 @@ v2.1.6
  - Bug Fix: Where you couldn't purchase more than one ring through shopmenu 2
  - Bug Fix: Player names with a ' would not save
  - Bug Fix: If you used big bad voodoo, then a new round started during its use, you would die
+ - Bug Fix: (DOD) Each kill was reported as a head shot
+ - Bug Fix: Where dying from the bomb would allow you to still have amulet the next round
+ - Bug Fix: Where you would select a different race, then re-select your current race, it would still change your race to the 1st selection
  - Change: Stopped using cs_get_user_buyzone, cs_get_user_defuse
  - Change: When a player first joins a team, they will no longer be given XP for winning that round if they weren't on that team
  - Change: Percentage chance of impale being activated was lowered
  - Change: The effect for healing wards will no longer be seen unless it is actually healing someone
  - Change: Ring of regeneration and healing ward will no longer stop at the end of the round
  - Change: Ultimates can now be used after the round has ended
- - Change: Playerskills code
+ - Change: Chain Lightning no longer removes armor
+ - Change: Damage calculations now match the calculations done in the HL SDK (armor GREATLY reduces magical damage now)
  - Addition: FT_entangle_drop
+ - Addition: One ability added for each hero race
+	- Blood Mage's Resistant Skin which will deflect normal damage (up to 50% at level 10)
+	- Shadow Hunter's Unstable Concoction which gives a maximum chance of 20% to damage nearby enemies when attacked
+	- Warden's Hardened Skin which allows the warden to block magical damage (50% at level 10)
+	- Crypt Lord's Orb of Annihilation which gives the crypt lord a maximum chance of 15% to do a bonus 20 damage
  - Improvement: Code for Healing Wards
  - Improvement: Code for Serpent Wards
+ - Improvement: Playerskills code
+ - Language: Dutch Updated
+ - Language: Some French added
 
 v2.1.5
  - Bug Fix: Human's being able to get 255 health

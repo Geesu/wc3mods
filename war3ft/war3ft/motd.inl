@@ -199,14 +199,17 @@ public MOTD_Playerskills(id, saychat){
 						replace(name, 127, "<", "&lt;")
 						replace(name, 127, ">", "&gt;")
 
-						pos += format(message[pos],2048-pos,"<li>(%d) %s",p_data[playerid][P_LEVEL],name)
+						if(get_user_team(playerid) == CTS)
+							pos += format(message[pos],2048-pos,"<li><font color='blue'>(%d) %s",p_data[playerid][P_LEVEL],name)
+						else
+							pos += format(message[pos],2048-pos,"<li><font color='red'>(%d) %s",p_data[playerid][P_LEVEL],name)
 					}
 					else{
 						console_print(id, "%-2s(%d) %s","",p_data[playerid][P_LEVEL],name)
 					}
 					
 					if( saychat ) {
-						pos += format(message[pos],2048-pos,"</li>")
+						pos += format(message[pos],2048-pos,"</font></li>")
 					}
 				}
 			}
@@ -229,7 +232,7 @@ public MOTD_Playerskills(id, saychat){
 
 public MOTD_Skillsinfo(id){
 	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("skills_info",id)
+		writeDebugInfo("MOTD_Skillsinfo",id)
 	#endif
 
 	if (warcraft3==false)
@@ -261,8 +264,7 @@ public MOTD_Skillsinfo(id){
 		// Format the Title
 
 		pos += format(message[pos],2048-pos, "%s", MOTD_header)
-		pos += format(message[pos],1024-pos,"%L <br>",id,"CLICK_HERE", szGame)
-		pos += format(message[pos],2048-pos,"<br><br><font face=^"Verdana, Arial, Helvetica, sans-serif^" color=^"#00FF00^" size=+1><b>%s</b></font><br><br>",race_name)
+		pos += format(message[pos],2048-pos,"<div id=^"title^">%s</div><br><br>",race_name)
 
 		for(i=0;i<4;i++){
 
@@ -277,23 +279,40 @@ public MOTD_Skillsinfo(id){
 
 		}
 
-		for(i=0;i<4;i++){
+		for(i=0;i<5;i++){
 
 			// Add each skill
 			if(0 <= i < 3){
-				pos += format(message[pos],2048-pos,"<font color='#F4D285'><li>%s</li></font><div id='s'>%s</div><br>", race_skill[i], skill_description[i])
+				if( i == 0 )
+					pos += format(message[pos],2048-pos,"<font color=^"FFEEFF^" size=+1>%L</font><br><br>", id, "WORD_TRAINABLE_SKILLS")
+
+				pos += format(message[pos],2048-pos,"<font color=^"#F4D285^"><li>%s</li></font><ul>%s</ul><br>", race_skill[i], skill_description[i])
 
 			}
 
 			// Add the ultimate
-			else{
-				pos += format(message[pos],2048-pos,"<font color='#F4D285'><li>%L, %s</li></font><div id='s'>%s</div><br>", id, "WORD_ULTIMATE", race_skill[i], skill_description[i])
+			else if( i == 3 ){
+				pos += format(message[pos],2048-pos,"<font color=^"FFEEFF^" size=+1>%L</font><br><br>",id, "WORD_ULTIMATE")
+				pos += format(message[pos],2048-pos,"<font color='#F4D285'><li>%s</li></font><ul>%s</ul>", race_skill[i], skill_description[i])
 
+			}
+
+			// Add the hero's passive ability
+			else if(4 < p_data[id][P_RACE] < 9 && i == 4){
+				pos += format(message[pos],2048-pos,"<br><font color=^"FFEEFF^" size=+1>%L</font><br><br>", id, "WORD_HERO_ABILITY")
+
+				new heroskillinfo[128]
+				new heroskillname[64]
+				Lang_Hero_Skill_Name(p_data[id][P_RACE], SKILL_HERO, id, heroskillname, 63)
+				Lang_Hero_Skill_Info(p_data[id][P_RACE], SKILL_HERO, id, heroskillinfo, 127)
+				pos += format(message[pos],2048-pos,"<font color='#F4D285'><li>%s</li></font><ul>%s</ul><br>", heroskillname, heroskillinfo)
 			}
 		}
 
+		pos += format(message[pos],1024-pos,"%L",id,"CLICK_HERE", szGame)
+
 		new race_info[128]
-		format(race_info,127,"%L",id,"RACE_INFORMATION")
+		format(race_info,127,"%s %L",race_name, id,"WORD_INFORMATION")
 		show_motd(id,message,race_info)
 
 	}
