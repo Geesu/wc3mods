@@ -2,7 +2,8 @@ v2.2.2
  - Addition: Effect during Big Bad Voodoo
  - Addition: FT_cshack variable
  - Addition: FT_impale_intensity (setting this to a lower value will lower the intesity of impale)
- - Change: Pheonix will now revive players if they were TKed (thanks -]ST|Ghost[-)
+ - Change: Price of Scroll Increased
+ - Change: Phoenix will now revive players if they were TKed (thanks -]ST|Ghost[-)
  - Change: Impale % lowered to 12% max (was 15%)
  - Change: Mask of Death no longer stacks with Undead's Vampiric Aura
  - Change: Orc's Critical Strike, you now have a 15% chance of doing an extra 25%, 50%, or 75% of the original damage to an enemy

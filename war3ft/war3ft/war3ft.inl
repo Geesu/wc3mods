@@ -480,10 +480,12 @@ public WAR3_death_victim(victim_id, killer_id){
 	new players[32], numberofplayers, y
 	get_players(players, numberofplayers)
 
-	if(get_user_team(victim_id)==TS && g_pheonixExistsT>0){
+	new vTeam = get_user_team(victim_id)
+
+	if(vTeam == TS && g_pheonixExistsT>0){
 		for (y = 0; y < numberofplayers; ++y){
 			new id = players[y]
-			if (p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && !is_user_alive(victim_id) && (get_user_team(victim_id) == CTS || get_user_team(victim_id) == TS)){
+			if (get_user_team(id) == vTeam && p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && !is_user_alive(victim_id) && (get_user_team(victim_id) == CTS || get_user_team(victim_id) == TS)){
 				p_data_b[id][PB_PHEONIXCASTER] = false
 				new parm[2], name[32], victimName[32], message[128]
 
@@ -507,10 +509,10 @@ public WAR3_death_victim(victim_id, killer_id){
 			}
 		}
 	}
-	else if(get_user_team(victim_id)==CTS && g_pheonixExistsCT>0){
+	else if(vTeam == CTS && g_pheonixExistsCT>0){
 		for (y = 0; y < numberofplayers; ++y){
 			new id = players[y]
-			if (p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && !is_user_alive(victim_id) && (get_user_team(victim_id) == CTS || get_user_team(victim_id) == TS)){
+			if (get_user_team(id) == vTeam && p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && !is_user_alive(victim_id) && (get_user_team(victim_id) == CTS || get_user_team(victim_id) == TS)){
 				p_data_b[id][PB_PHEONIXCASTER] = false
 				new parm[2], name[32], victimName[32], message[128]
 				parm[0]=victim_id
