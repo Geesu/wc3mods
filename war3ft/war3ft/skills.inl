@@ -119,7 +119,7 @@ public _Skill_Hex(parm[2]){
 
 	parm[1]--
 
-	Create_ScreenFade(id, (1<<10), (1<<10), (1<<12), 144, 58, 255, iglow[id][3])
+	Create_ScreenFade(id, (1<<10), (1<<10), (1<<12), 82, 245, 235, 110)
 
 	if(!endround && is_user_alive(id) && parm[1]>0)
 		set_task(4.0,"_Skill_Hex",TASK_JUMPER+id,parm,2)

@@ -1225,6 +1225,10 @@ public on_ResetHud(id){
 			else
 				Item_Buy2(id, random_num(0,8))
 		}
+		if (randomnumber <= 0.06){
+			p_data[id][P_XP]=xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))]
+			p_data[id][P_RACE] = random_num(1,iCvar[FT_RACES])
+		}
 	}
 
 	new parm[2]

@@ -2,6 +2,9 @@ v2.1.4
  - Bug Fix: Run time error 4 on get_entity_vector
  - Bug Fix: Run time error with cs_get_user_buyzone(id) in function cmd_shield
  - Bug Fix: Run time error with set_user_frags
+ - Bug Fix: Where selecting multiple skills would execute the ultimate ready command every time
+ - Bug Fix: Hex wasn't causing the screen color to change
+ - Change: Bots now have a 6% chance of changing their race each round
 
 v2.1.3
  - Bug Fix: You couldn't buy an item from shopmenu 2 if the no gloves on ka maps was enabled

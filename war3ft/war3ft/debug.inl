@@ -21,6 +21,18 @@ public test(id){
 	return PLUGIN_HANDLED
 }
 
+public test2(id){
+	new players[32], num
+	get_players(players, num)
+
+	for(new i=0;i<num;i++){
+		if(is_user_bot(players[i])){
+			p_data[players[i]][P_XP] = 100000
+			p_data[players[i]][P_RACE] = RACE_SHADOW
+		}
+	}
+}
+
 new g_configsDir[64]
 new g_configFound = 0
 new keepTrack = 0

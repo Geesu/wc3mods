@@ -234,17 +234,17 @@ public _menu_Select_Skill(id,key){
 
 	new skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]+p_data[id][P_ULTIMATE]
 
-	if (key == 0 && p_data[id][P_SKILL1]!=3 && p_data[id][P_LEVEL]>2*p_data[id][P_SKILL1] && skillsused<p_data[id][P_LEVEL])
+	if (key == KEY_1 && p_data[id][P_SKILL1]!=3 && p_data[id][P_LEVEL]>2*p_data[id][P_SKILL1] && skillsused<p_data[id][P_LEVEL])
 		++p_data[id][P_SKILL1]
-	else if (key == 1 && p_data[id][P_SKILL2]!=3 && p_data[id][P_LEVEL]>2*p_data[id][P_SKILL2] && skillsused<p_data[id][P_LEVEL])
+	else if (key == KEY_2 && p_data[id][P_SKILL2]!=3 && p_data[id][P_LEVEL]>2*p_data[id][P_SKILL2] && skillsused<p_data[id][P_LEVEL])
 		++p_data[id][P_SKILL2]
-	else if (key == 2 && p_data[id][P_SKILL3]!=3 && p_data[id][P_LEVEL]>2*p_data[id][P_SKILL3] && skillsused<p_data[id][P_LEVEL])
+	else if (key == KEY_3 && p_data[id][P_SKILL3]!=3 && p_data[id][P_LEVEL]>2*p_data[id][P_SKILL3] && skillsused<p_data[id][P_LEVEL])
 		++p_data[id][P_SKILL3]
-	else if (key == 3 && p_data[id][P_ULTIMATE]==0 && p_data[id][P_LEVEL]>=6 && skillsused<p_data[id][P_LEVEL]){
+	else if (key == KEY_4 && p_data[id][P_ULTIMATE]==0 && p_data[id][P_LEVEL]>=6 && skillsused<p_data[id][P_LEVEL]){
 		p_data[id][P_ULTIMATE]=1
 		p_data_b[id][PB_ULTIMATEUSED]=false
 	}
-	else if (key == 9)
+	else if (key == KEY_0)
 		return PLUGIN_HANDLED
 
 	skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]+p_data[id][P_ULTIMATE]
@@ -256,35 +256,35 @@ public _menu_Select_Skill(id,key){
 
 	// Initiate cooldown for player's ultimate, or give them they're ultimate
 
-	if( !task_exists(TASK_UDELAY+id) ){
+	if( !task_exists(TASK_UDELAY+id) && key == KEY_4 ){
 		new parm[1]
 		parm[0] = id
 
 		p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
 		_WAR3_Ultimate_Delay(parm)
 	}
-	else{
+	else if ( key == KEY_4 && !p_data[id][P_ULTIMATEDELAY] && !p_data_b[id][PB_ULTIMATEUSED]){
 		WAR3_Ultimate_Ready(id)
 	}
 
 	// Serpent Ward Chosen
-	if ( Verify_Skill(id, RACE_SHADOW, SKILL3) && key == 2 ){
+	if ( Verify_Skill(id, RACE_SHADOW, SKILL3) && key == KEY_3 ){
 		p_data[id][P_SERPENTCOUNT]++
 	}
 	// Carrion Beetle Chosen
-	if ( Verify_Skill(id, RACE_CRYPT, SKILL3) &&  key == 2 ){
+	if ( Verify_Skill(id, RACE_CRYPT, SKILL3) &&  key == KEY_3 ){
 		if( p_data[id][P_CARRIONCOUNT] < 3 ){
 			p_data[id][P_CARRIONCOUNT]++
 		}
 	}
 	// Shadow Strike Chosen
-	if ( Verify_Skill(id, RACE_WARDEN, SKILL3) && key == 2 ){
+	if ( Verify_Skill(id, RACE_WARDEN, SKILL3) && key == KEY_3 ){
 		if (p_data[id][P_SHADOWCOUNT] < 3 ){
 			p_data[id][P_SHADOWCOUNT] = 2
 		}
 	}
 	// Devotion Aura Chosen
-	if ( Verify_Skill(id, RACE_HUMAN, SKILL2) && key == 1 && is_user_alive(id)){
+	if ( Verify_Skill(id, RACE_HUMAN, SKILL2) && key == KEY_2 && is_user_alive(id)){
 		if(p_data[id][P_SKILL2]==1)
 			set_user_health(id,get_user_health(id) + (p_devotion[0] - 100))
 		else if(p_data[id][P_SKILL2]==2)
