@@ -3,6 +3,7 @@ v2.1.6
  - Bug Fix: Rings would not health humans to their max health (thanks ol)
  - Bug Fix: FT_buyzone would display a message if you attempted to buy an item when dead
  - Bug Fix: When the bomb would kill you, ankh/reincarnation would not work
+ - Bug Fix: Where you couldn't purchase more than one ring through shopmenu 2
  - Change: Stopped using cs_get_user_buyzone, cs_get_user_defuse
  - Change: When a player first joins a team, they will no longer be given XP for winning that round if they weren't on that team
  - Change: Percentage chance of impale being activated was lowered

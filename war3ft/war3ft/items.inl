@@ -211,7 +211,7 @@ public Item_Buy2(id, key){
 		else if (p_data[id][P_ITEM2]==ITEM_CHAMELEON){
 			changeskin(id,SKIN_SWITCH)
 		}
-		else if (p_data[id][P_ITEM2]==ITEM_RING){
+		else if (p_data[id][P_ITEM2]==ITEM_RING && iShopmenuItem!=ITEM_RING){
 			if(task_exists(TASK_ITEM_RINGERATE+id))
 				remove_task(TASK_ITEM_RINGERATE+id)
 			p_data[id][P_RINGS]=0

@@ -430,6 +430,10 @@ public _Skill_Healing_Wave(parm[2]){
 			if (distancebetween < iCvar[FT_HEALING_RANGE]){
 
 				get_user_origin(targetid,origin)
+				
+				// Create effect, but only if the user needs to be healed
+				if( get_user_actualhealth(targetid) != get_user_maxhealth(targetid) )
+					Create_TE_IMPLOSION(origin, 100, 8, 1)
 
 				while(heal!=0){
 					if( get_user_actualhealth(targetid) + heal <= get_user_maxhealth(targetid) ){
@@ -437,8 +441,6 @@ public _Skill_Healing_Wave(parm[2]){
 					}
 					heal--
 				}
-
-				Create_TE_IMPLOSION(origin, 100, 8, 1)
 			}
 		}
 	}
