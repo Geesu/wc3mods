@@ -1,7 +1,7 @@
 /* AMXMOD X script. 
 *
 *  Warcraft 3: Frozen Throne
-*  by Pimp Daddy (OoTOAoO)
+*  by Geesu==Pimp Daddy==OoTOAoO=
 *  http://www.war3ft.com
 *  http://www.4hm.net (check forums)
 *
@@ -39,6 +39,8 @@ new const WC3VERSION[] =	"2.2.2"
 #include <amxmisc>
 #include <fun>
 #include <war3ft>
+
+//#pragma ctrlchar '^'
 
 #define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)

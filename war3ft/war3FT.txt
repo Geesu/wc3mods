@@ -2120,24 +2120,12 @@ MENU_GIVE_PLAYERS_XP = \yXP Adas
 MENU_TEAM_XP = \yCsapat XP Menu
 CLICK_HERE = Klikkelj ide, hogy informaciot kaphass az uj fajokrol.
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Help
-WAR3HELP = Igy kell bebindelni egy billentyut<p>
-1) Nyisd meg a console-t<br>
-2) Ird bind alt ultimate<br>
-3) Ird bind - shopmenu<br>
+
+WAR3HELP :
+Igy kell bebindelni egy billentyut<p>
+:
+
 4) Ird bind = shopmenu2<br>
-5) Ird bind p ability<p>
-Itt van par parancs amit tudnod kell<p>
-say /selectskill - Itt valaszthatod ki a kepessegeket a kovetkezo kor kezdese elott<br>
-say /changerace - Itt valtoztathatod meg a fajod<br>
-say /playerskills - Itt megnezheted, hogy masoknak milyen szinten vannak<br>
-say /skillsinfo - Itt leirast talalsz a valaszthato kepessegekrol<br>
-say /itemsinfo - Itt talalod a targyak listajat es leirasat<br>
-say /itemsinfo2 - A tobbi targy leirasa<br>
-say /level - Megmutatja a fajodat, a szintedet és a kepessegeidet<br>
-say /war3menu - A War3 Frozen Throne Jatekos menu<br>
-say /ability - Az orzo kigyot ezzel tudod lerakni ha van ilyened<br>
-say /resetskills - Lenullazza a kepessegeidet<br>
-say /resetxp - A szinted es az XP-det 0-ra allitja
 DOD_RACE3_SKILL2_INFO = Granatod mindig %d x, %d x vagy %d x erosebb sebzesu lesz, es a robbanasig eltelt ido 2 masodpercre csokken 5 helyett
 AWARDED_FOR_KILLING_BOMB_D = %d XP-t kaptal, mert megolted a bomba hatastalanito ellenfelet
 AWARDED_FOR_KILLING_BOMB_C = %d XP-t kaptal, mert megolted a bomba cipelo ellenfelet

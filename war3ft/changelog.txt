@@ -16,6 +16,7 @@ v2.2.2
  - Bug Fix: Warden's Blink not blocking Big Bad Voodoo (thanks Rawh)
  - Bug Fix: Being able to buy rings outside of the buyzone (thanks Goldenstrike peeps)
  - Bug Fix: Level 1 impale had a 50% chance of occuring on each shot (should have been 5%, thanks Alphabet Soup)
+ - Bug Fix: Level 2 Resistant Skin gave 80% resistance (thanks Smor)
  - Removed: Warden's being protected from moles
  - Balance: Undead's Vampiric Aura lowered, mask of death lowered (update your war3ft.cfg files)
  - Languages: All up-to-date except Danish and Polish
