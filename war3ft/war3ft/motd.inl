@@ -150,7 +150,7 @@ public MOTD_Playerskills(id, saychat){
 		}
 	}
 
-	new name[32], message[2048]
+	new name[32], message[4096]
 	
 	new race_name[MAX_RACES+1][64]
 	new players[32], numberofplayers, i, k, playerid, pos
@@ -167,47 +167,50 @@ public MOTD_Playerskills(id, saychat){
 	}
 
 	if(saychat)
-		pos += format(message[pos],2048-pos, "<body bgcolor=#000000><font color=#FFB000>")
+		pos += format(message[pos],4095-pos, "<body bgcolor=#000000><font color=#FFB000>")
 
 	for(k=1;k<(iCvar[FT_RACES]+1);k++){
 
 		if(iTotalRace[k] > 0){
 			
 			if ( saychat ) {
-				pos += format(message[pos],2048-pos, "<font color=#00FF00><b>%s</b></font><ul>",race_name[k])
+				pos += format(message[pos],4095-pos, "<font color=#00FF00><b>%s</b></font><ul>",race_name[k])
 			}
 			else{
 				console_print(id, "**** %s ****", race_name[k])
 			}
 			
-			for (new iTeam = TS; iTeam <= CTS; iTeam++){
+			for (new iTeam = TS; iTeam <= CTS+1; iTeam++){
 				for (i = 0; i < numberofplayers; ++i){
 					playerid=players[i]
+					new pTeam = get_user_team(playerid)
 
-					if(p_data[playerid][P_RACE] == k && get_user_team(playerid) == iTeam){
+					if(p_data[playerid][P_RACE] == k && (pTeam == iTeam || (iTeam == CTS+1 && pTeam != CTS && pTeam != TS))){
 						get_user_name(playerid,name,31)
 						
 						if ( saychat ) {
-							replace(name, 127, "<", "&lt;")
-							replace(name, 127, ">", "&gt;")
+							replace(name, 127, "<", "")
+							replace(name, 127, ">", "")
 
 							if(get_user_team(playerid) == CTS)
-								pos += format(message[pos],2048-pos,"<li><font color='#99CCFF'>(%d) %s",p_data[playerid][P_LEVEL],name)
+								pos += format(message[pos],4095-pos,"<li><font color='#99CCFF'>(%d) %s",p_data[playerid][P_LEVEL],name)
+							else if (get_user_team(playerid) == TS)
+								pos += format(message[pos],4095-pos,"<li><font color='#FF3F3F'>(%d) %s",p_data[playerid][P_LEVEL],name)
 							else
-								pos += format(message[pos],2048-pos,"<li><font color='#FF3F3F'>(%d) %s",p_data[playerid][P_LEVEL],name)
+								pos += format(message[pos],4095-pos,"<li><font color='#FFFFFF'>(%d) %s",p_data[playerid][P_LEVEL],name)
 						}
 						else{
 							console_print(id, "%-2s(%d) %s","",p_data[playerid][P_LEVEL],name)
 						}
 						
 						if( saychat ) {
-							pos += format(message[pos],2048-pos,"</font></li>")
+							pos += format(message[pos],4095-pos,"</font></li>")
 						}
 					}
 				}
 			}
 			if (saychat)
-				pos += format(message[pos],2048-pos,"</ul>")
+				pos += format(message[pos],4095-pos,"</ul>")
 		}
 	}
 
