@@ -142,7 +142,7 @@ public Item_Buy(id, key){
 
 	WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
 
-	return PLUGIN_CONTINUE
+	return PLUGIN_HANDLED
 }
 
 public Item_Buy2(id, key){

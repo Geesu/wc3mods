@@ -527,6 +527,42 @@ public on_Damage(victim){
 		}
 	}
 
+
+	// **************************************************
+	// Single Victim Ability (Evasion)
+	// This is here b/c we do not want war3 damage being done before we take the health away
+	// **************************************************
+
+	if ( Verify_Race(victim, RACE_ELF) ){
+
+		// Evasion
+		if ( Verify_Skill(victim, RACE_ELF, SKILL1) && p_data_b[victim][PB_EVADENEXTSHOT] ) {
+			new healthadjustment = -1024
+			new iHealth = get_user_health(victim)
+
+			set_user_actualhealth(victim, iHealth + damage + healthadjustment, "client_damage, evade adjustment")
+			#if DEBUG
+				client_print(victim, print_chat,"### You just evaded %d damage", damage)
+			#endif
+
+			if (iglow[victim][2] < 1){
+				new parm[2]
+				parm[0] = victim
+				set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
+			}
+			iglow[victim][2] += damage
+			iglow[victim][0] = 0
+			iglow[victim][1] = 0
+			iglow[victim][3] = 0
+			if (iglow[victim][2]>MAXGLOW)
+				iglow[victim][2]=MAXGLOW
+
+			Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 0, 0, 255, iglow[victim][2])
+
+			p_data_b[victim][PB_EVADENEXTSHOT] = false
+		}
+	}
+
 	// **************************************************
 	// Attacker Abilities
 	// **************************************************
@@ -882,13 +918,22 @@ public on_Damage(victim){
 
 	// Mask of Death
 	else if (p_data[attacker][P_ITEM] == ITEM_MASK){
-		new iHealth = get_user_health(attacker)
+		new iHealth = get_user_actualhealth(attacker)
 
 		tempdamage = floatround(float(damage) * iCvar[FT_MASK_OF_DEATH])
-		set_user_actualhealth(attacker, get_user_actualhealth(attacker) + tempdamage, "client_damage, mask")
 
-		if (iHealth > get_user_maxhealth(attacker) && iHealth < 500)
-			set_user_actualhealth(attacker, get_user_maxhealth(attacker), "client_damage, mask above") 
+		if ( iHealth + tempdamage > get_user_maxhealth(attacker) ){
+			new iTotalHealth = get_user_health(attacker)
+
+			if( iTotalHealth > 1500 )		// God Mode
+				set_user_actualhealth(attacker, 2148, "client_damage, mask 1")
+			else if( iTotalHealth > 500 )	// Evasion
+				set_user_actualhealth(attacker, 1124, "client_damage, mask 2")
+			else
+				set_user_actualhealth(attacker, get_user_maxhealth(attacker), "client_damage, mask 3")
+		}
+		else
+			set_user_actualhealth(attacker, get_user_health(attacker) + tempdamage, "client_damage, mask 4")
 
 		if (iglow[attacker][1] < 1){
 			new parm[2]
@@ -944,40 +989,23 @@ public on_Damage(victim){
 			new healthadjustment = 0
 			new Float:randomnumber = random_float(0.0,1.0)
 			new iHealth = get_user_health(victim)
+			
+			#if DEBUG
+			console_print(victim, "##### Evasion Chance: %f", randomnumber*100)
+			#endif
 
 			if (randomnumber <= p_evasion[p_data[victim][P_SKILL1]-1]){
+				healthadjustment = 1024
+
 				p_data_b[victim][PB_EVADENEXTSHOT] = true
 
-				if (iHealth <= get_user_maxhealth(victim)){
-					healthadjustment = 1024
-				}
-			}
-			else{
-				p_data_b[victim][PB_EVADENEXTSHOT] = false
+				set_user_actualhealth(victim, iHealth + healthadjustment, "client_damage, evade adjustment")
 
-				if (iHealth > get_user_maxhealth(victim) && iHealth > 500){
-					healthadjustment = -1024					
-				}
-			}
-			if (p_data_b[victim][PB_EVADENEXTSHOT]){
-				set_user_actualhealth(victim, iHealth + damage + healthadjustment, "client_damage, evade adjustment")
+				#if DEBUG
+					client_print(victim, print_chat,"### You will evade the next shot", damage)
+					console_print(victim,"### You will evade the next shot", damage)
+				#endif
 
-				if (iglow[victim][2] < 1){
-					new parm[2]
-					parm[0] = victim
-					set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
-				}
-				iglow[victim][2] += damage
-				iglow[victim][0] = 0
-				iglow[victim][1] = 0
-				iglow[victim][3] = 0
-				if (iglow[victim][2]>MAXGLOW)
-					iglow[victim][2]=MAXGLOW
-
-				Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 0, 0, 255, iglow[victim][2])
-			}
-			else if ( healthadjustment != 0 ){
-				set_user_actualhealth(victim, iHealth + healthadjustment, "client_damage, evade adjustment2")
 			}
 		}
 		
@@ -1086,6 +1114,7 @@ public on_Damage(victim){
 			Create_ScreenFade(attacker, (1<<10), (1<<10), (1<<12), 255, 0, 0, iglow[attacker][0])
 		}
 	}
+
 
 	return PLUGIN_CONTINUE
 }

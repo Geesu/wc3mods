@@ -18,6 +18,11 @@ public test(id){
 	return PLUGIN_HANDLED
 }
 
+public test3(id){
+	p_data_b[id][PB_EVADENEXTSHOT] = true
+	set_user_health(id, 1124)
+}
+
 public test2(id){
 
 	new iNum[8]

@@ -239,7 +239,7 @@ public XP_Save(id){
 	if(p_data[id][P_RACE]==0)
 		return PLUGIN_CONTINUE
 
-	new playerid[33], playername[32], timet[32], ip[32]
+	new playerid[33], playername[65], timet[32], ip[32]
 
 	if (iCvar[SV_MYSQL]){
 		if(mysql < SQL_OK){
@@ -255,12 +255,12 @@ public XP_Save(id){
 			return PLUGIN_CONTINUE
 		}
 		new mquery[1024]
-		get_user_name(id,playername,34)
+		get_user_name(id,playername,64)
 		get_user_authid(id,playerid,31)
 		get_user_ip(id,ip,31) 
 
-		replace(playername, 31, "'", "\'")
-		replace(playername, 31, "`", "")
+		replace(playername, 64, "'", "\'")
+		replace(playername, 64, "`", "")
 
 		if(iCvar[FT_SAVEBY]==0)						// Save by steam ID
 			format(mquery, 1023, "REPLACE INTO `%s` SET playerid='%s',playername='%s',xp='%d',race='%d',skill1='%d',skill2='%d',skill3='%d',skill4='%d'",mysqltablename,playerid,playername,p_data[id][P_XP], p_data[id][P_RACE],p_data[id][P_SKILL1],p_data[id][P_SKILL2],p_data[id][P_SKILL3],p_data[id][P_ULTIMATE])

@@ -917,7 +917,7 @@ public searchtarget(parm[2]){
 		if(!g_mapDisabled)
 			Create_TE_BEAMFOLLOW(enemy, g_siTrail, 10, 5, 10, 108, 23, 255)
 
-		emit_sound(id,CHAN_STATIC, SOUND_ENTANGLING, 1.0, ATTN_NORM, 0, PITCH_NORM)
+//		emit_sound(id,CHAN_STATIC, SOUND_ENTANGLING, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
 		new waitparm[6]
 		waitparm[0]=enemy

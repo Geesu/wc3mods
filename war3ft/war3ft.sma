@@ -299,6 +299,7 @@ public plugin_init(){
 	#if DEBUG == 1
 		register_concmd("test","test")
 		register_concmd("test2","test2")
+		register_concmd("test3","test3")
 	#endif
 
 }
