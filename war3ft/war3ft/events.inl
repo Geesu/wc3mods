@@ -114,7 +114,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 #endif
 
 	if(p_data_b[attacker][PB_MOLE] && (p_data[victim][P_ITEM2]==ITEM_PROTECTANT || p_data_b[victim][PB_WARDENBLINK])){	
-		set_user_actualhealth(victim,get_user_health(victim)+damage, "client_damage, protectant")
+		set_user_health(victim,get_user_health(victim)+damage)
 		client_print(victim,print_chat,"%L",victim,"SHOT_DEFLECTED",g_MOD)
 		return PLUGIN_HANDLED
 	}
@@ -126,7 +126,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 			}
 		}
 		else{
-			set_user_actualhealth(victim, get_user_health(victim) + damage, "client_damage, godmode")
+			set_user_health(victim, get_user_health(victim) + damage)
 		}
 
 		return PLUGIN_CONTINUE
@@ -158,7 +158,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 			new healthadjustment = -1024
 			new iHealth = get_user_health(victim)
 
-			set_user_actualhealth(victim, iHealth + damage + healthadjustment, "client_damage, evade adjustment")
+			set_user_health(victim, iHealth + damage + healthadjustment)
 			#if DEBUG
 				client_print(victim, print_chat,"### You just evaded %d damage", damage)
 			#endif
@@ -198,9 +198,9 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 			
 			if(health < maxHealth){
 				if( health + tempdamage > maxHealth )
-					set_user_actualhealth(attacker, maxHealth, "client_damage, Vamp Aura - max")
+					set_user_health(attacker, maxHealth)
 				else
-					set_user_actualhealth(attacker, health + tempdamage, "client_damage, Vamp Aura")
+					set_user_health(attacker, health + tempdamage)
 			}
 			
 			if (iglow[attacker][1] < 1){
@@ -565,14 +565,14 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 			new iTotalHealth = get_user_health(attacker)
 
 			if( iTotalHealth > 1500 )		// God Mode
-				set_user_actualhealth(attacker, 2148, "client_damage, mask 1")
+				set_user_health(attacker, 2148)
 			else if( iTotalHealth > 500 )	// Evasion
-				set_user_actualhealth(attacker, 1124, "client_damage, mask 2")
+				set_user_health(attacker, 1124)
 			else
-				set_user_actualhealth(attacker, get_user_maxhealth(attacker), "client_damage, mask 3")
+				set_user_health(attacker, get_user_maxhealth(attacker))
 		}
 		else
-			set_user_actualhealth(attacker, get_user_health(attacker) + tempdamage, "client_damage, mask 4")
+			set_user_health(attacker, get_user_health(attacker) + tempdamage)
 
 		if (iglow[attacker][1] < 1){
 			new parm[2]
@@ -638,7 +638,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 
 				p_data_b[victim][PB_EVADENEXTSHOT] = true
 
-				set_user_actualhealth(victim, iHealth + healthadjustment, "client_damage, evade adjustment")
+				set_user_health(victim, iHealth + healthadjustment)
 
 				#if DEBUG
 					client_print(victim, print_chat,"### You will evade the next shot", damage)
@@ -674,7 +674,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	else if ( Verify_Race(victim, RACE_BLOOD) ){
 
 		// Resistant Skin
-		set_user_actualhealth(victim, get_user_health(victim) + floatround(float(damage) * p_resistant[p_data[victim][P_LEVEL]]), "client_damage, resistant skin")
+		set_user_health(victim, get_user_health(victim) + floatround(float(damage) * p_resistant[p_data[victim][P_LEVEL]]))
 
 	}
 
@@ -1103,9 +1103,6 @@ public on_ResetHud(id){
 	p_data[id][P_FLAMECOUNT]=0
 	p_data_b[id][PB_WARDENBLINK] = false
 
-	// Checks skills
-	Skill_Check(id)
-
 	// Fan of Knives Check
 
 	if ( Verify_Skill(id, RACE_WARDEN, SKILL1) && is_user_alive(id) && !p_data_b[id][PB_RESETSKILLS] ){
@@ -1119,13 +1116,16 @@ public on_ResetHud(id){
 	}
 
 	if (p_data_b[id][PB_RESETSKILLS]) {
-		p_data[id][P_SKILL1]=0
-		p_data[id][P_SKILL2]=0
-		p_data[id][P_SKILL3]=0
-		p_data[id][P_ULTIMATE]=0
+		p_data[id][P_SKILL1] = 0
+		p_data[id][P_SKILL2] = 0
+		p_data[id][P_SKILL3] = 0
+		p_data[id][P_ULTIMATE] = 0
 		p_data[id][P_LEVEL] = 0
 		WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
 	}
+
+	// Checks skills
+	Skill_Check(id)
 
 	new skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]+p_data[id][P_ULTIMATE]
 	if (skillsused < p_data[id][P_LEVEL]){

@@ -79,24 +79,6 @@ public writeDebugInfo(info[], id){
 	return PLUGIN_CONTINUE
 }
 
-public write_Health_Info(info[], id){
-	new fileInfo[64], string[128]
-	format(fileInfo,63,"%s/war3ft_health.log", g_configsDir)
-
-	new name[32] = ""
-	if(id>0 && id<33){
-		if(p_data_b[id][PB_ISCONNECTED]){
-			get_user_name(id,name,31)
-		}
-	}
-	
-	format(string,127,"[%-64s] [%-2d] [%-32s]",info, id, name)
-
-	write_file(fileInfo, string, -1)
-	
-	return PLUGIN_CONTINUE
-}
-
 #define USE_FILE 1
 public testing(msgid){
 	new args = get_msg_args()

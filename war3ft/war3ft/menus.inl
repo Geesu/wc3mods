@@ -120,7 +120,7 @@ public _menu_Shopmenu_One(id, key){
 		// Remove health bonus after buying new item
 
 		if (p_data[id][P_ITEM]==ITEM_HEALTH)
-			set_user_actualhealth(id,get_user_health(id)-iCvar[FT_HEALTH_BONUS], "Item_Buy, remove health")
+			set_user_health(id,get_user_health(id)-iCvar[FT_HEALTH_BONUS])
 
 		p_data[id][P_ITEM]=iShopmenuItem
 
@@ -128,7 +128,7 @@ public _menu_Shopmenu_One(id, key){
 		// Give health bonus for buying periapt of health
 
 		if (p_data[id][P_ITEM]==ITEM_HEALTH)		
-			set_user_actualhealth(id,get_user_health(id)+iCvar[FT_HEALTH_BONUS], "Item_Buy, add health")
+			set_user_health(id,get_user_health(id)+iCvar[FT_HEALTH_BONUS])
 
 
 		// Display a message regarding what the item does
@@ -519,11 +519,11 @@ public _menu_Select_Skill(id,key){
 	// Devotion Aura Chosen
 	if ( Verify_Skill(id, RACE_HUMAN, SKILL2) && key == KEY_2 && is_user_alive(id)){
 		if(p_data[id][P_SKILL2]==1)
-			set_user_actualhealth(id,get_user_health(id) + (p_devotion[0] - 100), "_menu_Select_Skill, Devotion 1")
+			set_user_health(id,get_user_health(id) + (p_devotion[0] - 100))
 		else if(p_data[id][P_SKILL2]==2)
-			set_user_actualhealth(id,get_user_health(id) + (p_devotion[1] - p_devotion[0]), "_menu_Select_Skill, Devotion 2")
+			set_user_health(id,get_user_health(id) + (p_devotion[1] - p_devotion[0]))
 		else if(p_data[id][P_SKILL2]==3)
-			set_user_actualhealth(id,get_user_health(id) + (p_devotion[2] - p_devotion[1]), "_menu_Select_Skill, Devotion 3")
+			set_user_health(id,get_user_health(id) + (p_devotion[2] - p_devotion[1]))
 	}
 
 	return PLUGIN_HANDLED

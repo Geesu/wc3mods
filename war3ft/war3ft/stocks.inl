@@ -89,22 +89,6 @@ stock find_free_spawn(iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]){
 
 	return -1
 }
-stock set_user_actualhealth(id, health, fromFunction[]){
-	#if DEBUG
-		new name[32], info[128]
-		get_user_name(id, name, 31)
-		new players[32], num
-		get_players(players, num)
-
-		format(info,127,"(%d) %s's health set to %d (%s)", is_user_alive(id), name, health, fromFunction)
-		write_Health_Info(info, id)
-	#endif
-	
-	new z = strlen(fromFunction)
-	z--
-
-	set_user_health(id, health)
-}
 
 stock get_user_actualhealth(id){
 
@@ -247,7 +231,13 @@ stock get_user_money(id){
 		return PLUGIN_CONTINUE
 
 	#if MOD == 0
-		return cs_get_user_money(id)
+		new money = cs_get_user_money(id)
+		if (cs_get_user_money(id) > 16000 && !Verify_Skill(id, RACE_BLOOD, SKILL3)){
+			set_user_money(id, 16000, 0)
+			return 16000
+		}
+			
+		return money
 	#endif
 	#if MOD == 1
 		return p_data[id][P_MONEY]

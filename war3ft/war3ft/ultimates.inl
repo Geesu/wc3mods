@@ -1346,7 +1346,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 
 		p_data_b[id][PB_GODMODE] = true
 
-		set_user_actualhealth(id, get_user_health(id) + 2048, "_Ultimate_BigBadVoodoo, start")
+		set_user_health(id, get_user_health(id) + 2048)
 
 		#if MOD == 0
 			Create_BarTime(id, 2, 0)
@@ -1367,7 +1367,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 		p_data_b[id][PB_GODMODE] = false
 		
 		if( is_user_alive(id) )
-			set_user_actualhealth(id, get_user_health(id) - 2048, "_Ultimate_BigBadVoodoo, stop")
+			set_user_health(id, get_user_health(id) - 2048)
 	
 		Ultimate_Icon(id,ICON_HIDE)
 
@@ -1437,7 +1437,7 @@ Ultimate_Vengeance(id){
 		set_user_origin(id, origin)
 
 		if(get_user_health(id)<50)
-			set_user_actualhealth(id,50, "Ultimate_Vengeance")
+			set_user_health(id, 50)
 	
 		emit_sound(id,CHAN_STATIC, SOUND_VENGEANCE, 1.0, ATTN_NORM, 0, PITCH_NORM)
 

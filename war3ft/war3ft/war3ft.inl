@@ -344,7 +344,7 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 #endif
 		WAR3_death(victim, attacker, weapon, headshot)
 	else
-		set_user_actualhealth(victim, health - damage, "WAR3_damage")
+		set_user_health(victim, health - damage)
 
 	return PLUGIN_CONTINUE
 }
@@ -789,7 +789,7 @@ public WAR3_set_race(id,race){
 	p_data[id][P_CHANGERACE] = 0
 
 	if (get_user_health(id)>100)
-		set_user_actualhealth(id,100, "WAR3_set_race")
+		set_user_health(id, 100)
 
 	#if MOD == 1
 		p_data_b[id][PB_REINCARNATION_DELAY] = false
@@ -817,7 +817,7 @@ public WAR3_set_race(id,race){
 	}
 
 	if(((p_data[id][P_RACE] == 9 && race9Options[2] == 2) || p_data[id][P_RACE] == 2) && p_data[id][P_SKILL2] && get_user_health(id) <= 100){	// set_health
-		set_user_actualhealth(id,p_devotion[p_data[id][P_SKILL2]-1], "From Setting devotion aura in war3_set_race")
+		set_user_health(id,p_devotion[p_data[id][P_SKILL2]-1])
 	}
 
 	WAR3_Display_Level(id, DISPLAYLEVEL_SHOWRACE)
@@ -1093,7 +1093,7 @@ public WAR3_Display_Level(id, flag){
 	if (((p_data[id][P_RACE] == 9 && race9Options[1] != 4) || p_data[id][P_RACE] != 4 || !p_data[id][P_SKILL1])){	// Evasion
 		new userhealth = get_user_health(id)
 		if (userhealth > 500 && userhealth < 1500)
-			set_user_actualhealth(id, userhealth-1024, "WAR3_Display_Level")
+			set_user_health(id, userhealth-1024)
 	}
 
 	new parm4[1]
