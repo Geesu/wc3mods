@@ -1356,8 +1356,18 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 		return PLUGIN_CONTINUE
 
 	if(parm[1] == 1){
-		entity_set_int(id,EV_INT_effects,EF_BRIGHTFIELD)
-
+	#if MOD == 0
+		if ( get_user_team(id) == TS )
+			set_user_rendering( id, kRenderFxGlowShell, 255, 0, 0,  kRenderNormal, 255 )
+		else
+			set_user_rendering( id, kRenderFxGlowShell, 0, 0, 255,  kRenderNormal, 255 )
+	#endif
+	#if MOD == 1
+		if ( get_user_team(id) == ALLIES )
+			set_user_rendering( id, kRenderFxGlowShell, 255, 63, 63,  kRenderNormal, 255 )
+		else
+			set_user_rendering( id, kRenderFxGlowShell, 76, 102, 76,  kRenderNormal, 255 )
+	#endif
 		p_data_b[id][PB_GODMODE] = true
 
 		set_user_health(id, get_user_health(id) + 2048)
@@ -1376,8 +1386,9 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 		set_task(2.0,"_Ultimate_BigBadVoodoo",TASK_RESETGOD+id,parm,2)
 	}
 	else{
-		entity_set_int(id,EV_INT_effects,0)
-	
+		
+		set_user_rendering(id)
+
 		p_data_b[id][PB_GODMODE] = false
 		
 		if( is_user_alive(id) )

@@ -31,7 +31,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Pimp Daddy (OoTOAoO)"
-new const WC3VERSION[] =	"2.2.1"
+new const WC3VERSION[] =	"2.2.3"
 
 #include <amxmodx>
 #include <dbi>
@@ -44,10 +44,9 @@ new const WC3VERSION[] =	"2.2.1"
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define PRECACHE_WAR3FTSOUNDS 1
-#define USE_CSHACK 1					// Set this to 1 to use CSHack (this is safe for windows, not so sure about linux)
 
 // Debugging Options
-#define DEBUG 0 						// Only use this when coding.. you normally don't want it
+#define DEBUG 1 						// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
 #define ADVANCED_DEBUG_BOTS 1			// Print info for bots too?
 
@@ -89,6 +88,10 @@ new const WC3VERSION[] =	"2.2.1"
 public plugin_init(){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("plugin_init",0)
+	#endif
+
+	#if DEBUG
+		register_srvcmd("testage", "testage")
 	#endif
 
 	gmsgDeathMsg = get_user_msgid("DeathMsg")
@@ -147,7 +150,7 @@ public plugin_init(){
 	// Server Admin Commands (used by external plugins)
 	register_srvcmd("amx_takexp","Admin_TakeXP")
 	register_srvcmd("changexp","changeXP")
-
+	
 	#if MOD == 1
 		register_statsfwd(XMF_SCORE)
 		register_statsfwd(XMF_DAMAGE)
@@ -226,6 +229,7 @@ public plugin_init(){
 	}
 
 	// For an explanation of these variables, please see war3ft.cfg
+	register_cvar("FT_cshack",					"0")
 	register_cvar("FT_autoxp",					"0")
 	register_cvar("FT_show_player",				"1")
 	register_cvar("FT_Race9_Random",			"1")
@@ -320,10 +324,6 @@ public plugin_init(){
 		register_concmd("test","test")
 		register_concmd("test2","test2")
 		register_concmd("test3","test3")
-	#endif
-
-	#if USE_CSHACK == 1 && MOD == 0
-		set_maxmoney(2147483583)
 	#endif
 }
 

@@ -442,19 +442,20 @@
 #define FT_ENTANGLE_DROP					42
 #define FT_SHOW_PLAYER						43
 #define FT_AUTOXP							44
+#define FT_CSHACK							45
 
 #if MOD == 0
-	#define	FT_ITEMS_IN_HUD						45
-	#define	FT_NO_ORCNADES						46
-	#define	FT_BOMBPLANTERXP					47
-	#define	FT_DEFUSEXP							48
-	#define	FT_HOSTAGEXP						49
-	#define	FT_KILLRESCUEMANXP					50
-	#define	FT_KILL_BOMB_CARRIER_BONUS			51
-	#define	FT_DEFUSER_KILL_BONUS				52
-	#define	FT_VIP_ESCAPE_BONUS					53
-	#define	FT_VIP_KILL_BONUS					54
-	#define	MP_GRENADEPROTECTION				55
+	#define	FT_ITEMS_IN_HUD						50
+	#define	FT_NO_ORCNADES						51
+	#define	FT_BOMBPLANTERXP					52
+	#define	FT_DEFUSEXP							53
+	#define	FT_HOSTAGEXP						54
+	#define	FT_KILLRESCUEMANXP					55
+	#define	FT_KILL_BOMB_CARRIER_BONUS			56
+	#define	FT_DEFUSER_KILL_BONUS				57
+	#define	FT_VIP_ESCAPE_BONUS					58
+	#define	FT_VIP_KILL_BONUS					59
+	#define	MP_GRENADEPROTECTION				60
 #endif
 #if MOD == 1
 	#define DOD_STARTMONEY						45
@@ -526,7 +527,7 @@ new race9Options[5] = {0,1,1,1,1}		// the value is what race that skill should b
 new p_data[33][P_LAST]					// Contains player data
 new bool:p_data_b[33][PB_LAST]			// Contains player data of type boolean
 
-new iCvar[56]							// Contains integer CVAR data (loaded at plugin start)
+new iCvar[61]							// Contains integer CVAR data (loaded at plugin start)
 new Float:fCvar[9]						// Contains float CVAR data (loaded at plugin start)
 
 #if ADVANCED_STATS

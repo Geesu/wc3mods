@@ -92,7 +92,7 @@ stock find_free_spawn(id, iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]
 
 	}
 
-	if( foundFreeSpawn ){
+	if( foundFreeSpawn && spawnPoints[i] ){
 		entity_get_vector(spawnPoints[i], EV_VEC_angles, spawnAngle)
 
 		return spawnPoints[i]

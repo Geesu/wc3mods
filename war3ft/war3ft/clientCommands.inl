@@ -157,14 +157,28 @@ public cmd_Rings(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if (!is_user_alive(id))
-		return PLUGIN_HANDLED
-
 	if (iCvar[FT_CD]) {
 		if (!WAR3_CD_installed(id)){
-			return PLUGIN_CONTINUE
+			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MOD)
+			return PLUGIN_HANDLED
 		}
 	}
+
+	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
+		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
+		return PLUGIN_HANDLED
+	}
+	#if MOD == 0
+		else if(iCvar[FT_BUYTIME] && !g_buyTime){
+			new Float:thetime = get_cvar_float("mp_buytime")*60.0
+			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
+			return PLUGIN_HANDLED
+		}
+		else if(iCvar[FT_BUYZONE] && !p_data_b[id][PB_BUYZONE] && is_user_alive(id)){
+			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
+			return PLUGIN_HANDLED
+		}
+	#endif
 
 	if(iCvar[FT_RACES]<5)
 		return PLUGIN_CONTINUE

@@ -1,3 +1,8 @@
+public testage(id)
+{
+	Skill_Mole(id, 16000);
+}
+
 public test(id){
 	//new const MAXPLAYERS = get_global_int(GL_maxClients)
 	new zone = 0

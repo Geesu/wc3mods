@@ -107,14 +107,14 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	}
 #endif
 
-	if(p_data_b[attacker][PB_MOLE] && (p_data[victim][P_ITEM2]==ITEM_PROTECTANT || p_data_b[victim][PB_WARDENBLINK])){	
+/*	if(p_data_b[attacker][PB_MOLE] && (p_data[victim][P_ITEM2]==ITEM_PROTECTANT || p_data_b[victim][PB_WARDENBLINK])){	
 		set_user_health(victim,get_user_health(victim)+damage)
 		client_print(victim,print_chat,"%s %L",g_MOD,victim,"SHOT_DEFLECTED")
 		return PLUGIN_HANDLED
-	}
+	}*/
 
 	if( p_data_b[victim][PB_GODMODE] ){
-		if( p_data[attacker][P_ITEM] == ITEM_NECKLACE && attacker != victim ){
+		if( ( p_data[attacker][P_ITEM] == ITEM_NECKLACE || p_data_b[attacker][PB_WARDENBLINK] ) && attacker != victim ){
 			if( get_user_health(victim) - damage <= 2048 ){
 				WAR3_damage(victim, attacker, 3000, wpnindex, hitplace)
 			}
@@ -550,7 +550,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	else if (p_data[attacker][P_ITEM] == ITEM_MASK){
 		new iHealth = get_user_actualhealth(attacker)
 
-		tempdamage = floatround(float(damage) * iCvar[FT_MASK_OF_DEATH])
+		tempdamage = floatround(float(damage) * fCvar[FT_MASK_OF_DEATH])
 
 		if ( iHealth + tempdamage > get_user_maxhealth(attacker) ){
 			new iTotalHealth = get_user_health(attacker)

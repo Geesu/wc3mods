@@ -1,3 +1,17 @@
+v2.2.3
+ - Addition: Effect during Big Bad Voodoo
+ - Module: Fixed 100% CPU spike for real
+ - Module: Fixed bomb explosion crash bug on some servers
+ - Bug Fix: Mask of Death giving back an unpredictable amout of health
+ - Bug Fix: Warden's Blink not blocking Big Bad Voodoo (thanks Rawh)
+ - Bug Fix: Being able to buy rings outside of the buyzone
+ - Removed: Warden's being protected from moles
+
+v2.2.2
+ - Addition: FT_cshack variable
+ - Module: Fixed bug where CPU would spike to 100% on windows servers
+ - Module: Support for linux/amd64 removed for the CSHack portion of the module
+
 v2.2.1
  - Languages updated
  - Change: Blood Mage's Resistant Skin ability lowered (max 40% resistance)
