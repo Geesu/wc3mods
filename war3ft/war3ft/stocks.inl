@@ -38,7 +38,7 @@ stock isSecondary(weapon){
 	return false
 }
 
-stock find_free_spawn(iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]){
+stock find_free_spawn(id, iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]){
 	new iSpawn
 	if(iTeamNumber == CTS)
 		iSpawn=0
@@ -48,6 +48,8 @@ stock find_free_spawn(iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]){
 	const maxSpawns = 128
 	new spawnPoints[maxSpawns]
 	new ent = -1, spawnsFound = 0
+
+	/* Find all of the spawn points */
 	do {
 		ent = find_ent_by_class(ent,spawnEntString[iSpawn])
 		if (ent != 0) {
@@ -62,26 +64,35 @@ stock find_free_spawn(iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]){
 	new i
 	new playersInVicinity
 	new entList[1]
+	
+	/* Loop through all the spawn points */
 	for (i = 0;i < spawnsFound && !foundFreeSpawn;i++) {
-		if(spawnPoints[i] != 0){
+
+		if(spawnPoints[i] != 0 && !spawnPointsused[i]){
+			/* Get the origin of the spawn point */
 			entity_get_vector(spawnPoints[i],EV_VEC_origin,spawnOrigin)
+
+			/* Determine if a player is in this vicinity */
 			playersInVicinity = find_sphere_class(0, "player", vicinity, entList, 1, spawnOrigin)
+
+			/* If not, we want to transport the player here */
 			if (playersInVicinity == 0){
-				if (!spawnPointsused[i]){
-					foundFreeSpawn = true
-					spawnPointsused[i] = true
-				}
-				else{
-					foundFreeSpawn = false
-				}
+				foundFreeSpawn = true
+				spawnPointsused[i] = true
 			}
+			/* Otherwise we don't */
 			else{
 				foundFreeSpawn = false
 			}
 		}
+		#if DEBUG
+			console_print(id, "[WAR3FT][%d] Searching %d, used: %d, found:%d", i, spawnPoints[i], spawnPointsused[i], foundFreeSpawn)
+		#endif
+		id--
+
 	}
 
-	if(foundFreeSpawn && spawnPoints[i] != 0){
+	if( foundFreeSpawn ){
 		entity_get_vector(spawnPoints[i], EV_VEC_angles, spawnAngle)
 
 		return spawnPoints[i]

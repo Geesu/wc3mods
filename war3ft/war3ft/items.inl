@@ -380,9 +380,9 @@ public _Item_Mole(parm[]){ // For ITEM_MOLE, checks to see if there is an open s
 	new Float:spawnOrigin[3]
 
 	if(get_user_team(id)==CTS)
-		 entSpawn = find_free_spawn(TS, spawnOrigin, spawnAngle)
+		 entSpawn = find_free_spawn(id, TS, spawnOrigin, spawnAngle)
 	else
-		 entSpawn = find_free_spawn(CTS, spawnOrigin, spawnAngle)
+		 entSpawn = find_free_spawn(id, CTS, spawnOrigin, spawnAngle)
 
 	if (!entSpawn) { 
 		// Didn't find a free spawn spot. Quit... 

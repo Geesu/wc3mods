@@ -607,6 +607,8 @@ new g_lastAnnounce = -1
 	new g_pheonixExistsT = 0
 	new g_pheonixExistsCT = 0
 #endif
+
+// Used for Mole
 new bool:spawnPointsused[33] = false
 
 // Sprites
@@ -674,11 +676,11 @@ new const Float:p_trueshot[3] =			{0.15,0.3,0.45}			// Trueshot Aura			(skill 3)
 	new const Float:p_pheonix[3] =			{0.333,0.666,1.0}	// Pheonix					(skill 1)
 #endif
 #if MOD == 1
-	new const p_pheonix[3] =			{300,600,900}				// Pheonix					(skill 1)
+	new const p_pheonix[3] =			{300,600,900}			// Pheonix					(skill 1)
 #endif
 new const Float:p_banish[3] =			{0.07,0.13,0.20}		// Banish					(skill 2)
 new const Float:p_mana[3] =				{0.02,0.04,0.08}		// Siphon Mana				(skill 3)
-new const Float:p_resistant[11] =		{0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50}	// Resistant Skin		(Skill 4)
+new const Float:p_resistant[11] =		{0.0, 0.04, 0.8, 0.12, 0.16, 0.20, 0.24, 0.28, 0.32, 0.36, 0.40}	// Resistant Skin		(Skill 4)
 
 new const Float:p_heal[3] =				{6.0,4.0,2.0}			// Healing Wave				(skill 1)
 new const Float:p_hex[3] =				{0.05,0.10,0.15}		// Hex						(skill 2)
@@ -690,7 +692,7 @@ new const Float:p_blink[3] =			{0.333,0.666,1.0}		// Blink					(skill 2)
 new const Float:p_shadow[3] =			{0.15,0.30,0.45}		// Shadow Strike			(skill 3)
 new const Float:p_harden[11] =			{0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50}	// Hardened Skin		(Skill 4)
 
-new const Float:p_impale[3] =			{0.5,0.10,0.20}			// Impale					(skill 1)
+new const Float:p_impale[3] =			{0.5,0.10,0.15}			// Impale					(skill 1)
 new const Float:p_spiked[3] =			{0.05,0.1,0.15}			// Spiked Carapace			(skill 2)
 new const Float:p_carrion[3] =			{0.15,0.25,0.45}		// Carrion Beetle			(skill 3)
 new const Float:p_orb[11] =				{0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.15}	// Orb of Annihilation	(Skill 4)

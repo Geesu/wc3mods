@@ -8,7 +8,7 @@ public Admin_TakeXP(){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	new argID[3], argXP[8]
+	new argID[3], argXP[32]
 	read_argv(1,argID,2)
 	read_argv(2,argXP,31)
 

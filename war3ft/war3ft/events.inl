@@ -109,7 +109,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 
 	if(p_data_b[attacker][PB_MOLE] && (p_data[victim][P_ITEM2]==ITEM_PROTECTANT || p_data_b[victim][PB_WARDENBLINK])){	
 		set_user_health(victim,get_user_health(victim)+damage)
-		client_print(victim,print_chat,"%L",victim,"SHOT_DEFLECTED",g_MOD)
+		client_print(victim,print_chat,"%s %L",g_MOD,victim,"SHOT_DEFLECTED")
 		return PLUGIN_HANDLED
 	}
 
@@ -928,18 +928,17 @@ public on_ResetHud(id){
 		remove_task(TASK_JUMPER+id)
 	}
 	
+	/* Stop the user from searching (chain lightning) */
 	if (task_exists(TASK_LIGHTSEARCH+id)){
 		remove_task(TASK_LIGHTSEARCH+id)
 		p_data_b[id][PB_ISSEARCHING]=false
-		Ultimate_Icon(id,ICON_HIDE)
 	}
 
+	/* Stop the user from searching (entangling roots) */
 	if (task_exists(TASK_SEARCHTARGET+id)){
 		remove_task(TASK_SEARCHTARGET+id)
 		p_data_b[id][PB_ISSEARCHING]=false
-		Ultimate_Icon(id,ICON_HIDE)
 	}
-
 
 	if(is_user_alive(id)){
 		p_data_b[id][PB_JUSTJOINED] = false
@@ -971,8 +970,7 @@ public on_ResetHud(id){
 			set_task(get_cvar_float("mp_buytime")*60.0,"_WAR3_set_buytime",TASK_BUYTIME)
 			g_buyCalled = true
 		}
-	#endif
-	Ultimate_Icon(id,ICON_HIDE)
+	#endif	
 
 	p_data_b[id][PB_TOBEREVIVED] = false
 	p_data_b[id][PB_CHANGINGTEAM] = false
@@ -1024,10 +1022,11 @@ public on_ResetHud(id){
 	p_data[id][P_FLASHCOUNT]=0
 
 	// Stop any cooldowns in effect	
-
+	
 	if (task_exists(TASK_UDELAY+id))		
 		remove_task(TASK_UDELAY+id)
-
+	
+	Ultimate_Icon(id,ICON_HIDE)
 	// Start a new cooldown
 
 	if (iCvar[FT_ULTIMATE_DELAY] > 0){

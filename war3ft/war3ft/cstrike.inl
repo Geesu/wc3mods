@@ -647,7 +647,7 @@ public on_ShowStatus(id){
 		if ( idteam == team || p_data_b[pid][PB_MOLE] ) {
 			new wpnname[32] , clip, ammo, wpnid = get_user_weapon(pid,clip,ammo) 
 			
-			if ( id > 0 && id < MAX_WEAPONS + MAX_CWEAPONS ){
+			if ( wpnid > 0 && wpnid < MAX_WEAPONS + MAX_CWEAPONS ){
 				get_weaponname(wpnid,wpnname,31) 
 			}
 			set_hudmessage(red,50,blue,-1.0,0.60,1, 0.01, 3.0, 0.01, 0.01, 4)
