@@ -12,6 +12,7 @@ v2.1.6
  - Change: The effect for healing wards will no longer be seen unless it is actually healing someone
  - Change: Ring of regeneration and healing ward will no longer stop at the end of the round
  - Change: Ultimates can now be used after the round has ended
+ - Change: Playerskills code
  - Addition: FT_entangle_drop
  - Improvement: Code for Healing Wards
  - Improvement: Code for Serpent Wards

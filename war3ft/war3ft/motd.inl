@@ -151,37 +151,47 @@ public MOTD_Playerskills(id, saychat){
 
 	new name[32], message[2048]
 	
-	new race_name[64]
-	new players[32], numberofplayers, i, j, k, playerid, pos, iTotalRace
+	new race_name[MAX_RACES][64]
+	new players[32], numberofplayers, i, k, playerid, pos
+	new iTotalRace[MAX_RACES]
 
 	get_players(players, numberofplayers)
+
+#if DEBUG == 1
+	writeDebugInfo("MOTD_Playerskills",101)
+#endif
+	for(k=0;k<numberofplayers;k++){
+		iTotalRace[p_data[players[k]][P_RACE]]++
+	}
+#if DEBUG == 1
+	writeDebugInfo("MOTD_Playerskills",102)
+#endif
+
+	for(k=1;k<iCvar[FT_RACES]+1;k++){
+		racename(k,id,race_name[k],64)
+	}
+#if DEBUG == 1
+	writeDebugInfo("MOTD_Playerskills",103)
+#endif
 
 	if(saychat)
 		pos += format(message[pos],2048-pos, "<body bgcolor=#000000><font color=#FFB000>")
 
-	for(j=1;j<(iCvar[FT_RACES]+1);j++){
-		iTotalRace = 0
-	
-		for(k=0;k<numberofplayers;k++){
-			if(p_data[players[k]][P_RACE] == j)
-				iTotalRace++
-		}
+	for(k=1;k<(iCvar[FT_RACES]+1);k++){
 
-		if(iTotalRace > 0){
-			race_name=""
-			racename(j,id,race_name,64)
+		if(iTotalRace[k] > 0){
 			
 			if ( saychat ) {
-				pos += format(message[pos],2048-pos, "<font color=#00FF00><b>%s</b></font><ul>",race_name)
+				pos += format(message[pos],2048-pos, "<font color=#00FF00><b>%s</b></font><ul>",race_name[k])
 			}
 			else{
-				console_print(id, "**** %s ****", race_name)
+				console_print(id, "**** %s ****", race_name[k])
 			}
 
 			for (i = 0; i < numberofplayers; ++i){
 				playerid=players[i]
 
-				if(p_data[playerid][P_RACE] == j){
+				if(p_data[playerid][P_RACE] == k){
 					get_user_name(playerid,name,31)
 					
 					if ( saychat ) {
@@ -203,6 +213,9 @@ public MOTD_Playerskills(id, saychat){
 				pos += format(message[pos],2048-pos,"</ul>")
 		}
 	}
+#if DEBUG == 1
+	writeDebugInfo("MOTD_Playerskills",104)
+#endif
 
 	if( saychat ) {
 		new motdmessage[128]
