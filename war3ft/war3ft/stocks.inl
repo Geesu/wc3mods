@@ -85,18 +85,17 @@ stock find_free_spawn(iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]){
 
 stock get_user_actualhealth(id){
 
+	// Player has god mode
+
+	if ( get_user_health(id) > 1500 )
+		return get_user_health(id)-2048
+
+
 	// Player will evade the next shot
 
-	if (p_data_b[id][PB_EVADENEXTSHOT]){
+	if ( get_user_health(id) > 500 )
 		return get_user_health(id)-1024
-	}
 
-
-	// Player is in god mode
-
-	if (p_data_b[id][PB_GODMODE]){					
-		return get_user_health(id)-2048
-	}
 
 	return get_user_health(id)
 }

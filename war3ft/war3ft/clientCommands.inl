@@ -228,7 +228,10 @@ public cmd_ability(id){
 		#endif
 
 		if (!WAR3_check())
-			return PLUGIN_CONTINUE
+			return PLUGIN_HANDLED
+
+		if(!p_data_b[id][PB_ISCONNECTED])
+			return PLUGIN_HANDLED
 
 		if(!cs_get_user_buyzone(id))
 			return PLUGIN_HANDLED

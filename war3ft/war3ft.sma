@@ -284,11 +284,10 @@ public plugin_init(){
 	register_cvar("FT_mysql_pass",				"")
 	register_cvar("FT_mysql_db",				"amx")
 
-	set_task(15.0, "FT_controller",TASK_FTCONTROLLER,"",0,"b")
-
 	WAR3_exec_config()
+
+	set_task(15.0, "FT_controller",TASK_FTCONTROLLER,"",0,"b")
    
-   // Dictionary files
 	register_dictionary("war3FT.txt")
 
 	#if DEBUG == 1
@@ -361,6 +360,8 @@ public plugin_cfg(){
 	#if ADVANCED_DEBUG == 1
 		writeDebugInfo("plugin_cfg",0)
 	#endif
+
+	WAR3_exec_config()
 
 	if (get_cvar_num("sv_warcraft3")==0)
 		warcraft3=false

@@ -217,7 +217,7 @@ public MOTD_Playerskills(id){
 	get_players(players, numberofplayers)
 
 	if(iCvar[FT_STEAM])
-		pos += format(message[pos],2048-pos, "<body bgcolor=#000000><font color=#FFB000>")
+		pos += format(message[pos],2047-pos, "<body bgcolor=#000000><font color=#FFB000>")
 
 	for(j=1;j<(iCvar[FT_RACES]+1);j++){
 		iTotalRace = 0
@@ -232,9 +232,9 @@ public MOTD_Playerskills(id){
 			racename(j,id,race_name,RACE_NAME_LENGTH_F)
 			
 			if(iCvar[FT_STEAM])
-				pos += format(message[pos],2048-pos, "<font color='#00FF00'><b>%s</b></font><ul>",race_name)
+				pos += format(message[pos],2047-pos, "<font color='#00FF00'><b>%s</b></font><ul>",race_name)
 			else
-				pos += format(message[pos],2048-pos, "^n%s",race_name)
+				pos += format(message[pos],2047-pos, "^n%s",race_name)
 
 			for (i = 0; i < numberofplayers; ++i){
 				playerid=players[i]
@@ -246,31 +246,31 @@ public MOTD_Playerskills(id){
 					replace(name, 127, ">", "&gt;")
 
 					if (iCvar[FT_STEAM])
-						pos += format(message[pos],2048-pos,"<li>%s - %d",name,p_data[playerid][P_LEVEL])
+						pos += format(message[pos],2047-pos,"<li>%s - %d",name,p_data[playerid][P_LEVEL])
 					else
-						pos += format(message[pos],2048-pos,"/t%s - %d",name,p_data[playerid][P_LEVEL])
+						pos += format(message[pos],2047-pos,"/t%s - %d",name,p_data[playerid][P_LEVEL])
 	
 					for(k=0;k<4;k++){
 						raceskill(p_data[playerid][0],k+1,id,race_skill[k],RACE_SKILL_LENGTH_F)
 					}
 
 					if(p_data[playerid][P_SKILL1])
-						pos += format(message[pos],2048-pos,", %s %d",race_skill[0],p_data[playerid][P_SKILL1])
+						pos += format(message[pos],2047-pos,", %s %d",race_skill[0],p_data[playerid][P_SKILL1])
 					if(p_data[playerid][P_SKILL2])
-						pos += format(message[pos],2048-pos,", %s %d",race_skill[1],p_data[playerid][P_SKILL2])
+						pos += format(message[pos],2047-pos,", %s %d",race_skill[1],p_data[playerid][P_SKILL2])
 					if(p_data[playerid][P_SKILL3])
-						pos += format(message[pos],2048-pos,", %s %d",race_skill[2],p_data[playerid][P_SKILL3])
+						pos += format(message[pos],2047-pos,", %s %d",race_skill[2],p_data[playerid][P_SKILL3])
 					if(p_data[playerid][P_ULTIMATE])
-						pos += format(message[pos],2048-pos,", %s",race_skill[3])
+						pos += format(message[pos],2047-pos,", %s",race_skill[3])
 
 					if (iCvar[FT_STEAM])
-						pos += format(message[pos],2048-pos,"</li>")
+						pos += format(message[pos],2047-pos,"</li>")
 					else
-						pos += format(message[pos],2048-pos,"^n")
+						pos += format(message[pos],2047-pos,"^n")
 				}
 			}
 			if (iCvar[FT_STEAM])
-				pos += format(message[pos],2048-pos,"</ul>")
+				pos += format(message[pos],2047-pos,"</ul>")
 		}
 	}
 

@@ -483,8 +483,9 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 
 	if(get_user_team(killer_id) == get_user_team(victim_id) && killer_id != victim_id){		// Team Kill
         new iKillerFrags = get_user_frags(killer_id) - 1
-
-        set_user_frags(killer_id, iKillerFrags)
+		
+	if(p_data_b[killer_id][PB_ISCONNECTED])
+		set_user_frags(killer_id, iKillerFrags)
 
         // Update frags ( realtime )
 	#if MOD == 0
@@ -495,7 +496,8 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 	else{
         new iKillerFrags = get_user_frags(killer_id) + 1
 
-        set_user_frags(killer_id, iKillerFrags)
+	if(p_data_b[killer_id][PB_ISCONNECTED])
+		set_user_frags(killer_id, iKillerFrags)
 
         // Update frags ( realtime )
 	#if MOD == 0
@@ -520,7 +522,8 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 		// Update frags ( realtime )
 		new iVictimFrags = get_user_frags(victim_id) + 1
 
-		set_user_frags(victim_id, iVictimFrags)
+		if(p_data_b[victim_id][PB_ISCONNECTED])
+			set_user_frags(victim_id, iVictimFrags)
 
 	#if MOD == 0
 		new iVictimDeaths = get_user_deaths(victim_id)
