@@ -2,12 +2,13 @@ v2.2.1
  - Languages updated
  - Change: Blood Mage's Resistant Skin ability lowered (max 40% resistance)
  - Change: Crypt Lord's Impale ability lowered (max 15% chance)
+ - Change: Price of Helm increased
  - Bug Fix: get_user_attacker native error on line 55
  - Bug Fix: native error for get_weaponname
  - Bug Fix: (DOD) native error in entity_get_int
  - Bug Fix: native error in Admin_TakeXP
  - Bug Fix: Formatting error with SHOT_DEFLECTED string
- - Addition: Autobalance option (short term only)
+ - Addition: Autoxp option (short term only)
  - Module: Fixed bug where nothing was returned on changelevel
 
 v2.2.0

@@ -226,7 +226,7 @@ public plugin_init(){
 	}
 
 	// For an explanation of these variables, please see war3ft.cfg
-	register_cvar("FT_autobalance",				"0")
+	register_cvar("FT_autoxp",					"0")
 	register_cvar("FT_show_player",				"1")
 	register_cvar("FT_Race9_Random",			"1")
 	register_cvar("FT_Race9_Skill1",			"1")
@@ -435,7 +435,7 @@ public client_connect(id){
 	p_data[id][P_SPECMODE] = 0 
 	p_data_b[id][PB_JUSTJOINED] = true
 
-	if ( iCvar[FT_AUTOBALANCE] && !iCvar[MP_SAVEXP] ){
+	if ( iCvar[FT_AUTOXP] && !iCvar[MP_SAVEXP] ){
 		new iTotalXP
 		new iNum
 		for(new i = 1; i <= MAXPLAYERS; i++){
