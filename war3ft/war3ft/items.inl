@@ -1,4 +1,4 @@
-public Item_ShowHUD(parm2[2]){					// Displays the player's items in the bottom center of the screen
+public _Item_ShowHUD(parm2[2]){					// Displays the player's items in the bottom center of the screen
 	#if ADVANCED_DEBUG
 		writeDebugInfo("items",parm2[0])
 	#endif
@@ -57,7 +57,7 @@ public Item_ShowHUD(parm2[2]){					// Displays the player's items in the bottom 
 	//set_hudmessage(224, 160, 0, 0.011, 0.91, HUDMESSAGE_FX_FADEIN, 10.0, 1.0, 2.0, 3.0, HUDMESSAGE_CHAN_ITEM)
 	//show_hudmessage(id, message)
 
-	set_task(1.0,"_WAR3_showHUDItems",TASK_ITEMS+id,parm2,2)
+	set_task(1.0,"_Item_ShowHUD",TASK_ITEMS+id,parm2,2)
 	return PLUGIN_CONTINUE
 }
 

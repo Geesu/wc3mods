@@ -851,7 +851,7 @@ public WAR3_Display_Level(id, flag){
 		new parm2[2]
 		parm2[0] = id
 		if(!task_exists(TASK_ITEMS+id)){
-			Item_ShowHUD(parm2)
+			_Item_ShowHUD(parm2)
 		}
 	}
 #endif
