@@ -362,7 +362,7 @@
 #define FT_SPEC_INFO						2
 #define FT_MIN_B4_XP						3
 #define	FT_BLINK_RADIUS						4
-#define	FT_STEAM							5
+//#define	FT_STEAM							5
 #define	MP_SAVEXP							6
 #define	FT_SHOW_ICONS						7
 #define	FT_HEALTH_BONUS						8
@@ -627,3 +627,5 @@ new const itemcost[9] =					{1500,1500,1000,800,2000,800,2000,1000,4000}
 #if MOD == 1
 	new const itemcost2[9] =				{800,1500,550,1500,1500,1750,1000,9000,16000}
 #endif
+
+new MOTD_header[] = "<html><head><style type=^"text/css^">#s{text-indent:35px;width:500px;}</style></head><body bgcolor=#000000 text=#FFB000>"

@@ -149,24 +149,24 @@ DONT_DIE_GOOSE = Don't die next time and I'll give you another nade ya silly goo
 RACE_NOT_YET_SELECTED = %s - race not yet selected%s
 PLAYER_SKILLS = Warcraft 3 Frozen Throne Player Skills
 
-SHOPMENU_1 =	%s: If you die you will retrieve your equipment the following round
-SHOPMENU_2 =	%s: Allows you to run faster
-SHOPMENU_3 =	%s +%d: An additional %d hp will be removed from the enemy on every hit
-SHOPMENU_4 =	%s: Makes you partially invisible, invisibility is increased when holding the knife
-SHOPMENU_5 =	%s: You will receive health for every hit on the enemy
-SHOPMENU_6 =	%s: You will be immune enemy ultimates
-SHOPMENU_7 =	%s: Slows your enemy down when you hit him
-SHOPMENU_8 =	%s: Receive extra health
-SHOPMENU_9 =	%s: Automatically gain experience, the item is used on purchase
+SHOPMENU_1 =	If you die you will retrieve your equipment the following round
+SHOPMENU_2 =	Allows you to run faster
+SHOPMENU_3 =	+%d: An additional %d hp will be removed from the enemy on every successful attack
+SHOPMENU_4 =	Makes you partially invisible, invisibility is increased when holding the knife
+SHOPMENU_5 =	You will receive health for every hit on the enemy
+SHOPMENU_6 =	You will be immune to enemy ultimates
+SHOPMENU_7 =	Slows your enemy down when you hit him
+SHOPMENU_8 =	Receive extra health
+SHOPMENU_9 =	Automatically gain experience, this item is used on purchase
 SHOPMENU_TITLE = Shopmenu Item Information
-SHOPMENU2_1 = %s: You will respawn after death
-SHOPMENU2_2 = %s: Protects you from moles (unless they hit you in the head)
-SHOPMENU2_3 = %s: Immune to headshots
-SHOPMENU2_4 = %s: You cannot be heard when running/going up ladders
-SHOPMENU2_6 = %s: Given an HE grenade every %d seconds
-SHOPMENU2_7 = %s: Gives 1 health every 2 seconds, you can have 5 max (type rings to receive 5)
-SHOPMENU2_8 = %s: You look like the enemy
-SHOPMENU2_9 = %s: Teleported to enemy spawn at the start of the round, can only be used once
+SHOPMENU2_1 = You will respawn after death
+SHOPMENU2_2 = Deflects some damage from moles
+SHOPMENU2_3 = Immune to headshots
+SHOPMENU2_4 = You cannot be heard when running/going up ladders
+SHOPMENU2_6 = You will be given a high explosive grenade every %d seconds
+SHOPMENU2_7 = Gives 1 health every 2 seconds, you can have 5 max (type rings to receive 5)
+SHOPMENU2_8 = You look like the enemy
+SHOPMENU2_9 = Teleported to enemy spawn at the start of the round, can only be used once
 SHOPMENU2_TITLE = Shopmenu2 Item Information
 NOT_ULTIMATE_DURING_FREEZETIME = You may not use your ultimate during freezetime
 SUICIDE_BOMB_ARMED = Suicide Bomb Armed^nPress Again To Detonate
@@ -259,7 +259,7 @@ EVERYONE = Everyone
 WORD_SKILLS = Skills
 RACE_INFORMATION = Race Information
 WAS_KILLED_BY = %s was killed by %s's %s
-THIS_MOD_WAS_DEVELOPED = This mod was developed by 4HM | Pimp Daddy, visit www.4hm.net (forums) for more details%s
+THIS_MOD_WAS_DEVELOPED = This mod was developed by 4HM | Pimp Daddy, visit www.4hm.net (forums) for more details
 CLICK_HERE_FOR_LATEST = Click <a href='http://4honor.net/forum/viewforum.php?f=28'>here</a> for the latest updates to Warcraft 3 Frozen Throne
 THERE_ARE_MORE = There are more clients matching to your argument
 CLIENT_NOT_FOUND = Client with that name or userid not found
@@ -284,24 +284,24 @@ MENU_TEAM_XP = \yTeam XP Menu
 CLICK_HERE = Click <a href='http://ootoaoo.no-ip.com/war3/war3info.php?game=%s&lang=en'>here</A> for more information regarding the new races, etc..
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Help
 WAR3HELP :
-%sThis is how you bind a key %s
-1) Type ` to get to the console (key to the left of number 1)%s
-2) Type bind alt ultimate%s
-3) Type bind - shopmenu%s
-4) Type bind = shopmenu2%s
-5) Type bind p ability%s
-There are a few commands you need to know in order take full advantage of the plugin%s
-say /selectskill - Allows you to select skills before the start of the next round%s
-say /changerace - Allows you to change your race%s
-say /playerskills - Shows you what skills other players have chosen%s
-say /skillsinfo - Shows you what each skill does for the race you have selected%s
-say /itemsinfo - Shows you a list of items and what they do%s
-say /itemsinfo2 - Shows you more items%s
-say /level - Shows you what race, level and skills you have%s
-say /war3menu -  Shows the War3 Frozen Throne Player menu%s
-say /ability - if you have serpent wards it will plant them%s
-say /resetskills - resets your skills%s		
-say /resetxp - Will reset your level and XP to 0%s
+This is how you bind a key<p>
+1) Type ` to get to the console (key to the left of number 1)<br>
+2) Type bind alt ultimate<br>
+3) Type bind - shopmenu<br>
+4) Type bind = shopmenu2<br>
+5) Type bind p ability<p>
+There are a few commands you need to know in order take full advantage of the plugin<p>
+say /selectskill - Allows you to select skills before the start of the next round<br>
+say /changerace - Allows you to change your race<br>
+say /playerskills - Shows you what skills other players have chosen<br>
+say /skillsinfo - Shows you what each skill does for the race you have selected<br>
+say /itemsinfo - Shows you a list of items and what they do<br>
+say /itemsinfo2 - Shows you more items<br>
+say /level - Shows you what race, level and skills you have<br>
+say /war3menu -  Shows the War3 Frozen Throne Player menu<br>
+say /ability - if you have serpent wards it will plant them<br>
+say /resetskills - resets your skills<br>		
+say /resetxp - Will reset your level and XP to 0
 :
 
 DOD_RACE3_SKILL2_INFO = Grenades will ALWAYS do (%d, %d or %d) times normal damage and the grenade's fuse is set to 2 seconds instead of the normal 5
@@ -351,9 +351,9 @@ INFO_SHOPMENU2_8 =	You now look like the enemy
 INFO_SHOPMENU2_9 =	You will be disguised as your enemy and appear at the enemy's spawn next round
 SKILL_REINCARNATION_SKIPPING =	Skipping reincarnation this round due to nearby enemies
 SKILL_REINCARNATION_FAILED =	Reincarnation failed
-DOD_SHOPMENU_1 =	%s: This item will make you respawn where you died
-DOD_SHOPMENU_2 =	%s: Gives you more stamina
-SHOPMENU2_5 = %s: You will be able to jump higher
+DOD_SHOPMENU_1 =	This item will make you respawn where you died
+DOD_SHOPMENU_2 =	Gives you more stamina
+SHOPMENU2_5 = You will be able to jump higher
 
 [sv]
 RACENAME_0 = Ingen Ras
@@ -504,24 +504,24 @@ UNTIL_YOUR_NEXT_GRENADE = %d sekunder tills du ges en ny granat
 DONT_DIE_GOOSE = Asso d'o' inte n'a'sta gong jag ger dig en granat din dumma Gris :D !
 RACE_NOT_YET_SELECTED = %s - Rasen har inte valts 'a'nnu%s
 PLAYER_SKILLS = Warcraft 3 Frozen Throne Spelar Skills
-SHOPMENU_1 = %s: Om du d'o'r ges din utrustning tillbaka rundan efter
-SHOPMENU_2 = %s: Du kan springa snabbare
-SHOPMENU_3 = %s +%d: %d mer h'a'lsa kommer att tas av fienden vid varje tr'a'ff
-SHOPMENU_4 = %s: Du blir delvis osynlig, osynligheten blir b'a'ttre om du har kniven framme.
-SHOPMENU_5 = %s: Du ges h'a'lsa f'o'r varje tr'a'ff mot fienden
-SHOPMENU_6 = %s: Du kommer att vara immun mot fiendernas Ultimate
-SHOPMENU_7 = %s: Saktar ner fienden n'a'r du tr'a'ffar dem
-SHOPMENU_8 = %s: Ger dig extra h'a'lsa
-SHOPMENU_9 = %s: DU ges XP, detta ges direkt
+SHOPMENU_1 = Om du d'o'r ges din utrustning tillbaka rundan efter
+SHOPMENU_2 = Du kan springa snabbare
+SHOPMENU_3 = +%d: %d mer h'a'lsa kommer att tas av fienden vid varje tr'a'ff
+SHOPMENU_4 = Du blir delvis osynlig, osynligheten blir b'a'ttre om du har kniven framme.
+SHOPMENU_5 = Du ges h'a'lsa f'o'r varje tr'a'ff mot fienden
+SHOPMENU_6 = Du kommer att vara immun mot fiendernas Ultimate
+SHOPMENU_7 = Saktar ner fienden n'a'r du tr'a'ffar dem
+SHOPMENU_8 = Ger dig extra h'a'lsa
+SHOPMENU_9 = DU ges XP, detta ges direkt
 SHOPMENU_TITLE = Information om Items i Shopmenu 1
-SHOPMENU2_1 = %s: Du ges nytt liv n'a'r du d'o'r
-SHOPMENU2_2 = %s: Skyddar dig mot Mullvadar (om dem inte treffar dig i huvudet)
-SHOPMENU2_3 = %s: Immun mot HS
-SHOPMENU2_4 = %s: Dina fotsteg h'o'rs inte n'a'r du springer eller springer i stegar
-SHOPMENU2_6 = %s: Ger dig en ny granat var %d sekund
-SHOPMENU2_7 = %s: Ger 1 hp varannan sekund, du kan ha max 5 (ringtyper f'o'r att ges 5hp)
-SHOPMENU2_8 = %s: Du ser ut som fienden
-SHOPMENU2_9 = %s: Du Teleportas till fiendens start vid rundans b'o'rjan, kan bara anv'a'das en gong
+SHOPMENU2_1 = Du ges nytt liv n'a'r du d'o'r
+SHOPMENU2_2 = Skyddar dig mot Mullvadar (om dem inte treffar dig i huvudet)
+SHOPMENU2_3 = Immun mot HS
+SHOPMENU2_4 = Dina fotsteg h'o'rs inte n'a'r du springer eller springer i stegar
+SHOPMENU2_6 = Ger dig en ny granat var %d sekund
+SHOPMENU2_7 = Ger 1 hp varannan sekund, du kan ha max 5 (ringtyper f'o'r att ges 5hp)
+SHOPMENU2_8 = Du ser ut som fienden
+SHOPMENU2_9 = Du Teleportas till fiendens start vid rundans b'o'rjan, kan bara anv'a'das en gong
 SHOPMENU2_TITLE = Information om Items i Shopmenu 2
 NOT_ULTIMATE_DURING_FREEZETIME = Du kan inte utnyttja din Ultimate innan rundan har startat
 SUICIDE_BOMB_ARMED = SjälvmordsBomben 'a'r armerad^nTryck igen f'o'r att spr'a'ngas
@@ -615,7 +615,7 @@ EVERYONE = Alla
 WORD_SKILLS = Skills
 RACE_INFORMATION = Ras Information
 WAS_KILLED_BY = %s d'o'dades av %s's %s
-THIS_MOD_WAS_DEVELOPED = Denna mod utvecklas av 4HM | Pimp Daddy, bes'o'k www.4hm.net (forums) f'o'r mer detaljer%s
+THIS_MOD_WAS_DEVELOPED = Denna mod utvecklas av 4HM | Pimp Daddy, bes'o'k www.4hm.net (forums) f'o'r mer detaljer
 CLICK_HERE_FOR_LATEST = Klicka <a href'http://4honor.net/forum/viewforum.php?f28'>h'a'r</a> f'o'r de senaste uppdateringarna av Warcraft 3 Frozen Throne
 VOTING_NOT_ALLOWED = R'o'stning kan inte goras i denna Server.
 THERE_ARE_MORE = Det finns flera Klienter som matchar ditt argument
@@ -638,24 +638,24 @@ MENU_TEAM_XP = \yLag XP Meny
 CLICK_HERE = Klicka <a href'http://ootoaoo.no-ip.com/war3/war3info.php?game%s&langsv'>h'a'r</A> f'o'r mer information om de nya raserna, etc..
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Hj'a'lp
 WAR3HELP :
-%sDetta beskriver hur du bindar dina tangenter %s
-1) Ta fram consolen%s
-2) Skriv bind f ultimate%s
-3) Skriv bind f11 shopmenu%s
-4) Skriv bind f12 shopmenu2%s
-5) Skriv bind p ability%s
-Det finns en del kommando som du skall veta f'o'r att kunna utnyttja War3FT till fullo%s
-say /selectskill - Du kan v'a'lja dina skills innan n'a'sta runda startar%s
-say /changerace - Du kan byta till en annan Ras%s
-say /playerskills - Visar andra spelares skill%s
-say /skillsinfo - Visar vad varje skill kan med Rasen du har valt%s
-say /itemsinfo - Visar en lista med items och vad de kan%s
-say /itemsinfo2 - Visar dig fler items%s
-say /level - Visar vilken Ras, level och skills som du har%s
-say /war3menu - Visar War3 Frozen Throne Meny%s
-say /ability - om du har serpent wards, sau plantas de%s
-say /resetskills - v'a'lj om dina skills%s
-say /resetxp - Detta nollar dina levels och din XP%s
+Detta beskriver hur du bindar dina tangenter<p>
+1) Ta fram consolen<br>
+2) Skriv bind f ultimate<br>
+3) Skriv bind f11 shopmenu<br>
+4) Skriv bind f12 shopmenu2<br>
+5) Skriv bind p ability<p>
+Det finns en del kommando som du skall veta f'o'r att kunna utnyttja War3FT till fullo<p>
+say /selectskill - Du kan v'a'lja dina skills innan n'a'sta runda startar<br>
+say /changerace - Du kan byta till en annan Ras<br>
+say /playerskills - Visar andra spelares skill<br>
+say /skillsinfo - Visar vad varje skill kan med Rasen du har valt<br>
+say /itemsinfo - Visar en lista med items och vad de kan<br>
+say /itemsinfo2 - Visar dig fler items<br>
+say /level - Visar vilken Ras, level och skills som du har<br>
+say /war3menu - Visar War3 Frozen Throne Meny<br>
+say /ability - om du har serpent wards, sau plantas de<br>
+say /resetskills - v'a'lj om dina skills<br>
+say /resetxp - Detta nollar dina levels och din XP
 :
 DOD_RACE3_SKILL2_INFO = Granater ger ALLTID (%d, %d eller %d) ggr den normala skadan och granaterna spr'a'ngs efter 2 sekunder ist'a'llet f'o'r normalt 5.
 AWARDED_FOR_KILLING_BOMB_D = fick %d XP f'o'r att du d'o'dade han som desarmerade bomben
@@ -832,24 +832,24 @@ UNTIL_YOUR_NEXT_GRENADE = %d Sekunde(n) bevor du deine naechste Granate erhaells
 DONT_DIE_GOOSE = Sterbe nicht das naechste Mal und du bekommst eine andere Granate!
 RACE_NOT_YET_SELECTED = %s - Rasse nicht ausgewaehlt%s
 PLAYER_SKILLS = Warcraft 3 Frozen Throne Spieler Fertigkeiten
-SHOPMENU_1 = %s: Wenn du stirbst, erhälst du in der nächsten Runde deine Ausrüstung zurück
-SHOPMENU_2 = %s: Du rennst schneller als alle anderen
-SHOPMENU_3 = %s +%d: Bei jedem Treffer werden dem Gegner zusätzliche %d HP abgezogen
-SHOPMENU_4 = %s: Macht dich teilweise unsichtbar, mit dem Messer in der Hand fast unsichtbar
-SHOPMENU_5 = %s: Du bekommst HP zurück wenn du dem Gegner Schaden zufügst
-SHOPMENU_6 = %s: Du bist immun gegen Ultimates
-SHOPMENU_7 = %s: Macht den Gegner langsamer wenn du ihn triffst
-SHOPMENU_8 = %s: Du bekommst extra Gesundheit beim Start der Runde
-SHOPMENU_9 = %s: Du kaufst Erfahrungspunkte ein.
+SHOPMENU_1 = Wenn du stirbst, erhälst du in der nächsten Runde deine Ausrüstung zurück
+SHOPMENU_2 = Du rennst schneller als alle anderen
+SHOPMENU_3 = +%d: Bei jedem Treffer werden dem Gegner zusätzliche %d HP abgezogen
+SHOPMENU_4 = Macht dich teilweise unsichtbar, mit dem Messer in der Hand fast unsichtbar
+SHOPMENU_5 = Du bekommst HP zurück wenn du dem Gegner Schaden zufügst
+SHOPMENU_6 = Du bist immun gegen Ultimates
+SHOPMENU_7 = Macht den Gegner langsamer wenn du ihn triffst
+SHOPMENU_8 = Du bekommst extra Gesundheit beim Start der Runde
+SHOPMENU_9 = Du kaufst Erfahrungspunkte ein.
 SHOPMENU_TITLE = Shopmenu Gegenstands-Informationen
-SHOPMENU2_1 = %s: YWenn du stirbst wirst du wieder wiederbelebt
-SHOPMENU2_2 = %s: Schutz vor Schüssen von Maulwürfen (ausser du bekommst einen Kopfschuss)
-SHOPMENU2_3 = %s: Macht dich immun gegen Kopfschuesse
-SHOPMENU2_4 = %s: Deine Schritte und Leitergeräusche sind nicht mehr zu hören
-SHOPMENU2_6 = %s: Gibt dir alle %d Sekunden eine Granate
-SHOPMENU2_7 = %s: GGibt dir 1 HP alle 2 Sekunden. (Maximal 5 - schreib: rings um sie zu erhalten)
-SHOPMENU2_8 = %s: Du siehst aus wie der Gegner!!
-SHOPMENU2_9 = %s: Du wirst bei Rundenbginn mit gegnerischem Skin zum anderen Startplatz teleportiert.
+SHOPMENU2_1 = YWenn du stirbst wirst du wieder wiederbelebt
+SHOPMENU2_2 = Schutz vor Schüssen von Maulwürfen (ausser du bekommst einen Kopfschuss)
+SHOPMENU2_3 = Macht dich immun gegen Kopfschuesse
+SHOPMENU2_4 = Deine Schritte und Leitergeräusche sind nicht mehr zu hören
+SHOPMENU2_6 = Gibt dir alle %d Sekunden eine Granate
+SHOPMENU2_7 = GGibt dir 1 HP alle 2 Sekunden. (Maximal 5 - schreib: rings um sie zu erhalten)
+SHOPMENU2_8 = Du siehst aus wie der Gegner!!
+SHOPMENU2_9 = Du wirst bei Rundenbginn mit gegnerischem Skin zum anderen Startplatz teleportiert.
 SHOPMENU2_TITLE = Shopmenu2 Gegenstands-Informationen
 NOT_ULTIMATE_DURING_FREEZETIME = Du kannst keine Ultimate in der Freezetime benutzen
 SUICIDE_BOMB_ARMED = Selbstmord-Bombe entsichert^nDruecke nochmal um zu explodieren
@@ -942,7 +942,7 @@ EVERYONE = Jeder
 WORD_SKILLS = Fertigkeiten
 RACE_INFORMATION = Rassen Information
 WAS_KILLED_BY = %s wurde getoeten von %s's %s
-THIS_MOD_WAS_DEVELOPED = Dieser Mod wird entwickelt von 4HM | Pimp Daddy, besuche www.4hm.net (forum) für mehr Details%s
+THIS_MOD_WAS_DEVELOPED = Dieser Mod wird entwickelt von 4HM | Pimp Daddy, besuche www.4hm.net (forum) für mehr Details
 CLICK_HERE_FOR_LATEST = Klicke <a href='http://4honor.net/forum/viewforum.php?f=28'>hier</a> fuer die neuesten Updates von Warcraft3 Frozen Throne
 THERE_ARE_MORE = Es gibt mehr Clienten die zu ihrem Argument passen
 CLIENT_NOT_FOUND = Client mit dem Namen oder UserID nicht gefunden
@@ -967,24 +967,24 @@ MENU_TEAM_XP = \yTeam XP Menue
 CLICK_HERE = Klicke <a href='http://ootoaoo.no-ip.com/war3/war3info.php?game=%s&lang=en'>hier</A> für mehr Informationen über neue Rassen, etc..
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Hilfe
 WAR3HELP :
-%sDas binden von Tasten %s
-1) Die ` Taste drücken um in die Konsole zu gelangen (links von der 1)%s
-2) Schreibe bind alt ultimate (so aktiviert die ALT Taste das Ultimate)%s
-3) Schreibe bind - shopmenu (so aktiviert die - Taste das shopmenu)%s
-4) Schreibe bind = shopmenu2 (so aktiviert die = Taste das shopmenu2)%s
-5) Schreibe bind p ability (so aktiviert die p Taste die Fertigkeit einiger Rassen)%s
-Es gibt noch einige Befehle mehr um das WC3-Plugin vollständig zu nutzen.%s
-say /selectskill - Fähigkeiten deiner Rasse auswählen%s
-say /changerace - Rasse wechseln%s
-say /playerskills - Rassen und Fähigkeiten Anzeige aller Spieler%s
-say /skillsinfo - Erklärungen der Fähigkeiten deiner Rasse%s
-say /itemsinfo - Erklärung der Gegenstände im shopmenu%s
-say /itemsinfo2 - Erklärung der Gegenstände im shopmenu2%s
-say /level - Zeigt deine Rasse, Fähigkeiten ,Level und Erfahrungspunkte an%s
-say /war3menu - Blendet das Warcraft3 Menu ein für weitere Einstellungen und Erklärungen%s
-say /ability - Mit diesem Befehl können verfuegbare Schadens Wellen platziert werden%s
-say /resetskills - Du kannst deine Fertigkeiten erneut auswählen%s
-say /resetxp - Loescht dein Level und deine XP auf 0%s
+Das binden von Tasten<p>
+1) Die ` Taste drücken um in die Konsole zu gelangen (links von der 1)<br>
+2) Schreibe bind alt ultimate (so aktiviert die ALT Taste das Ultimate)<br>
+3) Schreibe bind - shopmenu (so aktiviert die - Taste das shopmenu)<br>
+4) Schreibe bind = shopmenu2 (so aktiviert die = Taste das shopmenu2)<br>
+5) Schreibe bind p ability (so aktiviert die p Taste die Fertigkeit einiger Rassen)<p>
+Es gibt noch einige Befehle mehr um das WC3-Plugin vollständig zu nutzen.<p>
+say /selectskill - Fähigkeiten deiner Rasse auswählen<br>
+say /changerace - Rasse wechseln<br>
+say /playerskills - Rassen und Fähigkeiten Anzeige aller Spieler<br>
+say /skillsinfo - Erklärungen der Fähigkeiten deiner Rasse<br>
+say /itemsinfo - Erklärung der Gegenstände im shopmenu<br>
+say /itemsinfo2 - Erklärung der Gegenstände im shopmenu2<br>
+say /level - Zeigt deine Rasse, Fähigkeiten ,Level und Erfahrungspunkte an<br>
+say /war3menu - Blendet das Warcraft3 Menu ein für weitere Einstellungen und Erklärungen<br>
+say /ability - Mit diesem Befehl können verfuegbare Schadens Wellen platziert werden<br>
+say /resetskills - Du kannst deine Fertigkeiten erneut auswählen<br>
+say /resetxp - Loescht dein Level und deine XP auf 0
 :
 
 AWARDED_FOR_KILLING_TEAMMATE = Du hast %d XP fuer das toeten eines Teamkollegen verloren
@@ -1148,24 +1148,24 @@ UNTIL_YOUR_NEXT_GRENADE = %d segundo(s) hasta tu siguiente granada
 DONT_DIE_GOOSE = ¡No te dejes matar la próxima vez y te daré otra granada, flipao!
 RACE_NOT_YET_SELECTED = %s - raza todavía no seleccionada%s
 PLAYER_SKILLS = Warcraft 3 Frozen Throne - Habilidades de los jugadores
-SHOPMENU_1 = %s: Si mueres recuperas tu equipamiento la siguiente ronda
-SHOPMENU_2 = %s: Te permite correr más rápido
-SHOPMENU_3 = %s +%d: El enemigo perderá un %d adicional de vida en cada disparo recibido
-SHOPMENU_4 = %s: Te hace parcialmente invisible, y todavía más si llevas el cuchillo
-SHOPMENU_5 = %s: Recibirás vida por cada disparo que aciertes en el enemigo
-SHOPMENU_6 = %s: Serás inmune a los Ultimates del enemigo
-SHOPMENU_7 = %s: Enlentece al enemigo cuando le disparas
-SHOPMENU_8 = %s: Recibes extra de vida
-SHOPMENU_9 = %s: Ganas experiencia automáticamente, el objeto se usa al comprarlo
+SHOPMENU_1 = Si mueres recuperas tu equipamiento la siguiente ronda
+SHOPMENU_2 = Te permite correr más rápido
+SHOPMENU_3 = +%d: El enemigo perderá un %d adicional de vida en cada disparo recibido
+SHOPMENU_4 = Te hace parcialmente invisible, y todavía más si llevas el cuchillo
+SHOPMENU_5 = Recibirás vida por cada disparo que aciertes en el enemigo
+SHOPMENU_6 = Serás inmune a los Ultimates del enemigo
+SHOPMENU_7 = Enlentece al enemigo cuando le disparas
+SHOPMENU_8 = Recibes extra de vida
+SHOPMENU_9 = Ganas experiencia automáticamente, el objeto se usa al comprarlo
 SHOPMENU_TITLE = Información de los objetos del menú de compras 1
-SHOPMENU2_1 = %s: Resucitarás tras morir
-SHOPMENU2_2 = %s: Te protege de los mulos (a menos que te den en la cabeza)
-SHOPMENU2_3 = %s: No serás oído al correr o subir escaleras
-SHOPMENU2_4 = %s: Crea 1 o 2 clones tuyos a tu alrededor
-SHOPMENU2_6 = %s: Recibes una granada explosiva cada %d segundos
-SHOPMENU2_7 = %s: Recibes 1 de vida cada 2 segundos. Puedes tener 5 como máximo (escribe rings para recibir 5)
-SHOPMENU2_8 = %s: Te disfrazas de enemigo
-SHOPMENU2_9 = %s: Te teletransportas a la base enemiga al inicio de la ronda, sólo puede ser usado una vez
+SHOPMENU2_1 = Resucitarás tras morir
+SHOPMENU2_2 = Te protege de los mulos (a menos que te den en la cabeza)
+SHOPMENU2_3 = No serás oído al correr o subir escaleras
+SHOPMENU2_4 = Crea 1 o 2 clones tuyos a tu alrededor
+SHOPMENU2_6 = Recibes una granada explosiva cada %d segundos
+SHOPMENU2_7 = Recibes 1 de vida cada 2 segundos. Puedes tener 5 como máximo (escribe rings para recibir 5)
+SHOPMENU2_8 = Te disfrazas de enemigo
+SHOPMENU2_9 = Te teletransportas a la base enemiga al inicio de la ronda, sólo puede ser usado una vez
 SHOPMENU2_TITLE = Información de los objetos del menú de compras 2
 NOT_ULTIMATE_DURING_FREEZETIME = No puedes usar tu Ultimate durante los segundos iniciales
 SUICIDE_BOMB_ARMED = Bomba suicida armada^nPulsa otra vez para detonación
@@ -1259,7 +1259,7 @@ EVERYONE = Todos
 WORD_SKILLS = Habilidades
 RACE_INFORMATION = Información de la raza
 WAS_KILLED_BY = %s ha sido eliminado por %s con la %s
-THIS_MOD_WAS_DEVELOPED = Este mod ha sido desarrollado por 4HM | Pimp Daddy, visita www.4hm.net (forums) para más detalles%s
+THIS_MOD_WAS_DEVELOPED = Este mod ha sido desarrollado por 4HM | Pimp Daddy, visita www.4hm.net (forums) para más detalles
 CLICK_HERE_FOR_LATEST = Haz clic <a href='http://4honor.net/forum/viewforum.php?f=28'>aquí</a> para la última actualización de Warcraft 3 Frozen Throne
 THERE_ARE_MORE = Hay más clientes que coinciden con tu argumento
 CLIENT_NOT_FOUND = Ese nombre de cliente o userid no se encuentran
@@ -1284,24 +1284,24 @@ MENU_TEAM_XP = \yMenú XP de Equipo
 CLICK_HERE = Haz clic <a href='http://ootoaoo.no-ip.com/war3/war3info.php?game=%s&lang=es'>aquí</A> para más información sobre nuevas razas, etc...
 WAR3HELP_TITLE = Ayuda de Warcraft 3 Frozen Throne
 WAR3HELP :
-%sAsí es como puedes bindear una tecla %s
-1) Pulsa ` para bajar la consola (la tecla a la izquierda del número 1)%s
-2) Escribe bind alt ultimate%s
-3) Escribe bind - shopmenu%s
-4) Escribe bind = shopmenu2%s
-5) Escribe bind p ability%s
-Hay algunos comandos que necesitas saber para sacar el máximo rendimiento al plugin%s
-say /selectskill - Te permite seleccionar habilidades antes de que comience la siguiente ronda%s
-say /changerace - Te permite cambiar tu raza%s
-say /playerskills - Te muestra que habilidades han elegido los otros jugadores%s
-say /skillsinfo - Te muestra que hace cada habilidad de la raza que has seleccionado%s
-say /itemsinfo - Te muestra una lista de objetos y qué hace cada uno%s
-say /itemsinfo2 - Te muestra más objetos%s
-say /level - Te muestra que raza, nivel y habilidades que tienes%s
-say /war3menu -  Muestra el menú del jugador de War3 Frozen Throne%s
-say /ability - Si tienes las cajas de serpientes, abre una%s
-say /resetskills - Resetea tus habilidades%s		
-say /resetxp - Resetea tu nivel y tu XP a 0%s
+Así es como puedes bindear una tecla<p>
+1) Pulsa ` para bajar la consola (la tecla a la izquierda del número 1)<br>
+2) Escribe bind alt ultimate<br>
+3) Escribe bind - shopmenu<br>
+4) Escribe bind = shopmenu2<br>
+5) Escribe bind p ability<p>
+Hay algunos comandos que necesitas saber para sacar el máximo rendimiento al plugin<p>
+say /selectskill - Te permite seleccionar habilidades antes de que comience la siguiente ronda<br>
+say /changerace - Te permite cambiar tu raza<br>
+say /playerskills - Te muestra que habilidades han elegido los otros jugadores<br>
+say /skillsinfo - Te muestra que hace cada habilidad de la raza que has seleccionado<br>
+say /itemsinfo - Te muestra una lista de objetos y qué hace cada uno<br>
+say /itemsinfo2 - Te muestra más objetos<br>
+say /level - Te muestra que raza, nivel y habilidades que tienes<br>
+say /war3menu -  Muestra el menú del jugador de War3 Frozen Throne<br>
+say /ability - Si tienes las cajas de serpientes, abre una<br>
+say /resetskills - Resetea tus habilidades<br>		
+say /resetxp - Resetea tu nivel y tu XP a 0
 :
 
 DOD_RACE3_SKILL2_INFO = Las granadas SIEMPRE harán (%d, %d or %d) veces más daño del normal y explotan a los 2 segundos en vez de los 5 habituales
@@ -1461,24 +1461,24 @@ UNTIL_YOUR_NEXT_GRENADE = %d seconde(n) tot je volgende granaat
 DONT_DIE_GOOSE = Zorg dat je de volgende keer niet wordt gedood, dan krijg je nog een granaat!
 RACE_NOT_YET_SELECTED = %s - ras nog niet geselecteerd%s
 PLAYER_SKILLS = Warcraft 3 Frozen Throne Speler Skills
-SHOPMENU_1 = %s: Als je doodgaat krijg je de volgende ronde je uitrusting terug
-SHOPMENU_2 = %s: Laat je sneller rennen
-SHOPMENU_3 = %s +%d: %d hp extra zal van de vijand worden afgehaald met elk raak schot
-SHOPMENU_4 = %s: Maakt je gedeeltelijk onzichtbaar, dit wordt meer als je je mes vasthoudt
-SHOPMENU_5 = %s: Je krijgt health voor ieder schot op een vijand
-SHOPMENU_6 = %s: Je kan niet worden geraakt door vijandelijke ultimates
-SHOPMENU_7 = %s: Remt je vijand af als je hem raakt
-SHOPMENU_8 = %s: Ontvang extra health
-SHOPMENU_9 = %s: Koop XP, wordt direct toegepast
+SHOPMENU_1 = Als je doodgaat krijg je de volgende ronde je uitrusting terug
+SHOPMENU_2 = Laat je sneller rennen
+SHOPMENU_3 = +%d: %d hp extra zal van de vijand worden afgehaald met elk raak schot
+SHOPMENU_4 = Maakt je gedeeltelijk onzichtbaar, dit wordt meer als je je mes vasthoudt
+SHOPMENU_5 = Je krijgt health voor ieder schot op een vijand
+SHOPMENU_6 = Je kan niet worden geraakt door vijandelijke ultimates
+SHOPMENU_7 = Remt je vijand af als je hem raakt
+SHOPMENU_8 = Ontvang extra health
+SHOPMENU_9 = Koop XP, wordt direct toegepast
 SHOPMENU_TITLE = Shopmenu Item Informatie
-SHOPMENU2_1 = %s: Je zal terugkomen uit de dood
-SHOPMENU2_2 = %s: Beschermd je voor moles (tenzij ze je in je hoofd raken)
-SHOPMENU2_3 = %s: Je bent immuun voor vijandelijke headshots
-SHOPMENU2_4 = %s: Je kan niet worden gehoord als je ladders op rent/klimt
-SHOPMENU2_6 = %s: Geeft elke %d seconden een HE granaat
-SHOPMENU2_7 = %s: Geeft 1 health elke 2 seconden, je kan maximaal 5 ringen hebben (zeg rings om 5 te krijgen)
-SHOPMENU2_8 = %s: Je lijkt op de vijand
-SHOPMENU2_9 = %s: Teleported to enemy spawn at the start of the round, can only be used once
+SHOPMENU2_1 = Je zal terugkomen uit de dood
+SHOPMENU2_2 = Beschermd je voor moles (tenzij ze je in je hoofd raken)
+SHOPMENU2_3 = Je bent immuun voor vijandelijke headshots
+SHOPMENU2_4 = Je kan niet worden gehoord als je ladders op rent/klimt
+SHOPMENU2_6 = Geeft elke %d seconden een HE granaat
+SHOPMENU2_7 = Geeft 1 health elke 2 seconden, je kan maximaal 5 ringen hebben (zeg rings om 5 te krijgen)
+SHOPMENU2_8 = Je lijkt op de vijand
+SHOPMENU2_9 = Teleported to enemy spawn at the start of the round, can only be used once
 SHOPMENU2_TITLE = Shopmenu2 Item Information
 NOT_ULTIMATE_DURING_FREEZETIME = Je mag je ultimate niet gebruiken tijdens freezetime
 SUICIDE_BOMB_ARMED = Suicide Bomb Armed^nDruk nog een keer om te ontploffen
@@ -1572,7 +1572,7 @@ EVERYONE = Iedereen
 WORD_SKILLS = Skills
 RACE_INFORMATION = Ras Informatie
 WAS_KILLED_BY = %s is gedood door %s's %s
-THIS_MOD_WAS_DEVELOPED = Deze mod is gemaakt door 4HM | Pimp Daddy, kijk op www.4hm.net (forums) voor meer details%s
+THIS_MOD_WAS_DEVELOPED = Deze mod is gemaakt door 4HM | Pimp Daddy, kijk op www.4hm.net (forums) voor meer details
 CLICK_HERE_FOR_LATEST = Klik <a href='http://4honor.net/forum/viewforum.php?f=28'>hier</a> voor de laatste updates voor Warcraft 3 Frozen Throne
 THERE_ARE_MORE = Er zijn meerdere spelers die bij de opgegeven naam of user id horen gevonden
 CLIENT_NOT_FOUND = Client met die naam of user id niet gevonden
@@ -1597,24 +1597,24 @@ MENU_TEAM_XP = \yTeam XP Menu
 CLICK_HERE = Klik <a href='http://ootoaoo.no-ip.com/war3/war3info.php?game=%s&lang=en'>hier</A> voor meer informatie over de nieuwe rassen, etc..(in het Engels)
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Help
 WAR3HELP :
-%sZo bind je een knop aan een commando %s
-1) Druk op ` voor de console (key to the left of number 1)%s
-2) Typ bind alt ultimate%s
-3) Typ bind - shopmenu%s
-4) Typ bind = shopmenu2%s
-5) Typ bind p ability%s
-Er zijn een paar commandos die je moet weten om de mod op zijn best te gebruiken%s
-zeg /selectskill - Laat je je skills kiezen aan het begin van de volgende ronde%s
-zeg /changerace - Laat je je ras veranderen%s
-zeg /playerskills - Laat je het ras en de skills van andere mensen op de server zien%s
-zeg /skillsinfo - Laat je zien wat elke skill doet voor het ras dat je hebt gekozen%s
-zeg /itemsinfo - Laat je een lijst met items zien met een beschrijving van wat ze doen%s
-zeg /itemsinfo2 - Laat je nog meer items met beschrijving zien%s
-zeg /level - Laat je jouw ras, level en skills zien%s
-zeg /war3menu - Laat je het War3 Frozen Throne Player menu zien%s
-zeg /ability - als je serpent wards hebt worden ze met dit commando geplant%s
-zeg /resetskills - Laat je je skills opnieuw kiezen%s
-zeg /resetxp - Zet je level en XP terug naar 0%s
+Zo bind je een knop aan een commando<p>
+1) Druk op ` voor de console (key to the left of number 1)<br>
+2) Typ bind alt ultimate<br>
+3) Typ bind - shopmenu<br>
+4) Typ bind = shopmenu2<br>
+5) Typ bind p ability<p>
+Er zijn een paar commandos die je moet weten om de mod op zijn best te gebruiken<p>
+zeg /selectskill - Laat je je skills kiezen aan het begin van de volgende ronde<br>
+zeg /changerace - Laat je je ras veranderen<br>
+zeg /playerskills - Laat je het ras en de skills van andere mensen op de server zien<br>
+zeg /skillsinfo - Laat je zien wat elke skill doet voor het ras dat je hebt gekozen<br>
+zeg /itemsinfo - Laat je een lijst met items zien met een beschrijving van wat ze doen<br>
+zeg /itemsinfo2 - Laat je nog meer items met beschrijving zien<br>
+zeg /level - Laat je jouw ras, level en skills zien<br>
+zeg /war3menu - Laat je het War3 Frozen Throne Player menu zien<br>
+zeg /ability - als je serpent wards hebt worden ze met dit commando geplant<br>
+zeg /resetskills - Laat je je skills opnieuw kiezen<br>
+zeg /resetxp - Zet je level en XP terug naar 0<br>
 :
 
 DOD_RACE3_SKILL2_INFO = Granaten zullen ALTIJD (%d, %d or %d) keer de normale schade aanrichten en de granaats ontploft na 2 seconden i.p.v. de normale 5
@@ -1782,24 +1782,24 @@ UNTIL_YOUR_NEXT_GRENADE = %d sekund(er) indtil din næste granat
 DONT_DIE_GOOSE = Lad vær med at dø næste gang eller jeg kaster en ny granat, din gås 
 RACE_NOT_YET_SELECTED = %s - Race ikk valgt%s 
 PLAYER_SKILLS = Warcraft 3 Frozen Throne Spiller Skills 
-SHOPMENU_1 = %s: Hvis du dø vil du få dit udstyr tilbage i næste runde.
-SHOPMENU_2 = %s: Tillader dig at løbe hurtigere.
-SHOPMENU_3 = %s +%d:  %d mere liv vil blive fjernet fra fjenden hver gang du rammer. 
-SHOPMENU_4 = %s: Gør dig delvist usynlig, du er mere usynlig når du har kniven fremme. 
-SHOPMENU_5 = %s: Du vil få liv hver gang du ramme en fjende. 
-SHOPMENU_6 = %s: Ultimate virker ikke på dig.
-SHOPMENU_7 = %s: fjenden løber langsommere når du rammer ham.
-SHOPMENU_8 = %s: Du får extra liv.
-SHOPMENU_9 = %s: Du får mere xp ved at købe denne bog. 
+SHOPMENU_1 = Hvis du dø vil du få dit udstyr tilbage i næste runde.
+SHOPMENU_2 = Tillader dig at løbe hurtigere.
+SHOPMENU_3 = +%d:  %d mere liv vil blive fjernet fra fjenden hver gang du rammer. 
+SHOPMENU_4 = Gør dig delvist usynlig, du er mere usynlig når du har kniven fremme. 
+SHOPMENU_5 = Du vil få liv hver gang du ramme en fjende. 
+SHOPMENU_6 = Ultimate virker ikke på dig.
+SHOPMENU_7 = fjenden løber langsommere når du rammer ham.
+SHOPMENU_8 = Du får extra liv.
+SHOPMENU_9 = Du får mere xp ved at købe denne bog. 
 SHOPMENU_TITLE = Shopmenu Infomations Liste. 
-SHOPMENU2_1 = %s: Du vil genoplive efter du dør. 
-SHOPMENU2_2 = %s: Beskytter dig mod "moles" (med mindre de rammer dig i hovdet) 
-SHOPMENU2_3 = %s: Headshots virker ikke på dig. 
-SHOPMENU2_4 = %s: Du larmer ikke når du løber/går op af stiger. 
-SHOPMENU2_6 = %s: Giver en HE granat hver %d sekund 
-SHOPMENU2_7 = %s: Giver 1 i liv hver 2 sekund, du kan max have 5 ringe på en gang (skriv "rings" for at få 5) 
-SHOPMENU2_8 = %s: Du ligner fjenden 
-SHOPMENU2_9 = %s: Bliver teleporteret til fjendens base, kan kun bruges en gang. 
+SHOPMENU2_1 = Du vil genoplive efter du dør. 
+SHOPMENU2_2 = Beskytter dig mod "moles" (med mindre de rammer dig i hovdet) 
+SHOPMENU2_3 = Headshots virker ikke på dig. 
+SHOPMENU2_4 = Du larmer ikke når du løber/går op af stiger. 
+SHOPMENU2_6 = Giver en HE granat hver %d sekund 
+SHOPMENU2_7 = Giver 1 i liv hver 2 sekund, du kan max have 5 ringe på en gang (skriv "rings" for at få 5) 
+SHOPMENU2_8 = Du ligner fjenden 
+SHOPMENU2_9 = Bliver teleporteret til fjendens base, kan kun bruges en gang. 
 SHOPMENU2_TITLE = Shopmenu2 Infomations Liste. 
 NOT_ULTIMATE_DURING_FREEZETIME = Du kan ikke bruge ultimate i nedkølings perioden. 
 SUICIDE_BOMB_ARMED = Suicide Bomb Armerede^nTryk igen for at eksplodere.
@@ -1893,7 +1893,7 @@ EVERYONE = Alle
 WORD_SKILLS = Skills 
 RACE_INFORMATION = Race Information 
 WAS_KILLED_BY = %s Blev drabt af %s's %s 
-THIS_MOD_WAS_DEVELOPED = Dette mod blev udviklet af 4HM | Pimp Daddy, Besøg www.4hm.net (forum) for flere detaljer%s 
+THIS_MOD_WAS_DEVELOPED = Dette mod blev udviklet af 4HM | Pimp Daddy, Besøg www.4hm.net (forum) for flere detaljer
 CLICK_HERE_FOR_LATEST = klik <a href='http://4honor.net/forum/viewforum.php?f=28'>here</a> for de sidste updates til Warcraft 3 Frozen Throne
 THERE_ARE_MORE = Der er flere clienter med samme argumenter. 
 CLIENT_NOT_FOUND = Clienten med dette navn eller brugerid ikke fundet. 
@@ -1918,24 +1918,24 @@ MENU_TEAM_XP = \yTeam XP Menu
 CLICK_HERE = Klik <a href='http://ootoaoo.no-ip.com/war3/war3info.php?game=%s&lang=en'>her</A> for mere information omkring de nye racer, osv..
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Help 
 WAR3HELP : 
-%sSådan "binder" man en "key" %s 
-1) Tryk ` for at komme til consolen (knap til venstre for 1)%s 
-2) Tryk bind alt ultimate%s 
-3) Tryk bind - shopmenu%s 
-4) Tryk bind = shopmenu2%s 
-5) Tryk bind p ability%s 
-Der er få commandoer du behøver at vide for at få fuld of the plugin%s 
-say /selectskill - Tillader dig at vælge skills før næste runde%s 
-say /changerace - Tillader dig at skifte race%s 
-say /playerskills - Viser dig hvilke skills andre spillere har valgt%s 
-say /skillsinfo - Viser dig hvad dine skills gør%s 
-say /itemsinfo - Viser dig en liste med ting og hvad de gør do%s 
-say /itemsinfo2 - Vis flere ting%s 
-say /level - Viser dig hvad race, level og skills du har%s 
-say /war3menu - Viser War3 Frozen Throne Spiller menu%s 
-say /ability - Hvis du har nogle Serpent Wards Vil de blive plantet%s 
-say /resetskills - resets your skills%s 
-say /resetxp - Vil sætte din Xp og level til 0%s 
+Sådan "binder" man en "key"<p>
+1) Tryk ` for at komme til consolen (knap til venstre for 1)<br>
+2) Tryk bind alt ultimate<br>
+3) Tryk bind - shopmenu<br> 
+4) Tryk bind = shopmenu2<br> 
+5) Tryk bind p ability<p> 
+Der er få commandoer du behøver at vide for at få fuld of the plugin<p>
+say /selectskill - Tillader dig at vælge skills før næste runde<br>
+say /changerace - Tillader dig at skifte race<br>
+say /playerskills - Viser dig hvilke skills andre spillere har valgt<br>
+say /skillsinfo - Viser dig hvad dine skills gør<br>
+say /itemsinfo - Viser dig en liste med ting og hvad de gør do<br>
+say /itemsinfo2 - Vis flere ting<br>
+say /level - Viser dig hvad race, level og skills du har<br>
+say /war3menu - Viser War3 Frozen Throne Spiller menu<br>
+say /ability - Hvis du har nogle Serpent Wards Vil de blive plantet<br>
+say /resetskills - resets your skills<br>
+say /resetxp - Vil sætte din Xp og level til 0
 : 
 
 DOD_RACE3_SKILL2_INFO = Ganater vil ALTID Gøre (%d, %d or %d) gange normal skade og granater er sat til at eksplodere after 2 sekunder istedet for de normale 5. 
@@ -2104,24 +2104,24 @@ UNTIL_YOUR_NEXT_GRENADE = %d sekund do nastepnego granata
 DONT_DIE_GOOSE = Don't die next time and I'll give you another nade ya silly goose!
 RACE_NOT_YET_SELECTED = %s - rasa jeszcze nie wybrana%s
 PLAYER_SKILLS = Warcraft 3 Frozen Throne Umiejetnosci Graczy
-SHOPMENU_1 = %s: Jesli zginiesz odzyskasz swoj ekwipunek w nastepnej rundzie
-SHOPMENU_2 = %s: Pozwala biegac szybciej
-SHOPMENU_3 = %s +%d: Dodatkowe %d hp zostanie odebrane przeciwnikowi przy trafieniu
-SHOPMENU_4 = %s: Czesciowa niewidzialnosc. Im lzejsza bron tym bardziej jestes niewidzialny
-SHOPMENU_5 = %s: Dostaniesz HP za kazde trafienie przeciwnika
-SHOPMENU_6 = %s: Bedziesz odporny na Ultimate przeciwnika
-SHOPMENU_7 = %s: Spowalnia przeciwnika kiedy go trafisz
-SHOPMENU_8 = %s: Otrzymujesz dodatkowe HP
-SHOPMENU_9 = %s: Natychmiast dostajesz doswiadczenie
+SHOPMENU_1 = Jesli zginiesz odzyskasz swoj ekwipunek w nastepnej rundzie
+SHOPMENU_2 = Pozwala biegac szybciej
+SHOPMENU_3 = +%d: Dodatkowe %d hp zostanie odebrane przeciwnikowi przy trafieniu
+SHOPMENU_4 = Czesciowa niewidzialnosc. Im lzejsza bron tym bardziej jestes niewidzialny
+SHOPMENU_5 = Dostaniesz HP za kazde trafienie przeciwnika
+SHOPMENU_6 = Bedziesz odporny na Ultimate przeciwnika
+SHOPMENU_7 = Spowalnia przeciwnika kiedy go trafisz
+SHOPMENU_8 = Otrzymujesz dodatkowe HP
+SHOPMENU_9 = Natychmiast dostajesz doswiadczenie
 SHOPMENU_TITLE = Shopmenu Informacje
-SHOPMENU2_1 = %s: Odrodzisz sie po smierci
-SHOPMENU2_2 = %s: Chroni Cie przed Kretem (chyba ze trafi Cie w glowe)
-SHOPMENU2_3 = %s: Odporosc na headshoty
-SHOPMENU2_4 = %s: Nikt Cie nie slyszy kiedy biegasz/chodzisz po drabinie
-SHOPMENU2_6 = %s: Dostajesz granat HE co kazde %d sekund
-SHOPMENU2_7 = %s: Daje 1 HP co 2 sekundy, mozesz miec maksimum 5
-SHOPMENU2_8 = %s: Wygladasz jak przeciwnik
-SHOPMENU2_9 = %s: Teleportuje Cie na respa przeciwnej druzyny w nastepnej rundzie
+SHOPMENU2_1 = Odrodzisz sie po smierci
+SHOPMENU2_2 = Chroni Cie przed Kretem (chyba ze trafi Cie w glowe)
+SHOPMENU2_3 = Odporosc na headshoty
+SHOPMENU2_4 = Nikt Cie nie slyszy kiedy biegasz/chodzisz po drabinie
+SHOPMENU2_6 = Dostajesz granat HE co kazde %d sekund
+SHOPMENU2_7 = Daje 1 HP co 2 sekundy, mozesz miec maksimum 5
+SHOPMENU2_8 = Wygladasz jak przeciwnik
+SHOPMENU2_9 = Teleportuje Cie na respa przeciwnej druzyny w nastepnej rundzie
 SHOPMENU2_TITLE = Shopmenu2 Informacje
 NOT_ULTIMATE_DURING_FREEZETIME = Nie mozesz uzywac Ultimate podczas freezetime
 SUICIDE_BOMB_ARMED = Samobojcza Bomba Uzbrojona^nWcisnij ponownie by wybuchnac
@@ -2214,7 +2214,7 @@ EVERYONE = wszyscy
 WORD_SKILLS = Umiejetnosci
 RACE_INFORMATION = Informacje o Rasie
 WAS_KILLED_BY = %s zostal zabity przez %s's %s
-THIS_MOD_WAS_DEVELOPED = Ten mod zostal stworzony przez 4HM | Pimp Daddy, odwiedz www.4hm.net (forums) %s
+THIS_MOD_WAS_DEVELOPED = Ten mod zostal stworzony przez 4HM | Pimp Daddy, odwiedz www.4hm.net (forums)
 CLICK_HERE_FOR_LATEST = Kliknij <a href='http://4honor.net/forum/viewforum.php?f=28'>here</a> po najnowsze updaty do Warcraft 3 Frozen Throne
 THERE_ARE_MORE = Jest wiecej Graczy pasujacych do tego argumentu
 CLIENT_NOT_FOUND = Gracz z tym nickiem lub userid nie znaleziony
@@ -2239,24 +2239,24 @@ MENU_TEAM_XP = \yTeam XP Menu
 CLICK_HERE = Odwiedz <a href='http://ootoaoo.no-ip.com/war3/war3info.php?game=%s&lang=en'>here</A> po wiecej informacji dotyczacych nowych ras etc
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Pomoc
 WAR3HELP :
-%sW ten sposob bindujesz klawisze %s
-1) Wcisnij ` by wejsc do konsoli (pod ESC)%s
-2) Wpisz bind alt ultimate%s
-3) Wpisz bind - shopmenu%s
-4) Wpisz bind = shopmenu2%s
-5) Wpisz bind p ability%s
-Podstawowe komendy do wpisania w sayu%s
-  /selectskill - Pozwala wybrac Umiejetnosci przed rozpoczeciem nastepnej rundy%s
-  /changerace - Pozwala na zmiane Rasy%s
-  /playerskills - Informacje o Umiejetnosciach innych Graczy%s
-  /skillsinfo - Pokazuje opis Umiejetnosci ktore wybrales%s
-  /itemsinfo - Pokazuje liste Przedmiotow oraz ich zastosowanie%s
-  /itemsinfo2 - Pokazuje wiecej przedmiotow%s
-  /level - Pokazuje Rase, Poziom oraz Umiejetnosci jakie posiadasz%s
-  /war3menu -  Pokazuje menu glowne War3FT%s
-  /ability - Jesli masz Pilnujace Weze to je postawi%s
-  /resetskills - Resetuje Twoje Umiejetnosci%s		
-  /resetxp - Resetuje Twoj Poziom i XP do 0%s
+W ten sposob bindujesz klawisze<p>
+1) Wcisnij ` by wejsc do konsoli (pod ESC)<br>
+2) Wpisz bind alt ultimate<br>
+3) Wpisz bind - shopmenu<br>
+4) Wpisz bind = shopmenu2<br>
+5) Wpisz bind p ability<p>
+Podstawowe komendy do wpisania w sayu<p>
+/selectskill - Pozwala wybrac Umiejetnosci przed rozpoczeciem nastepnej rundy<br>
+/changerace - Pozwala na zmiane Rasy<br>
+/playerskills - Informacje o Umiejetnosciach innych Graczy<br>
+/skillsinfo - Pokazuje opis Umiejetnosci ktore wybrales<br>
+/itemsinfo - Pokazuje liste Przedmiotow oraz ich zastosowanie<br>
+/itemsinfo2 - Pokazuje wiecej przedmiotow<br>
+/level - Pokazuje Rase, Poziom oraz Umiejetnosci jakie posiadasz<br>
+/war3menu -  Pokazuje menu glowne War3FT<br>
+/ability - Jesli masz Pilnujace Weze to je postawi<br>
+/resetskills - Resetuje Twoje Umiejetnosci	
+/resetxp - Resetuje Twoj Poziom i XP do 0
 :
 
 DOD_RACE3_SKILL2_INFO = Granaty ZAWSZE zadadza (%d, %d lub %d)krotnie wiecej obrazen i zapalnik nie jest ustawiony na 5 sekund lecz na 2

@@ -1130,7 +1130,7 @@ public item_functions(parm[]){
 		return PLUGIN_CONTINUE
 
 	if(p_data[id][P_ITEM2]==ITEM_MOLE)
-		set_task(0.1,"_Item_Mole",TASK_FAN+12,parm,1)
+		set_task(0.1,"_Item_Mole",TASK_FAN+id,parm,1)
 		
 	if(p_data_b[id][PB_DIEDLASTROUND]){
 		p_data[id][P_ITEM]=0
@@ -1197,25 +1197,6 @@ public resetSkills(id,saychat){
 
 
 	return PLUGIN_HANDLED
-}
-
-public reset_position(parm[4]){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("reset_position",parm[0])
-	#endif
-
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	new origin[3]
-	origin[0]=parm[1]
-	origin[1]=parm[2]
-	origin[2]=parm[3]
-	set_user_origin(id,origin)
-
-	return PLUGIN_CONTINUE
 }
 
 public weapon_controller( parm[2]  ){
@@ -2110,7 +2091,6 @@ public set_variables(){
 	iCvar[FT_SPEC_INFO				] =	get_cvar_num("FT_spec_info")
 	iCvar[FT_MIN_B4_XP				] =	get_cvar_num("FT_min_b4_XP")
 	iCvar[FT_BLINK_RADIUS			] =	get_cvar_num("FT_blink_radius")
-	iCvar[FT_STEAM					] =	get_cvar_num("FT_steam")
 	iCvar[MP_SAVEXP					] =	get_cvar_num("mp_savexp")
 	iCvar[FT_SHOW_ICONS				] =	get_cvar_num("FT_show_icons")
 	iCvar[FT_HEALTH_BONUS			] =	get_cvar_num("FT_health_bonus")

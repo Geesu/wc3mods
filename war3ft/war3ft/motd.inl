@@ -1,4 +1,4 @@
-public MOTD_Itemsinfo(id,saychat){
+public MOTD_Itemsinfo(id){
 	#if ADVANCED_DEBUG == 1
 		writeDebugInfo("MOTD_Itemsinfo",id)
 	#endif
@@ -13,63 +13,42 @@ public MOTD_Itemsinfo(id,saychat){
 		}
 	}
 
-	new temp[1024], pos = 0
-	new theforward[8],backward[8]
-	if(iCvar[FT_STEAM]){
-		format(theforward,7,"<li>")
-		format(backward,7,"</li>")
-		pos += format(temp[pos], 1024-pos, "<body bgcolor=#000000><font color=#FFB000>")
-	}
-	else{
-		format(theforward,7,"")
-		format(backward,7,"^n")
-	}
-
+	new message[2048], title[128], pos = 0
 	new item_name[9][ITEM_NAME_LENGTH]
+
 	for(new i=0;i<9;i++){
 		itemname(i+1,id,item_name[i],ITEM_NAME_LENGTH_F)
 	}
 
-	if(saychat==1){
-		#if MOD == 0
-			pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU_1",item_name[0],backward)
-			pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU_2",item_name[1],backward)
-		#endif
-		#if MOD == 1
-			pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"DOD_SHOPMENU_1",item_name[0],backward)
-			pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"DOD_SHOPMENU_2",item_name[1],backward)
-		#endif
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU_3",item_name[2],iCvar[FT_CLAW],iCvar[FT_CLAW],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU_4",item_name[3],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU_5",item_name[4],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU_6",item_name[5],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU_7",item_name[6],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU_8",item_name[7],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU_9",item_name[8],backward)
+	// Add header
 
-		new motdmessage[128]
-		format(motdmessage, 127, "%L",id,"SHOPMENU_TITLE")
-		show_motd(id,temp,motdmessage)
+	pos += format(message[pos], 2048-pos, "%s", MOTD_header)
 
-	}
-	else{
-		console_print(id,"---- %L ----",id,"SHOPMENU_TITLE")
-		console_print(id,"%L",id,"SHOPMENU_1",item_name[0])
-		console_print(id,"%L",id,"SHOPMENU_2",item_name[1])
-		console_print(id,"%L",id,"SHOPMENU_3",item_name[2],iCvar[FT_CLAW],iCvar[FT_CLAW])
-		console_print(id,"%L",id,"SHOPMENU_4",item_name[3])
-		console_print(id,"%L",id,"SHOPMENU_5",item_name[4])
-		console_print(id,"%L",id,"SHOPMENU_6",item_name[5])
-		console_print(id,"%L",id,"SHOPMENU_7",item_name[6])
-		console_print(id,"%L",id,"SHOPMENU_8",item_name[7])
-		console_print(id,"%L",id,"SHOPMENU_9",item_name[8])
-		console_print(id,"---- %L ----",id,"SHOPMENU_TITLE")
-	}
+	// Add Item Information
 
-	return PLUGIN_CONTINUE
+	#if MOD == 0
+		pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[0],id,"SHOPMENU_1")
+		pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[1],id,"SHOPMENU_2")
+	#endif
+	#if MOD == 1
+		pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[0],id,"DOD_SHOPMENU_1")
+		pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[1],id,"DOD_SHOPMENU_2")
+	#endif
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[2],id,"SHOPMENU_3",iCvar[FT_CLAW],iCvar[FT_CLAW])
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[3],id,"SHOPMENU_4")
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[4],id,"SHOPMENU_5")
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[5],id,"SHOPMENU_6")
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[6],id,"SHOPMENU_7")
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[7],id,"SHOPMENU_8")
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[8],id,"SHOPMENU_9")
+
+	format(title, 127, "%L",id,"SHOPMENU_TITLE")
+	show_motd(id,message,title)
+
+	return PLUGIN_HANDLED
 }
 
-public MOTD_Itemsinfo2(id,saychat){
+public MOTD_Itemsinfo2(id){
 	#if ADVANCED_DEBUG == 1
 		writeDebugInfo("MOTD_Itemsinfo2",id)
 	#endif
@@ -86,56 +65,36 @@ public MOTD_Itemsinfo2(id,saychat){
 		}
 	}
 
-	new temp[1024], pos = 0
-	new theforward[8],backward[8]
-	if(iCvar[FT_STEAM]){
-		format(theforward,7,"<li>")
-		format(backward,7,"</li>")
-		pos += format(temp[pos], 1024-pos, "<body bgcolor=#000000><font color=#FFB000>")
-	}
-	else{
-		format(theforward,7,"")
-		format(backward,7,"^n")
-	}
+	new message[2048], title[128], pos = 0
+	new item_name2[9][64]
 
-	new item_name2[9][ITEM_NAME_LENGTH_F]
 	for(new i=0;i<9;i++){
-		itemname2(i+1,id,item_name2[i],ITEM_NAME_LENGTH_F)
+		itemname2(i+1,id,item_name2[i],64)
 	}
 
-	if(saychat==1){
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU2_1",item_name2[0],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU2_2",item_name2[1],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU2_3",item_name2[2],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU2_4",item_name2[3],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU2_5",item_name2[4],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU2_6",item_name2[5],iCvar[FT_GLOVE_TIMER],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU2_7",item_name2[6],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU2_8",item_name2[7],backward)
-		pos += format(temp[pos], 1024-pos, "%s %L %s",theforward,id,"SHOPMENU2_9",item_name2[8],backward)
+	// Add header
 
-		new motdmessage[128]
-		format(motdmessage, 127, "%L",id,"SHOPMENU2_TITLE")
-		show_motd(id,temp,motdmessage)
-	}
-	else{
-		console_print(id,"%L",id,"---- SHOPMENU2_TITLE ----")
-		console_print(id,"%L",id,"SHOPMENU2_1",item_name2[0])
-		console_print(id,"%L",id,"SHOPMENU2_2",item_name2[1])
-		console_print(id,"%L",id,"SHOPMENU2_3",item_name2[2])
-		console_print(id,"%L",id,"SHOPMENU2_4",item_name2[3])
-		console_print(id,"%L",id,"SHOPMENU2_5",item_name2[4])
-		console_print(id,"%L",id,"SHOPMENU2_6",item_name2[5],iCvar[FT_GLOVE_TIMER])
-		console_print(id,"%L",id,"SHOPMENU2_7",item_name2[6])
-		console_print(id,"%L",id,"SHOPMENU2_8",item_name2[7])
-		console_print(id,"%L",id,"SHOPMENU2_9",item_name2[8])
-		console_print(id,"%L",id,"---- SHOPMENU2_TITLE ----")
-	}
+	pos += format(message[pos], 2048-pos, "%s", MOTD_header)
 
-	return PLUGIN_CONTINUE
+	// Add Item Information
+
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[0],id,"SHOPMENU2_1")
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[1],id,"SHOPMENU2_2")
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[2],id,"SHOPMENU2_3")
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[3],id,"SHOPMENU2_4")
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[4],id,"SHOPMENU2_5")
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[5],id,"SHOPMENU2_6",iCvar[FT_GLOVE_TIMER])
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[6],id,"SHOPMENU2_7")
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[7],id,"SHOPMENU2_8")
+	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[8],id,"SHOPMENU2_9")
+
+	format(title, 127, "%L",id,"SHOPMENU2_TITLE")
+	show_motd(id,message,title)
+
+	return PLUGIN_HANDLED
 }
 
-public MOTD_War3help(id, saychat){
+public MOTD_War3help(id){
 	#if ADVANCED_DEBUG == 1
 		writeDebugInfo("war3_info",id)
 	#endif
@@ -150,45 +109,27 @@ public MOTD_War3help(id, saychat){
 		}
 	}
 
-	new temp[2048], message[1024], title[128]
+	new message[2048]
+
+	new title[128], szGame[8]
 	new pos = 0
-	new thereturn[8], thep[8]
 
-	if(iCvar[FT_STEAM]){
-		new szGame[8]
+	if (is_running("cstrike"))
+		szGame = "cstrike"
+	else if (is_running("czero"))
+		szGame = "czero"
+	else if (is_running("dod"))
+		szGame = "dod"
 
-		if (is_running("cstrike"))
-			szGame = "cstrike"
-		else if (is_running("czero"))
-			szGame = "czero"
-		else if (is_running("dod"))
-			szGame = "dod"
+	format(title,127,"%L",id,"WAR3HELP_TITLE")
 
-		format(thereturn,7,"<br>")
-		format(thep,7,"<p>")
-		pos += format(message[pos], 1024-pos, "<body bgcolor=#000000><font color=#FFB000>")
-		pos += format(message[pos], 1024-pos, "%L",id,"THIS_MOD_WAS_DEVELOPED",thereturn)
-		pos += format(message[pos], 1024-pos, "%L %s",id,"CLICK_HERE_FOR_LATEST",thereturn)	
-		pos += format(message[pos], 1024-pos, "%L %s",id,"CLICK_HERE", szGame, thereturn)
-	}
-	else{
-		format(thereturn,7,"^n")
-		format(thep,7,"^n^n")
-		pos += format(message[pos], 1024-pos, "%L",id,"THIS_g_MOD_WAS_DEVELOPED",thereturn)
-	}
+	pos += format(message[pos], 2048-pos, "<body bgcolor=#000000><font color=#FFB000>")
+	pos += format(message[pos], 2048-pos, "%L<br>",id,"THIS_MOD_WAS_DEVELOPED")
+	pos += format(message[pos], 2048-pos, "%L<br>",id,"CLICK_HERE_FOR_LATEST")	
+	pos += format(message[pos], 2048-pos, "%L<p>",id,"CLICK_HERE", szGame)
+	pos += format(message[pos], 2048-pos, "%L",id,"WAR3HELP")
 
-	if(saychat==1){
-		format(title,127,"%L",id,"WAR3HELP_TITLE")
-		format(temp,2047,"%L",id,"WAR3HELP",message,thep,thereturn,thereturn,thereturn,thereturn,thep,thep,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn)
-		show_motd(id,temp,title)
-	}
-	else{		// Currently doesn't work correctly
-		thereturn = "^n"
-		thep = "^n"
-		format(title,127,"---- %L ----^n^n",id,"WAR3HELP_TITLE")
-		format(temp,2047,"%L",id,"WAR3HELP",title,thep,thereturn,thereturn,thereturn,thereturn,thep,thep,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn,thereturn)
-		console_print(id,temp)
-	}
+	show_motd(id,message,title)
 
 	return PLUGIN_HANDLED
 }
@@ -210,13 +151,13 @@ public MOTD_Playerskills(id, saychat){
 
 	new name[32], message[2048]
 	
-	new race_name[RACE_NAME_LENGTH]
+	new race_name[64]
 	new players[32], numberofplayers, i, j, k, playerid, pos, iTotalRace
 
 	get_players(players, numberofplayers)
 
-	if(iCvar[FT_STEAM] && saychat)
-		pos += format(message[pos],2047-pos, "<body bgcolor=#000000><font color=#FFB000>")
+	if(saychat)
+		pos += format(message[pos],2048-pos, "<body bgcolor=#000000><font color=#FFB000>")
 
 	for(j=1;j<(iCvar[FT_RACES]+1);j++){
 		iTotalRace = 0
@@ -228,13 +169,10 @@ public MOTD_Playerskills(id, saychat){
 
 		if(iTotalRace > 0){
 			race_name=""
-			racename(j,id,race_name,RACE_NAME_LENGTH_F)
+			racename(j,id,race_name,64)
 			
 			if ( saychat ) {
-				if(iCvar[FT_STEAM])
-					pos += format(message[pos],2047-pos, "<font color=#00FF00><b>%s</b></font><ul>",race_name)
-				else
-					pos += format(message[pos],2047-pos, "^n%s",race_name)
+				pos += format(message[pos],2048-pos, "<font color=#00FF00><b>%s</b></font><ul>",race_name)
 			}
 			else{
 				console_print(id, "**** %s ****", race_name)
@@ -247,29 +185,22 @@ public MOTD_Playerskills(id, saychat){
 					get_user_name(playerid,name,31)
 					
 					if ( saychat ) {
-						if ( iCvar[FT_STEAM] ){
-							replace(name, 127, "<", "&lt;")
-							replace(name, 127, ">", "&gt;")
+						replace(name, 127, "<", "&lt;")
+						replace(name, 127, ">", "&gt;")
 
-							pos += format(message[pos],2047-pos,"<li>(%d) %s",p_data[playerid][P_LEVEL],name)
-						}
-						else
-							pos += format(message[pos],2047-pos,"^t(%d) %s",p_data[playerid][P_LEVEL],name)
+						pos += format(message[pos],2048-pos,"<li>(%d) %s",p_data[playerid][P_LEVEL],name)
 					}
 					else{
 						console_print(id, "%-2s(%d) %s","",p_data[playerid][P_LEVEL],name)
 					}
 					
 					if( saychat ) {
-						if (iCvar[FT_STEAM])
-							pos += format(message[pos],2047-pos,"</li>")
-						else
-							pos += format(message[pos],2047-pos,"^n")
+						pos += format(message[pos],2048-pos,"</li>")
 					}
 				}
 			}
-			if (iCvar[FT_STEAM] && saychat)
-				pos += format(message[pos],2047-pos,"</ul>")
+			if (saychat)
+				pos += format(message[pos],2048-pos,"</ul>")
 		}
 	}
 
@@ -282,7 +213,7 @@ public MOTD_Playerskills(id, saychat){
 	return PLUGIN_CONTINUE
 }
 
-public MOTD_Skillsinfo(id,saychat){
+public MOTD_Skillsinfo(id){
 	#if ADVANCED_DEBUG == 1
 		writeDebugInfo("skills_info",id)
 	#endif
@@ -309,17 +240,14 @@ public MOTD_Skillsinfo(id,saychat){
 		else if (is_running("dod"))
 			szGame = "dod"
 
-		pos += format(message[pos],1024-pos,"<body bgcolor=#000000><font color=#FFB000>")
-		pos += format(message[pos],1024-pos,"%L <br>",id,"CLICK_HERE", szGame)
-
-
 		// Get the Race Name
 
 		racename(p_data[id][P_RACE],id,race_name,RACE_NAME_LENGTH_F)
 
 		// Format the Title
 
-		pos += format(message[pos],2048-pos,"<html><head><style type=^"text/css^">#s{text-indent:35px;width:500px;}</style></head><body>")
+		pos += format(message[pos],2048-pos, "%s", MOTD_header)
+		pos += format(message[pos],1024-pos,"%L <br>",id,"CLICK_HERE", szGame)
 		pos += format(message[pos],2048-pos,"<br><br><font face=^"Verdana, Arial, Helvetica, sans-serif^" color=^"#00FF00^" size=+1><b>%s</b></font><br><br>",race_name)
 
 		for(i=0;i<4;i++){

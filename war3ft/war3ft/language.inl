@@ -105,7 +105,7 @@ public racename(race,id,race_name[],length){
 
 	new race_lookup[128]
 	format(race_lookup,127,"RACENAME_%d",race)
-	format(race_name,length,"%L",id,race_lookup)
+	format(race_name,length-1,"%L",id,race_lookup)
 }
 
 public shortracename(race,id,short_race_name[],length){
@@ -115,7 +115,7 @@ public shortracename(race,id,short_race_name[],length){
 
 	new race_lookup[128]
 	format(race_lookup,127,"SHORT_RACENAME_%d",race)
-	format(short_race_name,length,"%L",id,race_lookup)
+	format(short_race_name,length-1,"%L",id,race_lookup)
 }
 
 public itemname(item,id,item_name[],length){
@@ -125,7 +125,7 @@ public itemname(item,id,item_name[],length){
 
 	new item_lookup[128]
 	format(item_lookup,127,"ITEMNAME_%d",item)
-	format(item_name,length,"%L",id,item_lookup)
+	format(item_name,length-1,"%L",id,item_lookup)
 }
 
 public shortitemname(item,id,short_item_name[],length){
@@ -135,7 +135,7 @@ public shortitemname(item,id,short_item_name[],length){
 
 	new item_lookup[128]
 	format(item_lookup,127,"SHORT_ITEMNAME_%d",item)
-	format(short_item_name,length,"%L",id,item_lookup)
+	format(short_item_name,length-1,"%L",id,item_lookup)
 }
 
 public itemname2(item,id,item_name2[],length){
@@ -145,7 +145,7 @@ public itemname2(item,id,item_name2[],length){
 
 	new item_lookup[128]
 	format(item_lookup,127,"ITEMNAME2_%d",item)
-	format(item_name2,length,"%L",id,item_lookup)
+	format(item_name2,length-1,"%L",id,item_lookup)
 }
 
 public shortitemname2(item,id,short_item_name[],length){
@@ -155,7 +155,7 @@ public shortitemname2(item,id,short_item_name[],length){
 
 	new item_lookup[128]
 	format(item_lookup,127,"SHORT_ITEMNAME2_%d",item)
-	format(short_item_name,length,"%L",id,item_lookup)
+	format(short_item_name,length-1,"%L",id,item_lookup)
 }
 
 
@@ -167,7 +167,7 @@ public raceskill(race, skill, id, skill_name[],length){
 
 #if MOD == 1
 	if(race == RACE_ORC && skill == SKILL3){
-		format(skill_name,length,"%L",id,"DOD_RACE3_SKILL3")
+		format(skill_name,length-1,"%L",id,"DOD_RACE3_SKILL3")
 	}
 	else if(race > 0 && race < 9){
 #endif
@@ -176,14 +176,14 @@ public raceskill(race, skill, id, skill_name[],length){
 #endif
 		new skill_lookup[128]
 		format(skill_lookup,127,"RACE%d_SKILL%d",race,skill)
-		format(skill_name,length,"%L",id,skill_lookup)
+		format(skill_name,length-1,"%L",id,skill_lookup)
 	}else if(race == RACE_CHAMELEON){
 		new skill_lookup[128]
 		format(skill_lookup,127,"RACE%d_SKILL%d",race9Options[skill],skill)
-		format(skill_name,length,"%L",id,skill_lookup)
+		format(skill_name,length-1,"%L",id,skill_lookup)
 	}else if(race != 0 ){
 		log_amx("[%s] ERROR, Race: %d, skill: %d not found in raceskill function",g_MOD,race,skill)
-		format(skill_name,length,"")
+		format(skill_name,length-1,"")
 	}
 }
 

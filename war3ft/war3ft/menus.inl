@@ -446,7 +446,7 @@ public _menu_War3menu(id,key){
 		case 0:	menu_Skill_Options(id)
 		case 1:	menu_Race_Options(id)
 		case 2:	menu_Item_Options(id)
-		case 3:	MOTD_War3help(id,1)
+		case 3:	MOTD_War3help(id)
 		case 4:	menu_Admin_Options(id)
 		default:	return PLUGIN_HANDLED
 	}
@@ -485,7 +485,7 @@ public _menu_Skill_Options(id,key){
 
 	switch (key){
 		case 0:	menu_Select_Skill(id,1)
-		case 1:	MOTD_Skillsinfo(id,1)
+		case 1:	MOTD_Skillsinfo(id)
 		case 2:	resetSkills(id,1)
 		case 8: menu_War3menu(id)
 		default: return PLUGIN_HANDLED
@@ -565,8 +565,8 @@ public _menu_Item_Options(id,key){
 	switch (key){
 		case 0:	menu_Shopmenu_One(id)
 		case 1:	menu_Shopmenu_Two(id)
-		case 2:	MOTD_Itemsinfo(id,1)
-		case 3:	MOTD_Itemsinfo2(id,1)
+		case 2:	MOTD_Itemsinfo(id)
+		case 3:	MOTD_Itemsinfo2(id)
 		case 8: menu_War3menu(id)
 		default: return PLUGIN_HANDLED
 	}

@@ -930,17 +930,7 @@ public _WAR3_Drop_Items(id){
 		}
 
 		// Restore Re-Incarnated Player to the map
-		if(iCvar[FT_STEAM]){
-			set_user_origin(id,origin)
-		}
-		else{
-			new parm2[4]
-			parm2[0]=id
-			parm2[1]=origin[0]
-			parm2[2]=origin[1]
-			parm2[3]=origin[2]
-			set_task(0.1,"reset_position",TASK_RESETPOS+id,parm2,4)
-		}
+		set_user_origin(id,origin)
 
 		// This will make the player have the new reincarnated weapon selected
 		// instead of the player's knife being selected

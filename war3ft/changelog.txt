@@ -4,7 +4,9 @@ v2.1.5
  - Bug Fix: Playerskills (for real this time)
  - Addition: Playerskills can be viewed via rcon (type playerskills)
  - Change: Max speed of undead lowered from 320 to 300
- - Change: skillsinfo looks better
+ - Change: skillsinfo, itemsinfo and itemsinfo2 look better
+ - Removed: Support for CS 1.5 (this plugin will still work, but MOTDs will be in HTML)
+ - Removed: Console support (text) for itemsinfo and itemsinfo2 commands
 
 v2.1.4
  - Bug Fix: Run time error 4 on get_entity_vector
