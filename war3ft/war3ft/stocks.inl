@@ -212,7 +212,7 @@ stock race9_randomize(){
 	} 
 }
 
-stock set_user_money(id,money,show){
+stock set_user_money(id, money, show = 1){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("set_user_money",id)
 	#endif
@@ -221,7 +221,7 @@ stock set_user_money(id,money,show){
 		return PLUGIN_CONTINUE
 
 	#if MOD == 0
-		if (money > 16000)
+		if (money > 16000 && !Verify_Skill(id, RACE_BLOOD, SKILL3))
 			money = 16000
 
 		cs_set_user_money(id,money,show)

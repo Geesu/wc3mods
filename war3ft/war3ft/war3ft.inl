@@ -357,6 +357,10 @@ public WAR3_death_victim(victim_id, killer_id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
+	if( !Verify_Skill(killer_id, RACE_BLOOD, SKILL3) && get_user_money(killer_id) > 16000 ){
+		set_user_money(killer_id, 16000)
+	}
+
 	// In case they respawn, continue ultimate delay check
 	if(!task_exists(TASK_UDELAY+victim_id)){
 		new parm[1]

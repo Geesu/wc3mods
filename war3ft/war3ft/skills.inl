@@ -9,6 +9,12 @@ public Skill_Check(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
+	if( p_data_b[id][PB_RESETSKILLS] ){
+		p_data_b[id][PB_RESETSKILLS] = false
+		
+		return PLUGIN_CONTINUE
+	}
+
 	new parm[2]
 	parm[0]=id
 

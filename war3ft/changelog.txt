@@ -1,6 +1,8 @@
 v2.1.8
+ - Bug Fix: You could gain extra abilities using resetskills
  - Change: Playerskills now will show spectators if they have a race
  - Change: Blood Mage's with Siphon Mana can get as much money as they want (16K is no longer a limit, requires cshack module)
+ - Special thanks to Damaged Soul for the CSHack module and for taking the time to get the one native to function on czero
  - Addition: /level will show the hero abilities
 
 v2.1.7

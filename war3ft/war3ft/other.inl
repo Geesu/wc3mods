@@ -173,9 +173,13 @@ public weapon_controller( parm[2]  ){
 
 	#if MOD == 0
 		new id = parm[0]
-		
+
 		if(!p_data_b[id][PB_ISCONNECTED])
 			return PLUGIN_CONTINUE
+
+		if( !Verify_Skill(id, RACE_BLOOD, SKILL3) && get_user_money(id) > 16000 ){
+			set_user_money(id, 16000)
+		}
 
 		new bool:reincarnate = false
 		

@@ -1107,7 +1107,7 @@ public on_ResetHud(id){
 
 	// Fan of Knives Check
 
-	if ( Verify_Skill(id, RACE_WARDEN, SKILL1) && is_user_alive(id) ){
+	if ( Verify_Skill(id, RACE_WARDEN, SKILL1) && is_user_alive(id) && !p_data_b[id][PB_RESETSKILLS] ){
 		new Float:randomnumber = random_float(0.0,1.0)
 		if (randomnumber <= p_fan[p_data[id][P_SKILL1]-1]){
 			new fanparm[2]
@@ -1123,7 +1123,6 @@ public on_ResetHud(id){
 		p_data[id][P_SKILL3]=0
 		p_data[id][P_ULTIMATE]=0
 		p_data[id][P_LEVEL] = 0
-		p_data_b[id][PB_RESETSKILLS]=false
 		WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
 	}
 
