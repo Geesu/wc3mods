@@ -58,25 +58,27 @@ public on_Damage(victim){
 #if MOD == 0
 	// Check to see if the damage was from the bomb
 	if( attacker != inflictor && wpnindex != 4 && attacker != victim && inflictor > 0 ){
+		
+		if ( is_valid_ent ( inflictor ) )
+		{
+			new szClassName[64]
+			entity_get_string(inflictor, EV_SZ_classname, szClassName, 63)
+				
+			// Technically I don't think we need to check the classname, but just in case
+			if ( equali(szClassName, "grenade") || equali(szClassName, "env_explosion") ){
+				wpnindex = CSW_C4
+				attacker = 0
 
-		new szClassName[64]
-		entity_get_string(inflictor, EV_SZ_classname, szClassName, 63)
-			
-		// Technically I don't think we need to check the classname, but just in case
-		if ( equali(szClassName, "grenade") || equali(szClassName, "env_explosion") ){
-			wpnindex = CSW_C4
-			attacker = 0
+				// We need to call the death function manually b/c DeathMsg isn't broadcasted when the bomb explodes and kills someone
+				if (get_user_health(victim) - damage < 0 ){
+					on_Death(victim, attacker, wpnindex, 0)
+				}
 
-			// We need to call the death function manually b/c DeathMsg isn't broadcasted when the bomb explodes and kills someone
-			if (get_user_health(victim) - damage < 0 ){
-				on_Death(victim, attacker, wpnindex, 0)
+				#if DEBUG
+					client_print(victim, print_chat, "### You were just attacked by the bomb for %d damage (%s)", damage, szClassName)
+				#endif
 			}
-
-			#if DEBUG
-				client_print(victim, print_chat, "### You were just attacked by the bomb for %d damage (%s)", damage, szClassName)
-			#endif
 		}
-
 	}
 #endif
 
