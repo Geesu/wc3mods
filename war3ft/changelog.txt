@@ -1,6 +1,8 @@
 v2.2.1
  - Languages updated
  - Bug Fix: get_user_attacker native error on line 55
+ - Bug Fix: native error for get_weaponname
+ - Bug Fix: (DOD) native error in entity_get_int
  - Addition: Autobalance option (short term only)
 
 v2.2.0

@@ -181,7 +181,7 @@ public on_SetSpecMode(id){
 
 public on_StatusValue(id){	
 
-	if(!warcraft3 || !iCvar[FT_SPEC_INFO])
+	if(!warcraft3 || !iCvar[FT_SPEC_INFO] || !p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
 	new targetid = entity_get_int(id, EV_INT_iuser2)

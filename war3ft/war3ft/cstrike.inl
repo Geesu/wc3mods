@@ -1,3 +1,9 @@
+
+// From the HL SDK
+#define MAX_WEAPONS		32
+// From CSX Module
+#define MAX_CWEAPONS	6
+
 public on_SetSpecMode(id) {
 	#if ADVANCED_DEBUG
 		writeDebugInfo("on_SetSpecMode",id)
@@ -640,8 +646,10 @@ public on_ShowStatus(id){
 		// Teammate
 		if ( idteam == team || p_data_b[pid][PB_MOLE] ) {
 			new wpnname[32] , clip, ammo, wpnid = get_user_weapon(pid,clip,ammo) 
-
-			get_weaponname(wpnid,wpnname,31) 
+			
+			if ( id > 0 && id < MAX_WEAPONS + MAX_CWEAPONS ){
+				get_weaponname(wpnid,wpnname,31) 
+			}
 			set_hudmessage(red,50,blue,-1.0,0.60,1, 0.01, 3.0, 0.01, 0.01, 4)
 			show_hudmessage(id,"%s -- %d HP / %d AP / %s", name, get_user_health(pid), get_user_armor(pid), wpnname)
 		} 
