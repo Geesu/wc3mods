@@ -177,12 +177,100 @@ public raceskill(race, skill, id, skill_name[],length){
 		new skill_lookup[128]
 		format(skill_lookup,127,"RACE%d_SKILL%d",race,skill)
 		format(skill_name,length,"%L",id,skill_lookup)
-	}else if(race == 9){
+	}else if(race == RACE_CHAMELEON){
 		new skill_lookup[128]
 		format(skill_lookup,127,"RACE%d_SKILL%d",race9Options[skill],skill)
 		format(skill_name,length,"%L",id,skill_lookup)
 	}else if(race != 0 ){
 		log_amx("[%s] ERROR, Race: %d, skill: %d not found in raceskill function",g_MOD,race,skill)
 		format(skill_name,length,"")
+	}
+}
+
+public Lang_Skill_Info(race, skill, id, skill_description[], iDescLen){
+
+	switch(race){
+		case RACE_UNDEAD:{
+			switch(skill){
+				case SKILL1: format(skill_description,iDescLen-1,"%L",id,"RACE1_SKILL1_INFO",floatround(p_vampiric[0]*100),floatround(p_vampiric[1]*100),floatround(p_vampiric[2]*100))
+			#if MOD == 1
+				case SKILL2: format(skill_description,iDescLen-1,"%L",id,"DOD_RACE1_SKILL2_INFO")
+			#else
+				case SKILL2: format(skill_description,iDescLen-1,"%L",id,"RACE1_SKILL2_INFO")
+			#endif
+				case SKILL3: format(skill_description,iDescLen-1,"%L",id,"RACE1_SKILL3_INFO")
+				case SKILL4: format(skill_description,iDescLen-1,"%L",id,"RACE1_SKILL4_INFO")
+			}
+		}
+		case RACE_HUMAN:{
+			switch(skill){
+
+				case SKILL1: format(skill_description,iDescLen-1,"%L",id,"RACE2_SKILL1_INFO")
+				case SKILL2: format(skill_description,iDescLen-1,"%L",id,"RACE2_SKILL2_INFO",p_devotion[0],p_devotion[1],p_devotion[2])
+				case SKILL3: format(skill_description,iDescLen-1,"%L",id,"RACE2_SKILL3_INFO",floatround(p_bash[0]*100),floatround(p_bash[1]*100),floatround(p_bash[2]*100))
+				case SKILL4: {
+					if (iCvar[FT_BLINKENABLED])
+						format(skill_description,iDescLen-1,"%L",id,"RACE2_SKILL4_INFO_B")
+					else
+						format(skill_description,iDescLen-1,"%L",id,"RACE2_SKILL4_INFO_T")
+				}
+			}
+		}
+		case RACE_ORC:{
+			switch(skill){
+				case SKILL1: format(skill_description,iDescLen-1,"%L",id,"RACE3_SKILL1_INFO",floatround(p_critical[0]*100))
+			#if MOD == 1
+				case SKILL2: format(skill_description,iDescLen-1,"%L",id,"DOD_RACE3_SKILL2_INFO",floatround(p_grenade[0]),floatround(p_grenade[1]),floatround(p_grenade[2]))
+			#else
+				case SKILL2: format(skill_description,iDescLen-1,"%L",id,"RACE3_SKILL2_INFO",floatround(p_grenade[0]),floatround(p_grenade[1]),floatround(p_grenade[2]))
+			#endif
+			#if MOD == 1
+				case SKILL3: format(skill_description,iDescLen-1,"%L",id,"DOD_RACE3_SKILL3_INFO",floatround(p_ankh[0]*100),floatround(p_ankh[1]*100),floatround(p_ankh[2]*100))
+			#else
+				case SKILL3: format(skill_description,iDescLen-1,"%L",id,"RACE3_SKILL3_INFO",floatround(p_ankh[0]*100),floatround(p_ankh[1]*100),floatround(p_ankh[2]*100))
+			#endif
+				case SKILL4: format(skill_description,iDescLen-1,"%L",id,"RACE3_SKILL4_INFO")
+			}
+		}
+		case RACE_ELF: {
+			switch(skill){
+				case SKILL1: format(skill_description,iDescLen-1,"%L",id,"RACE4_SKILL1_INFO",floatround(p_evasion[0]*100),floatround(p_evasion[1]*100),floatround(p_evasion[2]*100))
+				case SKILL2: format(skill_description,iDescLen-1,"%L",id,"RACE4_SKILL2_INFO",floatround(p_thorns[0]*100),floatround(p_thorns[1]*100),floatround(p_thorns[2]*100))
+				case SKILL3: format(skill_description,iDescLen-1,"%L",id,"RACE4_SKILL3_INFO",floatround(p_trueshot[0]*100),floatround(p_trueshot[1]*100),floatround(p_trueshot[2]*100))
+				case SKILL4: format(skill_description,iDescLen-1,"%L",id,"RACE4_SKILL4_INFO")
+			}
+		}
+		case RACE_BLOOD :{
+			switch(skill){
+				case SKILL1: format(skill_description,iDescLen-1,"%L",id,"RACE5_SKILL1_INFO",floatround(p_pheonix[0]*100),floatround(p_pheonix[1]*100),floatround(p_pheonix[2]*100))
+				case SKILL2: format(skill_description,iDescLen-1,"%L",id,"RACE5_SKILL2_INFO",floatround(p_banish[0]*100),floatround(p_banish[1]*100),floatround(p_banish[2]*100))
+				case SKILL3: format(skill_description,iDescLen-1,"%L",id,"RACE5_SKILL3_INFO",floatround(p_mana[0]*100),floatround(p_mana[1]*100),floatround(p_mana[2]*100))
+				case SKILL4: format(skill_description,iDescLen-1,"%L",id,"RACE5_SKILL4_INFO")
+			}
+		}
+		case RACE_SHADOW: {
+			switch(skill){
+				case SKILL1: format(skill_description,iDescLen-1,"%L",id,"RACE6_SKILL1_INFO",floatround(p_heal[0]),floatround(p_heal[1]),floatround(p_heal[2]))
+				case SKILL2: format(skill_description,iDescLen-1,"%L",id,"RACE6_SKILL2_INFO",floatround(p_hex[0]*100),floatround(p_hex[1]*100),floatround(p_hex[2]*100))
+				case SKILL3: format(skill_description,iDescLen-1,"%L",id,"RACE6_SKILL3_INFO",p_serpent[0],p_serpent[1],p_serpent[2])
+				case SKILL4: format(skill_description,iDescLen-1,"%L",id,"RACE6_SKILL4_INFO")
+			}
+		}
+		case RACE_WARDEN: {
+			switch(skill){
+				case SKILL1: format(skill_description,iDescLen-1,"%L",id,"RACE7_SKILL1_INFO",floatround(p_fan[0]*100),floatround(p_fan[1]*100),floatround(p_fan[2]*100))
+				case SKILL2: format(skill_description,iDescLen-1,"%L",id,"RACE7_SKILL2_INFO",floatround(p_blink[0]*100),floatround(p_blink[1]*100),floatround(p_blink[2]*100))
+				case SKILL3: format(skill_description,iDescLen-1,"%L",id,"RACE7_SKILL3_INFO",floatround(p_shadow[0]*100),floatround(p_shadow[1]*100),floatround(p_shadow[2]*100))
+				case SKILL4: format(skill_description,iDescLen-1,"%L",id,"RACE7_SKILL4_INFO")
+			}
+		}
+		case RACE_CRYPT: {
+			switch(skill){
+				case SKILL1: format(skill_description,iDescLen-1,"%L",id,"RACE8_SKILL1_INFO")
+				case SKILL2: format(skill_description,iDescLen-1,"%L",id,"RACE8_SKILL2_INFO",floatround(p_spiked[0]*100),floatround(p_spiked[1]*100),floatround(p_spiked[2]*100))
+				case SKILL3: format(skill_description,iDescLen-1,"%L",id,"RACE8_SKILL3_INFO",floatround(p_carrion[0]*100),floatround(p_carrion[1]*100),floatround(p_carrion[2]*100))
+				case SKILL4: format(skill_description,iDescLen-1,"%L",id,"RACE8_SKILL4_INFO")
+			}
+		}
 	}
 }

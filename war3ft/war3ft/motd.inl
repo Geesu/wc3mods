@@ -212,7 +212,6 @@ public MOTD_Playerskills(id, saychat){
 	
 	new race_name[RACE_NAME_LENGTH]
 	new players[32], numberofplayers, i, j, k, playerid, pos, iTotalRace
-	new race_skill[4][RACE_SKILL_LENGTH]
 
 	get_players(players, numberofplayers)
 
@@ -233,7 +232,7 @@ public MOTD_Playerskills(id, saychat){
 			
 			if ( saychat ) {
 				if(iCvar[FT_STEAM])
-					pos += format(message[pos],2047-pos, "<font color='#00FF00'><b>%s</b></font><ul>",race_name)
+					pos += format(message[pos],2047-pos, "<font color=#00FF00><b>%s</b></font><ul>",race_name)
 				else
 					pos += format(message[pos],2047-pos, "^n%s",race_name)
 			}
@@ -260,19 +259,6 @@ public MOTD_Playerskills(id, saychat){
 					else{
 						console_print(id, "%-2s(%d) %s","",p_data[playerid][P_LEVEL],name)
 					}
-
-					for(k=0;k<4;k++){
-						raceskill(p_data[playerid][0],k+1,id,race_skill[k],RACE_SKILL_LENGTH_F)
-					}
-
-/*					if(p_data[playerid][P_SKILL1])
-						pos += format(message[pos],2047-pos,", %s %d",race_skill[0],p_data[playerid][P_SKILL1])
-					if(p_data[playerid][P_SKILL2])
-						pos += format(message[pos],2047-pos,", %s %d",race_skill[1],p_data[playerid][P_SKILL2])
-					if(p_data[playerid][P_SKILL3])
-						pos += format(message[pos],2047-pos,", %s %d",race_skill[2],p_data[playerid][P_SKILL3])
-					if(p_data[playerid][P_ULTIMATE])
-						pos += format(message[pos],2047-pos,", %s",race_skill[3])*/
 					
 					if( saychat ) {
 						if (iCvar[FT_STEAM])
@@ -311,11 +297,10 @@ public MOTD_Skillsinfo(id,saychat){
 		}
 	}
 
-	new message[2048]
-	new title[64], temp[1024]
-	new pos = 0, len = 0, p[8]
-	if(iCvar[FT_STEAM]){
-		new szGame[8]
+	if (0 < p_data[id][P_RACE] <= iCvar[FT_RACES]){
+		new message[2048], szGame[8]
+		new race_skill[4][64], skill_description[4][256], race_name[64]
+		new pos = 0, i
 
 		if (is_running("cstrike"))
 			szGame = "cstrike"
@@ -324,148 +309,57 @@ public MOTD_Skillsinfo(id,saychat){
 		else if (is_running("dod"))
 			szGame = "dod"
 
-		format(p,7,"<p>")
-		len += format(message[len],1024-len,"<pre><body bgcolor=#000000><font color=#FFB000>")
-		len += format(message[len],1024-len,"%L %s",id,"CLICK_HERE", szGame, p)
-	}
-	else{
-		format(p,7,"^n^n")
-	}
-	new race_name[RACE_NAME_LENGTH]
-	racename(p_data[id][P_RACE],id,race_name,RACE_NAME_LENGTH_F)
+		pos += format(message[pos],1024-pos,"<body bgcolor=#000000><font color=#FFB000>")
+		pos += format(message[pos],1024-pos,"%L <br>",id,"CLICK_HERE", szGame)
 
-	format(title,63,"%L",id,"SKILLS_STRING",race_name)
-	new race_skill[4][RACE_SKILL_LENGTH]
-	for(new i=0;i<4;i++){
-		raceskill(p_data[id][P_RACE],i+1,id,race_skill[i],RACE_SKILL_LENGTH_F)
-	}
 
-	if (p_data[id][P_RACE]==1){
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE1_SKILL1_INFO",race_skill[0],floatround(p_vampiric[0]*100),floatround(p_vampiric[1]*100),floatround(p_vampiric[2]*100),p)
-	#if MOD == 0
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE1_SKILL2_INFO",race_skill[1],p)
-	#endif
-	#if MOD == 1
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"DOD_RACE1_SKILL2_INFO",race_skill[1],p)
-	#endif
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE1_SKILL3_INFO",race_skill[2],p)
-		pos+= format(temp[pos],1024-pos,"%L",id,"RACE1_SKILL4_INFO",race_skill[3])
-	}
-	else if (p_data[id][P_RACE]==2){
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE2_SKILL1_INFO",race_skill[0],p)
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE2_SKILL2_INFO",race_skill[1],p_devotion[0],p_devotion[1],p_devotion[2],p)
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE2_SKILL3_INFO",race_skill[2],floatround(p_bash[0]*100),floatround(p_bash[1]*100),floatround(p_bash[2]*100),p)
-		if (iCvar[FT_BLINKENABLED])
-			pos+= format(temp[pos],1024-pos,"%L",id,"RACE2_SKILL4_INFO_B",race_skill[3])
-		else
-			pos+= format(temp[pos],1024-pos,"%L",id,"RACE2_SKILL4_INFO_T",race_skill[3])
-	}
-	else if (p_data[id][P_RACE]==3){
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE3_SKILL1_INFO",race_skill[0],floatround(p_critical[0]*100),p)
-		#if MOD == 1
-			pos+= format(temp[pos],1024-pos,"%L%s",id,"DOD_RACE3_SKILL2_INFO",race_skill[1],floatround(p_grenade[0]),floatround(p_grenade[1]),floatround(p_grenade[2]),p)
-		#else
-			pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE3_SKILL2_INFO",race_skill[1],floatround(p_grenade[0]),floatround(p_grenade[1]),floatround(p_grenade[2]),p)
-		#endif
-		#if MOD == 1
-			pos+= format(temp[pos],1024-pos,"%L%s",id,"DOD_RACE3_SKILL3_INFO",race_skill[2],floatround(p_ankh[0]*100),floatround(p_ankh[1]*100),floatround(p_ankh[2]*100),p)
-		#else
-			pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE3_SKILL3_INFO",race_skill[2],floatround(p_ankh[0]*100),floatround(p_ankh[1]*100),floatround(p_ankh[2]*100),p)
-		#endif
-		pos+= format(temp[pos],1024-pos,"%L",id,"RACE3_SKILL4_INFO",race_skill[3])
-	}
-	else if (p_data[id][P_RACE]==4){
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE4_SKILL1_INFO",race_skill[0],floatround(p_evasion[0]*100),floatround(p_evasion[1]*100),floatround(p_evasion[2]*100),p)
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE4_SKILL2_INFO",race_skill[1],floatround(p_thorns[0]*100),floatround(p_thorns[1]*100),floatround(p_thorns[2]*100),p)
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE4_SKILL3_INFO",race_skill[2],floatround(p_trueshot[0]*100),floatround(p_trueshot[1]*100),floatround(p_trueshot[2]*100),p)
-		pos+= format(temp[pos],1024-pos,"%L",id,"RACE4_SKILL4_INFO",race_skill[3])
-	}
-	else if (p_data[id][P_RACE]==5){
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE5_SKILL1_INFO",race_skill[0],floatround(p_pheonix[0]*100),floatround(p_pheonix[1]*100),floatround(p_pheonix[2]*100),p)
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE5_SKILL2_INFO",race_skill[1],floatround(p_banish[0]*100),floatround(p_banish[1]*100),floatround(p_banish[2]*100),p)
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE5_SKILL3_INFO",race_skill[2],floatround(p_mana[0]*100),floatround(p_mana[1]*100),floatround(p_mana[2]*100),p)
-		pos+= format(temp[pos],1024-pos,"%L",id,"RACE5_SKILL4_INFO",race_skill[3])
-	}
-	else if (p_data[id][P_RACE]==6){
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE6_SKILL1_INFO",race_skill[0],floatround(p_heal[0]),floatround(p_heal[1]),floatround(p_heal[2]),p)
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE6_SKILL2_INFO",race_skill[1],floatround(p_hex[0]*100),floatround(p_hex[1]*100),floatround(p_hex[2]*100),p)
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE6_SKILL3_INFO",race_skill[2],p_serpent[0],p_serpent[1],p_serpent[2],p)
-		pos+= format(temp[pos],1024-pos,"%L",id,"RACE6_SKILL4_INFO",race_skill[3])
-	}
-	else if (p_data[id][P_RACE]==7){
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE7_SKILL1_INFO",race_skill[0],floatround(p_fan[0]*100),floatround(p_fan[1]*100),floatround(p_fan[2]*100),p)
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE7_SKILL2_INFO",race_skill[1],floatround(p_blink[0]*100),floatround(p_blink[1]*100),floatround(p_blink[2]*100),p)
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE7_SKILL3_INFO",race_skill[2],floatround(p_shadow[0]*100),floatround(p_shadow[1]*100),floatround(p_shadow[2]*100),p)
-		pos+= format(temp[pos],1024-pos,"%L",id,"RACE7_SKILL4_INFO",race_skill[3])
-	}
-	else if (p_data[id][P_RACE]==8){
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE8_SKILL1_INFO",race_skill[0],p)
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE8_SKILL2_INFO",race_skill[1],floatround(p_spiked[0]*100),floatround(p_spiked[1]*100),floatround(p_spiked[2]*100),p)
-		pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE8_SKILL3_INFO",race_skill[2],floatround(p_carrion[0]*100),floatround(p_carrion[1]*100),floatround(p_carrion[2]*100),p)
-		pos+= format(temp[pos],1024-pos,"%L",id,"RACE8_SKILL4_INFO",race_skill[3])
-	}
-	else if (p_data[id][P_RACE]==9){
-		switch(race9Options[1]){
-			case 1: pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE1_SKILL1_INFO",race_skill[0],floatround(p_vampiric[0]*100),floatround(p_vampiric[1]*100),floatround(p_vampiric[2]*100),p)
-			case 2: pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE2_SKILL1_INFO",race_skill[0],p)
-			case 3: pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE3_SKILL1_INFO",race_skill[0],floatround(p_critical[0]*100),p)
-			case 4:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE4_SKILL1_INFO",race_skill[0],floatround(p_evasion[0]*100),floatround(p_evasion[1]*100),floatround(p_evasion[2]*100),p)
-			case 5: pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE5_SKILL1_INFO",race_skill[0],floatround(p_pheonix[0]*100),floatround(p_pheonix[1]*100),floatround(p_pheonix[2]*100),p)
-			case 6: pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE6_SKILL1_INFO",race_skill[0],floatround(p_heal[0]),floatround(p_heal[1]),floatround(p_heal[2]),p)
-			case 7: pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE7_SKILL1_INFO",race_skill[0],floatround(p_fan[0]*100),floatround(p_fan[1]*100),floatround(p_fan[2]*100),p)
-			case 8: pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE8_SKILL1_INFO",race_skill[0],p)
+		// Get the Race Name
+
+		racename(p_data[id][P_RACE],id,race_name,RACE_NAME_LENGTH_F)
+
+		// Format the Title
+
+		pos += format(message[pos],2048-pos,"<html><head><style type=^"text/css^">#s{text-indent:35px;width:500px;}</style></head><body>")
+		pos += format(message[pos],2048-pos,"<br><br><font face=^"Verdana, Arial, Helvetica, sans-serif^" color=^"#00FF00^" size=+1><b>%s</b></font><br><br>",race_name)
+
+		for(i=0;i<4;i++){
+
+			// Get Skill Name
+			raceskill(p_data[id][P_RACE],i+1,id,race_skill[i],64)
+
+			// Get Skill Description
+			if(p_data[id][P_RACE] == RACE_CHAMELEON)
+				Lang_Skill_Info(race9Options[i+1], i+1, id, skill_description[i], 256)
+			else
+				Lang_Skill_Info(p_data[id][P_RACE], i+1, id, skill_description[i], 256)
+
 		}
-		switch(race9Options[2]){
-			case 1:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE1_SKILL2_INFO",race_skill[1],p)
-			case 2:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE2_SKILL2_INFO",race_skill[1],p_devotion[0],p_devotion[1],p_devotion[2],p)
-			case 3:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE3_SKILL2_INFO",race_skill[1],floatround(p_grenade[0]),floatround(p_grenade[1]),floatround(p_grenade[2]),p)
-			case 4:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE4_SKILL2_INFO",race_skill[1],floatround(p_thorns[0]*100),floatround(p_thorns[1]*100),floatround(p_thorns[2]*100),p)
-			case 5:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE5_SKILL2_INFO",race_skill[1],floatround(p_banish[0]*100),floatround(p_banish[1]*100),floatround(p_banish[2]*100),p)
-			case 6:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE6_SKILL2_INFO",race_skill[1],floatround(p_hex[0]*100),floatround(p_hex[1]*100),floatround(p_hex[2]*100),p)
-			case 7:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE7_SKILL2_INFO",race_skill[1],floatround(p_blink[0]*100),floatround(p_blink[1]*100),floatround(p_blink[2]*100),p)
-			case 8:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE8_SKILL2_INFO",race_skill[1],floatround(p_spiked[0]*100),floatround(p_spiked[1]*100),floatround(p_spiked[2]*100),p)
-		}
-		switch(race9Options[3]){
-			case 1:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE1_SKILL3_INFO",race_skill[2],p)
-			case 2:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE2_SKILL3_INFO",race_skill[2],floatround(p_bash[0]*100),floatround(p_bash[1]*100),floatround(p_bash[2]*100),p)
-			case 3:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE3_SKILL3_INFO",race_skill[2],floatround(p_ankh[0]*100),floatround(p_ankh[1]*100),floatround(p_ankh[2]*100),p)
-			case 4:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE4_SKILL3_INFO",race_skill[2],floatround(p_trueshot[0]*100),floatround(p_trueshot[1]*100),floatround(p_trueshot[2]*100),p)
-			case 5:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE5_SKILL3_INFO",race_skill[2],floatround(p_mana[0]*100),floatround(p_mana[1]*100),floatround(p_mana[2]*100),p)
-			case 6:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE6_SKILL3_INFO",race_skill[2],p_serpent[0],p_serpent[1],p_serpent[2],p)
-			case 7:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE7_SKILL3_INFO",race_skill[2],floatround(p_shadow[0]*100),floatround(p_shadow[1]*100),floatround(p_shadow[2]*100),p)
-			case 8:	pos+= format(temp[pos],1024-pos,"%L%s",id,"RACE8_SKILL3_INFO",race_skill[2],floatround(p_carrion[0]*100),floatround(p_carrion[1]*100),floatround(p_carrion[2]*100),p)
-		}
-		switch(race9Options[4]){
-			case 1:	pos+= format(temp[pos],1024-pos,"%L",id,"RACE1_SKILL4_INFO",race_skill[3])
-			case 2:{
-				if (iCvar[FT_BLINKENABLED])
-					pos+= format(temp[pos],1024-pos,"%L",id,"RACE2_SKILL4_INFO_B",race_skill[3])
-				else
-					pos+= format(temp[pos],1024-pos,"%L",id,"RACE2_SKILL4_INFO_T",race_skill[3])
+
+		for(i=0;i<4;i++){
+
+			// Add each skill
+			if(0 <= i < 3){
+				pos += format(message[pos],2048-pos,"<font color='#F4D285'><li>%s</li></font><div id='s'>%s</div><br>", race_skill[i], skill_description[i])
+
 			}
-			case 3:		pos+= format(temp[pos],1024-pos,"%L",id,"RACE3_SKILL4_INFO",race_skill[3])
-			case 4:		pos+= format(temp[pos],1024-pos,"%L",id,"RACE4_SKILL4_INFO",race_skill[3])
-			case 5:		pos+= format(temp[pos],1024-pos,"%L",id,"RACE5_SKILL4_INFO",race_skill[3])
-			case 6:		pos+= format(temp[pos],1024-pos,"%L",id,"RACE6_SKILL4_INFO",race_skill[3])
-			case 7:		pos+= format(temp[pos],1024-pos,"%L",id,"RACE7_SKILL4_INFO",race_skill[3])
-			case 8:		pos+= format(temp[pos],1024-pos,"%L",id,"RACE8_SKILL4_INFO",race_skill[3])
+
+			// Add the ultimate
+			else{
+				pos += format(message[pos],2048-pos,"<font color='#F4D285'><li>%L, %s</li></font><div id='s'>%s</div><br>", id, "WORD_ULTIMATE", race_skill[i], skill_description[i])
+
+			}
 		}
 
+		new race_info[128]
+		format(race_info,127,"%L",id,"RACE_INFORMATION")
+		show_motd(id,message,race_info)
 
 	}
 	else{
+		client_print(id, print_chat,"%L",id,"SELECT_RACE_BEFORE_SKILLS")
 		console_print(id,"%L",id,"SELECT_RACE_BEFORE_SKILLS")
 		return PLUGIN_HANDLED
 	}
 
-	if(p_data[id][P_RACE]!=0){
-		len += format(message[len],1024-len,temp)
-	}
-
-	new race_info[128]
-	format(race_info,127,"%L",id,"RACE_INFORMATION")
-	show_motd(id,message,race_info)
-	if (saychat==1)
-		return PLUGIN_CONTINUE
 	return PLUGIN_HANDLED
 }

@@ -410,10 +410,10 @@ public WAR3_death_victim(victim_id, killer_id){
 
 				format(message, 127, "%L",victim_id,"HAS_REVIVED_YOU",name)
 				Status_Text(victim_id, message, 3.0, HUDMESSAGE_POS_INFO)
-				client_print(victim_id, print_chat, message)
+				client_print(victim_id, print_chat, "%s %s", g_MODclient, message)
 				format(message, 127, "%L",id,"YOU_HAVE_REVIVED",victimName)
 				Status_Text(id, message, 3.0, HUDMESSAGE_POS_INFO)
-				client_print(id, print_chat, message)
+				client_print(id, print_chat, "%s %s", g_MODclient, message)
 
 				p_data_b[victim_id][PB_TOBEREVIVED]=true
 				g_pheonixExistsT--
@@ -436,10 +436,10 @@ public WAR3_death_victim(victim_id, killer_id){
 
 				format(message, 127, "%L",victim_id,"HAS_REVIVED_YOU",name)
 				Status_Text(victim_id, message, 3.0, HUDMESSAGE_POS_INFO)
-				client_print(victim_id, print_chat, message)
+				client_print(victim_id, print_chat, "%s %s", g_MODclient, message)
 				format(message, 127, "%L",id,"YOU_HAVE_REVIVED",victimName)
 				Status_Text(id, message, 3.0, HUDMESSAGE_POS_INFO)
-				client_print(id, print_chat, message)
+				client_print(id, print_chat, "%s %s", g_MODclient, message)
 
 				p_data_b[victim_id][PB_TOBEREVIVED]=true
 				g_pheonixExistsCT--
@@ -1175,7 +1175,7 @@ public WAR3_Display_Level(id, flag){
 			add(message,255,temp)
 		}
 		if (p_data[id][P_ULTIMATE]){
-			format(temp,127,"^n%L: %s",id,"ULTIMATE",race_skill[3])
+			format(temp,127,"^n%L: %s",id,"WORD_ULTIMATE",race_skill[3])
 			add(message,255,temp)
 		}
 

@@ -1,6 +1,4 @@
- 
-
- [en]
+[en]
 RACENAME_0 = No Race
 RACENAME_1 = Undead Scourge
 RACENAME_2 = Human Alliance
@@ -89,38 +87,38 @@ RACE8_SKILL1 = Impale
 RACE8_SKILL2 = Spiked Carapace
 RACE8_SKILL3 = Carrion Beetles
 RACE8_SKILL4 = Locust Swarm
-RACE1_SKILL1_INFO = %s: Gives you (%d%%, %d%% or %d%%) of the damage you do in attack back as health
-RACE1_SKILL2_INFO = %s: Gives you a speed boost, also all weapons make you go at the same speed
-RACE1_SKILL3_INFO = %s: Allows you to jump higher by reducing your gravity
-RACE1_SKILL4_INFO = Ultimate, %s: When you die you will explode killing nearby enemies
-RACE2_SKILL1_INFO = %s: Makes you partially invisible, you will be harder to see
-RACE2_SKILL2_INFO = %s: Gives you (%d, %d or %d) health at the start of the round.
-RACE2_SKILL3_INFO = %s: When you shoot someone you have a (%d, %d or %d) chance of rendering them immobile for 1 second
-RACE2_SKILL4_INFO_B = Ultimate, %s: Allows you to teleport to where you aim (avoid ceilings)
-RACE2_SKILL4_INFO_T = Ultimate, %s: Allows you to teleport to a team mate (10 seconds cooldown)
-RACE3_SKILL1_INFO = %s: Gives you a %d chance of doing (2, 3, or 4) times normal damage
-RACE3_SKILL2_INFO = %s: Grenades will ALWAYS do (%d, %d or %d) times normal damage
-RACE3_SKILL3_INFO = %s: Gives you a (%d, %d or %d) chance of regaining your equipment on death
-RACE3_SKILL4_INFO = Ultimate, %s: Discharges a bolt of lightning that jumps to all nearby enemies
-RACE4_SKILL1_INFO = %s: Gives you a (%d, %d or %d) chance of evading each shot
-RACE4_SKILL2_INFO = %s: Does (%d, %d or %d) mirror damage to the person who shot you
-RACE4_SKILL3_INFO = %s: Does (%d, %d or %d) extra damage to the enemy
-RACE4_SKILL4_INFO = Ultimate, %s: Allows you to prevent an enemy player from moving for 10 seconds
-RACE5_SKILL1_INFO = %s: You have a (%d, %d or %d) chance of reviving the first teammate who dies
-RACE5_SKILL2_INFO = %s: You have a (%d, %d or %d) chance of slapping your enemy
-RACE5_SKILL3_INFO = %s: Steal (%d, %d or %d) of the enemy's money
-RACE5_SKILL4_INFO = Ultimate, %s: You receive a flame thrower
-RACE6_SKILL1_INFO = %s: Every (%d, %d or %d) seconds you and your nearby teammates around you gain 1 HP
-RACE6_SKILL2_INFO = %s: You have a (%d, %d or %d) chance of turning your enemy into a big goober (which slows them down)
-RACE6_SKILL3_INFO = %s: You receive (%d, %d or %d) serpent wards each round that damage nearby enemy units, bind a key to ability (or say ability) to plant one
-RACE6_SKILL4_INFO = Ultimate, %s: Invincibility for 2 seconds
-RACE7_SKILL1_INFO = %s: You have a (%d, %d or %d) chance of becoming a mole
-RACE7_SKILL2_INFO = %s: You have a (%d, %d or %d) chance of disabling enemy ultimates
-RACE7_SKILL3_INFO = %s: You have a (%d, %d or %d) chance of hurling a poisoned dagger at the enemy
-RACE8_SKILL1_INFO = %s: Distorts the enemy
-RACE8_SKILL2_INFO = %s: Does (%d, %d or %d) mirror damage to the person who shot you and you gain armor
-RACE8_SKILL3_INFO = %s: You have a (%d, %d or %d) chance of your beetles attacking the enemy when on target
-RACE8_SKILL4_INFO = Ultimate, %s: A Swarm of Green Locusts attacks the enemy
+RACE1_SKILL1_INFO = Gives you (%d%%, %d%% or %d%%) of the damage you do in attacks back as health
+RACE1_SKILL2_INFO = Gives you a speed boost, also all weapons make you go at the same speed
+RACE1_SKILL3_INFO = Allows you to jump higher by reducing your gravity
+RACE1_SKILL4_INFO = When you die you will explode killing nearby enemies
+RACE2_SKILL1_INFO = Makes you partially invisible, you will be harder to see
+RACE2_SKILL2_INFO = Gives you (%d, %d or %d) health at the start of the round.
+RACE2_SKILL3_INFO = When you shoot someone you have a (%d%%, %d%% or %d%%) chance of rendering them immobile for 1 second
+RACE2_SKILL4_INFO_B = Allows you to teleport to where you aim (avoid ceilings)
+RACE2_SKILL4_INFO_T = Allows you to teleport to a team mate (10 seconds cooldown)
+RACE3_SKILL1_INFO = Gives you a %d chance of doing (2, 3, or 4) times normal damage
+RACE3_SKILL2_INFO = Grenades will ALWAYS do (%d, %d or %d) times normal damage
+RACE3_SKILL3_INFO = Gives you a (%d%%, %d%% or %d%%) chance of regaining your equipment on death
+RACE3_SKILL4_INFO = Discharges a bolt of lightning that jumps to all nearby enemies
+RACE4_SKILL1_INFO = Gives you a (%d%%, %d%% or %d%%) chance of evading each shot
+RACE4_SKILL2_INFO = Does (%d%%, %d%% or %d%%) mirror damage to the person who shot you
+RACE4_SKILL3_INFO = Does (%d%%, %d%% or %d%%) extra damage to the enemy
+RACE4_SKILL4_INFO = Allows you to prevent an enemy player from moving for 10 seconds
+RACE5_SKILL1_INFO = You have a (%d%%, %d%% or %d%%) chance of reviving the first teammate who dies
+RACE5_SKILL2_INFO = You have a (%d%%, %d%% or %d%%) chance of slapping your enemy
+RACE5_SKILL3_INFO = Steal (%d%%, %d%% or %d%%) of the enemy's money on each successful attack
+RACE5_SKILL4_INFO = You receive a flame thrower
+RACE6_SKILL1_INFO = Every (%d, %d or %d) seconds you and your nearby teammates around you gain 1 HP
+RACE6_SKILL2_INFO = You have a (%d%%, %d%% or %d%%) chance of turning your enemy into a big goober (which slows them down)
+RACE6_SKILL3_INFO = You receive (%d, %d or %d) serpent wards each round that damage nearby enemy units, bind a key to ability (or say ability) to plant one
+RACE6_SKILL4_INFO = Invincibility for 2 seconds
+RACE7_SKILL1_INFO = You have a (%d%%, %d%% or %d%%) chance of becoming a mole
+RACE7_SKILL2_INFO = You have a (%d%%, %d%% or %d%%) chance of disabling enemy ultimates
+RACE7_SKILL3_INFO = You have a (%d%%, %d%% or %d%%) chance of hurling a poisoned dagger at the enemy
+RACE8_SKILL1_INFO = Distorts the enemy
+RACE8_SKILL2_INFO = Does (%d%%, %d%% or %d%%) mirror damage to the person who shot you and you gain armor
+RACE8_SKILL3_INFO = You have a (%d%%, %d%% or %d%%) chance of your beetles attacking the enemy when on target
+RACE8_SKILL4_INFO = A Swarm of Green Locusts attacks the enemy
 
 CURRENT_ITEMS_RING = Current Items: %s and %s x%d
 CURRENT_ITEMS = Current Items: %s and %s
@@ -129,7 +127,7 @@ CURRENT_ITEM = Current Item: %s
 PLAYERITEM_AND_REGEN = %s and %s x%d
 PLAYERITEM_AND = %s and %s
 YOU_GAINED_A_LEVEL = You gained a Level
-ULTIMATE = Ultimate
+WORD_ULTIMATE= Ultimate
 HAS_REVIVED_YOU = %s has revived you
 YOU_HAVE_REVIVED = You have revived %s, way to go !
 AWARDED_FOR_HEADSHOT = You are awarded an additional %d XP for killing someone with a headshot
@@ -145,14 +143,6 @@ ALREADY_SELECTED_SKILL_POINTS = You have already used up all your skill points!
 LEVEL_SELECT_SKILL_FUNC = ^n%d. %s Level %d\w
 ULTIMATE_SELECT_SKILL_FUNC = ^n4. Ultimate: %s\w
 CANCEL_SELECT_SKILL_FUNC = ^n^n0. Cancel
-RACES_9 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\ySelect Hero\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n9. %s^n^n
-RACES_8 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\ySelect Hero\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n^n9. Auto-select
-RACES_5 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n5. %s^n^n9. Auto-select
-RACES_4 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n9. Auto-select
-RACES_9_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\ySelect Hero^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n\w9. %s\y\R%s^n
-RACES_8_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\ySelect Hero^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n^n\w9. Auto-select
-RACES_5_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n\w5. %s\y\R%s^n^n\w6. Auto-select
-RACES_4_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\w5. Auto-select
 SHOT_DEFLECTED = A shot by a mole was deflected
 UNTIL_YOUR_NEXT_GRENADE = %d second(s) until your next grenade
 DONT_DIE_GOOSE = Don't die next time and I'll give you another nade ya silly goose!
@@ -266,7 +256,7 @@ THE_ADMIN_JUST_GAVE_YOU_XP = The admin just awarded you %d experience.
 TERRORISTS = Terrorists
 CT = Counter-Terrorists
 EVERYONE = Everyone
-SKILLS_STRING = %s Skills
+WORD_SKILLS = Skills
 RACE_INFORMATION = Race Information
 WAS_KILLED_BY = %s was killed by %s's %s
 THIS_MOD_WAS_DEVELOPED = This mod was developed by 4HM | Pimp Daddy, visit www.4hm.net (forums) for more details%s
@@ -312,9 +302,9 @@ say /war3menu -  Shows the War3 Frozen Throne Player menu%s
 say /ability - if you have serpent wards it will plant them%s
 say /resetskills - resets your skills%s		
 say /resetxp - Will reset your level and XP to 0%s
-: END
+:
 
-DOD_RACE3_SKILL2_INFO = %s: Grenades will ALWAYS do (%d, %d or %d) times normal damage and the grenade's fuse is set to 2 seconds instead of the normal 5
+DOD_RACE3_SKILL2_INFO = Grenades will ALWAYS do (%d, %d or %d) times normal damage and the grenade's fuse is set to 2 seconds instead of the normal 5
 AWARDED_FOR_KILLING_BOMB_D = You received %d XP for killing the bomb defuser
 AWARDED_FOR_KILLING_BOMB_C = You received %d XP for killing the bomb carrier
 
@@ -327,10 +317,10 @@ SELECT_RACE_TITLE = %s\RExperience^n^n
 SELECT_RACE_FOOTER = ^n\w%d. Auto-select
 SELECT_HERO = ^n\ySelect Hero^n^n
 
-RACE7_SKILL4_INFO = Ultimate, %s: Respawn with 50 health or be teleported back to your spawn
+RACE7_SKILL4_INFO = Respawn with 50 health or be teleported back to your spawn
 DOD_RACE3_SKILL3 = Reincarnation
-DOD_RACE3_SKILL3_INFO = %s: Gives you a (%d, %d or %d) chance of spawning where you died
-DOD_RACE1_SKILL2_INFO = %s: Gives you more stamina
+DOD_RACE3_SKILL3_INFO = Gives you a (%d%%, %d%% or %d%%) chance of spawning where you died
+DOD_RACE1_SKILL2_INFO = Gives you more stamina
 NO_FREE_SPAWN_FOUND = No free spawn was found to teleport to
 MAP_DISABLED = Please note, sounds and some effects are disabled on this map
 MAP_DISABLED_DUE = This is due to a limitation of half-life
@@ -365,7 +355,7 @@ DOD_SHOPMENU_1 =	%s: This item will make you respawn where you died
 DOD_SHOPMENU_2 =	%s: Gives you more stamina
 SHOPMENU2_5 = %s: You will be able to jump higher
 
- [sv]
+[sv]
 RACENAME_0 = Ingen Ras
 RACENAME_1 = Undead Scourge
 RACENAME_2 = Human Alliance (M'a'nskliga Alliansen)
@@ -454,39 +444,38 @@ RACE8_SKILL1 = Impale
 RACE8_SKILL2 = Spiked Carapace
 RACE8_SKILL3 = Carrion Beetles
 RACE8_SKILL4 = Locust Swarm
-RACE1_SKILL1_INFO = %s: Ger dig (%d, %d eller %d) av skadan du g'o'r tillbaka i h'a'lsa.
-RACE1_SKILL2_INFO = %s: Ger dig snabbhet, och du springer lika snabbt med alla vapen.
-RACE1_SKILL3_INFO = %s: Du kan hoppa h'o'gre genom att gravitationen minskat.
-RACE1_SKILL4_INFO = Ultimate, %s: N'a'r du d'o'r sa exploderar du och d'o'dar fiender som 'a'r runtom dig, sen aterupplivas du.
-RACE2_SKILL1_INFO = %s: Du blir delvis osynlig.
-RACE2_SKILL2_INFO = %s: Ger dig (%d, %d eller %d) i h'a'lsa vid ny runda.
-RACE2_SKILL3_INFO = %s: N'a'r du prickar fienden sau har du (%d, %d or %d) chans att frysa fienden i 1 sekund
-RACE2_SKILL4_INFO_B = Ultimate, %s: Du kan teleporta dig dit du siktar (Akta himlen)
-RACE2_SKILL4_INFO_T = Ultimate, %s: Du kan teleporta dig till en medspelare (10 sekunders kylning)
-RACE3_SKILL1_INFO = %s: Ger dig %d chans att g'o'ra (2, 3, eller 4) ggr den normala skadan
-RACE3_SKILL2_INFO = %s: Granater kommer alltid att g'o'ra (%d, %d eller %d) mer skada.
-RACE3_SKILL3_INFO = %s: Ger dig (%d, %d eller %d) chans att fa tillbaka din utrustning n'a'r du d'o'r
-RACE3_SKILL4_INFO = Ultimate, %s: Avlossar en blixt som tr'a'ffar alla n'a'rliggande fiender
-RACE4_SKILL1_INFO = %s: Ger dig (%d, %d eller %d) chans att skotten missar dig
-RACE4_SKILL2_INFO = %s: G'o'r (%d, %d eller %d) spegelSkada mot personen som skjuter pa dig
-RACE4_SKILL3_INFO = %s: G'o'r (%d, %d eller %d) extra skada pau fienden
-RACE4_SKILL4_INFO = Ultimate, %s: Fryser fienden i 10 sekunder
-RACE5_SKILL1_INFO = %s: Du har (%d, %d eller %d) chans ateruppliva den f'o'rsta medspelaren som d'o'r
-RACE5_SKILL2_INFO = %s: Du har (%d, %d eller %d) chans att smiska din fiende
-RACE5_SKILL3_INFO = %s: Stj'a'ler (%d, %d eller %d) av fiendens pengar
-RACE5_SKILL4_INFO = Ultimate, %s: Du kan spruta eld
-RACE6_SKILL1_INFO = %s: Var (%d, %d eller %d) sekund ges du och medspelare runtom dig 1 hp
-RACE6_SKILL2_INFO = %s: Du har (%d, %d or %d) chans att f'o'vandla din fiende till en stor goober (Som saktar ner dem)
-RACE6_SKILL3_INFO = %s: Du mottager (%d, %d or %d) serpent wards varje runda som skadar fienderna, binda en tangent till ability (eller say ability i chatten) f'o'r att plantera en
-RACE6_SKILL4_INFO = Ultimate, %s: Osynlighet i 2 sekunder
-RACE7_SKILL1_INFO = %s: Du har (%d, %d or %d) chans att bli en Mullvad
-RACE7_SKILL2_INFO = %s: Du har (%d, %d or %d) chans att blocka fiendernas ultimates
-RACE7_SKILL3_INFO = %s: Du har (%d, %d or %d) chans att kasta en giftig kniv mot fienden
-RACE8_SKILL1_INFO = %s: Skakar om fienden
-RACE8_SKILL2_INFO = %s: Ger (%d, %d or %d) spegelSkada mot personen som skjuter mot dig och du ges armor
-RACE8_SKILL3_INFO = %s: Du har (%d, %d or %d) chans att dina skalbaggar attackerar fienden
-RACE8_SKILL4_INFO = Ultimate, %s: en sv'a'rm av gr'o'na Locusts attackerar fienden
-
+RACE1_SKILL1_INFO = Ger dig (%d, %d eller %d) av skadan du g'o'r tillbaka i h'a'lsa.
+RACE1_SKILL2_INFO = Ger dig snabbhet, och du springer lika snabbt med alla vapen.
+RACE1_SKILL3_INFO = Du kan hoppa h'o'gre genom att gravitationen minskat.
+RACE1_SKILL4_INFO = N'a'r du d'o'r sa exploderar du och d'o'dar fiender som 'a'r runtom dig, sen aterupplivas du.
+RACE2_SKILL1_INFO = Du blir delvis osynlig.
+RACE2_SKILL2_INFO = Ger dig (%d, %d eller %d) i h'a'lsa vid ny runda.
+RACE2_SKILL3_INFO = N'a'r du prickar fienden sau har du (%d, %d or %d) chans att frysa fienden i 1 sekund
+RACE2_SKILL4_INFO_B = Du kan teleporta dig dit du siktar (Akta himlen)
+RACE2_SKILL4_INFO_T = Du kan teleporta dig till en medspelare (10 sekunders kylning)
+RACE3_SKILL1_INFO = Ger dig %d chans att g'o'ra (2, 3, eller 4) ggr den normala skadan
+RACE3_SKILL2_INFO = Granater kommer alltid att g'o'ra (%d, %d eller %d) mer skada.
+RACE3_SKILL3_INFO = Ger dig (%d, %d eller %d) chans att fa tillbaka din utrustning n'a'r du d'o'r
+RACE3_SKILL4_INFO = Avlossar en blixt som tr'a'ffar alla n'a'rliggande fiender
+RACE4_SKILL1_INFO = Ger dig (%d, %d eller %d) chans att skotten missar dig
+RACE4_SKILL2_INFO = G'o'r (%d, %d eller %d) spegelSkada mot personen som skjuter pa dig
+RACE4_SKILL3_INFO = G'o'r (%d, %d eller %d) extra skada pau fienden
+RACE4_SKILL4_INFO = Fryser fienden i 10 sekunder
+RACE5_SKILL1_INFO = Du har (%d, %d eller %d) chans ateruppliva den f'o'rsta medspelaren som d'o'r
+RACE5_SKILL2_INFO = Du har (%d, %d eller %d) chans att smiska din fiende
+RACE5_SKILL3_INFO = Stj'a'ler (%d, %d eller %d) av fiendens pengar
+RACE5_SKILL4_INFO = Du kan spruta eld
+RACE6_SKILL1_INFO = Var (%d, %d eller %d) sekund ges du och medspelare runtom dig 1 hp
+RACE6_SKILL2_INFO = Du har (%d, %d or %d) chans att f'o'vandla din fiende till en stor goober (Som saktar ner dem)
+RACE6_SKILL3_INFO = Du mottager (%d, %d or %d) serpent wards varje runda som skadar fienderna, binda en tangent till ability (eller say ability i chatten) f'o'r att plantera en
+RACE6_SKILL4_INFO = Osynlighet i 2 sekunder
+RACE7_SKILL1_INFO = Du har (%d, %d or %d) chans att bli en Mullvad
+RACE7_SKILL2_INFO = Du har (%d, %d or %d) chans att blocka fiendernas ultimates
+RACE7_SKILL3_INFO = Du har (%d, %d or %d) chans att kasta en giftig kniv mot fienden
+RACE8_SKILL1_INFO = Skakar om fienden
+RACE8_SKILL2_INFO = Ger (%d, %d or %d) spegelSkada mot personen som skjuter mot dig och du ges armor
+RACE8_SKILL3_INFO = Du har (%d, %d or %d) chans att dina skalbaggar attackerar fienden
+RACE8_SKILL4_INFO = en sv'a'rm av gr'o'na Locusts attackerar fienden
 CURRENT_ITEMS_RING = Items just nu: %s och %s x%d
 CURRENT_ITEMS = Items just nu: %s och %s
 CURRENT_ITEM_RING = Item just nu: %s %d
@@ -494,7 +483,7 @@ CURRENT_ITEM = Item just nu: %s
 PLAYERITEM_AND_REGEN = %s och %s x%d
 PLAYERITEM_AND = %s och %s
 YOU_GAINED_A_LEVEL = Du gick upp en Level
-ULTIMATE = Ultimate
+WORD_ULTIMATE= Ultimate
 HAS_REVIVED_YOU = %s har gett dig nytt liv
 YOU_HAVE_REVIVED = Du har aterupplivat %s, vad du 'a'r sn'a'll :D !
 AWARDED_FOR_HEADSHOT = Du fick %d XP f'o'r ditt HS
@@ -510,14 +499,6 @@ ALREADY_SELECTED_SKILL_POINTS = Du har redan utnyttjat dina skill-po'a'ng!
 LEVEL_SELECT_SKILL_FUNC = ^n%d. %s Level %d\w
 ULTIMATE_SELECT_SKILL_FUNC = ^n4. Ultimate: %s\w
 CANCEL_SELECT_SKILL_FUNC = ^n^n0. Avbryt
-RACES_9 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\yV'a'lj Hero\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n9. %s^n^n
-RACES_8 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\yV'a'lj Hero\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n^n9. Auto-v'a'lj
-RACES_5 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n5. %s^n^n9. Auto-v'a'lj
-RACES_4 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n9. Auto-v'a'lj
-RACES_9_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\yV'a'lj Hero^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n\w9. %s\y\R%s^n
-RACES_8_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\yV'a'lj Hero^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n^n\w9. Auto-v'a'lj
-RACES_5_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n\w5. %s\y\R%s^n^n\w6. Auto-v'a'lj
-RACES_4_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\w5. Auto-v'a'lj
 SHOT_DEFLECTED = Ett skott fran en Mullvad undveks
 UNTIL_YOUR_NEXT_GRENADE = %d sekunder tills du ges en ny granat
 DONT_DIE_GOOSE = Asso d'o' inte n'a'sta gong jag ger dig en granat din dumma Gris :D !
@@ -596,7 +577,7 @@ NOW_SEE_ICONS = Nu kommer du att se ditt lags RAS-iconer.
 IS_ACTIVATED_NOW = %s (%s) Aktiverades nu.
 IS_NO_LONGER_ACTIVE = %s (%s) 'a'r inte l'a'ngre aktivt
 IS_IN_AUTOMATIC_MODE = %s (%s) 'a'r nu i automatiskt l'a'ge
-USAGE_STRING = Anv'a'ndning: amx_wc3 <on|off|auto> (auto = Aktivera Tidkontroll)
+USAGE_STRING = Anv'a'ndning: amx_wc3 <on|off|auto> (auto  Aktivera Tidkontroll)
 BETWEEN = mellan %dh och %dh
 INACTIVE = %s (%s)^nInaktiverad %s^nTiden 'a'r:%02d:%02d^nTid Kvar: %d:%02d (N'a'sta Bana: %s)
 ACTIVE = %s (%s)^nAktiverad %s^nTiden 'a'r:%02d:%02d^nTid Kvar: %d:%02d (N'a'sta Bana: %s)
@@ -631,19 +612,17 @@ THE_ADMIN_JUST_GAVE_YOU_XP = Admin gav dig %d XP.
 TERRORISTS = Terrorister
 CT = Counter-Terrorister
 EVERYONE = Alla
-SKILLS_STRING = %s Skills
+WORD_SKILLS = Skills
 RACE_INFORMATION = Ras Information
 WAS_KILLED_BY = %s d'o'dades av %s's %s
 THIS_MOD_WAS_DEVELOPED = Denna mod utvecklas av 4HM | Pimp Daddy, bes'o'k www.4hm.net (forums) f'o'r mer detaljer%s
-CLICK_HERE_FOR_LATEST = Klicka <a href='http://4honor.net/forum/viewforum.php?f=28'>h'a'r</a> f'o'r de senaste uppdateringarna av Warcraft 3 Frozen Throne
+CLICK_HERE_FOR_LATEST = Klicka <a href'http://4honor.net/forum/viewforum.php?f28'>h'a'r</a> f'o'r de senaste uppdateringarna av Warcraft 3 Frozen Throne
 VOTING_NOT_ALLOWED = R'o'stning kan inte goras i denna Server.
 THERE_ARE_MORE = Det finns flera Klienter som matchar ditt argument
 CLIENT_NOT_FOUND = Klient med det namnet eller userID hittades inte
 ICONS_ARE_DISABLED = Ras-Iconerna 'a'r inaktiverade
 ICONS_ARE_DISABLED_DO = Ras-Iconerna 'a'r inaktiverade i just denna bana pga en Half-life limitation
 INCORRECT_NUM_RACES = ERROR, FEL RAS-ANTAL 'A'R VALT
-
-
 MENU_BUY_ITEM = \yShopMeny 1\R$ Kostnad^n^n
 MENU_BUY_ITEM2 = \yShopMeny 2\R$ Kostnad^n^n
 MENU_TELEPORT_TO = \yTeleportera Till:\w^n
@@ -656,10 +635,9 @@ MENU_RACE_OPTIONS = \yVal av Ras
 MENU_ADMIN_MENU = \yAdmin Meny
 MENU_GIVE_PLAYERS_XP = \yGe Spelare XP
 MENU_TEAM_XP = \yLag XP Meny
-
-CLICK_HERE = Klicka <a href='http://ootoaoo.no-ip.com/war3/war3info.php?game=%s&lang=sv'>h'a'r</A> f'o'r mer information om de nya raserna, etc..
+CLICK_HERE = Klicka <a href'http://ootoaoo.no-ip.com/war3/war3info.php?game%s&langsv'>h'a'r</A> f'o'r mer information om de nya raserna, etc..
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Hj'a'lp
-WAR3 HJ'A'LP :
+WAR3HELP :
 %sDetta beskriver hur du bindar dina tangenter %s
 1) Ta fram consolen%s
 2) Skriv bind f ultimate%s
@@ -678,23 +656,31 @@ say /war3menu - Visar War3 Frozen Throne Meny%s
 say /ability - om du har serpent wards, sau plantas de%s
 say /resetskills - v'a'lj om dina skills%s
 say /resetxp - Detta nollar dina levels och din XP%s
-: END 
-
-DOD_RACE3_SKILL2_INFO = %s: Granater ger ALLTID (%d, %d eller %d) ggr den normala skadan och granaterna spr'a'ngs efter 2 sekunder ist'a'llet f'o'r normalt 5. 
+:
+DOD_RACE3_SKILL2_INFO = Granater ger ALLTID (%d, %d eller %d) ggr den normala skadan och granaterna spr'a'ngs efter 2 sekunder ist'a'llet f'o'r normalt 5.
 AWARDED_FOR_KILLING_BOMB_D = fick %d XP f'o'r att du d'o'dade han som desarmerade bomben
 AWARDED_FOR_KILLING_BOMB_C = fick %d XP f'o'r att du d'o'dade han som hade bomben
-AWARDED_FOR_KILLING_TEAMMATE = Du har losat %d XP bara f'o'r att du d'o'dade en medspelare 
-ULTIMATE_NOT_READY = Ultimate 'a'r inte redo.^n(%d sekunder kvar) 
-ULTIMATE_NOT_FOUND = Ultimate hittades inte. 
-ULTIMATE_READY = Ultimate 'a'r redo :D 
-AWARD_FOR_KILLING_VIP = Du fick %d XP f'o'r att du fraggde VIPn. 
-SELECT_RACE_TITLE = %s\RExperience^n^n 
-SELECT_RACE_FOOTER = ^n\w%d. Auto-v'a'lj 
-SELECT_HERO = ^n\yV'a'lj Hj'a'lte^n^n 
+AWARDED_FOR_KILLING_TEAMMATE = Du har losat %d XP bara f'o'r att du d'o'dade en medspelare
+ULTIMATE_NOT_READY = Ultimate 'a'r inte redo.^n(%d sekunder kvar)
+ULTIMATE_NOT_FOUND = Ultimate hittades inte.
+ULTIMATE_READY = Ultimate 'a'r redo :D
+AWARD_FOR_KILLING_VIP = Du fick %d XP f'o'r att du fraggde VIPn.
+SELECT_RACE_TITLE = %s\RExperience^n^n
+SELECT_RACE_FOOTER = ^n\w%d. Auto-v'a'lj
+SELECT_HERO = ^n\yV'a'lj Hj'a'lte^n^n
+RACE7_SKILL4_INFO = Nytt liv med 50 i h'a'lsa, or be teleported back to your spawn
+DOD_RACE3_SKILL3 = Reinkarnation
+DOD_RACE3_SKILL3_INFO = Ger dig (%d, %d eller %d) chans att spawna d'a'r du dog
+DOD_RACE1_SKILL2_INFO = Ger dig mer uthallighet
+NO_FREE_SPAWN_FOUND = Inga l'a'mpliga platser hittades f'o'r teleportningen
+MAP_DISABLED = En del ljud och effekter 'a'r av pa denna map
+MAP_DISABLED_DUE = Det beror pa en begr'a'nsning i Half-life motorn
+SERVER_MAP_DISABLED = War3FT effekterna 'a'r av pa banan: %s pga en begr'a'nsning i Half-life motorn
+WORD_LEVEL = Level
+WORD_PURCHASED = k'o'pte
+WORD_CANCEL = Avbryt
 
-RACE7_SKILL4_INFO = Ultimate, %s: Nytt liv med 50 i h'a'lsa, or be teleported back to your spawn
-
- [de]
+[de]
 RACENAME_0 = keine Rasse
 RACENAME_1 = Untote Plage
 RACENAME_2 = Menschliche Allianz
@@ -783,38 +769,38 @@ RACE8_SKILL1 = Aufspießen
 RACE8_SKILL2 = Stachelruestung
 RACE8_SKILL3 = Aas Kaefer
 RACE8_SKILL4 = Heuschrecken Schwarm
-RACE1_SKILL1_INFO = %s: Gibt dir (%d, %d oder %d) Gesundheit wieder zurück, wenn du Schaden verursachst.
-RACE1_SKILL2_INFO = %s: Du bist schneller als alle anderen, egal mit welcher Waffe in der Hand (3 Stufen Schnelligkeit).
-RACE1_SKILL3_INFO = %s: Du springst höher als alle anderen, und verlierst keine/wenig Gesundheit bei Stürzen (3 Stufen Schweben).
-RACE1_SKILL4_INFO = Ultimate, %s: Wenn du stirbst explodierst du und reisst nahe Gegner mit in den Tod.
-RACE2_SKILL1_INFO = %s: Du wirst mit jeder Stufe transparenter (mit dem Messer in der Hand fast unsichtbar) (3 Stufen Unsichtbarkeit).
-RACE2_SKILL2_INFO = %s: Gibt dir einen Gesundheitsbonus von (%d, %d or %d) HP in 3 Stufen, am Start jeder Runde.
-RACE2_SKILL3_INFO = %s: Wenn du jemanden triffst hast du eine Chance von (%d, %d or %d), das er sich für 1 Sekunde nicht bewegen kann.
-RACE2_SKILL4_INFO_B = Ultimate, %s: Erlaubt es dir, dich dahin zu teleportieren, wohin du zielst.
-RACE2_SKILL4_INFO_T = Ultimate, %s: Die Möglichkeit sich zu teleportieren, in die Richtung deines Fadenkreuzes (alle 10 Sekunden möglich).
-RACE3_SKILL1_INFO = %s: Gibt dir eine %d Chance den (2, 3, oder 4) fachen Schaden mit jedem Schuss zu machen.
-RACE3_SKILL2_INFO = %s: Granaten machen IMMER (%d, %d oder %d) mal soviel Schaden.
-RACE3_SKILL3_INFO = %s: Gibt dir eine (%d, %d oder %d) Chance mit der kompletten Ausrüstung aus der letzten Runde zu starten, wenn du gefallen bist.
-RACE3_SKILL4_INFO = Ultimate, %s: Die Möglichkeit einen Blitz hervorzubringen, der von Gegner zu Gegner springt und diese verletzt. Mit jedem 'Sprung' verringert sich jedoch der Schaden um 1/3.
-RACE4_SKILL1_INFO = %s: Gibt dir eine Chance von (%d, %d oder %d) einem Schuss auszuweichen.
-RACE4_SKILL2_INFO = %s: Macht einen Schaden von (%d, %d oder %d), an denen die dir Schaden zugefügt haben.
-RACE4_SKILL3_INFO = %s: Macht (%d, %d or %d) extra Schaden mit jeder deiner Kugeln.
-RACE4_SKILL4_INFO = Ultimate, %s: Immobilisiert den getroffenen Gegner für 10 Sekunden. (er kann sich nicht bewegen!)
-RACE5_SKILL1_INFO = %s: Du hast die Chance von (%d, %d oder %d), den ersten Teamkollegen der stirbt wiederzubeleben.
-RACE5_SKILL2_INFO = %s: Mit einer Wahrscheinlichkeit von (%d, %d oder %d) slapst du deinen Gegner.
-RACE5_SKILL3_INFO = %s: Stehle deinem Gegner (%d, %d oder %d) des Geldes deines Gegners.
-RACE5_SKILL4_INFO = Ultimate, %s: Du erhälst einen Flammenwerfer.
-RACE6_SKILL1_INFO = %s: Alle (%d, %d oder %d) Sekunden erhalten du und die dir am nächsten stehenden Teamkamaraden in der Nähe 1 HP.
-RACE6_SKILL2_INFO = %s: Eine (%d, %d oder %d) Chance deinen Gegner in einen großen Goomber zu verwandeln (er wird dadurch langsamer).
-RACE6_SKILL3_INFO = %s: Du hast die Möglichkeit (%d, %d oder %d) magische Pfähle aufzustellen, die dem Gegner in der Nähe Schaden zufügen. Binde hierfür eine Taste: bind TASTE ability (oder schreibe einfach ability in den Chat) um welche aufzustellen.
-RACE6_SKILL4_INFO = Ultimate, %s: Du bist für 2 Sekunden unverwundbar!
-RACE7_SKILL1_INFO = %s: Du hast eine (%d, %d oder %d) Chance ein Spion nächste Runde zu sein. (Maulwurf-Start am gegnerischen Startplatz)
-RACE7_SKILL2_INFO = %s: Mit einer (%d, %d oder %d) Chance werden die Ultimates der Gegner in der Nähe unbrauchbar sein.
-RACE7_SKILL3_INFO = %s: Du hast die Chance von (%d, %d oder %d), einen vergifteten Pfeil auf deinen Gegner zu schiessen. (3 Pfeile max.)
-RACE8_SKILL1_INFO = %s: Ruckelt getroffene Gegner druch. (Ihr Schirm wackelt)
-RACE8_SKILL2_INFO = %s: Macht (%d, %d oder %d) Schaden am Gegner, wenn er dir schadet und gibt dir Armor zurück.
-RACE8_SKILL3_INFO = %s: Du hat eine (%d, %d oder %d) Chance das deine Käfer dem Gegner Schaden zufügen.
-RACE8_SKILL4_INFO = Ultimate, %s: Du lässt einen Schwarm von Heuschracken auf den Gegner los.
+RACE1_SKILL1_INFO = Gibt dir (%d, %d oder %d) Gesundheit wieder zurück, wenn du Schaden verursachst.
+RACE1_SKILL2_INFO = Du bist schneller als alle anderen, egal mit welcher Waffe in der Hand (3 Stufen Schnelligkeit).
+RACE1_SKILL3_INFO = Du springst höher als alle anderen, und verlierst keine/wenig Gesundheit bei Stürzen (3 Stufen Schweben).
+RACE1_SKILL4_INFO = Wenn du stirbst explodierst du und reisst nahe Gegner mit in den Tod.
+RACE2_SKILL1_INFO = Du wirst mit jeder Stufe transparenter (mit dem Messer in der Hand fast unsichtbar) (3 Stufen Unsichtbarkeit).
+RACE2_SKILL2_INFO = Gibt dir einen Gesundheitsbonus von (%d, %d or %d) HP in 3 Stufen, am Start jeder Runde.
+RACE2_SKILL3_INFO = Wenn du jemanden triffst hast du eine Chance von (%d, %d or %d), das er sich für 1 Sekunde nicht bewegen kann.
+RACE2_SKILL4_INFO_B = Erlaubt es dir, dich dahin zu teleportieren, wohin du zielst.
+RACE2_SKILL4_INFO_T = Die Möglichkeit sich zu teleportieren, in die Richtung deines Fadenkreuzes (alle 10 Sekunden möglich).
+RACE3_SKILL1_INFO = Gibt dir eine %d Chance den (2, 3, oder 4) fachen Schaden mit jedem Schuss zu machen.
+RACE3_SKILL2_INFO = Granaten machen IMMER (%d, %d oder %d) mal soviel Schaden.
+RACE3_SKILL3_INFO = Gibt dir eine (%d, %d oder %d) Chance mit der kompletten Ausrüstung aus der letzten Runde zu starten, wenn du gefallen bist.
+RACE3_SKILL4_INFO = Die Möglichkeit einen Blitz hervorzubringen, der von Gegner zu Gegner springt und diese verletzt. Mit jedem 'Sprung' verringert sich jedoch der Schaden um 1/3.
+RACE4_SKILL1_INFO = Gibt dir eine Chance von (%d, %d oder %d) einem Schuss auszuweichen.
+RACE4_SKILL2_INFO = Macht einen Schaden von (%d, %d oder %d), an denen die dir Schaden zugefügt haben.
+RACE4_SKILL3_INFO = Macht (%d, %d or %d) extra Schaden mit jeder deiner Kugeln.
+RACE4_SKILL4_INFO = Immobilisiert den getroffenen Gegner für 10 Sekunden. (er kann sich nicht bewegen!)
+RACE5_SKILL1_INFO = Du hast die Chance von (%d, %d oder %d), den ersten Teamkollegen der stirbt wiederzubeleben.
+RACE5_SKILL2_INFO = Mit einer Wahrscheinlichkeit von (%d, %d oder %d) slapst du deinen Gegner.
+RACE5_SKILL3_INFO = Stehle deinem Gegner (%d, %d oder %d) des Geldes deines Gegners.
+RACE5_SKILL4_INFO = Du erhälst einen Flammenwerfer.
+RACE6_SKILL1_INFO = Alle (%d, %d oder %d) Sekunden erhalten du und die dir am nächsten stehenden Teamkamaraden in der Nähe 1 HP.
+RACE6_SKILL2_INFO = Eine (%d, %d oder %d) Chance deinen Gegner in einen großen Goomber zu verwandeln (er wird dadurch langsamer).
+RACE6_SKILL3_INFO = Du hast die Möglichkeit (%d, %d oder %d) magische Pfähle aufzustellen, die dem Gegner in der Nähe Schaden zufügen. Binde hierfür eine Taste: bind TASTE ability (oder schreibe einfach ability in den Chat) um welche aufzustellen.
+RACE6_SKILL4_INFO = Du bist für 2 Sekunden unverwundbar!
+RACE7_SKILL1_INFO = Du hast eine (%d, %d oder %d) Chance ein Spion nächste Runde zu sein. (Maulwurf-Start am gegnerischen Startplatz)
+RACE7_SKILL2_INFO = Mit einer (%d, %d oder %d) Chance werden die Ultimates der Gegner in der Nähe unbrauchbar sein.
+RACE7_SKILL3_INFO = Du hast die Chance von (%d, %d oder %d), einen vergifteten Pfeil auf deinen Gegner zu schiessen. (3 Pfeile max.)
+RACE8_SKILL1_INFO = Ruckelt getroffene Gegner druch. (Ihr Schirm wackelt)
+RACE8_SKILL2_INFO = Macht (%d, %d oder %d) Schaden am Gegner, wenn er dir schadet und gibt dir Armor zurück.
+RACE8_SKILL3_INFO = Du hat eine (%d, %d oder %d) Chance das deine Käfer dem Gegner Schaden zufügen.
+RACE8_SKILL4_INFO = Du lässt einen Schwarm von Heuschracken auf den Gegner los.
 
 CURRENT_ITEMS_RING = Benutzte Gegenstaende: %s und %s x%d
 CURRENT_ITEMS = Benutzte Gegenstaende: %s und %s
@@ -825,7 +811,7 @@ LEVEL10 = %s Level: %d XP: %d
 PLAYERITEM_AND_REGEN = %s und %s x%d
 PLAYERITEM_AND = %s und %s
 YOU_GAINED_A_LEVEL = Du bist ein Level aufgestiegen
-ULTIMATE = Ultimate
+WORD_ULTIMATE= Ultimate
 HAS_REVIVED_YOU = %s hat dich wiederbelebt
 YOU_HAVE_REVIVED = Du hast %s wiederbelebt !
 AWARDED_FOR_HEADSHOT = Du erhaelst %d XP fuer den Headshot
@@ -841,14 +827,6 @@ ALREADY_SELECTED_SKILL_POINTS = Du hast bereits alle deine XP-Punkte verbraucht!
 LEVEL_SELECT_SKILL_FUNC = ^n%d. %s Level %d\w
 ULTIMATE_SELECT_SKILL_FUNC = ^n4. Ultimate: %s\w
 CANCEL_SELECT_SKILL_FUNC = ^n^n0. Abbrechen
-RACES_9 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\yWaehle deinen Helden:\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n9. %s^n^n
-RACES_8 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\yWaehle deinen Helden:\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n^n9. Automatische Auswahl
-RACES_5 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n5. %s^n^n9. Automatische Auswahl
-RACES_4 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n9. Automatische Auswahl
-RACES_9_XP = %s\RErfahrung^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\yWaehle deinen Helden:^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n\w9. %s\y\R%s^n
-RACES_8_XP = %s\RErfahrung^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\yWaehle deinen Helden:^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n^n\w9. Automatische Auswahl
-RACES_5_XP = %s\RErfahrung^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n\w5. %s\y\R%s^n^n\w6. Automatische Auswahl
-RACES_4_XP = %s\RErfahrung^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\w5. Automatische Auswahl
 SHOT_DEFLECTED = Ein Schuss von einem Maulwurf wurde abgelenkt
 UNTIL_YOUR_NEXT_GRENADE = %d Sekunde(n) bevor du deine naechste Granate erhaellst
 DONT_DIE_GOOSE = Sterbe nicht das naechste Mal und du bekommst eine andere Granate!
@@ -961,7 +939,7 @@ THE_ADMIN_JUST_GAVE_YOU_XP = Der Admin gab dir gerade %d Erfahrung.
 TERRORISTS = Terrorists
 CT = Counter-Terrorists
 EVERYONE = Jeder
-SKILLS_STRING = %s Fertigkeiten
+WORD_SKILLS = Fertigkeiten
 RACE_INFORMATION = Rassen Information
 WAS_KILLED_BY = %s wurde getoeten von %s's %s
 THIS_MOD_WAS_DEVELOPED = Dieser Mod wird entwickelt von 4HM | Pimp Daddy, besuche www.4hm.net (forum) für mehr Details%s
@@ -1007,7 +985,7 @@ say /war3menu - Blendet das Warcraft3 Menu ein für weitere Einstellungen und Erk
 say /ability - Mit diesem Befehl können verfuegbare Schadens Wellen platziert werden%s
 say /resetskills - Du kannst deine Fertigkeiten erneut auswählen%s
 say /resetxp - Loescht dein Level und deine XP auf 0%s
-: END
+:
 
 AWARDED_FOR_KILLING_TEAMMATE = Du hast %d XP fuer das toeten eines Teamkollegen verloren
 ULTIMATE_NOT_READY = Ultimate noch nicht bereit.^n(%d Sekunden verbleibend)
@@ -1018,9 +996,9 @@ SELECT_RACE_TITLE = %s\RErfahrung^n^n
 SELECT_RACE_FOOTER = ^n\w%d. Automatisch
 SELECT_HERO = ^n\yWaehle Held^n^n 
 
-RACE7_SKILL4_INFO = Ultimate, %s: Du wirst im Falle deinens Ablebens mit 50 HP wiederbelebt, or be teleported back to your spawn
+RACE7_SKILL4_INFO = Du wirst im Falle deinens Ablebens mit 50 HP wiederbelebt, or be teleported back to your spawn
 
- [es]
+[es]
 RACENAME_0 = Sin raza
 RACENAME_1 = El azote de los no muertos
 RACENAME_2 = La alianza humana
@@ -1109,38 +1087,38 @@ RACE8_SKILL1 = Empalador
 RACE8_SKILL2 = Caparazón de espinas
 RACE8_SKILL3 = Escarabajos inmundos
 RACE8_SKILL4 = Plaga de langostas
-RACE1_SKILL1_INFO = %s: Te devuelve (%d, %d or %d) del daño producido en forma de vida
-RACE1_SKILL2_INFO = %s: Te aumenta tu velocidad y la de tus armas
-RACE1_SKILL3_INFO = %s: Te permite saltar más alto reduciendo tu gravedad
-RACE1_SKILL4_INFO = Ultimate, %s: Cuando mueres explotas matando a los enemigos cercanos
-RACE2_SKILL1_INFO = %s: Te hace parcialmente invisible, serás más difícil de ver
-RACE2_SKILL2_INFO = %s: Te da (%d, %d or %d) de vida al inicio de la ronda
-RACE2_SKILL3_INFO = %s: Cuando disparas a alguien tienes un (%d, %d or %d) de probabilidad de inmovilizarlo durante 1 segundo
-RACE2_SKILL4_INFO_B = Ultimate, %s: Te permite teletransportarte allí donde estés apuntando (evita los techos)
-RACE2_SKILL4_INFO_T = Ultimate, %s: Te permite teletransportarte al lado de un compañero (10 segundos de reposo)
-RACE3_SKILL1_INFO = %s: Te da un %d de posibilidades de hacer (2, 3, or 4) veces más daño del normal
-RACE3_SKILL2_INFO = %s: Las granadas siempre producirán (%d, %d or %d) veces más daño
-RACE3_SKILL3_INFO = %s: Te da un (%d, %d or %d) de posibilidades de recuperar tu equipamiento tras morir
-RACE3_SKILL4_INFO = Ultimate, %s: Descarga un rayo de luz que salta de un enemigo a otro
-RACE4_SKILL1_INFO = %s: Te da un (%d, %d or %d) de posibilidades de evitar cada disparo recibido
-RACE4_SKILL2_INFO = %s: Refleja un (%d, %d or %d) de daño recibido en la persona que te dispara
-RACE4_SKILL3_INFO = %s: Produce un (%d, %d or %d) de dañoñ extra en el enemigo
-RACE4_SKILL4_INFO = Ultimate, %s: Te permite paralizar al jugador enemigo durante 10 segundos
-RACE5_SKILL1_INFO = %s: Tienes un (%d, %d or %d) de posibilidades de resucitar al primer compañero que muere
-RACE5_SKILL2_INFO = %s: Tienes un (%d, %d or %d) de posibilidades de empujar y dañar (slap) a tu enemigo
-RACE5_SKILL3_INFO = %s: Robas un (%d, %d or %d) del dinero de tu enemigo
-RACE5_SKILL4_INFO = Ultimate, %s: Recibes un lanzallamas
-RACE6_SKILL1_INFO = %s: Cada (%d, %d or %d) segundos tu y tus compañeros cercanos reciben 1 de vida
-RACE6_SKILL2_INFO = %s: Tienes un (%d, %d or %d) de posibilidades de transformar a tu enemigo en un monstruo y lo enlentece
-RACE6_SKILL3_INFO = %s: Recibes (%d, %d or %d) cajas de serpientes cada ronda que dañan a los enemigos. Haz un bind para ability (o escribe say ability) para abrir una
-RACE6_SKILL4_INFO = Ultimate, %s: Eres invencible durante 2 segundos
-RACE7_SKILL1_INFO = %s: Tienes un (%d, %d or %d) de posibilidades de convertirte en un mulo
-RACE7_SKILL2_INFO = %s: Tienes un (%d, %d or %d) de posibilidades de anular los ultimates del enemigo
-RACE7_SKILL3_INFO = %s: Tienes un (%d, %d or %d) de posibilidades de lanzar una daga envenenada al enemigo
-RACE8_SKILL1_INFO = %s: Distorsionas lo que ve el enemigo
-RACE8_SKILL2_INFO = %s: Refleja un (%d, %d or %d) del daño recibido al que te dispara y ganas blindaje
-RACE8_SKILL3_INFO = %s: Tienes un (%d, %d or %d) de posibilidades de que tus escarabajos ataquen al enemigo al que apuntas
-RACE8_SKILL4_INFO = Ultimate, %s: Lanzas una plaga de langostas verdes al enemigo
+RACE1_SKILL1_INFO = Te devuelve (%d, %d or %d) del daño producido en forma de vida
+RACE1_SKILL2_INFO = Te aumenta tu velocidad y la de tus armas
+RACE1_SKILL3_INFO = Te permite saltar más alto reduciendo tu gravedad
+RACE1_SKILL4_INFO = Cuando mueres explotas matando a los enemigos cercanos
+RACE2_SKILL1_INFO = Te hace parcialmente invisible, serás más difícil de ver
+RACE2_SKILL2_INFO = Te da (%d, %d or %d) de vida al inicio de la ronda
+RACE2_SKILL3_INFO = Cuando disparas a alguien tienes un (%d, %d or %d) de probabilidad de inmovilizarlo durante 1 segundo
+RACE2_SKILL4_INFO_B = Te permite teletransportarte allí donde estés apuntando (evita los techos)
+RACE2_SKILL4_INFO_T = Te permite teletransportarte al lado de un compañero (10 segundos de reposo)
+RACE3_SKILL1_INFO = Te da un %d de posibilidades de hacer (2, 3, or 4) veces más daño del normal
+RACE3_SKILL2_INFO = Las granadas siempre producirán (%d, %d or %d) veces más daño
+RACE3_SKILL3_INFO = Te da un (%d, %d or %d) de posibilidades de recuperar tu equipamiento tras morir
+RACE3_SKILL4_INFO = Descarga un rayo de luz que salta de un enemigo a otro
+RACE4_SKILL1_INFO = Te da un (%d, %d or %d) de posibilidades de evitar cada disparo recibido
+RACE4_SKILL2_INFO = Refleja un (%d, %d or %d) de daño recibido en la persona que te dispara
+RACE4_SKILL3_INFO = Produce un (%d, %d or %d) de dañoñ extra en el enemigo
+RACE4_SKILL4_INFO = Te permite paralizar al jugador enemigo durante 10 segundos
+RACE5_SKILL1_INFO = Tienes un (%d, %d or %d) de posibilidades de resucitar al primer compañero que muere
+RACE5_SKILL2_INFO = Tienes un (%d, %d or %d) de posibilidades de empujar y dañar (slap) a tu enemigo
+RACE5_SKILL3_INFO = Robas un (%d, %d or %d) del dinero de tu enemigo
+RACE5_SKILL4_INFO = Recibes un lanzallamas
+RACE6_SKILL1_INFO = Cada (%d, %d or %d) segundos tu y tus compañeros cercanos reciben 1 de vida
+RACE6_SKILL2_INFO = Tienes un (%d, %d or %d) de posibilidades de transformar a tu enemigo en un monstruo y lo enlentece
+RACE6_SKILL3_INFO = Recibes (%d, %d or %d) cajas de serpientes cada ronda que dañan a los enemigos. Haz un bind para ability (o escribe say ability) para abrir una
+RACE6_SKILL4_INFO = Eres invencible durante 2 segundos
+RACE7_SKILL1_INFO = Tienes un (%d, %d or %d) de posibilidades de convertirte en un mulo
+RACE7_SKILL2_INFO = Tienes un (%d, %d or %d) de posibilidades de anular los ultimates del enemigo
+RACE7_SKILL3_INFO = Tienes un (%d, %d or %d) de posibilidades de lanzar una daga envenenada al enemigo
+RACE8_SKILL1_INFO = Distorsionas lo que ve el enemigo
+RACE8_SKILL2_INFO = Refleja un (%d, %d or %d) del daño recibido al que te dispara y ganas blindaje
+RACE8_SKILL3_INFO = Tienes un (%d, %d or %d) de posibilidades de que tus escarabajos ataquen al enemigo al que apuntas
+RACE8_SKILL4_INFO = Lanzas una plaga de langostas verdes al enemigo
 
 CURRENT_ITEMS_RING = Objetos: %s y %s x%d
 CURRENT_ITEMS = Objetos: %s y %s
@@ -1149,7 +1127,7 @@ CURRENT_ITEM = Objeto: %s
 PLAYERITEM_AND_REGEN = %s y %s x%d
 PLAYERITEM_AND = %s y %s
 YOU_GAINED_A_LEVEL = Has ganado un nivel
-ULTIMATE = Ultimate
+WORD_ULTIMATE= Ultimate
 HAS_REVIVED_YOU = %s te ha resucitado
 YOU_HAVE_REVIVED = Has resucitado a %s, ¡así se hace!
 AWARDED_FOR_HEADSHOT = Has recibido %d XP por un disparo en la cabeza
@@ -1165,14 +1143,6 @@ ALREADY_SELECTED_SKILL_POINTS = Has utilizado ya todos tus puntos de habilidad
 LEVEL_SELECT_SKILL_FUNC = ^n%d. %s Nivel %d\w
 ULTIMATE_SELECT_SKILL_FUNC = ^n4. Ultimate: %s\w
 CANCEL_SELECT_SKILL_FUNC = ^n^n0. Cancelar
-RACES_9 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\ySelecciona Héroe\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n9. %s^n^n
-RACES_8 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\ySelecciona Héroe\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n^n9. Autoselección
-RACES_5 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n5. %s^n^n9. Autoselección
-RACES_4 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n9. Autoselección
-RACES_9_XP = %s\RExperiencia^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\ySelecciona Héroe^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n\w9. %s\y\R%s^n
-RACES_8_XP = %s\RExperiencia^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\ySSelecciona Héroe^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n^n\w9. Autoselección
-RACES_5_XP = %s\RExperiencia^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n\w5. %s\y\R%s^n^n\w6. Autoselección
-RACES_4_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\w5. Autoselección
 SHOT_DEFLECTED = Has evitado un disparo de un mulo
 UNTIL_YOUR_NEXT_GRENADE = %d segundo(s) hasta tu siguiente granada
 DONT_DIE_GOOSE = ¡No te dejes matar la próxima vez y te daré otra granada, flipao!
@@ -1286,7 +1256,7 @@ THE_ADMIN_JUST_GAVE_YOU_XP = El administrador te ha premiado con %d de experienc
 TERRORISTS = Terroristas
 CT = Countra-Terroristas
 EVERYONE = Todos
-SKILLS_STRING = %s Habilidades
+WORD_SKILLS = Habilidades
 RACE_INFORMATION = Información de la raza
 WAS_KILLED_BY = %s ha sido eliminado por %s con la %s
 THIS_MOD_WAS_DEVELOPED = Este mod ha sido desarrollado por 4HM | Pimp Daddy, visita www.4hm.net (forums) para más detalles%s
@@ -1332,16 +1302,16 @@ say /war3menu -  Muestra el menú del jugador de War3 Frozen Throne%s
 say /ability - Si tienes las cajas de serpientes, abre una%s
 say /resetskills - Resetea tus habilidades%s		
 say /resetxp - Resetea tu nivel y tu XP a 0%s
-: END
+:
 
-DOD_RACE3_SKILL2_INFO = %s: Las granadas SIEMPRE harán (%d, %d or %d) veces más daño del normal y explotan a los 2 segundos en vez de los 5 habituales
+DOD_RACE3_SKILL2_INFO = Las granadas SIEMPRE harán (%d, %d or %d) veces más daño del normal y explotan a los 2 segundos en vez de los 5 habituales
 
 AWARDED_FOR_KILLING_BOMB_D = recibió %d XP por matar al desactivador de la bomba
 AWARDED_FOR_KILLING_BOMB_C = recibió %d XP por matar al que lleva la bomba
 
-RACE7_SKILL4_INFO = Ultimate, %s: Resucitas una vez con 50 de vida, or be teleported back to your spawn
+RACE7_SKILL4_INFO = Resucitas una vez con 50 de vida, or be teleported back to your spawn
 
- [nl]
+[nl]
 RACENAME_0 = Geen ras
 RACENAME_1 = Undead Scourge
 RACENAME_2 = Human Alliance
@@ -1430,38 +1400,38 @@ RACE8_SKILL1 = Impale
 RACE8_SKILL2 = Spiked Carapace
 RACE8_SKILL3 = Carrion Beetles
 RACE8_SKILL4 = Locust Swarm
-RACE1_SKILL1_INFO = %s: Geeft je (%d%%, %d%% of %d%%) van de schade die je aanricht terug als health
-RACE1_SKILL2_INFO = %s: Geeft je een snelheidsboost, ook hebben de wapens geen effect meer op je snelheid
-RACE1_SKILL3_INFO = %s: Laat je hoger springen door je zwaartekracht je verkleinen
-RACE1_SKILL4_INFO = Ultimate, %s: Als je doodgaat zul je exploderen, waardoor ook dichtbijstaande vijanden gedood worden
-RACE2_SKILL1_INFO = %s: Maakt je gedeeltelijk onzichtbaar, je bent moeilijker te zien
-RACE2_SKILL2_INFO = %s: Geeft je (%d, %d of %d) health aan het begin van de ronde.
-RACE2_SKILL3_INFO = %s: Als je op iemand schiet, heb je (%d, %d of %d) kans om hem 1 seconde stil te laten staan
-RACE2_SKILL4_INFO_B = Ultimate, %s: Laat je teleporteren naar waar je richt (ontwijk richels!)
-RACE2_SKILL4_INFO_T = Ultimate, %s: Laat je teleporteren naar een teammaat (10 seconden afkoeltijd)
-RACE3_SKILL1_INFO = %s: Geeft je %d kans om (2, 3, or 4) keer de normale schade aan te richten
-RACE3_SKILL2_INFO = %s: Granaten zullen ALTIJD (%d, %d of %d) keer de normale schade aanrichten
-RACE3_SKILL3_INFO = %s: Geeft je (%d, %d of %d) kans om je uitrusting terug te krijgen aan het begin van de ronde
-RACE3_SKILL4_INFO = Ultimate, %s: Schiet een bliksemstraal die naar dichtbijzijnde vijanden over schiet
-RACE4_SKILL1_INFO = %s: Geeft je (%d, %d of %d) kans om elk schot te ontwijken
-RACE4_SKILL2_INFO = %s: Doet (%d, %d of %d) weerspiegelde schade aan degene die op je schoot
-RACE4_SKILL3_INFO = %s: Doet (%d, %d of %d) extra schade aan je vijand
-RACE4_SKILL4_INFO = Ultimate, %s: Laat je een vijandige speler vastzetten zodat hij niet kan bewegen voor 10 seconden
-RACE5_SKILL1_INFO = %s: Je hebt (%d, %d of %d) kans om een teammaat terug te halen uit de dood, zodra hij wordt gedood 
-RACE5_SKILL2_INFO = %s: Je hebt (%d, %d of %d) kans om je vijand te slaan
-RACE5_SKILL3_INFO = %s: Steel (%d, %d of %d) van je vijandelijke speler's geld
-RACE5_SKILL4_INFO = Ultimate, %s: Je krijgt een vlammenwerper
-RACE6_SKILL1_INFO = %s: Elke (%d, %d of %d) seconden krijgen jij en je dichtbijzijnde teammaten 1 HP
-RACE6_SKILL2_INFO = %s: Je hebt (%d, %d of %d) kans om je vijand in een goober te veranderen (wat ze afremd)
-RACE6_SKILL3_INFO = %s: Je krijgt (%d, %d of %d) serpent wards elke ronde die vijandelijke speler die dichtbij komen kunnen schaden, bind een knop aan ability (of zeg ability) om een serpent ward neer te zetten
-RACE6_SKILL4_INFO = Ultimate, %s: 2 seconden onschadelijk
-RACE7_SKILL1_INFO = %s: Je hebt (%d, %d of %d) kans om een mole te worden
-RACE7_SKILL2_INFO = %s: Je hebt (%d, %d of %d) kans om vijandelijke ultimates uit te schakelen
-RACE7_SKILL3_INFO = %s: Je hebt (%d, %d of %d) kans om een giftige angel naar een vijand te schieten
-RACE8_SKILL1_INFO = %s: Vervormd de vijand
-RACE8_SKILL2_INFO = %s: Doet (%d, %d of %d) weerspiegelde schade aan degene die op je schoot en je krijgt armor
-RACE8_SKILL3_INFO = %s: Je hebt (%d, %d of %d) kans dat jouw beetles de vijand aanvallen
-RACE8_SKILL4_INFO = Ultimate, %s: Een swerm van Green Locusts valt de vijand aan
+RACE1_SKILL1_INFO = Geeft je (%d%%, %d%% of %d%%) van de schade die je aanricht terug als health
+RACE1_SKILL2_INFO = Geeft je een snelheidsboost, ook hebben de wapens geen effect meer op je snelheid
+RACE1_SKILL3_INFO = Laat je hoger springen door je zwaartekracht je verkleinen
+RACE1_SKILL4_INFO = Als je doodgaat zul je exploderen, waardoor ook dichtbijstaande vijanden gedood worden
+RACE2_SKILL1_INFO = Maakt je gedeeltelijk onzichtbaar, je bent moeilijker te zien
+RACE2_SKILL2_INFO = Geeft je (%d, %d of %d) health aan het begin van de ronde.
+RACE2_SKILL3_INFO = Als je op iemand schiet, heb je (%d, %d of %d) kans om hem 1 seconde stil te laten staan
+RACE2_SKILL4_INFO_B = Laat je teleporteren naar waar je richt (ontwijk richels!)
+RACE2_SKILL4_INFO_T = Laat je teleporteren naar een teammaat (10 seconden afkoeltijd)
+RACE3_SKILL1_INFO = Geeft je %d kans om (2, 3, or 4) keer de normale schade aan te richten
+RACE3_SKILL2_INFO = Granaten zullen ALTIJD (%d, %d of %d) keer de normale schade aanrichten
+RACE3_SKILL3_INFO = Geeft je (%d, %d of %d) kans om je uitrusting terug te krijgen aan het begin van de ronde
+RACE3_SKILL4_INFO = Schiet een bliksemstraal die naar dichtbijzijnde vijanden over schiet
+RACE4_SKILL1_INFO = Geeft je (%d, %d of %d) kans om elk schot te ontwijken
+RACE4_SKILL2_INFO = Doet (%d, %d of %d) weerspiegelde schade aan degene die op je schoot
+RACE4_SKILL3_INFO = Doet (%d, %d of %d) extra schade aan je vijand
+RACE4_SKILL4_INFO = Laat je een vijandige speler vastzetten zodat hij niet kan bewegen voor 10 seconden
+RACE5_SKILL1_INFO = Je hebt (%d, %d of %d) kans om een teammaat terug te halen uit de dood, zodra hij wordt gedood 
+RACE5_SKILL2_INFO = Je hebt (%d, %d of %d) kans om je vijand te slaan
+RACE5_SKILL3_INFO = Steel (%d, %d of %d) van je vijandelijke speler's geld
+RACE5_SKILL4_INFO = Je krijgt een vlammenwerper
+RACE6_SKILL1_INFO = Elke (%d, %d of %d) seconden krijgen jij en je dichtbijzijnde teammaten 1 HP
+RACE6_SKILL2_INFO = Je hebt (%d, %d of %d) kans om je vijand in een goober te veranderen (wat ze afremd)
+RACE6_SKILL3_INFO = Je krijgt (%d, %d of %d) serpent wards elke ronde die vijandelijke speler die dichtbij komen kunnen schaden, bind een knop aan ability (of zeg ability) om een serpent ward neer te zetten
+RACE6_SKILL4_INFO = 2 seconden onschadelijk
+RACE7_SKILL1_INFO = Je hebt (%d, %d of %d) kans om een mole te worden
+RACE7_SKILL2_INFO = Je hebt (%d, %d of %d) kans om vijandelijke ultimates uit te schakelen
+RACE7_SKILL3_INFO = Je hebt (%d, %d of %d) kans om een giftige angel naar een vijand te schieten
+RACE8_SKILL1_INFO = Vervormd de vijand
+RACE8_SKILL2_INFO = Doet (%d, %d of %d) weerspiegelde schade aan degene die op je schoot en je krijgt armor
+RACE8_SKILL3_INFO = Je hebt (%d, %d of %d) kans dat jouw beetles de vijand aanvallen
+RACE8_SKILL4_INFO = Een swerm van Green Locusts valt de vijand aan
 
 CURRENT_ITEMS_RING = Huidige Items: %s en %s x%d
 CURRENT_ITEMS = Huidige Items: %s en %s
@@ -1470,7 +1440,7 @@ CURRENT_ITEM = Huidig Item: %s
 PLAYERITEM_AND_REGEN = %s en %s x%d
 PLAYERITEM_AND = %s en %s
 YOU_GAINED_A_LEVEL = Je bent een level omhoog gegaan
-ULTIMATE = Ultimate
+WORD_ULTIMATE= Ultimate
 HAS_REVIVED_YOU = %s heeft je teruggehaald uit de dood
 YOU_HAVE_REVIVED = Je hebt %s teruggehaald uit de dood, ga zo door !
 AWARDED_FOR_HEADSHOT = He hebt %d XP extra gekregen voor het doden van iemand door middel van een headshot
@@ -1486,14 +1456,6 @@ ALREADY_SELECTED_SKILL_POINTS = Je hebt alle beschikbare skillpunten al gebruikt
 LEVEL_SELECT_SKILL_FUNC = ^n%d. %s Level %d\w
 ULTIMATE_SELECT_SKILL_FUNC = ^n4. Ultimate: %s\w
 CANCEL_SELECT_SKILL_FUNC = ^n^n0. Annuleren
-RACES_9 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\ySelecteer Hero\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n9. %s^n^n
-RACES_8 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\ySelecteer Hero\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n^n9. Auto-select
-RACES_5 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n5. %s^n^n9. Auto-select
-RACES_4 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n9. Auto-select
-RACES_9_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\ySelect Hero^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n\w9. %s\y\R%s^n
-RACES_8_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\ySelect Hero^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n^n\w9. Auto-select
-RACES_5_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n\w5. %s\y\R%s^n^n\w6. Auto-select
-RACES_4_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\w5. Auto-select
 SHOT_DEFLECTED = Een shot door een mole is afgeketst
 UNTIL_YOUR_NEXT_GRENADE = %d seconde(n) tot je volgende granaat
 DONT_DIE_GOOSE = Zorg dat je de volgende keer niet wordt gedood, dan krijg je nog een granaat!
@@ -1607,7 +1569,7 @@ THE_ADMIN_JUST_GAVE_YOU_XP = De admin heeft je %d XP gegeven.
 TERRORISTS = Terroristen
 CT = Counter-Terroristen
 EVERYONE = Iedereen
-SKILLS_STRING = %s Skills
+WORD_SKILLS = Skills
 RACE_INFORMATION = Ras Informatie
 WAS_KILLED_BY = %s is gedood door %s's %s
 THIS_MOD_WAS_DEVELOPED = Deze mod is gemaakt door 4HM | Pimp Daddy, kijk op www.4hm.net (forums) voor meer details%s
@@ -1653,9 +1615,9 @@ zeg /war3menu - Laat je het War3 Frozen Throne Player menu zien%s
 zeg /ability - als je serpent wards hebt worden ze met dit commando geplant%s
 zeg /resetskills - Laat je je skills opnieuw kiezen%s
 zeg /resetxp - Zet je level en XP terug naar 0%s
-: END
+:
 
-DOD_RACE3_SKILL2_INFO = %s: Granaten zullen ALTIJD (%d, %d or %d) keer de normale schade aanrichten en de granaats ontploft na 2 seconden i.p.v. de normale 5
+DOD_RACE3_SKILL2_INFO = Granaten zullen ALTIJD (%d, %d or %d) keer de normale schade aanrichten en de granaats ontploft na 2 seconden i.p.v. de normale 5
 AWARDED_FOR_KILLING_BOMB_D = Je hebt %d XP gekregen voor het doden van de defuser.
 AWARDED_FOR_KILLING_BOMB_C = Je hebt %d XP gekregen voor het doden van de drager.
 
@@ -1668,9 +1630,9 @@ SELECT_RACE_TITLE = %s\RExperience^n^n
 SELECT_RACE_FOOTER = ^n\w%d. Auto-select
 SELECT_HERO = ^n\ySelecteer Hero^n^n 
 
-RACE7_SKILL4_INFO = Ultimate, %s: Kom 1 keer terug uit de dood met 50 health, of je wordt 1 keer terug geteleport naar de spawn.
+RACE7_SKILL4_INFO = Kom 1 keer terug uit de dood met 50 health, of je wordt 1 keer terug geteleport naar de spawn.
 
- [da]
+[da]
 RACENAME_0 = Ingen Race 
 RACENAME_1 = Undead Scourge 
 RACENAME_2 = Human Alliance 
@@ -1759,38 +1721,38 @@ RACE8_SKILL1 = Impale
 RACE8_SKILL2 = Spiked Carapace 
 RACE8_SKILL3 = Carrion Beetles 
 RACE8_SKILL4 = Locust Swarm 
-RACE1_SKILL1_INFO = %s: Giver dig (%d%%, %d%% or %d%%) af den skade du giver i kamp tilbage som liv.
-RACE1_SKILL2_INFO = %s: Gør dig hurtigere, og du løber lige hurtigt uanset hvilket våben du bærer.
-RACE1_SKILL3_INFO = %s: Tillader dig at hoppe højere ved  at nedsætte din tyngdekraft.
-RACE1_SKILL4_INFO = Ultimate, %s: Når du dør vil du eksplodere og dræbe alle fjender omkring dig.
-RACE2_SKILL1_INFO = %s: Gør dig delvist usynlig, og du vil blive svær at se.
-RACE2_SKILL2_INFO = %s: Giver dig (%d, %d or %d) mere liv når du starter. 
-RACE2_SKILL3_INFO = %s: Når du rammer nogen har du (%d, %d or %d) chance for at lamme dem i 1 second .
-RACE2_SKILL4_INFO_B = Ultimate, %s: Tillader dig at telepotere hen hvor du sigter. (Undgå loft) 
-RACE2_SKILL4_INFO_T = Ultimate, %s: Tillader di og telepotere hen til en holdkammerat. (10 sekunders nedkølling) 
-RACE3_SKILL1_INFO = %s: Giver dig %d chance For at gøre (2, 3, or 4) gange normal skade.
-RACE3_SKILL2_INFO = %s: Grenader vil ALTID Gøre (%d, %d or %d) gange normal skade. 
-RACE3_SKILL3_INFO = %s: Giver dig (%d, %d or %d) chance for at få dit udstyrer tilbage når du dør. 
-RACE3_SKILL4_INFO = Ultimate, %s: Laver et lyn som hoppe til alle fjender omkring dig. 
-RACE4_SKILL1_INFO = %s: Giver dig (%d, %d or %d) chance for at undgå kuglerne.
-RACE4_SKILL2_INFO = %s: Giver (%d, %d or %d) skade til den der skyder på dig.
-RACE4_SKILL3_INFO = %s: Giver (%d, %d or %d) extra skade til fjenden.
-RACE4_SKILL4_INFO = Ultimate, %s: Tillader dig at lamme en spiller i 10 sekunder. 
-RACE5_SKILL1_INFO = %s: Du har (%d, %d or %d) chance for at genoplive den første holdkammerat der dør.
-RACE5_SKILL2_INFO = %s: Du har (%d, %d or %d) chance for at "slå" en fjende
-RACE5_SKILL3_INFO = %s: Stjæler (%d, %d or %d) af fjendens penge.
-RACE5_SKILL4_INFO = Ultimate, %s: Du har fået en flammekaster. 
-RACE6_SKILL1_INFO = %s: Hver (%d, %d or %d) sekunder vil dig og dine holdkammerater omkring dig få 1 HP. 
-RACE6_SKILL2_INFO = %s: Du har (%d, %d or %d) chance for at forvandle en fjende til en alien (som gør dem langsommere) 
-RACE6_SKILL3_INFO = %s: Du fik (%d, %d or %d) Serpent Wards hver runde som skader fjender der går igennem den, skriv i consolen "bind * ability" for at pladsere en (* er den knap du vil bruge)
-RACE6_SKILL4_INFO = Ultimate, %s: Udødelig i 2 sekunder.
-RACE7_SKILL1_INFO = %s: Du har (%d, %d or %d) chance blive en "mole" 
-RACE7_SKILL2_INFO = %s: Du har (%d, %d or %d) chance for at forhindre fjenden i at bruge ultimates 
-RACE7_SKILL3_INFO = %s: Du har (%d, %d or %d) chance for at ramme fjenden med en giftig kniv.
-RACE8_SKILL1_INFO = %s: Forvirrer fjenden. 
-RACE8_SKILL2_INFO = %s: giver (%d, %d or %d) skade til fjenden der skyder på dig, men du får armor af det.
-RACE8_SKILL3_INFO = %s: Du har (%d, %d or %d) chance for at dine biller angriber fjenden, når du sigter på ham. 
-RACE8_SKILL4_INFO = Ultimate, %s: En sværm af grønne myg angriber fjenden.
+RACE1_SKILL1_INFO = Giver dig (%d%%, %d%% or %d%%) af den skade du giver i kamp tilbage som liv.
+RACE1_SKILL2_INFO = Gør dig hurtigere, og du løber lige hurtigt uanset hvilket våben du bærer.
+RACE1_SKILL3_INFO = Tillader dig at hoppe højere ved  at nedsætte din tyngdekraft.
+RACE1_SKILL4_INFO = Når du dør vil du eksplodere og dræbe alle fjender omkring dig.
+RACE2_SKILL1_INFO = Gør dig delvist usynlig, og du vil blive svær at se.
+RACE2_SKILL2_INFO = Giver dig (%d, %d or %d) mere liv når du starter. 
+RACE2_SKILL3_INFO = Når du rammer nogen har du (%d, %d or %d) chance for at lamme dem i 1 second .
+RACE2_SKILL4_INFO_B = Tillader dig at telepotere hen hvor du sigter. (Undgå loft) 
+RACE2_SKILL4_INFO_T = Tillader di og telepotere hen til en holdkammerat. (10 sekunders nedkølling) 
+RACE3_SKILL1_INFO = Giver dig %d chance For at gøre (2, 3, or 4) gange normal skade.
+RACE3_SKILL2_INFO = Grenader vil ALTID Gøre (%d, %d or %d) gange normal skade. 
+RACE3_SKILL3_INFO = Giver dig (%d, %d or %d) chance for at få dit udstyrer tilbage når du dør. 
+RACE3_SKILL4_INFO = Laver et lyn som hoppe til alle fjender omkring dig. 
+RACE4_SKILL1_INFO = Giver dig (%d, %d or %d) chance for at undgå kuglerne.
+RACE4_SKILL2_INFO = Giver (%d, %d or %d) skade til den der skyder på dig.
+RACE4_SKILL3_INFO = Giver (%d, %d or %d) extra skade til fjenden.
+RACE4_SKILL4_INFO = Tillader dig at lamme en spiller i 10 sekunder. 
+RACE5_SKILL1_INFO = Du har (%d, %d or %d) chance for at genoplive den første holdkammerat der dør.
+RACE5_SKILL2_INFO = Du har (%d, %d or %d) chance for at "slå" en fjende
+RACE5_SKILL3_INFO = Stjæler (%d, %d or %d) af fjendens penge.
+RACE5_SKILL4_INFO = Du har fået en flammekaster. 
+RACE6_SKILL1_INFO = Hver (%d, %d or %d) sekunder vil dig og dine holdkammerater omkring dig få 1 HP. 
+RACE6_SKILL2_INFO = Du har (%d, %d or %d) chance for at forvandle en fjende til en alien (som gør dem langsommere) 
+RACE6_SKILL3_INFO = Du fik (%d, %d or %d) Serpent Wards hver runde som skader fjender der går igennem den, skriv i consolen "bind * ability" for at pladsere en (* er den knap du vil bruge)
+RACE6_SKILL4_INFO = Udødelig i 2 sekunder.
+RACE7_SKILL1_INFO = Du har (%d, %d or %d) chance blive en "mole" 
+RACE7_SKILL2_INFO = Du har (%d, %d or %d) chance for at forhindre fjenden i at bruge ultimates 
+RACE7_SKILL3_INFO = Du har (%d, %d or %d) chance for at ramme fjenden med en giftig kniv.
+RACE8_SKILL1_INFO = Forvirrer fjenden. 
+RACE8_SKILL2_INFO = giver (%d, %d or %d) skade til fjenden der skyder på dig, men du får armor af det.
+RACE8_SKILL3_INFO = Du har (%d, %d or %d) chance for at dine biller angriber fjenden, når du sigter på ham. 
+RACE8_SKILL4_INFO = En sværm af grønne myg angriber fjenden.
 
 CURRENT_ITEMS_RING = Nuværerne ting: %s og %s x%d. 
 CURRENT_ITEMS = Nuværerne ting: %s og %s. 
@@ -1799,7 +1761,7 @@ CURRENT_ITEM = Nuværerne ting: %s.
 PLAYERITEM_AND_REGEN = %s og %s x%d. 
 PLAYERITEM_AND = %s og %s. 
 YOU_GAINED_A_LEVEL = Du steg et Level. 
-ULTIMATE = Ultimate
+WORD_ULTIMATE= Ultimate
 HAS_REVIVED_YOU = %s Har genoplivede dig. 
 YOU_HAVE_REVIVED = Du har genoplivede %s, Sådan!! 
 AWARDED_FOR_HEADSHOT = Du er blevet tildelt %d XP extra for at dræbe en med et headshot.
@@ -1815,14 +1777,6 @@ ALREADY_SELECTED_SKILL_POINTS = Du har allerede opbrugt alle dine skill points!
 LEVEL_SELECT_SKILL_FUNC = ^n%d. %s Level %d\w 
 ULTIMATE_SELECT_SKILL_FUNC = ^n4. Ultimate: %s\w 
 CANCEL_SELECT_SKILL_FUNC = ^n^n0. Fortryd 
-RACES_9 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\yVælg Helt\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n9. %s^n^n 
-RACES_8 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\yVælg Helt\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n^n9. Auto-vælg 
-RACES_5 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n5. %s^n^n9. Auto-vælg 
-RACES_4 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n9. Auto-vælg 
-RACES_9_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\yVælg Helt^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n\w9. %s\y\R%s^n 
-RACES_8_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\yVælg Helt^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n^n\w9. Auto-vælg 
-RACES_5_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n\w5. %s\y\R%s^n^n\w6. Auto-vælg
-RACES_4_XP = %s\RExperience^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\w5. Auto-vælg
 SHOT_DEFLECTED = A shot by a mole was deflected 
 UNTIL_YOUR_NEXT_GRENADE = %d sekund(er) indtil din næste granat 
 DONT_DIE_GOOSE = Lad vær med at dø næste gang eller jeg kaster en ny granat, din gås 
@@ -1936,7 +1890,7 @@ THE_ADMIN_JUST_GAVE_YOU_XP = Adminen tildelte dig lige %d XP.
 TERRORISTS = Terrorister 
 CT = Counter-Terrorister 
 EVERYONE = Alle 
-SKILLS_STRING = %s Skills 
+WORD_SKILLS = Skills 
 RACE_INFORMATION = Race Information 
 WAS_KILLED_BY = %s Blev drabt af %s's %s 
 THIS_MOD_WAS_DEVELOPED = Dette mod blev udviklet af 4HM | Pimp Daddy, Besøg www.4hm.net (forum) for flere detaljer%s 
@@ -1982,9 +1936,9 @@ say /war3menu - Viser War3 Frozen Throne Spiller menu%s
 say /ability - Hvis du har nogle Serpent Wards Vil de blive plantet%s 
 say /resetskills - resets your skills%s 
 say /resetxp - Vil sætte din Xp og level til 0%s 
-: END 
+: 
 
-DOD_RACE3_SKILL2_INFO = %s: Ganater vil ALTID Gøre (%d, %d or %d) gange normal skade og granater er sat til at eksplodere after 2 sekunder istedet for de normale 5. 
+DOD_RACE3_SKILL2_INFO = Ganater vil ALTID Gøre (%d, %d or %d) gange normal skade og granater er sat til at eksplodere after 2 sekunder istedet for de normale 5. 
 AWARDED_FOR_KILLING_BOMB_D = Do modtog %d XP for  at dræbe ham der prøver  at desarmere bomben. 
 AWARDED_FOR_KILLING_BOMB_C = Du modtog %d XP for at dræbe ham der bærer bomben. 
 
@@ -1997,9 +1951,9 @@ SELECT_RACE_TITLE = %s\RExperience^n^n
 SELECT_RACE_FOOTER = ^n\w%d. Auto-vælg 
 SELECT_HERO = ^n\yVælg Helt^n^n 
 
-RACE7_SKILL4_INFO = Ultimate, %s: Genoplive med kun 50 i liv, or be teleported back to your spawn
+RACE7_SKILL4_INFO = Genoplive med kun 50 i liv, or be teleported back to your spawn
 
- [pl]
+[pl]
 RACENAME_0 = Brak Rasy
 RACENAME_1 = Nieumarli
 RACENAME_2 = Ludzie
@@ -2088,39 +2042,39 @@ RACE8_SKILL1 = Klujaca Aura
 RACE8_SKILL2 = Mocny Pancerz
 RACE8_SKILL3 = Padlina Chrzaszczy
 RACE8_SKILL4 = Roj Szaranczy
-RACE1_SKILL1_INFO = %s: Daje Ci (%d%%, %d%% lub %d%%) szans na odzyskanie HP przy kazdym trafieniu przeciwnika
-RACE1_SKILL2_INFO = %s: Pozwala poruszac sie szybciej, nie ma roznicy z jaka bronia biegniesz
-RACE1_SKILL3_INFO = %s: Grawitacja slabiej na Ciebie dziala
-RACE1_SKILL4_INFO = Ultimate, %s: Przy umieraniu lub uaktywnieniu wybuchasz raniac wszystkich wokol
-RACE2_SKILL1_INFO = %s: Stajesz sie czesciowo niewidzialny, zaleznie od poziomu tej Umiejetnosci. Im lzejsza bron tym bardziej jestes niewidzialny
-RACE2_SKILL2_INFO = %s: Daje Ci (%d, %d lub %d) dodatkowych HP na starcie rundy
-RACE2_SKILL3_INFO = %s: Przy trafieniu przeciwnika masz (%d, %d lub %d) szans na unieruchomienie go na 1 sekunde
-RACE2_SKILL4_INFO_B = Ultimate, %s: Teleportujesz sie tam gdzie celujesz (unikaj sufitow)
-RACE2_SKILL4_INFO_T = Ultimate, %s: Teleportujesz sie do kogos z Twojej druzyny (ochlodzenie 10 sekund)
-RACE3_SKILL1_INFO = %s: Daje Ci %d szans na zadanie przeciwnikowi (2, 3, lub 4)krotnie wiekszych obrazen
-RACE3_SKILL2_INFO = %s: Granaty ZAWSZE zadadza (%d, %d lub %d)krotnie wiecej obrazen
-RACE3_SKILL3_INFO = %s: Daje Ci (%d, %d lub %d) szans na odzyskanie ekwipunku
-RACE3_SKILL4_INFO = Ultimate, %s: Uwolniona blyskawica odbija sie od wszystkich pobliskich nieprzyjaciol zadajac im obrazenia
-RACE4_SKILL1_INFO = %s: Masz (%d, %d lub %d) szans na unikniecie kazdego pocisku
-RACE4_SKILL2_INFO = %s: Zadaje (%d, %d lub %d) lustrzanych obrazen osobie ktora do Ciebie strzela
-RACE4_SKILL3_INFO = %s: Zadaje (%d, %d lub %d) dodatkowych obrazen przeciwnikowi
-RACE4_SKILL4_INFO = Ultimate, %s: Uniemozliwia ruch przeciwnika na 10 sekund
-RACE5_SKILL1_INFO = %s: Masz (%d, %d lub %d) szans na ozywienie kogos z Twojej druzyny
-RACE5_SKILL2_INFO = %s: Masz (%d, %d lub %d) szans na SLAPniecie przeciwnika przy kazdym trafieniu
-RACE5_SKILL3_INFO = %s: Kradniesz (%d, %d lub %d) pieniedzy przeciwnikowi przy trafieniu
-RACE5_SKILL4_INFO = Ultimate, %s: Dostajesz miotacz ognia
-RACE6_SKILL1_INFO = %s: Co kazde (%d, %d lub %d) sekundy Ty i najblizsi z Twojej druzyny zyskujecie 1 HP
-RACE6_SKILL2_INFO = %s: Masz (%d, %d lub %d) szanse ze Twoj przeciwnik trafiony zamieni sie w Duzego Goobera
-RACE6_SKILL3_INFO = %s: Otrzymujesz (%d, %d lub %d) Weze co runde ktore rania najblizszych wrogow, zbinduj klawisz dla ability (lub say ability) by postawic jednego
-RACE6_SKILL4_INFO = Ultimate, %s: Niesmiertelnosc przez 2 sekundy
-RACE7_SKILL1_INFO = %s: Masz (%d, %d lub %d) szans na zostanie Kretem
-RACE7_SKILL2_INFO = %s: Masz (%d, %d lub %d) szans na wylaczenie przeciwnikowi Ultimate
-RACE7_SKILL3_INFO = %s: Masz (%d, %d lub %d) szans na rzucenie w przeciwnika zatrutym sztyletem
-RACE7_SKILL4_INFO = Ultimate, %s: Odradzasz sie majac 50 punktow zycia
-RACE8_SKILL1_INFO = %s: Kluje przeciwnika
-RACE8_SKILL2_INFO = %s: Zadaje (%d, %d lub %d) lustrzanych obrazen a ty zyskujesz zbroje
-RACE8_SKILL3_INFO = %s: Masz (%d, %d lub %d) szans na atak Chrzaszczami przeciwnika
-RACE8_SKILL4_INFO = Ultimate, %s: Roj zielonej Szaranczy atakuje nieprzyjaciela
+RACE1_SKILL1_INFO = Daje Ci (%d%%, %d%% lub %d%%) szans na odzyskanie HP przy kazdym trafieniu przeciwnika
+RACE1_SKILL2_INFO = Pozwala poruszac sie szybciej, nie ma roznicy z jaka bronia biegniesz
+RACE1_SKILL3_INFO = Grawitacja slabiej na Ciebie dziala
+RACE1_SKILL4_INFO = Przy umieraniu lub uaktywnieniu wybuchasz raniac wszystkich wokol
+RACE2_SKILL1_INFO = Stajesz sie czesciowo niewidzialny, zaleznie od poziomu tej Umiejetnosci. Im lzejsza bron tym bardziej jestes niewidzialny
+RACE2_SKILL2_INFO = Daje Ci (%d, %d lub %d) dodatkowych HP na starcie rundy
+RACE2_SKILL3_INFO = Przy trafieniu przeciwnika masz (%d, %d lub %d) szans na unieruchomienie go na 1 sekunde
+RACE2_SKILL4_INFO_B = Teleportujesz sie tam gdzie celujesz (unikaj sufitow)
+RACE2_SKILL4_INFO_T = Teleportujesz sie do kogos z Twojej druzyny (ochlodzenie 10 sekund)
+RACE3_SKILL1_INFO = Daje Ci %d szans na zadanie przeciwnikowi (2, 3, lub 4)krotnie wiekszych obrazen
+RACE3_SKILL2_INFO = Granaty ZAWSZE zadadza (%d, %d lub %d)krotnie wiecej obrazen
+RACE3_SKILL3_INFO = Daje Ci (%d, %d lub %d) szans na odzyskanie ekwipunku
+RACE3_SKILL4_INFO = Uwolniona blyskawica odbija sie od wszystkich pobliskich nieprzyjaciol zadajac im obrazenia
+RACE4_SKILL1_INFO = Masz (%d, %d lub %d) szans na unikniecie kazdego pocisku
+RACE4_SKILL2_INFO = Zadaje (%d, %d lub %d) lustrzanych obrazen osobie ktora do Ciebie strzela
+RACE4_SKILL3_INFO = Zadaje (%d, %d lub %d) dodatkowych obrazen przeciwnikowi
+RACE4_SKILL4_INFO = Uniemozliwia ruch przeciwnika na 10 sekund
+RACE5_SKILL1_INFO = Masz (%d, %d lub %d) szans na ozywienie kogos z Twojej druzyny
+RACE5_SKILL2_INFO = Masz (%d, %d lub %d) szans na SLAPniecie przeciwnika przy kazdym trafieniu
+RACE5_SKILL3_INFO = Kradniesz (%d, %d lub %d) pieniedzy przeciwnikowi przy trafieniu
+RACE5_SKILL4_INFO = Dostajesz miotacz ognia
+RACE6_SKILL1_INFO = Co kazde (%d, %d lub %d) sekundy Ty i najblizsi z Twojej druzyny zyskujecie 1 HP
+RACE6_SKILL2_INFO = Masz (%d, %d lub %d) szanse ze Twoj przeciwnik trafiony zamieni sie w Duzego Goobera
+RACE6_SKILL3_INFO = Otrzymujesz (%d, %d lub %d) Weze co runde ktore rania najblizszych wrogow, zbinduj klawisz dla ability (lub say ability) by postawic jednego
+RACE6_SKILL4_INFO = Niesmiertelnosc przez 2 sekundy
+RACE7_SKILL1_INFO = Masz (%d, %d lub %d) szans na zostanie Kretem
+RACE7_SKILL2_INFO = Masz (%d, %d lub %d) szans na wylaczenie przeciwnikowi Ultimate
+RACE7_SKILL3_INFO = Masz (%d, %d lub %d) szans na rzucenie w przeciwnika zatrutym sztyletem
+RACE7_SKILL4_INFO = Odradzasz sie majac 50 punktow zycia
+RACE8_SKILL1_INFO = Kluje przeciwnika
+RACE8_SKILL2_INFO = Zadaje (%d, %d lub %d) lustrzanych obrazen a ty zyskujesz zbroje
+RACE8_SKILL3_INFO = Masz (%d, %d lub %d) szans na atak Chrzaszczami przeciwnika
+RACE8_SKILL4_INFO = Roj zielonej Szaranczy atakuje nieprzyjaciela
 
 CURRENT_ITEMS_RING = Aktualne Przedmioty: %s i %s x%d
 CURRENT_ITEMS = Aktualne Przedmioty: %s i %s
@@ -2129,7 +2083,7 @@ CURRENT_ITEM = Aktualny Przedmiot: %s
 PLAYERITEM_AND_REGEN = %s i %s x%d
 PLAYERITEM_AND = %s i %s
 YOU_GAINED_A_LEVEL = Zdobyles Poziom
-ULTIMATE = Ultimate
+WORD_ULTIMATE= Ultimate
 HAS_REVIVED_YOU = Zostales ozywiony przez %s
 YOU_HAVE_REVIVED = Ozywiles %s !
 AWARDED_FOR_HEADSHOT = Otrzymales dodatkowe %d XP za zabicie kogos headshotem
@@ -2145,14 +2099,6 @@ ALREADY_SELECTED_SKILL_POINTS = Zuzyles juz wszystkie punkty umiejetnosci!
 LEVEL_SELECT_SKILL_FUNC = ^n%d. %s Poziom %d\w
 ULTIMATE_SELECT_SKILL_FUNC = ^n4. Ultimate: %s\w
 CANCEL_SELECT_SKILL_FUNC = ^n^n0. Anuluj
-RACES_9 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\yWybor Bohatera\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n9. %s^n^n
-RACES_8 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n\yWybor Bohatera\w^n^n5. %s^n6. %s^n7. %s^n8. %s^n^n9. Auto-select
-RACES_5 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n5. %s^n^n9. Auto-select
-RACES_4 = %s\w^n^n1. %s^n2. %s^n3. %s^n4. %s^n^n9. Auto-select
-RACES_9_XP = %s\RDoswiadczenie^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\yWybor Bohatera^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n\w9. %s\y\R%s^n
-RACES_8_XP = %s\RDoswiadczenie^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\yWybor Bohatera^n^n\w5. %s\y\R%s^n\w6. %s\y\R%s^n\w7. %s\y\R%s^n\w8. %s\y\R%s^n^n\w9. Auto-select
-RACES_5_XP = %s\RDoswiadczenie^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n\w5. %s\y\R%s^n^n\w6. Auto-select
-RACES_4_XP = %s\RDoswiadczenie^n^n\w1. %s\y\R%s^n\w2. %s\y\R%s^n\w3. %s\y\R%s^n\w4. %s\y\R%s^n^n\w5. Auto-select
 SHOT_DEFLECTED = Strzal Kreta zostal odbity
 UNTIL_YOUR_NEXT_GRENADE = %d sekund do nastepnego granata
 DONT_DIE_GOOSE = Don't die next time and I'll give you another nade ya silly goose!
@@ -2265,7 +2211,7 @@ THE_ADMIN_JUST_GAVE_YOU_XP = Admin dal Ci %d doswiadczenia.
 TERRORISTS = Terrorists
 CT = Counter-Terrorists
 EVERYONE = wszyscy
-SKILLS_STRING = %s Umiejetnosci
+WORD_SKILLS = Umiejetnosci
 RACE_INFORMATION = Informacje o Rasie
 WAS_KILLED_BY = %s zostal zabity przez %s's %s
 THIS_MOD_WAS_DEVELOPED = Ten mod zostal stworzony przez 4HM | Pimp Daddy, odwiedz www.4hm.net (forums) %s
@@ -2311,9 +2257,9 @@ Podstawowe komendy do wpisania w sayu%s
   /ability - Jesli masz Pilnujace Weze to je postawi%s
   /resetskills - Resetuje Twoje Umiejetnosci%s		
   /resetxp - Resetuje Twoj Poziom i XP do 0%s
-: END
+:
 
-DOD_RACE3_SKILL2_INFO = %s: Granaty ZAWSZE zadadza (%d, %d lub %d)krotnie wiecej obrazen i zapalnik nie jest ustawiony na 5 sekund lecz na 2
+DOD_RACE3_SKILL2_INFO = Granaty ZAWSZE zadadza (%d, %d lub %d)krotnie wiecej obrazen i zapalnik nie jest ustawiony na 5 sekund lecz na 2
 AWARDED_FOR_KILLING_BOMB_D = Otrzymales %d XP za zabicie rozbrajacego bombe
 AWARDED_FOR_KILLING_BOMB_C = Otrzymales %d XP za zabicie niosacego bombe
 

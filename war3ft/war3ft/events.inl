@@ -846,10 +846,13 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 			else{
 				p_data_b[victim][PB_EVADENEXTSHOT]=false
 				if (get_user_health(victim) > get_user_maxhealth(victim)){
-					healthadjustment = -1024
+					healthadjustment = -1024					
 				}
 			}
 			if (p_data_b[victim][PB_EVADENEXTSHOT]){
+				#if DEBUG == 1
+				client_print(victim, print_chat,"** Setting your health to: %d", get_user_health(victim) + damage + healthadjustment)
+				#endif
 				set_user_health(victim, get_user_health(victim) + damage + healthadjustment)
 
 				if (iglow[victim][2] < 1){
@@ -866,8 +869,12 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 
 				Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 0, 0, 255, iglow[victim][2])
 			}
-			else
+			else{
+				#if DEBUG == 1
+				client_print(victim, print_chat,"** Setting your health to: %d", get_user_health(victim) + healthadjustment)
+				#endif
 				set_user_health(victim, get_user_health(victim) + healthadjustment)
+			}
 		}
 		
 		// Thorns Aura

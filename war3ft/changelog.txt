@@ -1,7 +1,10 @@
 v2.1.5
  - Bug Fix: Human's being able to get 255 health
  - Bug Fix: Stopped using plugin_cfg as this does not always work
- - Addition: Playerskils can be viewed via rcon (type playerskills)
+ - Bug Fix: Playerskills (for real this time)
+ - Addition: Playerskills can be viewed via rcon (type playerskills)
+ - Change: Max speed of undead lowered from 320 to 300
+ - Change: skillsinfo looks better
 
 v2.1.4
  - Bug Fix: Run time error 4 on get_entity_vector

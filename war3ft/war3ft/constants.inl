@@ -152,6 +152,7 @@
 #define RACE_SHADOW				6
 #define RACE_WARDEN				7
 #define RACE_CRYPT				8
+#define RACE_CHAMELEON			9
 
 #define SHOPMENU_ONE			1
 #define SHOPMENU_TWO			2
@@ -579,7 +580,7 @@ new bool:endround
 // Constants for Abilities
 new const Float:p_vampiric[3] =			{0.15,0.30,0.45}		// Vampiric Aura			(skill 1)
 #if MOD == 0
-	new const Float:p_unholy[3] =		{265.0,285.0,320.0}		// Unholy Aura				(skill 2)
+	new const Float:p_unholy[3] =		{265.0,285.0,300.0}		// Unholy Aura				(skill 2)
 #endif
 #if MOD == 1
 	new const Float:p_unholy[3] =		{25.0,50.0,100.0}		// Unholy Aura				(skill 2)
