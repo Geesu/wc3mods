@@ -44,14 +44,9 @@ public changeskin(id,reset){							// Function changes your skin for ITEM_MOLE a
 		num = random_num(0,4)
 
 	
-	if (reset==SKIN_RESET && (p_data[id][P_SKINCHANGED] == SKIN_HEX || p_data[id][P_SKINCHANGED]==SKIN_SWITCH)){
+	if (reset==SKIN_RESET && p_data[id][P_SKINCHANGED]==SKIN_SWITCH){
 		cs_reset_user_model(id)
 		p_data[id][P_SKINCHANGED]=SKIN_RESET
-	}
-	else if (reset==SKIN_HEX){ 
-		if(!g_mapDisabled)
-			cs_set_user_model(id,"alien4")
-		p_data[id][P_SKINCHANGED]=SKIN_HEX
 	}
 	else if (reset==SKIN_SWITCH){
 		if (get_user_team(id)==TS)
@@ -266,7 +261,11 @@ public glow_change(parm[]){
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
-	if ( Verify_Skill(id, RACE_HUMAN, SKILL1) ){	// Don't glow if player is invisible
+	if ( !p_data_b[id][PB_RENDER] )		// Don't render if we shouldn't
+	{
+		return PLUGIN_CONTINUE
+	}
+	else if ( Verify_Skill(id, RACE_HUMAN, SKILL1) ){	// Don't glow if player is invisible
 		iglow[id][0] = 0
 		iglow[id][1] = 0
 		iglow[id][2] = 0
@@ -342,6 +341,10 @@ public unholyspeed(parm[1]){
 		set_user_maxspeed(id,1.0)
 		return PLUGIN_HANDLED
 	}
+	else if (p_data_b[id][PB_HEXED]){
+		set_user_maxspeed(id, SKILL_HEX_SPEED)
+		return PLUGIN_HANDLED
+	}
 	else if (p_data_b[id][PB_SLOWED]){
 		set_user_maxspeed(id,fCvar[FT_FROST_SPEED])
 		return PLUGIN_HANDLED
@@ -353,16 +356,16 @@ public unholyspeed(parm[1]){
 
 		return PLUGIN_HANDLED
 	}
-	else if(get_user_maxspeed(id) == 50.0 && ( p_data[id][P_ITEM] == ITEM_BOOTS || Verify_Skill(id, RACE_UNDEAD, SKILL2) ) ){		// User has a rocket launcher "mounted"
+	else if(get_user_maxspeed(id) == 50.0 && ( p_data[id][P_ITEM] == ITEM_BOOTS || Verify_Skill(id, RACE_UNDEAD, SKILL2) ) && !p_data_b[id][PB_HEXED] ){		// User has a rocket launcher "mounted"
 		set_user_maxspeed(id, 600.0)
 	}
 #endif
 #if MOD == 0
-	else if (Verify_Skill(id, RACE_UNDEAD, SKILL2) && !g_freezetime){              // Unholy Aura
+	else if ( Verify_Skill(id, RACE_UNDEAD, SKILL2) && !g_freezetime && !p_data_b[id][PB_HEXED] ){              // Unholy Aura
 		if (get_user_maxspeed(id)>5 && get_user_maxspeed(id)!=p_unholy[p_data[id][P_SKILL2]-1])
 			set_user_maxspeed(id,(p_unholy[p_data[id][P_SKILL2]-1]))
 	}
-	else if (p_data[id][P_ITEM]==ITEM_BOOTS && !g_freezetime){			// Boots of Speed
+	else if ( p_data[id][P_ITEM]==ITEM_BOOTS && !g_freezetime && !p_data_b[id][PB_HEXED] ){			// Boots of Speed
 		if (get_user_maxspeed(id)!=fCvar[FT_BOOTSPEED])
 			set_user_maxspeed(id,fCvar[FT_BOOTSPEED])
 	}

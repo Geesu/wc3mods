@@ -228,6 +228,14 @@ public cmd_ability(id){
 
 	if(iCvar[FT_RACES] < 5)
 		return PLUGIN_CONTINUE
+	
+	if ( p_data_b[id][PB_HEXED] )
+	{
+		new message[128]
+		format(message, 127, "%L",id,"HEX_NO_ABILITY")
+		Status_Text(id, message, 4.0, HUDMESSAGE_POS_INFO)
+		return PLUGIN_HANDLED
+	}
 
 	if(is_user_alive(id)){
 		if ( Verify_Skill(id, RACE_SHADOW, SKILL3) && p_data[id][P_SERPENTCOUNT]>0 && !endround){	 //Serpent Ward
@@ -411,6 +419,15 @@ public cmd_Ultimate(id){
 
 	if (!is_user_alive(id))
 		return PLUGIN_HANDLED
+
+	if ( p_data_b[id][PB_HEXED] )
+	{
+		new message[128]
+		format(message, 127, "%L",id,"HEX_NO_ABILITY")
+		Status_Text(id, message, 3.0, HUDMESSAGE_POS_STATUS)
+		client_cmd(id, "speak warcraft3/bonus/Error.wav")
+		return PLUGIN_HANDLED
+	}
 
 	if(!p_data[id][P_ULTIMATE]){
 		new message[128]

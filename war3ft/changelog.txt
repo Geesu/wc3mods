@@ -1,3 +1,13 @@
+v2.2.3
+ - Bug Fix: Mole Protectant Not functioning
+ - Bug Fix: Undead's suicide bomber can continue onto the next round and damage nearby moles
+ - Bug Fix: Death function was being called from explosions even if you were not dead
+ - Possible Fix: Where NE's and ORC's ultimate would stop functioning until mapchange
+ - Change: Impale lowered (max 9% chance per shot)
+ - Change: Hex will now disable some enemy abilities for 5 seconds and slow them down, their skin will change (and a NEW sound will play) so you know when it is activated
+ - Change: Necklace will no longer allow you to damage players using Big Bad Voodoo
+ - Addition: % chance of Impale occurring in skillsinfo
+
 v2.2.2
  - Addition: Effect during Big Bad Voodoo
  - Addition: FT_cshack variable

@@ -8,6 +8,13 @@ public _Ultimate_End(){
 
 	for(new i = 0; i < num; i++){
 		p_data_b[players[i]][PB_ULTIMATEUSED] = true
+
+		/* Remove any explosions that are occuring, we don't want them carried over to the next round */
+		if( task_exists(TASK_EXPLOSION + players[i]) )
+			remove_task(TASK_EXPLOSION + players[i])
+		if( task_exists(TASK_BEAMCYLINDER + players[i]) )
+			remove_task(TASK_BEAMCYLINDER + players[i])
+
 	}
 }
 
@@ -71,10 +78,15 @@ public apacheexplode(parm[5]){		// Suicide Bomber
 	--parm[1]
 	if (parm[1]>0)
 		set_task(0.1,"apacheexplode",TASK_EXPLOSION+id,parm,5)
+	
 	return PLUGIN_CONTINUE
 }
 
 public blastcircles(parm[5]){
+
+	if ( endround )
+		return 0
+
 	// Create Blast Circles
 	if(g_mapDisabled)
 		return PLUGIN_CONTINUE
@@ -557,7 +569,6 @@ public teleportfadein(parm[3]){
 	if (parm[1]==2)
 		set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,212)
 	if (parm[1]==1){
-
 		set_user_rendering(id)
 
 		new origin[3]
@@ -765,6 +776,10 @@ public lightsearchtarget(parm[2]){
 	#endif
 
 	new id = parm[0]
+	
+	#if DEBUG
+		console_print(id, "[DEBUG] Searching.......")
+	#endif
 
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
@@ -826,6 +841,11 @@ public lightsearchtarget(parm[2]){
 			Ultimate_Icon(id,ICON_HIDE)
 		}
 	}
+
+	#if DEBUG
+		console_print(id, "[DEBUG] Searching.2......")
+	#endif
+
 	return PLUGIN_CONTINUE
 }
 
@@ -1370,6 +1390,9 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 	#endif
 		p_data_b[id][PB_GODMODE] = true
 
+		/* Do not allow other renderings to take place, like switching to invis, etc... */
+		p_data_b[id][PB_RENDER] = false
+
 		set_user_health(id, get_user_health(id) + 2048)
 
 		#if MOD == 0
@@ -1386,7 +1409,9 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 		set_task(2.0,"_Ultimate_BigBadVoodoo",TASK_RESETGOD+id,parm,2)
 	}
 	else{
-		
+		/* Allow other renderings to take place now */
+		p_data_b[id][PB_RENDER] = true
+
 		set_user_rendering(id)
 
 		p_data_b[id][PB_GODMODE] = false

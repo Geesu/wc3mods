@@ -605,7 +605,7 @@ public on_ShowStatus(id){
 
 	new pid = read_data(2)
 
-	if(get_user_team(id)==get_user_team(pid) && (p_data[pid][P_ITEM2]==ITEM_CHAMELEON || (p_data[pid][P_SKINCHANGED] == SKIN_HEX || p_data[pid][P_SKINCHANGED]==SKIN_SWITCH)) && is_user_alive(pid)){
+	if(get_user_team(id)==get_user_team(pid) && (p_data[pid][P_ITEM2]==ITEM_CHAMELEON || p_data[pid][P_SKINCHANGED]==SKIN_SWITCH) && is_user_alive(pid)){
 		client_print(id,print_center,"%L",id,"HES_ON_YOUR_TEAM_DONT_SHOOT")
 		client_cmd(id,"speak warcraft3/antend.wav")
 	}

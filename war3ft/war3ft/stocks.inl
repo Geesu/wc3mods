@@ -185,7 +185,7 @@ stock Status_Text(id, szMessage[], Float:fDuration, Float:iYPos){
 	#endif
 
     // Print important messages to console
-    if ( fDuration >= 4.0 ){
+    if ( fDuration > 4.0 ){
         console_print( id, "%s %s", g_MODclient, szMessage )
     }
 }

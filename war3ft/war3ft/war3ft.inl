@@ -29,6 +29,7 @@ public WAR3_precache() {
 		copy( SOUND_ANNIHILATION, 63,		"warcraft3/PurgeTarget1.wav"					)	// Orb of Annihilation
 		copy( SOUND_CONCOCTION_CAST, 63,	"warcraft3/PossessionMissileLaunch1.wav"		)	// Unstable Concoction Cast
 		copy( SOUND_CONCOCTION_HIT, 63,		"warcraft3/PossessionMissileHit1.wav"			)	// Unstable Concoction Hit
+		copy( SOUND_HEX, 63,				"warcraft3/PolymorphDone.wav"					)	// Hex
 	#else
 		copy( SOUND_VENGEANCE, 63,			"ambience/des_wind2.wav"						)  // Warden's Ultimate
 		copy( SOUND_SUICIDE, 63,			"ambience/particle_suck1.wav"					)  // Undead's Ultimate
@@ -51,6 +52,7 @@ public WAR3_precache() {
 //		copy( SOUND_ANNIHILATION, 63,		"warcraft3/PurgeTarget1.wav"					)	// Orb of Annihilation
 //		copy( SOUND_CONCOCTION_CAST, 63,	"warcraft3/PossessionMissileLaunch1.wav"		)	// Unstable Concoction Cast
 //		copy( SOUND_CONCOCTION_HIT, 63,		"warcraft3/PossessionMissileHit1.wav"			)	// Unstable Concoction Hit
+//		copy( SOUND_HEX, 63,				"warcraft3/PolymorphDone.wav"					)	// Hex
 
 	#endif
 
@@ -71,6 +73,7 @@ public WAR3_precache() {
 	precache_sound(SOUND_ANNIHILATION) 
 	precache_sound(SOUND_CONCOCTION_CAST) 
 	precache_sound(SOUND_CONCOCTION_HIT) 
+	precache_sound(SOUND_HEX) 
 
 	// Miscellaneous
 	precache_sound(SOUND_LEVELUP) 
@@ -89,7 +92,6 @@ public WAR3_precache() {
 	g_sLightning = precache_model("sprites/lgtning.spr")
 	g_sFire = precache_model("sprites/explode1.spr") 
 	g_sBurning = precache_model("sprites/xfire.spr") 
-	precache_model("models/player/alien4/alien4.mdl")  
 	
 	g_sShadow = precache_model("sprites/animglow01.spr") 
 	g_sBeetle = precache_model("sprites/agrunt1.spr") 
@@ -221,7 +223,7 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 
 	if(!is_user_alive(victim))
 		return PLUGIN_CONTINUE
-
+	
 	if( p_data_b[victim][PB_WARDENBLINK] && (weapon == CSW_LIGHTNING || weapon == CSW_SUICIDE || weapon == CSW_FLAME || weapon == CSW_LOCUSTS))
 		return PLUGIN_CONTINUE
 
@@ -313,7 +315,7 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 
 	new health = get_user_health(victim)
 
-	if ( health - damage <= 2048 &&  p_data_b[victim][PB_GODMODE] && (p_data[attacker][P_ITEM] == ITEM_NECKLACE || p_data_b[attacker][PB_WARDENBLINK]))
+	if ( health - damage <= 2048 &&  p_data_b[victim][PB_GODMODE] && (p_data_b[attacker][PB_WARDENBLINK]))
 		userkilled = true
 	if ( health - damage <= 0 )
 		userkilled = true
@@ -375,6 +377,15 @@ public WAR3_death_victim(victim_id, killer_id){
 		Create_BarTime(victim_id, 0, 0)
 #endif
 	
+	// Remove Hex if the user was hexed before death
+	if ( p_data_b[victim_id][PB_HEXED] ){
+		new parm[2]
+		parm[0] = victim_id
+		if ( task_exists(TASK_HEX+victim_id) )
+			remove_task(TASK_HEX+victim_id)
+		_Skill_Hex(parm)
+	}
+
 	if(is_user_bot(victim_id)){
 		new Float:randomnumber = random_float(0.0,1.0)
 		if (randomnumber <= 0.10){
@@ -405,8 +416,8 @@ public WAR3_death_victim(victim_id, killer_id){
 
 	// Remove task that makes the victim jump
 
-	if (task_exists(TASK_JUMPER+victim_id)){		// Remove the function that makes you jump from Hex
-		remove_task(TASK_JUMPER+victim_id)
+	if (task_exists(TASK_HEX+victim_id)){		// Remove the function that makes you jump from Hex
+		remove_task(TASK_HEX+victim_id)
 		changeskin(victim_id,SKIN_RESET)
 	}
 
@@ -416,7 +427,7 @@ public WAR3_death_victim(victim_id, killer_id){
 
 	// Check for Ultimate abilities
 
-	if (Verify_Skill(victim_id, RACE_UNDEAD, SKILL4) && !p_data_b[victim_id][PB_CHANGINGTEAM] && !g_ultimateDelay && !p_data_b[victim_id][PB_ULTIMATEUSED]){	// Suicide Bomber
+	if (Verify_Skill(victim_id, RACE_UNDEAD, SKILL4) && !p_data_b[victim_id][PB_CHANGINGTEAM] && !g_ultimateDelay && !p_data_b[victim_id][PB_ULTIMATEUSED] ){	// Suicide Bomber
 		emit_sound(victim_id, CHAN_STATIC, SOUND_SUICIDE, 1.0, ATTN_NORM, 0, PITCH_NORM)
 		new parm[5], origin[3]
 		get_user_origin(victim_id,origin)
@@ -440,7 +451,7 @@ public WAR3_death_victim(victim_id, killer_id){
 		_Ultimate_Delay(parm)
 	}
 #if MOD == 0
-	else if (Verify_Skill(victim_id, RACE_WARDEN, SKILL4) && !p_data_b[victim_id][PB_CHANGINGTEAM] && (!p_data_b[killer_id][PB_WARDENBLINK] || killer_id==victim_id) && !g_ultimateDelay && !p_data_b[victim_id][PB_ULTIMATEUSED] && !endround){	// Vengeance
+	else if (Verify_Skill(victim_id, RACE_WARDEN, SKILL4) && !p_data_b[victim_id][PB_CHANGINGTEAM] && (!p_data_b[killer_id][PB_WARDENBLINK] || killer_id==victim_id) && !g_ultimateDelay && !p_data_b[victim_id][PB_ULTIMATEUSED] && !endround ){	// Vengeance
 		new parm[2]
 		parm[0]=victim_id
 		parm[1]=6
@@ -485,7 +496,7 @@ public WAR3_death_victim(victim_id, killer_id){
 	if(vTeam == TS && g_pheonixExistsT>0){
 		for (y = 0; y < numberofplayers; ++y){
 			new id = players[y]
-			if (get_user_team(id) == vTeam && p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && !is_user_alive(victim_id) && (get_user_team(victim_id) == CTS || get_user_team(victim_id) == TS)){
+			if (get_user_team(id) == vTeam && p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && !is_user_alive(victim_id) ){
 				p_data_b[id][PB_PHEONIXCASTER] = false
 				new parm[2], name[32], victimName[32], message[128]
 
@@ -512,7 +523,7 @@ public WAR3_death_victim(victim_id, killer_id){
 	else if(vTeam == CTS && g_pheonixExistsCT>0){
 		for (y = 0; y < numberofplayers; ++y){
 			new id = players[y]
-			if (get_user_team(id) == vTeam && p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && !is_user_alive(victim_id) && (get_user_team(victim_id) == CTS || get_user_team(victim_id) == TS)){
+			if (get_user_team(id) == vTeam && p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && !is_user_alive(victim_id) ){
 				p_data_b[id][PB_PHEONIXCASTER] = false
 				new parm[2], name[32], victimName[32], message[128]
 				parm[0]=victim_id
@@ -1048,24 +1059,8 @@ public WAR3_Display_Level(id, flag){
 	else
 		set_user_gravity(id,1.0)
 
-	if (((p_data[id][P_RACE] == 9 && race9Options[1] == 2) || p_data[id][P_RACE] == 2) && p_data[id][P_SKILL1]){		// Invisibility
-		if (p_data_b[id][PB_KNIFESELECTED]){
-			new invisibility = p_invisibility[p_data[id][P_SKILL1]-1]/2
-			set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,invisibility)
-		}
-		else
-			set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,p_invisibility[p_data[id][P_SKILL1]-1])
-	}
-	else if (p_data[id][P_ITEM]==ITEM_CLOAK){
-		if (p_data_b[id][PB_KNIFESELECTED]){
-			new invisibility = iCvar[FT_CLOAK]/2
-			set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,invisibility)
-		}
-		else
-			set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,iCvar[FT_CLOAK])
-	}
-	else
-		set_user_rendering(id)
+	/* Check the player's invisibility */
+	Skill_Invisibility(id)
 
 	if (((p_data[id][P_RACE] == 9 && race9Options[1] != 4) || p_data[id][P_RACE] != 4 || !p_data[id][P_SKILL1])){	// Evasion
 		new userhealth = get_user_health(id)

@@ -186,7 +186,7 @@ public Item_Check(parm[]){
 	else
 		set_user_gravity(id,1.0)
 
-	if(p_data[id][P_ITEM2]!=ITEM_CHAMELEON && (p_data[id][P_SKINCHANGED] == SKIN_HEX || p_data[id][P_SKINCHANGED]==SKIN_SWITCH))
+	if(p_data[id][P_ITEM2]!=ITEM_CHAMELEON && p_data[id][P_SKINCHANGED]==SKIN_SWITCH)
 		changeskin(id,SKIN_RESET)
 
 	if (task_exists(TASK_ITEM_RINGERATE+id) && p_data[id][P_ITEM2]!=ITEM_RING)

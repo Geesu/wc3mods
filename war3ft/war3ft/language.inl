@@ -289,7 +289,7 @@ public Lang_Skill_Info(race, skill, id, skill_description[], iDescLen){
 		}
 		case RACE_CRYPT: {
 			switch(skill){
-				case SKILL1: format(skill_description,iDescLen-1,"%L",id,"RACE8_SKILL1_INFO")
+				case SKILL1: format(skill_description,iDescLen-1,"%L",id,"RACE8_SKILL1_INFO",floatround(p_impale[0]*100),floatround(p_impale[1]*100),floatround(p_impale[2]*100))
 				case SKILL2: format(skill_description,iDescLen-1,"%L",id,"RACE8_SKILL2_INFO",floatround(p_spiked[0]*100),floatround(p_spiked[1]*100),floatround(p_spiked[2]*100))
 				case SKILL3: format(skill_description,iDescLen-1,"%L",id,"RACE8_SKILL3_INFO",floatround(p_carrion[0]*100),floatround(p_carrion[1]*100),floatround(p_carrion[2]*100))
 				case SKILL4: format(skill_description,iDescLen-1,"%L",id,"RACE8_SKILL4_INFO")

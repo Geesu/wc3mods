@@ -87,6 +87,47 @@ public Skill_Check(id){
 }
 
 
+// ****************************************
+// Human's Invisibility ability in Day of Defeat
+// ****************************************
+
+public Skill_Invisibility(id)
+{
+	if ( p_data_b[id][PB_RENDER] && !p_data_b[id][PB_HEXED])
+	{
+		new clipamount = 0, ammoamount = 0, weaponnum = 0
+		weaponnum = get_user_weapon(id,clipamount,ammoamount)
+
+		if ( Verify_Skill(id, RACE_HUMAN, SKILL1) ){
+		#if MOD == 0
+			if (weaponnum==CSW_KNIFE){
+		#endif
+		#if MOD == 1
+			if (weaponnum==DODW_AMERKNIFE || weaponnum==DODW_GERKNIFE || weaponnum==DODW_SPADE){
+		#endif
+				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,p_invisibility[p_data[id][P_SKILL1]-1]/2)
+			}
+			else{
+				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,p_invisibility[p_data[id][P_SKILL1]-1])
+			}
+		}
+		else if ( p_data[id][P_ITEM]==ITEM_CLOAK ){
+		#if MOD == 0
+			if (weaponnum==CSW_KNIFE){
+		#endif
+		#if MOD == 1
+			if (weaponnum==DODW_AMERKNIFE || weaponnum==DODW_GERKNIFE || weaponnum==DODW_SPADE){
+		#endif
+				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,iCvar[FT_CLOAK]/2)
+			}
+			else{
+				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,iCvar[FT_CLOAK])
+			}
+		}
+		else
+			set_user_rendering(id)
+	}
+}
 
 #if MOD == 1
 // ****************************************
@@ -504,6 +545,10 @@ public _Skill_Healing_Wave(parm[2]){
 	if ( Verify_Skill(id, RACE_SHADOW, SKILL1) && is_user_alive(id) ){
 		set_task(p_heal[p_data[id][P_SKILL1]-1],"_Skill_Healing_Wave",TASK_WAVE+id,parm,2)
 	}
+	
+	// Prevent healing if this player is Hexed
+	if ( p_data_b[id][PB_HEXED] )
+		return PLUGIN_CONTINUE
 
 	new team = get_user_team(id)
 
@@ -556,17 +601,16 @@ public _Skill_Hex(parm[2]){
 
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
+	
+	p_data_b[id][PB_RENDER] = true
+	p_data_b[id][PB_HEXED] = false
+	
+	/* Reset the user's speed */
+	set_user_maxspeed(id, 250.0)
 
-	client_cmd(id,"+jump;wait;-jump")
+	set_user_rendering(id)
 
-	parm[1]--
-
-	Create_ScreenFade(id, (1<<10), (1<<10), (1<<12), 82, 245, 235, 110)
-
-	if(is_user_alive(id) && parm[1]>0)
-		set_task(4.0,"_Skill_Hex",TASK_JUMPER+id,parm,2)
-	else
-		changeskin(id,SKIN_RESET)
+	emit_sound(id, CHAN_STATIC, SOUND_HEX, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
 	return PLUGIN_CONTINUE
 }

@@ -31,7 +31,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Pimp Daddy (OoTOAoO)"
-new const WC3VERSION[] =	"2.2.2"
+new const WC3VERSION[] =	"2.2.3"
 
 #include <amxmodx>
 #include <dbi>
@@ -93,7 +93,7 @@ public plugin_init(){
 	#endif
 
 	#if DEBUG
-		register_srvcmd("testage", "testage")
+		//register_srvcmd("testage", "testage")
 	#endif
 
 	gmsgDeathMsg = get_user_msgid("DeathMsg")
@@ -111,7 +111,7 @@ public plugin_init(){
 	#endif
 
 	#if DEBUG
-		register_message(get_user_msgid("CurWeapon"), "testing")
+		//register_message(get_user_msgid("CurWeapon"), "testing")
 	#endif
 
 	register_plugin(WC3NAME,WC3VERSION,WC3AUTHOR)
@@ -323,7 +323,7 @@ public plugin_init(){
 
 	register_dictionary("war3FT.txt")
 
-	#if DEBUG == 1
+	#if DEBUG
 		register_concmd("test","test")
 		register_concmd("test2","test2")
 		register_concmd("test3","test3")
@@ -437,6 +437,7 @@ public client_connect(id){
 	p_data_b[id][PB_ISBURNING] = false
 	p_data[id][P_SPECMODE] = 0 
 	p_data_b[id][PB_JUSTJOINED] = true
+	p_data_b[id][PB_RENDER] = true
 
 	if ( iCvar[FT_AUTOXP] && !iCvar[MP_SAVEXP] ){
 		new iTotalXP

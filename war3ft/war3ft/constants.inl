@@ -19,7 +19,7 @@
 #define	TASK_REINCARNATION	384		// Weapon Reincarnation
 #define	TASK_GLOW			416		// Calls glow_change
 #define	TASK_RESETPOS		448		// Resets the user's position (1.5)
-#define	TASK_JUMPER			480		// Jumper task (goomba)
+#define	TASK_HEX			480		// Jumper task (goomba)
 #define	TASK_RESETSPEED		512		// Reset maxspeed (bash)
 #define	TASK_ITEM_GLOVES	544		// Nade timer (gloves)
 #define	TASK_UNHOLYSPEED	576		// Unholyspeed timer
@@ -127,6 +127,8 @@
 #define CONCOCTION_DAMAGE		15			// Damage done by Unstable Concoction
 #define CONCOCTION_RADIUS		300
 #define CRITICAL_STRIKE_CHANCE	0.15		// 15% chance of Critical Strike working
+#define SKILL_HEX_LENGTH		5.0			// Length that hex lasts in seconds
+#define SKILL_HEX_SPEED			175.0		// Speed hexed player will move at
 
 // CS AmmoX Types
 #define AMMOX_338MAGNUM			1     // AWP
@@ -240,7 +242,7 @@
 
 #define SKIN_RESET					0
 #define SKIN_SWITCH					1
-#define SKIN_HEX					2
+//#define SKIN_HEX					2
 
 #define KEY_1						0
 #define KEY_2						1
@@ -373,7 +375,7 @@
 	#define PB_LIGHTNINGHIT			25
 //	#define PB_HEALINGHIT			26
 	#define PB_ULTIMATEUSED			27
-	#define PB_KNIFESELECTED		28
+	#define PB_HEXED				28		// Is the player hexed? (All abilities are disabled)
 	#define PB_SILENT				29
 	#define PB_GODMODE				32
 
@@ -381,8 +383,8 @@
 	#define PB_ISCONNECTED			31
 	
 	#define PB_BUYZONE				33		// Player in buyzone?
-	
-//	#define PB_EVADENEXTWAR3DMG		34		// Should player evade next war3 damage? (NE's Evasion)
+	#define PB_RENDER				34
+
 #if MOD == 1
 	#define PB_REINCARNATION_DELAY	35
 	#define PB_REINCARNATION_SKIP	36
@@ -520,6 +522,7 @@ new SOUND_PICKUPITEM[64]
 new SOUND_ITEM_TOME[64]
 new SOUND_ULTIMATESCAN[64]
 new SOUND_ULTIMATEREADY[64]
+new SOUND_HEX[64]
 
 // Race9 Setup 
 new race9Options[5] = {0,1,1,1,1}		// the value is what race that skill should be copied from so race9Options[1] = 1 means that skill1 is undead skill1 this means you can not have skill 1 form more than one race.
@@ -695,7 +698,7 @@ new const Float:p_blink[3] =			{0.333,0.666,1.0}		// Blink					(skill 2)
 new const Float:p_shadow[3] =			{0.15,0.30,0.45}		// Shadow Strike			(skill 3)
 new const Float:p_harden[11] =			{0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50}	// Hardened Skin		(Skill 4)
 
-new const Float:p_impale[3] =			{0.06,0.09,0.12}			// Impale					(skill 1)
+new const Float:p_impale[3] =			{0.03,0.06,0.09}			// Impale					(skill 1)
 new const Float:p_spiked[3] =			{0.05,0.1,0.15}			// Spiked Carapace			(skill 2)
 new const Float:p_carrion[3] =			{0.15,0.25,0.45}		// Carrion Beetle			(skill 3)
 new const Float:p_orb[11] =				{0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.15}	// Orb of Annihilation	(Skill 4)

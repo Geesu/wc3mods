@@ -1,23 +1,28 @@
 public testage(id)
 {
-	Skill_Mole(id, 16000);
 }
 
 public test(id){
-	//new const MAXPLAYERS = get_global_int(GL_maxClients)
-	new zone = 0
-	new name[32]
-	for (new j = 1; j <= MAXPLAYERS; j++){
-		zone = get_user_hitzones(j, id)
-		if(zone!=0){
-			get_user_name(j, name, 31)
-			console_print(id,"Player: %d, Zone: %d, Name:%s", j, zone, name)
-		}
-	}
+	
+	new arg1[8], arg2[8], r[8], g[8], b[8], amount[8];
+	read_argv(1,arg1,7)
+	read_argv(2,arg2,7)
+	read_argv(3,r,7)
+	read_argv(4,g,7)
+	read_argv(5,b,7)
+	read_argv(6,amount,7)
 
-	client_print(id, print_chat, "Shield: %d", p_data_b[id][PB_SHIELD])
+	set_user_rendering(id, str_to_num(arg1), str_to_num(r), str_to_num(g), str_to_num(b), str_to_num(arg2), str_to_num(amount))
 
-	set_user_money(id, 20000, 1)
+	client_print(id, print_chat, "Trying")
+//native set_user_rendering(index, fx = kRenderFxNone, r = 255, g = 255, b = 255, render = kRenderNormal, amount = 16);
+
+/*	
+	Results:
+		kRenderFxExplode and all 0's and kRenderNormal = only seeing player's shadow
+		kRenderFxDistort and all 0's - cool distoring effect 
+
+*/
 	return PLUGIN_HANDLED
 }
 

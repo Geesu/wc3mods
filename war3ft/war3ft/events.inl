@@ -107,14 +107,14 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	}
 #endif
 
-/*	if(p_data_b[attacker][PB_MOLE] && (p_data[victim][P_ITEM2]==ITEM_PROTECTANT || p_data_b[victim][PB_WARDENBLINK])){	
+	if(p_data_b[attacker][PB_MOLE] && p_data[victim][P_ITEM2]==ITEM_PROTECTANT){	
 		set_user_health(victim,get_user_health(victim)+damage)
 		client_print(victim,print_chat,"%s %L",g_MOD,victim,"SHOT_DEFLECTED")
 		return PLUGIN_HANDLED
-	}*/
+	}
 
 	if( p_data_b[victim][PB_GODMODE] ){
-		if( ( p_data[attacker][P_ITEM] == ITEM_NECKLACE || p_data_b[attacker][PB_WARDENBLINK] ) && attacker != victim ){
+		if( ( p_data_b[attacker][PB_WARDENBLINK] ) && attacker != victim ){
 			if( get_user_health(victim) - damage <= 2048 ){
 				WAR3_damage(victim, attacker, 3000, wpnindex, hitplace)
 			}
@@ -181,7 +181,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	if ( Verify_Race(attacker, RACE_UNDEAD) ){
 
 		// Vampiric Aura
-		if ( Verify_Skill(attacker, RACE_UNDEAD, SKILL1) ) {
+		if ( Verify_Skill(attacker, RACE_UNDEAD, SKILL1) && !p_data_b[attacker][PB_HEXED] ) {
 			new health = get_user_health(attacker)
 			new maxHealth = get_user_maxhealth(attacker)
 
@@ -212,7 +212,9 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 
 	// Human Alliance
 	else if ( Verify_Race(attacker, RACE_HUMAN) ){
-		if ( Verify_Skill(attacker, RACE_HUMAN, SKILL3) ) {
+
+		// Bash
+		if ( Verify_Skill(attacker, RACE_HUMAN, SKILL3) && !p_data_b[attacker][PB_HEXED] ) {
 			new Float:randomnumber = random_float(0.0,1.0)
 			if (randomnumber <= p_bash[p_data[attacker][P_SKILL3]-1] && get_user_maxspeed(victim) > 10 && !p_data_b[victim][PB_SLOWED]){		// Cannot bash if already bashed or frosted
 				new normalspeed = floatround(get_user_maxspeed(victim))
@@ -244,7 +246,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	else if ( Verify_Race(attacker, RACE_ORC) ){
 
 		// Critical Strike
-		if ( Verify_Skill(attacker, RACE_ORC, SKILL1)) {
+		if ( Verify_Skill(attacker, RACE_ORC, SKILL1) && !p_data_b[attacker][PB_HEXED]) {
 			new Float:randomnumber = random_float(0.0,1.0)
 			if (randomnumber <= CRITICAL_STRIKE_CHANCE){
 				tempdamage = floatround(float(damage) * p_data[attacker][P_SKILL1])
@@ -267,7 +269,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 		}
 
 		// Critical Grenade
-		if ( Verify_Skill(attacker, RACE_ORC, SKILL2) ){		
+		if ( Verify_Skill(attacker, RACE_ORC, SKILL2) && !p_data_b[attacker][PB_HEXED] ){		
 			new bool:allow=true
 
 			if(p_data[attacker][P_ITEM2]==ITEM_GLOVES){
@@ -311,7 +313,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	else if ( Verify_Race(attacker, RACE_ELF) ){
 
 		// Trueshot
-		if ( Verify_Skill(attacker, RACE_ELF, SKILL3) ){
+		if ( Verify_Skill(attacker, RACE_ELF, SKILL3) && !p_data_b[attacker][PB_HEXED] ){
 			tempdamage = floatround(float(damage) * p_trueshot[p_data[attacker][P_SKILL3]-1])
 
 			WAR3_damage(victim, attacker,tempdamage,wpnindex, hitplace)
@@ -333,7 +335,9 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	
 	// Blood Mage
 	else if ( Verify_Race(attacker, RACE_BLOOD) ){
-		if ( Verify_Skill(attacker, RACE_BLOOD, SKILL2) ){
+
+		// Banish
+		if ( Verify_Skill(attacker, RACE_BLOOD, SKILL2) && !p_data_b[attacker][PB_HEXED] ){
 			new Float:randomnumber = random_float(0.0,1.0)
 
 			if (randomnumber <= p_banish[p_data[attacker][P_SKILL2]-1]){
@@ -370,7 +374,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 		}
 
 		// Siphon Mana
-		if ( Verify_Skill(attacker, RACE_BLOOD, SKILL3) ){
+		if ( Verify_Skill(attacker, RACE_BLOOD, SKILL3) && !p_data_b[attacker][PB_HEXED] ){
 			new money = floatround( p_mana[p_data[attacker][P_SKILL3]-1] * get_user_money(victim) )  
 
 			set_user_money(attacker,get_user_money(attacker)+money,1)
@@ -396,26 +400,29 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	else if ( Verify_Race(attacker, RACE_SHADOW) ){
 
 		// Hex
-		if ( Verify_Skill(attacker, RACE_SHADOW, SKILL2) ) {
+		if ( Verify_Skill(attacker, RACE_SHADOW, SKILL2) && !p_data_b[attacker][PB_HEXED] ) {
 			new Float:randomnumber = random_float(0.0,1.0)
-			if (randomnumber <= p_hex[p_data[attacker][P_SKILL2]-1] && p_data[victim][P_SKINCHANGED] != SKIN_HEX){
-				changeskin(victim,SKIN_HEX)
+			if (randomnumber <= p_hex[p_data[attacker][P_SKILL2]-1] && !p_data_b[victim][PB_HEXED]){
+
+				/*  Set the rendering of the player */
+				set_user_rendering(victim, kRenderFxDistort, 0, 0, 0, kRenderTransTexture, 0)
+				
+				/* Do not allow other renderings to take place like invisibility */
+				p_data_b[victim][PB_RENDER] = false
+				
+				p_data_b[victim][PB_HEXED] = true
+					
+				/* Set the user's speed */
+				new unholyparm[1]
+				unholyparm[0] = victim
+				unholyspeed(unholyparm)
+
+				/* Hex will only last for 10 seconds */
 				new parm[2]
 				parm[0]=victim
-				parm[1]=10		// 10 * 4 = 40 seconds (time hex lasts)
-				_Skill_Hex(parm)
+				set_task(SKILL_HEX_LENGTH,"_Skill_Hex",TASK_HEX+victim,parm,2)
 
-				if (iglow[victim][3] < 1){
-					parm[0] = victim
-					parm[1] = 0
-					set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
-				}
-				iglow[victim][3] += 100
-				iglow[victim][0] = 0
-				iglow[victim][1] = 0
-				iglow[victim][2] = 0
-				if (iglow[victim][3]>MAXGLOW)
-					iglow[victim][3]=MAXGLOW
+				emit_sound(victim, CHAN_STATIC, SOUND_HEX, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
 				Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 255, 255, 255, iglow[victim][3])
 			}
@@ -426,7 +433,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	else if ( Verify_Race(attacker, RACE_WARDEN) ){
 		
 		// Shadow Strike
-		if ( Verify_Skill(attacker, RACE_WARDEN, SKILL3) ){
+		if ( Verify_Skill(attacker, RACE_WARDEN, SKILL3) && !p_data_b[attacker][PB_HEXED] ){
 			new Float:randomnumber = random_float(0.0,1.0)
 			if (randomnumber <= p_shadow[p_data[attacker][P_SKILL3]-1]){
 				if ( p_data[attacker][P_SHADOWCOUNT]>0 && is_user_alive(victim) ){
@@ -460,28 +467,31 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	else if ( Verify_Race(attacker, RACE_CRYPT) ){
 		
 		// Orb of Annihilation
-		new Float:randomnumber = random_float(0.0,1.0)
-		if (randomnumber <= p_orb[p_data[attacker][P_LEVEL]]){
-			new origin[3]
-			get_user_origin(victim, origin)
-			
-			origin[2] -= 20
-	
-			Create_TE_SPRITE(origin, g_sWave, 10, 200)
+		if ( !p_data_b[attacker][PB_HEXED] )
+		{
+			new Float:randomnumber = random_float(0.0,1.0)
+			if (randomnumber <= p_orb[p_data[attacker][P_LEVEL]]){
+				new origin[3]
+				get_user_origin(victim, origin)
+				
+				origin[2] -= 20
+		
+				Create_TE_SPRITE(origin, g_sWave, 10, 200)
 
-			emit_sound(victim, CHAN_STATIC, SOUND_ANNIHILATION, 1.0, ATTN_NORM, 0, PITCH_NORM)
+				emit_sound(victim, CHAN_STATIC, SOUND_ANNIHILATION, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
-			WAR3_damage(victim, attacker, ORB_DAMAGE, CSW_ORB, hitplace)
+				WAR3_damage(victim, attacker, ORB_DAMAGE, CSW_ORB, hitplace)
+			}
+		#if ADVANCED_STATS
+			else{
+				new WEAPON = CSW_ORB - CSW_WAR3_MIN
+				iStatsShots[attacker][WEAPON]++
+			}
+		#endif
 		}
-	#if ADVANCED_STATS
-		else{
-			new WEAPON = CSW_ORB - CSW_WAR3_MIN
-			iStatsShots[attacker][WEAPON]++
-		}
-	#endif
 
 		// Carrion Beetle
-		if ( Verify_Skill(attacker, RACE_CRYPT, SKILL3) ){
+		if ( Verify_Skill(attacker, RACE_CRYPT, SKILL3) && !p_data_b[attacker][PB_HEXED] ){
 			if (random_float(0.0,1.0) <= p_carrion[p_data[attacker][P_SKILL3]-1]){
 				if ( p_data[attacker][P_CARRIONCOUNT]>0 && is_user_alive(victim) ){
 					new origin[3], attackerorigin[3]
@@ -508,7 +518,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 		}
 		
 		// Impale
-		if ( Verify_Skill(attacker, RACE_CRYPT, SKILL1) ){
+		if ( Verify_Skill(attacker, RACE_CRYPT, SKILL1) && !p_data_b[attacker][PB_HEXED] ){
 
 			if (random_float(0.0,1.0) <= p_impale[p_data[attacker][P_SKILL1]-1]){
 				emit_sound(victim,CHAN_STATIC, SOUND_IMPALE, 1.0, ATTN_NORM, 0, PITCH_NORM)
@@ -527,7 +537,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	// Item abilities
 
 	// Claws of Attack
-	if ( p_data[attacker][P_ITEM] == ITEM_CLAWS ){	
+	if ( p_data[attacker][P_ITEM] == ITEM_CLAWS && !p_data_b[attacker][PB_HEXED] ){	
 		WAR3_damage(victim, attacker, iCvar[FT_CLAW], wpnindex, hitplace)
 
 		if (iglow[victim][0] < 1){
@@ -547,7 +557,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	}
 
 	// Mask of Death
-	else if ( p_data[attacker][P_ITEM] == ITEM_MASK && !Verify_Skill(attacker, RACE_UNDEAD, SKILL1) ){
+	else if ( p_data[attacker][P_ITEM] == ITEM_MASK && !Verify_Skill(attacker, RACE_UNDEAD, SKILL1) && !p_data_b[attacker][PB_HEXED] ){
 		new iHealth = get_user_actualhealth(attacker)
 
 		tempdamage = floatround(float(damage) * fCvar[FT_MASK_OF_DEATH])
@@ -581,7 +591,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	}
 
 	// Orb of Frost
-	else if (p_data[attacker][P_ITEM] == ITEM_FROST){
+	else if ( p_data[attacker][P_ITEM] == ITEM_FROST && !p_data_b[attacker][PB_HEXED] ){
 		if (get_user_maxspeed(victim) > 10 && !p_data_b[victim][PB_SLOWED]){
 			new normalspeed = floatround(get_user_maxspeed(victim))
 			set_user_maxspeed(victim,fCvar[FT_FROST_SPEED])
@@ -631,7 +641,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 		}
 		
 		// Thorns Aura
-		if ( Verify_Skill(victim, RACE_ELF, SKILL2) && attacker > 0) {
+		if ( Verify_Skill(victim, RACE_ELF, SKILL2) && attacker > 0 && !p_data_b[victim][PB_HEXED] ) {
 			tempdamage = floatround(float(damage) * p_thorns[p_data[victim][P_SKILL2]-1])
 			
 			WAR3_damage(attacker, victim,tempdamage,CSW_THORNS, hitplace)
@@ -654,58 +664,62 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 
 	// Blood Mage
 	else if ( Verify_Race(victim, RACE_BLOOD) ){
-
-		// Resistant Skin
-		set_user_health(victim, get_user_health(victim) + floatround(float(damage) * p_resistant[p_data[victim][P_LEVEL]]))
-
+		
+		if ( !p_data_b[victim][PB_HEXED] )
+		{
+			// Resistant Skin
+			set_user_health(victim, get_user_health(victim) + floatround(float(damage) * p_resistant[p_data[victim][P_LEVEL]]))
+		}
 	}
 
 	// Shadow Hunter
 	else if ( Verify_Race(victim, RACE_SHADOW) ){
+		
+		if ( !p_data_b[victim][PB_HEXED] )
+		{
+			// Unstable Concoction
+			new Float:randomnumber = random_float(0.0,1.0)
 
-		// Unstable Concoction
-		new Float:randomnumber = random_float(0.0,1.0)
+			if (randomnumber <= p_concoction[p_data[victim][P_LEVEL]]){
+				new origin[3], k, initorigin[3], axisorigin[3]
+					
+				get_user_origin(victim, origin)
 
-		if (randomnumber <= p_concoction[p_data[victim][P_LEVEL]]){
-			new origin[3], k, initorigin[3], axisorigin[3]
+				emit_sound(victim,CHAN_STATIC, SOUND_CONCOCTION_CAST, 1.0, ATTN_NORM, 0, PITCH_NORM)
+
+				initorigin[0] = origin[0]
+				initorigin[1] = origin[1]
+				initorigin[2] = origin[2] - 16
+
+				axisorigin[0] = origin[0]
+				axisorigin[1] = origin[1]
+				axisorigin[2] = origin[2] + CONCOCTION_RADIUS
+
+				for (k=0;k<200;k=k+25){
+					Create_TE_BEAMCYLINDER(origin, initorigin, axisorigin, g_sSpriteTexture, 0, 0, 9, 20, 0, 188, 220, 255, 255, 0)
+
+					initorigin[2] += 25
+				}
+
+				new players[32], numberofplayers, targetorigin[3], i
+				get_players(players, numberofplayers, "a")
+				new team = get_user_team(victim)
 				
-			get_user_origin(victim, origin)
-
-			emit_sound(victim,CHAN_STATIC, SOUND_CONCOCTION_CAST, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-			initorigin[0] = origin[0]
-			initorigin[1] = origin[1]
-			initorigin[2] = origin[2] - 16
-
-			axisorigin[0] = origin[0]
-			axisorigin[1] = origin[1]
-			axisorigin[2] = origin[2] + CONCOCTION_RADIUS
-
-			for (k=0;k<200;k=k+25){
-				Create_TE_BEAMCYLINDER(origin, initorigin, axisorigin, g_sSpriteTexture, 0, 0, 9, 20, 0, 188, 220, 255, 255, 0)
-
-				initorigin[2] += 25
-			}
-
-			new players[32], numberofplayers, targetorigin[3], i
-			get_players(players, numberofplayers, "a")
-			new team = get_user_team(victim)
-			
-			for(i=0;i<numberofplayers;i++){
-				get_user_origin(players[i], targetorigin)
-				if( get_distance(origin, targetorigin) <= CONCOCTION_RADIUS && get_user_team(players[i]) != team ){
-					WAR3_damage(players[i], victim, CONCOCTION_DAMAGE, CSW_CONCOCTION, hitplace)
-					emit_sound(victim,CHAN_STATIC, SOUND_CONCOCTION_HIT, 1.0, ATTN_NORM, 0, PITCH_NORM)
+				for(i=0;i<numberofplayers;i++){
+					get_user_origin(players[i], targetorigin)
+					if( get_distance(origin, targetorigin) <= CONCOCTION_RADIUS && get_user_team(players[i]) != team ){
+						WAR3_damage(players[i], victim, CONCOCTION_DAMAGE, CSW_CONCOCTION, hitplace)
+						emit_sound(victim,CHAN_STATIC, SOUND_CONCOCTION_HIT, 1.0, ATTN_NORM, 0, PITCH_NORM)
+					}
 				}
 			}
+		#if ADVANCED_STATS
+			else{
+				new WEAPON = CSW_CONCOCTION - CSW_WAR3_MIN
+				iStatsShots[victim][WEAPON]++
+			}
+		#endif
 		}
-	#if ADVANCED_STATS
-		else{
-			new WEAPON = CSW_CONCOCTION - CSW_WAR3_MIN
-			iStatsShots[victim][WEAPON]++
-		}
-	#endif
-
 	}
 
 
@@ -713,7 +727,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	else if ( Verify_Race(victim, RACE_CRYPT) ){
 
 		// Spiked Carapace
-		if ( Verify_Skill(victim, RACE_CRYPT, SKILL2) && attacker > 0){						
+		if ( Verify_Skill(victim, RACE_CRYPT, SKILL2) && attacker > 0 && !p_data_b[victim][PB_HEXED] ){						
 			tempdamage = floatround(float(damage) * p_spiked[p_data[victim][P_SKILL2]-1])
 
 			WAR3_damage(attacker, victim, tempdamage, CSW_CARAPACE, hitplace)
@@ -749,6 +763,11 @@ public on_Death(victim, killer, wpnindex, headshot){
 	#endif
 
 	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
+	/* For some reason the damage passed by explosions is not actually correct
+		(perhaps armor adjustments weren't done yet), so lets check */
+	if ( is_user_alive(victim) && wpnindex == CSW_C4 )
 		return PLUGIN_CONTINUE
 
 	if(p_data_b[victim][PB_DIEDLASTROUND])
@@ -826,12 +845,11 @@ public on_CurWeapon(id) {
 		}
 	}
 
-	new clipamount = 0
-	new ammoamount = 0
-	new weaponnum = 0
-	weaponnum = get_user_weapon(id,clipamount,ammoamount)
 
 	#if MOD == 1
+		new clipamount = 0, ammoamount = 0, weaponnum = 0
+		weaponnum = get_user_weapon(id,clipamount,ammoamount)
+
 		if (weaponnum==DODW_HANDGRENADE || weaponnum==DODW_STICKGRENADE){
 			if( Verify_Skill(id, RACE_ORC, SKILL2) ){
 				dod_set_fuse(id,FUSE_SET,2.0,FT_NEW)
@@ -840,40 +858,8 @@ public on_CurWeapon(id) {
 
 	#endif
 
-	// Invisibility
-
-	if ( Verify_Skill(id, RACE_HUMAN, SKILL1)){
-	#if MOD == 0
-		if (weaponnum==CSW_KNIFE){
-	#endif
-	#if MOD == 1
-		if (weaponnum==DODW_AMERKNIFE || weaponnum==DODW_GERKNIFE || weaponnum==DODW_SPADE){
-	#endif
-			set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,p_invisibility[p_data[id][P_SKILL1]-1]/2)
-			p_data_b[id][PB_KNIFESELECTED]=true
-		}
-		else{
-			set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,p_invisibility[p_data[id][P_SKILL1]-1])
-			p_data_b[id][PB_KNIFESELECTED]=false
-		}
-	}
-	else if (p_data[id][P_ITEM]==ITEM_CLOAK){
-	#if MOD == 0
-		if (weaponnum==CSW_KNIFE){
-	#endif
-	#if MOD == 1
-		if (weaponnum==DODW_AMERKNIFE || weaponnum==DODW_GERKNIFE || weaponnum==DODW_SPADE){
-	#endif
-			set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,iCvar[FT_CLOAK]/2)
-			p_data_b[id][PB_KNIFESELECTED]=true
-		}
-		else{
-			set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,iCvar[FT_CLOAK])
-			p_data_b[id][PB_KNIFESELECTED]=false
-		}
-	}
-	else
-		set_user_rendering(id)
+	// Check to see if we should set the player's invisibility
+	Skill_Invisibility(id)
 
 	new parm[1]
 	parm[0]=id
@@ -922,23 +908,18 @@ public on_ResetHud(id){
 	p_data_b[id][PB_STUNNED] = false
 	p_data_b[id][PB_SLOWED] = false
 
-	// Remove Hex
-	if (task_exists(TASK_JUMPER+id)){
-		changeskin(id,SKIN_RESET)
-		remove_task(TASK_JUMPER+id)
-	}
-	
 	/* Stop the user from searching (chain lightning) */
 	if (task_exists(TASK_LIGHTSEARCH+id)){
 		remove_task(TASK_LIGHTSEARCH+id)
-		p_data_b[id][PB_ISSEARCHING]=false
 	}
 
 	/* Stop the user from searching (entangling roots) */
 	if (task_exists(TASK_SEARCHTARGET+id)){
 		remove_task(TASK_SEARCHTARGET+id)
-		p_data_b[id][PB_ISSEARCHING]=false
 	}
+
+	/* Set this to false just to be safe (used by NE and ORC ultimates) */
+	p_data_b[id][PB_ISSEARCHING]=false
 
 	if(is_user_alive(id)){
 		p_data_b[id][PB_JUSTJOINED] = false
