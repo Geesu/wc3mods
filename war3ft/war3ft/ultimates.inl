@@ -749,6 +749,11 @@ public lightsearchtarget(parm[2]){
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
+	if(!is_user_alive(id)){
+		p_data_b[id][PB_ISSEARCHING] = false
+		return PLUGIN_CONTINUE
+	}
+
 	new enemy, body
 	get_user_aiming(id,enemy,body)
 
@@ -895,6 +900,11 @@ public searchtarget(parm[2]){
 
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
+
+	if(!is_user_alive(id)){
+		p_data_b[id][PB_ISSEARCHING] = false
+		return PLUGIN_CONTINUE
+	}
 
 	new enemy, body
 	get_user_aiming(id,enemy,body)
@@ -1319,7 +1329,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 
 		p_data_b[id][PB_GODMODE] = true
 
-		set_user_health(id, get_user_health(id) + 2048)
+		set_user_actualhealth(id, get_user_health(id) + 2048, "_Ultimate_BigBadVoodoo, start")
 
 		#if MOD == 0
 			Create_BarTime(id, 2, 0)
@@ -1340,7 +1350,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 		p_data_b[id][PB_GODMODE] = false
 		
 		if( is_user_alive(id) )
-			set_user_health(id, get_user_health(id) - 2048)
+			set_user_actualhealth(id, get_user_health(id) - 2048, "_Ultimate_BigBadVoodoo, stop")
 	
 		icon_controller(id,ICON_HIDE)
 
@@ -1410,7 +1420,7 @@ Ultimate_Vengeance(id){
 		set_user_origin(id, origin)
 
 		if(get_user_health(id)<50)
-			set_user_health(id,50)
+			set_user_actualhealth(id,50, "Ultimate_Vengeance")
 	
 		emit_sound(id,CHAN_STATIC, SOUND_VENGEANCE, 1.0, ATTN_NORM, 0, PITCH_NORM)
 

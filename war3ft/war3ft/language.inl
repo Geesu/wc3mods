@@ -1,101 +1,101 @@
-public lang_Set_Menus(){
-#if ADVANCED_DEBUG == 1
-writeDebugInfo("lang_Set_Menus",0)
-#endif
+public Lang_Set_Menus(){
+	#if ADVANCED_DEBUG == 1
+		writeDebugInfo("lang_Set_Menus",0)
+	#endif
 
-new total_languages = get_langsnum()
-new lang[3], i = 0, menu[128]
-new curMenuId = -1, highestMenuId = -1
+	new total_languages = get_langsnum()
+	new lang[3], i = 0, menu[128]
+	new curMenuId = -1, highestMenuId = -1
 
-for(i=0;i<total_languages;i++){
-get_lang(i,lang)
-if(lang_exists(lang)){
+	for(i=0;i<total_languages;i++){
+		get_lang(i,lang)
+		if(lang_exists(lang)){
 
-format(menu,127,"%L",lang,"MENU_BUY_ITEM")
-curMenuId = register_menuid(menu)
-if(curMenuId>highestMenuId){
-register_menucmd(curMenuId,1023,"Item_Buy")
-highestMenuId = curMenuId
-}
+			format(menu,127,"%L",lang,"MENU_BUY_ITEM")
+			curMenuId = register_menuid(menu)
+			if(curMenuId>highestMenuId){
+				register_menucmd(curMenuId,1023,"Item_Buy")
+				highestMenuId = curMenuId
+			}
 
-format(menu,127,"%L",lang,"MENU_BUY_ITEM2")
-curMenuId = register_menuid(menu)
-if(curMenuId>highestMenuId){
-register_menucmd(curMenuId,1023,"Item_Buy2")
-highestMenuId = curMenuId
-}
+			format(menu,127,"%L",lang,"MENU_BUY_ITEM2")
+			curMenuId = register_menuid(menu)
+			if(curMenuId>highestMenuId){
+				register_menucmd(curMenuId,1023,"Item_Buy2")
+				highestMenuId = curMenuId
+			}
 
-format(menu,127,"%L",lang,"MENU_SELECT_SKILL")
-curMenuId = register_menuid(menu)
-if(curMenuId>highestMenuId){
-register_menucmd(curMenuId,1023,"_menu_Select_Skill")
-highestMenuId = curMenuId
-}
+			format(menu,127,"%L",lang,"MENU_SELECT_SKILL")
+			curMenuId = register_menuid(menu)
+			if(curMenuId>highestMenuId){
+				register_menucmd(curMenuId,1023,"_menu_Select_Skill")
+				highestMenuId = curMenuId
+			}
 
-format(menu,127,"%L",lang,"MENU_TELEPORT_TO")
-curMenuId = register_menuid(menu)
-if(curMenuId>highestMenuId){
-register_menucmd(curMenuId,1023,"_menu_Teleport")
-highestMenuId = curMenuId
-}
+			format(menu,127,"%L",lang,"MENU_TELEPORT_TO")
+			curMenuId = register_menuid(menu)
+			if(curMenuId>highestMenuId){
+				register_menucmd(curMenuId,1023,"_menu_Teleport")
+				highestMenuId = curMenuId
+			}
 
-format(menu,127,"%L",lang,"MENU_SELECT_RACE")
-curMenuId = register_menuid(menu)
-if(curMenuId>highestMenuId){
-register_menucmd(curMenuId,1023,"_menu_Select_Race")
-highestMenuId = curMenuId
-}
+			format(menu,127,"%L",lang,"MENU_SELECT_RACE")
+			curMenuId = register_menuid(menu)
+			if(curMenuId>highestMenuId){
+				register_menucmd(curMenuId,1023,"_menu_Select_Race")
+				highestMenuId = curMenuId
+			}
 
-format(menu,127,"%L",lang,"MENU_WAR3_FT_MENU")
-curMenuId = register_menuid(menu)
-if(curMenuId>highestMenuId){
-register_menucmd(curMenuId,1023,"_menu_War3menu")
-highestMenuId = curMenuId
-}
+			format(menu,127,"%L",lang,"MENU_WAR3_FT_MENU")
+			curMenuId = register_menuid(menu)
+			if(curMenuId>highestMenuId){
+				register_menucmd(curMenuId,1023,"_menu_War3menu")
+				highestMenuId = curMenuId
+			}
 
-format(menu,127,"%L",lang,"MENU_SKILLS_OPTIONS")
-curMenuId = register_menuid(menu)
-if(curMenuId>highestMenuId){
-register_menucmd(curMenuId,1023,"_menu_Skill_Options")
-highestMenuId = curMenuId
-}
+			format(menu,127,"%L",lang,"MENU_SKILLS_OPTIONS")
+			curMenuId = register_menuid(menu)
+			if(curMenuId>highestMenuId){
+				register_menucmd(curMenuId,1023,"_menu_Skill_Options")
+				highestMenuId = curMenuId
+			}
 
-format(menu,127,"%L",lang,"MENU_ITEM_OPTIONS")
-curMenuId = register_menuid(menu)
-if(curMenuId>highestMenuId){
-register_menucmd(curMenuId,1023,"_menu_Item_Options")
-highestMenuId = curMenuId
-}
+			format(menu,127,"%L",lang,"MENU_ITEM_OPTIONS")
+			curMenuId = register_menuid(menu)
+			if(curMenuId>highestMenuId){
+				register_menucmd(curMenuId,1023,"_menu_Item_Options")
+				highestMenuId = curMenuId
+			}
 
-format(menu,127,"%L",lang,"MENU_RACE_OPTIONS")
-curMenuId = register_menuid(menu)
-if(curMenuId>highestMenuId){
-register_menucmd(curMenuId,1023,"_menu_Race_Options")
-highestMenuId = curMenuId
-}
+			format(menu,127,"%L",lang,"MENU_RACE_OPTIONS")
+			curMenuId = register_menuid(menu)
+			if(curMenuId>highestMenuId){
+				register_menucmd(curMenuId,1023,"_menu_Race_Options")
+				highestMenuId = curMenuId
+			}
 
-format(menu,127,"%L",lang,"MENU_ADMIN_MENU")
-curMenuId = register_menuid(menu)
-if(curMenuId>highestMenuId){
-register_menucmd(curMenuId,1023,"_menu_Admin_Options")
-highestMenuId = curMenuId
-}
+			format(menu,127,"%L",lang,"MENU_ADMIN_MENU")
+			curMenuId = register_menuid(menu)
+			if(curMenuId>highestMenuId){
+				register_menucmd(curMenuId,1023,"_menu_Admin_Options")
+				highestMenuId = curMenuId
+			}
 
-format(menu,127,"%L",lang,"MENU_GIVE_PLAYERS_XP")
-curMenuId = register_menuid(menu)
-if(curMenuId>highestMenuId){
-register_menucmd(curMenuId,1023,"_menu_PlayerXP_Options")
-highestMenuId = curMenuId
-}
+			format(menu,127,"%L",lang,"MENU_GIVE_PLAYERS_XP")
+			curMenuId = register_menuid(menu)
+			if(curMenuId>highestMenuId){
+				register_menucmd(curMenuId,1023,"_menu_PlayerXP_Options")
+				highestMenuId = curMenuId
+			}
 
-format(menu,127,"%L",lang,"MENU_TEAM_XP")
-curMenuId = register_menuid(menu)
-if(curMenuId>highestMenuId){
-register_menucmd(curMenuId,1023,"_menu_TeamXP_Options")
-highestMenuId = curMenuId
-}
-}
-}
+			format(menu,127,"%L",lang,"MENU_TEAM_XP")
+			curMenuId = register_menuid(menu)
+			if(curMenuId>highestMenuId){
+				register_menucmd(curMenuId,1023,"_menu_TeamXP_Options")
+				highestMenuId = curMenuId
+			}
+		}
+	}
 }
 
 public racename(race,id,race_name[],length){

@@ -28,7 +28,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Pimp Daddy (OoTOAoO)"
-new const WC3VERSION[] =	"2.1.6"
+new const WC3VERSION[] =	"2.1.7"
 
 #include <amxmodx>
 #include <dbi>
@@ -38,7 +38,7 @@ new const WC3VERSION[] =	"2.1.6"
 
 #define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
-#define DEBUG 0							// Only use this when coding.. you normally don't want it
+#define DEBUG 1							// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
 #define ADVANCED_DEBUG_BOTS 0			// Print info for bots too?
 #define PRECACHE_WAR3FTSOUNDS 1
@@ -133,7 +133,6 @@ public plugin_init(){
 	register_srvcmd("amx_takexp","amx_takexp")							// For internal use only (don't use this command)
 	register_srvcmd("changexp","changeXP")								// For internal use only (don't use this command)
 
-	register_event("StatusIcon", "on_StatusIcon",  "be")
 
 	#if MOD == 1
 		register_statsfwd(XMF_DAMAGE)
@@ -163,6 +162,8 @@ public plugin_init(){
 
 		register_event("StatusValue","on_ShowStatus","be","1=2","2!0")
 		//register_event("StatusValue","on_HideStatus","be","1=1","2=0")  
+
+		register_event("StatusIcon", "on_StatusIcon",  "be")
 
 		register_event("TextMsg","setSpecMode","bd","2&ec_Mod")
 

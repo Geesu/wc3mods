@@ -42,7 +42,7 @@
 #define	TASK_ITEM_RINGERATE	1120	// Used with rings of regeneration
 #define	TASK_TESPRAY		1152	// Used with flamethrower
 #define	TASK_ONFIRE			1184	// Used with flamethrower
-#define	TASK_HEALNOW		1226	// Used with Healing Waves
+//#define	TASK_HEALNOW		1226	// Used with Healing Waves
 #define	TASK_HEALNEXT		1258	// Used with Healing Waves
 #define	TASK_LIGHT			1290	// Used with serpant wards
 #define	TASK_SHIELD			1322	// Used to check for shield
@@ -72,7 +72,7 @@
 
 
 // From ../multiplayer source/dlls/player.cpp
-#define ARMOR_RATIO	 0.5	// Armor Takes 50% of the damage (was .2 in the SDK)
+#define ARMOR_RATIO	 0.7	// Armor Takes 30% of the damage (was .2 in the SDK)
 #define ARMOR_BONUS  0.5	// Each Point of Armor is work 1/x points of health
 
 #define TE_BEAMPOINTS		0
@@ -368,13 +368,14 @@
 	#define PB_ISCONNECTED			31
 	
 	#define PB_BUYZONE				33		// Player in buyzone?
-
+	
+	#define PB_EVADENEXTWAR3DMG		34		// Should player evade next war3 damage? (NE's Evasion)
 #if MOD == 1
-	#define PB_REINCARNATION_DELAY	34
-	#define PB_REINCARNATION_SKIP	35
+	#define PB_REINCARNATION_DELAY	35
+	#define PB_REINCARNATION_SKIP	36
 #endif
 
-	#define PB_LAST					36
+	#define PB_LAST					37
 	// ***************************
 	//		End of info for player_data_bool
 	// ***************************
@@ -571,6 +572,7 @@ new g_lastAnnounce = -1
 // Abilities
 new g_pheonixExistsT = 0
 new g_pheonixExistsCT = 0
+new bool:spawnPointsused[33] = false
 
 // Sprites
 new g_sShadow

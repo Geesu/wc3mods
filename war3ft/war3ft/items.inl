@@ -122,7 +122,7 @@ public Item_Buy(id, key){
 		// Remove health bonus after buying new item
 
 		if (p_data[id][P_ITEM]==ITEM_HEALTH)
-			set_user_health(id,get_user_health(id)-iCvar[FT_HEALTH_BONUS])
+			set_user_actualhealth(id,get_user_health(id)-iCvar[FT_HEALTH_BONUS], "Item_Buy, remove health")
 
 		p_data[id][P_ITEM]=iShopmenuItem
 
@@ -130,7 +130,7 @@ public Item_Buy(id, key){
 		// Give health bonus for buying periapt of health
 
 		if (p_data[id][P_ITEM]==ITEM_HEALTH)		
-			set_user_health(id,get_user_health(id)+iCvar[FT_HEALTH_BONUS])
+			set_user_actualhealth(id,get_user_health(id)+iCvar[FT_HEALTH_BONUS], "Item_Buy, add health")
 
 
 		// Display a message regarding what the item does
@@ -398,7 +398,7 @@ public Item_Check(parm[]){
 		remove_task(TASK_ITEM_RINGERATE+id)
 
 	if (p_data[id][P_ITEM]==ITEM_HEALTH)
-		set_user_health(id,get_user_health(id)+iCvar[FT_HEALTH_BONUS])
+		set_user_actualhealth(id,get_user_health(id)+iCvar[FT_HEALTH_BONUS], "Item_Buy, add health")
 	
 	if(p_data[id][P_ITEM2]==ITEM_RING && !task_exists(TASK_ITEM_RINGERATE+id))
 		_Item_Ring(parm)
@@ -626,7 +626,7 @@ public _Item_Ring(parm[]){
 
 	while(awardHealth!=0){
 		if( get_user_actualhealth(id) + 1 <= get_user_maxhealth(id) ){
-			set_user_health(id, get_user_health(id) + 1)
+			set_user_actualhealth(id, get_user_health(id) + 1, "_Item_Ring")
 		}
 
 		awardHealth--

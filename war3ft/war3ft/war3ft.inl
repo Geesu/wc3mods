@@ -215,20 +215,27 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
+	if( attacker==0 || victim==0 )
+		return PLUGIN_CONTINUE
+
 	if(!is_user_alive(victim))
 		return PLUGIN_CONTINUE
 
 	if( p_data_b[victim][PB_WARDENBLINK] && (weapon == CSW_LIGHTNING || weapon == CSW_SUICIDE || weapon == CSW_FLAME || weapon == CSW_LOCUSTS))
 		return PLUGIN_CONTINUE
 
+	if( p_data_b[victim][PB_EVADENEXTWAR3DMG] ){
+	#if DEBUG == 1
+		write_Health_Info("WAR3 Damage evaded", victim)
+		client_print(victim, print_chat,"### You evaded a war3 damage")
+	#endif
+		return PLUGIN_CONTINUE
+	}
+
 	// Warden's Hardened Skin
 	if( Verify_Race(victim, RACE_WARDEN) ){
 		damage -= floatround(float(damage) * p_harden[p_data[victim][P_LEVEL]])
 	}
-
-	#if DEBUG == 1
-		console_print(victim, "### WAR3 Damage: %d", damage)
-	#endif 
 
 #if MOD == 0
 	// Damage calculation due to armor from: ../multiplayer source/dlls/player.cpp
@@ -245,14 +252,10 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 		set_user_armor(victim, 0)
 	}
 	else
-		set_user_armor(victim, floatround(armor - flArmor))
+		set_user_armor(victim, floatround(armor - (3.0 * flArmor)))
 
 	damage = floatround(flNew)
 #endif
-
-	#if DEBUG == 1
-		console_print(victim, "### WAR3 Damage After Armor: %d", damage)
-	#endif 
 
 	new bool:userkilled = false
 	new headshot = 0
@@ -273,8 +276,17 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 		userkilled = true
 
 #if DEBUG
-	console_print(attacker,"Damage dealt: %d", damage)
-	console_print(victim,"Damage received: %d", damage)
+	new victimName[32]
+	new attackerName[32]
+	get_user_name(victim, victimName, 31)
+	get_user_name(attacker, attackerName, 31)
+	console_print(attacker,"You did %d damage to %s from weapon:%d", damage, victimName, weapon)
+	console_print(victim,"You received %d damage from %s by weapon:%d", damage, attackerName, weapon)
+	#if MOD == 0
+	console_print(attacker,"%s lost %0.0f armor", victimName, (3.0 * flArmor))
+	console_print(victim,"%s lost %0.0f armor", victimName, (3.0 * flArmor))
+
+	#endif
 #endif
 
 #if MOD == 1
@@ -284,7 +296,7 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 #endif
 		WAR3_death(victim, attacker, weapon, headshot)
 	else
-		set_user_health(victim, health - damage)
+		set_user_actualhealth(victim, health - damage, "WAR3_damage")
 
 	return PLUGIN_CONTINUE
 }
@@ -495,6 +507,15 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 	
 	#if DEBUG == 1
 		client_print(victim_id, print_chat,"*** WAR3 Death")
+
+		new victimName[32], attackerName[32]
+		get_user_name(victim_id, victimName, 31)
+		get_user_name(killer_id, attackerName, 31)
+
+		new players[32], numberofplayers
+		get_players(players, numberofplayers)
+		for(new i=0;i<numberofplayers;i++)
+			console_print(players[i], "### %s killed by %s with weapon: %d", victimName, attackerName, weapon)
 	#endif
 
 	clear_all_icons(victim_id)
@@ -688,8 +709,6 @@ public _WAR3_Ultimate_Delay(parm[]){
 
 	p_data[id][P_ULTIMATEDELAY]--
 
-	//console_print(id, "_WAR3_Ultimate_Delay Called: %d", p_data[id][P_ULTIMATEDELAY])
-
 	if (p_data[id][P_ULTIMATEDELAY] > 0)
 		set_task(1.0,"_WAR3_Ultimate_Delay",TASK_UDELAY+id, parm, 1)
 	else{
@@ -741,7 +760,7 @@ public WAR3_set_race(id,race){
 	p_data[id][P_CHANGERACE] = 0
 
 	if (get_user_health(id)>100)
-		set_user_health(id,100)
+		set_user_actualhealth(id,100, "WAR3_set_race")
 
 	#if MOD == 1
 		p_data_b[id][PB_REINCARNATION_DELAY] = false
@@ -769,7 +788,7 @@ public WAR3_set_race(id,race){
 	}
 
 	if(((p_data[id][P_RACE] == 9 && race9Options[2] == 2) || p_data[id][P_RACE] == 2) && p_data[id][P_SKILL2] && get_user_health(id) <= 100){	// set_health
-		set_user_health(id,p_devotion[p_data[id][P_SKILL2]-1])
+		set_user_actualhealth(id,p_devotion[p_data[id][P_SKILL2]-1], "From Setting devotion aura in war3_set_race")
 	}
 
 	WAR3_Display_Level(id, DISPLAYLEVEL_SHOWRACE)
@@ -1034,7 +1053,7 @@ public WAR3_Display_Level(id, flag){
 	if (((p_data[id][P_RACE] == 9 && race9Options[1] != 4) || p_data[id][P_RACE] != 4 || !p_data[id][P_SKILL1])){	// Evasion
 		new userhealth = get_user_health(id)
 		if (userhealth > 500 && userhealth < 1500)
-			set_user_health(id, userhealth-1024)
+			set_user_actualhealth(id, userhealth-1024, "WAR3_Display_Level")
 	}
 
 	new parm4[1]
@@ -1045,6 +1064,9 @@ public WAR3_Display_Level(id, flag){
 }
 
 WAR3_Show_Spectator_Info(id, targetid){
+	#if ADVANCED_DEBUG == 1
+		writeDebugInfo("WAR3_Show_Spectator_Info",id)
+	#endif
 
 	new name[32]
 	get_user_name(targetid ,name,31) 
@@ -1138,7 +1160,7 @@ WAR3_Immunity_Found_Near(id, origin[3]){
 
 public WAR3_Set_Variables(){
 	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("set_variables",0)
+		writeDebugInfo("WAR3_Set_Variables",0)
 	#endif
 
 	if (get_cvar_num("sv_warcraft3")==0)
@@ -1248,7 +1270,7 @@ public WAR3_Set_Variables(){
 		g_MODclient = "* [WAR3FT]"	
 	}
 
-	lang_Set_Menus()
+	Lang_Set_Menus()
 	XP_Set_DBI()
 	XP_Set()
 	checkmap()

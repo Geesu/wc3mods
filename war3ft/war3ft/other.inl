@@ -8,8 +8,12 @@ public showRank(id){
 
 	new a = read_data(2)
 
+	if ( is_user_bot(id) )
+		return PLUGIN_CONTINUE
+
+	// Not a valid target
 	if (!p_data_b[a][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE		// not valid target 
+		return PLUGIN_CONTINUE
 
 	WAR3_Show_Spectator_Info(id, a)
 	
@@ -73,13 +77,11 @@ public changeskin(id,reset){							// Function changes your skin for ITEM_MOLE a
 	if (reset==SKIN_RESET && (p_data[id][P_SKINCHANGED] == SKIN_HEX || p_data[id][P_SKINCHANGED]==SKIN_SWITCH)){
 		cs_reset_user_model(id)
 		p_data[id][P_SKINCHANGED]=SKIN_RESET
-		//console_print(id,"### Skin reset", newSkin)
 	}
 	else if (reset==SKIN_HEX){ 
 		if(!g_mapDisabled)
 			cs_set_user_model(id,"alien4")
 		p_data[id][P_SKINCHANGED]=SKIN_HEX
-		//console_print(id,"### You should look like an alien", newSkin)
 	}
 	else if (reset==SKIN_SWITCH){
 		if (get_user_team(id)==TS)
@@ -88,7 +90,6 @@ public changeskin(id,reset){							// Function changes your skin for ITEM_MOLE a
 			add(newSkin,31,TSkins[num])
 
 		cs_set_user_model(id,newSkin)
-		//console_print(id,"### You should look like: %s", newSkin)
 		p_data[id][P_SKINCHANGED]=SKIN_SWITCH
 	}
 #endif
@@ -518,15 +519,15 @@ public player_giveitems(parm[2]){
 
 	// Vengeance
 	if( Verify_Skill(id, RACE_WARDEN, SKILL4) && !p_data_b[id][PB_SPAWNEDFROMITEM])
-		set_user_health(id,50)
+		set_user_actualhealth(id,50, "player_giveitems, warden")
 
 	// Evasion
 	else if ( Verify_Skill(id, RACE_ELF, SKILL1) && p_data_b[id][PB_EVADENEXTSHOT])
-		set_user_health(id,1124)
+		set_user_actualhealth(id,1124, "player_giveitems, evade next")
 
 	// Devotion Aura
 	else if ( Verify_Skill(id, RACE_HUMAN, SKILL2))							
-		set_user_health(id,p_devotion[p_data[id][P_SKILL2]-1])
+		set_user_actualhealth(id,p_devotion[p_data[id][P_SKILL2]-1], "player_giveitems, human")
 
 	p_data_b[id][PB_GIVEITEMS]=true
 	set_task(0.1, "weapon_controller", TASK_REINCARNATION+id, parm, 2)							// Give weapons back

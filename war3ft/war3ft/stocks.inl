@@ -66,7 +66,13 @@ stock find_free_spawn(iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]){
 			entity_get_vector(spawnPoints[i],EV_VEC_origin,spawnOrigin)
 			playersInVicinity = find_sphere_class(0, "player", vicinity, entList, 1, spawnOrigin)
 			if (playersInVicinity == 0){
-				foundFreeSpawn = true
+				if (!spawnPointsused[i]){
+					foundFreeSpawn = true
+					spawnPointsused[i] = true
+				}
+				else{
+					foundFreeSpawn = false
+				}
 			}
 			else{
 				foundFreeSpawn = false
@@ -81,6 +87,20 @@ stock find_free_spawn(iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]){
 	}
 
 	return -1
+}
+
+stock set_user_actualhealth(id, health, fromFunction[]){
+	#if DEBUG == 1
+		new name[32], info[128]
+		get_user_name(id, name, 31)
+		new players[32], num
+		get_players(players, num)
+
+		format(info,127,"(%d) %s's health set to %d (%s)", is_user_alive(id), name, health, fromFunction)
+		write_Health_Info(info, id)
+	#endif
+
+	set_user_health(id, health)
 }
 
 stock get_user_actualhealth(id){
@@ -123,6 +143,9 @@ stock get_user_maxhealth(id){
 
 stock Verify_Race(id, race){
 
+	if( id == 0 )
+		return false
+	
 	if( p_data[id][P_RACE] == race )
 		return true
 
@@ -141,6 +164,10 @@ stock Verify_Race(id, race){
 }
 
 stock Verify_Skill(id, race, skill){
+
+	if( id == 0 )
+		return false
+
 	if( ((p_data[id][P_RACE] == 9 && race9Options[skill] == race) || p_data[id][P_RACE] == race) && p_data[id][skill] )
 		return true
 

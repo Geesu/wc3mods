@@ -1,3 +1,12 @@
+v2.1.7
+ - Bug Fix: (DOD) StatusIcon event unknown error
+ - Bug Fix: Mole's could spawn on top of each other
+ - Bug Fix: Using mask of death with evade could give you 100 health in one shot (thanks Caskeper)
+ - Bug Fix: World doing extra damage to you
+ - Bug Fix: Healing Wave's multiplying on top of each other (i.e. healing 3 health in 1 second)
+ - Change: You will no longer hear the banish sound when you banish someone
+ - Change: Armor ratio when dealing with magical damage
+
 v2.1.6
  - Bug Fix: An extra number appeared in war3menu, it was removed
  - Bug Fix: Rings would not health humans to their max health (thanks ol)

@@ -154,7 +154,6 @@ public MOTD_Playerskills(id, saychat){
 	new race_name[MAX_RACES+1][64]
 	new players[32], numberofplayers, i, k, playerid, pos
 	new iTotalRace[MAX_RACES+1]
-
 	get_players(players, numberofplayers)
 
 #if DEBUG == 1
@@ -188,28 +187,30 @@ public MOTD_Playerskills(id, saychat){
 			else{
 				console_print(id, "**** %s ****", race_name[k])
 			}
+			
+			for (new iTeam = TS; iTeam <= CTS; iTeam++){
+				for (i = 0; i < numberofplayers; ++i){
+					playerid=players[i]
 
-			for (i = 0; i < numberofplayers; ++i){
-				playerid=players[i]
+					if(p_data[playerid][P_RACE] == k && get_user_team(playerid) == iTeam){
+						get_user_name(playerid,name,31)
+						
+						if ( saychat ) {
+							replace(name, 127, "<", "&lt;")
+							replace(name, 127, ">", "&gt;")
 
-				if(p_data[playerid][P_RACE] == k){
-					get_user_name(playerid,name,31)
-					
-					if ( saychat ) {
-						replace(name, 127, "<", "&lt;")
-						replace(name, 127, ">", "&gt;")
-
-						if(get_user_team(playerid) == CTS)
-							pos += format(message[pos],2048-pos,"<li><font color='blue'>(%d) %s",p_data[playerid][P_LEVEL],name)
-						else
-							pos += format(message[pos],2048-pos,"<li><font color='red'>(%d) %s",p_data[playerid][P_LEVEL],name)
-					}
-					else{
-						console_print(id, "%-2s(%d) %s","",p_data[playerid][P_LEVEL],name)
-					}
-					
-					if( saychat ) {
-						pos += format(message[pos],2048-pos,"</font></li>")
+							if(get_user_team(playerid) == CTS)
+								pos += format(message[pos],2048-pos,"<li><font color='#99CCFF'>(%d) %s",p_data[playerid][P_LEVEL],name)
+							else
+								pos += format(message[pos],2048-pos,"<li><font color='#FF3F3F'>(%d) %s",p_data[playerid][P_LEVEL],name)
+						}
+						else{
+							console_print(id, "%-2s(%d) %s","",p_data[playerid][P_LEVEL],name)
+						}
+						
+						if( saychat ) {
+							pos += format(message[pos],2048-pos,"</font></li>")
+						}
 					}
 				}
 			}
@@ -226,6 +227,10 @@ public MOTD_Playerskills(id, saychat){
 		format(motdmessage, 127, "%L",id,"PLAYER_SKILLS","","")
 		show_motd(id,message,motdmessage)
 	}
+
+#if DEBUG == 1
+	writeDebugInfo("MOTD_Playerskills",105)
+#endif
 
 	return PLUGIN_HANDLED
 }

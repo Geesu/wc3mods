@@ -447,6 +447,12 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 		writeDebugInfo("client_damage",victim)
 	#endif
 
+	#if DEBUG == 1
+		console_print(victim, "### %d damage done by %d", damage, attacker)
+		console_print(attacker, "### %d damage done to %d", damage, victim)
+
+	#endif
+
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
@@ -457,7 +463,7 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 		return PLUGIN_CONTINUE
 	
 	if(p_data_b[attacker][PB_MOLE] && (p_data[victim][P_ITEM2]==ITEM_PROTECTANT || p_data_b[victim][PB_WARDENBLINK])){	
-		set_user_health(victim,get_user_health(victim)+damage)
+		set_user_actualhealth(victim,get_user_health(victim)+damage, "client_damage, protectant")
 		client_print(victim,print_chat,"%L",victim,"SHOT_DEFLECTED",g_MOD)
 		return PLUGIN_HANDLED
 	}
@@ -469,7 +475,7 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 			}
 		}
 		else{
-			set_user_health(victim, get_user_health(victim) + damage)
+			set_user_actualhealth(victim, get_user_health(victim) + damage, "client_damage, godmode")
 		}
 
 		return PLUGIN_CONTINUE
@@ -478,12 +484,11 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 	if (victim==attacker)
 		return PLUGIN_HANDLED
 
-	if (victim==attacker && wpnindex==0){
+	if (victim==attacker && wpnindex==0)
 		return PLUGIN_CONTINUE
-	}
-	else if (attacker==0){
+
+	else if (attacker==0)
 		return PLUGIN_CONTINUE
-	}
 
 	new tempdamage = 0
 
@@ -503,12 +508,18 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 
 		// Vampiric Aura
 		if ( Verify_Skill(attacker, RACE_UNDEAD, SKILL1) ) {
-			tempdamage = floatround(float(damage) * p_vampiric[p_data[attacker][P_SKILL1]-1])
-			set_user_health(attacker, get_user_health(attacker) + tempdamage)
+			new health = get_user_health(attacker)
+			new maxHealth = get_user_maxhealth(attacker)
 
-			if (get_user_health(attacker) > 100 + (p_data[attacker][P_ITEM]==ITEM_HEALTH ? iCvar[FT_HEALTH_BONUS] : 0) ){
-				set_user_health(attacker, 100 + (p_data[attacker][P_ITEM]==ITEM_HEALTH ? iCvar[FT_HEALTH_BONUS] : 0) )
+			tempdamage = floatround(float(damage) * p_vampiric[p_data[attacker][P_SKILL1]-1])
+			
+			if(health < maxHealth){
+				if( health + tempdamage > maxHealth )
+					set_user_actualhealth(attacker, maxHealth, "client_damage, Vamp Aura - max")
+				else
+					set_user_actualhealth(attacker, health + tempdamage, "client_damage, Vamp Aura")
 			}
+			
 			if (iglow[attacker][1] < 1){
 				new parm[2]
 				parm[0] = attacker
@@ -665,7 +676,6 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 					WAR3_damage(victim, attacker, 7, wpnindex, hitplace)
 				}
 
-				emit_sound(attacker,CHAN_STATIC, SOUND_BANISH, 1.0, ATTN_NORM, 0, PITCH_NORM)
 				emit_sound(victim,CHAN_STATIC, SOUND_BANISH, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
 				if (iglow[victim][3] < 1){
@@ -843,11 +853,13 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 
 	// Mask of Death
 	else if (p_data[attacker][P_ITEM] == ITEM_MASK){
-		tempdamage = floatround(float(damage) * iCvar[FT_MASK_OF_DEATH])
-		set_user_health(attacker, get_user_health(attacker) + tempdamage)
+		new iHealth = get_user_health(attacker)
 
-		if (get_user_health(attacker) > get_user_maxhealth(attacker))
-			set_user_health(attacker, get_user_maxhealth(attacker)) 
+		tempdamage = floatround(float(damage) * iCvar[FT_MASK_OF_DEATH])
+		set_user_actualhealth(attacker, get_user_actualhealth(attacker) + tempdamage, "client_damage, mask")
+
+		if (iHealth > get_user_maxhealth(attacker) && iHealth < 500)
+			set_user_actualhealth(attacker, get_user_maxhealth(attacker), "client_damage, mask above") 
 
 		if (iglow[attacker][1] < 1){
 			new parm[2]
@@ -902,21 +914,24 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 		if ( Verify_Skill(victim, RACE_ELF, SKILL1) ) {
 			new healthadjustment = 0
 			new Float:randomnumber = random_float(0.0,1.0)
+			new iHealth = get_user_health(victim)
 
 			if (randomnumber <= p_evasion[p_data[victim][P_SKILL1]-1]){
-				p_data_b[victim][PB_EVADENEXTSHOT]=true
-				if (get_user_health(victim) <= get_user_maxhealth(victim)){
+				p_data_b[victim][PB_EVADENEXTSHOT] = true
+				p_data_b[victim][PB_EVADENEXTWAR3DMG] = true
+				if (iHealth <= get_user_maxhealth(victim)){
 					healthadjustment = 1024
 				}
 			}
 			else{
-				p_data_b[victim][PB_EVADENEXTSHOT]=false
-				if (get_user_health(victim) > get_user_maxhealth(victim)){
+				p_data_b[victim][PB_EVADENEXTSHOT] = false
+				p_data_b[victim][PB_EVADENEXTWAR3DMG] = false
+				if (iHealth > get_user_maxhealth(victim) && iHealth > 500){
 					healthadjustment = -1024					
 				}
 			}
 			if (p_data_b[victim][PB_EVADENEXTSHOT]){
-				set_user_health(victim, get_user_health(victim) + damage + healthadjustment)
+				set_user_actualhealth(victim, iHealth + damage + healthadjustment, "client_damage, evade adjustment")
 
 				if (iglow[victim][2] < 1){
 					new parm[2]
@@ -933,7 +948,7 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 				Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 0, 0, 255, iglow[victim][2])
 			}
 			else{
-				set_user_health(victim, get_user_health(victim) + healthadjustment)
+				set_user_actualhealth(victim, iHealth + healthadjustment, "client_damage, evade adjustment2")
 			}
 		}
 		
@@ -963,13 +978,7 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 	else if ( Verify_Race(victim, RACE_BLOOD) ){
 
 		// Resistant Skin
-		tempdamage = floatround(float(damage) * p_resistant[p_data[victim][P_LEVEL]])
-		#if DEBUG == 1
-			console_print(victim, "### Damage: %d", damage)
-			console_print(victim, "### Final Damage: %d", damage - tempdamage)
-		#endif 
-
-		set_user_health(victim, get_user_health(victim) + tempdamage)
+		set_user_actualhealth(victim, get_user_health(victim) + floatround(float(damage) * p_resistant[p_data[victim][P_LEVEL]]), "client_damage, resistant skin")
 
 	}
 
@@ -1107,6 +1116,7 @@ public on_DeathMsg(){
 			p_data_b[id][PB_HELMET]=true
 		else
 			p_data_b[id][PB_HELMET]=false
+
 		return PLUGIN_CONTINUE
 	}
 
@@ -1286,6 +1296,9 @@ public on_EndRound(){
 		p_data[id][P_DEFUSERINDEX] = 0
 	}
 
+	for(y=0;y<33;++y)
+		spawnPointsused[y]=false
+
 	g_freezecalled = 0
 	g_buyCalled=false
 	g_pheonixExistsT=0
@@ -1348,6 +1361,12 @@ public on_ResetHud(id){
 	p_data_b[id][PB_STUNNED] = false
 	p_data_b[id][PB_SLOWED] = false
 
+	// Remove Hex
+	if (task_exists(TASK_JUMPER+id)){
+		changeskin(id,SKIN_RESET)
+		remove_task(TASK_JUMPER+id)
+	}
+	
 	if (task_exists(TASK_LIGHTSEARCH+id)){
 		remove_task(TASK_LIGHTSEARCH+id)
 		p_data_b[id][PB_ISSEARCHING]=false

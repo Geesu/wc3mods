@@ -25,12 +25,12 @@ public Skill_Check(id){
 
 	// Night Elf's Evasion
 	if ( Verify_Skill(id, RACE_ELF, SKILL1) && p_data_b[id][PB_EVADENEXTSHOT] ){
-		set_user_health(id,1124)
+		set_user_actualhealth(id,1124, "Skill_Check, evade next")
 	}
 
 	// Human's Devotion Aura
 	if ( Verify_Skill(id, RACE_HUMAN, SKILL2) ){
-		set_user_health(id,p_devotion[p_data[id][P_SKILL2]-1])
+		set_user_actualhealth(id,p_devotion[p_data[id][P_SKILL2]-1], "Skill_Check, unholy aura")
 	}
 
 	// God mode, removing the reset task will prevent death (health is reset to 100 at the start of the round, so we don't want to set the health to 100-2048)
@@ -418,8 +418,8 @@ public _Skill_Healing_Wave(parm[2]){
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
-	if (Verify_Skill(id, RACE_SHADOW, SKILL1) && is_user_alive(id)){
-		set_task(p_heal[p_data[id][P_SKILL1]-1],"_Skill_Healing_Wave",TASK_HEALNOW+id,parm,2)
+	if ( Verify_Skill(id, RACE_SHADOW, SKILL1) ){
+		set_task(p_heal[p_data[id][P_SKILL1]-1],"_Skill_Healing_Wave",TASK_WAVE+id,parm,2)
 	}
 
 	new players[32], numberofplayers, teamname[32]
@@ -448,7 +448,7 @@ public _Skill_Healing_Wave(parm[2]){
 				
 				if( get_user_actualhealth(targetid) + 1 <= get_user_maxhealth(targetid) ){
 
-					set_user_health(targetid, get_user_health(targetid) + 1)
+					set_user_actualhealth(targetid, get_user_health(targetid) + 1, "_Skill_Healing_Wave")
 
 					Create_TE_IMPLOSION(origin, 100, 8, 1)
 
@@ -481,9 +481,11 @@ public _Skill_Hex(parm[2]){
 
 	Create_ScreenFade(id, (1<<10), (1<<10), (1<<12), 82, 245, 235, 110)
 
-	if(!endround && is_user_alive(id) && parm[1]>0)
+	if(is_user_alive(id) && parm[1]>0)
 		set_task(4.0,"_Skill_Hex",TASK_JUMPER+id,parm,2)
-	
+	else
+		changeskin(id,SKIN_RESET)
+
 	return PLUGIN_CONTINUE
 }
 

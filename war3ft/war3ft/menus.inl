@@ -286,11 +286,11 @@ public _menu_Select_Skill(id,key){
 	// Devotion Aura Chosen
 	if ( Verify_Skill(id, RACE_HUMAN, SKILL2) && key == KEY_2 && is_user_alive(id)){
 		if(p_data[id][P_SKILL2]==1)
-			set_user_health(id,get_user_health(id) + (p_devotion[0] - 100))
+			set_user_actualhealth(id,get_user_health(id) + (p_devotion[0] - 100), "_menu_Select_Skill, Devotion 1")
 		else if(p_data[id][P_SKILL2]==2)
-			set_user_health(id,get_user_health(id) + (p_devotion[1] - p_devotion[0]))
+			set_user_actualhealth(id,get_user_health(id) + (p_devotion[1] - p_devotion[0]), "_menu_Select_Skill, Devotion 2")
 		else if(p_data[id][P_SKILL2]==3)
-			set_user_health(id,get_user_health(id) + (p_devotion[2] - p_devotion[1]))
+			set_user_actualhealth(id,get_user_health(id) + (p_devotion[2] - p_devotion[1]), "_menu_Select_Skill, Devotion 3")
 	}
 
 	return PLUGIN_HANDLED
