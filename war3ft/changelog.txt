@@ -4,6 +4,10 @@ v2.2.2
  - Addition: FT_impale_intensity (setting this to a lower value will lower the intesity of impale)
  - Change: Pheonix will now revive players if they were TKed (thanks -]ST|Ghost[-)
  - Change: Impale % lowered to 12% max (was 15%)
+ - Change: Mask of Death no longer stacks with Undead's Vampiric Aura
+ - Change: Orc's Critical Strike, you now have a 15% chance of doing an extra 25%, 50%, or 75% of the original damage to an enemy
+ - Change: Night Elf's Evasion now has a 10%, 15% and 25% of evading a shot
+ - Change: Night Elf's Trueshot now does an extra 10%, 20%, 35% damage
  - Module: Fixed 100% CPU spike for real
  - Module: Fixed bomb explosion crash bug on some servers
  - Module: Support for linux/amd64 removed for the CSHack portion of the module
@@ -14,6 +18,7 @@ v2.2.2
  - Removed: Warden's being protected from moles
  - Balance: Undead's Vampiric Aura lowered, mask of death lowered (update your war3ft.cfg files)
  - Languages: All up-to-date except Danish and Polish
+ - Thanks: to the admins over at http://goldenstrike.snt.utwente.nl for their extensive suggestions/bug reports
 
 v2.2.1
  - Languages updated

@@ -246,7 +246,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 		// Critical Strike
 		if ( Verify_Skill(attacker, RACE_ORC, SKILL1)) {
 			new Float:randomnumber = random_float(0.0,1.0)
-			if (randomnumber <= p_critical[p_data[attacker][P_SKILL1]-1]){
+			if (randomnumber <= CRITICAL_STRIKE_CHANCE){
 				tempdamage = floatround(float(damage) * p_data[attacker][P_SKILL1])
 
 				WAR3_damage(victim, attacker, tempdamage, wpnindex, hitplace)
@@ -547,7 +547,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	}
 
 	// Mask of Death
-	else if (p_data[attacker][P_ITEM] == ITEM_MASK){
+	else if ( p_data[attacker][P_ITEM] == ITEM_MASK && !Verify_Skill(attacker, RACE_UNDEAD, SKILL1) ){
 		new iHealth = get_user_actualhealth(attacker)
 
 		tempdamage = floatround(float(damage) * fCvar[FT_MASK_OF_DEATH])

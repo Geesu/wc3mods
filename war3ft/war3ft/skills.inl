@@ -702,8 +702,8 @@ public _Skill_Impale(parm[2]){
 		return PLUGIN_CONTINUE
 
 	if(parm[1]<4){
-		new iMin = -1 * iCvar[FT_IMPALE_INTENSITY]
-		new iMax = iCvar[FT_IMPALE_INTENSITY]
+		new Float:iMin = -1.0 * float(iCvar[FT_IMPALE_INTENSITY])
+		new Float:iMax = float(iCvar[FT_IMPALE_INTENSITY])
 
 		new Float:vec_angle[3], Float:vec_v_angle[3]
 		new i
