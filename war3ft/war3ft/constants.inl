@@ -438,6 +438,7 @@
 #define	FT_ROUND_WIN_XP						40
 #define FT_BLINK_DIZZINESS					41
 #define FT_ENTANGLE_DROP					42
+#define FT_SHOW_PLAYER						43
 
 #if MOD == 0
 	#define	FT_ITEMS_IN_HUD						45

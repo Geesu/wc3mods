@@ -171,7 +171,7 @@ public plugin_init(){
 		register_event("WeapPickup","on_WeapPickup","b") 
 
 		register_event("StatusValue","on_ShowStatus","be","1=2","2!0")
-		//register_event("StatusValue","on_HideStatus","be","1=1","2=0")  
+		register_event("StatusValue","on_HideStatus","be","1=1","2=0")  
 
 		register_event("StatusIcon", "on_StatusIcon",  "be")
 
@@ -221,7 +221,8 @@ public plugin_init(){
 	}
 
 	// For an explanation of these variables, please see war3ft.cfg
-	register_cvar("FT_Race9_Random",				"1")
+	register_cvar("FT_show_player",				"0")
+	register_cvar("FT_Race9_Random",			"1")
 	register_cvar("FT_Race9_Skill1",			"1")
 	register_cvar("FT_Race9_Skill2",			"1")
 	register_cvar("FT_Race9_Skill3",			"1")

@@ -1043,6 +1043,7 @@ public on_ResetHud(id){
 			changeskin(id,SKIN_RESET)
 
 			WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
+
 			return PLUGIN_HANDLED
 		}
 	#endif

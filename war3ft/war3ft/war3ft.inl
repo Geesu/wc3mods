@@ -1248,6 +1248,7 @@ public WAR3_Set_Variables(){
 	iCvar[MP_WEAPONXPMODIFIER		] = get_cvar_num("mp_weaponxpmodifier")
 	iCvar[FT_BLINK_PROTECTION		] = get_cvar_num("FT_blink_protection")
 	iCvar[FT_ENTANGLE_DROP			] = get_cvar_num("FT_entangle_drop")
+	iCvar[FT_SHOW_PLAYER			] = get_cvar_num("FT_show_player")
 
 	fCvar[FT_BOT_BUY_ITEM			] = get_cvar_float("FT_bot_buy_item")
 	fCvar[FT_FROST_SPEED			] = get_cvar_float("FT_frost_speed")

@@ -611,5 +611,39 @@ public on_ShowStatus(id){
 		}
 	}
 
+	if ( iCvar[FT_SHOW_PLAYER] && !g_freezetime ){
+		// From miscstats.sma
+		new name[32], color1 = 0, color2 = 0
+		new team = get_user_team(pid)
+
+		get_user_name(pid,name,31)
+		
+		if ( team == 1 )
+			color1 = 255
+		else
+			color2 = 255
+		
+		// Teammate
+		if ( get_user_team(id) == team || p_data_b[pid][PB_MOLE] ) {
+			new wpnname[32] , clip, ammo, wpnid = get_user_weapon(pid,clip,ammo) 
+
+			get_weaponname(wpnid,wpnname,31) 
+			set_hudmessage(color1,50,color2,-1.0,0.60,1, 0.01, 3.0, 0.01, 0.01, 4)
+			show_hudmessage(id,"%s -- %d HP / %d AP / %s", name, get_user_health(pid), get_user_armor(pid), wpnname)
+		} 
+		else { 
+			set_hudmessage(color1,50,color2,-1.0,0.60,1, 0.01, 3.0, 0.01, 0.01, 4) 
+			show_hudmessage(id, name) 
+		} 
+	}
+
 	return PLUGIN_CONTINUE
+}
+
+public on_HideStatus(id){
+
+	if ( iCvar[FT_SHOW_PLAYER] && !g_freezetime ){
+		set_hudmessage(0,0,0,0.0,0.0,0, 0.0, 0.01, 0.0, 0.0, 4) 
+		show_hudmessage(id,"")
+	}
 }
