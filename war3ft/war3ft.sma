@@ -6,13 +6,13 @@
 *  http://www.4hm.net (check forums)
 *
 *  Credits to:
-*  Spacedude (for War3 g_MOD)
+*  Spacedude (for War3 MOD)
 *  Ludwig Van (for flamethrower)
 *  OLO (for spectating rank info)
 *  JGHG for the mole code
 *  [AOL]Demandred, [AOL]LuckyJ for help coding it for steam
 *  [AOL]Demandred for freezetime exploit fix
-*  Everyone at amxmod.net for help
+*  Everyone at amxmod.net/amxmodx.org for help
 *  joecool12321 for various health related fixes
 *  Tri Moon for various improvements (No Race, war3menu, etc...)
 *  xeroblood for spotting some bugs for me :)
@@ -21,7 +21,6 @@
  		help w/testing version before release
 		always helping people out on the forums
 		contributing code for the anti-skywalking
-*  lui for the delayed ultimate code
 *  ryannotfound (war3x.net) for some of the naming conventions used (function names, constants, etc...) and functions
 */
 
@@ -40,7 +39,7 @@ new WC3VERSION[] =	"2.1.3"
 // THESE ARE THE ONLY OPTIONS THAT NEED TO BE CHANGED DURING COMPILE TIME
 #define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
-#define DEBUG 0							// Only use this when coding.. you normally don't want it
+#define DEBUG 1							// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
 #define ADVANCED_DEBUG_BOTS 0			// Print info for bots too?
 #define PRECACHE_WAR3FTSOUNDS 1
@@ -81,8 +80,6 @@ public plugin_init(){
 		writeDebugInfo("plugin_init",0)
 	#endif
 
-	//register_message(get_user_msgid("Radar"),"testing") 
-
 	gmsgDeathMsg = get_user_msgid("DeathMsg")
 	gmsgScreenFade = get_user_msgid("ScreenFade")
 	gmsgScreenShake = get_user_msgid("ScreenShake")
@@ -96,9 +93,7 @@ public plugin_init(){
 	#if MOD == 1
 		//register_message(get_user_msgid("TextMsg"), "testing")
 
-		//gmsgObject = get_user_msgid("Object")
 		gmsgHudText = get_user_msgid("HudText")
-		register_cvar("DOD_startmoney","800")
 	#endif
 
 
@@ -148,7 +143,6 @@ public plugin_init(){
 		register_event("TextMsg","on_SetSpecMode","b","2&#Spec_Mode")
 
 		register_event("StatusValue","on_StatusValue","b")
-
 	#endif
 
 	#if MOD == 0
@@ -208,6 +202,7 @@ public plugin_init(){
 		register_event("TextMsg", "FT_controller", "a", "2&#Game_C")
 	}
 
+	// For an explanation of these variables, please see war3ft.cfg
 	register_cvar("FT_Race9_Skill1",			"1")
 	register_cvar("FT_Race9_Skill2",			"1")
 	register_cvar("FT_Race9_Skill3",			"1")
@@ -219,11 +214,11 @@ public plugin_init(){
 	register_cvar("FT_buyzone",					"0")
 	register_cvar("FT_races",					"8")
 	register_cvar("FT_bot_buy_item",			"0.33")
-	register_cvar("FT_race_icons",				"1")			// race icons on players
-	register_cvar("FT_level_icons",				"1")			// level icons on players
+	register_cvar("FT_race_icons",				"1")
+	register_cvar("FT_level_icons",				"1")
 	register_cvar("FT_claw",					"6")
 #if MOD == 0
-	register_cvar("FT_items_in_hud",			"0")			// If set to 1, shows items w/ a HUD message
+	register_cvar("FT_items_in_hud",			"0")
 	register_cvar("FT_bootspeed",				"275")
 #endif
 #if MOD == 1
@@ -235,11 +230,11 @@ public plugin_init(){
 	register_cvar("FT_mask_of_death",			"0.3")
 	register_cvar("FT_cloak",					"150")
 	register_cvar("FT_steam",					"1")
-	register_cvar("FT_CD",						"0")					// Refuses to allow players to play if they do not have CD client installed
-	register_cvar("FT_start",					"23",FCVAR_SERVER)		// hour of start plugin		// Added by NeKo
-	register_cvar("FT_stop",					"7",FCVAR_SERVER)		// hour of stop plugin		// Added by NeKo
-	register_cvar("FT_control",					"0")					// controler				// Added by NeKo
-	register_cvar("FT_message",					"0")					// message projector		// Added by NeKo
+	register_cvar("FT_CD",						"0")
+	register_cvar("FT_start",					"23",FCVAR_SERVER)
+	register_cvar("FT_stop",					"7",FCVAR_SERVER)
+	register_cvar("FT_control",					"0")
+	register_cvar("FT_message",					"0")
 	register_cvar("FT_ultimatedelay",			"15.0")
 	register_cvar("FT_min_b4_XP",				"2")
 	register_cvar("FT_no_orcnades",				"0")
@@ -271,9 +266,9 @@ public plugin_init(){
 	register_cvar("FT_blink_protection",		"1")
 	register_cvar("FT_blink_dizziness",			"1")
 	register_cvar("FT_blinkenabled",			"1")
-	register_cvar("FT_spec_info",				"1")				// Show spectating information
-	register_cvar("FT_objectives",				"1")				// Displays objectives (when gaining XP, ie: rescue hostage)
-	register_cvar("sv_mysql_auto_pruning",		"0")				// Autoprunes MySQL database for old values
+	register_cvar("FT_spec_info",				"1")
+	register_cvar("FT_objectives",				"1")
+	register_cvar("sv_mysql_auto_pruning",		"0")
 	register_cvar("mp_savexp",					"0",FCVAR_SERVER)
 	register_cvar("mp_xpmultiplier",			"1.0")
 	register_cvar("mp_weaponxpmodifier",		"1")
@@ -290,10 +285,6 @@ public plugin_init(){
 	register_cvar("FT_mysql_db",				"amx")
 
 	set_task(15.0, "FT_controller",TASK_FTCONTROLLER,"",0,"b")
-	set_task(3.0,"XP_Set",TASK_SETXP)
-
-	set_task(0.9,"XP_Set_DBI",TASK_SETMYSQL)
-	set_task(0.1,"checkmap",TASK_CHECKMAP)
 
 	WAR3_exec_config()
    
@@ -372,6 +363,9 @@ public plugin_cfg(){
 	#endif
 
 	lang_Set_Menus()
+	XP_Set_DBI()
+	XP_Set()
+	checkmap()
 
 	if (get_cvar_num("sv_warcraft3")==0)
 		warcraft3=false

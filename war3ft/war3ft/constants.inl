@@ -8,7 +8,7 @@
 #define TASK_SPAWN			32		// Respawning from revive
 #define TASK_ITEM_SCROLL	64		// Respawning after death from an item
 #define TASK_VENGEANCE		96		// Respawning from having vengeance (warden ultimate)
-#define TASK_SETXP			128		// Sets the XP
+//#define TASK_SETXP			128		// Sets the XP
 #define TASK_EXPLOSION		160		// From Suicide Bomber
 #define TASK_BEAMCYLINDER	192		// From Suicide Bomber
 #define	TASK_GETINPUT		224		// Calls getuserinput function
@@ -63,9 +63,9 @@
 //#define	TASK_SETSHORTXP		2006
 #define	TASK_SETMYSQL		2007
 //#define	TASK_SETLANGUAGE	2008
-#define	TASK_SETVARIABLES	2009
+//#define	TASK_SETVARIABLES	2009
 #define	TASK_CLONETHINK		2010
-#define	TASK_CHECKMAP		2011
+//#define	TASK_CHECKMAP		2011
 #define TASK_BOIDTHINK		2012
 
 #define TE_BEAMPOINTS		0
