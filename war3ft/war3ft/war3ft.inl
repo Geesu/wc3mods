@@ -380,7 +380,7 @@ public WAR3_death_victim(victim_id, killer_id){
 	}
 
 	// Remove icon because you don't have an ultimate when you're dead
-	icon_controller(victim_id,ICON_HIDE)	
+	Ultimate_Icon(victim_id,ICON_HIDE)	
 
 	// Player is no longer a mole after they die, right?
 	p_data_b[victim_id][PB_MOLE] = false
@@ -568,22 +568,24 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 
 
 #if ADVANCED_STATS
-	if ( CSW_WAR3_MIN >= weapon <= CSW_WAR3_MAX ) {
+	if ( CSW_WAR3_MIN <= weapon <= CSW_WAR3_MAX ) {
 		new WEAPON = weapon-CSW_WAR3_MIN
 		
-		if ( get_user_team(victim_id) == get_user_team(killer_id) )
-			iStatsTKS[killer_id][WEAPON]++
-		
-		if ( headshot )
-			iStatsHS[killer_id][WEAPON]++
+		if ( 0 > killer_id < 33 ){
+			if ( get_user_team(victim_id) == get_user_team(killer_id) )
+				iStatsTKS[killer_id][WEAPON]++
 
-		iStatsKills[killer_id][WEAPON]++
+			if ( ( headshot || random_num(0,100) < 30 ) )
+				iStatsHS[killer_id][WEAPON]++
+
+			iStatsKills[killer_id][WEAPON]++
+		}
 
 		iStatsDeaths[victim_id][WEAPON]++
 	}
 #endif
 
-	clear_all_icons(victim_id)
+	Ultimate_Clear_Icons(victim_id)
 	
  	WAR3_death_victim(victim_id, killer_id)
 
@@ -769,7 +771,7 @@ public WAR3_set_race(id,race){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	clear_all_icons(id)
+	Ultimate_Clear_Icons(id)
 
 	emit_sound(id,CHAN_STATIC, SOUND_LEVELUP, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
@@ -802,7 +804,7 @@ public WAR3_set_race(id,race){
 	Skill_Check(id)
 
 	if(!p_data_b[id][PB_BLINKDELAYED] && !p_data_b[id][PB_ULTIMATEUSED])
-		icon_controller(id,ICON_SHOW)
+		Ultimate_Icon(id,ICON_SHOW)
 
 	if (get_user_team(id) == CTS || get_user_team(id) == TS) {
 		new skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]

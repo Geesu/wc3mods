@@ -191,7 +191,7 @@ Ultimate_Teleport(id){
 		set_task(0.1, "_Ultimate_Blink_Controller", TASK_BLINKCONT+id, teleparm, 6)
 						
 		p_data_b[id][PB_ULTIMATEUSED]=true
-		icon_controller(id,ICON_HIDE)
+		Ultimate_Icon(id,ICON_HIDE)
 
 		emit_sound(id, CHAN_STATIC, SOUND_BLINK, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
@@ -387,7 +387,7 @@ public _menu_Teleport(id,key){		// Teleport
 		
 	if (is_user_alive(id) && is_user_alive(targetid) && get_user_maxspeed(id)>10 && get_user_team(id)==get_user_team(targetid) && key!=9 && !p_data_b[id][PB_ULTIMATEUSED]){
 		
-		icon_controller(id,ICON_HIDE)
+		Ultimate_Icon(id,ICON_HIDE)
 
 		p_data_b[id][PB_ULTIMATEUSED]=true
 
@@ -763,7 +763,7 @@ public lightsearchtarget(parm[2]){
 
 	if ( 0<enemy<=MAXPLAYERS && get_user_team(id)!=get_user_team(enemy) && p_data[enemy][P_ITEM]!=ITEM_NECKLACE && !p_data_b[enemy][PB_WARDENBLINK] && is_user_alive(id) && is_user_alive(enemy)){
 		p_data_b[id][PB_ULTIMATEUSED]=true
-		icon_controller(id,ICON_HIDE)
+		Ultimate_Icon(id,ICON_HIDE)
 		new linewidth = 80
 		new damage = 50
 
@@ -784,7 +784,7 @@ public lightsearchtarget(parm[2]){
 	}
 	else{
 		p_data_b[id][PB_ISSEARCHING]=true
-		icon_controller(id,ICON_FLASH)
+		Ultimate_Icon(id,ICON_FLASH)
 		new counter = parm[1]
 		while (counter >= 0){
 			counter -= 10
@@ -803,11 +803,11 @@ public lightsearchtarget(parm[2]){
 				set_task(0.1,"lightsearchtarget",TASK_LIGHTSEARCH+id,parm,2)
 			}else{
 				p_data_b[id][PB_ISSEARCHING]=false
-				icon_controller(id,ICON_SHOW)
+				Ultimate_Icon(id,ICON_SHOW)
 			}
 		}
 		else{
-			icon_controller(id,ICON_HIDE)
+			Ultimate_Icon(id,ICON_HIDE)
 		}
 	}
 	return PLUGIN_CONTINUE
@@ -881,7 +881,7 @@ public lightningeffect(id,targetid,linewidth,damage,caster,bodypart){
 
 	new parm[1]
 	parm[0]=id
-	icon_controller(id,ICON_HIDE)
+	Ultimate_Icon(id,ICON_HIDE)
 
 	WAR3_damage(targetid, caster, damage, CSW_LIGHTNING, bodypart)
 
@@ -924,7 +924,7 @@ public searchtarget(parm[2]){
 	if ( 0<enemy<=MAXPLAYERS &&!p_data_b[enemy][PB_STUNNED] && get_user_team(id)!=get_user_team(enemy) && p_data[enemy][P_ITEM]!=ITEM_NECKLACE && !p_data_b[enemy][PB_WARDENBLINK] && is_user_alive(id) && is_user_alive(enemy)){
 		p_data_b[id][PB_ISSEARCHING]=false
 		p_data_b[id][PB_ULTIMATEUSED]=true
-		icon_controller(id,ICON_HIDE)
+		Ultimate_Icon(id,ICON_HIDE)
 
 		if(!g_mapDisabled)
 			Create_TE_BEAMFOLLOW(enemy, g_siTrail, 10, 5, 10, 108, 23, 255)
@@ -955,7 +955,7 @@ public searchtarget(parm[2]){
 	}
 	else{
 		p_data_b[id][PB_ISSEARCHING]=true
-		icon_controller(id,ICON_FLASH)
+		Ultimate_Icon(id,ICON_FLASH)
 		new counter = parm[1]
 		while (counter >= 0){
 			counter -= 10
@@ -969,11 +969,11 @@ public searchtarget(parm[2]){
 				set_task(0.1,"searchtarget",TASK_SEARCHTARGET+id,parm,2)
 			}else{
 				p_data_b[id][PB_ISSEARCHING]=false
-				icon_controller(id,ICON_SHOW)
+				Ultimate_Icon(id,ICON_SHOW)
 			}
 		}
 		else{
-			icon_controller(id,ICON_HIDE)
+			Ultimate_Icon(id,ICON_HIDE)
 		}
 	}
 	return PLUGIN_CONTINUE
@@ -1356,7 +1356,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 
 		p_data_b[id][PB_ULTIMATEUSED]=true
 		
-		icon_controller(id,ICON_FLASH)
+		Ultimate_Icon(id,ICON_FLASH)
 
 		parm[1] = 0
 		set_task(2.0,"_Ultimate_BigBadVoodoo",TASK_RESETGOD+id,parm,2)
@@ -1369,7 +1369,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 		if( is_user_alive(id) )
 			set_user_actualhealth(id, get_user_health(id) - 2048, "_Ultimate_BigBadVoodoo, stop")
 	
-		icon_controller(id,ICON_HIDE)
+		Ultimate_Icon(id,ICON_HIDE)
 
 		p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
 		_Ultimate_Delay(parm)
@@ -1443,7 +1443,7 @@ Ultimate_Vengeance(id){
 
 		p_data_b[id][PB_ULTIMATEUSED]=true
 
-		icon_controller(id,ICON_HIDE)
+		Ultimate_Icon(id,ICON_HIDE)
 
 		new parm[2]
 		parm[0]=id
@@ -1491,7 +1491,7 @@ Ultimate_LocustSwarm(id){
 	parm[1]=origin[1]
 	parm[2]=origin[2]
 
-	icon_controller(id,ICON_FLASH)
+	Ultimate_Icon(id,ICON_FLASH)
 
 	p_data_b[id][PB_ULTIMATEUSED]=true
 
@@ -1506,7 +1506,7 @@ public drawfunnels(parm[]){
 
 	if(p_data[id][P_ITEM]==ITEM_NECKLACE || p_data_b[id][PB_WARDENBLINK] || !is_user_alive(id) || !p_data_b[id][PB_ISCONNECTED]){
 		p_data_b[caster][PB_ULTIMATEUSED]=false
-		icon_controller(caster,ICON_SHOW)	
+		Ultimate_Icon(caster,ICON_SHOW)	
 		return PLUGIN_HANDLED
 	}
 
@@ -1556,7 +1556,7 @@ public drawfunnels(parm[]){
 
 			emit_sound(id,CHAN_STATIC, SOUND_LOCUSTSWARM, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
-			icon_controller(caster,ICON_HIDE)
+			Ultimate_Icon(caster,ICON_HIDE)
 
 			new cooldownparm[2]
 			cooldownparm[0]=caster
@@ -1614,8 +1614,72 @@ public Ultimate_Ready(id){
 
 		Status_Text(id, szMessage, 2.0, HUDMESSAGE_POS_STATUS)
 
-		icon_controller(id, ICON_SHOW)
+		Ultimate_Icon(id, ICON_SHOW)
 	}
 	
+	return PLUGIN_CONTINUE
+}
+
+public Ultimate_Icon(id, value){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("Ultimate_Icon",id)
+	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+	if (!iCvar[FT_SHOW_ICONS])
+		return PLUGIN_HANDLED
+	if(!p_data[id][P_ULTIMATE])
+		return PLUGIN_HANDLED
+	if (g_ultimateDelay > 0.0)
+		return PLUGIN_HANDLED
+	if(p_data_b[id][PB_ULTIMATEUSED] && value!=ICON_HIDE)
+		return PLUGIN_HANDLED
+	if(id==0)
+		return PLUGIN_HANDLED
+#if MOD == 0
+	new string[32], r, g, b, switchValue
+	if(p_data[id][P_RACE] == 9)
+		switchValue = race9Options[4]
+	else
+		switchValue = p_data[id][P_RACE]
+
+	switch(switchValue){
+		case 1:format(string,31,"dmg_rad"),			r=255,	g=0,	b=0			// Undead
+		case 2:format(string,31,"item_longjump"),	r=0,	g=120,	b=120		// Human
+		case 3:format(string,31,"dmg_shock"),		r=255,	g=255,	b=255		// Orc
+		case 4:format(string,31,"item_healthkit"),	r=0,	g=0,	b=255		// Night Elf
+		case 5:format(string,31,"dmg_heat"),		r=255,	g=0,	b=0			// Blood Mage
+		case 6:format(string,31,"suit_full"),		r=0,	g=200,	b=200		// Shadow Hunter
+		case 7:format(string,31,"cross"),			r=255,	g=0,	b=0			// Warden
+		case 8:format(string,31,"dmg_gas"),			r=0,	g=255,	b=0			// Crypt Lord
+	}
+
+	if(!is_user_alive(id))			// If the user is dead then hide the icon
+		value = ICON_HIDE
+
+	if(value==ICON_FLASH){
+		if( Verify_Skill(id, RACE_UNDEAD, SKILL4) )
+			r=255,g=255,b=255
+	}
+
+	Create_StatusIcon(id, value, string, r, g, b)
+#endif
+	return PLUGIN_CONTINUE
+}
+
+public Ultimate_Clear_Icons(id){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("Ultimate_Clear_Icons",id)
+	#endif
+	#if MOD == 0
+		if(id==0)
+			return PLUGIN_CONTINUE
+
+		new string[8][32] = {"dmg_rad","item_longjump","dmg_shock","item_healthkit","dmg_heat","suit_full","cross","dmg_gas"}
+		for(new i=0;i<8;i++){
+			Create_StatusIcon(id, ICON_HIDE, string[i], 0, 0, 0)
+		}
+	#endif
 	return PLUGIN_CONTINUE
 }

@@ -40,8 +40,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot){
 	new victimName[32], iXP, XP
 	get_user_name(victim_id,victimName,31)
 
+	#if MOD == 1
 	headshot--
-
+	#endif
 	if (killer_id && killer_id!=victim_id && victim_id){
 
 		// He killed a teammate
@@ -49,7 +50,7 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot){
 			iXP = -1 * xpgiven[p_data[killer_id][P_LEVEL]]
 			XP = XP_give(killer_id,iXP)
 			if (iCvar[FT_KILL_OBJECTIVES]){
-				client_print(killer_id,print_chat,"%L",killer_id,"AWARDED_FOR_KILLING_TEAMMATE",g_MOD,XP)
+				client_print(killer_id,print_chat,"%s %L",g_MODclient,killer_id,"AWARDED_FOR_KILLING_TEAMMATE",XP)
 			}
 		}
 		else{
@@ -57,7 +58,7 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot){
 				iXP = xpgiven[p_data[victim_id][P_LEVEL]]
 				XP = XP_give(killer_id,iXP)
 				if (iCvar[FT_KILL_OBJECTIVES]){			
-					client_print(killer_id,print_chat,"%L",killer_id,"AWARDED_FOR_KILLING",g_MOD,XP,victimName)
+					client_print(killer_id,print_chat,"%s %L",g_MODclient,killer_id,"AWARDED_FOR_KILLING",XP,victimName)
 				}
 			}
 			else
@@ -65,7 +66,7 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot){
 				iXP = floatround(xpgiven[p_data[victim_id][P_LEVEL]] * weaponxpmultiplier[weapon])
 				XP = XP_give(killer_id,iXP)
 				if (iCvar[FT_KILL_OBJECTIVES]){
-					client_print(killer_id,print_chat,"%L",killer_id,"AWARDED_FOR_KILLING",g_MOD,XP,victimName)
+					client_print(killer_id,print_chat,"%s %L",g_MODclient,killer_id,"AWARDED_FOR_KILLING",XP,victimName)
 				}
 			}
 		#if MOD == 0

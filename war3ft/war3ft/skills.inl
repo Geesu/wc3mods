@@ -73,7 +73,7 @@ public Skill_Check(id){
 		}
 	}
 
-	icon_controller(id,ICON_SHOW)
+	Ultimate_Icon(id,ICON_SHOW)
 
 	return PLUGIN_CONTINUE
 }

@@ -66,71 +66,6 @@ public changeskin(id,reset){							// Function changes your skin for ITEM_MOLE a
 	return PLUGIN_CONTINUE
 }
 
-
-public clear_all_icons(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("clear_all_icons",id)
-	#endif
-	#if MOD == 0
-		if(id==0)
-			return PLUGIN_CONTINUE
-
-		new string[8][32] = {"dmg_rad","item_longjump","dmg_shock","item_healthkit","dmg_heat","suit_full","cross","dmg_gas"}
-		for(new i=0;i<8;i++){
-			Create_StatusIcon(id, ICON_HIDE, string[i], 0, 0, 0)
-		}
-	#endif
-	return PLUGIN_CONTINUE
-}
-
-public icon_controller(id, value){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("icon_controller",id)
-	#endif
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-	if (!iCvar[FT_SHOW_ICONS])
-		return PLUGIN_HANDLED
-	if(!p_data[id][P_ULTIMATE])
-		return PLUGIN_HANDLED
-	if (g_ultimateDelay > 0.0)
-		return PLUGIN_HANDLED
-	if(p_data_b[id][PB_ULTIMATEUSED] && value!=ICON_HIDE)
-		return PLUGIN_HANDLED
-	if(id==0)
-		return PLUGIN_HANDLED
-#if MOD == 0
-	new string[32], r, g, b, switchValue
-	if(p_data[id][P_RACE] == 9)
-		switchValue = race9Options[4]
-	else
-		switchValue = p_data[id][P_RACE]
-
-	switch(switchValue){
-		case 1:format(string,31,"dmg_rad"),			r=255,	g=0,	b=0			// Undead
-		case 2:format(string,31,"item_longjump"),	r=0,	g=120,	b=120		// Human
-		case 3:format(string,31,"dmg_shock"),		r=255,	g=255,	b=255		// Orc
-		case 4:format(string,31,"item_healthkit"),	r=0,	g=0,	b=255		// Night Elf
-		case 5:format(string,31,"dmg_heat"),		r=255,	g=0,	b=0			// Blood Mage
-		case 6:format(string,31,"suit_full"),		r=0,	g=200,	b=200		// Shadow Hunter
-		case 7:format(string,31,"cross"),			r=255,	g=0,	b=0			// Warden
-		case 8:format(string,31,"dmg_gas"),			r=0,	g=255,	b=0			// Crypt Lord
-	}
-
-	if(!is_user_alive(id))			// If the user is dead then hide the icon
-		value = ICON_HIDE
-
-	if(value==ICON_FLASH){
-		if( Verify_Skill(id, RACE_UNDEAD, SKILL4) )
-			r=255,g=255,b=255
-	}
-
-	Create_StatusIcon(id, value, string, r, g, b)
-#endif
-	return PLUGIN_CONTINUE
-}
-
 public FT_controller(){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("FT_controller",0)
@@ -458,7 +393,7 @@ public func_spawn(parm[2]){
 	new team[32]
 	get_user_team(id,team,31)
 	p_data_b[id][PB_PLAYERSPAWNED]=true
-	icon_controller(id,ICON_SHOW)
+	Ultimate_Icon(id,ICON_SHOW)
 	spawn(id)
 	p_data_b[id][PB_SLOWED]=false
 	p_data_b[id][PB_STUNNED]=false

@@ -85,7 +85,7 @@ public Item_Message(id, item, shopmenu){
 			case ITEM_NECKLACE:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_6")
 			case ITEM_FROST:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_7", (100.0 * (fCvar[FT_FROST_SPEED]/260.0)))
 			case ITEM_HEALTH:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_8", iCvar[FT_HEALTH_BONUS])
-			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", iCvar[FT_XPBONUS])
+			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (iCvar[FT_XPBONUS] + xpgiven[p_data[id][P_LEVEL]]))
 		}
 	}
 	else if(shopmenu==SHOPMENU_TWO){

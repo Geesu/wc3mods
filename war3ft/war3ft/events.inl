@@ -960,13 +960,13 @@ public on_ResetHud(id){
 	if (task_exists(TASK_LIGHTSEARCH+id)){
 		remove_task(TASK_LIGHTSEARCH+id)
 		p_data_b[id][PB_ISSEARCHING]=false
-		icon_controller(id,ICON_HIDE)
+		Ultimate_Icon(id,ICON_HIDE)
 	}
 
 	if (task_exists(TASK_SEARCHTARGET+id)){
 		remove_task(TASK_SEARCHTARGET+id)
 		p_data_b[id][PB_ISSEARCHING]=false
-		icon_controller(id,ICON_HIDE)
+		Ultimate_Icon(id,ICON_HIDE)
 	}
 
 
@@ -1001,7 +1001,7 @@ public on_ResetHud(id){
 			g_buyCalled = true
 		}
 	#endif
-	icon_controller(id,ICON_HIDE)
+	Ultimate_Icon(id,ICON_HIDE)
 
 	p_data_b[id][PB_TOBEREVIVED] = false
 	p_data_b[id][PB_CHANGINGTEAM] = false
@@ -1026,7 +1026,7 @@ public on_ResetHud(id){
 				p_data[id][P_SERPENTCOUNT] = p_serpent[p_data[id][P_SKILL3]-1]
 			}
 
-			icon_controller(id,ICON_SHOW)
+			Ultimate_Icon(id,ICON_SHOW)
 
 			if(p_data_b[id][PB_STUNNED] || p_data_b[id][PB_SLOWED]){
 				p_data_b[id][PB_STUNNED] = false

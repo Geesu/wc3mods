@@ -36,10 +36,10 @@ new const WC3VERSION[] =	"2.1.7"
 #include <amxmisc>
 #include <fun>
 
-#define MOD 0							// 0 = cstrike or czero, 1 = dod
+#define MOD 1							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
-#define DEBUG 1							// Only use this when coding.. you normally don't want it
+#define DEBUG 0							// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
 #define ADVANCED_DEBUG_BOTS 0			// Print info for bots too?
 #define PRECACHE_WAR3FTSOUNDS 1
@@ -96,10 +96,11 @@ public plugin_init(){
 	#endif
 	#if MOD == 1
 		gmsgHudText = get_user_msgid("HudText")
-		register_message(get_user_msgid("Death"), "testing")
 	#endif
 
-
+	#if DEBUG
+		register_message(get_user_msgid("DeathMsg"), "testing")
+	#endif
 
 	register_plugin(WC3NAME,WC3VERSION,WC3AUTHOR)
 	register_cvar("War3: Frozen Throne", WC3VERSION,FCVAR_SERVER)

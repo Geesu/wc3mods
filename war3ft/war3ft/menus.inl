@@ -102,7 +102,7 @@ public _menu_Shopmenu_One(id, key){
 	else if (iShopmenuItem==ITEM_TOME){
 		set_user_money(id,get_user_money(id)-itemcost[key],1)
 
-		XP_give(id,iCvar[FT_XPBONUS])
+		XP_give(id,iCvar[FT_XPBONUS] + xpgiven[p_data[id][P_LEVEL]])
 
 		emit_sound(id,CHAN_STATIC, "warcraft3/Tomes.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)
 

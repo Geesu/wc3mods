@@ -1,0 +1,40 @@
+[en]
+LANG_NAME = English
+LANG_NAME_NATIVE = English
+
+[de]
+LANG_NAME = German
+LANG_NAME_NATIVE = Deutsch
+
+[sr]
+LANG_NAME = Serbian
+LANG_NAME_NATIVE = Srpski
+
+[tr]
+LANG_NAME = Turkish 
+LANG_NAME_NATIVE = Turkce 
+
+[fr]
+LANG_NAME = French
+LANG_NAME_NATIVE = Francais
+
+[sv]
+LANG_NAME = Swedish
+LANG_NAME_NATIVE = Svenska
+
+
+[da]
+LANG_NAME = Danish 
+LANG_NAME_NATIVE = Dansk 
+
+[pl]
+LANG_NAME = Polish
+LANG_NAME_NATIVE = Polski
+
+[nl]
+LANG_NAME = Dutch
+LANG_NAME_NATIVE = Nederlands
+
+[hu]
+LANG_NAME = Hungarian
+LANG_NAME_NATIVE = Hungarian
