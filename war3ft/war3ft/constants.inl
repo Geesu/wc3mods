@@ -500,6 +500,7 @@ new g_menuSettings[33]
 	new gmsgStatusText
 	new gmsgBarTime
 
+	new Float:g_fBombTime
 	new g_hostageSaver
 	new g_bombCarrier
 	new g_bombDefuser
@@ -581,8 +582,6 @@ new iglow[33][4]
 new savedweapons[33][32]
 new bool:warcraft3
 new bool:endround
-
-new Float:g_fBombTime
 
 // Constants for Abilities
 new const Float:p_vampiric[3] =			{0.15,0.30,0.45}		// Vampiric Aura			(skill 1)

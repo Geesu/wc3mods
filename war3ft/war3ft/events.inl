@@ -1039,10 +1039,11 @@ public on_DeathMsg(){
 		#endif
 
 		new weapon = read_data(1)
+
 		if (weapon==25)
 			++p_data[id][P_FLASHCOUNT]
 
-		if (weapon==CSW_GALIL||weapon==CSW_FAMAS||weapon==CSW_M3||weapon==CSW_XM1014||weapon==CSW_MP5NAVY||weapon==CSW_TMP ||weapon==CSW_P90||weapon==CSW_MAC10||weapon==CSW_UMP45||weapon==CSW_AK47 ||weapon==CSW_SG552||weapon==CSW_M4A1||weapon==CSW_AUG||weapon==CSW_SCOUT ||weapon==CSW_AWP||weapon==CSW_G3SG1||weapon==CSW_SG550||weapon==CSW_M249)
+		if ( isPrimary(weapon) )
 			p_data_b[id][PB_SHIELD]=false
 
 		return PLUGIN_CONTINUE 
@@ -1211,12 +1212,14 @@ public on_EndRound(){
 	g_pheonixExistsCT=0
 	g_randomizeCalled = false
 
+#if MOD == 0
 	if( task_exists(TASK_BUYTIME) )
 		remove_task(TASK_BUYTIME)
 
 	if( task_exists(TASK_BOMBTIMER) )
 		remove_task(TASK_BOMBTIMER)
-
+#endif
+	
 	if (iCvar[MP_SAVEXP])
 		XP_Save_All()
 

@@ -41,13 +41,9 @@ new const WC3VERSION[] =	"2.1.6"
 #endif
 
 #include <amxmisc>
-
 #include <fun>
 
-
-
 #define MOD 0							// 0 = cstrike or czero, 1 = dod
-
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define DEBUG 1							// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 1				// Prints debug information to a log file when every function is called, VERY LAGGY

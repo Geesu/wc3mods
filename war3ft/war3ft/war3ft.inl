@@ -258,9 +258,18 @@ public WAR3_death_victim(victim_id, killer_id){
 		_WAR3_Ultimate_Delay(parm)
 	}
 
+#if MOD == 0
 	// Remove the bar time if the user dies during god mode
 	if( p_data_b[victim_id][PB_GODMODE] )
 		Create_BarTime(victim_id, 0, 0)
+#endif
+	
+	if(is_user_bot(victim_id)){
+		new Float:randomnumber = random_float(0.0,1.0)
+		if (randomnumber <= 0.10){
+			Item_Buy2(victim_id, ITEM_SCROLL-1)
+		}
+	}
 
 	// Remove icon because you don't have an ultimate when you're dead
 	icon_controller(victim_id,ICON_HIDE)	

@@ -151,9 +151,9 @@ public MOTD_Playerskills(id, saychat){
 
 	new name[32], message[2048]
 	
-	new race_name[MAX_RACES][64]
+	new race_name[MAX_RACES+1][64]
 	new players[32], numberofplayers, i, k, playerid, pos
-	new iTotalRace[MAX_RACES]
+	new iTotalRace[MAX_RACES+1]
 
 	get_players(players, numberofplayers)
 
@@ -168,7 +168,8 @@ public MOTD_Playerskills(id, saychat){
 #endif
 
 	for(k=1;k<iCvar[FT_RACES]+1;k++){
-		racename(k,id,race_name[k],64)
+		if( iTotalRace[k] > 0 )
+			racename(k,id,race_name[k],64)
 	}
 #if DEBUG == 1
 	writeDebugInfo("MOTD_Playerskills",103)
@@ -223,7 +224,7 @@ public MOTD_Playerskills(id, saychat){
 		show_motd(id,message,motdmessage)
 	}
 
-	return PLUGIN_CONTINUE
+	return PLUGIN_HANDLED
 }
 
 public MOTD_Skillsinfo(id){
