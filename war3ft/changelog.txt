@@ -1,7 +1,9 @@
 v2.2.2
  - Addition: Effect during Big Bad Voodoo
  - Addition: FT_cshack variable
+ - Addition: FT_impale_intensity (setting this to a lower value will lower the intesity of impale)
  - Change: Pheonix will now revive players if they were TKed (thanks -]ST|Ghost[-)
+ - Change: Impale % lowered to 12% max (was 15%)
  - Module: Fixed 100% CPU spike for real
  - Module: Fixed bomb explosion crash bug on some servers
  - Module: Support for linux/amd64 removed for the CSHack portion of the module
@@ -11,6 +13,7 @@ v2.2.2
  - Bug Fix: Level 1 impale had a 50% chance of occuring on each shot (should have been 5%, thanks Alphabet Soup)
  - Removed: Warden's being protected from moles
  - Balance: Undead's Vampiric Aura lowered, mask of death lowered (update your war3ft.cfg files)
+ - Languages: All up-to-date except Danish and Polish
 
 v2.2.1
  - Languages updated

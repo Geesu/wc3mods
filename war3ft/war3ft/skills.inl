@@ -249,7 +249,7 @@ public Skill_Check(id){
 
 				if (distancebetween < iCvar[FT_HEALING_RANGE]){
 					set_user_money(targetid, get_user_money(targetid) + money)
-					client_print(targetid, print_chat, "%s %L", g_MODclient, targetid, "DOD_PHEONIX", money, name)
+					client_print(targetid, print_chat, "%s %L", g_MODclient, targetid, "DOD_PHOENIX", money, name)
 				}
 			}
 		}
@@ -702,6 +702,9 @@ public _Skill_Impale(parm[2]){
 		return PLUGIN_CONTINUE
 
 	if(parm[1]<4){
+		new iMin = -1 * iCvar[FT_IMPALE_INTENSITY]
+		new iMax = iCvar[FT_IMPALE_INTENSITY]
+
 		new Float:vec_angle[3], Float:vec_v_angle[3]
 		new i
 
@@ -709,8 +712,8 @@ public _Skill_Impale(parm[2]){
 		entity_get_vector(id, EV_VEC_v_angle, vec_v_angle)
 
 		for(i=0;i<2;i++){ // Don't modify z axis (causes a roll)
-			vec_angle[i] = vec_angle[i] + random_float(-10.0,10.0)
-			vec_v_angle[i] = vec_v_angle[i] + random_float(-10.0,10.0)
+			vec_angle[i] = vec_angle[i] + random_float(iMin, iMax)
+			vec_v_angle[i] = vec_v_angle[i] + random_float(iMin, iMax)
 		}
 
 		entity_set_int(id, EV_INT_fixangle, 1)

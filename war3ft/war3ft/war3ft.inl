@@ -1225,6 +1225,7 @@ public WAR3_Set_Variables(){
 	iCvar[FT_SHOW_PLAYER			] = get_cvar_num("FT_show_player")
 	iCvar[FT_AUTOXP					] = get_cvar_num("FT_autoxp")
 	iCvar[FT_CSHACK					] = get_cvar_num("FT_cshack")
+	iCvar[FT_IMPALE_INTENSITY		] = get_cvar_num("FT_impale_intensity")
 
 	fCvar[FT_BOT_BUY_ITEM			] = get_cvar_float("FT_bot_buy_item")
 	fCvar[FT_FROST_SPEED			] = get_cvar_float("FT_frost_speed")
