@@ -375,11 +375,11 @@ DOD_PHEONIX = You are given a bonus $%d because a nearby teammate (%s) with Pheo
 [sv]
 RACENAME_0 = Ingen Ras
 RACENAME_1 = Undead Scourge
-RACENAME_2 = Human Alliance (M'a'nskliga Alliansen)
+RACENAME_2 = Human Alliance
 RACENAME_3 = Orcish Horde
-RACENAME_4 = Night Elves of Kalimdor (Natt'a'lvorna fran Kalmidor)
+RACENAME_4 = Night Elves of Kalimdor
 RACENAME_5 = Blood Mage
-RACENAME_6 = Shadow Hunter (Skugg j'a'gare)
+RACENAME_6 = Shadow Hunter
 RACENAME_7 = Warden
 RACENAME_8 = Crypt Lord
 RACENAME_9 = Kameleont
@@ -415,16 +415,16 @@ ITEMNAME2_1 = Aterupplivning om du d'o'r
 ITEMNAME2_2 = Skydd mot Mullvad
 ITEMNAME2_3 = Hj'a'lm mot HS
 ITEMNAME2_4 = Tysta skor
-ITEMNAME2_5 = Immun mot HS
+ITEMNAME2_5 = Fj'a'derSockar
 ITEMNAME2_6 = Gratis granater
 ITEMNAME2_7 = Ring of Regeneration +1
 ITEMNAME2_8 = Kameleont
 ITEMNAME2_9 = Mullvad
 SHORT_ITEMNAME2_1 = Aterupplivning
-SHORT_ITEMNAME2_2 = Skydd mot Mullvad
-SHORT_ITEMNAME2_3 = Hj'a'lm mot HS
+SHORT_ITEMNAME2_2 = MullvadsSkydd
+SHORT_ITEMNAME2_3 = Hj'a'lm
 SHORT_ITEMNAME2_4 = Tysta skor
-SHORT_ITEMNAME2_5 = Inga HS
+SHORT_ITEMNAME2_5 = Sockar
 SHORT_ITEMNAME2_6 = Granater
 SHORT_ITEMNAME2_7 = Ring
 SHORT_ITEMNAME2_8 = Kameleont
@@ -468,8 +468,8 @@ RACE1_SKILL4_INFO = N'a'r du d'o'r sa exploderar du och d'o'dar fiender som 'a'r
 RACE2_SKILL1_INFO = Du blir delvis osynlig.
 RACE2_SKILL2_INFO = Ger dig (%d, %d eller %d) i h'a'lsa vid ny runda.
 RACE2_SKILL3_INFO = N'a'r du prickar fienden sau har du (%d, %d or %d) chans att frysa fienden i 1 sekund
-RACE2_SKILL4_INFO_B = Du kan teleporta dig dit du siktar (Akta himlen)
-RACE2_SKILL4_INFO_T = Du kan teleporta dig till en medspelare (10 sekunders kylning)
+RACE2_SKILL4_INFO_B = Du kan teleportera dig d'a'r du siktar (Akta himlen)
+RACE2_SKILL4_INFO_T = Du kan teleportera dig till en medspelare (10 sekunders kylning)
 RACE3_SKILL1_INFO = Ger dig %d chans att g'o'ra (2, 3, eller 4) ggr den normala skadan
 RACE3_SKILL2_INFO = Granater kommer alltid att g'o'ra (%d, %d eller %d) mer skada.
 RACE3_SKILL3_INFO = Ger dig (%d, %d eller %d) chans att fa tillbaka din utrustning n'a'r du d'o'r
@@ -482,17 +482,17 @@ RACE5_SKILL1_INFO = Du har (%d, %d eller %d) chans ateruppliva den f'o'rsta meds
 RACE5_SKILL2_INFO = Du har (%d, %d eller %d) chans att smiska din fiende
 RACE5_SKILL3_INFO = Stj'a'ler (%d, %d eller %d) av fiendens pengar
 RACE5_SKILL4_INFO = Du kan spruta eld
-RACE6_SKILL1_INFO = Var (%d, %d eller %d) sekund ges du och medspelare runtom dig 1 hp
+RACE6_SKILL1_INFO = Var (%d, %d eller %d) sekund ges du och medspelare runt om dig 1 hp
 RACE6_SKILL2_INFO = Du har (%d, %d or %d) chans att f'o'vandla din fiende till en stor goober (Som saktar ner dem)
 RACE6_SKILL3_INFO = Du mottager (%d, %d or %d) serpent wards varje runda som skadar fienderna, binda en tangent till ability (eller say ability i chatten) f'o'r att plantera en
 RACE6_SKILL4_INFO = Osynlighet i 2 sekunder
-RACE7_SKILL1_INFO = Du har (%d, %d or %d) chans att bli en Mullvad
-RACE7_SKILL2_INFO = Du har (%d, %d or %d) chans att blocka fiendernas ultimates
-RACE7_SKILL3_INFO = Du har (%d, %d or %d) chans att kasta en giftig kniv mot fienden
+RACE7_SKILL1_INFO = Du har (%d, %d eller %d) chans att bli en Mullvad
+RACE7_SKILL2_INFO = Du har (%d, %d eller %d) chans att blocka fiendernas ultimates
+RACE7_SKILL3_INFO = Du har (%d, %d eller %d) chans att kasta en giftig kniv mot fienden
 RACE8_SKILL1_INFO = Skakar om fienden
-RACE8_SKILL2_INFO = Ger (%d, %d or %d) spegelSkada mot personen som skjuter mot dig och du ges armor
+RACE8_SKILL2_INFO = Ger (%d, %d eller %d) spegelSkada mot personen som skjuter mot dig och du ges armor
 RACE8_SKILL3_INFO = Du har (%d, %d or %d) chans att dina skalbaggar attackerar fienden
-RACE8_SKILL4_INFO = en sv'a'rm av gr'o'na Locusts attackerar fienden
+RACE8_SKILL4_INFO = En sv'a'rm av gr'o'na Locusts attackerar fienden
 CURRENT_ITEMS_RING = Items just nu: %s och %s x%d
 CURRENT_ITEMS = Items just nu: %s och %s
 CURRENT_ITEM_RING = Item just nu: %s %d
@@ -515,9 +515,9 @@ ALREADY_SELECTED_SKILL_POINTS = Du har redan utnyttjat dina skill-po'a'ng!
 LEVEL_SELECT_SKILL_FUNC = ^n%d. %s Level %d\w
 ULTIMATE_SELECT_SKILL_FUNC = ^n4. Ultimate: %s\w
 CANCEL_SELECT_SKILL_FUNC = ^n^n0. Avbryt
-SHOT_DEFLECTED = Ett skott fran en Mullvad undveks
+SHOT_DEFLECTED = Du undvek ett skott fran en Mullvad undveks
 UNTIL_YOUR_NEXT_GRENADE = %d sekunder tills du ges en ny granat
-DONT_DIE_GOOSE = Asso d'o' inte n'a'sta gong jag ger dig en granat din dumma Gris :D !
+DONT_DIE_GOOSE = Asso d'o' inte n'a'sta gong jag ger dig en granat din dumma Gris :P
 RACE_NOT_YET_SELECTED = %s - Rasen har inte valts 'a'nnu%s
 PLAYER_SKILLS = Warcraft 3 Frozen Throne Spelar Skills
 SHOPMENU_1 = Om du d'o'r ges din utrustning tillbaka rundan efter
@@ -537,15 +537,15 @@ SHOPMENU2_4 = Dina fotsteg h'o'rs inte n'a'r du springer eller springer i stegar
 SHOPMENU2_6 = Ger dig en ny granat var %d sekund
 SHOPMENU2_7 = Ger 1 hp varannan sekund, du kan ha max 5 (ringtyper f'o'r att ges 5hp)
 SHOPMENU2_8 = Du ser ut som fienden
-SHOPMENU2_9 = Du Teleportas till fiendens start vid rundans b'o'rjan, kan bara anv'a'das en gong
+SHOPMENU2_9 = Du Teleporteras till fiendens spawn vid rundans b'o'rjan, kan bara anv'a'das en gang
 SHOPMENU2_TITLE = Information om Items i Shopmenu 2
 NOT_ULTIMATE_DURING_FREEZETIME = Du kan inte utnyttja din Ultimate innan rundan har startat
 SUICIDE_BOMB_ARMED = SjälvmordsBomben 'a'r armerad^nTryck igen f'o'r att spr'a'ngas
 BLINK_DISABLED_FOR_FIRST = Blink 'a'r Inaktiverad^nde %.0f f'o'rsta sekunderna av rundan
-TELEPORT_FAILED_ENEMY_IMMUNITY = Teleporten Misslyckades^nFienden har immunitet
+TELEPORT_FAILED_ENEMY_IMMUNITY = Teleporteringen misslyckades^nFienden har immunitet
 SLAIN_FOR_TELEPORTING = Du har slaktats f'o'r att du teleportade till en f'o'rbjuden plats
-NO_VALID_TARGETS_FOUND = Inga giltiga platser hittades f'o'r din teleportning!
-TELEPORT_FAILED_BAD_DESTINATION = Teleportningen Misslyckades^nOduglig Destination
+NO_VALID_TARGETS_FOUND = Inga platser hittades till din teleportering!
+TELEPORT_FAILED_BAD_DESTINATION = Teleporteringen misslyckades^nKass Destination
 CANCEL_TELEMENU = ^n^n\w0. Avbryt
 XP_IS_NOT_SAVED = Tyv'a'rr sparas inte XP i denna server
 NOT_BUY_ITEMS_WHEN_DEAD = Du kan inte handla Items om du 'a'r d'o'd.
@@ -553,7 +553,7 @@ SECONDS_HAVE_PASSED_CANT_BUY = %0.0f sekunder har passerat. Du kan inte handla n
 MUST_BE_IN_BUYZONE = Du skall vara i k'o'pZonen om du vill handla
 EXIT_STRING = Avsluta
 NOT_BUY_WHEN_ALONE_ON_SERVER = Du kan inte handla n'a'r du 'a'r ensam spelare.
-NOT_PURCHASE_WHEN_DEAD = Du kan inte handla det om du 'a'r d'o'd
+NOT_PURCHASE_WHEN_DEAD = Du kan inte handla det n'a'r du 'a'r d'o'd
 ALREADY_OWN_THAT_ITEM = Du har redan detta Item
 INSUFFICIENT_FUNDS = Du har f'o'r lite pengar!
 NOT_PURCHASE_AFTER_ENDROUND = Du kan inte handla detta efter att rundan har avslutats
@@ -583,11 +583,11 @@ AWARD_FOR_SPAWN_AS_VIP = %s fick %d XP f'o'r att han 'a'r viktig :D.
 AWARD_FOR_ESCAPED_VIP = %s fick %d extra XP f'o'r hindrandet av avr'a'ttningen.
 AWARD_FOR_SUPPORTING_VIP = %s fick %d f'o'r uppbackningen till %s att fly.
 NO_CLIENTS_IN_TEAM = Inga Klienter i detta Lag
-YOU_HAVE_NO_ACCESS = Du har inte access till detta kommando
+YOU_HAVE_NO_ACCESS = Du har ingen access till detta kommando
 YOUR_XP_HAS_BEEN_RESET = Din XP har nollats.
 THE_ADMIN_GAVE_YOU_EXPERIENCE = En admin gav dig %d XP
 HES_ON_YOUR_TEAM_DONT_SHOOT = Han 'a'r med ditt lag, SKJUT INTE
-AWARD_FOR_WINNING_ROUND = Nu fick %d XP f'o'r vinsten av rundan
+AWARD_FOR_WINNING_ROUND = Du fick %d XP f'o'r vinsten av rundan
 NO_LONGER_SEE_ICONS = Nu kommer du inte att se ditt lags RAS-iconer.
 NOW_SEE_ICONS = Nu kommer du att se ditt lags RAS-iconer.
 IS_ACTIVATED_NOW = %s (%s) Aktiverades nu.
@@ -633,7 +633,7 @@ RACE_INFORMATION = Ras Information
 WAS_KILLED_BY = %s d'o'dades av %s's %s
 THIS_MOD_WAS_DEVELOPED = Denna mod utvecklas av 4HM | Pimp Daddy, bes'o'k www.4hm.net (forums) f'o'r mer detaljer
 CLICK_HERE_FOR_LATEST = Klicka <a href'http://4honor.net/forum/viewforum.php?f28'>h'a'r</a> f'o'r de senaste uppdateringarna av Warcraft 3 Frozen Throne
-VOTING_NOT_ALLOWED = R'o'stning kan inte goras i denna Server.
+VOTING_NOT_ALLOWED = R'o'stning kan inte g'o'ras i denna Server.
 THERE_ARE_MORE = Det finns flera Klienter som matchar ditt argument
 CLIENT_NOT_FOUND = Klient med det namnet eller userID hittades inte
 ICONS_ARE_DISABLED = Ras-Iconerna 'a'r inaktiverade
@@ -736,6 +736,9 @@ WORD_HERO_ABILITY = Hero egenskap (passiv)
 WORD_TRAINABLE_SKILLS = Tr'a'ningsbara Skills
 WORD_INFORMATION = Information
 CENTER_CHANGED_NEXT = Din ras kommer att 'a'ndras n'a'sta runda
+DOD_AWARDED_XP_OBJECTIVE = Du har givits %d XP f'o'r slutf'o'randet av uppdraget.
+DOD_RACE5_SKILL1_INFO = Du kommer att ges ($%d, $%d, $%d) i bonus f'o'r varje frag, h'a'lften av denna bonus ges oxo till lagkamrater i n'a'rheten.
+DOD_PHEONIX = Du har givits $%d i bonus f'o'r att en lagkamrat (%s) med Phoenix har d'o'dat en fiende.
 
 [de]
 RACENAME_0 = keine Rasse
@@ -828,35 +831,35 @@ RACE8_SKILL3 = Aas Kaefer
 RACE8_SKILL4 = Heuschrecken Schwarm
 RACE1_SKILL1_INFO = Gibt dir (%d%%, %d%% oder %d%%) Gesundheit wieder zurueck, wenn du Schaden verursachst.
 RACE1_SKILL2_INFO = Du bist schneller als alle anderen, egal mit welcher Waffe in der Hand (3 Stufen Schnelligkeit).
-RACE1_SKILL3_INFO = Du springst hoeher als alle anderen, und verlierst keine/wenig Gesundheit bei Stürzen (3 Stufen Schweben).
-RACE1_SKILL4_INFO = Wenn du stirbst explodierst du und reisst nahe Gegner mit in den Tod.
-RACE2_SKILL1_INFO = Du wirst mit jeder Stufe transparenter (mit dem Messer in der Hand fast unsichtbar) (3 Stufen Unsichtbarkeit).
-RACE2_SKILL2_INFO = Gibt dir einen Gesundheitsbonus von (%d, %d oder %d) HP in 3 Stufen, am Start jeder Runde.
-RACE2_SKILL3_INFO = Wenn du jemanden triffst, besteht eine Wahrscheinlichkeit von (%d%%, %d%% oder %d%%), dass der Gegner sich für 1 Sekunde nicht bewegen kann.
-RACE2_SKILL4_INFO_B = Du teleportierst dich dorthin, wohin du zielst (vermeiden Sie Decken).
+RACE1_SKILL3_INFO = Du springst hoeher als alle anderen, und verlierst keine/wenig Gesundheit bei Stuerzen (3 Stufen Schweben)
+RACE1_SKILL4_INFO = Wenn du stirbst explodierst du und reisst nahe Gegner mit in den Tod
+RACE2_SKILL1_INFO = Du wirst mit jeder Stufe transparenter (mit dem Messer in der Hand fast unsichtbar) (3 Stufen Unsichtbarkeit)
+RACE2_SKILL2_INFO = Gibt dir einen Gesundheitsbonus von (%d, %d oder %d) HP in 3 Stufen, am Anfang jeder Runde
+RACE2_SKILL3_INFO = Wenn du jemanden triffst, besteht eine Wahrscheinlichkeit von (%d%%, %d%% oder %d%%), dass der Gegner sich für 1 Sekunde nicht bewegen kann
+RACE2_SKILL4_INFO_B = Du teleportierst dich dorthin, wohin du zielst (Bitte Decken vermeiden)
 RACE2_SKILL4_INFO_T = Du teleportierst dich zu einem Teamkamaraden. (alle 10 Sekunden möglich)
-RACE3_SKILL1_INFO = Mit einer Wahrscheinlichkeit von %d, verursachst du mit jedem Schuss den (2, 3, oder 4) fachen Schaden.
-RACE3_SKILL2_INFO = Granaten verursachen IMMER den (%d, %d oder %d) fachen Schaden.
-RACE3_SKILL3_INFO = Mit einer Wahrscheinlichkeit von (%d%%, %d%% oder %d%%), startest du mit der kompletten Ausrüstung aus der letzten Runde, wenn du gestorben bist.
-RACE3_SKILL4_INFO = Ermöglicht dir einen Blitz hervorzubringen, der von Gegner zu Gegner springt und diese verletzt. Mit jedem 'Sprung' verringert sich jedoch der Schaden um 1/3.
+RACE3_SKILL1_INFO = Mit einer Wahrscheinlichkeit von %d, verursachst du mit jedem Schuss den (2, 3, oder 4) fachen Schaden
+RACE3_SKILL2_INFO = Granaten verursachen IMMER den (%d, %d oder %d) fachen Schaden
+RACE3_SKILL3_INFO = Mit einer Wahrscheinlichkeit von (%d%%, %d%% oder %d%%), startest du mit der kompletten Ausrüstung aus der letzten Runde, wenn du gestorben bist
+RACE3_SKILL4_INFO = Ermoeglicht dir einen Blitz hervorzubringen, der von Gegner zu Gegner springt und diese verletzt. Mit jedem 'Sprung' verringert sich jedoch der Schaden um 1/3.
 RACE4_SKILL1_INFO = Mit einer Wahrscheinlichkeit von (%d%%, %d%% oder %d%%), kannst du einem Schuss auszuweichen.
 RACE4_SKILL2_INFO = Verursacht einen Schaden von (%d%%, %d%% oder %d%%), an denen, die dir Schaden zugefuegt haben.
 RACE4_SKILL3_INFO = Verursacht (%d%%, %d%% oder %d%%) extra Schaden mit jedem Treffer.
 RACE4_SKILL4_INFO = Immobilisiert den getroffenen Gegner für 10 Sekunden. (er kann sich nicht bewegen!)
 RACE5_SKILL1_INFO = Mit einer Wahrscheinlichkeit von (%d%%, %d%% oder %d%%), kannst du den ersten Teamkollegen der stirbt wiederzubeleben.
 RACE5_SKILL2_INFO = Mit einer Wahrscheinlichkeit von (%d%%, %d%% oder %d%%) slapst du deinen Gegner.
-RACE5_SKILL3_INFO = Stehle deinem Gegner (%d%%, %d%% oder %d%%) seines Geldes.
-RACE5_SKILL4_INFO = Du erhaelst einen Flammenwerfer.
-RACE6_SKILL1_INFO = Alle (%d, %d oder %d) Sekunden erhaelst du und die dir am nächsten stehenden Teamkamaraden 1 HP.
+RACE5_SKILL3_INFO = Stielt deinem Gegner (%d%%, %d%% oder %d%%) seines Geldes - es gibt kein 'Geldlimit' mehr
+RACE5_SKILL4_INFO = Du erhaelst einen Flammenwerfer
+RACE6_SKILL1_INFO = Alle (%d, %d oder %d) Sekunden erhaelst du und die dir am naechsten stehenden Teamkamaraden 1 HP
 RACE6_SKILL2_INFO = Mit einer Wahrscheinlichkeit von (%d%%, %d%% oder %d%%), kannst du einen Gegner in ein grosses Alien verwandeln (er wird dadurch langsamer).
 RACE6_SKILL3_INFO = Du hast die Möglichkeit (%d, %d oder %d) magische Pfähle aufzustellen, die dem Gegner in der Nähe Schaden zufügen. Binde hierfür eine Taste: bind TASTE ability (oder schreibe einfach ability in den Chat) um welche aufzustellen.
 RACE6_SKILL4_INFO = Du bist für 2 Sekunden unverwundbar!
 RACE7_SKILL1_INFO = Mit einer Wahrscheinlichkeit von (%d%%, %d%% oder %d%%), bist du in der naechsten Runde ein Spion. (Maulwurf-Start am gegnerischen Startplatz)
 RACE7_SKILL2_INFO = Mit einer Wahrscheinlichkeit von (%d%%, %d%% oder %d%%), werden die alle gegnerischen Ultimates in der Naehe unwirksam.
 RACE7_SKILL3_INFO = Mit einer Wahrscheinlichkeit von (%d%%, %d%% oder %d%%), schiesst du einen vergifteten Pfeil auf einen Gegner. (max. 3 Pfeile)
-RACE8_SKILL1_INFO = Ruckelt getroffene Gegner druch. (Ihr Bild wackelt)
+RACE8_SKILL1_INFO = Ruckelt getroffene Gegner durch. (Ihr Bild wackelt)
 RACE8_SKILL2_INFO = Verursacht (%d%%, %d%% oder %d%%) Schaden am Gegner, wenn er dich trifft und gibt dir Armor zurueck.
-RACE8_SKILL3_INFO = Mit einer Wahrscheinlichkeit von (%d%%, %d%% oder %d%%), fuegen deine Käfer dem Gegner Schaden zu.
+RACE8_SKILL3_INFO = Mit einer Wahrscheinlichkeit von (%d%%, %d%% oder %d%%), fuegen deine Kaefer dem Gegner Schaden zu.
 RACE8_SKILL4_INFO = Du laesst einen Schwarm von Heuschrecken auf den Gegner los.
 CURRENT_ITEMS_RING = Benutzte Gegenstaende: %s und %s x%d
 CURRENT_ITEMS = Benutzte Gegenstaende: %s und %s
@@ -887,18 +890,18 @@ UNTIL_YOUR_NEXT_GRENADE = Noch %d Sekunde(n), bevor du deine naechste Granate er
 DONT_DIE_GOOSE = Wenn du das naechste Mal nicht stirbst, bekommt du eine andere Granate!
 RACE_NOT_YET_SELECTED = %s - Rasse nicht ausgewaehlt%s
 PLAYER_SKILLS = Warcraft 3 Frozen Throne Spieler Fertigkeiten
-SHOPMENU_1 = Wenn du stirbst, erhälst du in der nächsten Runde deine Ausrüstung zurueck
+SHOPMENU_1 = Wenn du stirbst, erhälst du in der naechsten Runde deine Ausrüstung zurueck
 SHOPMENU_2 = Du rennst schneller als alle anderen
-SHOPMENU_3 = +%d: Bei jedem Treffer werden dem Gegner zusätzliche %d HP abgezogen
+SHOPMENU_3 = +%d: Bei jedem Treffer werden dem Gegner zusaetzliche %d HP abgezogen
 SHOPMENU_4 = Macht dich teilweise unsichtbar, mit dem Messer in der Hand fast unsichtbar
 SHOPMENU_5 = Du bekommst HP zurueck, wenn du dem Gegner Schaden zufuegst
 SHOPMENU_6 = Du bist immun gegen gegnerische Ultimates
-SHOPMENU_7 = Verlangsamt den Gegner, wenn du ihn triffst
+SHOPMENU_7 = Verlangsamt den Gegner wenn du ihn triffst
 SHOPMENU_8 = Du erhaelst extra Gesundheit
 SHOPMENU_9 = Du erhaelst automatisch XP, dieser Gegenstand wird sofort nach dem Kauf verbraucht
 SHOPMENU_TITLE = Shopmenu Gegenstands-Informationen
-SHOPMENU2_1 = Du wirst wiederbelebt, wenn du stirbst
-SHOPMENU2_2 = Schutz vor Schuessen von Maulwürfen (ausser du bekommst einen Kopfschuss)
+SHOPMENU2_1 = Du wirst wiederbelebt wenn du stirbst
+SHOPMENU2_2 = Schutz vor Schuessen von Maulwuerfen (ausser du bekommst einen Kopfschuss)
 SHOPMENU2_3 = Immunitaet gegen Kopfschuesse
 SHOPMENU2_4 = Deine Schritte und Leitergeräusche sind nicht mehr zu hoeren
 SHOPMENU2_6 = Du erhaelst nun alle %d Sekunden eine Granate
@@ -954,7 +957,7 @@ YOU_HAVE_NO_ACCESS = Du hast keine Befugnisse diesen Command zu nutzen
 YOUR_XP_HAS_BEEN_RESET = Deine XP wurden zurueck auf 0 gesetzt.
 THE_ADMIN_GAVE_YOU_EXPERIENCE = Der Admin hat dir %d Erfahrung gegeben
 HES_ON_YOUR_TEAM_DONT_SHOOT = Er ist in deinem Team, NICHT SCHIESSEN
-AWARD_FOR_WINNING_ROUND = Du erhaelst %d XP, weil Team die Runde gewonnen hat
+AWARD_FOR_WINNING_ROUND = Du erhaelst %d XP, weil dein Team die Runde gewonnen hat
 NO_LONGER_SEE_ICONS = Du wirst jetzt keine Rassen Icons deiner Teamkameraden mehr sehen.
 NOW_SEE_ICONS = Du wirst jetzt die Rassen Icons deiner Teamkameraden sehen.
 IS_ACTIVATED_NOW = %s (%s) ist jetzt aktiv
@@ -988,7 +991,7 @@ SHOW_SHOPMENU2_INFO = Zeige Kaufmenu 2 Informationen
 GIVE_IND_XP = Gebe bestimmten Spielern XP
 GIVE_MULT_XP = Gebe einem Team XP
 SAVE_ALL_XP = Speichere die XP Punkte aller Spieler
-GIVE = Los!
+GIVE = Gebe
 MORE_STRING = Mehr
 THE_ADMIN_JUST_GAVE_YOU_XP = Der Admin gab dir gerade %d Erfahrung.
 TERRORISTS = Terroristen
@@ -997,15 +1000,15 @@ EVERYONE = Jeder
 WORD_SKILLS = Fertigkeiten
 RACE_INFORMATION = Rassen Informationen
 WAS_KILLED_BY = %s wurde getoeten von %s's %s
-THIS_MOD_WAS_DEVELOPED = Dieser Mod wird entwickelt von 4HM | Pimp Daddy, besuche www.4hm.net (forum) für mehr Details
+THIS_MOD_WAS_DEVELOPED = Dieser Mod wird entwickelt von 4HM | Pimp Daddy, besuche www.4hm.net (forum) fuer mehr Details
 CLICK_HERE_FOR_LATEST = Klicke <a href'http://4honor.net/forum/viewforum.php?f28'>hier</a> fuer die neuesten Updates von Warcraft3 Frozen Throne
 THERE_ARE_MORE = Es gibt mehrere Klienten die zu ihrem Argument passen
-CLIENT_NOT_FOUND = Klient mit dem Namen oder UserID nicht gefunden
+CLIENT_NOT_FOUND = Klient mit dem Namen oder der UserID nicht gefunden
 ICONS_ARE_DISABLED = Rassen Icons sind deaktiviert
 ICONS_ARE_DISABLED_DO = Rassen Icons sind aufgrund der Half-Life Limitierung auf dieser Map deaktiviert
 INCORRECT_NUM_RACES = FEHLER, UNGUELTIGE ZAHL AN RASSEN SIND AUSGEWAEHLT
-MENU_BUY_ITEM = \yKaufe Gegenstand\R$ Kosten^n^n
-MENU_BUY_ITEM2 = \yKaufe ein Gegenstand\R$ Kosten^n^n
+MENU_BUY_ITEM = \yKaufe Gegenstand\R€ Kosten^n^n
+MENU_BUY_ITEM2 = \yKaufe ein Gegenstand\R€ Kosten^n^n
 MENU_TELEPORT_TO = \yTeleportiere zu:\w^n
 MENU_SELECT_RACE = \yWaehle deine Rasse:
 MENU_SELECT_SKILL = \yWaehle Fertigkeiten:\w^n
@@ -1016,7 +1019,7 @@ MENU_RACE_OPTIONS = \yRassen Optionen
 MENU_ADMIN_MENU = \yAdmin Menue
 MENU_GIVE_PLAYERS_XP = \yGebe Spielern XP
 MENU_TEAM_XP = \yTeam XP Menue
-CLICK_HERE = Klicke <a href'http://ootoaoo.no-ip.com/war3/war3info.php?game%s&langen'>hier</A> für mehr Informationen über neue Rassen, etc..
+CLICK_HERE = Klicke <a href'http://ootoaoo.no-ip.com/war3/war3info.php?game%s&langen'>hier</A> fuer mehr Informationen über neue Rassen, etc..
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Hilfe
 
 WAR3HELP :
@@ -1050,7 +1053,7 @@ SELECT_RACE_FOOTER = ^n\w%d. Automatische Auswahl
 SELECT_HERO = ^n\yWaehle deinen Helden^n^n
 RACE7_SKILL4_INFO = Du wirst im Falle deinens Ablebens mit 50 HP wiederbelebt oder zum Startpunkt zurueck teleportiert.
 WORD_ULTIMATE = Ultimate
-DOD_RACE3_SKILL2_INFO = Granaten verursachen IMMER (%d, %d oder %d) mal den normalen Schaden und die Granaten-Sicherung wird auf 2, anstatt der normalen 5 Sekunden gestellt
+DOD_RACE3_SKILL2_INFO = Granaten verursachen IMMER das (%d, %d oder %d) fache des normalen Schadens und die Granaten-Sicherung wird auf 2, anstatt der normalen 5 Sekunden gestellt
 AWARDED_FOR_KILLING_BOMB_D = Du erhaelst %d XP, weil du den Bombenentschaerfer getoetet hast
 AWARDED_FOR_KILLING_BOMB_C = Du erhaelst %d XP, weil du den Bombertraeger getoetet hast
 DOD_RACE3_SKILL3 = Reinkarnation
@@ -1078,7 +1081,7 @@ INFO_SHOPMENU2_2 = Du bist nun teilweise immun gegen Maulwuerfe
 INFO_SHOPMENU2_3 = Du bist nun immun gegen Kopfschuesse
 INFO_SHOPMENU2_4 = Du laeufst und rennst nun lautlos
 INFO_SHOPMENU2_5 = Du hast nun die Moeglichkeit hoeher zu springen
-INFO_SHOPMENU2_6 = Du erhaelst nun alle %d sekunden eine Granate
+INFO_SHOPMENU2_6 = Du erhaelst nun alle %d Sekunden eine Granate
 INFO_SHOPMENU2_7 = Du wirst nun mit 1 HP pro Sekunde geheilt (du kannst bis zu 5 Ringe kaufen)
 INFO_SHOPMENU2_8 = Du wirst nun wie ein Gegner aussehen
 INFO_SHOPMENU2_9 = Du wirst mit einem gegnerischen Model in der naechsten Runde in der gegnerischen Base starten
@@ -1090,17 +1093,21 @@ RACE5_SKILL5_INFO = Du wirst %0.0f%% des normalen gegnerischen Schadens ablenken
 RACE6_SKILL5_INFO = Wenn du angegriffen wirst, hast du eine Chance von %0.0f%%, an allen in der naehe befindlichen gegnerischen Einheiten einen Schaden von %d HP zu verursachen
 RACE7_SKILL5_INFO = Du wirst %0.0f%% des dir zugefuegten Schadens abwaehren
 RACE8_SKILL5_INFO = Mit einer Wahrscheinlichkeit von %0.0f%%, verursachst du bei jedem Angriff %d extra Schaden beim Gegner
-WORD_HERO_ABILITY = Helden-Faehigkeit (passiv)
+WORD_HERO_ABILITY = Helden-Fertigkeit (passiv)
 WORD_TRAINABLE_SKILLS = Verfuegbare Fertigkeiten
 WORD_INFORMATION = Informationen
 DOD_RACE1_SKILL2_INFO = Gibt dir mehr Stehvermoegen
 DOD_INFO_SHOPMENU_2 = Du wirst nun mehr Stehvermoegen haben
 DOD_SHOPMENU_2 = Gibt dir mehr Stehvermoegen
-RACE5_SKILL5_NAME = Widerstandsfaehige Haut 
+RACE5_SKILL5_NAME = Widerstandsfaehige Haut
 RACE6_SKILL5_NAME = Instabiles Gebraeu
 RACE7_SKILL5_NAME = Abgehaertete Haut
 RACE8_SKILL5_NAME = Kugel der Vernichtung
 CENTER_CHANGED_NEXT = Deine Rasse wird am Anfang der naechste Runde gewechselt
+DOD_AWARDED_XP_OBJECTIVE = Du erhaelst %d XP, weil dein Ziel erreicht wurde
+DOD_RACE5_SKILL1_INFO = Du erhaelst einen Bonus von (%d €, %d €, %d €) bei jedem getoeteten Gegner.
+Die Haelfte dieses Bonus erhalten Teammates, die sich in der Naehe aufhalten.
+DOD_PHEONIX = Du erhaelst einen Bonus von %d €, weil ein nahe gelegenes Teammate (%s) einen Gegner mit Phoenix getoetet hat
 
 [es]
 RACENAME_0 = Sin raza
@@ -1223,7 +1230,6 @@ RACE8_SKILL1_INFO = Distorsionas lo que ve el enemigo
 RACE8_SKILL2_INFO = Refleja un (%d, %d or %d) del daño recibido al que te dispara y ganas blindaje
 RACE8_SKILL3_INFO = Tienes un (%d, %d or %d) de posibilidades de que tus escarabajos ataquen al enemigo al que apuntas
 RACE8_SKILL4_INFO = Lanzas una plaga de langostas verdes al enemigo
-
 CURRENT_ITEMS_RING = Objetos: %s y %s x%d
 CURRENT_ITEMS = Objetos: %s y %s
 CURRENT_ITEM_RING = Objeto: %s %d
@@ -1324,7 +1330,7 @@ NOW_SEE_ICONS = Ahora verás los iconos de razas en tus compañeros
 IS_ACTIVATED_NOW = %s (%s) está activado ahora
 IS_NO_LONGER_ACTIVE = %s (%s) ya no está activo
 IS_IN_AUTOMATIC_MODE = %s (%s) está ahora en modo automático
-USAGE_STRING = USA: amx_wc3 <on|off|auto> (auto = activas control horario)
+USAGE_STRING = USA: amx_wc3 <on|off|auto> (auto  activas control horario)
 BETWEEN = entre %dh y %dh
 INACTIVE = %s (%s)^nInactivo %s^nHora actual:%02d:%02d^nTiempo restante: %d:%02d (mapa siguiente: %s)
 ACTIVE = %s (%s)^nActivo %s^nHora actual:%02d:%02d^nTiempo restante: %d:%02d (mapa siguiente: %s)
@@ -1363,14 +1369,12 @@ WORD_SKILLS = Habilidades
 RACE_INFORMATION = Información de la raza
 WAS_KILLED_BY = %s ha sido eliminado por %s con la %s
 THIS_MOD_WAS_DEVELOPED = Este mod ha sido desarrollado por 4HM | Pimp Daddy, visita www.4hm.net (forums) para más detalles
-CLICK_HERE_FOR_LATEST = Haz clic <a href='http://4honor.net/forum/viewforum.php?f=28'>aquí</a> para la última actualización de Warcraft 3 Frozen Throne
+CLICK_HERE_FOR_LATEST = Haz clic <a href'http://4honor.net/forum/viewforum.php?f28'>aquí</a> para la última actualización de Warcraft 3 Frozen Throne
 THERE_ARE_MORE = Hay más clientes que coinciden con tu argumento
 CLIENT_NOT_FOUND = Ese nombre de cliente o userid no se encuentran
 ICONS_ARE_DISABLED = Los iconos de raza están desactivados
 ICONS_ARE_DISABLED_DO = Los iconos de raza en este mapa debido a limitaciones del half-life
 INCORRECT_NUM_RACES = ERROR, NÚMERO INCORRECTO DE RAZAS SELECCIONADAS
-
-
 MENU_BUY_ITEM = \yComprar Objeto\R$   Precio^n^n
 MENU_BUY_ITEM2 = \yComprar un objeto\R$   Precio^n^n
 MENU_TELEPORT_TO = \yTeletransportarse a:\w^n
@@ -1383,9 +1387,9 @@ MENU_RACE_OPTIONS = \yOpciones de Razas
 MENU_ADMIN_MENU = \yMenú del Administrador
 MENU_GIVE_PLAYERS_XP = \yDar XP a los jugadores
 MENU_TEAM_XP = \yMenú XP de Equipo
-
-CLICK_HERE = Haz clic <a href='http://ootoaoo.no-ip.com/war3/war3info.php?game=%s&lang=es'>aquí</A> para más información sobre nuevas razas, etc...
+CLICK_HERE = Haz clic <a href'http://ootoaoo.no-ip.com/war3/war3info.php?game%s&langes'>aquí</A> para más información sobre nuevas razas, etc...
 WAR3HELP_TITLE = Ayuda de Warcraft 3 Frozen Throne
+
 WAR3HELP :
 Así es como puedes bindear una tecla<p>
 1) Pulsa ` para bajar la consola (la tecla a la izquierda del número 1)<br>
@@ -1408,10 +1412,8 @@ say /resetxp - Resetea tu nivel y tu XP a 0
 :
 
 DOD_RACE3_SKILL2_INFO = Las granadas SIEMPRE harán (%d, %d or %d) veces más daño del normal y explotan a los 2 segundos en vez de los 5 habituales
-
 AWARDED_FOR_KILLING_BOMB_D = recibió %d XP por matar al desactivador de la bomba
 AWARDED_FOR_KILLING_BOMB_C = recibió %d XP por matar al que lleva la bomba
-
 RACE7_SKILL4_INFO = Resucitas una vez con 50 de vida, or be teleported back to your spawn
 
 [nl]
@@ -1457,7 +1459,7 @@ ITEMNAME2_1 = Scroll of Respawning
 ITEMNAME2_2 = Mole Protectant
 ITEMNAME2_3 = Helm of Excellence
 ITEMNAME2_4 = Amulet of the Cat
-ITEMNAME2_5 = Wand of Illusion
+ITEMNAME2_5 = Sock of the Feather
 ITEMNAME2_6 = Flaming Gloves of Warmth
 ITEMNAME2_7 = Ring of Regeneration +1
 ITEMNAME2_8 = Chameleon
@@ -1466,7 +1468,7 @@ SHORT_ITEMNAME2_1 = Scroll
 SHORT_ITEMNAME2_2 = Protectant
 SHORT_ITEMNAME2_3 = Helm
 SHORT_ITEMNAME2_4 = Amulet
-SHORT_ITEMNAME2_5 = Wand
+SHORT_ITEMNAME2_5 = Sock
 SHORT_ITEMNAME2_6 = Gloves
 SHORT_ITEMNAME2_7 = Ring
 SHORT_ITEMNAME2_8 = Chameleon
@@ -1544,7 +1546,7 @@ PLAYERITEM_AND = %s en %s
 YOU_GAINED_A_LEVEL = Je bent een level omhoog gegaan
 HAS_REVIVED_YOU = %s heeft je teruggehaald uit de dood
 YOU_HAVE_REVIVED = Je hebt %s teruggehaald uit de dood, ga zo door !
-AWARDED_FOR_HEADSHOT = He hebt %d XP extra gekregen voor het doden van iemand door middel van een headshot
+AWARDED_FOR_HEADSHOT = Je hebt %d XP extra gekregen voor het doden van iemand door middel van een headshot
 AWARDED_FOR_KILLING = Je hebt %d XP gekregen voor het doden van %s
 AWARDED_FOR_KILLING_HOSTAGE_R = Je hebt %d XP gekregen voor het doden van de bevrijder van de gijzelaars
 NO_SPOT_MOLE_MONEY = Sorry, kon geen plek vinden voor een mole, hier is je geld terug
@@ -1777,6 +1779,9 @@ WORD_HERO_ABILITY = Hero Ability (passief)
 WORD_TRAINABLE_SKILLS = Oefenbare Skills
 WORD_INFORMATION = Informatie
 CENTER_CHANGED_NEXT = Je ras wordt veranderd aan de start van de volgende ronde
+DOD_AWARDED_XP_OBJECTIVE = Je hebt %d XP gekregen voor het uitvoeren van een objective
+DOD_RACE5_SKILL1_INFO = Je zal een bonus ($%d, $%d, $%d) ontvangen bij elke kill, de helft hiervan word ook aan dichtbijzijnde teammaten gegeven.
+DOD_PHEONIX = Je hebt een bonus $%d ontvangen omdat een dichtbijzijnde teammaat (%s) met Pheonix een vijand heeft gekilled
 
 [da]
 RACENAME_0 = Ingen Race
@@ -2564,7 +2569,7 @@ RACE5_SKILL1_INFO = Tu as (%d%%, %d%% ou %d%%) de chance de ressuciter le premie
 RACE5_SKILL2_INFO = Tu as (%d%%, %d%% ou %d%%) de chance de slaper l'ennemi
 RACE5_SKILL3_INFO = Vole (%d%%, %d%% ou %d%%) de l'argent de l'ennemi
 RACE5_SKILL4_INFO = Tu recois un Lance Flamme
-RACE6_SKILL1_INFO = Toutes les (%d%, %d% ou %d%) secondes toi et tes coequipiers recuperent 1HP
+RACE6_SKILL1_INFO = Toutes les (%d, %d ou %d) secondes toi et tes coequipiers recuperent 1HP
 RACE6_SKILL2_INFO = Tu as (%d%%, %d%% ou %d%%) de chance de transformer l'ennemi en goober (qui le ralenti)
 RACE6_SKILL3_INFO = Unite serpent: Tu recois (%d, %d ou %d) serpents a chaque round (eclairs bleus ou rouges),Tape ou bind ability pour en deposer un
 RACE6_SKILL4_INFO = Invincible 2 secondes
@@ -2577,7 +2582,7 @@ RACE8_SKILL3_INFO = Tu as (%d%%, %d%% ou %d%%) de chance que les scarabes attaqu
 RACE8_SKILL4_INFO = Un Essaim de sauterelles vertes attaquent l'ennemi
 CURRENT_ITEMS_RING = Objets: %s et %s x%d
 CURRENT_ITEMS = Objets: %s et %s
-CURRENT_ITEM_RING = Objets: %s %D
+CURRENT_ITEM_RING = Objets: %s %d
 CURRENT_ITEM = Objets: %s
 PLAYERITEM_AND_REGEN = %s et %s x%d
 PLAYERITEM_AND = %s et %s
@@ -2600,7 +2605,7 @@ ULTIMATE_SELECT_SKILL_FUNC = ^n4. Ultimate: %s\w
 CANCEL_SELECT_SKILL_FUNC = ^n^n0. Annuler
 SHOT_DEFLECTED = Un tir d'un agent double a ete devie
 UNTIL_YOUR_NEXT_GRENADE = %d seconde(s) avant la prochaine grenade
-DONT_DIE_GOOSE = Ne meurt pas, et je te donnerai une grenade!
+DONT_DIE_GOOSE = Ne meurt pas la prochaine fois et tu aura une grenade!
 RACE_NOT_YET_SELECTED = %s - race non choisie
 PLAYER_SKILLS = Pouvoirs des joueurs WC3
 SHOPMENU_1 = Si tu meurs, tu retrouvera ton equipement au prochain round
@@ -2650,7 +2655,7 @@ CURRENT_HEALTH = ^nVie: %d^nArmure: %d
 SERPENT_WARD = Unite Serpent placee, %d restante
 ONLY_ONE_GRENADE_PER_ROUND = Seulement une HE par round
 AWARD_FOR_PLANTING_BOMB = %s a recu %d XP supplementaires pour avoir planter la bombe
-AWARD_FOR_SUPPORTING_BOMB = %d a recu %d XP pour avoir couvert le plantage de bombe
+AWARD_FOR_SUPPORTING_BOMB = %s a recu %d XP pour avoir couvert le plantage de bombe
 AWARD_FOR_DEFUSING_BOMB = %s a recu %d XP pour avoir diffuser la bombe
 AWARD_FOR_SUPPORT_BOMB_D = %s a recu %d XP pour avoir couvert le diffuse
 AWARD_FOR_ATTEMPT_BOMB_D = %s a recu %d XP pour avoir diffuser la bombe
@@ -2663,7 +2668,7 @@ AWARD_FOR_SUPPORTING_HOSTAGE_RUN = %s a recu %d XP pour avoir supporter la liber
 AWARD_FOR_KILLING_HOSTAGE = %s a perdu %d XP pour avoir tuer un otage
 AWARD_FOR_SPAWN_AS_VIP = %s a recu %d XP pour avoir ete aussi important
 AWARD_FOR_ESCAPED_VIP = %s a gagne %d XP pour avoir echaper au terroristes
-AWARD_FOR_SUPPORTING_VIP = %s a recu %d XP pour avoir aider au sauvetage
+AWARD_FOR_SUPPORTING_VIP = %s a recu %d XP pour avoir aider au sauvetage de %s
 NO_CLIENTS_IN_TEAM = Pas de joueur dans cette team
 YOU_HAVE_NO_ACCESS = Tu n'as pas acces a la commande
 YOUR_XP_HAS_BEEN_RESET = Tes XP ont ete remis a 0
@@ -2726,6 +2731,95 @@ MENU_SKILLS_OPTIONS = \yOptions Pouvoirs
 MENU_ITEM_OPTIONS = \yOptions Objets
 MENU_RACE_OPTIONS = \yOptions Race
 MENU_ADMIN_MENU = \yMenu Admin
+AWARD_FOR_ATTEMPT_BOMB_D_BARE = %s a recu %d XP pour tenter de diffuser a mains nues
+WILL_BE_DEACTIVATED_IN = %s va etre desactiver dans %02d minutes^nTape savexp^nA demain!
+INACTIVE_ELSE = %s (%s) - Inactif^nIl est:%02d:%02d^nTemps restant: %d:%02d (nextmap: %s)
+ACTIVE_ELSE = %s (%s) - Actif^nIl est:%02d:%02d^nTemps restant: %d:%02d (nextmap: %s)
+MENU_GIVE_PLAYERS_XP = \yDonner XP joueur
+MENU_TEAM_XP = \yDonner XP equipe
+CLICK_HERE = Clique ici pour plus d'infos sur les races
+WAR3HELP_TITLE = Aide Warcraft 3 Frozen Throne
+WAR3HELP = Methode pour binder une touche:
+Tape sur la touche a cote du 1 tout a gauche du clavier
+Tape: bind alt ulimate
+Tape: bind - shopmenu
+Tape: bind = shopmenu2
+Tape: bind p ability
+
+Quelques commande utiles:
+Dit /selectskill - pour choisir tes pouvoirs avant le prochain round
+Dit /changerace - pour chosir ta race
+Dit /playerskills - pour voir les races des autres joueurs
+Dit /skillsinfo - pour voir une aide sur les pouvoirs de ta race
+Dit /itemsinfo - pour voir une aide sur les objets
+Dit /itemsinfo2 - pour voir une aide sur les objets 2
+Dit /level - pour voir ta race, ton niveau, tes pouvoirs
+Dit /war3menu - pour voir le menu war3
+Dit /ability - pour placer une unite serpent
+Dit /resetskills - pour rechoisir tes pouvoirs
+DOD_RACE3_SKILL2_INFO = Les grenades feront toujours (%d, %d ou %d) fois plus de de dommages et elles exploseront a 2sec au lieu de 5
+AWARDED_FOR_KILLING_BOMB_D = Tu recois %d XP pour avoir tuer le diffuseur
+AWARDED_FOR_KILLING_BOMB_C = Tu as recu %d XP pour avoir tuer le porteur de bombe
+AWARDED_FOR_KILLING_TEAMMATE = Tu as perdu %d XP pour avoir tuer un coequipier
+ULTIMATE_NOT_READY = Ultimate non prete:^n(%d secondes restantes)
+ULTIMATE_NOT_FOUND = Ultimate non trouvee
+ULTIMATE_READY = Ultimate prete !
+AWARD_FOR_KILLING_VIP = Tu as gagne %d XP pour avoir tuer le VIP
+SELECT_RACE_TITLE = %s\RExperience^n^n
+SELECT_RACE_FOOTER = ^n\w%d. Auto-selection
+SELECT_HERO = ^n\yChoisir Hero^n^n
+RACE7_SKILL4_INFO = Revis avec 50HP ou tu es teleporter a ton spawn
+DOD_RACE3_SKILL3 = Reincarnation
+DOD_RACE3_SKILL3_INFO = Te donnes (%d%%, %d%% or %d%%) de chance de revivre a l'endroit ou tu es mort
+DOD_RACE1_SKILL2_INFO = Te donnes plus de stamina
+NO_FREE_SPAWN_FOUND = Pas de respawn libre pour t'y envoyer
+MAP_DISABLED = Certains sons and effets additionnels sont desactives sur cette map
+MAP_DISABLED_DUE = Ceci est du a une limitation de Half-Life
+SERVER_MAP_DISABLED = Les effets warcraft sont desactives sur cette map:%s a cause le la limitation de half-life.
+WORD_LEVEL = Niveau
+WORD_PURCHASED = achete
+WORD_CANCEL = Annuler
+INFO_SHOPMENU_1 = Tes armes seront reincarnees au prochain round
+DOD_INFO_SHOPMENU_1 = Quand tu respawn, ce sera a l'endroit ou tu est mort
+INFO_SHOPMENU_2 = Tu cours maintenant %0.0f%% plus vite
+DOD_INFO_SHOPMENU_2 = Tu as mainetent plus de stamina
+INFO_SHOPMENU_3 = Chaque attaque fera %d dommage en plus
+INFO_SHOPMENU_4 = Tu es maintenant %0.0f%% moins visible
+INFO_SHOPMENU_5 = Tu gagnes %0.0f%% de vie des dommages que tu as fait a l'ennemi
+INFO_SHOPMENU_6 = Tu es maintenant immunise contre les ultimates ennemies
+INFO_SHOPMENU_7 = Tu va ralentir les ennemis de %0.0f%% a chaque fois que tu les touches
+INFO_SHOPMENU_8 = Tu as maintenant %d de vie en plus
+INFO_SHOPMENU_9 = Tu viens de gagner %d XP pour avoir acheter un tome
+INFO_SHOPMENU2_1 = Si le round n'est pas terminer, tu revis apres ta mort
+INFO_SHOPMENU2_1_DEAD = Tu es maintenant en vie
+INFO_SHOPMENU2_2 = Tu es immuniser partiellement contre les Agents-Double
+INFO_SHOPMENU2_3 = Tu es immuniser contre les Headshots
+INFO_SHOPMENU2_4 = Tu es maintenant silencieux quand tu cours
+INFO_SHOPMENU2_5 = Tu peux maintenant sauter plus haut
+INFO_SHOPMENU2_6 = Une grenade t'est maintenant donner toute les %d secondes
+INFO_SHOPMENU2_7 = Tu te regeneres de 1HP par secondes (maximum de 5 anneaux)
+INFO_SHOPMENU2_8 = Tu ressemble maintenant a l'ennemi
+INFO_SHOPMENU2_9 = Tu sera deguiser en ennemi et tu apparaitra a son spawn au prochain round
+SKILL_REINCARNATION_SKIPPING = Echec de la reincarnation due au ennemis proches
+SKILL_REINCARNATION_FAILED = Echec de la reincarnation
+DOD_SHOPMENU_1 = Cet objet te ferra revivre la ou tu es mort
+DOD_SHOPMENU_2 = Te donne plus de stamina
+SHOPMENU2_5 = Tu peux sauter plus haut
+RACE5_SKILL5_INFO = Reduit de %0.0f%% les dommages normaux
+RACE6_SKILL5_INFO = Quand tu es attaquer, tu as %0.0f%% de chance de faire %d dommages aux ennemis proches
+RACE7_SKILL5_INFO = Reduis de %0.0f%% les dommages magiques
+RACE8_SKILL5_INFO = Tu as %0.0f%% de chance de faire %d de dommages supplementaires a l'ennemi
+RACE5_SKILL5_NAME = Peau Resistante
+RACE6_SKILL5_NAME = Concoction instable
+RACE7_SKILL5_NAME = Peau Durcie
+RACE8_SKILL5_NAME = Orbe d'annihilation
+WORD_HERO_ABILITY = Pouvoir passif
+WORD_TRAINABLE_SKILLS = Pouvoirs entrainables
+WORD_INFORMATION = Informations
+CENTER_CHANGED_NEXT = Ta race sera change au debut du round
+DOD_AWARDED_XP_OBJECTIVE = Tu as recu %d XP pour avoir completer un objectif
+DOD_RACE5_SKILL1_INFO = Tu gagnes un bonus ($%d, $%d, $%d) pour chaque kill, la moitie est donner au equipiers proches
+DOD_PHEONIX = Tu as gagner un bonus de $% parce qu'un equipier proche (%s) avec Phenix a tuer un ennemi
 
 [hu]
 RACENAME_0 = Nincs Fajod
@@ -2840,7 +2934,7 @@ RACE5_SKILL4_INFO = Kapsz egy langszorot
 RACE6_SKILL1_INFO = Minden %d, %d vagy %d masodpercben, te es a kozeledben allo tarsaid 1 eleterot kapnak
 RACE6_SKILL2_INFO = %d%%, %d%% vagy %d%% eselyed van arra, hogy ellenfeledet szornnye valtoztasd
 RACE6_SKILL3_INFO = Minden korben %d, %d vagy %d darab orzo kigyot kapsz, ami az ellenfelet sebzi (bind gomb ability, ezzel rakhatod le)
-RACE6_SKILL4_INFO = Lathatatlansag 2 masodpercre
+RACE6_SKILL4_INFO = Halhatatlansag 2 masodpercre
 RACE7_SKILL1_INFO = %d%%, %d%% vagy %d%% eselyed van vakondda valni
 RACE7_SKILL2_INFO = %d%%, %d%% vagy %d%% eselyed van az ellenfel kepessegenek blokkolasara
 RACE7_SKILL3_INFO = %d%%, %d%% vagy %d%% eselyed van arra, hogy ellenfeledbe mergezett tort dobj
@@ -3008,7 +3102,7 @@ MENU_TEAM_XP = \yCsapat XP Menu
 CLICK_HERE = Klikkelj ide, hogy informaciot kaphass az uj fajokrol.
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Segitseg
 
-WAR3HELP : 
+WAR3HELP :
 Igy kell bebindelni egy billentyut<p>
 1) Nyisd meg a console-t<br>
 2) Ird bind alt ultimate<br>
@@ -3028,6 +3122,7 @@ say /ability - Az orzo kigyot ezzel tudod lerakni ha van ilyened<br>
 say /resetskills - Lenullazza a kepessegeidet<br>
 say /resetxp - A szinted es az XP-det 0-ra allitja
 :
+
 DOD_RACE3_SKILL2_INFO = A granat MINDIG %dX, %dX vagy %dX nagyobb sebzest okoz es a robbanas 2 masodperc mulva kovetkezik be 5 helyett
 AWARDED_FOR_KILLING_BOMB_D = %d XP-t kaptal, mert megolted a bomba hatastalanitot
 AWARDED_FOR_KILLING_BOMB_C = %d XP-t kaptal, mert megolted a bomba cipelot
@@ -3088,3 +3183,6 @@ WORD_HERO_ABILITY = Hos Kepesseg (passziv)
 WORD_TRAINABLE_SKILLS = Fejlesztheto Kepessegek
 WORD_INFORMATION = Informacio
 CENTER_CHANGED_NEXT = A fajod megvaltozik a kovetkezo kor elejen
+DOD_AWARDED_XP_OBJECTIVE = %d XP-t nyertel a feladat teljesiteseert
+DOD_RACE5_SKILL1_INFO = $%d, $%d, $%d bonuszt kapsz minden gyilkossagert, felet a kozeli csapattarsaid is megkapjak.
+DOD_PHEONIX = $%d bonuszt kaptal, amiért csapattarsad (%s) megolt egy ellenseget fonix segitsegevel
