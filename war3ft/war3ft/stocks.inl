@@ -211,3 +211,45 @@ stock race9_randomize(){
 		}
 	} 
 }
+
+stock set_user_money(id,money,show){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("set_user_money",id)
+	#endif
+
+	if(!p_data_b[id][PB_ISCONNECTED])
+		return PLUGIN_CONTINUE
+
+	#if MOD == 0
+		if (money > 16000)
+			money = 16000
+
+		cs_set_user_money(id,money,show)
+	#endif
+	#if MOD == 1
+		new parm[3]
+		parm[0] = id
+		parm[1] = 1
+		parm[2] = money - get_user_money(id)
+
+		p_data[id][P_MONEY]=money
+		_DOD_showMoney(parm)
+	#endif
+	return PLUGIN_CONTINUE
+}
+
+stock get_user_money(id){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("get_user_money",id)
+	#endif
+
+	if(!p_data_b[id][PB_ISCONNECTED])
+		return PLUGIN_CONTINUE
+
+	#if MOD == 0
+		return cs_get_user_money(id)
+	#endif
+	#if MOD == 1
+		return p_data[id][P_MONEY]
+	#endif
+}

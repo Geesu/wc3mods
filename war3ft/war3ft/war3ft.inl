@@ -1042,7 +1042,13 @@ public WAR3_Display_Level(id, flag){
 			format(temp,127,"^n%L: %s",id,"WORD_ULTIMATE",race_skill[3])
 			add(message,255,temp)
 		}
+		if (4 < p_data[id][P_RACE] < 9){
+			new heroskillname[64]
+			Lang_Hero_Skill_Name(p_data[id][P_RACE], SKILL_HERO, id, heroskillname, 63)
+			format(temp,127,"^n%s", heroskillname)
 
+			add(message,255,temp)
+		}
 		set_hudmessage(255, 255, 255, -1.0, 0.3, 0, 3.0, 5.0, 0.1, 0.2, HUDMESSAGE_CHAN_LEVEL)
 		show_hudmessage(id,message)
 	}

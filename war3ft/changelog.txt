@@ -1,3 +1,8 @@
+v2.1.8
+ - Change: Playerskills now will show spectators if they have a race
+ - Change: Blood Mage's with Siphon Mana can get as much money as they want (16K is no longer a limit, requires cshack module)
+ - Addition: /level will show the hero abilities
+
 v2.1.7
  - Bug Fix: (DOD) StatusIcon event unknown error
  - Bug Fix: Mole's could spawn on top of each other
@@ -19,7 +24,6 @@ v2.1.7
  - Change: FT_9raceRandom to FT_Race9_Random
  - Change: If you buy a necklace while on fire from Blood Mage's Flame Strike the damage will stop
  - Change: You will now gain more XP per level with the tome of XP
-
  - Addition: Detailed stats information for war3 abilities (this will appear on psychostats, hitplaces are inaccurate for serpent wards, suicide bomber and locust's swarm)
  - Language: French Updated
  - Language: German Updated

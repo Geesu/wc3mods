@@ -57,6 +57,7 @@ public on_EndRound(){
 
 		p_data_b[id][PB_MOLE] = false
 		p_data[id][P_DEFUSERINDEX] = 0
+
 	}
 
 	for(y=0;y<33;++y)

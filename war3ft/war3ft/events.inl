@@ -779,7 +779,6 @@ public on_Death(victim, killer, wpnindex, headshot){
 	if(p_data_b[victim][PB_DIEDLASTROUND])
 		return PLUGIN_CONTINUE
 
-
 	if(killer > 0 )
 		set_user_money(killer, get_user_money(killer)+300,1)
 

@@ -70,6 +70,7 @@
 #define TASK_TARGETBOMBED	2013
 #define TASK_BOMBTIMER		2014
 #define TASK_WAR3CHECK		2015	// Checks the value of sv_warcraft3 every 5 seconds (better than checking it on every function call)
+#define TASK_SIPHON			2016
 
 // From ../multiplayer source/dlls/player.cpp
 #define ARMOR_RATIO	 0.7	// Armor Takes 30% of the damage (was .2 in the SDK)
@@ -323,7 +324,7 @@
 //	#define P_SERPENTTEAM			26
 	#define P_SKINCHANGED			27		// Did the user's skin change?
 	#define P_ULTIMATEDELAY			30
-//	#define P_EVADESHOTHEALTH		31
+//	#define P_SIPHONMONEY			31
 
 	// Used for DOD
 	#define P_MONEY					28		// Amount of money the player has

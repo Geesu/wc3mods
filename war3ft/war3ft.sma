@@ -17,6 +17,7 @@
 *  Tri Moon for various improvements (No Race, war3menu, etc...)
 *  xeroblood for spotting some bugs for me :)
 *  bad-at-this for contributing the status bar code used for godmode (big bad voodoo)
+*  bad-at-this for creating race 9
 *  kamikaze for...
  		help w/testing version before release
 		always helping people out on the forums
@@ -28,7 +29,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Pimp Daddy (OoTOAoO)"
-new const WC3VERSION[] =	"2.1.7"
+new const WC3VERSION[] =	"2.1.8"
 
 #include <amxmodx>
 #include <dbi>
@@ -36,7 +37,7 @@ new const WC3VERSION[] =	"2.1.7"
 #include <amxmisc>
 #include <fun>
 
-#define MOD 1							// 0 = cstrike or czero, 1 = dod
+#define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define DEBUG 0							// Only use this when coding.. you normally don't want it
@@ -46,6 +47,7 @@ new const WC3VERSION[] =	"2.1.7"
 
 #if MOD == 0
 	#include <cstrike>
+	#include <cshack>
 #else
 	#include <dodfun>
 	#include <dodx>
@@ -99,7 +101,7 @@ public plugin_init(){
 	#endif
 
 	#if DEBUG
-		register_message(get_user_msgid("DeathMsg"), "testing")
+		//register_message(get_user_msgid("Money"), "testing")
 	#endif
 
 	register_plugin(WC3NAME,WC3VERSION,WC3AUTHOR)
@@ -195,6 +197,8 @@ public plugin_init(){
 		register_clcmd("shield", "cmd_Shield")
 
 		register_menucmd(register_menuid("Team_Select",1),(1<<0)|(1<<1)|(1<<4),"cmd_Teamselect")
+
+		cs_set_startmoney_max(2147483583)
 	#endif
 
 	register_event("DeathMsg","on_DeathMsg","a")
