@@ -899,9 +899,6 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 				}
 			}
 			if (p_data_b[victim][PB_EVADENEXTSHOT]){
-				#if DEBUG == 1
-				client_print(victim, print_chat,"** Setting your health to: %d", get_user_health(victim) + damage + healthadjustment)
-				#endif
 				set_user_health(victim, get_user_health(victim) + damage + healthadjustment)
 
 				if (iglow[victim][2] < 1){
@@ -919,9 +916,6 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 				Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 0, 0, 255, iglow[victim][2])
 			}
 			else{
-				#if DEBUG == 1
-				client_print(victim, print_chat,"** Setting your health to: %d", get_user_health(victim) + healthadjustment)
-				#endif
 				set_user_health(victim, get_user_health(victim) + healthadjustment)
 			}
 		}
@@ -1266,6 +1260,19 @@ public on_ResetHud(id){
 	if (task_exists(TASK_RESETSPEED+id)){			
 		remove_task(TASK_RESETSPEED+id)
 	}
+
+	if (task_exists(TASK_LIGHTSEARCH+id)){
+		remove_task(TASK_LIGHTSEARCH+id)
+		p_data_b[id][PB_ISSEARCHING]=false
+		icon_controller(id,ICON_HIDE)
+	}
+
+	if (task_exists(TASK_SEARCHTARGET+id)){
+		remove_task(TASK_SEARCHTARGET+id)
+		p_data_b[id][PB_ISSEARCHING]=false
+		icon_controller(id,ICON_HIDE)
+	}
+
 
 	if(is_user_alive(id)){
 		p_data_b[id][PB_JUSTJOINED] = false

@@ -782,12 +782,17 @@ public lightsearchtarget(parm[2]){
 				emit_sound(id,CHAN_STATIC, "turret/tu_ping.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)
 		}
 		--parm[1]	
-		if (parm[1]>0 && get_user_health(id)>=0 && !endround){
-			set_task(0.1,"lightsearchtarget",TASK_LIGHTSEARCH+id,parm,2)
-		}else{
-			p_data_b[id][PB_ISSEARCHING]=false
-			icon_controller(id,ICON_SHOW)
-		}	
+		if(!p_data_b[id][PB_ULTIMATEUSED]){
+			if (parm[1]>0 && get_user_health(id)>=0){
+				set_task(0.1,"lightsearchtarget",TASK_LIGHTSEARCH+id,parm,2)
+			}else{
+				p_data_b[id][PB_ISSEARCHING]=false
+				icon_controller(id,ICON_SHOW)
+			}
+		}
+		else{
+			icon_controller(id,ICON_HIDE)
+		}
 	}
 	return PLUGIN_CONTINUE
 }
@@ -944,11 +949,16 @@ public searchtarget(parm[2]){
 			}
 		}			
 		--parm[1]
-		if (parm[1]>0 && get_user_health(id)>0 && !endround){
-			set_task(0.1,"searchtarget",TASK_SEARCHTARGET+id,parm,2)
-		}else{
-			p_data_b[id][PB_ISSEARCHING]=false
-			icon_controller(id,ICON_SHOW)
+		if(!p_data_b[id][PB_ULTIMATEUSED]){
+			if (parm[1]>0 && get_user_health(id)>0){
+				set_task(0.1,"searchtarget",TASK_SEARCHTARGET+id,parm,2)
+			}else{
+				p_data_b[id][PB_ISSEARCHING]=false
+				icon_controller(id,ICON_SHOW)
+			}
+		}
+		else{
+			icon_controller(id,ICON_HIDE)
 		}
 	}
 	return PLUGIN_CONTINUE
@@ -1007,13 +1017,6 @@ public entangle(parm[2]){
 	get_user_origin(id,origin)
 
 	emit_sound(id,CHAN_STATIC, SOUND_ENTANGLING, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-/*	new parm2[2]
-	parm2[0]=id
-
-	p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
-	_WAR3_Ultimate_Delay(parm2)*/
-
 
 	while (counter<=7){
 		if (counter==0 || counter==8)

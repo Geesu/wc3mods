@@ -26,7 +26,7 @@
 
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
-new const WC3AUTHOR[] =	"Pimp Daddy (OoTOAoO)"
+new const WC3AUTHOR[] =		"Pimp Daddy (OoTOAoO)"
 new const WC3VERSION[] =	"2.1.6"
 
 #define AMX_ENABLED 0					// Compile for AMX? (currently doesn't work, don't get your hopes up)
