@@ -205,6 +205,7 @@ public WAR3_chooserace(id){
 		else
 			menu_Select_Race(id,{0,0,0,0,0,0,0,0,0})
 	}
+
 }
 
 public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is attacked, attacker ,damage
@@ -1313,13 +1314,4 @@ public WAR3_Check(){
 		warcraft3=false
 	else
 		warcraft3=true
-
-#if MOD == 0
-	new players[32], num
-	get_players(players, num, "c")
-
-	for(new i = 0; i < num; i++){
-		client_cmd(players[i], "cl_minmodels 0")
-	}
-#endif
 }

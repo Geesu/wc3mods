@@ -274,7 +274,7 @@ public _menu_Shopmenu_Two(id, key){
 			p_data_b[id][PB_SILENT] = false
 		}
 		else if (p_data[id][P_ITEM2]==ITEM_HELM){
-			Item_Set_Helm(id,0)
+			Item_Set_Helm(id, HELM_RESET)
 		}		
 		else if (p_data[id][P_ITEM2]==ITEM_CHAMELEON){
 			changeskin(id,SKIN_SWITCH)
@@ -298,7 +298,7 @@ public _menu_Shopmenu_Two(id, key){
 			changeskin(id,SKIN_RESET)
 		}
 		else if (p_data[id][P_ITEM2]==ITEM_HELM){
-			Item_Set_Helm(id,1)
+			Item_Set_Helm(id, HELM_SET)
 		}
 		else if (p_data[id][P_ITEM2]==ITEM_AMULET){
 			p_data_b[id][PB_SILENT] = true

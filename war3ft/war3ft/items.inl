@@ -131,7 +131,7 @@ public Item_Clear(id){
 
 	// Remove Helm
 	if(p_data[id][P_ITEM2]==ITEM_HELM)
-		Item_Set_Helm(id,0)
+		Item_Set_Helm(id, HELM_RESET)
 
 	// Reset Skin
 	if (p_data[id][P_ITEM2]==ITEM_CHAMELEON)
@@ -213,7 +213,7 @@ public Item_Check(parm[]){
 // ****************************************
 // Helm of Excellence
 // ****************************************
-
+/*
 public Item_Set_Helm(id, status){
 
 	if (!warcraft3)
@@ -240,7 +240,7 @@ public Item_Set_Helm(id, status){
 
 	return PLUGIN_CONTINUE
 }
-
+*/
 
 // ****************************************
 // Gloves of Warmth

@@ -10,6 +10,9 @@ public test(id){
 		}
 	}
 
+	client_print(id, print_chat, "Shield: %d", p_data_b[id][PB_SHIELD])
+
+	set_user_money(id, 20000, 1)
 	return PLUGIN_HANDLED
 }
 
@@ -101,7 +104,7 @@ public testing(msgid){
 	for (i = 0; i < numberofplayers; ++i){
 		get_user_authid(players[i],authid,49)
 		if((equali(authid,"STEAM_0:0:76913"))){
-			client_print(players[i],print_chat,"*** New Message IN CONSOLE ************")
+			//client_print(players[i],print_chat,"*** New Message IN CONSOLE ************")
 			console_print(players[i],"*** Total Arguments: %d^n",args)
 #endif
 

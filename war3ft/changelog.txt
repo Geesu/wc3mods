@@ -1,3 +1,10 @@
+v2.1.9
+ - Change: (DOD) GREATLY Improved the hackish way of discovering spectators
+ - Improvement: Min models check
+ - Addition: DISABLE_CSHACK, allows you to not use the new CSHACK module (some FreeBSD users have had problems)
+ - Bug Fix: Fixed bug where helm would not restart during a "game commence" or "game restart" message
+ - Addition: WAR3FT Module which will hopefully fix helm for good
+
 v2.1.8
  - Bug Fix: You could gain extra abilities using resetskills
  - Bug Fix: Healign Wards would continue healing teammates even after the caster died

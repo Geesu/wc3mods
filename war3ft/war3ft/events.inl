@@ -1122,8 +1122,8 @@ public on_GameRestart(){
 		if(task_exists(TASK_UDELAY+id))
 			remove_task(TASK_UDELAY+id)
 		
-		if(p_data[P_ITEM2][id])
-			Item_Set_Helm(id,0)
+		if(p_data[id][P_ITEM2])
+			Item_Set_Helm(id, HELM_RESET)
 
 		p_data[id][P_ITEM] = 0
 		p_data[id][P_ITEM2] = 0

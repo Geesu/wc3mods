@@ -29,25 +29,31 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Pimp Daddy (OoTOAoO)"
-new const WC3VERSION[] =	"2.1.8"
+new const WC3VERSION[] =	"2.1.9"
 
 #include <amxmodx>
 #include <dbi>
 #include <engine>
 #include <amxmisc>
 #include <fun>
+#include <war3ft>
 
-#define MOD 1							// 0 = cstrike or czero, 1 = dod
+#define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
-#define DEBUG 0 						// Only use this when coding.. you normally don't want it
+#define DISABLE_CSHACK 0				// Set this to 1 if you are using FreeBSD (default is 0)
+#define PRECACHE_WAR3FTSOUNDS 1
+
+// Debugging Options
+#define DEBUG 1 						// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
 #define ADVANCED_DEBUG_BOTS 1			// Print info for bots too?
-#define PRECACHE_WAR3FTSOUNDS 1
 
 #if MOD == 0
 	#include <cstrike>
-	#include <cshack>
+	#if !DISABLE_CSHACK
+		#include <cshack>
+	#endif
 #else
 	#include <dodfun>
 	#include <dodx>
@@ -101,7 +107,7 @@ public plugin_init(){
 	#endif
 
 	#if DEBUG
-		//register_message(get_user_msgid("Money"), "testing")
+		register_message(get_user_msgid("CurWeapon"), "testing")
 	#endif
 
 	register_plugin(WC3NAME,WC3VERSION,WC3AUTHOR)
@@ -149,8 +155,8 @@ public plugin_init(){
 
 		register_event("RoundState","on_EndRound","a","1=3","1=4")
 
-		register_event("TextMsg","on_Spectate","a","2=#game_joined_team")
-		register_event("TextMsg","on_SetSpecMode","b","2&#Spec_Mode")
+		//register_event("TextMsg","on_Spectate","a","2=#game_joined_team")
+		//register_event("TextMsg","on_SetSpecMode","b","2&#Spec_Mode")
 
 		register_event("StatusValue","on_StatusValue","b")
 	#endif
@@ -198,7 +204,11 @@ public plugin_init(){
 
 		register_menucmd(register_menuid("Team_Select",1),(1<<0)|(1<<1)|(1<<4),"cmd_Teamselect")
 
-		cs_set_startmoney_max(2147483583)
+		#if !DISABLE_CSHACK
+			cs_set_startmoney_max(2147483583)
+		#endif
+
+		set_task(0.7, "WAR3_Mole_Fix",TASK_MOLEFIX,"",0,"b")
 	#endif
 
 	register_event("DeathMsg","on_DeathMsg","a")

@@ -317,8 +317,9 @@ public _Skill_Reincarnation_Give(id){
 	if (p_data_b[id][PB_NIGHTVISION])
 		cs_set_user_nvg(id,1)
 
-	if(p_data_b[id][PB_SHIELD])
+	if(p_data_b[id][PB_SHIELD]){
 		give_item(id,"weapon_shield")
+	}
 
 	new weaponid = 0, j
 	for (j=0; (j < p_data[id][P_SAVEDNUMBER]) && (j < 32); ++j){

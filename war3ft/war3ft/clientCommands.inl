@@ -46,6 +46,8 @@ public cmd_Jointeam(id){
 
 	if(!p_data_b[id][PB_JUSTJOINED] && !is_user_alive(id))
 		p_data_b[id][PB_DIEDLASTROUND] = true
+
+	return PLUGIN_CONTINUE
 }
 
 public cmd_Level(id){
@@ -174,7 +176,7 @@ public cmd_Rings(id){
 	if (p_data[id][P_ITEM2]==ITEM_AMULET)
 		p_data_b[id][PB_SILENT] = false
 	if (p_data[id][P_ITEM2]==ITEM_HELM)
-		Item_Set_Helm(id,1)
+		Item_Set_Helm(id, HELM_RESET)
 	if (p_data[id][P_ITEM2]==ITEM_CHAMELEON)
 		changeskin(id,SKIN_RESET)
 	
@@ -253,6 +255,9 @@ public cmd_ability(id){
 			return PLUGIN_HANDLED
 
 		if(!p_data_b[id][PB_BUYZONE])
+			return PLUGIN_HANDLED
+
+		if(!is_user_alive(id))
 			return PLUGIN_HANDLED
 
 		new parm[1]

@@ -620,24 +620,25 @@ public on_ShowStatus(id){
 		// From miscstats.sma
 		new name[32], red = 0, blue = 0
 		new team = get_user_team(pid)
+		new idteam = get_user_team(id)
 
 		get_user_name(pid,name,31)
 		
 		if ( team == TS ){
-			if ( p_data_b[pid][PB_MOLE] && p_data[id][P_ITEM2] != ITEM_PROTECTANT )
+			if ( (p_data_b[pid][PB_MOLE] && team != idteam) && p_data[id][P_ITEM2] != ITEM_PROTECTANT )
 				blue = 255
 			else
 				red = 255
 		}
 		else if ( team == CTS ){
-			if ( p_data_b[pid][PB_MOLE] && p_data[id][P_ITEM2] != ITEM_PROTECTANT )
+			if ( (p_data_b[pid][PB_MOLE] && team != idteam) && p_data[id][P_ITEM2] != ITEM_PROTECTANT )
 				red = 255
 			else
 				blue = 255
 		}
 		
 		// Teammate
-		if ( get_user_team(id) == team || p_data_b[pid][PB_MOLE] ) {
+		if ( idteam == team || p_data_b[pid][PB_MOLE] ) {
 			new wpnname[32] , clip, ammo, wpnid = get_user_weapon(pid,clip,ammo) 
 
 			get_weaponname(wpnid,wpnname,31) 
@@ -658,5 +659,14 @@ public on_HideStatus(id){
 	if ( iCvar[FT_SHOW_PLAYER] && !g_freezetime ){
 		set_hudmessage(0,0,0,0.0,0.0,0, 0.0, 0.01, 0.0, 0.0, 4) 
 		show_hudmessage(id,"")
+	}
+}
+
+public WAR3_Mole_Fix(){
+	new players[32], num
+	get_players(players, num, "c")
+
+	for(new i = 0; i < num; i++){
+		client_cmd(players[i], "cl_minmodels 0")
 	}
 }

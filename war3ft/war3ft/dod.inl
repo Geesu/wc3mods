@@ -125,6 +125,7 @@ stock Create_DeathMsg_DOD(killer_id,victim_id,weapon){
 	message_end()
 }
 
+/*
 public on_Spectate(){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("on_Spectate",0)
@@ -176,34 +177,14 @@ public on_SetSpecMode(id){
 	}
 
 	return PLUGIN_CONTINUE
-}
+}*/
 
 public on_StatusValue(id){	
 
-	if((p_data[id][P_SPECMODE] != 4 && p_data[id][P_SPECMODE] != 2) || !warcraft3 || !iCvar[FT_SPEC_INFO])
+	if(!warcraft3 || !iCvar[FT_SPEC_INFO])
 		return PLUGIN_CONTINUE
 
-	new origin[3], targetorigin[3]
-	new players[32], numberofplayers, i
-	new targetid = 0
-	new name[32]
-
-	get_user_origin(id, origin)
-
-	get_players(players, numberofplayers, "a")
-
-	for (i=0;i<numberofplayers;i++){
-		if(players[i] != id ){
-			get_user_origin(players[i], targetorigin)
-			get_user_name(players[i], name, 31)
-			console_print(id, "Player: %s, Distance:%d", name, get_distance(origin, targetorigin))
-
-			if( get_distance(origin, targetorigin) < 50 ){
-				targetid = players[i]
-				break
-			}
-		}
-	}
+	new targetid = entity_get_int(id, EV_INT_iuser2)
 
 	if( targetid == 0 )
 		return PLUGIN_CONTINUE
