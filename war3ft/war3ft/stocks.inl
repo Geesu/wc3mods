@@ -107,7 +107,7 @@ stock get_user_maxhealth(id){
 	// Human Devotion Skill
 
 	if ( Verify_Skill(id, RACE_HUMAN, SKILL2) ){
-		maxHealth += (100 - p_devotion[p_data[id][P_SKILL2]-1])
+		maxHealth += (p_devotion[p_data[id][P_SKILL2]-1] - 100)
 	}
 
 

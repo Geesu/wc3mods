@@ -1,5 +1,6 @@
 v2.1.6
  - Bug Fix: An extra number appeared in war3menu, it was removed
+ - Bug Fix: Rings would not health humans to their max health (thanks ol)
  - Change: Stopped using cs_get_user_buyzone, cs_get_user_defuse
 
 v2.1.5
