@@ -434,7 +434,7 @@ public menu_War3menu(id){
 	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
 	show_menu(id,keys,menu_body,-1)
 
-	return PLUGIN_CONTINUE
+	return PLUGIN_HANDLED
 }
 
 public _menu_War3menu(id,key){
