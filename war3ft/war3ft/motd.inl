@@ -193,7 +193,7 @@ public MOTD_War3help(id, saychat){
 	return PLUGIN_HANDLED
 }
 
-public MOTD_Playerskills(id){
+public MOTD_Playerskills(id, saychat){
 	#if ADVANCED_DEBUG == 1
 		writeDebugInfo("player_skills",id)
 	#endif
@@ -216,7 +216,7 @@ public MOTD_Playerskills(id){
 
 	get_players(players, numberofplayers)
 
-	if(iCvar[FT_STEAM])
+	if(iCvar[FT_STEAM] && saychat)
 		pos += format(message[pos],2047-pos, "<body bgcolor=#000000><font color=#FFB000>")
 
 	for(j=1;j<(iCvar[FT_RACES]+1);j++){
@@ -231,25 +231,36 @@ public MOTD_Playerskills(id){
 			race_name=""
 			racename(j,id,race_name,RACE_NAME_LENGTH_F)
 			
-			if(iCvar[FT_STEAM])
-				pos += format(message[pos],2047-pos, "<font color='#00FF00'><b>%s</b></font><ul>",race_name)
-			else
-				pos += format(message[pos],2047-pos, "^n%s",race_name)
+			if ( saychat ) {
+				if(iCvar[FT_STEAM])
+					pos += format(message[pos],2047-pos, "<font color='#00FF00'><b>%s</b></font><ul>",race_name)
+				else
+					pos += format(message[pos],2047-pos, "^n%s",race_name)
+			}
+			else{
+				console_print(id, "**** %s ****", race_name)
+			}
 
 			for (i = 0; i < numberofplayers; ++i){
 				playerid=players[i]
 
 				if(p_data[playerid][P_RACE] == j){
 					get_user_name(playerid,name,31)
+					
+					if ( saychat ) {
+						if ( iCvar[FT_STEAM] ){
+							replace(name, 127, "<", "&lt;")
+							replace(name, 127, ">", "&gt;")
 
-					replace(name, 127, "<", "&lt;")
-					replace(name, 127, ">", "&gt;")
+							pos += format(message[pos],2047-pos,"<li>(%d) %s",p_data[playerid][P_LEVEL],name)
+						}
+						else
+							pos += format(message[pos],2047-pos,"^t(%d) %s",p_data[playerid][P_LEVEL],name)
+					}
+					else{
+						console_print(id, "%-2s(%d) %s","",p_data[playerid][P_LEVEL],name)
+					}
 
-					if (iCvar[FT_STEAM])
-						pos += format(message[pos],2047-pos,"<li>(%d) %s",p_data[playerid][P_LEVEL],name)
-					else
-						pos += format(message[pos],2047-pos,"/t(%d) %s",p_data[playerid][P_LEVEL],name)
-	
 					for(k=0;k<4;k++){
 						raceskill(p_data[playerid][0],k+1,id,race_skill[k],RACE_SKILL_LENGTH_F)
 					}
@@ -262,21 +273,25 @@ public MOTD_Playerskills(id){
 						pos += format(message[pos],2047-pos,", %s %d",race_skill[2],p_data[playerid][P_SKILL3])
 					if(p_data[playerid][P_ULTIMATE])
 						pos += format(message[pos],2047-pos,", %s",race_skill[3])*/
-
-					if (iCvar[FT_STEAM])
-						pos += format(message[pos],2047-pos,"</li>")
-					else
-						pos += format(message[pos],2047-pos,"^n")
+					
+					if( saychat ) {
+						if (iCvar[FT_STEAM])
+							pos += format(message[pos],2047-pos,"</li>")
+						else
+							pos += format(message[pos],2047-pos,"^n")
+					}
 				}
 			}
-			if (iCvar[FT_STEAM])
+			if (iCvar[FT_STEAM] && saychat)
 				pos += format(message[pos],2047-pos,"</ul>")
 		}
 	}
 
-	new motdmessage[128]
-	format(motdmessage, 127, "%L",id,"PLAYER_SKILLS","","")
-	show_motd(id,message,motdmessage)
+	if( saychat ) {
+		new motdmessage[128]
+		format(motdmessage, 127, "%L",id,"PLAYER_SKILLS","","")
+		show_motd(id,message,motdmessage)
+	}
 
 	return PLUGIN_CONTINUE
 }

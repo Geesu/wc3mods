@@ -1078,13 +1078,12 @@ public on_CurWeapon(id) {
 				foundNade = true 
 		#endif
 		}
-
-		new parm[2]
-		parm[0] = id
-		parm[1] = iCvar[FT_GLOVE_TIMER]
 		
-		if(!p_data_b[id][PB_NADEJUSTRECEIVED] && !foundNade)
-		{
+		if(!p_data_b[id][PB_NADEJUSTRECEIVED] && !foundNade){
+			new parm[2]
+			parm[0] = id
+			parm[1] = iCvar[FT_GLOVE_TIMER]
+
 			p_data_b[id][PB_NADEJUSTRECEIVED]=true
 			_Item_Glove(parm)
 		}

@@ -526,7 +526,7 @@ public _menu_Race_Options(id,key){
 		case 0:	change_race(id,1)
 		case 1:	WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
 		case 2:	amx_resetxp(id,1)
-		case 3:	MOTD_Playerskills(id)
+		case 3:	MOTD_Playerskills(id, 1)
 		case 8: menu_War3menu(id)
 		default: return PLUGIN_HANDLED
 	}

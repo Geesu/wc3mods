@@ -13,6 +13,7 @@ public test(id){
 	client_print(id,print_chat,"Max Speed: %f", get_user_maxspeed(id))
 	client_print(id,print_chat,"Health: %d", get_user_health(id))
 	client_print(id,print_chat,"Evade next shot: %d", p_data_b[id][PB_EVADENEXTSHOT])
+	client_print(id,print_chat,"Max health: %d", get_user_maxhealth(id))
 
 	return PLUGIN_HANDLED
 }

@@ -1,3 +1,7 @@
+v2.1.5
+ - Bug Fix: Human's being able to get 255 health
+ - Addition: Playerskils can be viewed via rcon (type playerskills)
+
 v2.1.4
  - Bug Fix: Run time error 4 on get_entity_vector
  - Bug Fix: Run time error with cs_get_user_buyzone(id) in function cmd_shield
@@ -6,6 +10,8 @@ v2.1.4
  - Bug Fix: Hex wasn't causing the screen color to change
  - Bug Fix: player not in game w/in the _Skill_Impale function
  - Bug Fix: God mode sometimes killing you when done (display level function caused this)
+ - Bug Fix: Health regeneration skills not working correctly
+ - Change: Playerskills no longer shows skill information, only level/race/name
  - Change: Bots now have a 6% chance of changing their race each round
 
 v2.1.3

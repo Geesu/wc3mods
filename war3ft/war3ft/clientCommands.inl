@@ -66,7 +66,7 @@ public cmd_Say(id){
 	else if (equali(said,"^"/selectskill^"") || equali(said,"^"selectskill^""))
 		menu_Select_Skill(id,1)
 	else if (equali(said,"^"/playerskills^"") || equali(said,"^"playerskills^""))
-		MOTD_Playerskills(id)
+		MOTD_Playerskills(id, 1)
 	else if (equali(said,"^"/skillsinfo^"") || equali(said,"^"skillsinfo^""))
 		MOTD_Skillsinfo(id,1)
 	else if (equali(said,"^"/war3help^"") || equali(said,"^"war3help^""))
