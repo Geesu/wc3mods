@@ -57,90 +57,6 @@ public _WAR3_showHUDItems(parm2[2]){					// Displays the player's items in the b
 	return PLUGIN_CONTINUE
 }
 
-public Item_Set_Helm(id, status){
-
-	if(id==0)
-		return PLUGIN_CONTINUE
-
-	// set_user_hitzones(shooter, the one getting hit, zone)
-	new zone = 0
-
-	if(status==1){		// Give helm
-		zone = 253
-		//console_print(id,"### Helm enabled")
-	}
-	else{				// Reset zones to normal
-		zone = 255
-		//console_print(id,"### Helm disabled")
-	}
-
-	for (new j = 1; j <= MAXPLAYERS; j++){
-		if((zone==255 && p_data[P_ITEM2][id]!=ITEM_HELM) || zone==253)
-			set_user_hitzones(j, id, zone)
-	}
-
-	return PLUGIN_CONTINUE
-}
-
-public _Item_Glove(parm[2]){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("_Item_Glove",parm[0])
-	#endif
-
-	new id = parm[0]
-
-	// Stop calling this if the user is no longer connected
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	// If the user buys another item, we should not be continuing this
-
-	if(p_data[id][P_ITEM2]!=ITEM_GLOVES){
-		set_hudmessage(0, 100, 0, 0.05, 0.65, 2, 0.02, 10.0, 0.01, 0.1, 2)	
-		show_hudmessage(id,"")
-		#if MOD == 1
-			Create_HudText(id, "", 1)
-		#endif
-		return PLUGIN_CONTINUE
-	}
-
-	// If the user dies, they won't get a nade, display a message
-
-	if (!is_user_alive(id)){
-		#if MOD == 0
-			set_hudmessage(0, 100, 0, 0.05, 0.65, 2, 0.02, 10.0, 0.01, 0.1, 2)	
-			show_hudmessage(id,"%L",id,"DONT_DIE_GOOSE")
-		#endif
-		#if MOD == 1
-			new message[128]
-			format(message, 127,"%L",id,"DONT_DIE_GOOSE")
-			Create_HudText(id, message, 1)
-		#endif
-
-		return PLUGIN_CONTINUE
-	}
-
-	// Give the nade or subtract 1 from the timer and call this again a second later
-	if(parm[1] < 1){
-		giveheifnothas(parm)
-	}else{
-		#if MOD == 0
-			set_hudmessage(0, 100, 0, 0.05, 0.65, 2, 0.02, 10.0, 0.01, 0.1, 2)	
-			show_hudmessage(id,"%L", id, "UNTIL_YOUR_NEXT_GRENADE", parm[1])
-		#endif
-		#if MOD == 1
-			new message[128]
-			format(message, 127,"%L", id, "UNTIL_YOUR_NEXT_GRENADE", parm[1])
-			Create_HudText(id, message, 1)
-		#endif
-		parm[1]--
-		set_task(1.0,"_Item_Glove",TASK_ITEM_GLOVES+id,parm,2)
-	}
-	
-	return PLUGIN_CONTINUE
-}
-
 public Item_Buy(id, key){
 	#if ADVANCED_DEBUG == 1
 		writeDebugInfo("Item_Buy",id)
@@ -335,10 +251,10 @@ public Item_Buy2(id, key){
 		}
 #endif
 		else if (p_data[id][P_ITEM2]==ITEM_GLOVES){
-			new parm[2]
-			parm[0]=id
-			parm[1] = iCvar[FT_GLOVE_TIMER]
-			giveheifnothas(parm)
+			//new parm[2]
+			//parm[0]=id
+			//parm[1] = iCvar[FT_GLOVE_TIMER]
+			Item_Glove_Give(id)
 		}
 		else if (p_data[id][P_ITEM2]==ITEM_RING){
 
@@ -412,6 +328,227 @@ public Item_Message(id, item, shopmenu){
 	}
 	return PLUGIN_CONTINUE
 }
+
+public Item_Clear(id){
+	#if ADVANCED_DEBUG == 1
+		writeDebugInfo("Item_Clear",id)
+	#endif
+
+	if (warcraft3==false)
+		return PLUGIN_CONTINUE
+
+	// Remove Helm
+	if(p_data[id][P_ITEM2]==ITEM_HELM)
+		Item_Set_Helm(id,0)
+
+	// Reset Skin
+	if (p_data[id][P_ITEM2]==ITEM_CHAMELEON)
+		changeskin(id,1)		
+
+	// Reset rings and footsteps
+	p_data[id][P_RINGS]=0
+	p_data_b[id][PB_SILENT] = false
+
+	return PLUGIN_CONTINUE
+}
+
+
+public Item_Check(parm[]){
+	#if ADVANCED_DEBUG == 1
+		writeDebugInfo("Item_Check",parm[0])
+	#endif
+
+	new id = parm[0]
+	
+	if(!p_data_b[id][PB_ISCONNECTED])
+		return PLUGIN_CONTINUE
+
+	if(p_data[id][P_ITEM2]==ITEM_MOLE)
+		set_task(0.1,"_Item_Mole",TASK_FAN+id,parm,1)
+		
+	if(p_data_b[id][PB_DIEDLASTROUND]){
+		p_data[id][P_ITEM]=0
+		p_data[id][P_ITEM2]=0
+		WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
+	}
+
+	p_data_b[id][PB_DIEDLASTROUND]=false
+	
+	if(get_cvar_num("sv_gravity")>650){
+		if ( Verify_Skill(id, RACE_UNDEAD, SKILL3) ){		// Levitation
+			if (get_user_gravity(id)!=p_levitation[p_data[id][P_SKILL3]-1])
+				set_user_gravity(id,p_levitation[p_data[id][P_SKILL3]-1])
+		}
+		else if (p_data[id][P_ITEM2] == ITEM_SOCK)
+			set_user_gravity(id, fCvar[FT_SOCK])
+		else
+			set_user_gravity(id,1.0)
+	}
+	else
+		set_user_gravity(id,1.0)
+
+	if(p_data[id][P_ITEM2]!=ITEM_CHAMELEON && (p_data[id][P_SKINCHANGED] == SKIN_HEX || p_data[id][P_SKINCHANGED]==SKIN_SWITCH))
+		changeskin(id,SKIN_RESET)
+
+	if (task_exists(TASK_ITEM_RINGERATE+id) && p_data[id][P_ITEM2]!=ITEM_RING)
+		remove_task(TASK_ITEM_RINGERATE+id)
+
+	if (p_data[id][P_ITEM]==ITEM_HEALTH)
+		set_user_health(id,get_user_health(id)+iCvar[FT_HEALTH_BONUS])
+	
+	if(p_data[id][P_ITEM2]==ITEM_RING && !task_exists(TASK_ITEM_RINGERATE+id))
+		_Item_Ring(parm)
+
+	if (p_data[id][P_ITEM2]==ITEM_CHAMELEON && is_user_alive(id))
+		changeskin(id,SKIN_SWITCH)
+
+	return PLUGIN_CONTINUE
+}
+
+
+// ****************************************
+// Helm of Excellence
+// ****************************************
+
+public Item_Set_Helm(id, status){
+
+	if(id==0)
+		return PLUGIN_CONTINUE
+
+	// set_user_hitzones(shooter, the one getting hit, zone)
+	new zone = 0
+
+	if(status==1){		// Give helm
+		zone = 253
+		//console_print(id,"### Helm enabled")
+	}
+	else{				// Reset zones to normal
+		zone = 255
+		//console_print(id,"### Helm disabled")
+	}
+
+	for (new j = 1; j <= MAXPLAYERS; j++){
+		if((zone==255 && p_data[P_ITEM2][id]!=ITEM_HELM) || zone==253)
+			set_user_hitzones(j, id, zone)
+	}
+
+	return PLUGIN_CONTINUE
+}
+
+
+// ****************************************
+// Gloves of Warmth
+// ****************************************
+
+public _Item_Glove(parm[2]){
+	#if ADVANCED_DEBUG == 1
+		writeDebugInfo("_Item_Glove",parm[0])
+	#endif
+
+	new id = parm[0]
+
+	// Stop calling this if the user is no longer connected
+
+	if(!p_data_b[id][PB_ISCONNECTED])
+		return PLUGIN_CONTINUE
+
+	// If the user buys another item, we should not be continuing this
+
+	if(p_data[id][P_ITEM2]!=ITEM_GLOVES){
+		set_hudmessage(0, 100, 0, 0.05, 0.65, 2, 0.02, 10.0, 0.01, 0.1, 2)	
+		show_hudmessage(id,"")
+		#if MOD == 1
+			Create_HudText(id, "", 1)
+		#endif
+		return PLUGIN_CONTINUE
+	}
+
+	// If the user dies, they won't get a nade, display a message
+
+	if (!is_user_alive(id)){
+		#if MOD == 0
+			set_hudmessage(0, 100, 0, 0.05, 0.65, 2, 0.02, 10.0, 0.01, 0.1, 2)	
+			show_hudmessage(id,"%L",id,"DONT_DIE_GOOSE")
+		#endif
+		#if MOD == 1
+			new message[128]
+			format(message, 127,"%L",id,"DONT_DIE_GOOSE")
+			Create_HudText(id, message, 1)
+		#endif
+
+		return PLUGIN_CONTINUE
+	}
+
+	// Give the nade or subtract 1 from the timer and call this again a second later
+	if(parm[1] < 1){
+		Item_Glove_Give(id)
+	}else{
+		#if MOD == 0
+			set_hudmessage(0, 100, 0, 0.05, 0.65, 2, 0.02, 10.0, 0.01, 0.1, 2)	
+			show_hudmessage(id,"%L", id, "UNTIL_YOUR_NEXT_GRENADE", parm[1])
+		#endif
+		#if MOD == 1
+			new message[128]
+			format(message, 127,"%L", id, "UNTIL_YOUR_NEXT_GRENADE", parm[1])
+			Create_HudText(id, message, 1)
+		#endif
+		parm[1]--
+		set_task(1.0,"_Item_Glove",TASK_ITEM_GLOVES+id,parm,2)
+	}
+	
+	return PLUGIN_CONTINUE
+}
+
+public Item_Glove_Give(id) { 
+	#if ADVANCED_DEBUG == 1
+		writeDebugInfo("Item_Glove_Give",id)
+	#endif
+
+	if(!p_data_b[id][PB_ISCONNECTED])
+		return PLUGIN_CONTINUE
+
+	new wpnList[32] = 0 
+	new number = 0
+	new foundNade = false 
+	get_user_weapons(id,wpnList,number) 
+	for (new i = 0;i < number && !foundNade;i++) { 
+		#if MOD == 0
+			if (wpnList[i] == CSW_HEGRENADE) 
+				foundNade = true 
+		#endif
+		#if MOD == 1
+			if (wpnList[i] == DODW_HANDGRENADE || wpnList[i] == DODW_STICKGRENADE) 
+				foundNade = true 
+		#endif
+	}
+
+	if (!foundNade && is_user_alive(id)){
+	#if MOD == 0
+		set_hudmessage(0, 100, 0, 0.05, 0.65, 2, 0.02, 10.0, 0.01, 0.1, 2)
+		show_hudmessage(id,"%L",id,"ENJOY_A_GRENADE")
+
+		give_item(id,"weapon_hegrenade")
+	#endif
+	#if MOD == 1
+		new message[128]
+		format(message,127,"%L",id,"ENJOY_A_GRENADE")
+		Create_HudText(id, message, 1)
+	
+		if(get_user_team(id)==ALLIES)
+			give_item(id,"weapon_handgrenade")
+		else
+			give_item(id,"weapon_stickgrenade")
+	#endif
+	} 
+
+	p_data_b[id][PB_NADEJUSTRECEIVED]=false
+	return PLUGIN_CONTINUE 
+} 
+
+
+// ****************************************
+// Mole
+// ****************************************
 
 public _Item_Mole(parm[]){ // For ITEM_MOLE, checks to see if there is an open spot on the other team's spawn 
 	#if ADVANCED_DEBUG == 1

@@ -3,7 +3,7 @@ public on_PlayerAction(){
 		writeDebugInfo("on_PlayerAction",0)
 	#endif
 
-	if (!WAR3_check())
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	new sArg[MAX_VAR_LENGTH], sAction[MAX_VAR_LENGTH] 
@@ -290,7 +290,7 @@ public on_PlayerAction(){
 			writeDebugInfo("on_FreezeTimeComplete",0)
 		#endif
 
-		if (!WAR3_check())
+		if (!warcraft3)
 			return PLUGIN_CONTINUE
 
 		g_freezetime = false
@@ -370,7 +370,7 @@ public grenade_throw(index,greindex,wId){
 		writeDebugInfo("grenade_throw",index)
 	#endif
 
-	if (!WAR3_check())
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	if(g_mapDisabled)
@@ -398,7 +398,7 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 		writeDebugInfo("client_damage",victim)
 	#endif
 
-	if (!WAR3_check())
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	if(!p_data_b[victim][PB_ISCONNECTED])
@@ -441,7 +441,7 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 	// Bot should "auto" cast his/her ultimate when attacking
 
 	if (is_user_bot(attacker) && p_data[attacker][P_ULTIMATE]){
-		ultimate(attacker)
+		cmd_Ultimate(attacker)
 	}
 
 	// **************************************************
@@ -937,7 +937,7 @@ public on_Death(victim, killer, wpnindex, headshot){
 		writeDebugInfo("on_Death",victim)
 	#endif
 
-	if (!WAR3_check())
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	#if DEBUG == 1
@@ -980,7 +980,7 @@ public on_DeathMsg(){
 			writeDebugInfo("on_ArmorType",id)
 		#endif
 
-		if (!WAR3_check())
+		if (!warcraft3)
 			return PLUGIN_CONTINUE
 
 		if (read_data(1))
@@ -1371,8 +1371,19 @@ public on_ResetHud(id){
 	p_data_b[id][PB_WARDENBLINK] = false
 
 	// Checks skills
-	check_skills(id)
-	check_fan(id)
+	Skill_Check(id)
+
+	// Fan of Knives Check
+
+	if ( Verify_Skill(id, RACE_WARDEN, SKILL1) && is_user_alive(id) ){
+		new Float:randomnumber = random_float(0.0,1.0)
+		if (randomnumber <= p_fan[p_data[id][P_SKILL1]-1]){
+			new fanparm[2]
+			fanparm[0]=id
+			fanparm[1]=7
+			set_task(0.1,"_Item_Mole",TASK_FAN+id,fanparm,2)
+		}
+	}
 
 	if (p_data_b[id][PB_RESETSKILLS]) {
 		p_data[id][P_SKILL1]=0
@@ -1430,6 +1441,28 @@ public on_GameRestart(){
 			p_data[id][P_HECOUNT]=0
 			p_data[id][P_FLASHCOUNT]=0
 		#endif
+	}
+
+	return PLUGIN_CONTINUE
+}
+
+public on_StatusIcon(id) {
+
+	new szStatusItem[8]
+	read_data(2, szStatusItem, 7)
+
+	if ( equali(szStatusItem, "defuser") ){
+		if ( read_data(1) )
+			p_data_b[id][PB_DEFUSE] = true
+		else
+			p_data_b[id][PB_DEFUSE] = false
+	}
+
+	if ( equali(szStatusItem, "buyzone") ){
+		if ( read_data(1) )
+			p_data_b[id][PB_BUYZONE] = true
+		else
+			p_data_b[id][PB_BUYZONE] = false
 	}
 
 	return PLUGIN_CONTINUE

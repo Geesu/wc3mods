@@ -75,6 +75,7 @@ new const WC3VERSION[] =	"2.1.6"
 #include "war3ft/motd.inl"
 #include "war3ft/language.inl"
 #include "war3ft/other.inl"
+#include "war3ft/admin.inl"
 
 // AMXX Functions that do not exist in AMX
 #include "war3ft/amx_inc.inl"
@@ -125,7 +126,7 @@ public plugin_init(){
 	register_clcmd("itemsinfo","MOTD_Itemsinfo",-1,"itemsinfo")
 	register_clcmd("itemsinfo2","MOTD_Itemsinfo2",-1,"itemsinfo2")
 	register_clcmd("war3help","MOTD_War3help",-1,"war3help")
-	register_clcmd("ultimate","ultimate",-1,"ultimate")
+	register_clcmd("ultimate","cmd_Ultimate",-1,"ultimate")
 	register_clcmd("shopmenu","menu_Shopmenu_One",-1,"shopmenu")
 	register_clcmd("shopmenu2","menu_Shopmenu_Two",-1,"shopmenu2")
 
@@ -222,6 +223,7 @@ public plugin_init(){
 	register_cvar("FT_Race9_Skill3",			"1")
 	register_cvar("FT_Race9_Ultimate",			"1")
 
+	register_cvar("FT_entangle_drop",			"0")
 	register_cvar("FT_sock",					"0.5")
 	register_cvar("FT_buydead",					"1")
 	register_cvar("FT_buytime",					"0")
@@ -299,7 +301,7 @@ public plugin_init(){
 
 	WAR3_exec_config()
 
-	set_task(2.0, "set_variables", TASK_SETVARIABLES)
+	set_task(2.0, "WAR3_Set_Variables", TASK_SETVARIABLES)
 	set_task(15.0, "FT_controller",TASK_FTCONTROLLER,"",0,"b")
    
 	register_dictionary("war3FT.txt")

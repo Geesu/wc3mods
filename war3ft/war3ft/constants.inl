@@ -101,7 +101,7 @@
 #define SHORT_ITEM_NAME_LENGTH_F 31
 
 #define MAXGLOW					150
-#define ULTIMATESEARCHTIME		50
+#define ULTIMATESEARCHTIME		50			// Translates to 5 seconds
 #define TELEPORT_RADIUS			50
 #define LIGHTNING_RANGE			500
 #define EXPLOSION_MAX_DAMAGE	50
@@ -333,7 +333,7 @@
 	#define PB_SLOWED				23
 	#define PB_ISSEARCHING			24
 	#define PB_LIGHTNINGHIT			25
-	#define PB_HEALINGHIT			26
+//	#define PB_HEALINGHIT			26
 	#define PB_ULTIMATEUSED			27
 	#define PB_KNIFESELECTED		28
 	#define PB_SILENT				29
@@ -401,6 +401,7 @@
 #define	FT_HEADSHOT_BONUS					39
 #define	FT_ROUND_WIN_XP						40
 #define FT_BLINK_DIZZINESS					41
+#define FT_ENTANGLE_DROP					42
 
 #if MOD == 0
 	#define	FT_ITEMS_IN_HUD						45

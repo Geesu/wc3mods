@@ -486,7 +486,7 @@ public _menu_Skill_Options(id,key){
 	switch (key){
 		case 0:	menu_Select_Skill(id,1)
 		case 1:	MOTD_Skillsinfo(id)
-		case 2:	resetSkills(id,1)
+		case 2:	cmd_ResetSkill(id,1)
 		case 8: menu_War3menu(id)
 		default: return PLUGIN_HANDLED
 	}

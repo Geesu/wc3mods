@@ -86,7 +86,7 @@ public cmd_Say(id){
 	else if (equali(said,"^"/savexp^"") || equali(said,"^"savexp^""))
        	XP_Client_Save(id,1)  
 	else if (equali(said,"^"/resetskills^"") || equali(said,"^"resetskills^""))
-		resetSkills(id,1)
+		cmd_ResetSkill(id,1)
 
 	if(iCvar[FT_RACES] > 4){
 		if (equali(said,"^"/itemsinfo2^"") || equali(said,"^"itemsinfo2^""))
@@ -206,7 +206,7 @@ public cmd_ability(id){
 			parm[2]=origin[2]
 			parm[5]=id
 
-			lightpls(parm)
+			_Skill_SerpentWard(parm)
 			p_data[id][P_SERPENTCOUNT]--
 
 			new message[128]
@@ -227,7 +227,7 @@ public cmd_ability(id){
 			writeDebugInfo("cmd_Shield",id)
 		#endif
 
-		if (!WAR3_check())
+		if (!warcraft3)
 			return PLUGIN_HANDLED
 
 		if(!p_data_b[id][PB_ISCONNECTED])
@@ -276,7 +276,7 @@ public cmd_ability(id){
 			writeDebugInfo("cmd_Drop",id)
 		#endif
 
-		if (!WAR3_check())
+		if (!warcraft3)
 			return PLUGIN_CONTINUE
 
 		cmd_Shield(id)
@@ -318,3 +318,163 @@ public cmd_ability(id){
 		return PLUGIN_CONTINUE
 	} 
 #endif
+
+public cmd_ResetSkill(id,saychat){
+	#if ADVANCED_DEBUG == 1
+		writeDebugInfo("cmd_ResetSkill",id)
+	#endif
+
+	if (warcraft3==false)
+		return PLUGIN_CONTINUE
+
+	if (iCvar[FT_CD]) {
+		if (!WAR3_CD_installed(id)){
+			client_print(id,print_chat,"%s %L",g_MODclient, id,"CHEATING_DEATH_NOT_INSTALLED")
+			return PLUGIN_CONTINUE
+		}
+	}
+
+	if(saychat==1){
+		client_print(id,print_center,"%L",id,"SKILLS_RESET_NEXT_ROUND")
+	}
+	else{
+		console_print(id,"%L",id,"SKILLS_RESET_NEXT_ROUND")
+	}
+	p_data_b[id][PB_RESETSKILLS]=true
+
+
+	return PLUGIN_HANDLED
+}
+
+public cmd_Ultimate(id){
+	#if ADVANCED_DEBUG == 1
+		writeDebugInfo("ultimate",id)
+	#endif
+
+	if (warcraft3==false)
+		return PLUGIN_CONTINUE
+
+	if (iCvar[FT_CD]) {
+		if (!WAR3_CD_installed(id)){
+			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MOD)
+			return PLUGIN_HANDLED
+		}
+	}
+
+	if (!is_user_alive(id))
+		return PLUGIN_HANDLED
+
+	if(!p_data[id][P_ULTIMATE]){
+		new message[128]
+		format(message, 127, "%L",id,"ULTIMATE_NOT_FOUND")
+		Status_Text(id, message, 0.5, HUDMESSAGE_POS_STATUS)
+		client_cmd(id, "speak warcraft3/bonus/Error.wav")
+		return PLUGIN_HANDLED
+	}
+
+	if(p_data_b[id][PB_ULTIMATEUSED]){
+		new message[128]
+		format(message, 127, "%L",id,"ULTIMATE_NOT_READY",p_data[id][P_ULTIMATEDELAY])
+		Status_Text(id, message, 0.5, HUDMESSAGE_POS_STATUS)
+		client_cmd(id, "speak warcraft3/bonus/Error.wav")
+		return PLUGIN_HANDLED
+	}
+
+	// Suicide Bomber
+	if ( Verify_Skill(id, RACE_UNDEAD, SKILL4) ){
+		if (iCvar[FT_WARN_SUICIDE]){
+			if( p_data_b[id][PB_SUICIDEATTEMPT] ){
+				set_msg_block(gmsgDeathMsg,BLOCK_ONCE)
+			#if MOD == 0
+				user_kill(id)
+			#endif
+			#if MOD == 1
+				dod_user_kill(id)
+				on_Death(id, 0, 0, 0)
+				//client_cmd(id,"kill")
+			#endif
+			
+				p_data_b[id][PB_SUICIDEATTEMPT] = false
+			}
+			else{
+				new parm[1]
+				parm[0]=id
+				icon_controller(id,ICON_FLASH)
+				p_data_b[id][PB_SUICIDEATTEMPT] = true
+			#if MOD == 0
+				set_hudmessage(178, 14, 41, -1.0, -0.4, 1, 0.5, 1.7, 0.2, 0.2,5)
+				show_hudmessage(id,"%L",id,"SUICIDE_BOMB_ARMED")
+			#endif
+			#if MOD == 1
+				new szMessage[128]
+				format(szMessage, 127, "%L", id, "SUICIDE_BOMB_ARMED")
+				Create_HudText(id, szMessage, 1)
+			#endif
+			}
+		}
+		else{
+			set_msg_block(gmsgDeathMsg,BLOCK_ONCE)
+		#if MOD == 0
+			user_kill(id)
+		#endif
+		#if MOD == 1
+			//client_cmd(id,"kill")
+			dod_user_kill(id)
+			on_Death(id, 0, 0, 0)
+		#endif
+
+		}
+	}
+
+	// Teleport
+	else if ( Verify_Skill(id, RACE_HUMAN, SKILL4) ){
+		Ultimate_Teleport(id)
+	}
+
+	// Chain Lightning
+	else if ( Verify_Skill(id, RACE_ORC, SKILL4) && !p_data_b[id][PB_ISSEARCHING] ){
+		new parm[2]
+		parm[0]=id
+		parm[1]=ULTIMATESEARCHTIME
+		lightsearchtarget(parm)
+	}
+
+	// Entangling Roots
+	else if ( Verify_Skill(id, RACE_ELF, SKILL4) && !p_data_b[id][PB_ISSEARCHING] ){
+		new parm[2]
+		parm[0]=id
+		parm[1]=ULTIMATESEARCHTIME
+		searchtarget(parm)
+	}
+
+	// Flame Strike
+	else if ( Verify_Skill(id, RACE_BLOOD, SKILL4) ){
+		Ultimate_FlameStrike(id) 
+		p_data[id][P_FLAMECOUNT]++
+		if(p_data[id][P_FLAMECOUNT]>5){
+			p_data_b[id][PB_ULTIMATEUSED]=true
+			icon_controller(id,ICON_HIDE)
+			p_data[id][P_FLAMECOUNT]=0
+		}
+	}
+
+	// Big Bad Voodoo
+	else if ( Verify_Skill(id, RACE_SHADOW, SKILL4) ){
+		new parm[2]
+		parm[0] = id
+		parm[1] = 1
+		_Ultimate_BigBadVoodoo(parm)
+	}
+
+	// Vengeance
+	else if ( Verify_Skill(id, RACE_WARDEN, SKILL4) ){
+		Ultimate_Vengeance(id)
+	}
+
+	// Locust Swarm
+	else if ( Verify_Skill(id, RACE_CRYPT, SKILL4) ){
+		Ultimate_LocustSwarm(id)
+	}
+
+	return PLUGIN_HANDLED
+}

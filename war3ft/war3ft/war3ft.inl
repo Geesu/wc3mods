@@ -159,17 +159,6 @@ public WAR3_exec_config(){
 	server_cmd("exec %s/war3FT.cfg", configsDir)
 }
 
-public WAR3_check(){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("WAR3_check",0)
-	#endif
-
-	if(!warcraft3)
-		return false
-
-	return true
-}
-
 public WAR3_CD_installed(id){
 	#if ADVANCED_DEBUG == 1
 		writeDebugInfo("has_CD",id)
@@ -205,29 +194,6 @@ public WAR3_chooserace(id){
 		else
 			menu_Select_Race(id,{0,0,0,0,0,0,0,0,0})
 	}
-}
-
-public WAR3_ClearItems(id){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("WAR3_ClearItems",id)
-	#endif
-
-	if (warcraft3==false)
-		return PLUGIN_CONTINUE
-
-	// Remove Helm
-	if(p_data[id][P_ITEM2]==ITEM_HELM)
-		Item_Set_Helm(id,0)
-
-	// Reset Skin
-	if (p_data[id][P_ITEM2]==ITEM_CHAMELEON)
-		changeskin(id,1)		
-
-	// Reset rings and footsteps
-	p_data[id][P_RINGS]=0
-	p_data_b[id][PB_SILENT] = false
-
-	return PLUGIN_CONTINUE
 }
 
 public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is attacked, attacker ,damage
@@ -320,7 +286,7 @@ public WAR3_death_victim(victim_id, killer_id){
 
 	// Clear Item Information because the player just died
 
-	WAR3_ClearItems(victim_id)
+	Item_Clear(victim_id)
 
 
 #if MOD == 1
@@ -722,7 +688,7 @@ public WAR3_set_race(id,race){
 		XP_Retreive(id,0)
 	}
 
-	check_skills(id)
+	Skill_Check(id)
 
 	if(!p_data_b[id][PB_BLINKDELAYED] && !p_data_b[id][PB_ULTIMATEUSED])
 		icon_controller(id,ICON_SHOW)
@@ -750,216 +716,6 @@ public WAR3_set_race(id,race){
 	}
 #endif
 
-public _WAR3_Drop_Items(id){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("_WAR3_Drop_Items",0)
-	#endif
-
-	new origin[3]
-	new iweapons[32] = 0, wpname[32] = 0, inum = 0
-	get_user_weapons(id,iweapons,inum)
-
-	// Disarm and Isolate Player Before Re-Incarnation
-	get_user_origin(id,origin)
-	origin[2] -= 2000
-	set_user_origin(id,origin)
-	for(new a=0;a<inum;++a){
-		if(iweapons[a] != CSW_C4 && iweapons[a] != CSW_KNIFE){
-			get_weaponname(iweapons[a],wpname,31)
-			engclient_cmd(id,"drop",wpname)
-		}
-	}
-	client_cmd(id,"weapon_knife")
-}
-
-#if MOD == 0
-	public _WAR3_Give_Items(id){
-		#if ADVANCED_DEBUG == 1
-			writeDebugInfo("_WAR3_Give_Items",0)
-		#endif
-
-		new origin[3]
-		new weaponname[20] = 0, ammoname[20] = 0
-
-		get_user_origin(id,origin)
-		origin[2] += 2005
-
-		if (p_data[id][P_ARMORONDEATH]){
-			if (p_data_b[id][PB_HELMET])
-				give_item(id,"item_assaultsuit")
-			else
-				give_item(id,"item_kevlar")
-
-			set_user_armor(id,p_data[id][P_ARMORONDEATH])
-		}
-
-		if (p_data_b[id][PB_DEFUSE])
-			give_item(id,"item_thighpack")
-
-		if (p_data_b[id][PB_NIGHTVISION])
-			cs_set_user_nvg(id,1)
-
-		if(p_data_b[id][PB_SHIELD])
-			give_item(id,"weapon_shield")
-
-		new weaponid = 0, j
-		for (j=0; (j < p_data[id][P_SAVEDNUMBER]) && (j < 32); ++j){
-			weaponid=savedweapons[id][j]
-
-			if(weaponid==CSW_USP){
-				weaponname="weapon_usp"
-				ammoname="ammo_45acp"
-			}
-			else if(weaponid==CSW_ELITE){
-				weaponname="weapon_elite"
-				ammoname="ammo_9mm"
-			}
-			else if(weaponid==CSW_FIVESEVEN){
-				weaponname="weapon_fiveseven"
-				ammoname="ammo_57mm"
-			}
-			else if(weaponid==CSW_GLOCK18){
-				weaponname="weapon_glock18"
-				ammoname="ammo_9mm"
-			}
-			else if(weaponid==CSW_DEAGLE){
-				weaponname="weapon_deagle"
-				ammoname="ammo_50ae"
-			}
-			else if(weaponid==CSW_P228){
-				weaponname="weapon_p228"
-				ammoname="ammo_357sig"
-			}
-			else if (weaponid==3){
-				weaponname="weapon_scout"
-				ammoname="ammo_762nato"
-			}
-			else if (weaponid==4){
-				give_item(id,"weapon_hegrenade")
-			}
-			else if (weaponid==5){
-				weaponname="weapon_xm1014"
-				ammoname="ammo_buckshot"
-			}
-			else if (weaponid==7){
-				weaponname="weapon_mac10"
-				ammoname="ammo_45acp"
-			}
-			else if (weaponid==8){
-				weaponname="weapon_aug"
-				ammoname="ammo_556nato"
-			}
-			else if (weaponid==9){
-				give_item(id,"weapon_smokegrenade")	
-			}
-			else if (weaponid==12){
-				weaponname="weapon_ump45"
-				ammoname="ammo_45acp"
-			}
-			else if (weaponid==13){
-				weaponname="weapon_sg550"
-				ammoname="ammo_556nato"
-			}
-			else if (weaponid==14){
-				weaponname="weapon_galil"
-				ammoname="ammo_556nato"
-			}
-			else if (weaponid==15){
-				weaponname="weapon_famas"
-				ammoname="ammo_556nato"
-			}
-			else if (weaponid==18){
-				weaponname="weapon_awp"
-				ammoname="ammo_338magnum"
-			}
-			else if (weaponid==19){
-				weaponname="weapon_mp5navy"
-				ammoname="ammo_9mm"				
-			}
-			else if (weaponid==20){
-				weaponname="weapon_m249"
-				ammoname="ammo_556natobox"
-			}
-			else if (weaponid==21){
-				weaponname="weapon_m3"
-				ammoname="ammo_buckshot"
-			}
-			else if (weaponid==22){
-				weaponname="weapon_m4a1"
-				ammoname="ammo_556nato"
-			}
-			else if (weaponid==23){
-				weaponname="weapon_tmp"
-				ammoname="ammo_9mm"
-			}
-			else if (weaponid==24){
-				weaponname="weapon_g3sg1"
-				ammoname="ammo_762nato"
-			}
-			else if (weaponid==25){
-				if(p_data[id][P_FLASHCOUNT]==1)
-					give_item(id,"weapon_flashbang")
-				else{
-					give_item(id,"weapon_flashbang")
-					give_item(id,"weapon_flashbang")
-				}
-			}
-			else if (weaponid==27){
-				weaponname="weapon_sg552"
-				ammoname="ammo_556nato"
-			}
-			else if (weaponid==28){
-				weaponname="weapon_ak47"
-				ammoname="ammo_762nato"
-			}
-			else if (weaponid==30){
-				weaponname="weapon_p90"
-				ammoname="ammo_57mm"
-			}
-			else{
-				weaponname=""
-				ammoname=""
-			}
-			if (contain(weaponname,"weapon_")==0){	//  if no match found, 0 if match
-				give_item(id,weaponname)
-				give_item(id,ammoname)
-				give_item(id,ammoname)
-				give_item(id,ammoname)
-				give_item(id,ammoname)
-			}
-		}
-
-		// Restore Re-Incarnated Player to the map
-		set_user_origin(id,origin)
-
-		// This will make the player have the new reincarnated weapon selected
-		// instead of the player's knife being selected
-		new iweapons[32] = 0, wpname[32] = 0, inum = 0
-		new bool:foundPrim = false
-		//new bool:foundSec = false
-		get_user_weapons(id,iweapons,inum)
-
-		for(new a=0;a<inum;++a){
-			if(isPrimary(iweapons[a])){
-				get_weaponname(iweapons[a],wpname,31)
-				client_cmd(id,wpname)
-				foundPrim = true
-				break
-			}
-		}
-
-		if(!foundPrim){
-			for(new a=0;a<inum;++a){
-				if(isSecondary(iweapons[a])){
-					get_weaponname(iweapons[a],wpname,31)
-					client_cmd(id,wpname)
-					//foundSec = true
-					break
-				}
-			}
-		}	
-	}
-#endif
 
 public WAR3_Display_Level(id, flag){
 	#if ADVANCED_DEBUG == 1
@@ -1309,41 +1065,122 @@ WAR3_Immunity_Found_Near(id, origin[3]){
 	return false
 }
 
-public set_user_money(id,money,show){
+public WAR3_Set_Variables(){
 	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("set_user_money",id)
+		writeDebugInfo("set_variables",0)
 	#endif
 
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
+	if (get_cvar_num("sv_warcraft3")==0)
+		warcraft3=false
+	else
+		warcraft3=true
 
-	#if MOD == 0
-		cs_set_user_money(id,money,show)
-	#endif
-	#if MOD == 1
-		new parm[3]
-		parm[0] = id
-		parm[1] = 1
-		parm[2] = money - get_user_money(id)
+	MAXPLAYERS = get_global_int(GL_maxClients)
 
-		p_data[id][P_MONEY]=money
-		_DOD_showMoney(parm)
-	#endif
+	new divisor
+
+	iCvar[FT_RACE_ICONS				] =	get_cvar_num("FT_race_icons")
+	iCvar[FT_LEVEL_ICONS			] =	get_cvar_num("FT_level_icons")
+	iCvar[FT_SPEC_INFO				] =	get_cvar_num("FT_spec_info")
+	iCvar[FT_MIN_B4_XP				] =	get_cvar_num("FT_min_b4_XP")
+	iCvar[FT_BLINK_RADIUS			] =	get_cvar_num("FT_blink_radius")
+	iCvar[MP_SAVEXP					] =	get_cvar_num("mp_savexp")
+	iCvar[FT_SHOW_ICONS				] =	get_cvar_num("FT_show_icons")
+	iCvar[FT_HEALTH_BONUS			] =	get_cvar_num("FT_health_bonus")
+	iCvar[FT_NO_GLOVES_ON_KA		] = get_cvar_num("FT_no_gloves_on_ka")
+	iCvar[FT_GLOVE_ORC_DAMAGE		] = get_cvar_num("FT_glove_orc_damage")
+	iCvar[FT_CLAW					] = get_cvar_num("FT_claw")
+	iCvar[FT_CLOAK					] = get_cvar_num("FT_cloak")
+	iCvar[FT_OBJECTIVES				] = get_cvar_num("FT_objectives")
+	iCvar[FT_KILL_OBJECTIVES		] = get_cvar_num("FT_kill_objectives")
+	iCvar[FT_ULTIMATE_DELAY			] = get_cvar_num("FT_ultimatedelay") + 1
+	iCvar[FT_ULTIMATE_COOLDOWN		] = get_cvar_num("FT_ultimate_cooldown") + 1
+	iCvar[FT_RACES					] = get_cvar_num("FT_races")
+	iCvar[FT_POSITION				] = get_cvar_num("FT_position")
+	iCvar[FT_9RACERANDOM			] = get_cvar_num("FT_9raceRandom")
+	iCvar[FT_CD						] = get_cvar_num("FT_CD")
+	iCvar[FT_WARN_SUICIDE			] = get_cvar_num("FT_warn_suicide")
+	iCvar[FT_BLINKENABLED			] = get_cvar_num("FT_blinkenabled")
+	iCvar[SV_ALLOWWAR3VOTE			] = get_cvar_num("sv_allowwar3vote")
+	iCvar[SV_MYSQL					] = get_cvar_num("sv_mysql")
+	iCvar[SV_MYSQL_SAVE_END_ROUND	] = get_cvar_num("sv_mysql_save_end_round")
+	iCvar[FT_SAVEBY					] = get_cvar_num("FT_saveby")
+	iCvar[SV_MYSQL_AUTO_PRUNING		] = get_cvar_num("sv_mysql_auto_pruning")
+	iCvar[SV_DAYSBEFOREDELETE		] = get_cvar_num("sv_daysbeforedelete")
+	iCvar[FT_HEALING_RANGE			] = get_cvar_num("FT_healing_range")
+	iCvar[FT_XP_RADIUS				] = get_cvar_num("FT_xp_radius")
+	iCvar[FT_GLOVE_TIMER			] = get_cvar_num("FT_glove_timer")
+	iCvar[FT_BUYTIME				] = get_cvar_num("FT_buytime")
+	iCvar[FT_BUYZONE				] = get_cvar_num("FT_buyzone")
+	iCvar[FT_BUYDEAD				] = get_cvar_num("FT_buydead")
+	iCvar[FT_BLINK_DIZZINESS		] = get_cvar_num("FT_blink_dizziness")
+	iCvar[MP_WEAPONXPMODIFIER		] = get_cvar_num("mp_weaponxpmodifier")
+	iCvar[FT_BLINK_PROTECTION		] = get_cvar_num("FT_blink_protection")
+	iCvar[FT_ENTANGLE_DROP			] = get_cvar_num("FT_entangle_drop")
+
+	fCvar[FT_BOT_BUY_ITEM			] = get_cvar_float("FT_bot_buy_item")
+	fCvar[FT_FROST_SPEED			] = get_cvar_float("FT_frost_speed")
+	fCvar[FT_MASK_OF_DEATH			] = get_cvar_float("FT_mask_of_death")
+	fCvar[MP_XPMULTIPLIER			] = get_cvar_float("mp_xpmultiplier")
+	fCvar[AMX_VOTE_ANSWERS			] = get_cvar_float("amx_vote_answers")
+	fCvar[AMX_VOTEWAR3_RATIO		] = get_cvar_float("amx_votewar3_ratio")
+	fCvar[FT_SOCK					] = get_cvar_float("FT_sock")
+
+	if(iCvar[MP_SAVEXP])
+		divisor = 5
+	else
+		divisor = 1
+
+	iCvar[FT_XPBONUS				] = get_cvar_num("FT_xpbonus") / divisor
+	iCvar[FT_HEADSHOT_BONUS			] = (get_cvar_num("FT_headshot_bonus") / divisor) + 2
+	iCvar[FT_ROUND_WIN_XP			] = get_cvar_num("FT_round_win_XP") / divisor
+
+#if MOD == 0
+	server_cmd("amx_statscfg off PlayerName")
+
+	iCvar[FT_ITEMS_IN_HUD			] = get_cvar_num("FT_items_in_hud")
+	iCvar[FT_NO_ORCNADES			] = get_cvar_num("FT_no_orcnades")
+	iCvar[FT_BOMBPLANTERXP			] = get_cvar_num("FT_bombplanterxp") / divisor
+	iCvar[FT_DEFUSEXP				] = get_cvar_num("FT_defusexp") / divisor
+	iCvar[FT_HOSTAGEXP				] = get_cvar_num("FT_hostagexp") / divisor
+	iCvar[FT_KILLRESCUEMANXP		] = get_cvar_num("FT_killrescuemanxp") / divisor
+	iCvar[FT_KILL_BOMB_CARRIER_BONUS] = get_cvar_num("FT_kill_bomb_carrier_bonus") / divisor
+	iCvar[FT_DEFUSER_KILL_BONUS		] = get_cvar_num("FT_defuser_kill_bonus") / divisor
+	iCvar[FT_VIP_ESCAPE_BONUS		] = get_cvar_num("FT_VIP_escape_bonus") / divisor
+	iCvar[FT_VIP_KILL_BONUS			] = get_cvar_num("FT_VIP_kill_bonus") / divisor
+	iCvar[MP_GRENADEPROTECTION		] = get_cvar_num("mp_grenadeprotection")
+
+	fCvar[FT_BOOTSPEED				] = get_cvar_float("FT_bootspeed")
+#endif
+
+#if MOD == 1
+	iCvar[DOD_STARTMONEY			] = get_cvar_num("DOD_startmoney")
+	
+	fCvar[DOD_BOOTSPEED				] = get_cvar_float("DOD_bootspeed")
+#endif
+
+	race9Options[1] = get_cvar_num("FT_Race9_Skill1")
+	race9Options[2] = get_cvar_num("FT_Race9_Skill2")
+	race9Options[3] = get_cvar_num("FT_Race9_Skill3")
+	race9Options[4] = get_cvar_num("FT_Race9_Ultimate")
+
+	if(iCvar[FT_RACES] > MAX_RACES)
+		iCvar[FT_RACES] = MAX_RACES
+
+	// Set the version of war3 that is running (war3ft or classic war3?)
+	if(iCvar[FT_RACES] < 5){
+		g_MOD = "WAR3"
+		g_MODclient = "* [WAR3]"
+	}
+	else{
+		g_MOD = "WAR3FT"
+		g_MODclient = "* [WAR3FT]"	
+	}
+
+	lang_Set_Menus()
+	XP_Set_DBI()
+	XP_Set()
+	checkmap()
+
 	return PLUGIN_CONTINUE
-}
-
-public get_user_money(id){
-	#if ADVANCED_DEBUG == 1
-		writeDebugInfo("get_user_money",id)
-	#endif
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	#if MOD == 0
-		return cs_get_user_money(id)
-	#endif
-	#if MOD == 1
-		return p_data[id][P_MONEY]
-	#endif
 }
