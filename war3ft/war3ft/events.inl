@@ -442,16 +442,13 @@ public grenade_throw(index,greindex,wId){
 	return PLUGIN_CONTINUE
 }
 
-public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
+public on_Damage(victim){
 	#if ADVANCED_DEBUG == 1
 		writeDebugInfo("client_damage",victim)
 	#endif
 
-	#if DEBUG == 1
-		console_print(victim, "### %d damage done by %d", damage, attacker)
-		console_print(attacker, "### %d damage done to %d", damage, victim)
-
-	#endif
+	new wpnindex = 0, hitplace = 0, attacker = get_user_attacker(victim,wpnindex,hitplace)
+	new damage = read_data(2)
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -459,9 +456,45 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 	if(!p_data_b[victim][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
-	if(!p_data_b[attacker][PB_ISCONNECTED])
+	if(!p_data_b[attacker][PB_ISCONNECTED] && attacker > 0)
 		return PLUGIN_CONTINUE
+
+#if MOD == 0
+	new inflictor = entity_get_edict(victim, EV_ENT_dmg_inflictor)
+#endif
 	
+	#if DEBUG
+		new attackerName[32]
+		get_user_name(attacker, attackerName, 31)
+
+		console_print(victim, "### on_Damage : %d by %s(%d:%d) from %d", damage, attackerName, attacker, entity_get_edict(victim, EV_ENT_dmg_inflictor), wpnindex)
+	#endif
+
+#if MOD == 0
+	// Check to see if the damage was from the bomb
+	if( attacker != inflictor && wpnindex != 4 && attacker != victim && inflictor > 0 ){
+
+		new szClassName[64]
+		entity_get_string(inflictor, EV_SZ_classname, szClassName, 63)
+			
+		// Technically I don't think we need to check the classname, but just in case
+		if ( equali(szClassName, "grenade") || equali(szClassName, "env_explosion") ){
+			wpnindex = CSW_C4
+			attacker = 0
+
+			// We need to call the death function manually b/c DeathMsg isn't broadcasted when the bomb explodes and kills someone
+			if (get_user_health(victim) - damage < 0 ){
+				on_Death(victim, attacker, wpnindex, 0)
+			}
+
+			#if DEBUG
+				client_print(victim, print_chat, "### You were just attacked by the bomb for %d damage (%s)", damage, szClassName)
+			#endif
+		}
+
+	}
+#endif
+
 	if(p_data_b[attacker][PB_MOLE] && (p_data[victim][P_ITEM2]==ITEM_PROTECTANT || p_data_b[victim][PB_WARDENBLINK])){	
 		set_user_actualhealth(victim,get_user_health(victim)+damage, "client_damage, protectant")
 		client_print(victim,print_chat,"%L",victim,"SHOT_DEFLECTED",g_MOD)
@@ -484,18 +517,14 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 	if (victim==attacker)
 		return PLUGIN_HANDLED
 
-	if (victim==attacker && wpnindex==0)
-		return PLUGIN_CONTINUE
-
-	else if (attacker==0)
-		return PLUGIN_CONTINUE
-
 	new tempdamage = 0
 
 	// Bot should "auto" cast his/her ultimate when attacking
-
-	if (is_user_bot(attacker) && p_data[attacker][P_ULTIMATE]){
-		cmd_Ultimate(attacker)
+	
+	if( attacker > 0 ){
+		if (is_user_bot(attacker) && p_data[attacker][P_ULTIMATE]){
+			cmd_Ultimate(attacker)
+		}
 	}
 
 	// **************************************************
@@ -918,14 +947,14 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 
 			if (randomnumber <= p_evasion[p_data[victim][P_SKILL1]-1]){
 				p_data_b[victim][PB_EVADENEXTSHOT] = true
-				p_data_b[victim][PB_EVADENEXTWAR3DMG] = true
+
 				if (iHealth <= get_user_maxhealth(victim)){
 					healthadjustment = 1024
 				}
 			}
 			else{
 				p_data_b[victim][PB_EVADENEXTSHOT] = false
-				p_data_b[victim][PB_EVADENEXTWAR3DMG] = false
+
 				if (iHealth > get_user_maxhealth(victim) && iHealth > 500){
 					healthadjustment = -1024					
 				}
@@ -947,15 +976,15 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 
 				Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 0, 0, 255, iglow[victim][2])
 			}
-			else{
+			else if ( healthadjustment != 0 ){
 				set_user_actualhealth(victim, iHealth + healthadjustment, "client_damage, evade adjustment2")
 			}
 		}
 		
 		// Thorns Aura
-		if ( Verify_Skill(victim, RACE_ELF, SKILL2) ) {
+		if ( Verify_Skill(victim, RACE_ELF, SKILL2) && attacker > 0) {
 			tempdamage = floatround(float(damage) * p_thorns[p_data[victim][P_SKILL2]-1])
-	
+			
 			WAR3_damage(attacker, victim,tempdamage,CSW_THORNS, hitplace)
 
 			if (iglow[attacker][0] < 1){
@@ -1032,7 +1061,7 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 	else if ( Verify_Race(victim, RACE_CRYPT) ){
 
 		// Spiked Carapace
-		if ( Verify_Skill(victim, RACE_CRYPT, SKILL2) ){						
+		if ( Verify_Skill(victim, RACE_CRYPT, SKILL2) && attacker > 0){						
 			tempdamage = floatround(float(damage) * p_spiked[p_data[victim][P_SKILL2]-1])
 
 			WAR3_damage(attacker, victim, tempdamage, CSW_CARAPACE, hitplace)
@@ -1095,10 +1124,10 @@ public on_DeathMsg(){
 	new killer = read_data(1)
 	new victim = read_data(2)
 	new headshot = read_data(3)
-	new weapon
-	get_user_attacker(victim,weapon)
+	new wpnindex
+	get_user_attacker(victim, wpnindex)
 
-	on_Death(victim, killer, weapon, headshot)
+	on_Death(victim, killer, wpnindex, headshot)
 	
 	return PLUGIN_CONTINUE
 }

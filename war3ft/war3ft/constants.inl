@@ -315,11 +315,12 @@
 //	#define P_SERPENTTEAM			26
 	#define P_SKINCHANGED			27		// Did the user's skin change?
 	#define P_ULTIMATEDELAY			30
+//	#define P_EVADESHOTHEALTH		31
 
 	// Used for DOD
 	#define P_MONEY					28		// Amount of money the player has
 
-	#define P_LAST					31
+	#define P_LAST					32
 	// ***************************
 	//		End of info for player_data
 	// ***************************
@@ -369,7 +370,7 @@
 	
 	#define PB_BUYZONE				33		// Player in buyzone?
 	
-	#define PB_EVADENEXTWAR3DMG		34		// Should player evade next war3 damage? (NE's Evasion)
+//	#define PB_EVADENEXTWAR3DMG		34		// Should player evade next war3 damage? (NE's Evasion)
 #if MOD == 1
 	#define PB_REINCARNATION_DELAY	35
 	#define PB_REINCARNATION_SKIP	36

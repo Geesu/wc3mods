@@ -215,6 +215,10 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
+#if DEBUG
+	console_print(victim, "### WAR3_Damage: %d by %d from %d", damage, attacker, weapon)
+#endif
+
 	if( attacker==0 || victim==0 )
 		return PLUGIN_CONTINUE
 
@@ -223,14 +227,6 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 
 	if( p_data_b[victim][PB_WARDENBLINK] && (weapon == CSW_LIGHTNING || weapon == CSW_SUICIDE || weapon == CSW_FLAME || weapon == CSW_LOCUSTS))
 		return PLUGIN_CONTINUE
-
-	if( p_data_b[victim][PB_EVADENEXTWAR3DMG] ){
-	#if DEBUG == 1
-		write_Health_Info("WAR3 Damage evaded", victim)
-		client_print(victim, print_chat,"### You evaded a war3 damage")
-	#endif
-		return PLUGIN_CONTINUE
-	}
 
 	// Warden's Hardened Skin
 	if( Verify_Race(victim, RACE_WARDEN) ){
@@ -282,11 +278,6 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 	get_user_name(attacker, attackerName, 31)
 	console_print(attacker,"You did %d damage to %s from weapon:%d", damage, victimName, weapon)
 	console_print(victim,"You received %d damage from %s by weapon:%d", damage, attackerName, weapon)
-	#if MOD == 0
-	console_print(attacker,"%s lost %0.0f armor", victimName, (3.0 * flArmor))
-	console_print(victim,"%s lost %0.0f armor", victimName, (3.0 * flArmor))
-
-	#endif
 #endif
 
 #if MOD == 1

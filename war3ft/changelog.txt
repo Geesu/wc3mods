@@ -6,6 +6,9 @@ v2.1.7
  - Bug Fix: Healing Wave's multiplying on top of each other (i.e. healing 3 health in 1 second)
  - Change: You will no longer hear the banish sound when you banish someone
  - Change: Armor ratio when dealing with magical damage
+ - Change: Stopped using client_damage from the CSX/DODX module
+ - Change: (In Theory) Night Elves can now successfully evade the bomb
+ - Change: Being killed/damaged by the bomb will now trigger the death/damage functions
 
 v2.1.6
  - Bug Fix: An extra number appeared in war3menu, it was removed

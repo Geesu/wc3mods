@@ -38,7 +38,7 @@ new const WC3VERSION[] =	"2.1.7"
 
 #define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
-#define DEBUG 1							// Only use this when coding.. you normally don't want it
+#define DEBUG 1						// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
 #define ADVANCED_DEBUG_BOTS 0			// Print info for bots too?
 #define PRECACHE_WAR3FTSOUNDS 1
@@ -90,10 +90,10 @@ public plugin_init(){
 		gmsgStatusIcon = get_user_msgid("StatusIcon") 
 	#endif
 	#if MOD == 1
-		//register_message(get_user_msgid("TextMsg"), "testing")
-
 		gmsgHudText = get_user_msgid("HudText")
 	#endif
+
+	//register_message(get_user_msgid("Health"), "testing")
 
 
 	register_plugin(WC3NAME,WC3VERSION,WC3AUTHOR)
@@ -135,7 +135,7 @@ public plugin_init(){
 
 
 	#if MOD == 1
-		register_statsfwd(XMF_DAMAGE)
+		//register_statsfwd(XMF_DAMAGE)
 		register_statsfwd(XMF_SCORE)
 		register_event("RoundState","on_EndRound","a","1=3","1=4")
 
@@ -188,6 +188,7 @@ public plugin_init(){
 	#endif
 
 	register_event("DeathMsg","on_DeathMsg","a")
+	register_event("Damage", "on_Damage", "b", "2!0")
 
 	register_event("CurWeapon","on_CurWeapon","be","1=1")
 	register_event("HideWeapon", "on_CurWeapon", "b")
@@ -299,6 +300,7 @@ public plugin_init(){
 		register_concmd("test","test")
 		register_concmd("test2","test2")
 	#endif
+
 }
 
 public plugin_end(){

@@ -88,9 +88,8 @@ stock find_free_spawn(iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]){
 
 	return -1
 }
-
 stock set_user_actualhealth(id, health, fromFunction[]){
-	#if DEBUG == 1
+	#if DEBUG
 		new name[32], info[128]
 		get_user_name(id, name, 31)
 		new players[32], num
@@ -99,7 +98,7 @@ stock set_user_actualhealth(id, health, fromFunction[]){
 		format(info,127,"(%d) %s's health set to %d (%s)", is_user_alive(id), name, health, fromFunction)
 		write_Health_Info(info, id)
 	#endif
-
+	
 	set_user_health(id, health)
 }
 

@@ -5,6 +5,9 @@ stock XP_give(id, iXP){
 	#if ADVANCED_DEBUG == 1
 		writeDebugInfo("XP_give",id)
 	#endif
+	
+	if(id==0)
+		return 0
 
 	// Check for min. players here
 	new numberofplayers = get_playersnum() 
@@ -236,7 +239,7 @@ public XP_Save(id){
 	if(p_data[id][P_RACE]==0)
 		return PLUGIN_CONTINUE
 
-	new playerid[32], playername[32], timet[32], ip[32]
+	new playerid[33], playername[32], timet[32], ip[32]
 
 	if (iCvar[SV_MYSQL]){
 		if(mysql < SQL_OK){
@@ -252,7 +255,7 @@ public XP_Save(id){
 			return PLUGIN_CONTINUE
 		}
 		new mquery[1024]
-		get_user_name(id,playername,31)
+		get_user_name(id,playername,34)
 		get_user_authid(id,playerid,31)
 		get_user_ip(id,ip,31) 
 
