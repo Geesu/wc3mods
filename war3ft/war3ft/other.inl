@@ -1256,8 +1256,8 @@ public weapon_controller( parm[2]  ){
 		}else{
 			if(!cs_get_user_nvg(id))
 				p_data_b[id][PB_NIGHTVISION]=false
-			if(!cs_get_user_defuse(id))
-				p_data_b[id][PB_DEFUSE]=false
+			/**if(!cs_get_user_defuse(id))
+				p_data_b[id][PB_DEFUSE]=false*/
 		}
 	#endif
 

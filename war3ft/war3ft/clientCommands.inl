@@ -233,7 +233,7 @@ public cmd_ability(id){
 		if(!p_data_b[id][PB_ISCONNECTED])
 			return PLUGIN_HANDLED
 
-		if(!cs_get_user_buyzone(id))
+		if(!p_data_b[id][PB_BUYZONE])
 			return PLUGIN_HANDLED
 
 		new parm[1]
@@ -292,7 +292,7 @@ public cmd_ability(id){
 		if(iCvar[MP_GRENADEPROTECTION]==0)
 			return PLUGIN_CONTINUE
 
-		if(!cs_get_user_buyzone(id))
+		if(!p_data_b[id][PB_BUYZONE])
 			return PLUGIN_HANDLED
 
 		if (p_data[id][P_HECOUNT]>0){ 
@@ -312,7 +312,7 @@ public cmd_ability(id){
 		#if ADVANCED_DEBUG == 1
 			writeDebugInfo("cmd_flash",id)
 		#endif
-		if(!cs_get_user_buyzone(id))
+		if(!p_data_b[id][PB_BUYZONE])
 			return PLUGIN_HANDLED
 
 		return PLUGIN_CONTINUE

@@ -337,17 +337,19 @@
 	#define PB_ULTIMATEUSED			27
 	#define PB_KNIFESELECTED		28
 	#define PB_SILENT				29
-	
+	#define PB_GODMODE				32
+
 	#define PB_JUSTJOINED			30
 	#define PB_ISCONNECTED			31
 	
-	#define PB_GODMODE				32
+	#define PB_BUYZONE				33		// Player in buyzone?
+
 #if MOD == 1
-	#define PB_REINCARNATION_DELAY	33
-	#define PB_REINCARNATION_SKIP	34
+	#define PB_REINCARNATION_DELAY	34
+	#define PB_REINCARNATION_SKIP	35
 #endif
 
-	#define PB_LAST					35
+	#define PB_LAST					36
 	// ***************************
 	//		End of info for player_data_bool
 	// ***************************

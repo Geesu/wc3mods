@@ -23,7 +23,7 @@ public menu_Shopmenu_One(id){
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_CONTINUE
 		}
-		else if(iCvar[FT_BUYZONE] && !cs_get_user_buyzone(id)){
+		else if(iCvar[FT_BUYZONE] && !p_data_b[id][PB_BUYZONE]){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_CONTINUE
 		}
@@ -78,7 +78,7 @@ public menu_Shopmenu_Two(id){
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_CONTINUE
 		}
-		else if(iCvar[FT_BUYZONE] && !cs_get_user_buyzone(id)){
+		else if(iCvar[FT_BUYZONE] && !p_data_b[id][PB_BUYZONE]){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_CONTINUE
 		}
@@ -418,7 +418,7 @@ public menu_War3menu(id){
 		}
 	}
 
-	new pos = 0, i, menu_body[512], menu_items[6][32]
+	new pos = 0, i, menu_body[512], menu_items[5][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4)|(1<<9)
 
 	format(menu_items[0],31,"%L",id,"SKILLS_MENU")
@@ -428,7 +428,7 @@ public menu_War3menu(id){
 	format(menu_items[4],31,"%L",id,"ADMIN_MENU_TITLE")
 
 	pos += format(menu_body[pos], 511-pos, "%L^n^n",id,"MENU_WAR3_FT_MENU")
-	for (i = 0; i<6; i++){
+	for (i = 0; i<5; i++){
 		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menu_items[i])
 	}
 	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")

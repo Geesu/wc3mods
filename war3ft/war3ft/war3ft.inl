@@ -306,8 +306,8 @@ public WAR3_death_victim(victim_id, killer_id){
 		if(p_data_b[victim_id][PB_ISCONNECTED]){
 			if(cs_get_user_nvg(victim_id))
 				p_data_b[victim_id][PB_NIGHTVISION] = true
-			if(cs_get_user_defuse(victim_id))
-				p_data_b[victim_id][PB_DEFUSE] = true
+			/**if(cs_get_user_defuse(victim_id))
+				p_data_b[victim_id][PB_DEFUSE] = true*/
 		}
 		saveweapons(victim_id)
 	#endif

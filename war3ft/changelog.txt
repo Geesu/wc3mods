@@ -1,3 +1,7 @@
+v2.1.6
+ - Bug Fix: An extra number appeared in war3menu, it was removed
+ - Change: Stopped using cs_get_user_buyzone, cs_get_user_defuse
+
 v2.1.5
  - Bug Fix: Human's being able to get 255 health
  - Bug Fix: Stopped using plugin_cfg as this does not always work

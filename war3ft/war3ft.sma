@@ -24,20 +24,30 @@
 *  ryannotfound (war3x.net) for some of the naming conventions used (function names, constants, etc...) and functions
 */
 
-#include <amxmodx>
+
+new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
+new const WC3AUTHOR[] =	"Pimp Daddy (OoTOAoO)"
+new const WC3VERSION[] =	"2.1.6"
+
+#define AMX_ENABLED 0					// Compile for AMX? (currently doesn't work, don't get your hopes up)
+
+
+#if AMX_ENABLED
+	#include <amxmod>
+#else
+	#include <amxmodx>
+	#include <dbi>
+	#include <engine>
+#endif
+
 #include <amxmisc>
-#include <dbi>
+
 #include <fun>
-#include <engine>
 
-//VERSION NAME AUTHOR
-new WC3NAME[] =		"Warcraft 3 Frozen Throne"
-new WC3AUTHOR[] =	"Pimp Daddy (OoTOAoO)"
-new WC3VERSION[] =	"2.1.5"
-//
 
-// THESE ARE THE ONLY OPTIONS THAT NEED TO BE CHANGED DURING COMPILE TIME
-#define MOD 1							// 0 = cstrike or czero, 1 = dod
+
+#define MOD 0							// 0 = cstrike or czero, 1 = dod
+
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define DEBUG 0							// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 1				// Prints debug information to a log file when every function is called, VERY LAGGY
@@ -46,8 +56,7 @@ new WC3VERSION[] =	"2.1.5"
 
 #if MOD == 0
 	#include <cstrike>
-#endif
-#if MOD == 1
+#else
 	#include <dodfun>
 	#include <dodx>
 #endif
@@ -66,6 +75,9 @@ new WC3VERSION[] =	"2.1.5"
 #include "war3ft/motd.inl"
 #include "war3ft/language.inl"
 #include "war3ft/other.inl"
+
+// AMXX Functions that do not exist in AMX
+#include "war3ft/amx_inc.inl"
 
 #if MOD == 1
 	#include "war3ft/dod.inl"
@@ -133,6 +145,8 @@ public plugin_init(){
 
 	register_srvcmd("amx_takexp","amx_takexp")							// For internal use only (don't use this command)
 	register_srvcmd("changexp","changeXP")								// For internal use only (don't use this command)
+
+	register_event("StatusIcon", "on_StatusIcon",  "be")
 
 	#if MOD == 1
 		register_statsfwd(XMF_DAMAGE)
