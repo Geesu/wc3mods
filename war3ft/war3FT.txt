@@ -2739,24 +2739,41 @@ MENU_GIVE_PLAYERS_XP = \yDonner XP joueur
 MENU_TEAM_XP = \yDonner XP equipe
 CLICK_HERE = Clique ici pour plus d'infos sur les races
 WAR3HELP_TITLE = Aide Warcraft 3 Frozen Throne
-WAR3HELP = Methode pour binder une touche:
-Tape sur la touche a cote du 1 tout a gauche du clavier
-Tape: bind alt ulimate
-Tape: bind - shopmenu
-Tape: bind = shopmenu2
-Tape: bind p ability
 
-Quelques commande utiles:
-Dit /selectskill - pour choisir tes pouvoirs avant le prochain round
-Dit /changerace - pour chosir ta race
-Dit /playerskills - pour voir les races des autres joueurs
-Dit /skillsinfo - pour voir une aide sur les pouvoirs de ta race
-Dit /itemsinfo - pour voir une aide sur les objets
-Dit /itemsinfo2 - pour voir une aide sur les objets 2
-Dit /level - pour voir ta race, ton niveau, tes pouvoirs
-Dit /war3menu - pour voir le menu war3
-Dit /ability - pour placer une unite serpent
-Dit /resetskills - pour rechoisir tes pouvoirs
+WAR3HELP :
+Methode pour binder une touche
+
+1. Appuis sur la touche a gauche du 1 et en dessous de Echap
+2. Tape bind alt ultimate
+3. Tape bind - shopmenu
+4. Tape bind = shopmenu2
+5. Tape bind p ability
+
+Autres commandes
+
+/selectskill   - Te permet de choisir tes pouvoirs avant la fin du round
+/changerace  - Te permet de changer de race
+/playerskills  - Te permet de voir les races des autres joueurs
+/skillsinfo  - Te permet d'avoir des infos sur les pouvoirs de ta race
+/itemsinfo  - Infos shopmenu 1
+/itemsinfo2  - Infos shopmenu 2
+/level  - Te fais voir ton niveau, ta race et tes pouvoirs
+/war3menu  - Te fait voir le menu war3
+/ability  - Si tu as le pouvoirs unite serpent, tu en placera une
+/resetskills  - Remet a 0 tes pouvoirs
+/resetxp  - Remet a 0 tes xp
+:
+
+DOD_RACE3_SKILL2_INFO = Les grenades font (%d, %d ou %d) fois plus de dommage et elle explosera apres 2 secondes (au lieu de 5)
+AWARDED_FOR_KILLING_BOMB_D = Tu as recu %d XP pour avoir tuer le diffuseur de la bombe
+AWARDED_FOR_KILLING_BOMB_C = Tu as gagne %d XP pour avoir tuer le porteur de bombe
+AWARDED_FOR_KILLING_TEAMMATE = Tu as perdu %d XP pour avoir tuer un coequipier
+ULTIMATE_NOT_READY = Ultimate pas prete.^n(%d secondes)
+ULTIMATE_NOT_FOUND = Pas d'Ultimate
+ULTIMATE_READY = Ultimate prete !
+AWARD_FOR_KILLING_VIP = Tu as gagner %d XP pour avoir tuer le VIP
+SELECT_RACE_TITLE = %s\RExperience^n^n
+SELECT_RACE_FOOTER = ^n\w%d. Auto-selection
 DOD_RACE3_SKILL2_INFO = Les grenades feront toujours (%d, %d ou %d) fois plus de de dommages et elles exploseront a 2sec au lieu de 5
 AWARDED_FOR_KILLING_BOMB_D = Tu recois %d XP pour avoir tuer le diffuseur
 AWARDED_FOR_KILLING_BOMB_C = Tu as recu %d XP pour avoir tuer le porteur de bombe
