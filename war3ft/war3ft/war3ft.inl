@@ -410,8 +410,10 @@ public WAR3_death_victim(victim_id, killer_id){
 
 				format(message, 127, "%L",victim_id,"HAS_REVIVED_YOU",name)
 				Status_Text(victim_id, message, 3.0, HUDMESSAGE_POS_INFO)
+				client_print(victim_id, print_chat, message)
 				format(message, 127, "%L",id,"YOU_HAVE_REVIVED",victimName)
 				Status_Text(id, message, 3.0, HUDMESSAGE_POS_INFO)
+				client_print(id, print_chat, message)
 
 				p_data_b[victim_id][PB_TOBEREVIVED]=true
 				g_pheonixExistsT--
@@ -434,8 +436,10 @@ public WAR3_death_victim(victim_id, killer_id){
 
 				format(message, 127, "%L",victim_id,"HAS_REVIVED_YOU",name)
 				Status_Text(victim_id, message, 3.0, HUDMESSAGE_POS_INFO)
+				client_print(victim_id, print_chat, message)
 				format(message, 127, "%L",id,"YOU_HAVE_REVIVED",victimName)
 				Status_Text(id, message, 3.0, HUDMESSAGE_POS_INFO)
+				client_print(id, print_chat, message)
 
 				p_data_b[victim_id][PB_TOBEREVIVED]=true
 				g_pheonixExistsCT--
@@ -1227,16 +1231,6 @@ WAR3_Show_Spectator_Info(id, targetid){
 	get_user_name(targetid ,name,31) 
 	new temp[512]
 	new message[1048]
-
-	if (p_data[targetid][P_XP]<0)
-		p_data[targetid][P_XP]=0
-
-	for (new i=0; i<=10; ++i){
-		if (p_data[targetid][P_XP]>=xplevel[i])
-			p_data[targetid][P_LEVEL]=i
-		else
-			break
-	}
 
 	new short_race_name[SHORT_RACE_NAME_LENGTH]
 	shortracename(p_data[targetid][0],id,short_race_name,SHORT_RACE_NAME_LENGTH_F)

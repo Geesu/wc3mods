@@ -33,11 +33,11 @@
 //VERSION NAME AUTHOR
 new WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new WC3AUTHOR[] =	"Pimp Daddy (OoTOAoO)"
-new WC3VERSION[] =	"2.1.3"
+new WC3VERSION[] =	"2.1.4"
 //
 
 // THESE ARE THE ONLY OPTIONS THAT NEED TO BE CHANGED DURING COMPILE TIME
-#define MOD 1							// 0 = cstrike or czero, 1 = dod
+#define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define DEBUG 1							// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
@@ -362,11 +362,6 @@ public plugin_cfg(){
 		writeDebugInfo("plugin_cfg",0)
 	#endif
 
-	lang_Set_Menus()
-	XP_Set_DBI()
-	XP_Set()
-	checkmap()
-
 	if (get_cvar_num("sv_warcraft3")==0)
 		warcraft3=false
 	else
@@ -473,6 +468,12 @@ public plugin_cfg(){
 		g_MOD = "WAR3FT"
 		g_MODclient = "* [WAR3FT]"	
 	}
+
+	lang_Set_Menus()
+	XP_Set_DBI()
+	XP_Set()
+	checkmap()
+
 	return PLUGIN_CONTINUE
 }
 

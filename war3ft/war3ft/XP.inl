@@ -105,7 +105,7 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot){
 	return PLUGIN_CONTINUE
 }
 
-public XP_Set(){
+stock XP_Set(){
 	#if ADVANCED_DEBUG == 1
 		writeDebugInfo("XP_set",0)
 	#endif
@@ -121,7 +121,7 @@ public XP_Set(){
 	XP_Set_Multiplier()
 }
 
-public XP_Set_Multiplier(){
+stock XP_Set_Multiplier(){
 	#if ADVANCED_DEBUG == 1
 		writeDebugInfo("set_xpmultiplier", 0)
 	#endif
@@ -248,7 +248,6 @@ public XP_Save(id){
 				iSQLAttempts = SQL_ATTEMPTS + 10
 				iCvar[MP_SAVEXP] = 0
 				iCvar[SV_MYSQL] = 0
-				server_print("[%s] Unable to connect to the database server after %d tries, switching to short-term mode", g_MOD, iSQLAttempts)
 				log_amx("[%s] Unable to connect to the database server after %d tries, switching to short-term mode", g_MOD, iSQLAttempts)
 				client_print(0,print_chat,"%s Unable to connect to the database server after %d tries, switching to short-term mode", g_MODclient, iSQLAttempts)
 			}
@@ -271,8 +270,7 @@ public XP_Save(id){
 		if (ret < RESULT_NONE) {
 			new err[255]
 			new errNum = dbi_error(mysql, err, 254)
-			server_print("[%s] DBI write_xp error: %s|%d", g_MOD, err, errNum)
-			log_amx("[%s] DBI write_xp error: %s|%d", g_MOD, err, errNum)
+			log_amx("[%s] DBI XP_Save error: %s (%d)", g_MOD, err, errNum)
 			return 1
 		} 	
 
@@ -325,7 +323,6 @@ public XP_Retreive(id,returnrace){
 				iSQLAttempts = SQL_ATTEMPTS + 10
 				iCvar[MP_SAVEXP] = 0
 				iCvar[SV_MYSQL] = 0
-				server_print("[%s] Unable to connect to the database server after %d tries, switching to short-term mode", g_MOD, iSQLAttempts)
 				log_amx("[%s] Unable to connect to the database server after %d tries, switching to short-term mode", g_MOD, iSQLAttempts)
 				client_print(0,print_chat,"%s Unable to connect to the database server after %d tries, switching to short-term mode", g_MODclient, iSQLAttempts)
 			}
@@ -345,21 +342,15 @@ public XP_Retreive(id,returnrace){
 			if (res < RESULT_NONE) {
 				new err[255]
 				new errNum = dbi_error(mysql, err, 254)
-				server_print("[%s] DBI get_xp error1: %s|%d", g_MOD, err, errNum)
-				log_amx("[%s] DBI get_xp error1: %s|%d", g_MOD, err, errNum)
+				log_amx("[%s] DBI XP_Retreive error: %s (%d)", g_MOD, err, errNum)
 				return PLUGIN_CONTINUE
 			}
-		#if DEBUG
-			server_print("[%s] DBI get_xp Result handle: %d", g_MOD, res)
-		#endif
+
 			while (res && dbi_nextrow(res)>0) {
 				dbi_result(res, "xp", xp, 7)
 				dbi_result(res, "race", race, 1)
 				if (str_to_num(race)>=1 && str_to_num(race)<=9)
 					racexp[str_to_num(race)-1] = str_to_num(xp)
-			#if DEBUG
-				server_print("[%s] get_xp result: Race:%s, XP:%s", g_MOD, race, xp)
-			#endif
 			}
 
 			dbi_free_result(res) 
@@ -382,14 +373,10 @@ public XP_Retreive(id,returnrace){
 			if (res < RESULT_NONE) {
 				new err[255]
 				new errNum = dbi_error(mysql, err, 254)
-				server_print("[%s] DBI get_xp error2: %s|%d", g_MOD, err, errNum)
-				log_amx("[%s] DBI get_xp error2: %s|%d", g_MOD, err, errNum)
+				log_amx("[%s] DBI XP_Retreive error: %s (%d)", g_MOD, err, errNum)
 				
 				return PLUGIN_CONTINUE
 			}
-		#if DEBUG
-			server_print("[%s] DBI get_xp Result handle: %d", g_MOD, res)
-		#endif
 
 			if (res && dbi_nextrow(res)>0){
 				dbi_result(res, "xp", xp, 7)
@@ -398,9 +385,6 @@ public XP_Retreive(id,returnrace){
 				dbi_result(res, "skill3", skill3, 1)
 				dbi_result(res, "skill4", skill4, 1)				
 
-			#if DEBUG
-				server_print("[%s] get_xp result: Race:%s,  XP:%s, skill1:%d, skill2:%s, skill3:%s, skill4:%s", g_MOD, race, xp, skill1, skill2, skill3, skill4)
-			#endif
 				dbi_free_result(res) 
 
 				p_data[id][P_XP]=str_to_num(xp)
@@ -408,7 +392,9 @@ public XP_Retreive(id,returnrace){
 				p_data[id][P_SKILL2]=str_to_num(skill2)
 				p_data[id][P_SKILL3]=str_to_num(skill3)
 				p_data[id][P_ULTIMATE]=str_to_num(skill4)
+
 				WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
+
 			}
 			else{
 				p_data[id][P_XP]=0
@@ -542,27 +528,24 @@ public XP_Set_DBI(){
 		mysql = dbi_connect(mhost,muser,mpass,mdb)
 		if (mysql < SQL_OK) {
 			errNum = dbi_error(mysql, err, 254)
-			server_print("[%s] DBI XP_Set_DBI error1: %s|%d", g_MOD, err, errNum)
-			log_amx("[%s] DBI XP_Set_DBI error1: %s|%d", g_MOD, err, errNum)
+			log_amx("[%s] DBI XP_Set_DBI error: %s|%d", g_MOD, err, errNum)
 
 			if(iSQLAttempts < SQL_ATTEMPTS){
 				new Float:delay = 25.0
 				log_amx("[%s] Will attempt to re-connect to the MySQL database in %f seconds", g_MOD, delay)
-				server_print("[%s] Will attempt to re-connect to the MySQL database in %f seconds", g_MOD, delay)
 				set_task(delay, "XP_Set_DBI", TASK_SETMYSQL)
 			}
 			iSQLAttempts++
 			return 1
-		} 
-	#if DEBUG
-		server_print("[%s] Connection handle: %d", g_MOD, mysql)
-	#endif
+		}
+		else
+			server_print("[%s] Connection to MySQL Database successful (%d)", g_MOD, mysql)
+
 		new Result:ret = dbi_query(mysql, mquery)
 
 		if (ret < RESULT_NONE) {
 			errNum = dbi_error(mysql, err, 254)
-			server_print("[%s] DBI XP_Set_DBI error2: %s|%d", g_MOD, err, errNum)
-			log_amx("[%s] DBI XP_Set_DBI error2: %s|%d", g_MOD, err, errNum)
+			log_amx("[%s] DBI XP_Set_DBI error: %s|%d", g_MOD, err, errNum)
 			return 1
 		}
 
@@ -572,20 +555,12 @@ public XP_Set_DBI(){
 
 		if (res <= RESULT_NONE) {
 			errNum = dbi_error(mysql, err, 254)
-			server_print("[%s] DBI XP_Set_DBI error3: %s|%d", g_MOD, err, errNum)
-			log_amx("[%s] DBI XP_Set_DBI error3: %s|%d", g_MOD, err, errNum)
+			log_amx("[%s] DBI XP_Set_DBI error: %s|%d", g_MOD, err, errNum)
 			return 1
 		}
 
-	#if DEBUG
-		server_print("[%s] DBI XP_Set_DBI Result handle: %d", g_MOD, res)
-	#endif
-
 		while (res && dbi_nextrow(res)>0) {
 			dbi_result(res, "Column_name", primarykey, 127)
-		#if DEBUG
-			server_print("[%s] DBI XP_Set_DBI result: %s", g_MOD, primarykey)
-		#endif
 		}
 
 		dbi_free_result(res)
@@ -595,8 +570,7 @@ public XP_Set_DBI(){
 			new Result:ret2 = dbi_query(mysql, mquery)
 			if (ret2 < RESULT_NONE) {
 				errNum = dbi_error(mysql, err, 254)
-				server_print("[%s] DBI XP_Set_DBI error4: %s|%d", g_MOD, err, errNum)
-				log_amx("[%s] DBI XP_Set_DBI error4: %s|%d", g_MOD, err, errNum)
+				log_amx("[%s] DBI XP_Set_DBI error: %s|%d", g_MOD, err, errNum)
 				return 1
 			}
 		}

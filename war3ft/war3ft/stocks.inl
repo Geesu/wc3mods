@@ -62,17 +62,19 @@ stock find_free_spawn(iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]){
 	new playersInVicinity
 	new entList[1]
 	for (i = 0;i < spawnsFound && !foundFreeSpawn;i++) {
-		entity_get_vector(spawnPoints[i],EV_VEC_origin,spawnOrigin)
-		playersInVicinity = find_sphere_class(0, "player", vicinity, entList, 1, spawnOrigin)
-		if (playersInVicinity == 0){
-			foundFreeSpawn = true
-		}
-		else{
-			foundFreeSpawn = false
+		if(spawnPoints[i] != 0){
+			entity_get_vector(spawnPoints[i],EV_VEC_origin,spawnOrigin)
+			playersInVicinity = find_sphere_class(0, "player", vicinity, entList, 1, spawnOrigin)
+			if (playersInVicinity == 0){
+				foundFreeSpawn = true
+			}
+			else{
+				foundFreeSpawn = false
+			}
 		}
 	}
 
-	if(foundFreeSpawn){
+	if(foundFreeSpawn && spawnPoints[i] != 0){
 		entity_get_vector(spawnPoints[i], EV_VEC_angles, spawnAngle)
 
 		return spawnPoints[i]

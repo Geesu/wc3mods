@@ -12,8 +12,12 @@ public test(id){
 
 	client_print(id,print_chat,"Max Speed: %f", get_user_maxspeed(id))
 	client_print(id,print_chat,"Health: %d", get_user_health(id))
-	client_print(id,print_chat,"God Mode: %d", p_data_b[id][PB_GODMODE])
-	client_print(id,print_chat,"Evade next shot: %d", p_data_b[id][PB_EVADENEXTSHOT])
+	client_print(id,print_chat,"Level: %d", p_data[id][P_LEVEL])
+	client_print(id,print_chat,"XP: %d", p_data[id][P_XP])
+
+	for(new i=0;i<10;i++){
+		console_print(id, "%d: %d", i, xplevel[i])
+	}
 
 	return PLUGIN_HANDLED
 }
