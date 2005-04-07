@@ -364,7 +364,7 @@
 	#define PB_BLINKDELAYED			14		// Used to determine if the blink ability should be delayed (change this so its not [33])
 	#define PB_MOLE					15		// Is the player a mole?
 	#define PB_TOBEREVIVED			16		// Will this player be revived?
-	#define PB_PHEONIXCASTER		17		// Did this player use his/her ability to give the team pheonix? (reviving)
+	#define PB_PHOENIXCASTER		17		// Did this player use his/her ability to give the team pheonix? (reviving)
 	#define PB_WARDENBLINK			18		// Does this player have blink enabled?
 	#define PB_SUICIDEATTEMPT		19		// Has this player made a suicide attempt for undead's ultimate?
 	#define PB_ISBURNING			20		// Is the player burning from the flame strike ultimate?
@@ -577,7 +577,8 @@ new g_menuSettings[33]
 	new bool:g_givePistol
 	new bool:g_giveHE
 	new bool:g_notAllowHE = false
-
+	
+	new PhoenixFound[2]
 	new CTSkins[5][]={"sas","gsg9","urban","gign","spetsnaz"}
 	new TSkins[5][]={"arctic","leet","guerilla","terror","militia"}
 	new spawnEntString[2][] = {"info_player_start","info_player_deathmatch"}
@@ -607,12 +608,6 @@ new bool:g_randomizeCalled = false
 new bool:g_spritesEnabled = false
 new Float:g_ultimateDelay = 0.0
 new g_lastAnnounce = -1
-
-// Abilities
-#if MOD == 0
-	new g_pheonixExistsT = 0
-	new g_pheonixExistsCT = 0
-#endif
 
 // Used for Mole
 new bool:spawnPointsused[33] = false

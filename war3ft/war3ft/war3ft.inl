@@ -214,7 +214,7 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_damage",victim)
 	#endif
-
+	
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
@@ -486,66 +486,8 @@ public WAR3_death_victim(victim_id, killer_id){
 		p_data_b[victim_id][PB_SPAWNEDFROMITEM] = true
 	}
 
-
 	// Check to see if a player should be revived
-	new players[32], numberofplayers, y
-	get_players(players, numberofplayers)
-
-	new vTeam = get_user_team(victim_id)
-
-	if(vTeam == TS && g_pheonixExistsT>0){
-		for (y = 0; y < numberofplayers; ++y){
-			new id = players[y]
-			if (get_user_team(id) == vTeam && p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && !is_user_alive(victim_id) ){
-				p_data_b[id][PB_PHEONIXCASTER] = false
-				new parm[2], name[32], victimName[32], message[128]
-
-				parm[0]=victim_id
-				p_data_b[victim_id][PB_SPAWNEDFROMITEM] = true
-				set_task(0.7,"func_spawn",TASK_SPAWN+victim_id,parm,2)			// Spawns player
-				set_hudmessage(200, 100, 0, -0.8, 0.1, 0, 1.0, 5.0, 0.1, 0.2, 2) 
-				get_user_name(id,name,31)
-				get_user_name(victim_id,victimName,31)
-
-				format(message, 127, "%L",victim_id,"HAS_REVIVED_YOU",name)
-				Status_Text(victim_id, message, 3.0, HUDMESSAGE_POS_INFO)
-				client_print(victim_id, print_chat, "%s %s", g_MODclient, message)
-				format(message, 127, "%L",id,"YOU_HAVE_REVIVED",victimName)
-				Status_Text(id, message, 3.0, HUDMESSAGE_POS_INFO)
-				client_print(id, print_chat, "%s %s", g_MODclient, message)
-
-				p_data_b[victim_id][PB_TOBEREVIVED]=true
-				g_pheonixExistsT--
-				break
-			}
-		}
-	}
-	else if(vTeam == CTS && g_pheonixExistsCT>0){
-		for (y = 0; y < numberofplayers; ++y){
-			new id = players[y]
-			if (get_user_team(id) == vTeam && p_data_b[id][PB_PHEONIXCASTER] && !p_data_b[victim_id][PB_TOBEREVIVED] && !endround && id!=victim_id && is_user_alive(id) && !is_user_alive(victim_id) ){
-				p_data_b[id][PB_PHEONIXCASTER] = false
-				new parm[2], name[32], victimName[32], message[128]
-				parm[0]=victim_id
-				p_data_b[victim_id][PB_SPAWNEDFROMITEM] = true
-				set_task(0.7,"func_spawn",TASK_SPAWN+victim_id,parm,2)			// Spawns player
-				set_hudmessage(200, 100, 0, -1.6, 0.1, 0, 1.0, 5.0, 0.1, 0.2, 2)
-				get_user_name(id,name,31)
-				get_user_name(victim_id,victimName,31)
-
-				format(message, 127, "%L",victim_id,"HAS_REVIVED_YOU",name)
-				Status_Text(victim_id, message, 3.0, HUDMESSAGE_POS_INFO)
-				client_print(victim_id, print_chat, "%s %s", g_MODclient, message)
-				format(message, 127, "%L",id,"YOU_HAVE_REVIVED",victimName)
-				Status_Text(id, message, 3.0, HUDMESSAGE_POS_INFO)
-				client_print(id, print_chat, "%s %s", g_MODclient, message)
-
-				p_data_b[victim_id][PB_TOBEREVIVED]=true
-				g_pheonixExistsCT--
-				break
-			}
-		}
-	}
+	Skill_Phoenix(victim_id)
 #endif
 
 	new parameter[1]
@@ -773,7 +715,7 @@ public WAR3_set_race(id,race){
 	p_data[id][P_SKILL2] = 0
 	p_data[id][P_SKILL3] = 0
 	p_data[id][P_ULTIMATE] = 0
-	p_data_b[id][PB_PHEONIXCASTER] = false
+	p_data_b[id][PB_PHOENIXCASTER] = false
 	p_data[id][P_CHANGERACE] = 0
 
 	if (get_user_health(id)>100)

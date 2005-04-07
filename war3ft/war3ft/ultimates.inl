@@ -777,10 +777,6 @@ public lightsearchtarget(parm[2]){
 
 	new id = parm[0]
 	
-	#if DEBUG
-		console_print(id, "[DEBUG] Searching.......")
-	#endif
-
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
@@ -792,13 +788,17 @@ public lightsearchtarget(parm[2]){
 	new enemy, bodypart
 	get_user_aiming(id,enemy,bodypart)
 
-	if ( 0<enemy<=MAXPLAYERS && get_user_team(id)!=get_user_team(enemy) && p_data[enemy][P_ITEM]!=ITEM_NECKLACE && !p_data_b[enemy][PB_WARDENBLINK] && is_user_alive(id) && is_user_alive(enemy)){
+	
+	new CasterTeam = get_user_team(id)
+
+	if ( 0<enemy<=MAXPLAYERS && CasterTeam!=get_user_team(enemy) && p_data[enemy][P_ITEM]!=ITEM_NECKLACE && !p_data_b[enemy][PB_WARDENBLINK] && is_user_alive(id) && is_user_alive(enemy)){
 		p_data_b[id][PB_ULTIMATEUSED]=true
 		Ultimate_Icon(id,ICON_HIDE)
 		new linewidth = 80
 		new damage = 50
 
 		p_data_b[id][PB_ISSEARCHING]=false
+		
 		lightningeffect(id,enemy,linewidth,damage,id,bodypart)
 		new lightparm[5]
 		lightparm[0]=enemy
@@ -841,10 +841,6 @@ public lightsearchtarget(parm[2]){
 			Ultimate_Icon(id,ICON_HIDE)
 		}
 	}
-
-	#if DEBUG
-		console_print(id, "[DEBUG] Searching.2......")
-	#endif
 
 	return PLUGIN_CONTINUE
 }

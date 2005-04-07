@@ -72,11 +72,8 @@ public Skill_Check(id){
 		new Float:randomnumber = random_float(0.0,1.0)
 		new teamnumber = get_user_team(id)
 		if (randomnumber <= p_pheonix[p_data[id][P_SKILL1]-1]){
-			p_data_b[id][PB_PHEONIXCASTER] = true
-			if (teamnumber==1)
-				g_pheonixExistsT++
-			else
-				g_pheonixExistsCT++
+			p_data_b[id][PB_PHOENIXCASTER] = true
+			PhoenixFound[teamnumber-1]++
 		}
 	}
 #endif
@@ -522,6 +519,59 @@ public _Skill_Reincarnation_Give(id){
 
 	return PLUGIN_CONTINUE
 }
+#endif
+
+
+#if MOD == 0
+	// ****************************************
+	// Blood Mage's Phoenix in cstrike/czero
+	// ****************************************
+
+	public Skill_Phoenix(id)
+	{
+		new vTeam = get_user_team(id)
+		
+		/* Make sure that we have a CT/T player that died */
+		if ( vTeam == CTS || vTeam == TS )
+		{
+			/* Verify that a player on the victim's team has phoenix */
+			if ( PhoenixFound[vTeam-1] > 0 )
+			{
+				new players[32], numberofplayers, i, targetid
+				get_players(players, numberofplayers, "a")
+
+				/* Loop through all the players */
+				for (i = 0; i < numberofplayers; ++i)
+				{
+					targetid = players[i]
+					/* Verify that the players are on the same team and that a caster is found */
+					if ( get_user_team(targetid) == vTeam && p_data_b[targetid][PB_PHOENIXCASTER] && !p_data_b[id][PB_TOBEREVIVED] && !endround && id!=targetid && !p_data_b[id][PB_SPAWNEDFROMITEM] )
+					{
+						new parm[2], name[32], victimName[32], message[128]
+						parm[0] = id
+
+						p_data_b[id][PB_SPAWNEDFROMITEM] = true
+
+						set_task(0.7,"func_spawn",TASK_SPAWN+id,parm,2)
+						set_hudmessage(200, 100, 0, -0.8, 0.1, 0, 1.0, 5.0, 0.1, 0.2, 2) 
+						get_user_name(targetid,name,31)
+						get_user_name(id,victimName,31)
+
+						format(message, 127, "%L",id,"HAS_REVIVED_YOU",name)
+						Status_Text(id, message, 3.0, HUDMESSAGE_POS_INFO)
+						client_print(id, print_chat, "%s %s", g_MODclient, message)
+						format(message, 127, "%L",targetid,"YOU_HAVE_REVIVED",victimName)
+						Status_Text(targetid, message, 3.0, HUDMESSAGE_POS_INFO)
+						client_print(targetid, print_chat, "%s %s", g_MODclient, message)
+
+						p_data_b[id][PB_TOBEREVIVED]=true
+						PhoenixFound[vTeam-1]--
+						break
+					}
+				}
+			}
+		}
+	}
 #endif
 
 

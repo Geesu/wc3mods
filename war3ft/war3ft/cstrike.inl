@@ -73,8 +73,8 @@ public on_EndRound(){
 
 	g_freezecalled = 0
 	g_buyCalled=false
-	g_pheonixExistsT=0
-	g_pheonixExistsCT=0
+	PhoenixFound[0]=0
+	PhoenixFound[1]=0
 	g_randomizeCalled = false
 
 	if( task_exists(TASK_BUYTIME) )
