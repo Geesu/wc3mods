@@ -231,6 +231,7 @@ public plugin_init(){
 	}
 
 	// For an explanation of these variables, please see war3ft.cfg
+	register_cvar("FT_disable_savexp",			"0")
 	register_cvar("FT_impale_intensity",		"10")
 	register_cvar("FT_cshack",					"0")
 	register_cvar("FT_autoxp",					"0")

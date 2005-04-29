@@ -405,7 +405,7 @@
 #define FT_SPEC_INFO						2
 #define FT_MIN_B4_XP						3
 #define	FT_BLINK_RADIUS						4
-//#define	FT_STEAM							5
+#define	FT_DISABLE_SAVEXP					5
 #define	MP_SAVEXP							6
 #define	FT_SHOW_ICONS						7
 #define	FT_HEALTH_BONUS						8

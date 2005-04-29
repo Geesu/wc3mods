@@ -525,8 +525,17 @@ public XP_Client_Save(id,show){
 
 	if (iCvar[MP_SAVEXP]){
 		if(show)
-			client_print(id,print_chat, "%s XP saved.",g_MODclient)
-		XP_Save(id)
+		{
+			if ( iCvar[FT_DISABLE_SAVEXP] )
+			{
+				client_print(id, print_chat, "%s Typing /savexp does nothing on this server",g_MODclient)
+			}
+			else
+			{
+				client_print(id,print_chat, "%s XP saved.",g_MODclient)
+				XP_Save(id)
+			}
+		}
 	}	
 	else if (show)
 		client_print(id,print_chat,"%s %L",g_MODclient, id,"XP_IS_NOT_SAVED")
