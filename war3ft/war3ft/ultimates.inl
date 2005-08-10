@@ -774,7 +774,8 @@ public lightsearchtarget(parm[2]){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("lightsearchtarget",parm[0])
 	#endif
-
+	
+	// This is the caster
 	new id = parm[0]
 	
 	if(!p_data_b[id][PB_ISCONNECTED])
@@ -788,10 +789,9 @@ public lightsearchtarget(parm[2]){
 	new enemy, bodypart
 	get_user_aiming(id,enemy,bodypart)
 
-	
 	new CasterTeam = get_user_team(id)
 
-	if ( 0<enemy<=MAXPLAYERS && CasterTeam!=get_user_team(enemy) && p_data[enemy][P_ITEM]!=ITEM_NECKLACE && !p_data_b[enemy][PB_WARDENBLINK] && is_user_alive(id) && is_user_alive(enemy)){
+	if ( 0<enemy<=MAXPLAYERS && CasterTeam!=get_user_team(enemy) && p_data[enemy][P_ITEM]!=ITEM_NECKLACE && !p_data_b[enemy][PB_WARDENBLINK] && is_user_alive(enemy)){
 		p_data_b[id][PB_ULTIMATEUSED]=true
 		Ultimate_Icon(id,ICON_HIDE)
 		new linewidth = 80
@@ -799,7 +799,7 @@ public lightsearchtarget(parm[2]){
 
 		p_data_b[id][PB_ISSEARCHING]=false
 		
-		lightningeffect(id,enemy,linewidth,damage,id,bodypart)
+		lightningeffect(id,enemy,linewidth,damage,bodypart)
 		new lightparm[5]
 		lightparm[0]=enemy
 		lightparm[1]=damage
@@ -851,18 +851,28 @@ public lightningnext(parm[5]){		// Chain Lightning
 		writeDebugInfo("lightningnext",parm[0])
 	#endif
 
-	new id=parm[0]
+	// parm[0] = enemy
+	// parm[1] = damage
+	// parm[2] = linewidth
+	// parm[3] = caster
+	// parm[4] = bodypart
 
-	if(!p_data_b[id][PB_ISCONNECTED])
+	new enemy = parm[0]
+
+	if(!p_data_b[enemy][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
 	new caster=parm[3]
 	new bodypart=parm[4]
+	new CasterTeam = get_user_team(caster)
+
 	new origin[3]
-	get_user_origin(id, origin)
+	get_user_origin(enemy, origin)
+
 	new players[32], numberofplayers
-	new team = get_user_team(id)
 	get_players(players, numberofplayers,"a")
+
+
 	new i
 	new targetid = 0
 	new distancebetween = 0
@@ -871,9 +881,10 @@ public lightningnext(parm[5]){		// Chain Lightning
 	new linewidth = parm[2]*2/3
 	new closestdistance = 0
 	new closestid = 0
+
 	for (i = 0; i < numberofplayers; ++i){
 		targetid=players[i]
-		if ( get_user_team(targetid) == team && is_user_alive(targetid) ){
+		if ( get_user_team(targetid) != CasterTeam && is_user_alive(targetid) ){
 			get_user_origin(targetid,targetorigin)
 			distancebetween=get_distance(origin,targetorigin)
 			if (distancebetween < LIGHTNING_RANGE && !p_data_b[targetid][PB_LIGHTNINGHIT] && p_data[targetid][P_ITEM]!=ITEM_NECKLACE && !p_data_b[targetid][PB_WARDENBLINK]){
@@ -886,12 +897,13 @@ public lightningnext(parm[5]){		// Chain Lightning
 	}
 
 	if (closestid){
-		lightningeffect(id,closestid,linewidth,damage,caster,bodypart)
+		lightningeffect(caster,closestid,linewidth,damage,bodypart)
 		parm[0]=targetid
 		parm[1]=damage
 		parm[2]=linewidth
 		parm[3]=caster
-		set_task(0.2,"lightningnext",TASK_LIGHTNINGNEXT+id,parm,4)
+		parm[4]=0
+		set_task(0.2,"lightningnext",TASK_LIGHTNINGNEXT+caster,parm,4)
 	}
 	else{
 		for (i = 0; i < numberofplayers; ++i){
@@ -902,7 +914,7 @@ public lightningnext(parm[5]){		// Chain Lightning
 	return PLUGIN_CONTINUE
 }
 
-public lightningeffect(id,targetid,linewidth,damage,caster,bodypart){
+public lightningeffect(caster,targetid,linewidth,damage,bodypart){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("lightningeffect",id)
 	#endif
@@ -910,20 +922,20 @@ public lightningeffect(id,targetid,linewidth,damage,caster,bodypart){
 	p_data_b[targetid][PB_LIGHTNINGHIT]=true
 
 	new parm[1]
-	parm[0]=id
-	Ultimate_Icon(id,ICON_HIDE)
+	parm[0]=caster
+	Ultimate_Icon(caster,ICON_HIDE)
 
 	WAR3_damage(targetid, caster, damage, CSW_LIGHTNING, bodypart)
 
 	if(!g_mapDisabled)
-		Create_TE_BEAMENTS(id, targetid, g_sLightning, 0, 15, 10, linewidth, 10, 255, 255, 255, 255, 0)
+		Create_TE_BEAMENTS(caster, targetid, g_sLightning, 0, 15, 10, linewidth, 10, 255, 255, 255, 255, 0)
 
 	new origin[3]
 	get_user_origin(targetid,origin)
 
 	Create_TE_ELIGHT(targetid, origin, 100, 255, 255, 255, 10, 0)
 
-	emit_sound(id,CHAN_STATIC, SOUND_LIGHTNING, 1.0, ATTN_NORM, 0, PITCH_NORM)
+	emit_sound(caster,CHAN_STATIC, SOUND_LIGHTNING, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
 	return PLUGIN_CONTINUE
 }

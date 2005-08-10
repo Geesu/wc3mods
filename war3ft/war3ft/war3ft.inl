@@ -1163,7 +1163,6 @@ public WAR3_Set_Variables(){
 	iCvar[FT_ENTANGLE_DROP			] = get_cvar_num("FT_entangle_drop")
 	iCvar[FT_SHOW_PLAYER			] = get_cvar_num("FT_show_player")
 	iCvar[FT_AUTOXP					] = get_cvar_num("FT_autoxp")
-	iCvar[FT_CSHACK					] = get_cvar_num("FT_cshack")
 	iCvar[FT_IMPALE_INTENSITY		] = get_cvar_num("FT_impale_intensity")
 	iCvar[FT_DISABLE_SAVEXP			] = get_cvar_num("FT_disable_savexp")
 
@@ -1230,11 +1229,6 @@ public WAR3_Set_Variables(){
 	XP_Set_DBI()
 	XP_Set()
 	checkmap()
-
-	if (!is_running("dod") && iCvar[FT_CSHACK])
-	{
-		set_maxmoney(2147483583)
-	}
 
 	return PLUGIN_CONTINUE
 }

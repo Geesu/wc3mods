@@ -31,7 +31,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Pimp Daddy (OoTOAoO)"
-new const WC3VERSION[] =	"2.2.3"
+new const WC3VERSION[] =	"2.2.5"
 
 #include <amxmodx>
 #include <dbi>
@@ -42,7 +42,7 @@ new const WC3VERSION[] =	"2.2.3"
 
 //#pragma ctrlchar '^'
 
-#define MOD 0							// 0 = cstrike or czero, 1 = dod
+#define MOD 1							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define PRECACHE_WAR3FTSOUNDS 1
@@ -233,7 +233,6 @@ public plugin_init(){
 	// For an explanation of these variables, please see war3ft.cfg
 	register_cvar("FT_disable_savexp",			"0")
 	register_cvar("FT_impale_intensity",		"10")
-	register_cvar("FT_cshack",					"0")
 	register_cvar("FT_autoxp",					"0")
 	register_cvar("FT_show_player",				"1")
 	register_cvar("FT_Race9_Random",			"1")
@@ -380,7 +379,7 @@ public plugin_modules(){
 
 	require_module("engine")
 	require_module("dbi")
-	require_module("war3ft")
+	require_module("War3ft")
 	#if MOD == 0
 		require_module("cstrike")
 		require_module("csx")
@@ -457,15 +456,6 @@ public client_connect(id){
 #if MOD == 1
 	reincarnation[id][ZPOS] = -99999
 #endif
-
-	// If a player has a helm, the new player shouldn't be able to hit him in the head
-	for (new j = 1; j <= MAXPLAYERS; j++){
-		if(p_data_b[j][PB_ISCONNECTED]){
-			if(p_data[P_ITEM2][j] == ITEM_HELM && get_user_hitzones(id, j) != 253){
-				set_user_hitzones(id, j, 253)
-			}
-		}
-	}
 
 	#if MOD == 0
 		p_data[id][P_HECOUNT] = 0

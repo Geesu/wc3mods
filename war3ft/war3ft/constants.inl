@@ -445,7 +445,7 @@
 #define FT_ENTANGLE_DROP					42
 #define FT_SHOW_PLAYER						43
 #define FT_AUTOXP							44
-#define FT_CSHACK							45
+//#define FT_CSHACK							45
 #define FT_IMPALE_INTENSITY					46
 
 #if MOD == 0

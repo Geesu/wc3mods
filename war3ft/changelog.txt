@@ -1,3 +1,13 @@
+v2.2.5
+ - Module: recompiled for amxmodx 1.50
+ - Plugin: compiled for amxmodx 1.50
+ - Removed set_maxmoney and FT_cshack cvar
+ - Possibly fixed chain lightning bug?
+
+v2.2.4
+ - Bug Fix: module "war3ft" required even when it was running
+ - Recompiled all war3ft modules
+
 v2.2.3
  - Bug Fix: Mole Protectant Not functioning
  - Bug Fix: Undead's suicide bomber can continue onto the next round and damage nearby moles
