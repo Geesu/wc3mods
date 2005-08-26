@@ -30,8 +30,8 @@
 // Death animations for alien4: 56-65
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
-new const WC3AUTHOR[] =		"Pimp Daddy (OoTOAoO)"
-new const WC3VERSION[] =	"2.2.5"
+new const WC3AUTHOR[] =		"Geesu (Pimp Daddy==Geesu)"
+new const WC3VERSION[] =	"2.2.6"
 
 #include <amxmodx>
 #include <dbi>

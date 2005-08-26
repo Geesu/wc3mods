@@ -1,3 +1,7 @@
+v2.2.6
+ - Bug Fix: (DOD) Reincarnation works now (and ankh)
+ - Bug Fix: (DOD) Possible fix for Reliable channel overflow with crypt lord's ultimate
+
 v2.2.5
  - Module: recompiled for amxmodx 1.50
  - Plugin: compiled for amxmodx 1.50

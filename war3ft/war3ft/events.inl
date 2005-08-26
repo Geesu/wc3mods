@@ -777,6 +777,11 @@ public on_Death(victim, killer, wpnindex, headshot){
 	
 	XP_onDeath(victim, killer, wpnindex, headshot)
 
+	/* If we're playing DOD we need to get the user's origin when they die */
+	#if MOD == 1
+		get_user_origin(victim, reincarnation[victim]);
+	#endif
+	
 	return PLUGIN_CONTINUE
 }
 
@@ -965,6 +970,7 @@ public on_ResetHud(id){
 			new Float:randomnumber = random_float(0.0,1.0)
 			if(randomnumber <= p_ankh[p_data[id][P_SKILL3]-1])
 				SKILL_Reincarnation(id)
+
 		}
 	#endif
 

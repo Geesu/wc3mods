@@ -592,8 +592,6 @@ new g_menuSettings[33]
 	new spawnEntString[2][] = {"info_player_axis","info_player_allies"}
 
 	new reincarnation[33][3]
-	new Float:reinc_angles[33][3]
-	new Float:reinc_v_angles[33][3]
 #endif
 
 // Captured Messages

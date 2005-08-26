@@ -138,6 +138,7 @@ public Skill_Invisibility(id)
 
 		if (!warcraft3)
 			return PLUGIN_CONTINUE
+		
 
 		if(reincarnation[id][ZPOS] == -99999){}		// Player just joined, so lets not teleport them
 		else if(p_data_b[id][PB_REINCARNATION_SKIP]){
@@ -189,16 +190,8 @@ public Skill_Invisibility(id)
 		new id = parm[0]
 		new origin[3]
 		get_user_origin(id,origin)
-		entity_set_vector(id, EV_VEC_v_angle, reinc_v_angles[id])
-		entity_set_vector(id, EV_VEC_angles, reinc_angles[id])
-		
-		console_print(id, "Setting Angles:")
-		for(new z=0;z<3;z++)
-			console_print(id, "v %d:%f", z, reinc_v_angles[id][z])
-		for(new j=0;j<3;j++)
-			console_print(id, "%d:%f", j, reinc_angles[id][j])
 
-		// Failure, stuck somewhere, but them back
+		// Failure, stuck somewhere, put them back
 		if(origin[2] == reincarnation[id][2]){
 
 			new spawnID, playersInVicinity, entList[1], i

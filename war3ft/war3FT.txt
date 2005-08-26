@@ -256,7 +256,7 @@ WORD_SKILLS = Skills
 RACE_INFORMATION = Race Information
 WAS_KILLED_BY = %s Blev dræbt af %s's %s
 THIS_MOD_WAS_DEVELOPED = Dette mod blev udviklet af 4HM | Geesu (Pimp Daddy), Besøg www.4hm.net (forum) for flere detaljer
-CLICK_HERE_FOR_LATEST = klik <a href'http://4honor.net/forum/viewforum.php?f28'>here</a> for de sidste updates til Warcraft 3 Frozen Throne
+CLICK_HERE_FOR_LATEST = klik <a href'http://wc3mods.net/forums/index.php?c=1'>here</a> for de sidste updates til Warcraft 3 Frozen Throne
 THERE_ARE_MORE = Der er flere clienter med samme argumenter
 CLIENT_NOT_FOUND = Clienten med dette navn eller brugerid blev ikke fundet
 ICONS_ARE_DISABLED = Race ikoner er deactiveret
@@ -274,7 +274,7 @@ MENU_RACE_OPTIONS = \yRace valgmuligheder
 MENU_ADMIN_MENU = \yAdmin Menu
 MENU_GIVE_PLAYERS_XP = \yGiv Spillere XP
 MENU_TEAM_XP = \yTeam XP Menu
-CLICK_HERE = Klik <a href'http://ootoaoo.no-ip.com/war3/war3info.php?game%s&langen'>her</A> for mere information omkring de nye racer, o.s.v..
+CLICK_HERE = Klik <a href'http://wc3mods.net/war3ft/online/war3info.php?game%s'>her</A> for mere information omkring de nye racer, o.s.v..
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Help
 
 WAR3HELP :
@@ -617,7 +617,7 @@ WORD_SKILLS = Fertigkeiten
 RACE_INFORMATION = Rassen Informationen
 WAS_KILLED_BY = %s wurde getoeten von %s's %s
 THIS_MOD_WAS_DEVELOPED = Dieser Mod wird entwickelt von 4HM | Geesu (Pimp Daddy), besuche www.4hm.net (forum) fuer mehr Details
-CLICK_HERE_FOR_LATEST = Klicke <a href'http://4honor.net/forum/viewforum.php?f28'>hier</a> fuer die neuesten Updates von Warcraft3 Frozen Throne
+CLICK_HERE_FOR_LATEST = Klicke <a href'http://wc3mods.net/forums/index.php?c=1'>hier</a> fuer die neuesten Updates von Warcraft3 Frozen Throne
 THERE_ARE_MORE = Es gibt mehrere Klienten die zu ihrem Argument passen
 CLIENT_NOT_FOUND = Klient mit dem Namen oder der UserID nicht gefunden
 ICONS_ARE_DISABLED = Rassen Icons sind deaktiviert
@@ -635,7 +635,7 @@ MENU_RACE_OPTIONS = \yRassen Optionen
 MENU_ADMIN_MENU = \yAdmin Menue
 MENU_GIVE_PLAYERS_XP = \yGebe Spielern XP
 MENU_TEAM_XP = \yTeam XP Menue
-CLICK_HERE = Klicke <a href'http://ootoaoo.no-ip.com/war3/war3info.php?game%s&langen'>hier</A> fuer mehr Informationen über neue Rassen, etc..
+CLICK_HERE = Klicke <a href'http://wc3mods.net/war3ft/online/war3info.php?game%s'>hier</A> fuer mehr Informationen über neue Rassen, etc..
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Hilfe
 
 WAR3HELP :
@@ -984,7 +984,7 @@ WORD_SKILLS = Skills
 RACE_INFORMATION = Race Information
 WAS_KILLED_BY = %s was killed by %s's %s
 THIS_MOD_WAS_DEVELOPED = This mod was developed by 4HM | Geesu (Pimp Daddy), visit www.4hm.net (forums) for more details
-CLICK_HERE_FOR_LATEST = Click <a href'http://4honor.net/forum/viewforum.php?f28'>here</a> for the latest updates to Warcraft 3 Frozen Throne
+CLICK_HERE_FOR_LATEST = Click <a href'http://wc3mods.net/forums/index.php?c=1'>here</a> for the latest updates to Warcraft 3 Frozen Throne
 THERE_ARE_MORE = There are more clients matching to your argument
 CLIENT_NOT_FOUND = Client with that name or userid not found
 ICONS_ARE_DISABLED = Race Icons are disabled
@@ -1002,7 +1002,7 @@ MENU_RACE_OPTIONS = \yRace Options
 MENU_ADMIN_MENU = \yAdmin Menu
 MENU_GIVE_PLAYERS_XP = \yGive Players XP
 MENU_TEAM_XP = \yTeam XP Menu
-CLICK_HERE = Click <a href'http://ootoaoo.no-ip.com/war3/war3info.php?game%s&langen'>here</A> for more information regarding the new races.
+CLICK_HERE = Click <a href'http://wc3mods.net/war3ft/online/war3info.php?game%s'>here</A> for more information regarding the new races.
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Help
 
 WAR3HELP :
@@ -1349,7 +1349,7 @@ WORD_SKILLS = Habilidades
 RACE_INFORMATION = Información de la raza
 WAS_KILLED_BY = %s ha sido eliminado por %s con la %s
 THIS_MOD_WAS_DEVELOPED = Este mod ha sido desarrollado por 4HM | Geesu (Pimp Daddy), visita www.4hm.net (forums) para más detalles
-CLICK_HERE_FOR_LATEST = Haz clic <a href'http://4honor.net/forum/viewforum.php?f28'>aquí</a> para la última actualización de Warcraft 3 Frozen Throne
+CLICK_HERE_FOR_LATEST = Haz clic <a href'http://wc3mods.net/forums/index.php?c=1'>aquí</a> para la última actualización de Warcraft 3 Frozen Throne
 THERE_ARE_MORE = Hay más clientes que coinciden con tu argumento
 CLIENT_NOT_FOUND = Nombre de cliente o userid no localizado
 ICONS_ARE_DISABLED = Los iconos de raza están desactivados
@@ -1367,7 +1367,7 @@ MENU_RACE_OPTIONS = \yOpciones de Razas
 MENU_ADMIN_MENU = \yMenú del Administrador
 MENU_GIVE_PLAYERS_XP = \yDar XP a los jugadores
 MENU_TEAM_XP = \yMenú XP de Equipo
-CLICK_HERE = Haz clic <a href'http://ootoaoo.no-ip.com/war3/war3info.php?game%s&langes'>aquí</A> para más información sobre nuevas razas, etc...
+CLICK_HERE = Haz clic <a href'http://wc3mods.net/war3ft/online/war3info.php?game%s'>aquí</A> para más información sobre nuevas razas, etc...
 WAR3HELP_TITLE = Ayuda de Warcraft 3 Frozen Throne
 
 WAR3HELP :
@@ -2439,7 +2439,7 @@ WORD_SKILLS = Skills
 RACE_INFORMATION = Ras Informatie
 WAS_KILLED_BY = %s is gedood door %s's %s
 THIS_MOD_WAS_DEVELOPED = Deze mod is gemaakt door 4HM | Geesu (Pimp Daddy), kijk op www.4hm.net (forums) voor meer details
-CLICK_HERE_FOR_LATEST = Klik <a href'http://4honor.net/forum/viewforum.php?f28'>hier</a> voor de laatste updates voor Warcraft 3 Frozen Throne
+CLICK_HERE_FOR_LATEST = Klik <a href'http://wc3mods.net/forums/index.php?c=1'>hier</a> voor de laatste updates voor Warcraft 3 Frozen Throne
 THERE_ARE_MORE = Er zijn meerdere spelers die bij de opgegeven naam of user id horen gevonden
 CLIENT_NOT_FOUND = Client met die naam of user id niet gevonden
 ICONS_ARE_DISABLED = Ras Iconen zijn uitgeschakeld
@@ -2457,7 +2457,7 @@ MENU_RACE_OPTIONS = \yRas Opties
 MENU_ADMIN_MENU = \yAdmin Menu
 MENU_GIVE_PLAYERS_XP = \yGeef Spelers XP
 MENU_TEAM_XP = \yTeam XP Menu
-CLICK_HERE = Klik <a href'http://ootoaoo.no-ip.com/war3/war3info.php?game%s&langen'>hier</A> voor meer informatie over de nieuwe rassen, etc..(in het Engels)
+CLICK_HERE = Klik <a href'http://wc3mods.net/war3ft/online/war3info.php?game%s'>hier</A> voor meer informatie over de nieuwe rassen, etc..(in het Engels)
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Help
 
 WAR3HELP :
@@ -2804,7 +2804,7 @@ WORD_SKILLS = Umiejetnosci
 RACE_INFORMATION = Informacje o Rasie
 WAS_KILLED_BY = %s zostal zabity przez %s's %s
 THIS_MOD_WAS_DEVELOPED = Ten mod zostal stworzony przez 4HM | Geesu (Pimp Daddy), odwiedz www.4hm.net (forums)
-CLICK_HERE_FOR_LATEST = Kliknij <a href'http://4honor.net/forum/viewforum.php?f28'>here</a> po najnowsze updaty do Warcraft 3 Frozen Throne
+CLICK_HERE_FOR_LATEST = Kliknij <a href'http://wc3mods.net/forums/index.php?c=1'>here</a> po najnowsze updaty do Warcraft 3 Frozen Throne
 THERE_ARE_MORE = Jest wiecej Graczy pasujacych do tego argumentu
 CLIENT_NOT_FOUND = Gracz z tym nickiem lub userid nie znaleziony
 ICONS_ARE_DISABLED = Ikony Ras wylaczone
@@ -2822,7 +2822,7 @@ MENU_RACE_OPTIONS = \yOpcje Rasy
 MENU_ADMIN_MENU = \yAdmin Menu
 MENU_GIVE_PLAYERS_XP = \yDaj Graczom XP
 MENU_TEAM_XP = \yTeam XP Menu
-CLICK_HERE = Odwiedz <a href'http://ootoaoo.no-ip.com/war3/war3info.php?game%s&langen'>here</A> po wiecej informacji dotyczacych nowych ras etc
+CLICK_HERE = Odwiedz <a href'http://wc3mods.net/war3ft/online/war3info.php?game%s'>here</A> po wiecej informacji dotyczacych nowych ras etc
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Pomoc
 
 WAR3HELP :
@@ -3116,7 +3116,7 @@ WORD_SKILLS = Skills
 RACE_INFORMATION = Ras Information
 WAS_KILLED_BY = %s d'o'dades av %s's %s
 THIS_MOD_WAS_DEVELOPED = Denna mod utvecklas av 4HM | Geesu (Pimp Daddy), bes'o'k www.4hm.net (forums) f'o'r mer detaljer
-CLICK_HERE_FOR_LATEST = Klicka <a href'http://4honor.net/forum/viewforum.php?f28'>h'a'r</a> f'o'r de senaste uppdateringarna av Warcraft 3 Frozen Throne
+CLICK_HERE_FOR_LATEST = Klicka <a href'http://wc3mods.net/forums/index.php?c=1'>h'a'r</a> f'o'r de senaste uppdateringarna av Warcraft 3 Frozen Throne
 VOTING_NOT_ALLOWED = R'o'stning kan inte g'o'ras i denna Server.
 THERE_ARE_MORE = Det finns flera Klienter som matchar ditt argument
 CLIENT_NOT_FOUND = Klient med det namnet eller userID hittades inte
@@ -3135,7 +3135,7 @@ MENU_RACE_OPTIONS = \yVal av Ras
 MENU_ADMIN_MENU = \yAdmin Meny
 MENU_GIVE_PLAYERS_XP = \yGe Spelare XP
 MENU_TEAM_XP = \yLag XP Meny
-CLICK_HERE = Klicka <a href'http://ootoaoo.no-ip.com/war3/war3info.php?game%s&langsv'>h'a'r</A> f'o'r mer information om de nya raserna, etc..
+CLICK_HERE = Klicka <a href'http://wc3mods.net/war3ft/online/war3info.php?game%s'>h'a'r</A> f'o'r mer information om de nya raserna, etc..
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Hj'a'lp
 
 WAR3HELP :

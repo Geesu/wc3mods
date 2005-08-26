@@ -1607,7 +1607,11 @@ public drawfunnels(parm[]){
 
 	if(!endround){
 		if(!(xdist<50 && ydist<50 && zdist<50)){
-			set_task(0.1,"drawfunnels",caster+TASK_FUNNELS,parm,11)
+			#if MOD == 1
+				set_task(0.5,"drawfunnels",caster+TASK_FUNNELS,parm,11)
+			#else
+				set_task(0.1,"drawfunnels",caster+TASK_FUNNELS,parm,11)
+			#endif
 		}
 		else{
 			WAR3_damage(id, caster, 45, CSW_LOCUSTS, -1)
