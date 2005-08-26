@@ -1,4 +1,6 @@
 v2.2.6
+ - Addition: SQL-Lite support (all added by Lazarus Long)
+ - Change: MySQL code improved (thanks Lazarus Long)
  - Bug Fix: (DOD) Reincarnation works now (and ankh)
  - Bug Fix: (DOD) Possible fix for Reliable channel overflow with crypt lord's ultimate
 

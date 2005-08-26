@@ -23,6 +23,7 @@
 		always helping people out on the forums
 		contributing code for the anti-skywalking
 *  ryannotfound (war3x.net) for some of the naming conventions used (function names, constants, etc...) and functions
+*  Lazarus Long for adding ALL of the sql-lite code and fine-tuning the existing MySQL code... It's so much pertier
 */
 
 //#pragma dynamic 4096 
@@ -42,7 +43,7 @@ new const WC3VERSION[] =	"2.2.6"
 
 //#pragma ctrlchar '^'
 
-#define MOD 1							// 0 = cstrike or czero, 1 = dod
+#define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define PRECACHE_WAR3FTSOUNDS 1
@@ -51,6 +52,7 @@ new const WC3VERSION[] =	"2.2.6"
 #define DEBUG 0 						// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
 #define ADVANCED_DEBUG_BOTS 1			// Print info for bots too?
+#define SQL_DEBUG 0						// Prints debug information regarding SQL statments and replies
 
 #if MOD == 0
 	#include <cstrike>
@@ -351,18 +353,58 @@ public plugin_end(){
 		// At 5:36 AM until 5:59 AM a mapchange will trigger an auto-prune.
 		if((str_to_num(currentHour) == 5) && (str_to_num(currentMin) > 35 )){
 				
-			// Timestamp format: 20030912122142
-			// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42	
-			format(mquery, 1023, "DELETE FROM `%s` WHERE `time` + %d < now()",mysqltablename, iCvar[SV_DAYSBEFOREDELETE] * 1000000)
-
-			new Result:ret = dbi_query(mysql, mquery)
+			if (iSQLtype == SQL_MYSQL) {
+				// Timestamp format: 20030912122142
+				// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42	
+				format(mquery, 1023, "DELETE FROM `%s` WHERE `time` + %d < now()",mysqltablename, iCvar[SV_DAYSBEFOREDELETE] * 1000000)
+			} else if (iSQLtype == SQL_SQLITE) {
+				// Timestamp format: 2003-09-12 12:21:42
+				// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42
+				format(mquery, 1023, "DELETE FROM `%s` WHERE ((julianday(`time`) + %d) < julianday('now'))", mysqltablename, iCvar[SV_DAYSBEFOREDELETE])
+			}
+ 
+#if SQL_DEBUG
+			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
+#endif
+ 			new Result:ret = dbi_query(mysql, mquery)
+#if SQL_DEBUG
+			log_amx("[%s] ret=%d", g_MOD, ret)
+#endif
 
 			if (ret < RESULT_NONE) {
 				new err[255]
 				new errNum = dbi_error(mysql, err, 254)
 				log_amx("[%s] DBI prune error: %s (%d)", g_MOD, err, errNum)
+				dbi_free_result(ret)
 				return 1
-			} 		
+			} 	
+
+			dbi_free_result(ret)
+
+			if (iSQLtype == SQL_SQLITE) {
+				format(mquery, 1023, "VACUUM `%s`", mysqltablename)
+
+#if SQL_DEBUG
+				log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
+#endif
+				new Result:ret2 = dbi_query(mysql, mquery)
+#if SQL_DEBUG
+				log_amx("[%s] ret2=%d", g_MOD, ret)
+#endif
+
+				if (ret2 < RESULT_NONE) {
+					new err[255]
+					new errNum = dbi_error(mysql, err, 254)
+					log_amx("[%s] DBI prune error: %s (%d)", g_MOD, err, errNum)
+					dbi_free_result(ret2)
+					return 1
+				}
+
+				dbi_free_result(ret)
+			}
+
+			log_amx("[%s] The %s Database was successfully pruned %sat %s:%s", g_MOD, SQLtype, (iSQLtype == SQL_SQLITE) ? "and vacuumed " : "", currentHour, currentMin)
+
 		}
 	}
 	if (iCvar[SV_MYSQL]){

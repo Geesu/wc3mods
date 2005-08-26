@@ -261,8 +261,8 @@ public XP_Save(id){
 				iSQLAttempts = SQL_ATTEMPTS + 10
 				iCvar[MP_SAVEXP] = 0
 				iCvar[SV_MYSQL] = 0
-				log_amx("[%s] Unable to connect to the database server after %d tries, switching to short-term mode", g_MOD, iSQLAttempts)
-				client_print(0,print_chat,"%s Unable to connect to the database server after %d tries, switching to short-term mode", g_MODclient, iSQLAttempts)
+				log_amx("[%s] Unable to connect to the %s Database after %d tries, switching to short-term mode", g_MOD, SQLtype, iSQLAttempts)
+				client_print(0,print_chat,"%s Unable to connect to the %s Database after %d tries, switching to short-term mode", g_MODclient, SQLtype, iSQLAttempts)
 			}
 			return PLUGIN_CONTINUE
 		}
@@ -275,20 +275,29 @@ public XP_Save(id){
 		replace(playername, 64, "`", "")
 
 		if(iCvar[FT_SAVEBY]==0)						// Save by steam ID
-			format(mquery, 1023, "REPLACE INTO `%s` SET playerid='%s',playername='%s',xp='%d',race='%d',skill1='%d',skill2='%d',skill3='%d',skill4='%d'",mysqltablename,playerid,playername,p_data[id][P_XP], p_data[id][P_RACE],p_data[id][P_SKILL1],p_data[id][P_SKILL2],p_data[id][P_SKILL3],p_data[id][P_ULTIMATE])
+			format(mquery, 1023, "REPLACE INTO `%s` (`playerid`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', %d, %d, %d, %d, %d, %d)", mysqltablename, playerid, playername, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE])
 		else if(iCvar[FT_SAVEBY]==1)					// Save by IP address
-			format(mquery, 1023, "REPLACE INTO `%s` SET playerid='%s',playername='%s',xp='%d',race='%d',skill1='%d',skill2='%d',skill3='%d',skill4='%d'",mysqltablename,ip,playername,p_data[id][P_XP], p_data[id][P_RACE],p_data[id][P_SKILL1],p_data[id][P_SKILL2],p_data[id][P_SKILL3],p_data[id][P_ULTIMATE])
+			format(mquery, 1023, "REPLACE INTO `%s` (`playerid`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', %d, %d, %d, %d, %d, %d)", mysqltablename, ip, playername, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE])
 		else if(iCvar[FT_SAVEBY]==2)					// Save by Player name
-			format(mquery, 1023, "REPLACE INTO `%s` SET playerid='%s',playername='%s',xp='%d',race='%d',skill1='%d',skill2='%d',skill3='%d',skill4='%d'",mysqltablename,playername,playername,p_data[id][P_XP], p_data[id][P_RACE],p_data[id][P_SKILL1],p_data[id][P_SKILL2],p_data[id][P_SKILL3],p_data[id][P_ULTIMATE])
+			format(mquery, 1023, "REPLACE INTO `%s` (`playerid`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', %d, %d, %d, %d, %d, %d)", mysqltablename, playername, playername, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE])
 
-		new Result:ret = dbi_query(mysql, mquery)
+#if SQL_DEBUG
+		log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
+#endif
+ 		new Result:ret = dbi_query(mysql, mquery)
+#if SQL_DEBUG
+		log_amx("[%s] ret=%d", g_MOD, ret)
+#endif
 
 		if (ret < RESULT_NONE) {
 			new err[255]
 			new errNum = dbi_error(mysql, err, 254)
 			log_amx("[%s] DBI XP_Save error: %s (%d)", g_MOD, err, errNum)
+			dbi_free_result(ret)
 			return 1
 		} 	
+
+		//dbi_free_result(ret)		// Why is MySQL database complaining with this? SQLite works OK, so why?
 
 	}
 	else{			// Save it to a vault :)
@@ -343,26 +352,33 @@ public XP_Retreive(id,returnrace){
 				iSQLAttempts = SQL_ATTEMPTS + 10
 				iCvar[MP_SAVEXP] = 0
 				iCvar[SV_MYSQL] = 0
-				log_amx("[%s] Unable to connect to the database server after %d tries, switching to short-term mode", g_MOD, iSQLAttempts)
-				client_print(0,print_chat,"%s Unable to connect to the database server after %d tries, switching to short-term mode", g_MODclient, iSQLAttempts)
+				log_amx("[%s] Unable to connect to the %s Database after %d tries, switching to short-term mode", g_MOD, SQLtype, iSQLAttempts)
+				client_print(0,print_chat,"%s Unable to connect to the %s Database after %d tries, switching to short-term mode", g_MODclient, SQLtype, iSQLAttempts)
 			}
 			return PLUGIN_CONTINUE
 		}
 
 		if (returnrace){
 			if(iCvar[FT_SAVEBY]==0)						// Save by steam ID
-				format(mquery, 1023, "SELECT * FROM `%s` WHERE playerid='%s'",mysqltablename,playerid)
+				format(mquery, 1023, "SELECT * FROM `%s` WHERE (`playerid` = '%s')", mysqltablename, playerid)
 			else if(iCvar[FT_SAVEBY]==1)					// Save by IP address
-				format(mquery, 1023, "SELECT * FROM `%s` WHERE playerid='%s'",mysqltablename,ip)
+				format(mquery, 1023, "SELECT * FROM `%s` WHERE (`playerid` = '%s')", mysqltablename, ip)
 			else if(iCvar[FT_SAVEBY]==2)					// Save by Player name
-				format(mquery, 1023, "SELECT * FROM `%s` WHERE playerid='%s'",mysqltablename,playername)
+				format(mquery, 1023, "SELECT * FROM `%s` WHERE (`playerid` = '%s')", mysqltablename, playername)
 
-			new Result:res = dbi_query(mysql, mquery)
+#if SQL_DEBUG
+			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
+#endif
+ 			new Result:res = dbi_query(mysql, mquery)
+#if SQL_DEBUG
+			log_amx("[%s] res=%d", g_MOD, res)
+#endif
 
 			if (res < RESULT_NONE) {
 				new err[255]
 				new errNum = dbi_error(mysql, err, 254)
 				log_amx("[%s] DBI XP_Retreive error: %s (%d)", g_MOD, err, errNum)
+				dbi_free_result(res)
 				return PLUGIN_CONTINUE
 			}
 
@@ -382,19 +398,26 @@ public XP_Retreive(id,returnrace){
 		}
 		else{
 			if(iCvar[FT_SAVEBY]==0)						// Save by steam ID
-				format(mquery, 1023, "SELECT * FROM `%s` WHERE playerid='%s' AND race='%d'",mysqltablename,playerid,p_data[id][P_RACE])
+				format(mquery, 1023, "SELECT * FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", mysqltablename, playerid, p_data[id][P_RACE])
 			else if(iCvar[FT_SAVEBY]==1)					// Save by IP address
-				format(mquery, 1023, "SELECT * FROM `%s` WHERE playerid='%s' AND race='%d'",mysqltablename,ip,p_data[id][P_RACE])
+				format(mquery, 1023, "SELECT * FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", mysqltablename, ip, p_data[id][P_RACE])
 			else if(iCvar[FT_SAVEBY]==2)					// Save by Player name
-				format(mquery, 1023, "SELECT * FROM `%s` WHERE playerid='%s' AND race='%d'",mysqltablename,playername,p_data[id][P_RACE])
+				format(mquery, 1023, "SELECT * FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", mysqltablename, playername, p_data[id][P_RACE])
 
-			new Result:res = dbi_query(mysql, mquery)
+#if SQL_DEBUG
+			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
+#endif
+ 			new Result:res = dbi_query(mysql, mquery)
+#if SQL_DEBUG
+			log_amx("[%s] res=%d", g_MOD, res)
+#endif
 
 			if (res < RESULT_NONE) {
 				new err[255]
 				new errNum = dbi_error(mysql, err, 254)
 				log_amx("[%s] DBI XP_Retreive error: %s (%d)", g_MOD, err, errNum)
-				
+				dbi_free_result(res)
+
 				return PLUGIN_CONTINUE
 			}
 
@@ -404,8 +427,6 @@ public XP_Retreive(id,returnrace){
 				dbi_result(res, "skill2", skill2, 1)
 				dbi_result(res, "skill3", skill3, 1)
 				dbi_result(res, "skill4", skill4, 1)				
-
-				dbi_free_result(res) 
 
 				p_data[id][P_XP]=str_to_num(xp)
 				p_data[id][P_SKILL1]=str_to_num(skill1)
@@ -424,6 +445,8 @@ public XP_Retreive(id,returnrace){
 				p_data[id][P_ULTIMATE]=0
 				WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
 			}
+
+			dbi_free_result(res) 
 		}
 	}
 	else{			// Get info from a vault
@@ -497,16 +520,58 @@ public XP_Save_All(){
 	if (warcraft3){
 		new players[32], numofplayers, id, i
 		get_players(players, numofplayers)
-		if(iCvar[SV_MYSQL]){
-			if (iCvar[SV_MYSQL_SAVE_END_ROUND]){
-				for (i=0; i<numofplayers; i++){
+		if(iCvar[SV_MYSQL])
+		{
+			if (iCvar[SV_MYSQL_SAVE_END_ROUND])
+			{
+				if (iSQLtype == SQL_MYSQL)
+				{
+#if SQL_DEBUG
+					log_amx("[%s] dbi_query(%d, 'SET AUTOCOMMIT=0')", g_MOD, mysql)
+#endif
+					dbi_query(mysql, "SET AUTOCOMMIT=0")
+#if SQL_DEBUG
+					log_amx("[%s] dbi_query(%d, 'START TRANSACTION')", g_MOD, mysql)
+#endif
+					dbi_query(mysql, "START TRANSACTION")
+				} 
+				else if (iSQLtype == SQL_SQLITE) 
+				{
+#if SQL_DEBUG
+					log_amx("[%s] dbi_query(%d, 'BEGIN TRANSACTION')", g_MOD, mysql)
+#endif
+					dbi_query(mysql, "BEGIN TRANSACTION")
+				}
+
+				for (i=0; i<numofplayers; i++)
+				{
 					id = players[i]
 					XP_Save(id)
 				}
+
+#if SQL_DEBUG
+				log_amx("[%s] dbi_query(%d, 'COMMIT')", g_MOD, mysql)
+#endif
+				new Result:res = dbi_query(mysql, "COMMIT")
+#if SQL_DEBUG
+				log_amx("[%s] res=%d", g_MOD, res)
+#endif
+				if (res < RESULT_NONE)
+				{
+					new err[255]
+					new errNum = dbi_error(mysql, err, 254)
+					log_amx("[%s] DBI XP_Save_All error: %s (%d)", g_MOD, err, errNum)
+					dbi_free_result(res)
+					return 1
+				} 	
+
+				//dbi_free_result(res)		// Why is MySQL database complaining with this? SQLite works OK, so why?
 			}
 		}
-		else{
-			for (i=0; i<numofplayers; i++){
+		else
+		{
+			for (i=0; i<numofplayers; i++)
+			{
 				id = players[i]
 				XP_Save(id)
 			}
@@ -532,8 +597,8 @@ public XP_Client_Save(id,show){
 			}
 			else
 			{
-				client_print(id,print_chat, "%s XP saved.",g_MODclient)
 				XP_Save(id)
+				client_print(id,print_chat, "%s XP saved.",g_MODclient)
 			}
 		}
 	}	
@@ -550,64 +615,126 @@ public XP_Set_DBI(){
 
 	if (iCvar[SV_MYSQL]){
 		get_cvar_string("sv_mysqltablename",mysqltablename,63)
-		new mhost[64], muser[32], mpass[32], mdb[32], primarykey[128]
+		new mhost[64], muser[32], mpass[32], mdb[128], int_check[64]
 		new mquery[512]
-		format (mquery, 511, "CREATE TABLE IF NOT EXISTS `%s` ( `playerid` VARCHAR(35) NOT NULL, `playername` VARCHAR(35) NOT NULL, `xp` INT(11) NOT NULL, `race` TINYINT(4) NOT NULL, `skill1` TINYINT(4), `skill2` TINYINT(4), `skill3` TINYINT(4), `skill4` TINYINT(4), `time` TIMESTAMP( 14 ) NOT NULL, PRIMARY KEY (playerid,race))",mysqltablename)
+
+		dbi_type(SQLtype, 15)
+#if SQL_DEBUG
+		log_amx("[%s] dbi_type: %s", g_MOD, SQLtype)
+#endif
+
+		if (equali(SQLtype, g_MySQL))
+		{
+			iSQLtype = SQL_MYSQL
+			copy(SQLtype, strlen(g_MySQL)+1, g_MySQL)
+		}
+		else if (equali(SQLtype, g_SQLite))
+		{
+			iSQLtype = SQL_SQLITE
+			copy(SQLtype, strlen(g_SQLite)+1, g_SQLite)
+		}
+		else
+		{
+			iSQLtype = SQL_NONE
+			log_amx("[%s] Unsupported database type found (%s), the supported databases are %s or %s", g_MOD, SQLtype, g_MySQL, g_SQLite)
+			return PLUGIN_CONTINUE
+		}
+
+#if SQL_DEBUG
+		log_amx("[%s] iSQLtype = %d, SQLtype = %s", g_MOD, iSQLtype, SQLtype)
+#endif
+
+		if (iSQLtype == SQL_MYSQL)
+			format(mquery, 511, "CREATE TABLE IF NOT EXISTS `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`playerid`, `race`))", mysqltablename)
+		else if (iSQLtype == SQL_SQLITE)
+			format(mquery, 511, "CREATE TABLE `%s` (`playerid` TEXT NOT NULL DEFAULT '', `playername` TEXT NOT NULL DEFAULT '', `xp` INTEGER NOT NULL DEFAULT 0, `race` INTEGER NOT NULL DEFAULT 0, `skill1` INTEGER NOT NULL DEFAULT 0, `skill2` INTEGER NOT NULL DEFAULT 0, `skill3` INTEGER NOT NULL DEFAULT 0, `skill4` INTEGER NOT NULL DEFAULT 0, `time` TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`playerid`, `race`))", mysqltablename)
 
 		get_cvar_string("FT_mysql_host",mhost,63)
 		get_cvar_string("FT_mysql_user",muser,31)
 		get_cvar_string("FT_mysql_pass",mpass,31)
-		get_cvar_string("FT_mysql_db",mdb,31)
+		get_cvar_string("FT_mysql_db",mdb,127)
 
 		new err[255], errNum = 0
+#if SQL_DEBUG
+		log_amx("[%s] dbi_connect(%s, %s, %s, %s)", g_MOD, mhost, muser, mpass, mdb)
+#endif
 		mysql = dbi_connect(mhost,muser,mpass,mdb)
+#if SQL_DEBUG
+		log_amx("[%s] mysql=%d", g_MOD, mysql)
+#endif
+
 		if (mysql < SQL_OK) {
 			errNum = dbi_error(mysql, err, 254)
 			log_amx("[%s] DBI XP_Set_DBI error: %s (%d)", g_MOD, err, errNum)
 
 			if(iSQLAttempts < SQL_ATTEMPTS){
 				new Float:delay = 25.0
-				log_amx("[%s] Will attempt to re-connect to the MySQL database in %f seconds", g_MOD, delay)
+				log_amx("[%s] Will attempt to re-connect to the %s Database in %f seconds", g_MOD, SQLtype, delay)
 				set_task(delay, "XP_Set_DBI", TASK_SETMYSQL)
 			}
 			iSQLAttempts++
 			return 1
 		}
 		else
-			server_print("[%s] Connection to MySQL Database successful (%d)", g_MOD, mysql)
+			log_amx("[%s] Connection to %s Database successful (%d)", g_MOD, SQLtype, mysql)
 
-		new Result:ret = dbi_query(mysql, mquery)
+		new Result:ret
+		if (iSQLtype != SQL_SQLITE || !sqlite_table_exists(mysql, mysqltablename)) {
+#if SQL_DEBUG
+			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
+#endif
+			ret = dbi_query(mysql, mquery)
+#if SQL_DEBUG
+			log_amx("[%s] ret=%d", g_MOD, ret)
+#endif
 
-		if (ret < RESULT_NONE) {
-			errNum = dbi_error(mysql, err, 254)
-			log_amx("[%s] DBI XP_Set_DBI error: %s (%d)", g_MOD, err, errNum)
-			return 1
-		}
-
-		format(mquery, 511, "show index from `%s`", mysqltablename)
-
-		new Result:res = dbi_query(mysql, mquery)
-
-		if (res <= RESULT_NONE) {
-			errNum = dbi_error(mysql, err, 254)
-			log_amx("[%s] DBI XP_Set_DBI error: %s (%d)", g_MOD, err, errNum)
-			return 1
-		}
-
-		while (res && dbi_nextrow(res)>0) {
-			dbi_result(res, "Column_name", primarykey, 127)
-		}
-
-		dbi_free_result(res)
-
-		if (contain(primarykey,"playerid")){	// contain() returns 0 if the two strings match exactly
-			format(mquery, 511, "ALTER TABLE `%s` DROP PRIMARY KEY , ADD PRIMARY KEY ( `playerid` , `race` )", mysqltablename)
-			new Result:ret2 = dbi_query(mysql, mquery)
-			if (ret2 < RESULT_NONE) {
+			if (ret < RESULT_NONE) {
 				errNum = dbi_error(mysql, err, 254)
 				log_amx("[%s] DBI XP_Set_DBI error: %s (%d)", g_MOD, err, errNum)
+				dbi_free_result(ret)
 				return 1
 			}
+		}
+
+		//dbi_free_result(ret)		// Why is MySQL database complaining with this? SQLite works OK, so why?
+
+		if (iSQLtype == SQL_SQLITE) { // These probably should be subject to a CVAR
+			/*
+				Lets fine tune the database:
+			 		"synchronous = NORMAL"	- Put back the 2.x behaviour (faster than the defalt
+								  for 3.x)
+					"synchronous = OFF"	- Way faster, but it might get corrupted data if a
+								  server os system crash occurs
+					"integrity_check"	- well it's what it says, we do have to check the
+								  value it returns since it's important
+				PRAGMA commands don't return anything so no need to check the result of the query
+			 */
+			format(mquery, 511, "PRAGMA integrity_check")
+#if SQL_DEBUG
+			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
+#endif
+			new Result:res = dbi_query(mysql, mquery)
+
+
+			while (res && dbi_nextrow(res)>0)
+			{
+				dbi_result(res, "integrity_check", int_check, 63)
+			}
+
+			dbi_free_result(res)
+#if SQL_DEBUG
+			log_amx("[%s] int_check=%s", g_MOD, int_check)
+#endif
+
+			if (!equali(int_check, "ok")) {
+				log_amx("[%s] DBI XP_Set_DBI error: %s", g_MOD, int_check)
+				return 1
+			}
+			format(mquery, 511, "PRAGMA synchronous = %d", SQLITE_SYNC_OFF)
+#if SQL_DEBUG
+			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
+#endif
+			dbi_query(mysql, mquery)
 		}
 	}
 

@@ -283,6 +283,18 @@
 // Number of attempts to make to connect to the database if it fails (only if sv_mysql is 1)
 #define	SQL_ATTEMPTS				10
 
+// Type of SQL being used (only if sv_mysql is 1)
+#define SQL_FAIL				-1
+#define SQL_NONE				0
+#define SQL_MYSQL				1
+#define SQL_SQLITE				2
+
+// Type of SQlite database synchronization
+#define SQLITE_SYNC_OFF				0
+#define SQLITE_SYNC_NORMAL			1
+#define SQLITE_SYNC_FULL			2
+
+
 // ***************************************************************************
 // The following section contains defines for the player_data array, it pretty much
 // stores everything.  
@@ -633,6 +645,11 @@ new g_sWave
 new Sql:mysql
 new mysqltablename[64]
 new iSQLAttempts = 0
+
+new iSQLtype = SQL_NONE
+new SQLtype[16]
+new const g_MySQL[] = "MySQL"
+new const g_SQLite[] = "SQLite"
 
 new g_MOD[8] = "WAR3FT"
 new g_MODclient[15] = "* [WAR3FT]"
