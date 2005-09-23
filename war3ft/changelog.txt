@@ -1,3 +1,5 @@
+Known Bugs: get_user_team native error on client_disconnect for dod
+
 v2.2.6
  - Addition: SQL-Lite support (all added by Lazarus Long)
  - Change: MySQL code improved (thanks Lazarus Long)
