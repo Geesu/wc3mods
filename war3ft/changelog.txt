@@ -2,7 +2,9 @@ Known Bugs: get_user_team native error on client_disconnect for dod
 
 v2.2.6
  - Addition: SQL-Lite support (all added by Lazarus Long)
+ - Addition: (DOD) Added snow.spr to sprites folder
  - Change: MySQL code improved (thanks Lazarus Long)
+ - Change renamed menu_items to menuitems (thanks Lazarus Long)
  - Bug Fix: (DOD) Reincarnation works now (and ankh)
  - Bug Fix: (DOD) Possible fix for Reliable channel overflow with crypt lord's ultimate
 

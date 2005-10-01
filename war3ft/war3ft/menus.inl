@@ -665,18 +665,18 @@ public menu_War3menu(id){
 		}
 	}
 
-	new pos = 0, i, menu_body[512], menu_items[5][32]
+	new pos = 0, i, menu_body[512], menuitems[5][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4)|(1<<9)
 
-	format(menu_items[0],31,"%L",id,"SKILLS_MENU")
-	format(menu_items[1],31,"%L",id,"RACE_MENU")
-	format(menu_items[2],31,"%L",id,"ITEM_MENU")
-	format(menu_items[3],31,"%L",id,"HELP")
-	format(menu_items[4],31,"%L",id,"ADMIN_MENU_TITLE")
+	format(menuitems[0],31,"%L",id,"SKILLS_MENU")
+	format(menuitems[1],31,"%L",id,"RACE_MENU")
+	format(menuitems[2],31,"%L",id,"ITEM_MENU")
+	format(menuitems[3],31,"%L",id,"HELP")
+	format(menuitems[4],31,"%L",id,"ADMIN_MENU_TITLE")
 
 	pos += format(menu_body[pos], 511-pos, "%L^n^n",id,"MENU_WAR3_FT_MENU")
 	for (i = 0; i<5; i++){
-		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menu_items[i])
+		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menuitems[i])
 	}
 	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
 	show_menu(id,keys,menu_body,-1)
@@ -709,17 +709,17 @@ public menu_Skill_Options(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	new pos = 0, i, menu_body[512], menu_items[3][32]
+	new pos = 0, i, menu_body[512], menuitems[3][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<8)|(1<<9)
 
 
-	format(menu_items[0],31,"%L",id,"SELECT_SKILLS")
-	format(menu_items[1],31,"%L",id,"SKILLS_INFORMATION")
-	format(menu_items[2],31,"%L",id,"RESELECT_SKILLS")
+	format(menuitems[0],31,"%L",id,"SELECT_SKILLS")
+	format(menuitems[1],31,"%L",id,"SKILLS_INFORMATION")
+	format(menuitems[2],31,"%L",id,"RESELECT_SKILLS")
 
 	pos += format(menu_body[pos], 511-pos, "%L^n^n",id,"MENU_SKILLS_OPTIONS")
 	for (i = 0; i<3; i++){
-		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menu_items[i])
+		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menuitems[i])
 	}
 	pos += format(menu_body[pos], 511-pos, "^n^n\w9. %L",id,"BACK_STRING")
 	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
@@ -751,17 +751,17 @@ public menu_Race_Options(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	new pos = 0, i, menu_body[512], menu_items[4][32]
+	new pos = 0, i, menu_body[512], menuitems[4][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<8)|(1<<9)
 
-	format(menu_items[0],31,"%L",id,"CHANGE_RACE")
-	format(menu_items[1],31,"%L",id,"SHOW_LEVEL")
-	format(menu_items[2],31,"%L",id,"RESET_XP")
-	format(menu_items[3],31,"%L",id,"SHOW_PLAYER_SKILLS")
+	format(menuitems[0],31,"%L",id,"CHANGE_RACE")
+	format(menuitems[1],31,"%L",id,"SHOW_LEVEL")
+	format(menuitems[2],31,"%L",id,"RESET_XP")
+	format(menuitems[3],31,"%L",id,"SHOW_PLAYER_SKILLS")
 
 	pos += format(menu_body[pos], 511-pos, "%L^n^n",id,"MENU_RACE_OPTIONS")
 	for (i = 0; i<4; i++){
-		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menu_items[i])
+		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menuitems[i])
 	}
 	pos += format(menu_body[pos], 511-pos, "^n^n\w9. %L",id,"BACK_STRING")
 	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
@@ -794,17 +794,17 @@ public menu_Item_Options(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	new pos = 0, i, menu_body[512], menu_items[4][32]
+	new pos = 0, i, menu_body[512], menuitems[4][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<8)|(1<<9)
 
-	format(menu_items[0],31,"%L",id,"SHOPMENU1_OPTION")
-	format(menu_items[1],31,"%L",id,"SHOPMENU2_OPTION")
-	format(menu_items[2],31,"%L",id,"SHOW_SHOPMENU1_INFO")
-	format(menu_items[3],31,"%L",id,"SHOW_SHOPMENU2_INFO")
+	format(menuitems[0],31,"%L",id,"SHOPMENU1_OPTION")
+	format(menuitems[1],31,"%L",id,"SHOPMENU2_OPTION")
+	format(menuitems[2],31,"%L",id,"SHOW_SHOPMENU1_INFO")
+	format(menuitems[3],31,"%L",id,"SHOW_SHOPMENU2_INFO")
 
 	pos += format(menu_body[pos], 511-pos, "%L^n^n",id,"MENU_ITEM_OPTIONS")
 	for (i = 0; i<4; i++){
-		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menu_items[i])
+		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menuitems[i])
 	}
 	pos += format(menu_body[pos], 511-pos, "^n^n\w9. %L",id,"BACK_STRING")
 	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
@@ -844,16 +844,16 @@ public menu_Admin_Options(id){
 		}
 	}
 
-	new pos = 0, i, menu_body[512], menu_items[3][32]
+	new pos = 0, i, menu_body[512], menuitems[3][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<8)|(1<<9)
 
-	format(menu_items[0],31,"%L",id,"GIVE_IND_XP")
-	format(menu_items[1],31,"%L",id,"GIVE_MULT_XP")
-	format(menu_items[2],31,"%L",id,"SAVE_ALL_XP")
+	format(menuitems[0],31,"%L",id,"GIVE_IND_XP")
+	format(menuitems[1],31,"%L",id,"GIVE_MULT_XP")
+	format(menuitems[2],31,"%L",id,"SAVE_ALL_XP")
 
 	pos += format(menu_body[pos], 511-pos, "%L^n^n",id,"MENU_ADMIN_MENU")
 	for (i = 0; i<3; i++){
-		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menu_items[i])
+		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menuitems[i])
 	}
 	pos += format(menu_body[pos], 511-pos, "^n^n\w9. %L",id,"BACK_STRING")
 	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
@@ -986,16 +986,16 @@ public menu_TeamXP_Options(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	new pos = 0, i, menu_body[512], menu_items[3][32], give[16]
+	new pos = 0, i, menu_body[512], menuitems[3][32], give[16]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<7)|(1<<8)|(1<<9)
 
-	format(menu_items[0],31,"%L",id,"TERRORISTS")
-	format(menu_items[1],31,"%L",id,"CT")
-	format(menu_items[2],31,"%L",id,"EVERYONE")
+	format(menuitems[0],31,"%L",id,"TERRORISTS")
+	format(menuitems[1],31,"%L",id,"CT")
+	format(menuitems[2],31,"%L",id,"EVERYONE")
 
 	pos += format(menu_body[pos], 511-pos, "%L^n^n",id,"MENU_TEAM_XP")
 	for (i = 0; i<3; i++){
-		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menu_items[i])
+		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menuitems[i])
 	}
 	format(give,15,"%L",id,"GIVE")
 	pos += format(menu_body[pos], 511-pos,"^n8. %s  %d XP^n",give,g_menuSettings[id])

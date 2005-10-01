@@ -274,12 +274,7 @@ public XP_Save(id){
 		replace(playername, 64, "'", "\'")
 		replace(playername, 64, "`", "")
 
-		if(iCvar[FT_SAVEBY]==0)						// Save by steam ID
-			format(mquery, 1023, "REPLACE INTO `%s` (`playerid`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', %d, %d, %d, %d, %d, %d)", mysqltablename, playerid, playername, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE])
-		else if(iCvar[FT_SAVEBY]==1)					// Save by IP address
-			format(mquery, 1023, "REPLACE INTO `%s` (`playerid`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', %d, %d, %d, %d, %d, %d)", mysqltablename, ip, playername, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE])
-		else if(iCvar[FT_SAVEBY]==2)					// Save by Player name
-			format(mquery, 1023, "REPLACE INTO `%s` (`playerid`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', %d, %d, %d, %d, %d, %d)", mysqltablename, playername, playername, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE])
+		format(mquery, 1023, "REPLACE INTO `%s` (`playerid`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', %d, %d, %d, %d, %d, %d)", mysqltablename, (iCvar[FT_SAVEBY]==2) ? playername : ((iCvar[FT_SAVEBY]==1) ? ip : playerid), playername, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE])
 
 #if SQL_DEBUG
 		log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
@@ -359,12 +354,7 @@ public XP_Retreive(id,returnrace){
 		}
 
 		if (returnrace){
-			if(iCvar[FT_SAVEBY]==0)						// Save by steam ID
-				format(mquery, 1023, "SELECT * FROM `%s` WHERE (`playerid` = '%s')", mysqltablename, playerid)
-			else if(iCvar[FT_SAVEBY]==1)					// Save by IP address
-				format(mquery, 1023, "SELECT * FROM `%s` WHERE (`playerid` = '%s')", mysqltablename, ip)
-			else if(iCvar[FT_SAVEBY]==2)					// Save by Player name
-				format(mquery, 1023, "SELECT * FROM `%s` WHERE (`playerid` = '%s')", mysqltablename, playername)
+			format(mquery, 1023, "SELECT `xp`, `race` FROM `%s` WHERE (`playerid` = '%s')", mysqltablename, (iCvar[FT_SAVEBY]==2) ? playername : ((iCvar[FT_SAVEBY]==1) ? ip : playerid))
 
 #if SQL_DEBUG
 			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
@@ -397,12 +387,7 @@ public XP_Retreive(id,returnrace){
 			menu_Select_Race(id, racexp)
 		}
 		else{
-			if(iCvar[FT_SAVEBY]==0)						// Save by steam ID
-				format(mquery, 1023, "SELECT * FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", mysqltablename, playerid, p_data[id][P_RACE])
-			else if(iCvar[FT_SAVEBY]==1)					// Save by IP address
-				format(mquery, 1023, "SELECT * FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", mysqltablename, ip, p_data[id][P_RACE])
-			else if(iCvar[FT_SAVEBY]==2)					// Save by Player name
-				format(mquery, 1023, "SELECT * FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", mysqltablename, playername, p_data[id][P_RACE])
+			format(mquery, 1023, "SELECT `xp`, `skill1`, `skill2`, `skill3`, `skill4` FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", mysqltablename, (iCvar[FT_SAVEBY]==2) ? playername : ((iCvar[FT_SAVEBY]==1) ? ip : playerid), p_data[id][P_RACE])
 
 #if SQL_DEBUG
 			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
@@ -645,9 +630,9 @@ public XP_Set_DBI(){
 #endif
 
 		if (iSQLtype == SQL_MYSQL)
-			format(mquery, 511, "CREATE TABLE IF NOT EXISTS `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`playerid`, `race`))", mysqltablename)
+			format(mquery, 511, "CREATE TABLE IF NOT EXISTS `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL, PRIMARY KEY (`playerid`, `race`))", mysqltablename)
 		else if (iSQLtype == SQL_SQLITE)
-			format(mquery, 511, "CREATE TABLE `%s` (`playerid` TEXT NOT NULL DEFAULT '', `playername` TEXT NOT NULL DEFAULT '', `xp` INTEGER NOT NULL DEFAULT 0, `race` INTEGER NOT NULL DEFAULT 0, `skill1` INTEGER NOT NULL DEFAULT 0, `skill2` INTEGER NOT NULL DEFAULT 0, `skill3` INTEGER NOT NULL DEFAULT 0, `skill4` INTEGER NOT NULL DEFAULT 0, `time` TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`playerid`, `race`))", mysqltablename)
+			format(mquery, 511, "CREATE TABLE `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`playerid`, `race`))", mysqltablename)
 
 		get_cvar_string("FT_mysql_host",mhost,63)
 		get_cvar_string("FT_mysql_user",muser,31)
