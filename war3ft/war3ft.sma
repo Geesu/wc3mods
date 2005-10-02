@@ -32,7 +32,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu (Pimp Daddy==Geesu)"
-new const WC3VERSION[] =	"2.2.6"
+new const WC3VERSION[] =	"2.2.7"
 
 #include <amxmodx>
 #include <dbi>

@@ -9,6 +9,9 @@ public grenade_throw(index,greindex,wId){
 
 	if(g_mapDisabled)
 		return PLUGIN_CONTINUE
+	
+	if(g_notAllowHE)
+		return PLUGIN_CONTINUE
 
 	new szModel[64]
 	entity_get_string(greindex, EV_SZ_model, szModel, 63)
