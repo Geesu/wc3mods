@@ -673,8 +673,24 @@ public on_HideStatus(id){
 public WAR3_Mole_Fix(){
 	new players[32], num
 	get_players(players, num, "c")
-
-	for(new i = 0; i < num; i++){
-		client_cmd(players[i], "cl_minmodels 0")
+	
+	for(new i = 0; i < num; i++)
+	{
+		query_client_cvar(players[i], "cl_minmodels", "check_cvars") 
 	}
+
+	set_task(0.7, "WAR3_Mole_Fix", TASK_MOLEFIX)
 }
+
+public check_cvars(id, const cvar[], const value[])
+{
+	if( equali(cvar,"cl_minmodels") && str_to_num(value) > 0 )
+	{
+		//client_cmd(id, "cl_minmodels 0");
+		client_cmd(id, "echo ^"======== Warcraft 3 Frozen Throne ========^"");
+		client_cmd(id, "echo ^"You were kicked because cl_minmodels is set to 1 on your client, please change this to 0.^"");
+		client_cmd(id, "echo ^"Type ^"cl_minmodels 0^" in your console and press enter to do this.^"");
+		client_cmd(id, "echo ^"=========================================^"");
+		server_cmd("kick #%d ^"cl_minmodels 1 is not allowed on this server^"", get_user_userid(id));
+	} 
+} 

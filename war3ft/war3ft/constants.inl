@@ -72,7 +72,7 @@
 #define TASK_WAR3CHECK		2015	// Checks the value of sv_warcraft3 every 5 seconds (better than checking it on every function call)
 #define TASK_SIPHON			2016
 #define TASK_ENDULTIMATE	2017
-#define TASK_MOLEFIX		2018
+#define TASK_MOLEFIX		3000
 
 // From ../multiplayer source/dlls/player.cpp
 #define ARMOR_RATIO	 0.7	// Armor Takes 30% of the damage (was .2 in the SDK)
@@ -605,6 +605,9 @@ new g_menuSettings[33]
 
 	new reincarnation[33][3]
 #endif
+
+// Used to determine if the ultimatedelay is valid
+new iUltimateDelay;
 
 // Captured Messages
 new gmsgDeathMsg

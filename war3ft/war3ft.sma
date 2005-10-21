@@ -210,7 +210,7 @@ public plugin_init(){
 
 		register_menucmd(register_menuid("Team_Select",1),(1<<0)|(1<<1)|(1<<4),"cmd_Teamselect")
 
-		set_task(0.7, "WAR3_Mole_Fix",TASK_MOLEFIX,"",0,"b")
+		set_task(0.7, "WAR3_Mole_Fix", TASK_MOLEFIX)
 	#endif
 
 	register_event("DeathMsg","on_DeathMsg","a")
@@ -456,6 +456,10 @@ public client_putinserver(id){
 		parm[0] = id
 		parm[1] = 0
 		_DOD_showMoney(parm)
+	#endif
+
+	#if MOD == 0
+		query_client_cvar(id, "cl_minmodels", "check_cvars") 
 	#endif
 
 }

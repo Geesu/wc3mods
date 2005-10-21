@@ -445,6 +445,15 @@ public cmd_Ultimate(id){
 		return PLUGIN_HANDLED
 	}
 
+	if ( iUltimateDelay > 0 )
+	{
+		new message[128]
+		format(message, 127, "%L",id,"ULTIMATE_NOT_READY", iUltimateDelay)
+		Status_Text(id, message, 0.5, HUDMESSAGE_POS_STATUS)
+		client_cmd(id, "speak warcraft3/bonus/Error.wav")
+		return PLUGIN_HANDLED
+	}
+
 	// Suicide Bomber
 	if ( Verify_Skill(id, RACE_UNDEAD, SKILL4) ){
 		if (iCvar[FT_WARN_SUICIDE]){

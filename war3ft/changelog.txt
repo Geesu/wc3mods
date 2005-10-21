@@ -1,7 +1,9 @@
 Known Bugs: get_user_team native error on client_disconnect for dod
 
 v2.2.7
+ - Addition: Added cl_minmodels check, the user will now be kicked with a message
  - Change: Grenade trails will no longer appear if critical nades are disabled
+ - Bug Fix: Being able to use your ultimate before the ultimate delay was over
 
 v2.2.6
  - Addition: SQL-Lite support (all added by Lazarus Long)

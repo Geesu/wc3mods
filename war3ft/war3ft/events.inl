@@ -883,6 +883,18 @@ public on_ResetHud(id){
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
+	
+	// Then this is the first call of the new round
+	if ( endround )
+	{
+		// have "fake" ultimate delay
+		iUltimateDelay = iCvar[FT_ULTIMATE_DELAY];
+		
+		new parm[1];
+		parm[0] = 0;
+		_Ultimate_Delay(parm);
+	}
+
 
 	if (iCvar[FT_CD]) {
 		if (!WAR3_CD_installed(id))

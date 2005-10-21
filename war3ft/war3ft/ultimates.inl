@@ -1639,16 +1639,31 @@ public _Ultimate_Delay(parm[]){
 		return PLUGIN_CONTINUE
 
 	new id = parm[0]
+	
+	// Player call
+	if ( id != 0 )
+	{
+		if(!p_data_b[id][PB_ISCONNECTED])
+			return PLUGIN_CONTINUE
 
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
+		p_data[id][P_ULTIMATEDELAY]--
 
-	p_data[id][P_ULTIMATEDELAY]--
+		if (p_data[id][P_ULTIMATEDELAY] > 0)
+			set_task(1.0,"_Ultimate_Delay",TASK_UDELAY+id, parm, 1)
+		else{
+			Ultimate_Ready(id)
+		}
+	}
 
-	if (p_data[id][P_ULTIMATEDELAY] > 0)
-		set_task(1.0,"_Ultimate_Delay",TASK_UDELAY+id, parm, 1)
-	else{
-		Ultimate_Ready(id)
+	// Server check
+	else
+	{
+		iUltimateDelay--
+
+		if ( iUltimateDelay > 0 )
+			set_task(1.0,"_Ultimate_Delay",TASK_UDELAY+id, parm, 1)
+		else
+			iUltimateDelay = 0;
 	}
 
 	return PLUGIN_CONTINUE
