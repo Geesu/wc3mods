@@ -1,5 +1,10 @@
 Known Bugs: get_user_team native error on client_disconnect for dod
 
+v2.2.8
+ - Addition: Added FT_query_client cvar, setting this to 1 will NOT query the client's cl_minmodel value
+ - Bug Fix: Pruning now works for MySQL (untested for SQLLITE) - now occurs on EVERY map change
+ - Removed: plugin_modules()
+
 v2.2.7
  - Addition: Added cl_minmodels check, the user will now be kicked with a message
  - Change: Grenade trails will no longer appear if critical nades are disabled

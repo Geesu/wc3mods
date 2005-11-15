@@ -671,15 +671,19 @@ public on_HideStatus(id){
 }
 
 public WAR3_Mole_Fix(){
-	new players[32], num
-	get_players(players, num, "c")
-	
-	for(new i = 0; i < num; i++)
-	{
-		query_client_cvar(players[i], "cl_minmodels", "check_cvars") 
-	}
 
-	set_task(0.7, "WAR3_Mole_Fix", TASK_MOLEFIX)
+	if ( iCvar[FT_QUERY_CLIENT] )
+	{
+		new players[32], num
+		get_players(players, num, "c")
+		
+		for(new i = 0; i < num; i++)
+		{
+			query_client_cvar(players[i], "cl_minmodels", "check_cvars") 
+		}
+
+		set_task(1.0, "WAR3_Mole_Fix", TASK_MOLEFIX)
+	}
 }
 
 public check_cvars(id, const cvar[], const value[])

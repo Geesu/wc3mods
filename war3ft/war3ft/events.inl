@@ -9,9 +9,11 @@ public grenade_throw(index,greindex,wId){
 
 	if(g_mapDisabled)
 		return PLUGIN_CONTINUE
-	
+
+#if MOD == 0
 	if(g_notAllowHE)
 		return PLUGIN_CONTINUE
+#endif
 
 	new szModel[64]
 	entity_get_string(greindex, EV_SZ_model, szModel, 63)
@@ -631,9 +633,10 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 		if ( Verify_Skill(victim, RACE_ELF, SKILL1) ) {
 			new healthadjustment = 0
 			new Float:randomnumber = random_float(0.0,1.0)
-			new iHealth = get_user_health(victim)
 			
 			if (randomnumber <= p_evasion[p_data[victim][P_SKILL1]-1]){
+				new iHealth = get_user_health(victim)
+
 				healthadjustment = 1024
 
 				p_data_b[victim][PB_EVADENEXTSHOT] = true

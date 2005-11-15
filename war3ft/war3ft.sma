@@ -31,8 +31,8 @@
 // Death animations for alien4: 56-65
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
-new const WC3AUTHOR[] =		"Geesu (Pimp Daddy==Geesu)"
-new const WC3VERSION[] =	"2.2.7"
+new const WC3AUTHOR[] =		"Geesu==(Pimp Daddy==OoTOAoO)"
+new const WC3VERSION[] =	"2.2.8"
 
 #include <amxmodx>
 #include <dbi>
@@ -43,7 +43,7 @@ new const WC3VERSION[] =	"2.2.7"
 
 //#pragma ctrlchar '^'
 
-#define MOD 0							// 0 = cstrike or czero, 1 = dod
+#define MOD 1							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define PRECACHE_WAR3FTSOUNDS 1
@@ -210,7 +210,7 @@ public plugin_init(){
 
 		register_menucmd(register_menuid("Team_Select",1),(1<<0)|(1<<1)|(1<<4),"cmd_Teamselect")
 
-		set_task(0.7, "WAR3_Mole_Fix", TASK_MOLEFIX)
+		set_task(1.0, "WAR3_Mole_Fix", TASK_MOLEFIX)
 	#endif
 
 	register_event("DeathMsg","on_DeathMsg","a")
@@ -233,6 +233,7 @@ public plugin_init(){
 	}
 
 	// For an explanation of these variables, please see war3ft.cfg
+	register_cvar("FT_query_client",			"1")
 	register_cvar("FT_disable_savexp",			"0")
 	register_cvar("FT_impale_intensity",		"10")
 	register_cvar("FT_autoxp",					"0")
@@ -332,7 +333,8 @@ public plugin_init(){
 	#endif
 }
 
-public plugin_end(){
+public plugin_end()
+{
 	#if ADVANCED_DEBUG
 		writeDebugInfo("plugin_end",0)
 	#endif
@@ -341,96 +343,10 @@ public plugin_end(){
 		return PLUGIN_CONTINUE
 	
 	XP_Save_All()
+	XP_Prune();
+	XP_CloseDB();
 
-	if (iCvar[SV_MYSQL_AUTO_PRUNING] && iCvar[SV_MYSQL] && iCvar[MP_SAVEXP]){
-		new mquery[1024]
-		new currentHour[3]  
-		new currentMin[3]      			
-		
-		get_time("%H",currentHour,2)
-		get_time("%M",currentMin,2)
-		
-		// At 5:36 AM until 5:59 AM a mapchange will trigger an auto-prune.
-		if((str_to_num(currentHour) == 5) && (str_to_num(currentMin) > 35 )){
-				
-			if (iSQLtype == SQL_MYSQL) {
-				// Timestamp format: 20030912122142
-				// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42	
-				format(mquery, 1023, "DELETE FROM `%s` WHERE `time` + %d < now()",mysqltablename, iCvar[SV_DAYSBEFOREDELETE] * 1000000)
-			} else if (iSQLtype == SQL_SQLITE) {
-				// Timestamp format: 2003-09-12 12:21:42
-				// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42
-				format(mquery, 1023, "DELETE FROM `%s` WHERE ((julianday(`time`) + %d) < julianday('now'))", mysqltablename, iCvar[SV_DAYSBEFOREDELETE])
-			}
- 
-#if SQL_DEBUG
-			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
-#endif
- 			new Result:ret = dbi_query(mysql, mquery)
-#if SQL_DEBUG
-			log_amx("[%s] ret=%d", g_MOD, ret)
-#endif
-
-			if (ret < RESULT_NONE) {
-				new err[255]
-				new errNum = dbi_error(mysql, err, 254)
-				log_amx("[%s] DBI prune error: %s (%d)", g_MOD, err, errNum)
-				dbi_free_result(ret)
-				return 1
-			} 	
-
-			dbi_free_result(ret)
-
-			if (iSQLtype == SQL_SQLITE) {
-				format(mquery, 1023, "VACUUM `%s`", mysqltablename)
-
-#if SQL_DEBUG
-				log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
-#endif
-				new Result:ret2 = dbi_query(mysql, mquery)
-#if SQL_DEBUG
-				log_amx("[%s] ret2=%d", g_MOD, ret)
-#endif
-
-				if (ret2 < RESULT_NONE) {
-					new err[255]
-					new errNum = dbi_error(mysql, err, 254)
-					log_amx("[%s] DBI prune error: %s (%d)", g_MOD, err, errNum)
-					dbi_free_result(ret2)
-					return 1
-				}
-
-				dbi_free_result(ret)
-			}
-
-			log_amx("[%s] The %s Database was successfully pruned %sat %s:%s", g_MOD, SQLtype, (iSQLtype == SQL_SQLITE) ? "and vacuumed " : "", currentHour, currentMin)
-
-		}
-	}
-	if (iCvar[SV_MYSQL]){
-		if(mysql)
-			dbi_close(mysql)
-	}
 	return PLUGIN_CONTINUE
-}
-
-public plugin_modules(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("plugin_modules",0)
-	#endif
-
-	require_module("engine")
-	require_module("dbi")
-	require_module("War3ft")
-	#if MOD == 0
-		require_module("cstrike")
-		require_module("csx")
-		require_module("fun")
-	#endif
-	#if MOD == 1
-		require_module("dodfun")
-		require_module("dodx")
-	#endif
 }
 
 public plugin_precache() {

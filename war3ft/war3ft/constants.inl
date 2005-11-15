@@ -459,6 +459,7 @@
 #define FT_AUTOXP							44
 //#define FT_CSHACK							45
 #define FT_IMPALE_INTENSITY					46
+#define FT_QUERY_CLIENT						47
 
 #if MOD == 0
 	#define	FT_ITEMS_IN_HUD						50

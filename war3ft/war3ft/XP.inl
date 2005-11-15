@@ -752,3 +752,54 @@ public XP_Reset(id,saychat){
 
 	return PLUGIN_CONTINUE
 }	
+
+public XP_Prune()
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo("XP_Prune",id)
+	#endif
+
+	if ( iCvar[SV_MYSQL_AUTO_PRUNING] && iSQLtype == SQL_MYSQL )
+	{
+		new szTableName[64];
+		get_cvar_string("sv_mysqltablename", szTableName, 63);
+			
+		new query[256];
+
+		if ( iSQLtype == SQL_MYSQL )
+		{
+			// Timestamp format: 20030912122142
+			// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42	
+			format( query, 255, "DELETE FROM `%s` WHERE DATE_SUB(CURDATE(),INTERVAL %d DAY) > time;", szTableName, iCvar[SV_DAYSBEFOREDELETE] );
+		}
+		else if ( iSQLtype == SQL_SQLITE )
+		{
+			// Timestamp format: 2003-09-12 12:21:42
+			// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42
+			format( query, 255, "DELETE FROM `%s` WHERE ((julianday(`time`) + %d) < julianday('now'))", szTableName, iCvar[SV_DAYSBEFOREDELETE] );
+		}
+
+		dbi_query(mysql, query);
+
+		// Vacuum the SQL LITE DB
+		if (iSQLtype == SQL_SQLITE)
+		{
+			format( query, 255, "VACUUM `%s`", szTableName );
+
+			dbi_query( mysql, query );
+		}
+
+		log_amx("[%s] Database pruning successful, data older than %d days was removed", g_MOD, iCvar[SV_DAYSBEFOREDELETE]);
+	}
+}
+
+public XP_CloseDB()
+{
+	if ( iCvar[SV_MYSQL] )
+	{
+		if( mysql )
+		{
+			dbi_close( mysql );
+		}
+	}
+}
