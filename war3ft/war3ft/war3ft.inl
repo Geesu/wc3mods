@@ -1147,7 +1147,7 @@ public WAR3_Set_Variables(){
 	iCvar[FT_BLINKENABLED			] = get_cvar_num("FT_blinkenabled")
 	iCvar[SV_ALLOWWAR3VOTE			] = get_cvar_num("sv_allowwar3vote")
 	iCvar[SV_MYSQL					] = get_cvar_num("sv_mysql")
-	iCvar[SV_MYSQL_SAVE_END_ROUND	] = get_cvar_num("sv_mysql_save_end_round")
+	iCvar[SV_SAVE_END_ROUND	] = get_cvar_num("SV_SAVE_END_ROUND")
 	iCvar[FT_SAVEBY					] = get_cvar_num("FT_saveby")
 	iCvar[SV_MYSQL_AUTO_PRUNING		] = get_cvar_num("sv_mysql_auto_pruning")
 	iCvar[SV_DAYSBEFOREDELETE		] = get_cvar_num("sv_daysbeforedelete")

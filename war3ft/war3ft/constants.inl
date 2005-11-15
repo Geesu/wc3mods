@@ -53,6 +53,7 @@
 #define TASK_ANKHGIVEITEMS	1492
 #define TASK_HELM			1524
 #define	TASK_REINCCHECK		1556
+#define TASK_SAVE_ALL		1588	// Used for saving XP
 
 #define TASK_BUYTIME		2000	// Checks for buytime
 #define TASK_UDELAY			2001	// Ultimate Delay Function
@@ -439,7 +440,7 @@
 #define FT_BLINKENABLED						24
 #define SV_ALLOWWAR3VOTE					25
 #define SV_MYSQL							26
-#define SV_MYSQL_SAVE_END_ROUND				27
+#define SV_SAVE_END_ROUND				27
 #define FT_SAVEBY							28
 #define SV_MYSQL_AUTO_PRUNING				29
 #define SV_DAYSBEFOREDELETE					30

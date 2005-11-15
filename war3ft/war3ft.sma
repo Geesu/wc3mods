@@ -41,9 +41,7 @@ new const WC3VERSION[] =	"2.2.8"
 #include <fun>
 #include <war3ft>
 
-//#pragma ctrlchar '^'
-
-#define MOD 1							// 0 = cstrike or czero, 1 = dod
+#define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define PRECACHE_WAR3FTSOUNDS 1
@@ -309,7 +307,7 @@ public plugin_init(){
 	register_cvar("sv_warcraft3",				"1")
 	register_cvar("sv_allowwar3vote",			"0")
 	register_cvar("mp_grenadeprotection",		"0")
-	register_cvar("sv_mysql_save_end_round",	"0")
+	register_cvar("sv_save_end_round",			"1")
 	register_cvar("sv_daysbeforedelete",		"31")
 	register_cvar("sv_mysql",					"0")
 	register_cvar("sv_mysqltablename",			"war3users")

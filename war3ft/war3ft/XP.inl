@@ -241,19 +241,20 @@ public XP_Save(id){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("XP_Save",id)
 	#endif
+	
+	if ( !warcraft3 )
+	{
+		return PLUGIN_CONTINUE;
+	}
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if (is_user_bot(id) || !iCvar[MP_SAVEXP])
-		return PLUGIN_CONTINUE
-
-	if(p_data[id][P_RACE]==0)
-		return PLUGIN_CONTINUE
+	if ( p_data[id][P_RACE]==0 || is_user_bot(id) || !iCvar[MP_SAVEXP] )
+	{
+		return PLUGIN_CONTINUE;
+	}
 
 	new playerid[33], playername[65], timet[32], ip[32]
 
-	if (iCvar[SV_MYSQL]){
+	if ( iCvar[SV_MYSQL] ){
 		if(mysql < SQL_OK){
 			if(iSQLAttempts < SQL_ATTEMPTS)
 				XP_Set_DBI()
@@ -302,9 +303,9 @@ public XP_Save(id){
 		get_user_name(id,playername,31)
 		get_user_ip(id,ip,31)
 
-		format(string,511,"%s %d %d %d %d %d %d %s %s %s",playerid,p_data[id][P_XP],p_data[id][P_RACE],p_data[id][P_SKILL1],p_data[id][P_SKILL2],p_data[id][P_SKILL3],p_data[id][P_ULTIMATE],playername,ip,timet)
+		format( string,511,"%s %d %d %d %d %d %d %s %s %s", playerid, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE], ip, timet, playername );
 
-		if(iCvar[FT_SAVEBY]==0)						// Save by steam ID
+		if(iCvar[FT_SAVEBY]==0)							// Save by steam ID
 			format(temp,127,"%s_%d",playerid,p_data[id][P_RACE])
 		else if(iCvar[FT_SAVEBY]==1)					// Save by IP address
 			format(temp,127,"%s_%d",ip,p_data[id][P_RACE])
@@ -488,77 +489,6 @@ public XP_Retreive(id,returnrace){
 				p_data[id][P_SKILL3]=0
 				p_data[id][P_ULTIMATE]=0
 				WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
-			}
-		}
-	}
-	return PLUGIN_CONTINUE
-}
-
-public XP_Save_All(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Save_All",0)
-	#endif
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if (warcraft3){
-		new players[32], numofplayers, id, i
-		get_players(players, numofplayers)
-		if(iCvar[SV_MYSQL])
-		{
-			if (iCvar[SV_MYSQL_SAVE_END_ROUND])
-			{
-				if (iSQLtype == SQL_MYSQL)
-				{
-#if SQL_DEBUG
-					log_amx("[%s] dbi_query(%d, 'SET AUTOCOMMIT=0')", g_MOD, mysql)
-#endif
-					dbi_query(mysql, "SET AUTOCOMMIT=0")
-#if SQL_DEBUG
-					log_amx("[%s] dbi_query(%d, 'START TRANSACTION')", g_MOD, mysql)
-#endif
-					dbi_query(mysql, "START TRANSACTION")
-				} 
-				else if (iSQLtype == SQL_SQLITE) 
-				{
-#if SQL_DEBUG
-					log_amx("[%s] dbi_query(%d, 'BEGIN TRANSACTION')", g_MOD, mysql)
-#endif
-					dbi_query(mysql, "BEGIN TRANSACTION")
-				}
-
-				for (i=0; i<numofplayers; i++)
-				{
-					id = players[i]
-					XP_Save(id)
-				}
-
-#if SQL_DEBUG
-				log_amx("[%s] dbi_query(%d, 'COMMIT')", g_MOD, mysql)
-#endif
-				new Result:res = dbi_query(mysql, "COMMIT")
-#if SQL_DEBUG
-				log_amx("[%s] res=%d", g_MOD, res)
-#endif
-				if (res < RESULT_NONE)
-				{
-					new err[255]
-					new errNum = dbi_error(mysql, err, 254)
-					log_amx("[%s] DBI XP_Save_All error: %s (%d)", g_MOD, err, errNum)
-					dbi_free_result(res)
-					return 1
-				} 	
-
-				//dbi_free_result(res)		// Why is MySQL database complaining with this? SQLite works OK, so why?
-			}
-		}
-		else
-		{
-			for (i=0; i<numofplayers; i++)
-			{
-				id = players[i]
-				XP_Save(id)
 			}
 		}
 	}
@@ -793,8 +723,13 @@ public XP_Prune()
 	}
 }
 
+// Close the database connection
 public XP_CloseDB()
 {
+	#if ADVANCED_DEBUG
+		writeDebugInfo("XP_CloseDB", 0)
+	#endif
+
 	if ( iCvar[SV_MYSQL] )
 	{
 		if( mysql )
@@ -802,4 +737,43 @@ public XP_CloseDB()
 			dbi_close( mysql );
 		}
 	}
+}
+
+// This function will save the XP for all players, but it will save the data every 0.1 seconds (reduce lag?)
+public XP_Save_All()
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo("XP_Save_All", 0)
+	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE;
+	
+	if ( !iCvar[MP_SAVEXP] )
+		return PLUGIN_CONTINUE;
+
+	new players[32], numofplayers, parm[1];
+	get_players( players, numofplayers );
+	new Float:time = 0.0;
+
+	for ( new i=0; i < numofplayers; i++ )
+	{
+		parm[0] = players[i];
+
+		set_task( time, "XP_Save_Helper", TASK_SAVE_ALL + players[i], parm[0], 1 );
+
+		time += 0.1;
+	}
+
+	return PLUGIN_CONTINUE;
+}
+
+// Helper function to call save for XP_Save_All
+public XP_Save_Helper( parm[1] )
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo("XP_Save_Helper", parm[0])
+	#endif
+
+	XP_Save( parm[0] );
 }

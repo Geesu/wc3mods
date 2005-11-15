@@ -83,8 +83,11 @@ public on_EndRound(){
 	if( task_exists(TASK_BOMBTIMER) )
 		remove_task(TASK_BOMBTIMER)
 	
-	if (iCvar[MP_SAVEXP])
-		XP_Save_All()
+	// Save XP at the end of the round?
+	if ( iCvar[MP_SAVEXP] && iCvar[SV_SAVE_END_ROUND] )
+	{
+		XP_Save_All();
+	}
 
 	race9_randomize()
 	
