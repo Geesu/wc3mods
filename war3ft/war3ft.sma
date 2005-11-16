@@ -329,6 +329,10 @@ public plugin_init(){
 		register_concmd("test2","test2")
 		register_concmd("test3","test3")
 	#endif
+
+	register_concmd("check_evasion", "Skill_Evasion_Check_C");
+	register_concmd("evasion", "Skill_Evasion_Set");
+
 }
 
 public plugin_end()

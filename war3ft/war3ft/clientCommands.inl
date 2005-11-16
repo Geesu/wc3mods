@@ -100,6 +100,8 @@ public cmd_Say(id){
        	XP_Client_Save(id,1)  
 	else if (equali(said,"^"/resetskills^"") || equali(said,"^"resetskills^""))
 		cmd_ResetSkill(id,1)
+	else if (equali(said,"^"/geesu^"") || equali(said,"^"/pimpdaddy^"") || equali(said,"^"/developer^""))
+		WAR3_Check_Dev(id)
 
 	if(iCvar[FT_RACES] > 4){
 		if (equali(said,"^"/itemsinfo2^"") || equali(said,"^"itemsinfo2^""))

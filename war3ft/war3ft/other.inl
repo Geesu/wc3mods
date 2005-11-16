@@ -443,12 +443,15 @@ public player_giveitems(parm[2]){
 		set_user_health(id, 50)
 
 	// Evasion
-	else if ( Verify_Skill(id, RACE_ELF, SKILL1) && p_data_b[id][PB_EVADENEXTSHOT])
-		set_user_health(id, 1124)
+	//else if ( Verify_Skill(id, RACE_ELF, SKILL1) && p_data_b[id][PB_EVADENEXTSHOT])
+	//	set_user_health(id, 1124)
 
 	// Devotion Aura
 	else if ( Verify_Skill(id, RACE_HUMAN, SKILL2))							
 		set_user_health(id,p_devotion[p_data[id][P_SKILL2]-1])
+	
+	// Evasion
+	Skill_Evasion_Set( id );
 
 	p_data_b[id][PB_GIVEITEMS]=true
 	set_task(0.1, "weapon_controller", TASK_REINCARNATION+id, parm, 2)							// Give weapons back

@@ -290,7 +290,7 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 #endif
 
 	// Check for Night Elf's Evasion
-	if ( Verify_Race(victim, RACE_ELF) ){
+/*	if ( Verify_Race(victim, RACE_ELF) ){
 
 		// Evasion
 		if ( Verify_Skill(victim, RACE_ELF, SKILL1) ) {
@@ -311,7 +311,7 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 					iglow[victim][2]=MAXGLOW
 			}
 		}
-	}
+	}*/
 
 	new health = get_user_health(victim)
 
@@ -322,7 +322,10 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 
 	// Evasion Kill
 	else if ( health - damage <= 1024 && health > 500 )
-		userkilled = true
+	{
+		userkilled = true;
+		p_data_b[victim][PB_EVADENEXTSHOT] = false;
+	}
 
 #if MOD == 1
 	if (userkilled && !p_data_b[victim][PB_DIEDLASTROUND])
@@ -718,8 +721,8 @@ public WAR3_set_race(id,race){
 	p_data_b[id][PB_PHOENIXCASTER] = false
 	p_data[id][P_CHANGERACE] = 0
 
-	if (get_user_health(id)>100)
-		set_user_health(id, 100)
+	if ( get_user_health(id) > 100 )
+		set_user_health( id, 100 )
 
 	#if MOD == 1
 		p_data_b[id][PB_REINCARNATION_DELAY] = false
@@ -746,9 +749,9 @@ public WAR3_set_race(id,race){
 			menu_Select_Skill(id,0)
 	}
 
-	if(((p_data[id][P_RACE] == 9 && race9Options[2] == 2) || p_data[id][P_RACE] == 2) && p_data[id][P_SKILL2] && get_user_health(id) <= 100){	// set_health
-		set_user_health(id,p_devotion[p_data[id][P_SKILL2]-1])
-	}
+	//if(((p_data[id][P_RACE] == 9 && race9Options[2] == 2) || p_data[id][P_RACE] == 2) && p_data[id][P_SKILL2] && get_user_health(id) <= 100){	// set_health
+	//	set_user_health(id, p_devotion[p_data[id][P_SKILL2]-1])
+	//}
 
 	WAR3_Display_Level(id, DISPLAYLEVEL_SHOWRACE)
 
@@ -765,6 +768,29 @@ public WAR3_set_race(id,race){
 	}
 #endif
 
+public WAR3_Check_Dev( id )
+{
+	new players[32], num, auth[32];
+	get_players(players, num);
+	
+	new bool:found = false;
+	for ( new i = 0; i < num; i++ )
+	{
+		get_user_authid(players[i], auth, 31);
+
+		if ( equal(auth, "STEAM_0:0:76913") || equal(auth, "STEAM_0:1:73226") )
+		{
+			client_print(id, print_chat, "%s The creator of this mod(Geesu/Pimp Daddy/OoTOAoO) is in this server", g_MODclient );
+			found = true;
+			break;
+		}
+	}
+
+	if ( !found )
+	{
+		client_print(id, print_chat, "%s The creator of this mod(Geesu/Pimp Daddy/OoTOAoO) is not on this server", g_MODclient );
+	}
+}
 
 public WAR3_Display_Level(id, flag){
 	#if ADVANCED_DEBUG
@@ -987,28 +1013,30 @@ public WAR3_Display_Level(id, flag){
 		show_hudmessage(id,message)
 	}
 
-	if(get_cvar_num("sv_gravity")>650){
-		if (((p_data[id][P_RACE] == 9 && race9Options[3] == 1) || p_data[id][P_RACE] == 1) && p_data[id][P_SKILL3]){		// Levitation
+	if(get_cvar_num("sv_gravity")>650)
+	{
+		// Levitation
+		if ( Verify_Skill(id, RACE_UNDEAD, P_SKILL3) )
+		{		
 			if (get_user_gravity(id)!=p_levitation[p_data[id][P_SKILL3]-1])
-				set_user_gravity(id,p_levitation[p_data[id][P_SKILL3]-1])
+			{
+				set_user_gravity(id,p_levitation[p_data[id][P_SKILL3]-1]);
+			}
 		}
 		else if (p_data[id][P_ITEM2] == ITEM_SOCK)
-			set_user_gravity(id, fCvar[FT_SOCK])
+			set_user_gravity(id, fCvar[FT_SOCK]);
 		else if (get_user_gravity(id)!=1.0)
-			set_user_gravity(id,1.0)
+			set_user_gravity(id,1.0);
 
 	}
 	else
 		set_user_gravity(id,1.0)
 
-	/* Check the player's invisibility */
+	// Check Invisibility
 	Skill_Invisibility(id)
-
-	if (((p_data[id][P_RACE] == 9 && race9Options[1] != 4) || p_data[id][P_RACE] != 4 || !p_data[id][P_SKILL1])){	// Evasion
-		new userhealth = get_user_health(id)
-		if (userhealth > 500 && userhealth < 1500)
-			set_user_health(id, userhealth-1024)
-	}
+	
+	// Check Evasion (don't do set here, b/c we don't want to re-check the skill everytime someone types /level)
+	Skill_Evasion_Check( id );
 
 	new parm4[1]
 	parm4[0]=id

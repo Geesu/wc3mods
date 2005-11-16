@@ -153,7 +153,8 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	if ( Verify_Race(victim, RACE_ELF) ){
 
 		// Evasion
-		if ( Verify_Skill(victim, RACE_ELF, SKILL1) && p_data_b[victim][PB_EVADENEXTSHOT] ) {
+		Skill_Evasion_Reset( victim, damage );
+/*		if ( Verify_Skill(victim, RACE_ELF, SKILL1) && p_data_b[victim][PB_EVADENEXTSHOT] ) {
 			new healthadjustment = -1024
 			new iHealth = get_user_health(victim)
 
@@ -174,7 +175,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 			Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 0, 0, 255, iglow[victim][2])
 
 			p_data_b[victim][PB_EVADENEXTSHOT] = false
-		}
+		}*/
 	}
 
 	// **************************************************
@@ -630,21 +631,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	if ( Verify_Race(victim, RACE_ELF) ){
 
 		// Evasion
-		if ( Verify_Skill(victim, RACE_ELF, SKILL1) ) {
-			new healthadjustment = 0
-			new Float:randomnumber = random_float(0.0,1.0)
-			
-			if (randomnumber <= p_evasion[p_data[victim][P_SKILL1]-1]){
-				new iHealth = get_user_health(victim)
-
-				healthadjustment = 1024
-
-				p_data_b[victim][PB_EVADENEXTSHOT] = true
-
-				set_user_health(victim, iHealth + healthadjustment)
-
-			}
-		}
+		Skill_Evasion_Set( victim );
 		
 		// Thorns Aura
 		if ( Verify_Skill(victim, RACE_ELF, SKILL2) && attacker > 0 && !p_data_b[victim][PB_HEXED] ) {
