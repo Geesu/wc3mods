@@ -620,9 +620,15 @@ public _menu_Select_Race(id,key){
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
+	
+	// User pressed 0 (cancel)
+	if( iCvar[FT_RACES] < 9 && key-1 == iCvar[FT_RACES] )
+	{
+		return PLUGIN_HANDLED;
+	}
 
-	if(iCvar[FT_RACES]<9 && key-1 == iCvar[FT_RACES])
-		return PLUGIN_HANDLED
+	// Save the current race data before we change
+	XP_Save(id);
 
 	new race, autoselectkey
 
@@ -736,7 +742,7 @@ public _menu_Skill_Options(id,key){
 	switch (key){
 		case 0:	menu_Select_Skill(id,1)
 		case 1:	MOTD_Skillsinfo(id)
-		case 2:	cmd_ResetSkill(id,1)
+		case 2:	cmd_ResetSkill(id, 1)
 		case 8: menu_War3menu(id)
 		default: return PLUGIN_HANDLED
 	}
@@ -778,7 +784,7 @@ public _menu_Race_Options(id,key){
 	switch (key){
 		case 0:	change_race(id,1)
 		case 1:	WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
-		case 2:	XP_Reset(id,1)
+		case 2:	menu_ResetXP(id)
 		case 3:	MOTD_Playerskills(id, 1)
 		case 8: menu_War3menu(id)
 		default: return PLUGIN_HANDLED
@@ -1044,4 +1050,38 @@ public _menu_TeamXP_Options(id,key){
 		default: return PLUGIN_HANDLED
 	}
 	return PLUGIN_HANDLED
+}
+
+public menu_ResetXP(id)
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo("menu_ResetXP",id)
+	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE;
+
+	new szMenu[512];
+	new keys = (1<<0)|(1<<1)|(1<<9);
+	
+	format( szMenu, 511, "%L^n^n\w1. Yes^n\w2. No", id, "MENU_RESET_XP" );
+
+	show_menu(id, keys, szMenu, -1);
+
+	return PLUGIN_CONTINUE;
+}
+
+public _menu_ResetXP( id, key )
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo("_menu_ResetXP",id)
+	#endif
+	
+	// User selected yes
+	if ( key == 0 )
+	{
+		XP_Reset(id);
+	}
+	
+	return;
 }

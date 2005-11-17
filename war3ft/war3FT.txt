@@ -1002,6 +1002,7 @@ MENU_RACE_OPTIONS = \yRace Options
 MENU_ADMIN_MENU = \yAdmin Menu
 MENU_GIVE_PLAYERS_XP = \yGive Players XP
 MENU_TEAM_XP = \yTeam XP Menu
+MENU_RESET_XP = \yAre you sure you want to Reset your XP to 0?
 CLICK_HERE = Click <a href'http://wc3mods.net/war3ft/online/war3info.php?game%s'>here</A> for more information regarding the new races.
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Help
 

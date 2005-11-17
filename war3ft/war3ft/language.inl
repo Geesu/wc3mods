@@ -1,3 +1,4 @@
+
 public Lang_Set_Menus(){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("lang_Set_Menus",0)
@@ -92,6 +93,13 @@ public Lang_Set_Menus(){
 			curMenuId = register_menuid(menu)
 			if(curMenuId>highestMenuId){
 				register_menucmd(curMenuId,1023,"_menu_TeamXP_Options")
+				highestMenuId = curMenuId
+			}
+
+			format(menu,127,"%L",lang,"MENU_RESET_XP")
+			curMenuId = register_menuid(menu)
+			if(curMenuId>highestMenuId){
+				register_menucmd(curMenuId,1023,"_menu_ResetXP")
 				highestMenuId = curMenuId
 			}
 		}

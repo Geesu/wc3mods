@@ -216,9 +216,6 @@ stock set_user_money(id, money, show = 1){
 		return PLUGIN_CONTINUE
 
 	#if MOD == 0
-		if (money > 16000 && !Verify_Skill(id, RACE_BLOOD, SKILL3))
-			money = 16000
-
 		cs_set_user_money(id,money,show)
 	#endif
 	#if MOD == 1

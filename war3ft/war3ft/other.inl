@@ -61,78 +61,6 @@ public changeskin(id,reset){							// Function changes your skin for ITEM_MOLE a
 	return PLUGIN_CONTINUE
 }
 
-public FT_controller(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("FT_controller",0)
-	#endif
-
-	FT_control = get_cvar_num("FT_control")
-	FT_start = get_cvar_num("FT_start")
-	FT_stop = get_cvar_num("FT_stop")
-	FT_message = get_cvar_num("FT_message")
-
-	new stime[4],sminute[4]
-	get_time("%M",sminute,3)
-	get_time("%H",stime,3)
-	new minutes = str_to_num(sminute)
-	new hours  = str_to_num(stime)
-	new nextmap[32]
-	get_cvar_string("amx_nextmap",nextmap,31)
-	new timeleft = get_timeleft()
-	set_hudmessage(50, 50, 200, 0.13, 0.01, 2, 1.5, 12.0, 0.02, 5.0,15)
-	new bool:okidoki = false
-	new message[128]
-	if (FT_control){
-		if(FT_start > FT_stop){
-			if (((hours >= FT_start) && (hours > FT_stop)) || ((hours < FT_start) && (hours < FT_stop)))
-				okidoki = true
-		}
-		if (FT_stop > FT_start){
-			if ((hours >= FT_start) && (hours < FT_stop))
-				okidoki = true
-		}	
-		if (FT_start == FT_stop)
-			okidoki = true
-		if(okidoki){
-			set_cvar_num("sv_warcraft3",1)
-			if (FT_start == FT_stop)
-				format(message,127,"")
-			else{			
-				format(message,127,"%L",LANG_PLAYER,"BETWEEN",FT_start,FT_stop)
-			}
-		}		
-		else{
-			set_cvar_num("sv_warcraft3",0)
-			format(message,127,"de %dh a %dh",FT_stop,FT_start)
-		}
-		if (!get_cvar_num("sv_warcraft3") && FT_message){
-			show_hudmessage(0,"%L",LANG_PLAYER,"INACTIVE",WC3NAME,WC3VERSION,message,hours,minutes,timeleft / 60, timeleft % 60,nextmap)
-		}
-		if (get_cvar_num("sv_warcraft3") && FT_message){
-			show_hudmessage(0,"%L",LANG_PLAYER,"ACTIVE",WC3NAME,WC3VERSION,message,hours,minutes,timeleft / 60, timeleft % 60,nextmap)
-		}
-		set_hudmessage(200, 100, 0, -1.0, 0.3, 0, 1.0, 10.0, 0.1, 0.2, 17)
-		if ((g_lastAnnounce != minutes) && (hours == (FT_start - 1)) && ((minutes == 30) || (minutes == 45)|| (minutes == 55))){
-			g_lastAnnounce = minutes
-			show_hudmessage(0,"%L",LANG_PLAYER,"IS_ACTIVATED",WC3NAME,60 - minutes)			
-		}
-		if ((g_lastAnnounce != minutes) && (hours == (FT_stop - 1)) && ((minutes == 30) || (minutes == 45) || (minutes == 55))){
-			g_lastAnnounce = minutes
-			show_hudmessage(0,"%L",LANG_PLAYER,"WILL_BE_DEACTIVATED_IN",WC3NAME,60 - minutes)
-		}
-	}
-	else
-	{
-		if (!warcraft3 && FT_message)	{	
-			show_hudmessage(0,"%L",LANG_PLAYER,"INACTIVE_ELSE",WC3NAME,WC3VERSION,hours,minutes,timeleft / 60, timeleft % 60,nextmap)	
-		}
-		if (warcraft3 && FT_message){
-			show_hudmessage(0,"%L",LANG_PLAYER,"ACTIVE_ELSE",WC3NAME,WC3VERSION,hours,minutes,timeleft / 60, timeleft % 60,nextmap)
-		}
-	}		
-	return PLUGIN_CONTINUE
-}
-
 public getuserinput(parm[1]){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("getuserinput",parm[0])
@@ -157,78 +85,6 @@ public getuserinput(parm[1]){
 
 	return PLUGIN_HANDLED
 }
-
-public weapon_controller( parm[2]  ){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("weapon_controller",parm[0])
-	#endif
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	#if MOD == 0
-		new id = parm[0]
-
-		if(!p_data_b[id][PB_ISCONNECTED])
-			return PLUGIN_CONTINUE
-
-#if MOD == 0
-		if( !Verify_Skill(id, RACE_BLOOD, SKILL3) && get_user_money(id) > 16000 ){
-			set_user_money(id, 16000)
-		}
-#endif
-
-		new bool:reincarnate = false
-		
-		// Give items because of respawning...
-		if(p_data_b[id][PB_GIVEITEMS]){
-			reincarnate = true
-			p_data_b[id][PB_GIVEITEMS]=false
-		}
-									
-		// Equipement & Eligibility Check for Re-Incarnation
-		if (p_data_b[id][PB_DIEDLASTROUND]){	// DIED LAST ROUND		
-			new Float:randomnumber = random_float(0.0,1.0)   
-			if ( Verify_Skill(id, RACE_ORC, SKILL3) ){
-				if( randomnumber <= p_ankh[p_data[id][P_SKILL3]-1] ){
-					reincarnate = true				
-				}
-			}
-			if (p_data[id][P_ITEM]==ITEM_ANKH){
-				reincarnate=true
-			}	
-		}
-
-		if (reincarnate){
-				client_cmd(id, "speak warcraft3/soundpack/reincarnation.wav")
-
-				if (iglow[id][1] < 1){
-					parm[0] = id
-					set_task(0.1,"glow_change",TASK_GLOW+id,parm,2)
-				} 
-				iglow[id][1] += 100
-				iglow[id][0] = 0
-				iglow[id][2] = 0
-				iglow[id][3] = 0
-				if (iglow[id][1]>MAXGLOW)
-					iglow[id][1]=MAXGLOW
-
-				// Screen fade green
-				Create_ScreenFade(id, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[id][1])
-
-				_Skill_Reincarnation_Drop(id)
-				_Skill_Reincarnation_Give(id)
-		}else{
-			if(!cs_get_user_nvg(id))
-				p_data_b[id][PB_NIGHTVISION]=false
-
-		}
-	#endif
-
-	Item_Check(parm)
-
-	return PLUGIN_HANDLED	
-}	
 
 public saveweapons(id){
 	#if ADVANCED_DEBUG
@@ -454,7 +310,7 @@ public player_giveitems(parm[2]){
 	Skill_Evasion_Set( id );
 
 	p_data_b[id][PB_GIVEITEMS]=true
-	set_task(0.1, "weapon_controller", TASK_REINCARNATION+id, parm, 2)							// Give weapons back
+	set_task(0.1, "Skill_Reincarnation", TASK_REINCARNATION+id, parm, 2)							// Give weapons back
 
 	give_item(id, "item_suit")
 

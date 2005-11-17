@@ -283,6 +283,7 @@
 
 // Number of attempts to make to connect to the database if it fails (only if sv_mysql is 1)
 #define	SQL_ATTEMPTS				10
+#define SQL_ATTEMPT_DELAY			25.0
 
 // Type of SQL being used (only if sv_mysql is 1)
 #define SQL_FAIL				-1
@@ -295,6 +296,10 @@
 #define SQLITE_SYNC_NORMAL			1
 #define SQLITE_SYNC_FULL			2
 
+// Based on what we're saving by (FT_saveby)
+#define SAVE_STEAMID			0
+#define SAVE_IP					1
+#define SAVE_NAME				2
 
 // ***************************************************************************
 // The following section contains defines for the player_data array, it pretty much
@@ -411,6 +416,9 @@
 //	End player array information
 // ***************************************************************************
 
+// ***************************************************************************
+//	Start CVAR Array Defines
+// ***************************************************************************
 
 // Integer Array Defines
 #define FT_RACE_ICONS						0
@@ -442,7 +450,7 @@
 #define SV_MYSQL							26
 #define SV_SAVE_END_ROUND				27
 #define FT_SAVEBY							28
-#define SV_MYSQL_AUTO_PRUNING				29
+#define FT_AUTO_PRUNING						29
 #define SV_DAYSBEFOREDELETE					30
 //	#define FT_COMPETITIVE						31
 #define FT_HEALING_RANGE					32
@@ -494,15 +502,6 @@
 #if MOD == 1
 	#define DOD_BOOTSPEED						7
 #endif
-
-
-
-// ***************************************************************************
-//	Start CVAR Array Defines
-// ***************************************************************************
-
-
-
 
 // ***************************************************************************
 //	End CVAR Array Defines
@@ -622,7 +621,6 @@ new bool:g_mapDisabled = false
 new bool:g_randomizeCalled = false
 new bool:g_spritesEnabled = false
 new Float:g_ultimateDelay = 0.0
-new g_lastAnnounce = -1
 
 // Used for Mole
 new bool:spawnPointsused[33] = false
@@ -648,9 +646,8 @@ new g_sWave
 #endif
 
 new Sql:mysql
-new mysqltablename[64]
+new g_DBTableName[64]
 new iSQLAttempts = 0
-
 new iSQLtype = SQL_NONE
 new SQLtype[16]
 new const g_MySQL[] = "MySQL"
@@ -660,11 +657,6 @@ new g_MOD[8] = "WAR3FT"
 new g_MODclient[15] = "* [WAR3FT]"
 
 new teleportid[33][32]
-
-new FT_control
-new	FT_start
-new	FT_stop
-new	FT_message
 
 new iglow[33][4]
 new savedweapons[33][32]

@@ -13,8 +13,6 @@ public change_race(id,saychat){
 		}
 	}
 
-	XP_Client_Save(id,0)
-
 	WAR3_chooserace(id)
 
 	return PLUGIN_CONTINUE
@@ -91,15 +89,15 @@ public cmd_Say(id){
 	else if (equali(said,"^"/shopmenu^"") || equali(said,"^"shopmenu^""))
 		menu_Shopmenu_One(id)
 	else if (equali(said,"^"/resetxp^"") || equali(said,"^"resetxp^""))
-		XP_Reset(id,1)
+		menu_ResetXP(id);
 	else if (equali(said,"^"/itemsinfo^"") || equali(said,"^"itemsinfo^""))
 		MOTD_Itemsinfo(id)
 	else if (equali(said,"^"/war3menu^"") || equali(said,"^"war3menu^""))
 		menu_War3menu(id)
 	else if (equali(said,"^"/savexp^"") || equali(said,"^"savexp^""))
-       	XP_Client_Save(id,1)  
+       client_print( id, print_chat, "%s XP is saved automatically, you do not need to type this command", g_MODclient );
 	else if (equali(said,"^"/resetskills^"") || equali(said,"^"resetskills^""))
-		cmd_ResetSkill(id,1)
+		cmd_ResetSkill(id, 1);
 	else if (equali(said,"^"/geesu^"") || equali(said,"^"/pimpdaddy^"") || equali(said,"^"/developer^""))
 		WAR3_Check_Dev(id)
 
@@ -393,7 +391,7 @@ public cmd_ResetSkill(id,saychat){
 	}
 
 	if(saychat==1){
-		client_print(id,print_center,"%L",id,"SKILLS_RESET_NEXT_ROUND")
+		client_print(id,print_center,"%s %L",g_MODclient, id,"SKILLS_RESET_NEXT_ROUND")
 	}
 	else{
 		console_print(id,"%L",id,"SKILLS_RESET_NEXT_ROUND")

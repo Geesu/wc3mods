@@ -6,7 +6,10 @@ v2.2.8
  - Change: (VAULT) When saving data, playername is now at the end of the string (vault conversion will be able to pull the playername)
  - Change: Saving at the end of the round is improved (one query for every .1 seconds, not ALL queries at once)
  - Change: sv_save_end_round default changed from 0 to 1
+ - Change: sv_mysql_auto_pruning changed to FT_auto_pruning (b/c its not just mysql, also sqlite)
+ - Improvement: Re-wrote/updated the MySQL/Vault/SQLLite code (XP.inl)
  - Bug Fix: Pruning now works for MySQL (untested for SQLLITE) - now occurs on EVERY map change
+ - Removed: Option to auto-start/stop the server
  - Removed: plugin_modules()
 
 v2.2.7

@@ -294,6 +294,73 @@ public Skill_Invisibility(id)
 // Orc's Reincarnation Ability in CS/CZ
 // ****************************************
 
+public Skill_Reincarnation( parm[2] )
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo("Skill_Reincarnation",parm[0])
+	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE
+
+	#if MOD == 0
+		new id = parm[0]
+
+		if(!p_data_b[id][PB_ISCONNECTED])
+			return PLUGIN_CONTINUE
+
+		new bool:reincarnate = false
+		
+		// Give items because of respawning...
+		if(p_data_b[id][PB_GIVEITEMS]){
+			reincarnate = true
+			p_data_b[id][PB_GIVEITEMS]=false
+		}
+									
+		// Equipement & Eligibility Check for Re-Incarnation
+		if (p_data_b[id][PB_DIEDLASTROUND]){	// DIED LAST ROUND		
+			new Float:randomnumber = random_float(0.0,1.0)   
+			if ( Verify_Skill(id, RACE_ORC, SKILL3) ){
+				if( randomnumber <= p_ankh[p_data[id][P_SKILL3]-1] ){
+					reincarnate = true				
+				}
+			}
+			if (p_data[id][P_ITEM]==ITEM_ANKH){
+				reincarnate=true
+			}	
+		}
+
+		if (reincarnate){
+				client_cmd(id, "speak warcraft3/soundpack/reincarnation.wav")
+
+				if (iglow[id][1] < 1){
+					parm[0] = id
+					set_task(0.1,"glow_change",TASK_GLOW+id,parm,2)
+				} 
+				iglow[id][1] += 100
+				iglow[id][0] = 0
+				iglow[id][2] = 0
+				iglow[id][3] = 0
+				if (iglow[id][1]>MAXGLOW)
+					iglow[id][1]=MAXGLOW
+
+				// Screen fade green
+				Create_ScreenFade(id, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[id][1])
+
+				_Skill_Reincarnation_Drop(id)
+				_Skill_Reincarnation_Give(id)
+		}else{
+			if(!cs_get_user_nvg(id))
+				p_data_b[id][PB_NIGHTVISION]=false
+
+		}
+	#endif
+
+	Item_Check(parm)
+
+	return PLUGIN_HANDLED	
+}	
+
 public _Skill_Reincarnation_Drop(id){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("_Skill_Reincarnation_Drop",0)

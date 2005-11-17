@@ -203,7 +203,7 @@ public WAR3_chooserace(id){
 	if(get_user_team(id) == ALLIES || get_user_team(id) == AXIS){
 #endif
 		if(iCvar[MP_SAVEXP])
-			XP_Retreive(id,1)
+			XP_Get( id );
 		else
 			menu_Select_Race(id,{0,0,0,0,0,0,0,0,0})
 	}
@@ -356,12 +356,6 @@ public WAR3_death_victim(victim_id, killer_id){
 
 	if ( Verify_Skill(killer_id, RACE_BLOOD, SKILL1) && killer_id != victim_id ){
 		Skill_Pheonix(killer_id)
-	}
-#endif
-
-#if MOD == 0
-	if( !Verify_Skill(killer_id, RACE_BLOOD, SKILL3) && get_user_money(killer_id) > 16000 ){
-		set_user_money(killer_id, 16000)
 	}
 #endif
 
@@ -735,7 +729,7 @@ public WAR3_set_race(id,race){
 	if (iCvar[MP_SAVEXP]){
 		p_data[id][P_XP] = 0
 		p_data[id][P_LEVEL] = 0
-		XP_Retreive(id,0)
+		XP_Set_Race_Data( id );
 	}
 
 	Skill_Check(id)
@@ -1175,9 +1169,9 @@ public WAR3_Set_Variables(){
 	iCvar[FT_BLINKENABLED			] = get_cvar_num("FT_blinkenabled")
 	iCvar[SV_ALLOWWAR3VOTE			] = get_cvar_num("sv_allowwar3vote")
 	iCvar[SV_MYSQL					] = get_cvar_num("sv_mysql")
-	iCvar[SV_SAVE_END_ROUND	] = get_cvar_num("SV_SAVE_END_ROUND")
+	iCvar[SV_SAVE_END_ROUND			] = get_cvar_num("sv_save_end_round")
 	iCvar[FT_SAVEBY					] = get_cvar_num("FT_saveby")
-	iCvar[SV_MYSQL_AUTO_PRUNING		] = get_cvar_num("sv_mysql_auto_pruning")
+	iCvar[FT_AUTO_PRUNING			] = get_cvar_num("FT_auto_pruning")
 	iCvar[SV_DAYSBEFOREDELETE		] = get_cvar_num("sv_daysbeforedelete")
 	iCvar[FT_HEALING_RANGE			] = get_cvar_num("FT_healing_range")
 	iCvar[FT_XP_RADIUS				] = get_cvar_num("FT_xp_radius")

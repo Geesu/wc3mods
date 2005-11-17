@@ -1,111 +1,133 @@
 /***********************************************************************
 		XP FUNCTIONS (idea from war3x)
 ***********************************************************************/
-stock XP_give(id, iXP){
+
+stock XP_give(id, iXP)
+{
 	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_give",id)
+		writeDebugInfo("XP_give", id);
 	#endif
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
+	if ( !warcraft3 || id == 0 )
+	{
+		return 0;
+	}
 
-	if(id==0)
-		return 0
+	// Make sure we have the minimum amount of players
+	if( get_playersnum() < iCvar[FT_MIN_B4_XP] )
+	{
+		return 0;
+	}
 
-	// Check for min. players here
-	new numberofplayers = get_playersnum() 
+	p_data[id][P_XP] += iXP;
 
-	if(numberofplayers < iCvar[FT_MIN_B4_XP])
-		return 0
+	WAR3_Display_Level(id, DISPLAYLEVEL_SHOWGAINED);
 
-	p_data[id][P_XP] += iXP
-
-	WAR3_Display_Level(id, DISPLAYLEVEL_SHOWGAINED)
-
-	return iXP
+	return iXP;
 }
 
-stock XP_onDeath(victim_id, killer_id, weapon, headshot){
+stock XP_onDeath(victim_id, killer_id, weapon, headshot)
+{
 	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_onDeath",victim_id)
+		writeDebugInfo("XP_onDeath", victim_id);
 	#endif
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
+	if ( !warcraft3 )
+	{
+		return PLUGIN_CONTINUE;
+	}
 
-	// Don't award XP to world
-	if(killer_id==0)
-		return PLUGIN_CONTINUE
+	// Assuming we have a victim, a killer, and the victim is not the killer
+	if ( killer_id && killer_id != victim_id && victim_id )
+	{
+		new iXP, iXPAwarded;
 
-	new victimName[32], iXP, XP
-	get_user_name(victim_id,victimName,31)
-
-	#if MOD == 1
-	headshot--
-	#endif
-	if (killer_id && killer_id!=victim_id && victim_id){
-
-		// He killed a teammate
-		if (get_user_team(killer_id)==get_user_team(victim_id)){
-			iXP = -1 * xpgiven[p_data[killer_id][P_LEVEL]]
-			XP = XP_give(killer_id,iXP)
-			if (iCvar[FT_KILL_OBJECTIVES]){
-				client_print(killer_id,print_chat,"%s %L",g_MODclient,killer_id,"AWARDED_FOR_KILLING_TEAMMATE",XP)
+		// Attacker killed a teammate
+		if ( get_user_team(killer_id) == get_user_team(victim_id) )
+		{
+			iXP = -1 * xpgiven[p_data[killer_id][P_LEVEL]];
+			iXPAwarded = XP_give(killer_id, iXP);
+			if (iCvar[FT_KILL_OBJECTIVES])
+			{
+				client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_TEAMMATE", iXPAwarded);
 			}
 		}
 		else{
-			if (!iCvar[MP_WEAPONXPMODIFIER]){
-				iXP = xpgiven[p_data[victim_id][P_LEVEL]]
-				XP = XP_give(killer_id,iXP)
-				if (iCvar[FT_KILL_OBJECTIVES]){			
-					client_print(killer_id,print_chat,"%s %L",g_MODclient,killer_id,"AWARDED_FOR_KILLING",XP,victimName)
+			if (!iCvar[MP_WEAPONXPMODIFIER])
+			{
+				iXP = xpgiven[p_data[victim_id][P_LEVEL]];
+				iXPAwarded = XP_give(killer_id, iXP);
+				if (iCvar[FT_KILL_OBJECTIVES])
+				{			
+					new szVictimName[32];
+					get_user_name(victim_id, szVictimName, 31);
+
+					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING", iXPAwarded, szVictimName);
 				}
 			}
 			else
 			{
-				iXP = floatround(xpgiven[p_data[victim_id][P_LEVEL]] * weaponxpmultiplier[weapon])
-				XP = XP_give(killer_id,iXP)
-				if (iCvar[FT_KILL_OBJECTIVES]){
-					client_print(killer_id,print_chat,"%s %L",g_MODclient,killer_id,"AWARDED_FOR_KILLING",XP,victimName)
+				iXP = floatround(xpgiven[p_data[victim_id][P_LEVEL]] * weaponxpmultiplier[weapon]);
+				iXPAwarded = XP_give(killer_id, iXP);
+				if (iCvar[FT_KILL_OBJECTIVES])
+				{
+					new szVictimName[32];
+					get_user_name(victim_id, szVictimName, 31);
+
+					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING", iXPAwarded, szVictimName);
+				}
+			}
+			// Award XP for getting a headshot
+			if( headshot )
+			{
+				iXP = iCvar[FT_HEADSHOT_BONUS];
+				iXPAwarded = XP_give(killer_id, iXP);
+				if ( iCvar[FT_KILL_OBJECTIVES] )
+				{
+					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_HEADSHOT", iXPAwarded);		
 				}
 			}
 		#if MOD == 0
-			if( headshot && killer_id!=victim_id){
-				iXP = iCvar[FT_HEADSHOT_BONUS]
-				XP = XP_give(killer_id,iXP)
-				if (iCvar[FT_KILL_OBJECTIVES]){
-					client_print(killer_id,print_chat,"%s %L",g_MODclient, killer_id,"AWARDED_FOR_HEADSHOT", XP)			
+			// Award XP for killing the hostage saver
+			if ( victim_id == g_hostageSaver )
+			{
+				iXP = iCvar[FT_KILLRESCUEMANXP];
+				iXPAwarded = XP_give(killer_id, iXP);
+				if ( iCvar[FT_OBJECTIVES] )
+				{	
+					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_HOSTAGE_R", iXPAwarded);
 				}
 			}
-			if (victim_id==g_hostageSaver){
-				iXP = iCvar[FT_KILLRESCUEMANXP]
-				XP = XP_give(killer_id,iXP)
-				if (iCvar[FT_OBJECTIVES]){	
-					client_print(killer_id,print_chat,"%s %L", g_MODclient, killer_id,"AWARDED_FOR_KILLING_HOSTAGE_R", XP)
-				}
-			}
-			else if (victim_id==g_bombDefuser && killer_id!=g_bombDefuser){						
-				iXP = iCvar[FT_DEFUSER_KILL_BONUS]
-				XP = XP_give(killer_id,iXP)
-				if (iCvar[FT_OBJECTIVES]){				
-					client_print(killer_id,print_chat, "%s %L", g_MODclient, killer_id,"AWARDED_FOR_KILLING_BOMB_D",XP)
+			// Award XP for killing the bomb defuser
+			else if ( victim_id == g_bombDefuser )
+			{						
+				iXP = iCvar[FT_DEFUSER_KILL_BONUS];
+				iXPAwarded = XP_give(killer_id, iXP);
+				if ( iCvar[FT_OBJECTIVES] )
+				{				
+					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_BOMB_D", iXPAwarded);
 				}	
 			}
-			else if (victim_id==g_bombCarrier && killer_id!=g_bombCarrier){						
-				iXP = iCvar[FT_KILL_BOMB_CARRIER_BONUS]
-				XP = XP_give(killer_id,iXP)
-				if (iCvar[FT_OBJECTIVES]){
-					client_print(killer_id,print_chat, "%s %L", g_MODclient, killer_id,"AWARDED_FOR_KILLING_BOMB_C",XP)
+			// Award XP for killing the bomb carrier
+			else if ( victim_id == g_bombCarrier )
+			{						
+				iXP = iCvar[FT_KILL_BOMB_CARRIER_BONUS];
+				iXPAwarded = XP_give(killer_id, iXP);
+				if ( iCvar[FT_OBJECTIVES] )
+				{
+					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_BOMB_C", iXPAwarded);
 				}
 			}
-			else if (victim_id==g_vipID && killer_id!=g_vipID){
-				iXP = iCvar[FT_VIP_KILL_BONUS]
-				XP = XP_give(killer_id,iXP)
-				if (iCvar[FT_OBJECTIVES]){
-					client_print(killer_id,print_chat, "%s %L", g_MODclient, killer_id,"AWARD_FOR_KILLING_VIP",XP)
+			// Award XP for killing the VIP
+			else if ( victim_id==g_vipID )
+			{
+				iXP = iCvar[FT_VIP_KILL_BONUS];
+				iXPAwarded = XP_give(killer_id, iXP);
+				if ( iCvar[FT_OBJECTIVES] )
+				{
+					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARD_FOR_KILLING_VIP", iXPAwarded);
 				}
 			}
-
 		#endif
 		}
 	}
@@ -113,128 +135,137 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot){
 	return PLUGIN_CONTINUE
 }
 
-stock XP_Set(){
+stock XP_Set()
+{
 	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_set",0)
+		writeDebugInfo("XP_Set", 0);
 	#endif
 
-	if (iCvar[MP_SAVEXP]){
-		xpgiven = {6,8,10,12,14,16,18,20,24,28,32}
-		xplevel = {0,100,200,400,800,1600,3200,6400,12800,25600,51200}
+	// If we're saving XP, we want to set the max. amount of XP higher and the amount gained per kill/objective lower
+	if ( iCvar[MP_SAVEXP] )
+	{
+		xpgiven = {6,8,10,12,14,16,18,20,24,28,32};
+		xplevel = {0,100,200,400,800,1600,3200,6400,12800,25600,51200};
 	}
 
-	for(new i=0;i<11;i++)
-		xplevel[i] = floatround(xplevel[i] * fCvar[MP_XPMULTIPLIER])
+	// Set the XP multiplier
+	for( new i=0; i<11; i++ )
+	{
+		xplevel[i] = floatround(xplevel[i] * fCvar[MP_XPMULTIPLIER]);
+	}
 
-	XP_Set_Multiplier()
+	XP_Set_Multiplier();
 }
 
-stock XP_Set_Multiplier(){
+stock XP_Set_Multiplier()
+{
 	#if ADVANCED_DEBUG
-		writeDebugInfo("set_xpmultiplier", 0)
+		writeDebugInfo("XP_Set_Multiplier", 0);
 	#endif
 
-	if (!iCvar[MP_WEAPONXPMODIFIER])
-		return PLUGIN_CONTINUE
+	if ( !iCvar[MP_WEAPONXPMODIFIER] )
+	{
+		return PLUGIN_CONTINUE;
+	}
 
-	weaponxpmultiplier[CSW_WORLDSPAWN]		= 0.0
+	weaponxpmultiplier[CSW_WORLDSPAWN]		= 0.0;
 
 #if MOD == 0
-	weaponxpmultiplier[CSW_USP]				= 2.5
-	weaponxpmultiplier[CSW_DEAGLE]			= 2.5
-	weaponxpmultiplier[CSW_GLOCK18]			= 2.5
-	weaponxpmultiplier[CSW_ELITE]			= 3.5
-	weaponxpmultiplier[CSW_P228]			= 2.5
-	weaponxpmultiplier[CSW_FIVESEVEN]		= 2.5
+	weaponxpmultiplier[CSW_USP]				= 2.5;
+	weaponxpmultiplier[CSW_DEAGLE]			= 2.5;
+	weaponxpmultiplier[CSW_GLOCK18]			= 2.5;
+	weaponxpmultiplier[CSW_ELITE]			= 3.5;
+	weaponxpmultiplier[CSW_P228]			= 2.5;
+	weaponxpmultiplier[CSW_FIVESEVEN]		= 2.5;
 
-	weaponxpmultiplier[CSW_XM1014]			= 1.25
-	weaponxpmultiplier[CSW_M3]				= 1.5
+	weaponxpmultiplier[CSW_XM1014]			= 1.25;
+	weaponxpmultiplier[CSW_M3]				= 1.5;
 
-	weaponxpmultiplier[CSW_MP5NAVY]			= 1.0
-	weaponxpmultiplier[CSW_UMP45]			= 1.25
-	weaponxpmultiplier[CSW_P90]				= 1.25
-	weaponxpmultiplier[CSW_TMP]				= 1.5
-	weaponxpmultiplier[CSW_MAC10]			= 1.5
-	weaponxpmultiplier[CSW_GALIL]			= 1.15
-	weaponxpmultiplier[CSW_FAMAS]			= 1.15
+	weaponxpmultiplier[CSW_MP5NAVY]			= 1.0;
+	weaponxpmultiplier[CSW_UMP45]			= 1.25;
+	weaponxpmultiplier[CSW_P90]				= 1.25;
+	weaponxpmultiplier[CSW_TMP]				= 1.5;
+	weaponxpmultiplier[CSW_MAC10]			= 1.5;
+	weaponxpmultiplier[CSW_GALIL]			= 1.15;
+	weaponxpmultiplier[CSW_FAMAS]			= 1.15;
 
-	weaponxpmultiplier[CSW_AWP]				= 1.0
-	weaponxpmultiplier[CSW_M4A1]			= 1.0
-	weaponxpmultiplier[CSW_AK47]			= 1.0
-	weaponxpmultiplier[CSW_AUG]				= 1.0
-	weaponxpmultiplier[CSW_SG552]			= 1.0
-	weaponxpmultiplier[CSW_G3SG1]			= 1.0
-	weaponxpmultiplier[CSW_SG550]			= 1.0
-	weaponxpmultiplier[CSW_M249]			= 1.25
-	weaponxpmultiplier[CSW_SCOUT]			= 3.0
+	weaponxpmultiplier[CSW_AWP]				= 1.0;
+	weaponxpmultiplier[CSW_M4A1]			= 1.0;
+	weaponxpmultiplier[CSW_AK47]			= 1.0;
+	weaponxpmultiplier[CSW_AUG]				= 1.0;
+	weaponxpmultiplier[CSW_SG552]			= 1.0;
+	weaponxpmultiplier[CSW_G3SG1]			= 1.0;
+	weaponxpmultiplier[CSW_SG550]			= 1.0;
+	weaponxpmultiplier[CSW_M249]			= 1.25;
+	weaponxpmultiplier[CSW_SCOUT]			= 3.0;
 
-	weaponxpmultiplier[CSW_HEGRENADE]		= 1.75
-	weaponxpmultiplier[CSW_KNIFE]			= 6.0
+	weaponxpmultiplier[CSW_HEGRENADE]		= 1.75;
+	weaponxpmultiplier[CSW_KNIFE]			= 6.0;
 
-	weaponxpmultiplier[CSW_C4]				= 2.0
-	weaponxpmultiplier[CSW_SMOKEGRENADE]	= 1.0
-	weaponxpmultiplier[CSW_FLASHBANG]		= 1.0
+	weaponxpmultiplier[CSW_C4]				= 2.0;
+	weaponxpmultiplier[CSW_SMOKEGRENADE]	= 1.0;
+	weaponxpmultiplier[CSW_FLASHBANG]		= 1.0;
 #endif
 #if MOD == 1
-	weaponxpmultiplier[DODW_AMERKNIFE		] = 6.0
-	weaponxpmultiplier[DODW_GERKNIFE		] = 6.0
-	weaponxpmultiplier[DODW_BRITKNIFE		] = 6.0
-	weaponxpmultiplier[DODW_GARAND_BUTT		] = 6.0
+	weaponxpmultiplier[DODW_AMERKNIFE		] = 6.0;
+	weaponxpmultiplier[DODW_GERKNIFE		] = 6.0;
+	weaponxpmultiplier[DODW_BRITKNIFE		] = 6.0;
+	weaponxpmultiplier[DODW_GARAND_BUTT		] = 6.0;
 
-	weaponxpmultiplier[DODW_HANDGRENADE		] = 1.75
-	weaponxpmultiplier[DODW_STICKGRENADE	] = 1.75
-	weaponxpmultiplier[DODW_STICKGRENADE_EX	] = 1.75
-	weaponxpmultiplier[DODW_HANDGRENADE_EX	] = 1.75
+	weaponxpmultiplier[DODW_HANDGRENADE		] = 1.75;
+	weaponxpmultiplier[DODW_STICKGRENADE	] = 1.75;
+	weaponxpmultiplier[DODW_STICKGRENADE_EX	] = 1.75;
+	weaponxpmultiplier[DODW_HANDGRENADE_EX	] = 1.75;
 
-	weaponxpmultiplier[DODW_COLT			] = 1.0
-	weaponxpmultiplier[DODW_LUGER			] = 1.0
-	weaponxpmultiplier[DODW_GARAND			] = 1.0
-	weaponxpmultiplier[DODW_SCOPED_KAR		] = 1.0
-	weaponxpmultiplier[DODW_THOMPSON		] = 1.0
-	weaponxpmultiplier[DODW_STG44			] = 1.0
-	weaponxpmultiplier[DODW_SPRINGFIELD		] = 1.0
-	weaponxpmultiplier[DODW_KAR				] = 1.0
-	weaponxpmultiplier[DODW_BAR				] = 1.0
-	weaponxpmultiplier[DODW_MP40			] = 1.0
-	weaponxpmultiplier[DODW_MG42			] = 1.0
-	weaponxpmultiplier[DODW_30_CAL			] = 1.0
-	weaponxpmultiplier[DODW_SPADE			] = 1.0
-	weaponxpmultiplier[DODW_M1_CARBINE		] = 1.0
-	weaponxpmultiplier[DODW_MG34			] = 1.0
-	weaponxpmultiplier[DODW_GREASEGUN		] = 1.0
-	weaponxpmultiplier[DODW_FG42			] = 1.0
-	weaponxpmultiplier[DODW_K43				] = 1.0
-	weaponxpmultiplier[DODW_ENFIELD			] = 1.0
-	weaponxpmultiplier[DODW_STEN			] = 1.0
-	weaponxpmultiplier[DODW_BREN			] = 1.0
-	weaponxpmultiplier[DODW_WEBLEY			] = 1.0
-	weaponxpmultiplier[DODW_BAZOOKA			] = 1.0
-	weaponxpmultiplier[DODW_PANZERSCHRECK	] = 1.0
-	weaponxpmultiplier[DODW_PIAT			] = 1.0
-	weaponxpmultiplier[DODW_SCOPED_FG42		] = 1.0
-	weaponxpmultiplier[DODW_FOLDING_CARBINE	] = 1.0
-	weaponxpmultiplier[DODW_KAR_BAYONET		] = 1.0
-	weaponxpmultiplier[DODW_SCOPED_ENFIELD	] = 1.0
-	weaponxpmultiplier[DODW_MILLS_BOMB		] = 1.0
-	weaponxpmultiplier[DODW_ENFIELD_BAYONET	] = 1.0
-	weaponxpmultiplier[DODW_MORTAR			] = 1.0
-	weaponxpmultiplier[DODW_K43_BUTT		] = 1.0
+	weaponxpmultiplier[DODW_COLT			] = 1.0;
+	weaponxpmultiplier[DODW_LUGER			] = 1.0;
+	weaponxpmultiplier[DODW_GARAND			] = 1.0;
+	weaponxpmultiplier[DODW_SCOPED_KAR		] = 1.0;
+	weaponxpmultiplier[DODW_THOMPSON		] = 1.0;
+	weaponxpmultiplier[DODW_STG44			] = 1.0;
+	weaponxpmultiplier[DODW_SPRINGFIELD		] = 1.0;
+	weaponxpmultiplier[DODW_KAR				] = 1.0;
+	weaponxpmultiplier[DODW_BAR				] = 1.0;
+	weaponxpmultiplier[DODW_MP40			] = 1.0;
+	weaponxpmultiplier[DODW_MG42			] = 1.0;
+	weaponxpmultiplier[DODW_30_CAL			] = 1.0;
+	weaponxpmultiplier[DODW_SPADE			] = 1.0;
+	weaponxpmultiplier[DODW_M1_CARBINE		] = 1.0;
+	weaponxpmultiplier[DODW_MG34			] = 1.0;
+	weaponxpmultiplier[DODW_GREASEGUN		] = 1.0;
+	weaponxpmultiplier[DODW_FG42			] = 1.0;
+	weaponxpmultiplier[DODW_K43				] = 1.0;
+	weaponxpmultiplier[DODW_ENFIELD			] = 1.0;
+	weaponxpmultiplier[DODW_STEN			] = 1.0;
+	weaponxpmultiplier[DODW_BREN			] = 1.0;
+	weaponxpmultiplier[DODW_WEBLEY			] = 1.0;
+	weaponxpmultiplier[DODW_BAZOOKA			] = 1.0;
+	weaponxpmultiplier[DODW_PANZERSCHRECK	] = 1.0;
+	weaponxpmultiplier[DODW_PIAT			] = 1.0;
+	weaponxpmultiplier[DODW_SCOPED_FG42		] = 1.0;
+	weaponxpmultiplier[DODW_FOLDING_CARBINE	] = 1.0;
+	weaponxpmultiplier[DODW_KAR_BAYONET		] = 1.0;
+	weaponxpmultiplier[DODW_SCOPED_ENFIELD	] = 1.0;
+	weaponxpmultiplier[DODW_MILLS_BOMB		] = 1.0;
+	weaponxpmultiplier[DODW_ENFIELD_BAYONET	] = 1.0;
+	weaponxpmultiplier[DODW_MORTAR			] = 1.0;
+	weaponxpmultiplier[DODW_K43_BUTT		] = 1.0;
 
 #endif
 
-	weaponxpmultiplier[CSW_LIGHTNING]		= 1.0
-	weaponxpmultiplier[CSW_SUICIDE]			= 1.0
-	weaponxpmultiplier[CSW_FLAME]			= 1.0
-	weaponxpmultiplier[CSW_LOCUSTS]			= 1.1
-	weaponxpmultiplier[CSW_SERPENTWARD]		= 1.0
-	weaponxpmultiplier[CSW_SHADOW]			= 1.0	
-	weaponxpmultiplier[CSW_THORNS]			= 1.0
-	weaponxpmultiplier[CSW_CARAPACE]		= 1.0
-	weaponxpmultiplier[CSW_CARRION]			= 1.0
-	weaponxpmultiplier[CSW_ORB]				= 1.0
-	weaponxpmultiplier[CSW_CONCOCTION]		= 1.0
+	weaponxpmultiplier[CSW_LIGHTNING]		= 1.0;
+	weaponxpmultiplier[CSW_SUICIDE]			= 1.0;
+	weaponxpmultiplier[CSW_FLAME]			= 1.0;
+	weaponxpmultiplier[CSW_LOCUSTS]			= 1.1;
+	weaponxpmultiplier[CSW_SERPENTWARD]		= 1.0;
+	weaponxpmultiplier[CSW_SHADOW]			= 1.0;	
+	weaponxpmultiplier[CSW_THORNS]			= 1.0;
+	weaponxpmultiplier[CSW_CARAPACE]		= 1.0;
+	weaponxpmultiplier[CSW_CARRION]			= 1.0;
+	weaponxpmultiplier[CSW_ORB]				= 1.0;
+	weaponxpmultiplier[CSW_CONCOCTION]		= 1.0;
 
-	return PLUGIN_CONTINUE
+	return PLUGIN_CONTINUE;
 }
 
 public XP_Save(id){
@@ -247,280 +278,285 @@ public XP_Save(id){
 		return PLUGIN_CONTINUE;
 	}
 
-	if ( p_data[id][P_RACE]==0 || is_user_bot(id) || !iCvar[MP_SAVEXP] )
+	if ( p_data[id][P_RACE] == 0 || is_user_bot(id) || !iCvar[MP_SAVEXP] )
+	{
+		return PLUGIN_CONTINUE;
+	}
+	
+	// If we're saving by STEAM_ID, lets make sure the user has a steam ID
+	new szPlayerID[33];
+	get_user_authid(id, szPlayerID, 31);
+	if( iCvar[FT_SAVEBY] == 0 && equal(szPlayerID, "STEAM_ID_PENDING") )
 	{
 		return PLUGIN_CONTINUE;
 	}
 
-	new playerid[33], playername[65], timet[32], ip[32]
+	new szPlayerIP[20], szPlayerName[33];
+	get_user_name(id, szPlayerName, 32);
+	get_user_ip(id, szPlayerIP, 19);
 
-	if ( iCvar[SV_MYSQL] ){
-		if(mysql < SQL_OK){
-			if(iSQLAttempts < SQL_ATTEMPTS)
-				XP_Set_DBI()
-			else if(iSQLAttempts != SQL_ATTEMPTS + 10){
-				iSQLAttempts = SQL_ATTEMPTS + 10
-				iCvar[MP_SAVEXP] = 0
-				iCvar[SV_MYSQL] = 0
-				log_amx("[%s] Unable to connect to the %s Database after %d tries, switching to short-term mode", g_MOD, SQLtype, iSQLAttempts)
-				client_print(0,print_chat,"%s Unable to connect to the %s Database after %d tries, switching to short-term mode", g_MODclient, SQLtype, iSQLAttempts)
-			}
-			return PLUGIN_CONTINUE
+	// Save to the database
+	if ( iCvar[SV_MYSQL] )
+	{
+		// Verify we have a database connection
+		if ( !XP_Check_Connection() )
+		{
+			return PLUGIN_CONTINUE;
 		}
-		new mquery[1024]
-		get_user_name(id,playername,64)
-		get_user_authid(id,playerid,31)
-		get_user_ip(id,ip,31) 
 
-		replace(playername, 64, "'", "\'")
-		replace(playername, 64, "`", "")
+		// Prepare name for the query
+		XP_AddSlashes( szPlayerName, 32 );
+			
+		// Save the data
+		new szQuery[512];
+		format(szQuery, 511, "REPLACE INTO `%s` (`playerid`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', %d, %d, %d, %d, %d, %d)", g_DBTableName, (iCvar[FT_SAVEBY]==2) ? szPlayerName : ((iCvar[FT_SAVEBY]==1) ? szPlayerIP : szPlayerID), szPlayerName, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE]);
 
-		format(mquery, 1023, "REPLACE INTO `%s` (`playerid`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', %d, %d, %d, %d, %d, %d)", mysqltablename, (iCvar[FT_SAVEBY]==2) ? playername : ((iCvar[FT_SAVEBY]==1) ? ip : playerid), playername, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE])
-
-#if SQL_DEBUG
-		log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
-#endif
- 		new Result:ret = dbi_query(mysql, mquery)
-#if SQL_DEBUG
-		log_amx("[%s] ret=%d", g_MOD, ret)
-#endif
-
-		if (ret < RESULT_NONE) {
-			new err[255]
-			new errNum = dbi_error(mysql, err, 254)
-			log_amx("[%s] DBI XP_Save error: %s (%d)", g_MOD, err, errNum)
-			dbi_free_result(ret)
-			return 1
+ 		new Result:res = dbi_query(mysql, szQuery);
+		
+		// Verify we have a result
+		if (res < RESULT_NONE)
+		{
+			client_print(id, print_chat, "%s An error has occurred when saving your race information, please contact a server administrator", g_MODclient);
+			XP_DBI_Error( res, szQuery, 3 );
+			return PLUGIN_CONTINUE;
 		} 	
-
-		//dbi_free_result(ret)		// Why is MySQL database complaining with this? SQLite works OK, so why?
-
 	}
-	else{			// Save it to a vault :)
-		new temp[128], string[512]
-		get_time("%m %d %H %M",timet,31)
-		get_user_authid(id,playerid,31)
-		get_user_name(id,playername,31)
-		get_user_ip(id,ip,31)
-
-		format( string,511,"%s %d %d %d %d %d %d %s %s %s", playerid, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE], ip, timet, playername );
-
-		if(iCvar[FT_SAVEBY]==0)							// Save by steam ID
-			format(temp,127,"%s_%d",playerid,p_data[id][P_RACE])
-		else if(iCvar[FT_SAVEBY]==1)					// Save by IP address
-			format(temp,127,"%s_%d",ip,p_data[id][P_RACE])
-		else if(iCvar[FT_SAVEBY]==2)					// Save by Player name
-			format(temp,127,"%s_%d",playername,p_data[id][P_RACE])
-
-		set_vaultdata(temp,string)
+	// Otherwise lets save to the vault
+	else
+	{		
+		new szKey[128], szData[512];
+		
+		// Format the data for entry
+		format( szData, 511, "%s %d %d %d %d %d %d %s %d %s", szPlayerID, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE], szPlayerIP, get_systime(), szPlayerName );
+		
+		// Format the vault key
+		format( szKey, 127, "%s_%d", (iCvar[FT_SAVEBY]==SAVE_NAME) ? szPlayerName : ((iCvar[FT_SAVEBY]==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE] );
+		
+		// Save the data
+		set_vaultdata(szKey, szData);
 	}
+
 	return PLUGIN_CONTINUE
 }
 
-public XP_Retreive(id,returnrace){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Retreive",id)
-	#endif
+// Function will get data about a player's current race, and set it to whats in the DB/vault
+public XP_Set_Race_Data( id )
+{
+	if ( !warcraft3 )
+		return PLUGIN_CONTINUE;
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
+	if ( !iCvar[MP_SAVEXP] || !id )
+		return PLUGIN_CONTINUE;
 
-	if (!iCvar[MP_SAVEXP])
-		return PLUGIN_CONTINUE
+	// If we're saving by STEAM_ID, lets make sure the user has a steam ID
+	new szPlayerID[33];
+	get_user_authid(id, szPlayerID, 31);
+	if( iCvar[FT_SAVEBY] == SAVE_STEAMID && equal(szPlayerID, "STEAM_ID_PENDING") )
+	{
+		client_print(id, print_chat, "%s Unable to retreive race information, you have no STEAM ID, please rejoin the server.", g_MODclient);
+		return PLUGIN_CONTINUE;
+	}
+	
+	new szPlayerIP[20], szPlayerName[33];
+	get_user_name(id, szPlayerName, 32);
+	get_user_ip(id, szPlayerIP, 19);
 
-	if (!id)
-		return PLUGIN_CONTINUE
+	if ( iCvar[SV_MYSQL] )
+	{
+		// Verify we have a database connection
+		if ( !XP_Check_Connection() )
+		{
+			return PLUGIN_CONTINUE;
+		}
 
-	new mquery[1024]
+		// Prepare name for the query
+		XP_AddSlashes( szPlayerName, 32 );
 
-	new playerid[32], playername[32], ip[32]
-	new xp[8], race[2], skill1[2], skill2[2], skill3[2], skill4[2]
-	new racexp[9]={0,0,0,0,0,0,0,0,0}
-	get_user_name(id,playername,31)
-	get_user_authid(id,playerid,31)
-	get_user_ip(id,ip,31) 
+		new szQuery[256];
+		format( szQuery, 255, "SELECT `xp`, `skill1`, `skill2`, `skill3`, `skill4` FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", g_DBTableName, (iCvar[FT_SAVEBY]==SAVE_NAME) ? szPlayerName : ((iCvar[FT_SAVEBY]==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE])
 
-	if (iCvar[SV_MYSQL]){
-		if(mysql < SQL_OK){
-			if(iSQLAttempts < SQL_ATTEMPTS)
-				XP_Set_DBI()
-			else if(iSQLAttempts != SQL_ATTEMPTS + 10){
-				iSQLAttempts = SQL_ATTEMPTS + 10
-				iCvar[MP_SAVEXP] = 0
-				iCvar[SV_MYSQL] = 0
-				log_amx("[%s] Unable to connect to the %s Database after %d tries, switching to short-term mode", g_MOD, SQLtype, iSQLAttempts)
-				client_print(0,print_chat,"%s Unable to connect to the %s Database after %d tries, switching to short-term mode", g_MODclient, SQLtype, iSQLAttempts)
-			}
+		new Result:res = dbi_query(mysql, szQuery)
+		
+		// Verify we have a result
+		if (res < RESULT_NONE)
+		{
+			client_print(id, print_chat, "%s An error has occurred when retreiving your race information, please contact a server administrator", g_MODclient);
+			XP_DBI_Error( res, szQuery, 1 );
+			return PLUGIN_CONTINUE;
+		}
+		
+		// Then we have data in the database
+		if ( res && dbi_nextrow(res)>0 )
+		{
+			new szXP[8], szSkill1[2], szSkill2[2], szSkill3[2], szSkill4[2];
+			dbi_result(res, "xp", szXP, 7);
+			dbi_result(res, "skill1", szSkill1, 1);
+			dbi_result(res, "skill2", szSkill2, 1);
+			dbi_result(res, "skill3", szSkill3, 1);
+			dbi_result(res, "skill4", szSkill4, 1);			
+
+			p_data[id][P_XP]		= str_to_num(szXP);
+			p_data[id][P_SKILL1]	= str_to_num(szSkill1);
+			p_data[id][P_SKILL2]	= str_to_num(szSkill2);
+			p_data[id][P_SKILL3]	= str_to_num(szSkill3);
+			p_data[id][P_ULTIMATE]	= str_to_num(szSkill4);
+		}
+		// The user has no record, start them at 0
+		else
+		{
+			p_data[id][P_XP]		= 0;
+			p_data[id][P_SKILL1]	= 0;
+			p_data[id][P_SKILL2]	= 0;
+			p_data[id][P_SKILL3]	= 0;
+			p_data[id][P_ULTIMATE]	= 0;
+		}
+		
+		dbi_free_result(res);
+
+	}
+	// Retreive data from the vault
+	else
+	{
+		new szKey[128], szData[256], iAttempt;
+
+		format( szKey, 127, "%s_%d", (iCvar[FT_SAVEBY]==SAVE_NAME) ? szPlayerName : ((iCvar[FT_SAVEBY]==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE] );
+
+		iAttempt = get_vaultdata(szKey, szData, 255);
+		
+		// Then we found a record in the vault
+		if (iAttempt)
+		{
+			new szXP[8], szSkill1[2], szSkill2[2], szSkill3[2], szSkill4[2], szRace[2];
+
+			// Parse the vault entry
+			parse(szData, szPlayerID, 31, szXP, 7, szRace, 1, szSkill1, 1, szSkill2, 1, szSkill3, 1, szSkill4, 1);
+
+			p_data[id][P_XP]		= str_to_num(szXP);
+			p_data[id][P_SKILL1]	= str_to_num(szSkill1);
+			p_data[id][P_SKILL2]	= str_to_num(szSkill2);
+			p_data[id][P_SKILL3]	= str_to_num(szSkill3);
+			p_data[id][P_ULTIMATE]	= str_to_num(szSkill4);
+		}
+		// No record was found, lets start them at 0
+		else
+		{
+			p_data[id][P_XP]		= 0;
+			p_data[id][P_SKILL1]	= 0;
+			p_data[id][P_SKILL2]	= 0;
+			p_data[id][P_SKILL3]	= 0;
+			p_data[id][P_ULTIMATE]	= 0;
+		}
+	}
+	
+	// Display the race information to the user
+	WAR3_Display_Level(id, DISPLAYLEVEL_SHOWRACE);
+
+	return PLUGIN_CONTINUE;
+}
+
+// Function will retreive the XP for a user's race and call the changerace menu function
+public XP_Get( id )
+{
+	if ( !warcraft3 )
+		return PLUGIN_CONTINUE;
+
+	if ( !iCvar[MP_SAVEXP] || !id )
+		return PLUGIN_CONTINUE;
+
+	// If we're saving by STEAM_ID, lets make sure the user has a steam ID
+	new szPlayerID[33];
+	get_user_authid(id, szPlayerID, 31);
+	if( iCvar[FT_SAVEBY] == SAVE_STEAMID && equal(szPlayerID, "STEAM_ID_PENDING") )
+	{
+		client_print(id, print_chat, "%s Unable to retreive race information, you have no STEAM ID, please rejoin the server.", g_MODclient);
+		return PLUGIN_CONTINUE;
+	}
+	
+	new szPlayerIP[20], szPlayerName[33];
+	new iRaceXP[9]= {0,0,0,0,0,0,0,0,0};
+	get_user_name(id, szPlayerName, 32);
+	get_user_ip(id, szPlayerIP, 19);
+
+	// Retreive data via MySQL
+	if ( iCvar[SV_MYSQL] )
+	{
+		// Make sure we have a valid MySQL Connection
+		if ( !XP_Check_Connection() )
+		{
+			return PLUGIN_CONTINUE;
+		}
+
+		// Prepare name for the query
+		XP_AddSlashes( szPlayerName, 32 );
+	
+		new szQuery[256];
+		format(szQuery, 255, "SELECT `xp`, `race` FROM `%s` WHERE (`playerid` = '%s')", g_DBTableName, (iCvar[FT_SAVEBY]==SAVE_NAME) ? szPlayerName : ((iCvar[FT_SAVEBY]==SAVE_IP) ? szPlayerIP : szPlayerID));
+ 		
+		new Result:res = dbi_query(mysql, szQuery);
+		
+		// Make sure we have a result
+		if (res < RESULT_NONE)
+		{
+			client_print(id, print_chat, "%s An error has occurred when retreiving your race information, please contact a server administrator", g_MODclient);
+			XP_DBI_Error( res, szQuery, 0 );
 			return PLUGIN_CONTINUE
 		}
 
-		if (returnrace){
-			format(mquery, 1023, "SELECT `xp`, `race` FROM `%s` WHERE (`playerid` = '%s')", mysqltablename, (iCvar[FT_SAVEBY]==2) ? playername : ((iCvar[FT_SAVEBY]==1) ? ip : playerid))
-
-#if SQL_DEBUG
-			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
-#endif
- 			new Result:res = dbi_query(mysql, mquery)
-#if SQL_DEBUG
-			log_amx("[%s] res=%d", g_MOD, res)
-#endif
-
-			if (res < RESULT_NONE) {
-				new err[255]
-				new errNum = dbi_error(mysql, err, 254)
-				log_amx("[%s] DBI XP_Retreive error: %s (%d)", g_MOD, err, errNum)
-				dbi_free_result(res)
-				return PLUGIN_CONTINUE
-			}
-
-			while (res && dbi_nextrow(res)>0) {
-				dbi_result(res, "xp", xp, 7)
-				dbi_result(res, "race", race, 1)
-				if (str_to_num(race)>=1 && str_to_num(race)<=9)
-					racexp[str_to_num(race)-1] = str_to_num(xp)
-			}
-
-			dbi_free_result(res) 
-
-			if (p_data[id][P_RACE])
-				racexp[p_data[id][P_RACE]-1]=p_data[id][P_XP]
-
-			menu_Select_Race(id, racexp)
-		}
-		else{
-			format(mquery, 1023, "SELECT `xp`, `skill1`, `skill2`, `skill3`, `skill4` FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", mysqltablename, (iCvar[FT_SAVEBY]==2) ? playername : ((iCvar[FT_SAVEBY]==1) ? ip : playerid), p_data[id][P_RACE])
-
-#if SQL_DEBUG
-			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
-#endif
- 			new Result:res = dbi_query(mysql, mquery)
-#if SQL_DEBUG
-			log_amx("[%s] res=%d", g_MOD, res)
-#endif
-
-			if (res < RESULT_NONE) {
-				new err[255]
-				new errNum = dbi_error(mysql, err, 254)
-				log_amx("[%s] DBI XP_Retreive error: %s (%d)", g_MOD, err, errNum)
-				dbi_free_result(res)
-
-				return PLUGIN_CONTINUE
-			}
-
-			if (res && dbi_nextrow(res)>0){
-				dbi_result(res, "xp", xp, 7)
-				dbi_result(res, "skill1", skill1, 1)
-				dbi_result(res, "skill2", skill2, 1)
-				dbi_result(res, "skill3", skill3, 1)
-				dbi_result(res, "skill4", skill4, 1)				
-
-				p_data[id][P_XP]=str_to_num(xp)
-				p_data[id][P_SKILL1]=str_to_num(skill1)
-				p_data[id][P_SKILL2]=str_to_num(skill2)
-				p_data[id][P_SKILL3]=str_to_num(skill3)
-				p_data[id][P_ULTIMATE]=str_to_num(skill4)
-
-				WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
-
-			}
-			else{
-				p_data[id][P_XP]=0
-				p_data[id][P_SKILL1]=0
-				p_data[id][P_SKILL2]=0
-				p_data[id][P_SKILL3]=0
-				p_data[id][P_ULTIMATE]=0
-				WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
-			}
-
-			dbi_free_result(res) 
-		}
-	}
-	else{			// Get info from a vault
-		new info[512], temp[128]
-		new i, attempt
-		if (returnrace)
+		// Loop through all of the records
+		new szXP[8], szRace[2], iXP, iRace;
+		while ( res && dbi_nextrow(res) > 0 )
 		{
-			for(i=1;i<9;i++){
-				format(xp,7,"")
-				format(race,1,"")
-				format(temp,127,"")
+			dbi_result(res, "xp", szXP, 7);
+			dbi_result(res, "race", szRace, 1);
 
-				if(iCvar[FT_SAVEBY]==0)			// Get info by steam ID
-					format(temp,127,"%s_%d",playerid,i)
-				else if(iCvar[FT_SAVEBY]==1)		// Get info by IP address
-					format(temp,127,"%s_%d",ip,i)
-				else if(iCvar[FT_SAVEBY]==2)		// Get info by Player name
-					format(temp,127,"%s_%d",playername,i)
-
-
-				attempt = get_vaultdata(temp,info,511)
-				parse(info, playerid,31, xp,7, race,1, skill1,1, skill2,1, skill3,1, skill4,1)
-				if (str_to_num(race)>=1 && str_to_num(race)<=9)
-					racexp[str_to_num(race)-1] = str_to_num(xp)
+			iXP = str_to_num( szXP );
+			iRace = str_to_num( szRace );
+			
+			// Save the user's XP in an array
+			if ( iRace > 0 && iRace < 10)
+			{
+				iRaceXP[iRace-1] = iXP;
 			}
-			if (p_data[id][P_RACE])
-				racexp[p_data[id][P_RACE]-1]=p_data[id][P_XP]
-
-			menu_Select_Race(id, racexp)
 		}
-		else{
+		
+		// Free the result set
+		dbi_free_result(res); 
+	}
+	// Retrieve data via the vault
+	else
+	{
+		new iRace, iXP, iAttempt, szKey[128], szXP[8], szData[256], szPlayerID[32];
+		for( iRace = 1; iRace < 9; iRace++ )
+		{
+			format( szXP, 7, "");
+			
+			format( szKey, 127, "%s_%d", (iCvar[FT_SAVEBY]==SAVE_NAME) ? szPlayerName : ((iCvar[FT_SAVEBY]==SAVE_IP) ? szPlayerIP : szPlayerID), iRace );
 
-			if(iCvar[FT_SAVEBY]==0)			// Get info by steam ID
-				format(temp,127,"%s_%d",playerid,p_data[id][P_RACE])
-			else if(iCvar[FT_SAVEBY]==1)		// Get info by IP address
-				format(temp,127,"%s_%d",ip,p_data[id][P_RACE])
-			else if(iCvar[FT_SAVEBY]==2)		// Get info by Player name
-				format(temp,127,"%s_%d",playername,p_data[id][P_RACE])
+			iAttempt = get_vaultdata( szKey, szData, 255 );
+			
+			// Parse the vault data
+			parse( szData, szPlayerID, 31, szXP, 7 );
 
-			attempt = get_vaultdata(temp,info,511)
-			if (attempt){
-				parse(info, playerid,31, xp,7, race,1, skill1,1, skill2,1, skill3,1, skill4,1)
-				p_data[id][P_XP]=str_to_num(xp)
-				p_data[id][P_SKILL1]=str_to_num(skill1)
-				p_data[id][P_SKILL2]=str_to_num(skill2)
-				p_data[id][P_SKILL3]=str_to_num(skill3)
-				p_data[id][P_ULTIMATE]=str_to_num(skill4)
-				WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
-			}
-			else{
-				p_data[id][P_XP]=0
-				p_data[id][P_SKILL1]=0
-				p_data[id][P_SKILL2]=0
-				p_data[id][P_SKILL3]=0
-				p_data[id][P_ULTIMATE]=0
-				WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
+			iXP = str_to_num( szXP );
+			
+			// Save the user's XP in an array
+			if ( iRace > 0 && iRace < 10 && iAttempt )
+			{
+				iRaceXP[iRace-1] = iXP;
 			}
 		}
 	}
-	return PLUGIN_CONTINUE
-}
 
-public XP_Client_Save(id,show){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_client_save",id)
-	#endif
+	// We don't want to replace the player's current XP with whats in the database now do we ?
+	if ( p_data[id][P_RACE] )
+	{
+		iRaceXP[p_data[id][P_RACE]-1] = p_data[id][P_XP];
+	}
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
+	// Display the menu to the user
+	menu_Select_Race(id, iRaceXP);
 
-	if (iCvar[MP_SAVEXP]){
-		if(show)
-		{
-			if ( iCvar[FT_DISABLE_SAVEXP] )
-			{
-				client_print(id, print_chat, "%s Typing /savexp does nothing on this server",g_MODclient)
-			}
-			else
-			{
-				XP_Save(id)
-				client_print(id,print_chat, "%s XP saved.",g_MODclient)
-			}
-		}
-	}	
-	else if (show)
-		client_print(id,print_chat,"%s %L",g_MODclient, id,"XP_IS_NOT_SAVED")
-	
-	return PLUGIN_CONTINUE
+	return PLUGIN_CONTINUE;
 }
 
 public XP_Set_DBI(){
@@ -528,195 +564,229 @@ public XP_Set_DBI(){
 		writeDebugInfo("XP_Set_DBI",0)
 	#endif
 
-	if (iCvar[SV_MYSQL]){
-		get_cvar_string("sv_mysqltablename",mysqltablename,63)
-		new mhost[64], muser[32], mpass[32], mdb[128], int_check[64]
-		new mquery[512]
+	// Try to open a database connection
+	if ( iCvar[SV_MYSQL] )
+	{
+		// Get the table name
+		get_cvar_string("sv_mysqltablename", g_DBTableName, 63);
 
-		dbi_type(SQLtype, 15)
-#if SQL_DEBUG
-		log_amx("[%s] dbi_type: %s", g_MOD, SQLtype)
-#endif
-
+		// We have an attempt, lets increment our counter
+		iSQLAttempts++;
+		
+		// Verify the type of DBI module that is loaded is supported
+		dbi_type(SQLtype, 15);
 		if (equali(SQLtype, g_MySQL))
 		{
-			iSQLtype = SQL_MYSQL
-			copy(SQLtype, strlen(g_MySQL)+1, g_MySQL)
+			iSQLtype = SQL_MYSQL;
+			copy(SQLtype, strlen(g_MySQL)+1, g_MySQL);
 		}
 		else if (equali(SQLtype, g_SQLite))
 		{
-			iSQLtype = SQL_SQLITE
-			copy(SQLtype, strlen(g_SQLite)+1, g_SQLite)
+			iSQLtype = SQL_SQLITE;
+			copy(SQLtype, strlen(g_SQLite)+1, g_SQLite);
 		}
 		else
 		{
-			iSQLtype = SQL_NONE
-			log_amx("[%s] Unsupported database type found (%s), the supported databases are %s or %s", g_MOD, SQLtype, g_MySQL, g_SQLite)
-			return PLUGIN_CONTINUE
+			iSQLtype = SQL_NONE;
+			log_amx("[%s] Unsupported database type found (%s), the supported databases are %s or %s", g_MOD, SQLtype, g_MySQL, g_SQLite);
+			return PLUGIN_CONTINUE;
 		}
 
-#if SQL_DEBUG
-		log_amx("[%s] iSQLtype = %d, SQLtype = %s", g_MOD, iSQLtype, SQLtype)
-#endif
-
-		if (iSQLtype == SQL_MYSQL)
-			format(mquery, 511, "CREATE TABLE IF NOT EXISTS `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL, PRIMARY KEY (`playerid`, `race`))", mysqltablename)
-		else if (iSQLtype == SQL_SQLITE)
-			format(mquery, 511, "CREATE TABLE `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`playerid`, `race`))", mysqltablename)
-
-		get_cvar_string("FT_mysql_host",mhost,63)
-		get_cvar_string("FT_mysql_user",muser,31)
-		get_cvar_string("FT_mysql_pass",mpass,31)
-		get_cvar_string("FT_mysql_db",mdb,127)
-
-		new err[255], errNum = 0
-#if SQL_DEBUG
-		log_amx("[%s] dbi_connect(%s, %s, %s, %s)", g_MOD, mhost, muser, mpass, mdb)
-#endif
-		mysql = dbi_connect(mhost,muser,mpass,mdb)
-#if SQL_DEBUG
-		log_amx("[%s] mysql=%d", g_MOD, mysql)
-#endif
-
-		if (mysql < SQL_OK) {
-			errNum = dbi_error(mysql, err, 254)
-			log_amx("[%s] DBI XP_Set_DBI error: %s (%d)", g_MOD, err, errNum)
-
-			if(iSQLAttempts < SQL_ATTEMPTS){
-				new Float:delay = 25.0
-				log_amx("[%s] Will attempt to re-connect to the %s Database in %f seconds", g_MOD, SQLtype, delay)
-				set_task(delay, "XP_Set_DBI", TASK_SETMYSQL)
-			}
-			iSQLAttempts++
-			return 1
-		}
-		else
-			log_amx("[%s] Connection to %s Database successful (%d)", g_MOD, SQLtype, mysql)
-
-		new Result:ret
-		if (iSQLtype != SQL_SQLITE || !sqlite_table_exists(mysql, mysqltablename)) {
-#if SQL_DEBUG
-			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
-#endif
-			ret = dbi_query(mysql, mquery)
-#if SQL_DEBUG
-			log_amx("[%s] ret=%d", g_MOD, ret)
-#endif
-
-			if (ret < RESULT_NONE) {
-				errNum = dbi_error(mysql, err, 254)
-				log_amx("[%s] DBI XP_Set_DBI error: %s (%d)", g_MOD, err, errNum)
-				dbi_free_result(ret)
-				return 1
-			}
-		}
-
-		//dbi_free_result(ret)		// Why is MySQL database complaining with this? SQLite works OK, so why?
-
-		if (iSQLtype == SQL_SQLITE) { // These probably should be subject to a CVAR
-			/*
-				Lets fine tune the database:
-			 		"synchronous = NORMAL"	- Put back the 2.x behaviour (faster than the defalt
-								  for 3.x)
-					"synchronous = OFF"	- Way faster, but it might get corrupted data if a
-								  server os system crash occurs
-					"integrity_check"	- well it's what it says, we do have to check the
-								  value it returns since it's important
-				PRAGMA commands don't return anything so no need to check the result of the query
-			 */
-			format(mquery, 511, "PRAGMA integrity_check")
-#if SQL_DEBUG
-			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
-#endif
-			new Result:res = dbi_query(mysql, mquery)
-
-
-			while (res && dbi_nextrow(res)>0)
-			{
-				dbi_result(res, "integrity_check", int_check, 63)
-			}
-
-			dbi_free_result(res)
-#if SQL_DEBUG
-			log_amx("[%s] int_check=%s", g_MOD, int_check)
-#endif
-
-			if (!equali(int_check, "ok")) {
-				log_amx("[%s] DBI XP_Set_DBI error: %s", g_MOD, int_check)
-				return 1
-			}
-			format(mquery, 511, "PRAGMA synchronous = %d", SQLITE_SYNC_OFF)
-#if SQL_DEBUG
-			log_amx("[%s] dbi_query(%d, %s)", g_MOD, mysql, mquery)
-#endif
-			dbi_query(mysql, mquery)
-		}
-	}
-
-	return PLUGIN_CONTINUE
-}
-
-public XP_Reset(id,saychat){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Reset",id)
-	#endif
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	p_data[id][P_LEVEL]=0
-	p_data[id][P_XP]=0
-	p_data[id][P_SKILL1]=0
-	p_data[id][P_SKILL2]=0
-	p_data[id][P_SKILL3]=0
-	p_data[id][P_ULTIMATE]=0
-
-	WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
-
-	XP_Save(id)
-
-	if(saychat==1)
-		client_print(id,print_chat,"%s %L",g_MODclient, id,"YOUR_XP_HAS_BEEN_RESET")
-	else
-		console_print(id,"%L",id,"YOUR_XP_HAS_BEEN_RESET",g_MOD)
-
-	return PLUGIN_CONTINUE
-}	
-
-public XP_Prune()
-{
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Prune",id)
-	#endif
-
-	if ( iCvar[SV_MYSQL_AUTO_PRUNING] && iSQLtype == SQL_MYSQL )
-	{
-		new szTableName[64];
-		get_cvar_string("sv_mysqltablename", szTableName, 63);
-			
-		new query[256];
-
+		// Format the create table statement
+		new szQuery[512];
 		if ( iSQLtype == SQL_MYSQL )
 		{
-			// Timestamp format: 20030912122142
-			// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42	
-			format( query, 255, "DELETE FROM `%s` WHERE DATE_SUB(CURDATE(),INTERVAL %d DAY) > time;", szTableName, iCvar[SV_DAYSBEFOREDELETE] );
+			format( szQuery, 511, "CREATE TABLE IF NOT EXISTS `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL, PRIMARY KEY (`playerid`, `race`))", g_DBTableName );
 		}
 		else if ( iSQLtype == SQL_SQLITE )
 		{
-			// Timestamp format: 2003-09-12 12:21:42
-			// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42
-			format( query, 255, "DELETE FROM `%s` WHERE ((julianday(`time`) + %d) < julianday('now'))", szTableName, iCvar[SV_DAYSBEFOREDELETE] );
+			format( szQuery, 511, "CREATE TABLE `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`playerid`, `race`))", g_DBTableName );
+		}
+		
+		// Determine the database information
+		new szHost[64], szUser[32], szPass[32], szDB[128];
+		get_cvar_string("FT_mysql_host", szHost, 63);
+		get_cvar_string("FT_mysql_user", szUser, 31);
+		get_cvar_string("FT_mysql_pass", szPass, 31);
+		get_cvar_string("FT_mysql_db", szDB, 127);
+
+		// Attempt the Connection
+		mysql = dbi_connect(szHost, szUser, szPass, szDB);
+		
+		// Verify our database connection has worked
+		if ( !XP_Check_Connection() )
+		{
+			return PLUGIN_CONTINUE;
+		}
+		log_amx( "[%s] Connection to %s Database successful with an ID of %d", g_MOD, SQLtype, mysql );
+
+
+		// Execute our CREATE TABLE statement if it's MySQL or the SQL LITE table doesn't exist
+		if ( iSQLtype != SQL_SQLITE || !sqlite_table_exists(mysql, g_DBTableName) )
+		{
+			new Result:ret = dbi_query(mysql, szQuery)
+
+			if ( ret < RESULT_NONE )
+			{
+				XP_DBI_Error( ret, szQuery, 2 );
+				return PLUGIN_CONTINUE;
+			}
 		}
 
-		dbi_query(mysql, query);
-
-		// Vacuum the SQL LITE DB
-		if (iSQLtype == SQL_SQLITE)
+		/*
+			These probably should be subject to a CVAR
+			Lets fine tune the database:
+				"synchronous = NORMAL"	- Put back the 2.x behaviour (faster than the defalt
+							  for 3.x)
+				"synchronous = OFF"	- Way faster, but it might get corrupted data if a
+							  server os system crash occurs
+				"integrity_check"	- well it's what it says, we do have to check the
+							  value it returns since it's important
+			PRAGMA commands don't return anything so no need to check the result of the query
+		*/	
+		if ( iSQLtype == SQL_SQLITE ) 
 		{
-			format( query, 255, "VACUUM `%s`", szTableName );
+			new szIntegrityCheck[64];
+			format(szQuery, 511, "PRAGMA integrity_check");
+			new Result:res = dbi_query(mysql, szQuery);
+			
+			// Check for an error
+			if ( res < RESULT_NONE )
+			{
+				XP_DBI_Error( res, szQuery, 2 );
+				return PLUGIN_CONTINUE;
+			}
+			
+			// Get the integrity check value
+			while ( res && dbi_nextrow(res) > 0 )
+			{
+				dbi_result(res, "integrity_check", szIntegrityCheck, 63);
+			}
 
-			dbi_query( mysql, query );
+			// Free the result
+			dbi_free_result(res);
+
+			// Check to make sure the integrity check passed
+			if ( !equali(szIntegrityCheck, "ok") )
+			{
+				// Should we disable saving here?
+				log_amx("[%s] SQL Lite integrity check failed", g_MOD);
+				return PLUGIN_CONTINUE;
+			}
+				
+			// Do some synchronous crap
+			format(szQuery, 511, "PRAGMA synchronous = %d", SQLITE_SYNC_OFF);
+			dbi_query(mysql, szQuery);
+		}
+	}
+	// Tell the vault what version is running (we need this for the vault conversion)
+	else
+	{
+		set_vaultdata( "war3ft_version", WC3VERSION );
+	}
+
+	return PLUGIN_CONTINUE;
+}
+
+// Reset the user's XP to 0
+public XP_Reset(id)
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo("XP_Reset", id);
+	#endif
+
+	if (!warcraft3)
+		return PLUGIN_CONTINUE;
+
+	p_data[id][P_LEVEL]		= 0;
+	p_data[id][P_XP]		= 0;
+	p_data[id][P_SKILL1]	= 0;
+	p_data[id][P_SKILL2]	= 0;
+	p_data[id][P_SKILL3]	= 0;
+	p_data[id][P_ULTIMATE]	= 0;
+
+	XP_Save(id);
+
+	WAR3_Display_Level(id, DISPLAYLEVEL_NONE);
+
+	client_print(id, print_chat, "%s %L", g_MODclient, id, "YOUR_XP_HAS_BEEN_RESET");
+
+	return PLUGIN_CONTINUE;
+}	
+
+// Prune the database of old records
+public XP_Prune()
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo("XP_Prune", id);
+	#endif
+
+	if ( iCvar[FT_AUTO_PRUNING] )
+	{
+		// Vault pruning (only works with vaults created with version 2.2.8)
+		if ( !iCvar[SV_MYSQL] )
+		{
+			new szVault[] = "addons/amxmodx/data/vault.ini";
+			
+			// Make sure the vault exists
+			if ( file_exists( szVault ) )
+			{
+				new len, line, szText[256];
+				new iCurrentTime = get_systime();
+				// 86400 = 24 hours * 60 minutes * 60 seconds
+				new iExpiredTime = iCurrentTime - (iCvar[SV_DAYSBEFOREDELETE] * 86400);
+
+				// Check every line in the vault
+				while ( (line = read_file(szVault, line, szText, 255, len)) != 0 )
+				{
+					// The first 2 lines are not actual data, so lets skip them
+					if ( line > 2 )
+					{
+						new szID[32], szAuthID[32], szXP[8], szRace[2], szSkill1[2], szSkill2[2], szSkill3[2], szSkill4[2], szIP[32], szTimestamp[32];
+						parse(szText, szID, 31, szAuthID, 31, szXP, 7, szRace, 1, szSkill1, 1, szSkill2, 1, szSkill3, 1, szSkill4, 1, szIP, 31, szTimestamp, 31);
+						
+						// Verify its the new vault timestamp
+						if ( strlen(szTimestamp) > 2 )
+						{
+							new iUserTimestamp = str_to_num( szTimestamp );
+							
+							server_print( "[VAULT] Checking  %d < %d", iUserTimestamp, iExpiredTime );
+							if ( iUserTimestamp < iExpiredTime )
+							{
+								server_print( "[VAULT] Expired removing %s", szID );
+							}
+						}
+					}
+				} 
+			}
+		}
+		// MySQL/SQLLite pruning
+		else
+		{
+			new query[256];
+
+			if ( iSQLtype == SQL_MYSQL )
+			{
+				// Timestamp format: 20030912122142
+				// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42	
+				format( query, 255, "DELETE FROM `%s` WHERE DATE_SUB(CURDATE(),INTERVAL %d DAY) > time;", g_DBTableName, iCvar[SV_DAYSBEFOREDELETE] );
+			}
+			else if ( iSQLtype == SQL_SQLITE )
+			{
+				// Timestamp format: 2003-09-12 12:21:42
+				// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42
+				format( query, 255, "DELETE FROM `%s` WHERE ((julianday(`time`) + %d) < julianday('now'))", g_DBTableName, iCvar[SV_DAYSBEFOREDELETE] );
+			}
+
+			dbi_query(mysql, query);
+
+			// Vacuum the SQL LITE DB Table
+			if (iSQLtype == SQL_SQLITE)
+			{
+				format( query, 255, "VACUUM `%s`", g_DBTableName );
+
+				dbi_query( mysql, query );
+			}
 		}
 
 		log_amx("[%s] Database pruning successful, data older than %d days was removed", g_MOD, iCvar[SV_DAYSBEFOREDELETE]);
@@ -727,7 +797,7 @@ public XP_Prune()
 public XP_CloseDB()
 {
 	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_CloseDB", 0)
+		writeDebugInfo("XP_CloseDB", 0);
 	#endif
 
 	if ( iCvar[SV_MYSQL] )
@@ -743,7 +813,7 @@ public XP_CloseDB()
 public XP_Save_All()
 {
 	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Save_All", 0)
+		writeDebugInfo("XP_Save_All", 0);
 	#endif
 
 	if (!warcraft3)
@@ -772,8 +842,67 @@ public XP_Save_All()
 public XP_Save_Helper( parm[1] )
 {
 	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Save_Helper", parm[0])
+		writeDebugInfo("XP_Save_Helper", parm[0]);
 	#endif
 
 	XP_Save( parm[0] );
+}
+
+// The id should be a unique number, so we know what function called it (useful for debugging)
+public XP_DBI_Error( Result:res, query[], id )
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo("XP_DBI_Error", id);
+	#endif
+
+	// Get the error message and log it
+	new szError[255];
+	new iError = dbi_error(mysql, szError, 254);
+	log_amx("[%s] Error in querying database, location: %d", g_MOD, id);
+	log_amx("[%s] Message: %s (%d)", g_MOD, szError, iError);
+	log_amx("[%s] Query statement: %s ", g_MOD, query);
+
+	// Free the result
+	if ( res > RESULT_FAILED )
+	{
+		dbi_free_result(res);
+	}
+}
+
+// Prepares text for database insertion
+public XP_AddSlashes( text[], len )
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo("XP_AddSlashes", 0);
+	#endif
+
+	replace( text, len, "'", "\'" );
+}
+
+// Verifies that the database connection is ok
+public XP_Check_Connection()
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo("XP_Check_Connection", 0);
+	#endif
+
+	if( mysql < SQL_OK )
+	{
+		if( iSQLAttempts < SQL_ATTEMPTS )
+		{
+			log_amx( "[%s] Database connection failed, attempting to reconnect in %0.0f seconds", SQL_ATTEMPT_DELAY );
+			set_task( SQL_ATTEMPT_DELAY, "XP_Set_DBI", TASK_SETMYSQL );
+		}
+		else if( iSQLAttempts >= SQL_ATTEMPTS )
+		{
+			iCvar[MP_SAVEXP] = 0
+			iCvar[SV_MYSQL] = 0
+
+			log_amx("[%s] Unable to connect to the %s Database after %d attempts, switching to short-term mode", g_MOD, SQLtype, iSQLAttempts)
+		}
+
+		return false;
+	}
+
+	return true;
 }

@@ -1057,9 +1057,10 @@ public on_ResetHud(id){
 	if (iCvar[FT_WARN_SUICIDE])
 		p_data_b[id][PB_SUICIDEATTEMPT] = false
 
-	// Weapon Reincarnation
-
-	set_task(0.1, "weapon_controller", TASK_REINCARNATION+id, parm, 2)
+	#if MOD == 0
+		// Weapon Reincarnation
+		set_task(0.1, "Skill_Reincarnation", TASK_REINCARNATION+id, parm, 2)
+	#endif
 
 	endround=false
 	p_data_b[id][PB_ISBURNING] = false

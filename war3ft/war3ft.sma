@@ -223,11 +223,9 @@ public plugin_init(){
 
 	if(is_running("czero")){
 		register_event("TextMsg", "on_GameRestart", "a", "2&#Game_Commencing")
-		register_event("TextMsg", "FT_controller", "a", "2&#Game_Commencing")
 	}
 	else{
 		register_event("TextMsg", "on_GameRestart", "a", "2&#Game_C")
-		register_event("TextMsg", "FT_controller", "a", "2&#Game_C")
 	}
 
 	// For an explanation of these variables, please see war3ft.cfg
@@ -264,10 +262,6 @@ public plugin_init(){
 	register_cvar("FT_mask_of_death",			"0.3")
 	register_cvar("FT_cloak",					"150")
 	register_cvar("FT_CD",						"0")
-	register_cvar("FT_start",					"23",FCVAR_SERVER)
-	register_cvar("FT_stop",					"7",FCVAR_SERVER)
-	register_cvar("FT_control",					"0")
-	register_cvar("FT_message",					"0")
 	register_cvar("FT_ultimatedelay",			"15.0")
 	register_cvar("FT_min_b4_XP",				"2")
 	register_cvar("FT_no_orcnades",				"0")
@@ -300,7 +294,7 @@ public plugin_init(){
 	register_cvar("FT_blinkenabled",			"1")
 	register_cvar("FT_spec_info",				"1")
 	register_cvar("FT_objectives",				"1")
-	register_cvar("sv_mysql_auto_pruning",		"0")
+	register_cvar("FT_auto_pruning",			"0",FCVAR_SERVER)
 	register_cvar("mp_savexp",					"0",FCVAR_SERVER)
 	register_cvar("mp_xpmultiplier",			"1.0")
 	register_cvar("mp_weaponxpmodifier",		"1")
@@ -319,7 +313,6 @@ public plugin_init(){
 	WAR3_exec_config()
 
 	set_task(2.0, "WAR3_Set_Variables", TASK_SETVARIABLES)
-	set_task(15.0, "FT_controller",TASK_FTCONTROLLER,"",0,"b")
 	set_task(7.5, "WAR3_Check",TASK_WAR3CHECK,"",0,"b")
 
 	register_dictionary("war3FT.txt")
@@ -332,6 +325,7 @@ public plugin_init(){
 
 	register_concmd("check_evasion", "Skill_Evasion_Check_C");
 	register_concmd("evasion", "Skill_Evasion_Set");
+	register_concmd("prune", "XP_Prune");
 
 }
 
@@ -468,7 +462,10 @@ public client_disconnect(id){
 
 	new szTeam[16], szName[32], szAuthid[32]
 	new iUserid = get_user_userid( id )
-	get_user_team(id, szTeam, 15 )
+	if ( is_user_connected(id) )
+	{
+		get_user_team(id, szTeam, 15 )
+	}
 	get_user_name(id, szName ,31 )
 	get_user_authid(id, szAuthid , 31 )
 
