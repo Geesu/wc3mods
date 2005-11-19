@@ -114,7 +114,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 
 	if(p_data_b[attacker][PB_MOLE] && p_data[victim][P_ITEM2]==ITEM_PROTECTANT){	
 		set_user_health(victim,get_user_health(victim)+damage)
-		client_print(victim,print_chat,"%s %L",g_MOD,victim,"SHOT_DEFLECTED")
+		client_print(victim,print_chat,"%s %L",g_MODclient,victim,"SHOT_DEFLECTED")
 		return PLUGIN_HANDLED
 	}
 

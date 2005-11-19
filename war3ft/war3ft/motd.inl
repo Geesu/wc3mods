@@ -8,7 +8,7 @@ public MOTD_Itemsinfo(id){
 
 	if (iCvar[FT_CD]) {
 		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MOD)
+			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
 			return PLUGIN_CONTINUE
 		}
 	}
@@ -61,7 +61,7 @@ public MOTD_Itemsinfo2(id){
 
 	if (iCvar[FT_CD]) {
 		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MOD)
+			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
 			return PLUGIN_CONTINUE
 		}
 	}
@@ -105,7 +105,7 @@ public MOTD_War3help(id){
 
 	if (iCvar[FT_CD]) {
 		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MOD)
+			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
 			return PLUGIN_CONTINUE
 		}
 	}
@@ -149,7 +149,7 @@ public MOTD_Playerskills(id, saychat){
 		
 	if (iCvar[FT_CD]) {
 		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MOD)
+			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
 			return PLUGIN_CONTINUE
 		}
 	}
@@ -249,7 +249,7 @@ public MOTD_Skillsinfo(id){
 
 	if (iCvar[FT_CD]) {
 		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MOD)
+			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
 			return PLUGIN_CONTINUE
 		}
 	}

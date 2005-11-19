@@ -759,7 +759,7 @@ public ceiling_check(parm[2]){
 	#endif
 	
 	if(slay){
-		client_print(id,print_chat,"%L",id,"SLAIN_FOR_TELEPORTING",g_MOD)
+		client_print(id,print_chat,"%L",id,"SLAIN_FOR_TELEPORTING",g_MODclient)
 		user_kill(id)
 	}
 
@@ -916,7 +916,7 @@ public lightningnext(parm[5]){		// Chain Lightning
 
 public lightningeffect(caster,targetid,linewidth,damage,bodypart){
 	#if ADVANCED_DEBUG
-		writeDebugInfo("lightningeffect",id)
+		writeDebugInfo("lightningeffect",caster)
 	#endif
 
 	p_data_b[targetid][PB_LIGHTNINGHIT]=true

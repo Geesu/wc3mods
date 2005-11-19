@@ -278,7 +278,7 @@ public XP_Save(id){
 		return PLUGIN_CONTINUE;
 	}
 
-	if ( p_data[id][P_RACE] == 0 || is_user_bot(id) || !iCvar[MP_SAVEXP] )
+	if ( p_data[id][P_RACE] == 0 || is_user_bot(id) || !iCvar[MP_SAVEXP] || p_data[id][P_XP] == 0 )
 	{
 		return PLUGIN_CONTINUE;
 	}
@@ -291,12 +291,12 @@ public XP_Save(id){
 		return PLUGIN_CONTINUE;
 	}
 
-	new szPlayerIP[20], szPlayerName[33];
+	new szPlayerIP[20], szPlayerName[66];
 	get_user_name(id, szPlayerName, 32);
 	get_user_ip(id, szPlayerIP, 19);
 
 	// Save to the database
-	if ( iCvar[SV_MYSQL] )
+	if ( iCvar[SV_SQL] )
 	{
 		// Verify we have a database connection
 		if ( !XP_Check_Connection() )
@@ -304,14 +304,14 @@ public XP_Save(id){
 			return PLUGIN_CONTINUE;
 		}
 
-		// Prepare name for the query
-		XP_AddSlashes( szPlayerName, 32 );
+		// Prepare name for the query (playername is 66 in case all 33 characters are ')
+		XP_AddSlashes( szPlayerName, 65 );
 			
 		// Save the data
 		new szQuery[512];
 		format(szQuery, 511, "REPLACE INTO `%s` (`playerid`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', %d, %d, %d, %d, %d, %d)", g_DBTableName, (iCvar[FT_SAVEBY]==2) ? szPlayerName : ((iCvar[FT_SAVEBY]==1) ? szPlayerIP : szPlayerID), szPlayerName, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE]);
 
- 		new Result:res = dbi_query(mysql, szQuery);
+ 		new Result:res = dbi_query(sql, szQuery);
 		
 		// Verify we have a result
 		if (res < RESULT_NONE)
@@ -357,11 +357,11 @@ public XP_Set_Race_Data( id )
 		return PLUGIN_CONTINUE;
 	}
 	
-	new szPlayerIP[20], szPlayerName[33];
+	new szPlayerIP[20], szPlayerName[66];
 	get_user_name(id, szPlayerName, 32);
 	get_user_ip(id, szPlayerIP, 19);
 
-	if ( iCvar[SV_MYSQL] )
+	if ( iCvar[SV_SQL] )
 	{
 		// Verify we have a database connection
 		if ( !XP_Check_Connection() )
@@ -370,12 +370,12 @@ public XP_Set_Race_Data( id )
 		}
 
 		// Prepare name for the query
-		XP_AddSlashes( szPlayerName, 32 );
+		XP_AddSlashes( szPlayerName, 65 );
 
 		new szQuery[256];
 		format( szQuery, 255, "SELECT `xp`, `skill1`, `skill2`, `skill3`, `skill4` FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", g_DBTableName, (iCvar[FT_SAVEBY]==SAVE_NAME) ? szPlayerName : ((iCvar[FT_SAVEBY]==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE])
 
-		new Result:res = dbi_query(mysql, szQuery)
+		new Result:res = dbi_query(sql, szQuery)
 		
 		// Verify we have a result
 		if (res < RESULT_NONE)
@@ -424,7 +424,7 @@ public XP_Set_Race_Data( id )
 		iAttempt = get_vaultdata(szKey, szData, 255);
 		
 		// Then we found a record in the vault
-		if (iAttempt)
+		if ( iAttempt )
 		{
 			new szXP[8], szSkill1[2], szSkill2[2], szSkill3[2], szSkill4[2], szRace[2];
 
@@ -472,34 +472,34 @@ public XP_Get( id )
 		return PLUGIN_CONTINUE;
 	}
 	
-	new szPlayerIP[20], szPlayerName[33];
+	new szPlayerIP[20], szPlayerName[66];
 	new iRaceXP[9]= {0,0,0,0,0,0,0,0,0};
 	get_user_name(id, szPlayerName, 32);
 	get_user_ip(id, szPlayerIP, 19);
 
-	// Retreive data via MySQL
-	if ( iCvar[SV_MYSQL] )
+	// Retreive data via SQL
+	if ( iCvar[SV_SQL] )
 	{
-		// Make sure we have a valid MySQL Connection
+		// Make sure we have a valid SQL Connection
 		if ( !XP_Check_Connection() )
 		{
 			return PLUGIN_CONTINUE;
 		}
 
 		// Prepare name for the query
-		XP_AddSlashes( szPlayerName, 32 );
+		XP_AddSlashes( szPlayerName, 65 );
 	
 		new szQuery[256];
 		format(szQuery, 255, "SELECT `xp`, `race` FROM `%s` WHERE (`playerid` = '%s')", g_DBTableName, (iCvar[FT_SAVEBY]==SAVE_NAME) ? szPlayerName : ((iCvar[FT_SAVEBY]==SAVE_IP) ? szPlayerIP : szPlayerID));
  		
-		new Result:res = dbi_query(mysql, szQuery);
+		new Result:res = dbi_query(sql, szQuery);
 		
 		// Make sure we have a result
 		if (res < RESULT_NONE)
 		{
 			client_print(id, print_chat, "%s An error has occurred when retreiving your race information, please contact a server administrator", g_MODclient);
 			XP_DBI_Error( res, szQuery, 0 );
-			return PLUGIN_CONTINUE
+			return PLUGIN_CONTINUE;
 		}
 
 		// Loop through all of the records
@@ -525,24 +525,28 @@ public XP_Get( id )
 	// Retrieve data via the vault
 	else
 	{
-		new iRace, iXP, iAttempt, szKey[128], szXP[8], szData[256], szPlayerID[32];
-		for( iRace = 1; iRace < 9; iRace++ )
+		new iRace, iXP, iAttempt, szKey[128], szXP[8], szData[256];
+		for( iRace = 1; iRace < 10; iRace++ )
 		{
-			format( szXP, 7, "");
-			
 			format( szKey, 127, "%s_%d", (iCvar[FT_SAVEBY]==SAVE_NAME) ? szPlayerName : ((iCvar[FT_SAVEBY]==SAVE_IP) ? szPlayerIP : szPlayerID), iRace );
 
 			iAttempt = get_vaultdata( szKey, szData, 255 );
 			
-			// Parse the vault data
-			parse( szData, szPlayerID, 31, szXP, 7 );
-
-			iXP = str_to_num( szXP );
-			
-			// Save the user's XP in an array
-			if ( iRace > 0 && iRace < 10 && iAttempt )
+			// Only want to check if a key was found
+			if ( iAttempt )
 			{
-				iRaceXP[iRace-1] = iXP;
+				format( szXP, 7, "" );
+
+				// Parse the vault data
+				parse( szData, szPlayerID, 31, szXP, 7 );
+				
+				iXP = str_to_num( szXP );
+				
+				// Save the user's XP in an array
+				if ( iRace > 0 && iRace < 10 )
+				{
+					iRaceXP[iRace-1] = iXP;
+				}
 			}
 		}
 	}
@@ -563,12 +567,19 @@ public XP_Set_DBI(){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("XP_Set_DBI",0)
 	#endif
+	
+	// Check the DBI loaded variable
+	if ( !g_DBILoaded )
+	{
+		// Fall back to vault
+		iCvar[SV_SQL] = 0;
+	}
 
 	// Try to open a database connection
-	if ( iCvar[SV_MYSQL] )
+	if ( iCvar[SV_SQL] )
 	{
 		// Get the table name
-		get_cvar_string("sv_mysqltablename", g_DBTableName, 63);
+		get_cvar_string("sv_sqltablename", g_DBTableName, 63);
 
 		// We have an attempt, lets increment our counter
 		iSQLAttempts++;
@@ -588,7 +599,7 @@ public XP_Set_DBI(){
 		else
 		{
 			iSQLtype = SQL_NONE;
-			log_amx("[%s] Unsupported database type found (%s), the supported databases are %s or %s", g_MOD, SQLtype, g_MySQL, g_SQLite);
+			log_amx("Unsupported database type found (%s), the supported databases are %s or %s", SQLtype, g_MySQL, g_SQLite);
 			return PLUGIN_CONTINUE;
 		}
 
@@ -605,26 +616,26 @@ public XP_Set_DBI(){
 		
 		// Determine the database information
 		new szHost[64], szUser[32], szPass[32], szDB[128];
-		get_cvar_string("FT_mysql_host", szHost, 63);
-		get_cvar_string("FT_mysql_user", szUser, 31);
-		get_cvar_string("FT_mysql_pass", szPass, 31);
-		get_cvar_string("FT_mysql_db", szDB, 127);
+		get_cvar_string("FT_sql_host", szHost, 63);
+		get_cvar_string("FT_sql_user", szUser, 31);
+		get_cvar_string("FT_sql_pass", szPass, 31);
+		get_cvar_string("FT_sql_db", szDB, 127);
 
 		// Attempt the Connection
-		mysql = dbi_connect(szHost, szUser, szPass, szDB);
+		sql = dbi_connect(szHost, szUser, szPass, szDB);
 		
 		// Verify our database connection has worked
 		if ( !XP_Check_Connection() )
 		{
 			return PLUGIN_CONTINUE;
 		}
-		log_amx( "[%s] Connection to %s Database successful with an ID of %d", g_MOD, SQLtype, mysql );
+		log_amx( "Connection to %s database successful", SQLtype );
 
 
 		// Execute our CREATE TABLE statement if it's MySQL or the SQL LITE table doesn't exist
-		if ( iSQLtype != SQL_SQLITE || !sqlite_table_exists(mysql, g_DBTableName) )
+		if ( iSQLtype != SQL_SQLITE || !sqlite_table_exists(sql, g_DBTableName) )
 		{
-			new Result:ret = dbi_query(mysql, szQuery)
+			new Result:ret = dbi_query(sql, szQuery)
 
 			if ( ret < RESULT_NONE )
 			{
@@ -648,7 +659,7 @@ public XP_Set_DBI(){
 		{
 			new szIntegrityCheck[64];
 			format(szQuery, 511, "PRAGMA integrity_check");
-			new Result:res = dbi_query(mysql, szQuery);
+			new Result:res = dbi_query(sql, szQuery);
 			
 			// Check for an error
 			if ( res < RESULT_NONE )
@@ -670,13 +681,13 @@ public XP_Set_DBI(){
 			if ( !equali(szIntegrityCheck, "ok") )
 			{
 				// Should we disable saving here?
-				log_amx("[%s] SQL Lite integrity check failed", g_MOD);
+				log_amx("SQL Lite integrity check failed");
 				return PLUGIN_CONTINUE;
 			}
 				
 			// Do some synchronous crap
 			format(szQuery, 511, "PRAGMA synchronous = %d", SQLITE_SYNC_OFF);
-			dbi_query(mysql, szQuery);
+			dbi_query(sql, szQuery);
 		}
 	}
 	// Tell the vault what version is running (we need this for the vault conversion)
@@ -718,13 +729,13 @@ public XP_Reset(id)
 public XP_Prune()
 {
 	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Prune", id);
+		writeDebugInfo("XP_Prune", 0);
 	#endif
 
 	if ( iCvar[FT_AUTO_PRUNING] )
 	{
 		// Vault pruning (only works with vaults created with version 2.2.8)
-		if ( !iCvar[SV_MYSQL] )
+		if ( !iCvar[SV_SQL] )
 		{
 			new szVault[] = "addons/amxmodx/data/vault.ini";
 			
@@ -778,18 +789,18 @@ public XP_Prune()
 				format( query, 255, "DELETE FROM `%s` WHERE ((julianday(`time`) + %d) < julianday('now'))", g_DBTableName, iCvar[SV_DAYSBEFOREDELETE] );
 			}
 
-			dbi_query(mysql, query);
+			dbi_query(sql, query);
 
 			// Vacuum the SQL LITE DB Table
 			if (iSQLtype == SQL_SQLITE)
 			{
 				format( query, 255, "VACUUM `%s`", g_DBTableName );
 
-				dbi_query( mysql, query );
+				dbi_query( sql, query );
 			}
 		}
 
-		log_amx("[%s] Database pruning successful, data older than %d days was removed", g_MOD, iCvar[SV_DAYSBEFOREDELETE]);
+		log_amx("Database pruning successful, data older than %d days was removed", iCvar[SV_DAYSBEFOREDELETE]);
 	}
 }
 
@@ -800,11 +811,12 @@ public XP_CloseDB()
 		writeDebugInfo("XP_CloseDB", 0);
 	#endif
 
-	if ( iCvar[SV_MYSQL] )
+	if ( iCvar[SV_SQL] )
 	{
-		if( mysql )
+		if( sql )
 		{
-			dbi_close( mysql );
+			dbi_close( sql );
+			log_amx( "%s database connection closed", SQLtype );
 		}
 	}
 }
@@ -857,10 +869,10 @@ public XP_DBI_Error( Result:res, query[], id )
 
 	// Get the error message and log it
 	new szError[255];
-	new iError = dbi_error(mysql, szError, 254);
-	log_amx("[%s] Error in querying database, location: %d", g_MOD, id);
-	log_amx("[%s] Message: %s (%d)", g_MOD, szError, iError);
-	log_amx("[%s] Query statement: %s ", g_MOD, query);
+	new iError = dbi_error(sql, szError, 254);
+	log_amx("Error in querying database, location: %d", id);
+	log_amx("Message: %s (%d)", szError, iError);
+	log_amx("Query statement: %s ", query);
 
 	// Free the result
 	if ( res > RESULT_FAILED )
@@ -876,7 +888,7 @@ public XP_AddSlashes( text[], len )
 		writeDebugInfo("XP_AddSlashes", 0);
 	#endif
 
-	replace( text, len, "'", "\'" );
+	replace_all( text, len, "'", "\'" );
 }
 
 // Verifies that the database connection is ok
@@ -886,19 +898,19 @@ public XP_Check_Connection()
 		writeDebugInfo("XP_Check_Connection", 0);
 	#endif
 
-	if( mysql < SQL_OK )
+	if( sql < SQL_OK )
 	{
 		if( iSQLAttempts < SQL_ATTEMPTS )
 		{
-			log_amx( "[%s] Database connection failed, attempting to reconnect in %0.0f seconds", SQL_ATTEMPT_DELAY );
-			set_task( SQL_ATTEMPT_DELAY, "XP_Set_DBI", TASK_SETMYSQL );
+			log_amx( "Database connection failed, attempting to reconnect in %0.0f seconds", SQL_ATTEMPT_DELAY );
+			set_task( SQL_ATTEMPT_DELAY, "XP_Set_DBI", TASK_SETSQL );
 		}
 		else if( iSQLAttempts >= SQL_ATTEMPTS )
 		{
 			iCvar[MP_SAVEXP] = 0
-			iCvar[SV_MYSQL] = 0
+			iCvar[SV_SQL] = 0
 
-			log_amx("[%s] Unable to connect to the %s Database after %d attempts, switching to short-term mode", g_MOD, SQLtype, iSQLAttempts)
+			log_amx("Unable to connect to the %s database after %d attempts, switching to short-term mode", SQLtype, iSQLAttempts)
 		}
 
 		return false;

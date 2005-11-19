@@ -587,18 +587,6 @@ public _Skill_Reincarnation_Give(id){
 // Night Elf's Evasion
 // ****************************************
 
-public Skill_Evasion_Check_C( id )
-{
-	if ( id == 0 )
-	{
-		return;
-	}
-
-	client_print(id, print_chat, "%s Evade next shot: %d, Health: %d", g_MODclient, p_data_b[id][PB_EVADENEXTSHOT], get_user_health(id) );
-
-	return;
-}
-
 public Skill_Evasion_Set( id )
 {
 	if ( !Verify_Skill( id, RACE_ELF, SKILL1 ) )
@@ -615,7 +603,7 @@ public Skill_Evasion_Set( id )
 
 		p_data_b[id][PB_EVADENEXTSHOT] = true;
 
-		client_print(id, print_chat, "%s You will evade the next shot", g_MODclient);
+		//client_print(id, print_chat, "%s You will evade the next shot", g_MODclient);
 
 		set_user_health(id, iHealth + iHealthAdjustment);
 	}
@@ -633,12 +621,12 @@ public Skill_Evasion_Check( id )
 	{
 		set_user_health( id, iHealth + iHealthAdjustment );
 
-		client_print(id, print_chat, "%s Health adjusted for evasion from %d to %d", g_MODclient, iHealth, (iHealthAdjustment + iHealth));
+		//client_print(id, print_chat, "%s Health adjusted for evasion from %d to %d", g_MODclient, iHealth, (iHealthAdjustment + iHealth));
 	}
 	// Check if the user has too much health when they shouldn't evade the next shot
 	else if ( !p_data_b[id][PB_EVADENEXTSHOT] && iHealth > 500 && iHealth < 1500 )
 	{
-		client_print(id, print_chat, "%s Health adjusted for evasion from %d to %d", g_MODclient, iHealth, (iHealthAdjustment - iHealth));
+		//client_print(id, print_chat, "%s Health adjusted for evasion from %d to %d", g_MODclient, iHealth, (iHealthAdjustment - iHealth));
 
 		// Hopefully this will never kill them
 		set_user_health(id, iHealth - iHealthAdjustment);
@@ -650,7 +638,7 @@ public Skill_Evasion_Check( id )
 		// Just set back to default
 		set_user_health( id, 100 + iHealthAdjustment );
 
-		client_print(id, print_chat, "%s Health of %d adjusted from godmode, this should not occur", g_MODclient, iHealth);
+		//client_print(id, print_chat, "%s Health of %d adjusted from godmode, this should not occur", g_MODclient, iHealth);
 	}
 }
 
@@ -689,7 +677,7 @@ stock Skill_Evasion_Reset( id, damage )
 
 		p_data_b[id][PB_EVADENEXTSHOT] = false;
 
-		client_print(id, print_chat, "%s shot evaded, health set to %d", g_MODclient, get_user_health(id));
+		//client_print(id, print_chat, "%s shot evaded, health set to %d", g_MODclient, get_user_health(id));
 	}
 
 	return;
@@ -798,7 +786,6 @@ public _Skill_Healing_Wave(parm[2]){
 					set_user_health(targetid, get_user_health(targetid) + 1)
 
 					Create_TE_IMPLOSION(origin, 100, 8, 1)
-
 				}
 			}
 		}

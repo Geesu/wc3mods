@@ -202,10 +202,14 @@ public WAR3_chooserace(id){
 #if MOD == 1
 	if(get_user_team(id) == ALLIES || get_user_team(id) == AXIS){
 #endif
-		if(iCvar[MP_SAVEXP])
+		if( iCvar[MP_SAVEXP] )
+		{
 			XP_Get( id );
+		}
 		else
-			menu_Select_Race(id,{0,0,0,0,0,0,0,0,0})
+		{
+			menu_Select_Race( id, {0,0,0,0,0,0,0,0,0} )
+		}
 	}
 
 }
@@ -1168,7 +1172,7 @@ public WAR3_Set_Variables(){
 	iCvar[FT_WARN_SUICIDE			] = get_cvar_num("FT_warn_suicide")
 	iCvar[FT_BLINKENABLED			] = get_cvar_num("FT_blinkenabled")
 	iCvar[SV_ALLOWWAR3VOTE			] = get_cvar_num("sv_allowwar3vote")
-	iCvar[SV_MYSQL					] = get_cvar_num("sv_mysql")
+	iCvar[SV_SQL					] = get_cvar_num("sv_sql")
 	iCvar[SV_SAVE_END_ROUND			] = get_cvar_num("sv_save_end_round")
 	iCvar[FT_SAVEBY					] = get_cvar_num("FT_saveby")
 	iCvar[FT_AUTO_PRUNING			] = get_cvar_num("FT_auto_pruning")
@@ -1186,7 +1190,6 @@ public WAR3_Set_Variables(){
 	iCvar[FT_SHOW_PLAYER			] = get_cvar_num("FT_show_player")
 	iCvar[FT_AUTOXP					] = get_cvar_num("FT_autoxp")
 	iCvar[FT_IMPALE_INTENSITY		] = get_cvar_num("FT_impale_intensity")
-	iCvar[FT_DISABLE_SAVEXP			] = get_cvar_num("FT_disable_savexp")
 	iCvar[FT_QUERY_CLIENT			] = get_cvar_num("FT_query_client")
 
 	fCvar[FT_BOT_BUY_ITEM			] = get_cvar_float("FT_bot_buy_item")
@@ -1240,11 +1243,9 @@ public WAR3_Set_Variables(){
 
 	// Set the version of war3 that is running (war3ft or classic war3?)
 	if(iCvar[FT_RACES] < 5){
-		g_MOD = "WAR3"
 		g_MODclient = "* [WAR3]"
 	}
 	else{
-		g_MOD = "WAR3FT"
 		g_MODclient = "* [WAR3FT]"	
 	}
 

@@ -190,7 +190,7 @@ public raceskill(race, skill, id, skill_name[],length){
 		format(skill_lookup,63,"RACE%d_SKILL%d",race9Options[skill],skill)
 		format(skill_name,length-1,"%L",id,skill_lookup)
 	}else if(race != 0 ){
-		log_amx("[%s] ERROR, Race: %d, skill: %d not found in raceskill function",g_MOD,race,skill)
+		log_amx("Error, Race: %d, skill: %d not found in raceskill function",race,skill)
 		format(skill_name,length-1,"")
 	}
 }

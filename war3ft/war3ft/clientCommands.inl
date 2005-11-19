@@ -8,7 +8,7 @@ public change_race(id,saychat){
 
 	if (iCvar[FT_CD]) {
 		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MOD)
+			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
 			return PLUGIN_CONTINUE
 		}
 	}
@@ -159,7 +159,7 @@ public cmd_Rings(id){
 
 	if (iCvar[FT_CD]) {
 		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MOD)
+			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
 			return PLUGIN_HANDLED
 		}
 	}
@@ -412,7 +412,7 @@ public cmd_Ultimate(id){
 
 	if (iCvar[FT_CD]) {
 		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MOD)
+			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
 			return PLUGIN_HANDLED
 		}
 	}

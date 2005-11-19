@@ -31,7 +31,7 @@ public Admin_GiveMole(id, level, cid){
 
 	if (!(get_user_flags(id)&ADMIN_LEVEL_A)) { 
 		if(id != 0){
-			client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MOD)
+			client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MODclient)
 			return PLUGIN_HANDLED
 		}
 	}
@@ -102,7 +102,7 @@ public amx_wc3_launch(id, level, cid){
 
 	if (!(get_user_flags(id)&ADMIN_LEVEL_WC3)) { 
 		if(id != 0){
-			client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MOD)
+			client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MODclient)
 			return PLUGIN_HANDLED
 		}
 	}
@@ -149,7 +149,7 @@ public Admin_SaveXP(id, level, cid){
 
 	if (!(get_user_flags(id)&ADMIN_LEVEL_WC3)) { 
 		if(id != 0){
-			client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MOD)
+			client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MODclient)
 			return PLUGIN_HANDLED
 		}
 	}
@@ -212,7 +212,7 @@ public Admin_GiveXP(id, level, cid){
 
 	if (!(get_user_flags(id)&ADMIN_LEVEL_WC3)) {
 		if(id != 0){
-			client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MOD)
+			client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MODclient)
 			return PLUGIN_HANDLED
 		}
 	}

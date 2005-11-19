@@ -3,7 +3,6 @@
 *  Warcraft 3: Frozen Throne
 *  by Geesu==Pimp Daddy==OoTOAoO=
 *  http://www.war3ft.com
-*  http://www.4hm.net (check forums)
 *
 *  Credits to:
 *  Spacedude (for War3 MOD)
@@ -22,17 +21,13 @@
  		help w/testing version before release
 		always helping people out on the forums
 		contributing code for the anti-skywalking
-*  ryannotfound (war3x.net) for some of the naming conventions used (function names, constants, etc...) and functions
+*  ryannotfound (wc3mods.net/war3x) for some of the naming conventions used (function names, constants, etc...) and functions
 *  Lazarus Long for adding ALL of the sql-lite code and fine-tuning the existing MySQL code... It's so much pertier
 */
 
-//#pragma dynamic 4096 
-
-// Death animations for alien4: 56-65
-
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu==(Pimp Daddy==OoTOAoO)"
-new const WC3VERSION[] =	"2.2.8"
+new const WC3VERSION[] =	"2.2.9"
 
 #include <amxmodx>
 #include <dbi>
@@ -41,6 +36,7 @@ new const WC3VERSION[] =	"2.2.8"
 #include <fun>
 #include <war3ft>
 
+// Compiling Options
 #define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
@@ -50,7 +46,6 @@ new const WC3VERSION[] =	"2.2.8"
 #define DEBUG 0 						// Only use this when coding.. you normally don't want it
 #define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
 #define ADVANCED_DEBUG_BOTS 1			// Print info for bots too?
-#define SQL_DEBUG 0						// Prints debug information regarding SQL statments and replies
 
 #if MOD == 0
 	#include <cstrike>
@@ -92,10 +87,6 @@ public plugin_init(){
 		writeDebugInfo("plugin_init",0)
 	#endif
 
-	#if DEBUG
-		//register_srvcmd("testage", "testage")
-	#endif
-
 	gmsgDeathMsg = get_user_msgid("DeathMsg")
 	gmsgScreenFade = get_user_msgid("ScreenFade")
 	gmsgScreenShake = get_user_msgid("ScreenShake")
@@ -108,10 +99,6 @@ public plugin_init(){
 	#endif
 	#if MOD == 1
 		gmsgHudText = get_user_msgid("HudText")
-	#endif
-
-	#if DEBUG
-		//register_message(get_user_msgid("CurWeapon"), "testing")
 	#endif
 
 	register_plugin(WC3NAME,WC3VERSION,WC3AUTHOR)
@@ -230,7 +217,6 @@ public plugin_init(){
 
 	// For an explanation of these variables, please see war3ft.cfg
 	register_cvar("FT_query_client",			"1")
-	register_cvar("FT_disable_savexp",			"0")
 	register_cvar("FT_impale_intensity",		"10")
 	register_cvar("FT_autoxp",					"0")
 	register_cvar("FT_show_player",				"1")
@@ -294,8 +280,8 @@ public plugin_init(){
 	register_cvar("FT_blinkenabled",			"1")
 	register_cvar("FT_spec_info",				"1")
 	register_cvar("FT_objectives",				"1")
-	register_cvar("FT_auto_pruning",			"0",FCVAR_SERVER)
-	register_cvar("mp_savexp",					"0",FCVAR_SERVER)
+	register_cvar("FT_auto_pruning",			"0", FCVAR_SERVER)
+	register_cvar("mp_savexp",					"0", FCVAR_SERVER)
 	register_cvar("mp_xpmultiplier",			"1.0")
 	register_cvar("mp_weaponxpmodifier",		"1")
 	register_cvar("sv_warcraft3",				"1")
@@ -303,12 +289,12 @@ public plugin_init(){
 	register_cvar("mp_grenadeprotection",		"0")
 	register_cvar("sv_save_end_round",			"1")
 	register_cvar("sv_daysbeforedelete",		"31")
-	register_cvar("sv_mysql",					"0")
-	register_cvar("sv_mysqltablename",			"war3users")
-	register_cvar("FT_mysql_host",				"127.0.0.1")
-	register_cvar("FT_mysql_user",				"root")
-	register_cvar("FT_mysql_pass",				"")
-	register_cvar("FT_mysql_db",				"amx")
+	register_cvar("sv_sql",						"0")
+	register_cvar("sv_sqltablename",			"war3users")
+	register_cvar("FT_sql_host",				"127.0.0.1")
+	register_cvar("FT_sql_user",				"root")
+	register_cvar("FT_sql_pass",				"")
+	register_cvar("FT_sql_db",					"amx")
 
 	WAR3_exec_config()
 
@@ -321,11 +307,12 @@ public plugin_init(){
 		register_concmd("test","test")
 		register_concmd("test2","test2")
 		register_concmd("test3","test3")
+
+		register_concmd("check_evasion", "Skill_Evasion_Check_C");
+		register_concmd("evasion", "Skill_Evasion_Set");
+		register_concmd("prune", "XP_Prune");
 	#endif
 
-	register_concmd("check_evasion", "Skill_Evasion_Check_C");
-	register_concmd("evasion", "Skill_Evasion_Set");
-	register_concmd("prune", "XP_Prune");
 
 }
 
@@ -576,4 +563,41 @@ public client_PreThink(id){
 		}
 	#endif
 	}
+}
+
+// This functionality no longer requires a DBI module to be loaded
+public plugin_natives()
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo("plugin_natives",0)
+	#endif
+
+	set_module_filter("module_filter");
+	set_native_filter("native_filter");
+}
+
+public module_filter(const module[])
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo("module_filter",0)
+	#endif
+
+	// Then we obviously don't want to save XP via mysql or sql lite now do we?  Lets default to vault and print an error message
+	if ( equali( module, "dbi" ) )
+	{
+		log_amx("No DBI module found, defaulting to vault");
+		g_DBILoaded = false;
+
+		return PLUGIN_HANDLED;
+	}
+
+	return PLUGIN_CONTINUE;
+}
+
+public native_filter(const name[], index, trap)
+{
+      if (!trap)
+            return PLUGIN_HANDLED;
+
+      return PLUGIN_CONTINUE;
 }

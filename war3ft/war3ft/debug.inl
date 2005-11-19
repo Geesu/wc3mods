@@ -2,6 +2,18 @@ public testage(id)
 {
 }
 
+public Skill_Evasion_Check_C( id )
+{
+	if ( id == 0 )
+	{
+		return;
+	}
+
+	client_print(id, print_chat, "%s Evade next shot: %d, Health: %d", g_MODclient, p_data_b[id][PB_EVADENEXTSHOT], get_user_health(id) );
+
+	return;
+}
+
 public test(id){
 	
 	new arg1[8], arg2[8], r[8], g[8], b[8], amount[8];

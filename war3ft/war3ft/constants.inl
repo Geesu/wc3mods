@@ -62,7 +62,7 @@
 #define	TASK_CHECKWAR3		2004
 //#define	TASK_SETLONGXP		2005
 //#define	TASK_SETSHORTXP		2006
-#define	TASK_SETMYSQL		2007
+#define	TASK_SETSQL			2007
 //#define	TASK_SETLANGUAGE	2008
 #define	TASK_SETVARIABLES	2009
 #define	TASK_CLONETHINK		2010
@@ -281,11 +281,11 @@
 
 #define MAX_LEVELS					10
 
-// Number of attempts to make to connect to the database if it fails (only if sv_mysql is 1)
-#define	SQL_ATTEMPTS				10
-#define SQL_ATTEMPT_DELAY			25.0
+// Number of attempts to make to connect to the database if it fails (only if sv_sql is 1)
+#define	SQL_ATTEMPTS				3
+#define SQL_ATTEMPT_DELAY			5.0
 
-// Type of SQL being used (only if sv_mysql is 1)
+// Type of SQL being used (only if sv_sql is 1)
 #define SQL_FAIL				-1
 #define SQL_NONE				0
 #define SQL_MYSQL				1
@@ -426,7 +426,7 @@
 #define FT_SPEC_INFO						2
 #define FT_MIN_B4_XP						3
 #define	FT_BLINK_RADIUS						4
-#define	FT_DISABLE_SAVEXP					5
+//#define	FT_DISABLE_SAVEXP					5
 #define	MP_SAVEXP							6
 #define	FT_SHOW_ICONS						7
 #define	FT_HEALTH_BONUS						8
@@ -447,8 +447,8 @@
 #define FT_WARN_SUICIDE						23
 #define FT_BLINKENABLED						24
 #define SV_ALLOWWAR3VOTE					25
-#define SV_MYSQL							26
-#define SV_SAVE_END_ROUND				27
+#define SV_SQL								26
+#define SV_SAVE_END_ROUND					27
 #define FT_SAVEBY							28
 #define FT_AUTO_PRUNING						29
 #define SV_DAYSBEFOREDELETE					30
@@ -645,7 +645,8 @@ new g_sWave
 	new g_sSmoke
 #endif
 
-new Sql:mysql
+new bool:g_DBILoaded = true;
+new Sql:sql
 new g_DBTableName[64]
 new iSQLAttempts = 0
 new iSQLtype = SQL_NONE
@@ -653,7 +654,6 @@ new SQLtype[16]
 new const g_MySQL[] = "MySQL"
 new const g_SQLite[] = "SQLite"
 
-new g_MOD[8] = "WAR3FT"
 new g_MODclient[15] = "* [WAR3FT]"
 
 new teleportid[33][32]
