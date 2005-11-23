@@ -587,39 +587,39 @@ public _Skill_Reincarnation_Give(id){
 // Night Elf's Evasion
 // ****************************************
 
+// Called when a user is shot and when a user spawns
 public Skill_Evasion_Set( id )
 {
-	if ( !Verify_Skill( id, RACE_ELF, SKILL1 ) )
+	// Only check to see if the user can evade if they have the skill
+	if ( Verify_Skill( id, RACE_ELF, SKILL1 ) )
 	{
-		return;
-	}
+		new Float:randomnumber = random_float(0.0, 1.0);
+		
+		// Only set next shot as being evaded if if they aren't already evading the next shot
+		if ( randomnumber <= p_evasion[p_data[id][P_SKILL1]-1] && !p_data_b[id][PB_EVADENEXTSHOT] )
+		{
+			new iHealth = get_user_health( id );
 
-	new Float:randomnumber = random_float(0.0, 1.0);
+			p_data_b[id][PB_EVADENEXTSHOT] = true;
+
+			//client_print(id, print_chat, "%s You will evade the next shot", g_MODclient);
+
+			set_user_health(id, iHealth + SKILL_EVASION_ADJ);
+		}
+	}
 	
-	if ( randomnumber <= p_evasion[p_data[id][P_SKILL1]-1] )
-	{
-		new iHealthAdjustment = 1024;
-		new iHealth = get_user_health( id );
-
-		p_data_b[id][PB_EVADENEXTSHOT] = true;
-
-		//client_print(id, print_chat, "%s You will evade the next shot", g_MODclient);
-
-		set_user_health(id, iHealth + iHealthAdjustment);
-	}
-
 	Skill_Evasion_Check( id );
 }
 
+// Called on Skill_Evasion_Set and when a user types /level
 public Skill_Evasion_Check( id )
 {
-	new iHealthAdjustment = 1024;
 	new iHealth = get_user_health( id );
 
 	// Then son of a biotch, why don't they have > 1024 health?  Odd, lets give it to them
 	if ( p_data_b[id][PB_EVADENEXTSHOT] && iHealth < 500 && is_user_alive(id) )
 	{
-		set_user_health( id, iHealth + iHealthAdjustment );
+		set_user_health( id, iHealth + SKILL_EVASION_ADJ );
 
 		//client_print(id, print_chat, "%s Health adjusted for evasion from %d to %d", g_MODclient, iHealth, (iHealthAdjustment + iHealth));
 	}
@@ -629,14 +629,19 @@ public Skill_Evasion_Check( id )
 		//client_print(id, print_chat, "%s Health adjusted for evasion from %d to %d", g_MODclient, iHealth, (iHealthAdjustment - iHealth));
 
 		// Hopefully this will never kill them
-		set_user_health(id, iHealth - iHealthAdjustment);
+		set_user_health(id, iHealth - SKILL_EVASION_ADJ);
+	}
+	// Check to see if their health is too high and they don't have the skill
+	else if ( iHealth > 500 && !Verify_Skill( id, RACE_ELF, SKILL1 ) && !p_data_b[id][PB_GODMODE] )
+	{
+		set_user_health(id, iHealth - SKILL_EVASION_ADJ);
 	}
 
 	// This should technically never occur ...
 	if ( p_data_b[id][PB_EVADENEXTSHOT] && iHealth > 1500 && !p_data_b[id][PB_GODMODE] )
 	{
 		// Just set back to default
-		set_user_health( id, 100 + iHealthAdjustment );
+		set_user_health( id, 100 + SKILL_EVASION_ADJ );
 
 		//client_print(id, print_chat, "%s Health of %d adjusted from godmode, this should not occur", g_MODclient, iHealth);
 	}
@@ -649,14 +654,11 @@ stock Skill_Evasion_Reset( id, damage )
 		return;
 	}
 
-	new iHealthAdjustment = 1024;
 	new iHealth = get_user_health( id );
 	
 	if ( p_data_b[id][PB_EVADENEXTSHOT] )
 	{
-		iHealthAdjustment *= -1;
-
-		set_user_health(id, iHealth + damage + iHealthAdjustment);
+		set_user_health(id, iHealth + damage + (-1 * SKILL_EVASION_ADJ));
 
 		if (iglow[id][2] < 1)
 		{

@@ -42,6 +42,10 @@ LANG_NAME_NATIVE = Espanyol
 LANG_NAME = Brazil Portuguese
 LANG_NAME_NATIVE = Portugues Brasil
 
+[cz]
+LANG_NAME = Czech
+LANG_NAME_NATIVE = Cestina
+
 [hu]
 LANG_NAME = Hungarian
 LANG_NAME_NATIVE = Hungarian

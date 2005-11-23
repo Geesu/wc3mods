@@ -130,6 +130,7 @@
 #define CRITICAL_STRIKE_CHANCE	0.15		// 15% chance of Critical Strike working
 #define SKILL_HEX_LENGTH		5.0			// Length that hex lasts in seconds
 #define SKILL_HEX_SPEED			175.0		// Speed hexed player will move at
+#define SKILL_EVASION_ADJ		1024		// The amount of health that is given/taken for evasion
 
 // CS AmmoX Types
 #define AMMOX_338MAGNUM			1     // AWP

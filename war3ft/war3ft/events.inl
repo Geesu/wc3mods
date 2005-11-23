@@ -150,32 +150,10 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	// This is here b/c we do not want war3 damage being done before we take the health away
 	// **************************************************
 
-	if ( Verify_Race(victim, RACE_ELF) ){
-
+	if ( Verify_Race(victim, RACE_ELF) )
+	{
 		// Evasion
 		Skill_Evasion_Reset( victim, damage );
-/*		if ( Verify_Skill(victim, RACE_ELF, SKILL1) && p_data_b[victim][PB_EVADENEXTSHOT] ) {
-			new healthadjustment = -1024
-			new iHealth = get_user_health(victim)
-
-			set_user_health(victim, iHealth + damage + healthadjustment)
-
-			if (iglow[victim][2] < 1){
-				new parm[2]
-				parm[0] = victim
-				set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
-			}
-			iglow[victim][2] += damage
-			iglow[victim][0] = 0
-			iglow[victim][1] = 0
-			iglow[victim][3] = 0
-			if (iglow[victim][2]>MAXGLOW)
-				iglow[victim][2]=MAXGLOW
-
-			Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 0, 0, 255, iglow[victim][2])
-
-			p_data_b[victim][PB_EVADENEXTSHOT] = false
-		}*/
 	}
 
 	// **************************************************
@@ -965,6 +943,9 @@ public on_ResetHud(id){
 
 	p_data_b[id][PB_TOBEREVIVED] = false
 	p_data_b[id][PB_CHANGINGTEAM] = false
+	
+	// Skill Checks for functions that should occur on every spawn
+	Skill_Evasion_Set( id );
 
 	#if MOD == 1
 		if(p_data[id][P_ITEM] == ITEM_ANKH){

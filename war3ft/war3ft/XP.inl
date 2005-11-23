@@ -620,6 +620,12 @@ public XP_Set_DBI(){
 		get_cvar_string("FT_sql_user", szUser, 31);
 		get_cvar_string("FT_sql_pass", szPass, 31);
 		get_cvar_string("FT_sql_db", szDB, 127);
+		
+		// Set a default DB if it's SQLite and the user didn't supply one
+		if ( iSQLtype == SQL_SQLITE && strlen(szDB) < 1 )
+		{
+			copy( szDB, 127, "addons/amxmodx/data/amxx.db" );
+		}
 
 		// Attempt the Connection
 		sql = dbi_connect(szHost, szUser, szPass, szDB);
