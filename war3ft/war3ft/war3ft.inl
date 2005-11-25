@@ -293,30 +293,6 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 	}
 #endif
 
-	// Check for Night Elf's Evasion
-/*	if ( Verify_Race(victim, RACE_ELF) ){
-
-		// Evasion
-		if ( Verify_Skill(victim, RACE_ELF, SKILL1) ) {
-			new Float:randomnumber = random_float(0.0,1.0)
-
-			if (randomnumber <= p_evasion[p_data[victim][P_SKILL1]-1]){
-
-				if (iglow[victim][2] < 1){
-					new parm[2]
-					parm[0] = victim
-					set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
-				}
-				iglow[victim][2] += damage
-				iglow[victim][0] = 0
-				iglow[victim][1] = 0
-				iglow[victim][3] = 0
-				if (iglow[victim][2]>MAXGLOW)
-					iglow[victim][2]=MAXGLOW
-			}
-		}
-	}*/
-
 	new health = get_user_health(victim)
 
 	if ( health - damage <= 2048 &&  p_data_b[victim][PB_GODMODE] && (p_data_b[attacker][PB_WARDENBLINK]))
@@ -1258,6 +1234,10 @@ public WAR3_Set_Variables(){
 }
 
 public WAR3_Check(){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("WAR3_Check",0)
+	#endif
+
 	if (get_cvar_num("sv_warcraft3")==0)
 		warcraft3=false
 	else
@@ -1265,6 +1245,10 @@ public WAR3_Check(){
 }
 
 public WAR3_Kill(id, weapon){
+	#if ADVANCED_DEBUG
+		writeDebugInfo("WAR3_Kill",id)
+	#endif
+
 	#if MOD == 0
 		set_msg_block(gmsgDeathMsg,BLOCK_ONCE)
 		user_kill(id)

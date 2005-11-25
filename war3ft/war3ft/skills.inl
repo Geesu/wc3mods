@@ -33,10 +33,6 @@ public Skill_Check(id){
 	}
 
 	// Night Elf's Evasion
-	//if ( Verify_Skill(id, RACE_ELF, SKILL1) && p_data_b[id][PB_EVADENEXTSHOT] ){
-	//	set_user_health(id, 1124)
-	//}
-	// Night Elf's Evasion
 	Skill_Evasion_Set( id );
 
 	// Human's Devotion Aura
@@ -598,16 +594,15 @@ public Skill_Evasion_Set( id )
 		// Only set next shot as being evaded if if they aren't already evading the next shot
 		if ( randomnumber <= p_evasion[p_data[id][P_SKILL1]-1] && !p_data_b[id][PB_EVADENEXTSHOT] )
 		{
-			new iHealth = get_user_health( id );
-
 			p_data_b[id][PB_EVADENEXTSHOT] = true;
 
-			//client_print(id, print_chat, "%s You will evade the next shot", g_MODclient);
-
-			set_user_health(id, iHealth + SKILL_EVASION_ADJ);
+		#if DEBUG
+			client_print(id, print_chat, "%s You will evade the next shot", g_MODclient);
+		#endif
 		}
 	}
 	
+	// Actually do the health changes in this function
 	Skill_Evasion_Check( id );
 }
 
@@ -615,25 +610,42 @@ public Skill_Evasion_Set( id )
 public Skill_Evasion_Check( id )
 {
 	new iHealth = get_user_health( id );
-
-	// Then son of a biotch, why don't they have > 1024 health?  Odd, lets give it to them
-	if ( p_data_b[id][PB_EVADENEXTSHOT] && iHealth < 500 && is_user_alive(id) )
+	
+	// Make sure the user has the skill
+	if ( Verify_Skill( id, RACE_ELF, SKILL1 ) )
 	{
-		set_user_health( id, iHealth + SKILL_EVASION_ADJ );
+		// Give the user enough health so they can evade
+		if ( p_data_b[id][PB_EVADENEXTSHOT] && iHealth < 500 && is_user_alive(id) )
+		{
+			set_user_health( id, iHealth + SKILL_EVASION_ADJ );
 
-		//client_print(id, print_chat, "%s Health adjusted for evasion from %d to %d", g_MODclient, iHealth, (iHealthAdjustment + iHealth));
+		#if DEBUG
+			client_print(id, print_chat, "%s 1Health adjusted for evasion from %d to %d", g_MODclient, iHealth, (SKILL_EVASION_ADJ + iHealth));
+		#endif
+		}
 	}
-	// Check if the user has too much health when they shouldn't evade the next shot
-	else if ( !p_data_b[id][PB_EVADENEXTSHOT] && iHealth > 500 && iHealth < 1500 )
+	// User doesn't have the skill
+	else
 	{
-		//client_print(id, print_chat, "%s Health adjusted for evasion from %d to %d", g_MODclient, iHealth, (iHealthAdjustment - iHealth));
+		// This shouldn't be true if the user doesn't have the skill right?
+		if ( p_data_b[id][PB_EVADENEXTSHOT] )
+		{
+			p_data_b[id][PB_EVADENEXTSHOT] = false;
+
+		#if DEBUG
+			client_print(id, print_chat, "%s Evade next shot disabled", g_MODclient);
+		#endif
+		}
+	}
+
+	// Check if the user has too much health when they shouldn't evade the next shot
+	if ( !p_data_b[id][PB_EVADENEXTSHOT] && iHealth > 500 && !p_data_b[id][PB_GODMODE] )
+	{
+	#if DEBUG
+		client_print(id, print_chat, "%s Health adjusted for evasion from %d to %d", g_MODclient, iHealth, (SKILL_EVASION_ADJ - iHealth));
+	#endif
 
 		// Hopefully this will never kill them
-		set_user_health(id, iHealth - SKILL_EVASION_ADJ);
-	}
-	// Check to see if their health is too high and they don't have the skill
-	else if ( iHealth > 500 && !Verify_Skill( id, RACE_ELF, SKILL1 ) && !p_data_b[id][PB_GODMODE] )
-	{
 		set_user_health(id, iHealth - SKILL_EVASION_ADJ);
 	}
 
@@ -643,7 +655,9 @@ public Skill_Evasion_Check( id )
 		// Just set back to default
 		set_user_health( id, 100 + SKILL_EVASION_ADJ );
 
-		//client_print(id, print_chat, "%s Health of %d adjusted from godmode, this should not occur", g_MODclient, iHealth);
+	#if DEBUG
+		client_print(id, print_chat, "%s Health of %d adjusted from godmode, this should not occur", g_MODclient, iHealth);
+	#endif
 	}
 }
 
@@ -679,7 +693,9 @@ stock Skill_Evasion_Reset( id, damage )
 
 		p_data_b[id][PB_EVADENEXTSHOT] = false;
 
-		//client_print(id, print_chat, "%s shot evaded, health set to %d", g_MODclient, get_user_health(id));
+	#if DEBUG
+		client_print(id, print_chat, "%s shot evaded, health set to %d", g_MODclient, get_user_health(id));
+	#endif
 	}
 
 	return;

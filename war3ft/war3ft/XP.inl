@@ -342,6 +342,10 @@ public XP_Save(id){
 // Function will get data about a player's current race, and set it to whats in the DB/vault
 public XP_Set_Race_Data( id )
 {
+	#if ADVANCED_DEBUG
+		writeDebugInfo("XP_Set_Race_Data",id)
+	#endif
+
 	if ( !warcraft3 )
 		return PLUGIN_CONTINUE;
 
@@ -457,6 +461,10 @@ public XP_Set_Race_Data( id )
 // Function will retreive the XP for a user's race and call the changerace menu function
 public XP_Get( id )
 {
+	#if ADVANCED_DEBUG
+		writeDebugInfo("XP_Get",id)
+	#endif
+
 	if ( !warcraft3 )
 		return PLUGIN_CONTINUE;
 

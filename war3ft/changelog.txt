@@ -6,6 +6,7 @@ v2.2.9
  - Bug Fix: XP wouldn't save for MySQL when the name contained more than one '
  - Bug Fix: Chameleon XP wouldn't show in the changerace menu even though it was there
  - Bug Fix: String formatting error in XP_Check_Connection
+ - Bug Fix: Players getting an abnormally large amount of health
  - Change: CVARs changed to reflect that mysql isn't needed, UPDATE your war3ft.cfg
  - Removed: [WAR3FT]/[WAR3] tags in front of log_amx statements
  - Update: languages.txt file

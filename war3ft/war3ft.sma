@@ -37,7 +37,7 @@ new const WC3VERSION[] =	"2.2.9"
 #include <war3ft>
 
 // Compiling Options
-#define MOD 0							// 0 = cstrike or czero, 1 = dod
+#define MOD 1							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define PRECACHE_WAR3FTSOUNDS 1

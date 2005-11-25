@@ -549,10 +549,10 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 		if ( iHealth + tempdamage > get_user_maxhealth(attacker) ){
 			new iTotalHealth = get_user_health(attacker)
 
-			if( iTotalHealth > 1500 )		// God Mode
+			if( iTotalHealth > 1500 && p_data_b[attacker][PB_GODMODE] )		// God Mode
 				set_user_health(attacker, 2148)
-			else if( iTotalHealth > 500 )	// Evasion
-				set_user_health(attacker, 1124)
+			else if( iTotalHealth > 500 && p_data_b[attacker][PB_EVADENEXTSHOT] )	// Evasion
+				set_user_health(attacker, (100 + SKILL_EVASION_ADJ))
 			else
 				set_user_health(attacker, get_user_maxhealth(attacker))
 		}
