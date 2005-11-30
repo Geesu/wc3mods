@@ -1,5 +1,9 @@
 v2.3.0
+ - Addition: If there is an error on a database connection, the error is now printed to the amxx logs
  - Bug Fix: ADMIN_LEVEL_WC3 wasn't read for the give mole command
+ - Bug Fix: Shield would not be given with reincarnation
+ - Removed: amx_wc3 (just use amx_cvar sv_warcraft3 0/1)
+ - Removed: war3ft module, it is no longer needed, but fakemeta must be turned on
 
 v2.2.9
  - Addition: resetxp yes/no menu

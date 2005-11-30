@@ -748,9 +748,25 @@ public on_Death(victim, killer, wpnindex, headshot){
 	
 	XP_onDeath(victim, killer, wpnindex, headshot)
 
-	/* If we're playing DOD we need to get the user's origin when they die */
+	// If we're playing DOD we need to get the user's origin when they die
 	#if MOD == 1
-		get_user_origin(victim, reincarnation[victim]);
+		get_user_origin(victim, iReincarnation[victim]);
+	#endif
+
+	// If we're in CS we need to find out if the user had a shield when dying
+	#if MOD == 0
+		#if DEBUG
+			client_print(victim, print_chat, "Shield Status: %d", cs_get_user_shield(victim));
+		#endif
+		
+		if ( cs_get_user_shield( victim ) )
+		{
+			p_data_b[victim][PB_SHIELD] = true;
+		}
+		else
+		{
+			p_data_b[victim][PB_SHIELD] = false;
+		}
 	#endif
 	
 	return PLUGIN_CONTINUE
@@ -794,6 +810,9 @@ public on_CurWeapon(id) {
 			return PLUGIN_CONTINUE
 		}
 	}
+
+	// Record the last time a shot was fired
+	fLastShotFired[id] = halflife_time();
 
 	if (p_data[id][P_ITEM2]==ITEM_GLOVES){
 		new wpnList[32] = 0 
@@ -1099,7 +1118,7 @@ public on_GameRestart(){
 			remove_task(TASK_UDELAY+id)
 		
 		if(p_data[id][P_ITEM2])
-			Item_Set_Helm(id, HELM_RESET)
+			p_data_b[id][PB_IMMUNE_HEADSHOTS] = false;
 
 		p_data[id][P_ITEM] = 0
 		p_data[id][P_ITEM2] = 0

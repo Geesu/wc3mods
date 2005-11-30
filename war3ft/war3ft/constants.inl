@@ -403,13 +403,15 @@
 	
 	#define PB_BUYZONE				33		// Player in buyzone?
 	#define PB_RENDER				34
+	
+	#define PB_IMMUNE_HEADSHOTS		35		// Player immune to headshots?
 
 #if MOD == 1
-	#define PB_REINCARNATION_DELAY	35
-	#define PB_REINCARNATION_SKIP	36
+	#define PB_REINCARNATION_DELAY	36
+	#define PB_REINCARNATION_SKIP	37
 #endif
 
-	#define PB_LAST					37
+	#define PB_LAST					38
 	// ***************************
 	//		End of info for player_data_bool
 	// ***************************
@@ -447,7 +449,7 @@
 #define FT_CD								22
 #define FT_WARN_SUICIDE						23
 #define FT_BLINKENABLED						24
-#define SV_ALLOWWAR3VOTE					25
+//#define SV_ALLOWWAR3VOTE					25
 #define SV_SQL								26
 #define SV_SAVE_END_ROUND					27
 #define FT_SAVEBY							28
@@ -604,9 +606,12 @@ new g_menuSettings[33]
 	//new AlliedSkins[2][]={"us-inf","us-para"}
 	//new AxisSkins[2][]={"axis-inf","axis-para"}
 	new spawnEntString[2][] = {"info_player_axis","info_player_allies"}
-
-	new reincarnation[33][3]
+	
+	new iReincarnation[33][3];
 #endif
+
+// Used with helm
+new Float:fLastShotFired[33];
 
 // Used to determine if the ultimatedelay is valid
 new iUltimateDelay;

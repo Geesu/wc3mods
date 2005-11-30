@@ -140,10 +140,6 @@ public MOTD_Playerskills(id, saychat){
 		writeDebugInfo("MOTD_Playerskills",id)
 	#endif
 
-#if DEBUG
-	writeDebugInfo("Called", -1)
-#endif
-
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 		
@@ -224,16 +220,11 @@ public MOTD_Playerskills(id, saychat){
 				pos += format(message[pos],2047-pos,"</ul>")
 		}
 	}
-#if DEBUG
-	writeDebugInfo("Build Complete", strlen(message))
-#endif
+
 	if( saychat ) {
 		new motdmessage[128]
 		format(motdmessage, 127, "%L",id,"PLAYER_SKILLS")
 		show_motd(id,message,motdmessage)
-		#if DEBUG
-			writeDebugInfo("End", strlen(motdmessage))
-		#endif
 	}
 	
 	return PLUGIN_HANDLED

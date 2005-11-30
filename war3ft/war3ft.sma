@@ -27,14 +27,14 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu==(Pimp Daddy==OoTOAoO)"
-new const WC3VERSION[] =	"2.2.9"
+new const WC3VERSION[] =	"2.3.0"
 
 #include <amxmodx>
-#include <dbi>
-#include <engine>
 #include <amxmisc>
+#include <engine>
 #include <fun>
-#include <war3ft>
+#include <fakemeta>
+#include <dbi>
 
 // Compiling Options
 #define MOD 1							// 0 = cstrike or czero, 1 = dod
@@ -82,7 +82,8 @@ new const WC3VERSION[] =	"2.2.9"
 	#include "war3ft/debug.inl"
 #endif
 
-public plugin_init(){
+public plugin_init()
+{
 	#if ADVANCED_DEBUG
 		writeDebugInfo("plugin_init",0)
 	#endif
@@ -107,7 +108,6 @@ public plugin_init(){
 	format(WC3AMXCVAR,31,"%s %s", WC3NAME,WC3VERSION)
 	register_cvar("amx_war3_version", WC3AMXCVAR,FCVAR_SERVER)
 
-	register_clcmd("amx_wc3","amx_wc3_launch",-1,"Activate/Deactivate Controller & WAR3FT Plugin")		// Added by NeKo
 	register_clcmd("war3menu","menu_War3menu",-1,"- Show Warcraft 3 Frozen Throne Player menu")
 	register_clcmd("changerace","change_race",-1,"changerace")
 	register_clcmd("selectskill","menu_Select_Skill",-1,"selectskill")
@@ -140,21 +140,18 @@ public plugin_init(){
 	register_srvcmd("amx_takexp","Admin_TakeXP")
 	register_srvcmd("changexp","changeXP")
 	
+	// Register forwards (from fakemeta)
+	register_forward(FM_TraceLine, "traceline");
+
 	#if MOD == 1
 		register_statsfwd(XMF_SCORE)
 		register_statsfwd(XMF_DAMAGE)
 
 		register_event("RoundState","on_EndRound","a","1=3","1=4")
-
-		//register_event("TextMsg","on_Spectate","a","2=#game_joined_team")
-		//register_event("TextMsg","on_SetSpecMode","b","2&#Spec_Mode")
-
 		register_event("StatusValue","on_StatusValue","b")
 	#endif
 
 	#if MOD == 0
-		register_clcmd("drop", "cmd_Drop")
-
 		register_logevent("on_PlayerAction",3,"1=triggered") 
 		register_logevent("on_FreezeTimeComplete",2,"0=World triggered","1=Round_Start")
 		register_logevent("on_EndRound",2,"0=World triggered","1=Round_End")
@@ -178,7 +175,6 @@ public plugin_init(){
 
 		register_event("StatusValue","on_Spectate","bd","1=2")
 
-		register_menucmd(-34,(1<<8),"cmd_Shield")
 
 		// Old Style
 		register_menucmd(register_menuid("BuyItem"),(1<<2),"cmd_flash")
@@ -191,7 +187,6 @@ public plugin_init(){
 		// Steam
 		register_clcmd("flash",  "cmd_flash")
 		register_clcmd("hegren", "cmd_hegren")
-		register_clcmd("shield", "cmd_Shield")
 
 		register_menucmd(register_menuid("Team_Select",1),(1<<0)|(1<<1)|(1<<4),"cmd_Teamselect")
 
@@ -199,19 +194,19 @@ public plugin_init(){
 	#endif
 
 	register_event("DeathMsg","on_DeathMsg","a")
-
 	register_event("CurWeapon","on_CurWeapon","be","1=1")
 	register_event("HideWeapon", "on_CurWeapon", "b")
-
 	register_event("ResetHUD", "on_ResetHud", "b")
 
 
 	register_event("TextMsg","on_GameRestart","a","2&#Game_will_restart_in")
 
-	if(is_running("czero")){
+	if(is_running("czero"))
+	{
 		register_event("TextMsg", "on_GameRestart", "a", "2&#Game_Commencing")
 	}
-	else{
+	else
+	{
 		register_event("TextMsg", "on_GameRestart", "a", "2&#Game_C")
 	}
 
@@ -285,7 +280,6 @@ public plugin_init(){
 	register_cvar("mp_xpmultiplier",			"1.0")
 	register_cvar("mp_weaponxpmodifier",		"1")
 	register_cvar("sv_warcraft3",				"1")
-	register_cvar("sv_allowwar3vote",			"0")
 	register_cvar("mp_grenadeprotection",		"0")
 	register_cvar("sv_save_end_round",			"1")
 	register_cvar("sv_daysbeforedelete",		"31")
@@ -312,8 +306,6 @@ public plugin_init(){
 		register_concmd("evasion", "Skill_Evasion_Set");
 		register_concmd("prune", "XP_Prune");
 	#endif
-
-
 }
 
 public plugin_end()
@@ -325,14 +317,15 @@ public plugin_end()
 	if (!warcraft3 || !iCvar[MP_SAVEXP])
 		return PLUGIN_CONTINUE
 	
-	XP_Save_All()
+	XP_Save_All();
 	XP_Prune();
 	XP_CloseDB();
 
 	return PLUGIN_CONTINUE
 }
 
-public plugin_precache() {
+public plugin_precache()
+{
 	#if ADVANCED_DEBUG
 		writeDebugInfo("plugin_precache",0)
 	#endif
@@ -360,7 +353,6 @@ public client_putinserver(id){
 	#if MOD == 0
 		query_client_cvar(id, "cl_minmodels", "check_cvars") 
 	#endif
-
 }
 
 public client_connect(id){
@@ -398,21 +390,24 @@ public client_connect(id){
 		}
 	}
 
-#if MOD == 1
-	reincarnation[id][ZPOS] = -99999
-#endif
+	#if MOD == 1
+		// Skip Reincarnation since the user just joined
+		p_data_b[id][PB_REINCARNATION_SKIP] = true;
+	#endif
 
 	#if MOD == 0
 		p_data[id][P_HECOUNT] = 0
 		p_data[id][P_FLASHCOUNT]=0
 	#endif
-
-	if (is_user_bot(id) && iCvar[MP_SAVEXP]){
-		p_data[id][P_XP]=xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))]
-		p_data[id][P_RACE] = random_num(1,iCvar[FT_RACES])
-		return PLUGIN_CONTINUE
+	
+	// Give the bot a random amount of XP
+	if ( is_user_bot(id) && iCvar[MP_SAVEXP] )
+	{
+		p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
+		p_data[id][P_RACE] = random_num(1, iCvar[FT_RACES]);
 	}
-	return PLUGIN_CONTINUE
+
+	return PLUGIN_CONTINUE;
 }
 
 
@@ -515,7 +510,8 @@ public client_disconnect(id){
 
 public client_PreThink(id){
 
-	if(p_data_b[id][PB_ISCONNECTED]){
+	if( p_data_b[id][PB_ISCONNECTED] )
+	{
 
 		if(is_user_alive(id)){
 #if MOD == 0
@@ -535,13 +531,6 @@ public client_PreThink(id){
 				entity_set_int(id, EV_INT_flTimeStepSound, 999)
 			}
 		}
-/*		if(!p_data_b[id][PB_DIEDLASTROUND] && (get_user_team(id) == CTS || get_user_team(id) == TS)){	// Then player is dead
-			if(entity_get_int(id,EV_INT_deadflag)>0 && !p_data_b[id][PB_DIEDLASTROUND]){
-				//client_death(0,id,-1,0,0)
-				//WAR3_death_victim(id, 0)
-				//p_data_b[id][PB_DIEDLASTROUND] = true
-			}
-		}*/
 	#if MOD == 1
 		if( Verify_Skill(id, RACE_UNDEAD, SKILL2) || p_data[id][P_ITEM] == ITEM_BOOTS){
 			// They have a rocket launcher "deployed" or are using their stamina
@@ -565,7 +554,7 @@ public client_PreThink(id){
 	}
 }
 
-// This functionality no longer requires a DBI module to be loaded
+// This functionality allows us to no longer requires a DBI module to be loaded
 public plugin_natives()
 {
 	#if ADVANCED_DEBUG
@@ -582,7 +571,7 @@ public module_filter(const module[])
 		writeDebugInfo("module_filter",0)
 	#endif
 
-	// Then we obviously don't want to save XP via mysql or sql lite now do we?  Lets default to vault and print an error message
+	// Then we obviously don't want to save XP via mysql or SQLite now do we?  Lets default to vault and print an error message
 	if ( equali( module, "dbi" ) )
 	{
 		log_amx("No DBI module found, defaulting to vault");

@@ -94,51 +94,6 @@ public changeXP(){
 	return PLUGIN_CONTINUE
 }
 
-//amx_wc3 command
-public amx_wc3_launch(id, level, cid){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("amx_wc3_launch",id)
-	#endif
-
-	if (!(get_user_flags(id)&ADMIN_LEVEL_WC3)) { 
-		if(id != 0){
-			client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MODclient)
-			return PLUGIN_HANDLED
-		}
-	}
-	new cmds[32]
-	read_argv(1,cmds,31)
-	set_hudmessage(200, 100, 0, -1.0, 0.3, 2, 1.5, 10.0, 0.02, 5.0,15)
-	if (equal(cmds, "on" ))
-	{
-		set_cvar_num("FT_control",0)
-		set_cvar_num("sv_warcraft3",1)
-		warcraft3 = true
-		show_hudmessage(0,"%L",id,"IS_ACTIVATED_NOW",WC3NAME,WC3VERSION)
-		return PLUGIN_HANDLED
-	}
-	else if (equal(cmds, "off" ))
-	{
-		set_cvar_num("FT_control",0)
-		set_cvar_num("sv_warcraft3",0)
-		warcraft3 = false
-		show_hudmessage(0,"%L",id,"IS_NO_LONGER_ACTIVE",WC3NAME,WC3VERSION)
-		return PLUGIN_HANDLED
-	}
-	else if (equal(cmds, "auto" ))
-	{
-		set_cvar_num("FT_control",1)
-		show_hudmessage(0,"%L",id,"IS_IN_AUTOMATIC_g_MODE",WC3NAME,WC3VERSION)
-		return PLUGIN_HANDLED
-	}
-	else
-	{
-		client_print(id,print_console,"%s %L",g_MODclient, id,"USAGE_STRING")
-		return PLUGIN_HANDLED
-	}
-	return PLUGIN_HANDLED
-}
-
 public Admin_SaveXP(id, level, cid){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("Admin_SaveXP",id)

@@ -580,17 +580,16 @@ public on_WeapPickup(id){
 	#endif
 
 	if (!warcraft3)
-		return PLUGIN_CONTINUE
+		return PLUGIN_CONTINUE;
 
-	new weapon = read_data(1)
+	new weapon = read_data(1);
 
-	if (weapon==25)
-		++p_data[id][P_FLASHCOUNT]
+	if ( weapon == 25 )
+	{
+		++p_data[id][P_FLASHCOUNT];
+	}
 
-	if ( isPrimary(weapon) )
-		p_data_b[id][PB_SHIELD]=false
-
-	return PLUGIN_CONTINUE 
+	return PLUGIN_CONTINUE;
 }
 
 public on_ShowStatus(id){

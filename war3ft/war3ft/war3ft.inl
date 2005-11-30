@@ -196,12 +196,14 @@ public WAR3_chooserace(id){
 		writeDebugInfo("WAR3_chooserace",id)
 	#endif
 
+	new iTeam = get_user_team( id );
 #if MOD == 0
-	if(get_user_team(id) == CTS || get_user_team(id) == TS){
+	if( iTeam == CTS || iTeam == TS )
 #endif
 #if MOD == 1
-	if(get_user_team(id) == ALLIES || get_user_team(id) == AXIS){
+	if( iTeam == ALLIES || iTeam == AXIS )
 #endif
+	{
 		if( iCvar[MP_SAVEXP] )
 		{
 			XP_Get( id );
@@ -1147,7 +1149,6 @@ public WAR3_Set_Variables(){
 	iCvar[FT_CD						] = get_cvar_num("FT_CD")
 	iCvar[FT_WARN_SUICIDE			] = get_cvar_num("FT_warn_suicide")
 	iCvar[FT_BLINKENABLED			] = get_cvar_num("FT_blinkenabled")
-	iCvar[SV_ALLOWWAR3VOTE			] = get_cvar_num("sv_allowwar3vote")
 	iCvar[SV_SQL					] = get_cvar_num("sv_sql")
 	iCvar[SV_SAVE_END_ROUND			] = get_cvar_num("sv_save_end_round")
 	iCvar[FT_SAVEBY					] = get_cvar_num("FT_saveby")
@@ -1244,18 +1245,21 @@ public WAR3_Check(){
 		warcraft3=true
 }
 
-public WAR3_Kill(id, weapon){
+public WAR3_Kill( id, weapon )
+{
 	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_Kill",id)
 	#endif
+	
+	set_msg_block( gmsgDeathMsg, BLOCK_ONCE );
 
 	#if MOD == 0
-		set_msg_block(gmsgDeathMsg,BLOCK_ONCE)
-		user_kill(id)
+		user_kill( id );
 	#endif
 	#if MOD == 1
-		dod_block_deathmsg(id)
-		war3ft_kill(id)
-		on_Death(id, 0, weapon, 0)
+		dod_user_kill( id );
+		entity_set_int( id, EV_INT_deadflag, 1 ); // DEAD_DYING = 1
+
+		on_Death( id, 0, weapon, 0 );
 	#endif
 }

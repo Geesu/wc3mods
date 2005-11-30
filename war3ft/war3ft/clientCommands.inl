@@ -190,7 +190,7 @@ public cmd_Rings(id){
 	if (p_data[id][P_ITEM2]==ITEM_AMULET)
 		p_data_b[id][PB_SILENT] = false
 	if (p_data[id][P_ITEM2]==ITEM_HELM)
-		Item_Set_Helm(id, HELM_RESET)
+		p_data_b[id][PB_IMMUNE_HEADSHOTS] = false;
 	if (p_data[id][P_ITEM2]==ITEM_CHAMELEON)
 		changeskin(id,SKIN_RESET)
 	
@@ -265,74 +265,6 @@ public cmd_ability(id){
 }
 
 #if MOD == 0
-	public cmd_Shield(id){
-		#if ADVANCED_DEBUG
-			writeDebugInfo("cmd_Shield",id)
-		#endif
-
-		if (!warcraft3)
-			return PLUGIN_CONTINUE
-
-		if(!p_data_b[id][PB_ISCONNECTED])
-			return PLUGIN_HANDLED
-
-		if(!p_data_b[id][PB_BUYZONE])
-			return PLUGIN_HANDLED
-
-		if(!is_user_alive(id))
-			return PLUGIN_HANDLED
-
-		new parm[1]
-		parm[0] = id
-		set_task(0.1,"_cmd_Shield",TASK_SHIELD+id,parm,1)
-		
-		return PLUGIN_CONTINUE
-	}
-
-	public _cmd_Shield(parm[1]){
-		#if ADVANCED_DEBUG
-			writeDebugInfo("_cmd_Shield",parm[0])
-		#endif
-
-		if (!warcraft3)
-			return PLUGIN_CONTINUE
-
-		new id = parm[0]
-
-		if(!p_data_b[id][PB_ISCONNECTED])
-			return PLUGIN_CONTINUE
-
-		new seq = entity_get_int(id,EV_INT_sequence)
-		
-		if(seq == 89){
-			p_data_b[id][PB_SHIELD] = true
-		}
-		else if(seq == 94){
-			p_data_b[id][PB_SHIELD] = true
-		}
-		else if(seq == 98){
-			p_data_b[id][PB_SHIELD] = true
-		}
-		else{
-			p_data_b[id][PB_SHIELD] = false
-		}
-
-		return PLUGIN_CONTINUE
-	}
-
-	public cmd_Drop(id) { 
-		#if ADVANCED_DEBUG
-			writeDebugInfo("cmd_Drop",id)
-		#endif
-
-		if (!warcraft3)
-			return PLUGIN_CONTINUE
-
-		cmd_Shield(id)
-		
-		return PLUGIN_CONTINUE 
-	}
-
 	public cmd_hegren(id){ 
 		#if ADVANCED_DEBUG
 			writeDebugInfo("cmd_hegren",id)
@@ -479,17 +411,10 @@ public cmd_Ultimate(id){
 			#endif
 			}
 		}
-		else{
-			set_msg_block(gmsgDeathMsg,BLOCK_ONCE)
-		#if MOD == 0
-			user_kill(id)
-		#endif
-		#if MOD == 1
-			//client_cmd(id,"kill")
-			war3ft_kill(id)
-			on_Death(id, 0, 0, 0)
-		#endif
-
+		else
+		{
+			// Kill the user
+			WAR3_Kill( id, 0 );
 		}
 	}
 

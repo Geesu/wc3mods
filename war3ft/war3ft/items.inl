@@ -131,7 +131,7 @@ public Item_Clear(id){
 
 	// Remove Helm
 	if(p_data[id][P_ITEM2]==ITEM_HELM)
-		Item_Set_Helm(id, HELM_RESET)
+		p_data_b[id][PB_IMMUNE_HEADSHOTS] = false;
 
 	// Reset Skin
 	if (p_data[id][P_ITEM2]==ITEM_CHAMELEON)
@@ -209,38 +209,6 @@ public Item_Check(parm[]){
 	return PLUGIN_CONTINUE
 }
 
-
-// ****************************************
-// Helm of Excellence
-// ****************************************
-/*
-public Item_Set_Helm(id, status){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if(id==0)
-		return PLUGIN_CONTINUE
-
-	// set_user_hitzones(shooter, the one getting hit, zone)
-	new zone
-
-	if(status==1){		// Give helm
-		zone = 253
-	}
-	else{				// Reset zones to normal
-		zone = 255
-	}
-
-	set_user_hitzones(0, id, zone)
-
-	//for (new j = 1; j <= MAXPLAYERS; j++){
-	//	set_user_hitzones(j, id, zone)
-	//}
-
-	return PLUGIN_CONTINUE
-}
-*/
 
 // ****************************************
 // Gloves of Warmth
@@ -444,4 +412,32 @@ public _Item_Ring(parm[]){
 	set_task(2.0,"_Item_Ring",TASK_ITEM_RINGERATE+id,parm,2)
 
 	return PLUGIN_CONTINUE
+}
+
+// Called when a user looks/shoots somewhere
+public traceline(Float:v1[3], Float:v2[3], noMonsters, pentToSkip)
+{
+	new iAttacker = pentToSkip;
+	new iVictim = get_tr(TR_pHit);
+	new iHitZone = (1 << get_tr(TR_iHitgroup));
+
+	if ( iVictim >= 1 && iVictim <= MAXPLAYERS && p_data_b[iVictim][PB_IMMUNE_HEADSHOTS] )
+	{
+		// If its a headshot then we want to block it
+		if ( iHitZone & (1 << 1) )
+		{
+			set_tr(TR_flFraction, 1.0);
+			
+			// Do the check to see if we should flash the screen orange
+			new Float:time = halflife_time();
+			if ( time - fLastShotFired[iAttacker] < 0.1 )
+			{
+				Create_ScreenFade(iVictim, (1<<10), (1<<10), (1<<12), 250, 164, 20, 150);
+			}
+			
+			return FMRES_SUPERCEDE;
+		}
+	}
+	
+	return FMRES_IGNORED;
 }

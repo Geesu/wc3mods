@@ -586,9 +586,6 @@ public XP_Set_DBI(){
 	// Try to open a database connection
 	if ( iCvar[SV_SQL] )
 	{
-		// Get the table name
-		get_cvar_string("sv_sqltablename", g_DBTableName, 63);
-
 		// We have an attempt, lets increment our counter
 		iSQLAttempts++;
 		
@@ -611,19 +608,8 @@ public XP_Set_DBI(){
 			return PLUGIN_CONTINUE;
 		}
 
-		// Format the create table statement
-		new szQuery[512];
-		if ( iSQLtype == SQL_MYSQL )
-		{
-			format( szQuery, 511, "CREATE TABLE IF NOT EXISTS `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL, PRIMARY KEY (`playerid`, `race`))", g_DBTableName );
-		}
-		else if ( iSQLtype == SQL_SQLITE )
-		{
-			format( szQuery, 511, "CREATE TABLE `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`playerid`, `race`))", g_DBTableName );
-		}
-		
 		// Determine the database information
-		new szHost[64], szUser[32], szPass[32], szDB[128];
+		new szHost[64], szUser[32], szPass[32], szDB[128], szError[256];
 		get_cvar_string("FT_sql_host", szHost, 63);
 		get_cvar_string("FT_sql_user", szUser, 31);
 		get_cvar_string("FT_sql_pass", szPass, 31);
@@ -636,15 +622,30 @@ public XP_Set_DBI(){
 		}
 
 		// Attempt the Connection
-		sql = dbi_connect(szHost, szUser, szPass, szDB);
+		sql = dbi_connect(szHost, szUser, szPass, szDB, szError, 255);
 		
 		// Verify our database connection has worked
 		if ( !XP_Check_Connection() )
 		{
+			log_amx( "Error: %s", szError );
 			return PLUGIN_CONTINUE;
 		}
 		log_amx( "Connection to %s database successful", SQLtype );
 
+
+		// Get the table name
+		get_cvar_string("sv_sqltablename", g_DBTableName, 63);
+
+		// Format the create table statement
+		new szQuery[512];
+		if ( iSQLtype == SQL_MYSQL )
+		{
+			format( szQuery, 511, "CREATE TABLE IF NOT EXISTS `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL, PRIMARY KEY (`playerid`, `race`))", g_DBTableName );
+		}
+		else if ( iSQLtype == SQL_SQLITE )
+		{
+			format( szQuery, 511, "CREATE TABLE `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`playerid`, `race`))", g_DBTableName );
+		}
 
 		// Execute our CREATE TABLE statement if it's MySQL or the SQL LITE table doesn't exist
 		if ( iSQLtype != SQL_SQLITE || !sqlite_table_exists(sql, g_DBTableName) )

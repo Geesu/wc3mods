@@ -1,15 +1,23 @@
 
 public client_score(index,score,total){
 	#if ADVANCED_DEBUG
-		writeDebugInfo("client_score",index)
+		writeDebugInfo("client_score", index)
 	#endif
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	set_user_money(index,get_user_money(index)+(score*1000),1)
+	// Award the user money
+	set_user_money( index, get_user_money(index)+(score*1000), 1 );
 
-	new iXP = XP_give(index, (score * xpgiven[p_data[index][P_LEVEL]]))
-	client_print(index, print_chat, "%s %L", g_MODclient, index, "DOD_AWARDED_XP_OBJECTIVE", iXP)
+	// Award the user XP
+	new iXP, iXPAwarded;
+	iXP = score * xpgiven[p_data[index][P_LEVEL]];
+	iXPAwarded = XP_give( index, iXP );
+	if (iCvar[FT_OBJECTIVES])
+	{
+		client_print(index, print_chat, "%s %L", g_MODclient, index, "DOD_AWARDED_XP_OBJECTIVE", iXPAwarded);
+	}
+
 	return PLUGIN_CONTINUE
 }
 
@@ -63,46 +71,45 @@ public on_EndRound(){
 	#endif
 
 	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new winner = read_data(1)		// Allies = 3, Axis = 4
-
-	endround = true
-
-	new players[32], numberofplayers, a, id
-	new bool:give
-
-	get_players(players,numberofplayers)
+		return PLUGIN_CONTINUE;
 	
-	for (a = 0; a < numberofplayers; ++a){
-		id = players[a]
-		give = false
-		p_data_b[id][PB_REINCARNATION_DELAY] = false
+	// The round has ended
+	endround = true;
 
-		// Skip reincarnation
+	// Allies = 3, Axis = 4
+	new winner = read_data(1);
+	new players[32], numberofplayers, a, id, iXP, iXPAwarded;
+	get_players( players, numberofplayers );
+	
+	for ( a = 0; a < numberofplayers; ++a )
+	{
+		id = players[a];
+		p_data_b[id][PB_REINCARNATION_DELAY] = false;
+
+		// Skip reincarnation for the start of the next round
 		if( Verify_Skill(id, RACE_ORC, SKILL3) || p_data[id][P_ITEM] == ITEM_ANKH )
-			p_data_b[id][PB_REINCARNATION_SKIP] = true
+		{
+			p_data_b[id][PB_REINCARNATION_SKIP] = true;
+		}
 
-
-		// Run a check to award experience
-
-		if(get_user_team(id) == ALLIES && winner == 3)
-			give = true
-		else if(get_user_team(id) == AXIS && winner == 4)
-			give = true
-
-		if(give){
-			new iXP = (iCvar[FT_ROUND_WIN_XP] + xpgiven[p_data[id][P_LEVEL]])
-			iXP = XP_give(players[a], iXP)
+		// Should we award XP ?
+		new iTeam = get_user_team( id );
+		if ( (iTeam == ALLIES && winner == 3) || (iTeam == AXIS && winner == 4) )
+		{
+			iXP = iCvar[FT_ROUND_WIN_XP] + xpgiven[p_data[id][P_LEVEL]];
+			iXPAwarded = XP_give(id, iXP);
 			if (iCvar[FT_OBJECTIVES])
-				client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_WINNING_ROUND",iXP)
+			{
+				client_print(id,print_chat, "%s %L", g_MODclient, id, "AWARD_FOR_WINNING_ROUND", iXPAwarded);
+			}
 		}
 	}
 
 	return PLUGIN_CONTINUE
 }
 // DOD Specific stocks
-stock Create_HudText(id,message[], flag){
+stock Create_HudText(id,message[], flag)
+{
 #if ADVANCED_DEBUG
 	writeDebugInfo("Create_HudText",id)
 #endif
@@ -113,7 +120,8 @@ stock Create_HudText(id,message[], flag){
 	message_end()
 }
 
-stock Create_DeathMsg_DOD(killer_id,victim_id,weapon){
+stock Create_DeathMsg_DOD(killer_id,victim_id,weapon)
+{
 	#if ADVANCED_DEBUG
 		writeDebugInfo("Create_DeathMsg_DOD",weapon)
 	#endif
@@ -125,71 +133,21 @@ stock Create_DeathMsg_DOD(killer_id,victim_id,weapon){
 	message_end()
 }
 
-/*
-public on_Spectate(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_Spectate",0)
-	#endif
-
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new name[32], team[32]
-	read_data(4,team,31)
-	read_data(3,name,31)
-
-	new id = get_user_index(name)
-
-	if(equali(team,"Spectators")){
-		p_data[id][P_SPECMODE] = 1
-	}
-	else{
-		p_data[id][P_SPECMODE] = 0
-	}
-
-	return PLUGIN_CONTINUE
-}
-
-public on_SetSpecMode(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_SetSpecMode",id)
-	#endif
-
-	// #Spec_Mode2 = 3rd person
-	// #Spec_Mode4 = 1st person
-	// #Spec_Mode3 = free look
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new specMode[32]
-	read_data(2, specMode, 31)
-
-	// Third Person Spectating
-	if( equal(specMode, "#Spec_Mode2") ){
-		p_data[id][P_SPECMODE] = 2
-	}
-
-	// First Person Spectating
-	else if( equal(specMode, "#Spec_Mode4") ){
-		p_data[id][P_SPECMODE] = 4
-	}
-
-	return PLUGIN_CONTINUE
-}*/
-
-public on_StatusValue(id){	
-
+public on_StatusValue(id)
+{	
 	if(!warcraft3 || !iCvar[FT_SPEC_INFO] || !p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
+	{
+		return PLUGIN_CONTINUE;
+	}
 
-	new targetid = entity_get_int(id, EV_INT_iuser2)
+	new targetid = entity_get_int(id, EV_INT_iuser2);
 
 	if( targetid == 0 )
-		return PLUGIN_CONTINUE
+	{
+		return PLUGIN_CONTINUE;
+	}
 
-	WAR3_Show_Spectator_Info(id, targetid)
+	WAR3_Show_Spectator_Info(id, targetid);
 
-	return PLUGIN_CONTINUE
+	return PLUGIN_CONTINUE;
 }

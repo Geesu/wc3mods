@@ -137,16 +137,21 @@ public Skill_Invisibility(id)
 		if (!warcraft3)
 			return PLUGIN_CONTINUE
 		
-
-		if(reincarnation[id][ZPOS] == -99999){}		// Player just joined, so lets not teleport them
-		else if(p_data_b[id][PB_REINCARNATION_SKIP]){
-			p_data_b[id][PB_REINCARNATION_SKIP] = false
+		// User just joined or should skip reincarnation
+		if ( p_data_b[id][PB_REINCARNATION_SKIP] )
+		{
+			p_data_b[id][PB_REINCARNATION_SKIP] = false;
+			return PLUGIN_CONTINUE;
 		}
-		else if(p_data_b[id][PB_REINCARNATION_DELAY]){
+
+		
+		if(p_data_b[id][PB_REINCARNATION_DELAY])
+		{
 			client_print(id,print_chat,"%s %L", g_MODclient, id, "SKILL_REINCARNATION_SKIPPING")
 			p_data_b[id][PB_REINCARNATION_DELAY] = false
 		}
-		else{
+		else
+		{
 			new parm[2]
 			parm[0] = id
 
@@ -166,9 +171,9 @@ public Skill_Invisibility(id)
 			// Screen fade green
 			Create_ScreenFade(id, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[id][1])
 
-			reincarnation[id][ZPOS]+=30
+			iReincarnation[id][ZPOS]+=30
 
-			set_user_origin(id,reincarnation[id])
+			set_user_origin(id,iReincarnation[id])
 
 			set_task(0.1,"_SKILL_Reincarnation", TASK_REINCARNATION+id,parm,1)
 			set_task(2.5,"_SKILL_Reincarnation_Status", TASK_REINCCHECK+id,parm,1)
@@ -190,7 +195,7 @@ public Skill_Invisibility(id)
 		get_user_origin(id,origin)
 
 		// Failure, stuck somewhere, put them back
-		if(origin[2] == reincarnation[id][2]){
+		if(origin[2] == iReincarnation[id][2]){
 
 			new spawnID, playersInVicinity, entList[1], i
 			new ent = -1
