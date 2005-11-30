@@ -1,3 +1,6 @@
+v2.3.0
+ - Bug Fix: ADMIN_LEVEL_WC3 wasn't read for the give mole command
+
 v2.2.9
  - Addition: resetxp yes/no menu
  - Addition: Default amxx db added if a user does not enter one (for SQLite)

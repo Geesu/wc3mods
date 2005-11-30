@@ -29,7 +29,7 @@ public Admin_GiveMole(id, level, cid){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if (!(get_user_flags(id)&ADMIN_LEVEL_A)) { 
+	if (!(get_user_flags(id)&ADMIN_LEVEL_WC3)) { 
 		if(id != 0){
 			client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MODclient)
 			return PLUGIN_HANDLED
