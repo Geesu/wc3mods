@@ -94,34 +94,6 @@ public on_EndRound(){
 	return PLUGIN_CONTINUE
 }
 
-public on_StatusIcon(id) {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_StatusIcon",id)
-	#endif
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new szStatusItem[8]
-	read_data(2, szStatusItem, 7)
-
-	if ( equali(szStatusItem, "defuser") ){
-		if ( read_data(1) )
-			p_data_b[id][PB_DEFUSE] = true
-		else
-			p_data_b[id][PB_DEFUSE] = false
-	}
-
-	if ( equali(szStatusItem, "buyzone") ){
-		if ( read_data(1) )
-			p_data_b[id][PB_BUYZONE] = true
-		else
-			p_data_b[id][PB_BUYZONE] = false
-	}
-
-	return PLUGIN_CONTINUE
-}
-
 public on_PlayerAction(){ 
 	#if ADVANCED_DEBUG
 		writeDebugInfo("on_PlayerAction",0)
@@ -566,12 +538,16 @@ public on_ArmorType(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if (read_data(1))
-		p_data_b[id][PB_HELMET]=true
+	if ( read_data(1) )
+	{
+		g_ArmorType[id] = CS_ARMOR_VESTHELM;
+	}
 	else
-		p_data_b[id][PB_HELMET]=false
+	{
+		g_ArmorType[id] = CS_ARMOR_KEVLAR;
+	}
 
-	return PLUGIN_CONTINUE
+	return PLUGIN_CONTINUE;
 }
 
 public on_WeapPickup(id){ 

@@ -37,7 +37,7 @@ new const WC3VERSION[] =	"2.3.0"
 #include <dbi>
 
 // Compiling Options
-#define MOD 1							// 0 = cstrike or czero, 1 = dod
+#define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define PRECACHE_WAR3FTSOUNDS 1
@@ -49,7 +49,8 @@ new const WC3VERSION[] =	"2.3.0"
 
 #if MOD == 0
 	#include <cstrike>
-#else
+#endif
+#if MOD == 1
 	#include <dodfun>
 	#include <dodx>
 #endif
@@ -73,7 +74,6 @@ new const WC3VERSION[] =	"2.3.0"
 #if MOD == 0
 	#include "war3ft/cstrike.inl"
 #endif
-
 #if MOD == 1
 	#include "war3ft/dod.inl"
 #endif
@@ -144,13 +144,13 @@ public plugin_init()
 	register_forward(FM_TraceLine, "traceline");
 
 	#if MOD == 1
-		register_statsfwd(XMF_SCORE)
-		register_statsfwd(XMF_DAMAGE)
+		register_statsfwd(XMF_SCORE);
+		register_statsfwd(XMF_DAMAGE);
 
-		register_event("RoundState","on_EndRound","a","1=3","1=4")
-		register_event("StatusValue","on_StatusValue","b")
+		register_event("RoundState","on_EndRound","a","1=3","1=4");
+		register_event("StatusValue","on_StatusValue","b");
+
 	#endif
-
 	#if MOD == 0
 		register_logevent("on_PlayerAction",3,"1=triggered") 
 		register_logevent("on_FreezeTimeComplete",2,"0=World triggered","1=Round_Start")
@@ -166,8 +166,6 @@ public plugin_init()
 
 		register_event("StatusValue","on_ShowStatus","be","1=2","2!0")
 		register_event("StatusValue","on_HideStatus","be","1=1","2=0")  
-
-		register_event("StatusIcon", "on_StatusIcon",  "be")
 
 		register_event("TextMsg","on_SetSpecMode","bd","2&ec_Mod")
 
@@ -306,6 +304,20 @@ public plugin_init()
 		register_concmd("evasion", "Skill_Evasion_Set");
 		register_concmd("prune", "XP_Prune");
 	#endif
+
+	register_concmd("died", "died");
+}
+
+public died(id)
+{
+	if ( p_data_b[id][PB_DIEDLASTROUND] )
+	{
+		client_print(id, print_chat, "Died last round");
+	}
+	else
+	{
+		client_print(id, print_chat, "Not Died last round");
+	}
 }
 
 public plugin_end()
@@ -349,7 +361,6 @@ public client_putinserver(id){
 		parm[1] = 0
 		_DOD_showMoney(parm)
 	#endif
-
 	#if MOD == 0
 		query_client_cvar(id, "cl_minmodels", "check_cvars") 
 	#endif
@@ -394,7 +405,6 @@ public client_connect(id){
 		// Skip Reincarnation since the user just joined
 		p_data_b[id][PB_REINCARNATION_SKIP] = true;
 	#endif
-
 	#if MOD == 0
 		p_data[id][P_HECOUNT] = 0
 		p_data[id][P_FLASHCOUNT]=0

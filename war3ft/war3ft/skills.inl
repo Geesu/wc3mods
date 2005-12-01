@@ -20,7 +20,9 @@ public Skill_Check(id){
 
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
-
+	
+	// Undead's Unholy Aura
+	Skill_UnholyAura(id);
 
 	// Crypt Lord's Carrion Beetles
 	if ( Verify_Skill(id, RACE_CRYPT, SKILL3) ){
@@ -81,9 +83,39 @@ public Skill_Check(id){
 	return PLUGIN_CONTINUE
 }
 
+// ****************************************
+// Undead's Unholy Aura
+// ****************************************
+public Skill_UnholyAura( id )
+{
+	if( get_cvar_num("sv_gravity") > 650 )
+	{
+		// Levitation
+		if ( Verify_Skill(id, RACE_UNDEAD, P_SKILL3) )
+		{		
+			if ( get_user_gravity(id) != p_levitation[p_data[id][P_SKILL3]-1] )
+			{
+				set_user_gravity(id, p_levitation[p_data[id][P_SKILL3]-1]);
+			}
+		}
+		else if ( p_data[id][P_ITEM2] == ITEM_SOCK )
+		{
+			set_user_gravity(id, fCvar[FT_SOCK]);
+		}
+		else if ( get_user_gravity(id) != 1.0 )
+		{
+			set_user_gravity(id, 1.0);
+		}
+
+	}
+	else
+	{
+		set_user_gravity(id, 1.0);
+	}
+}
 
 // ****************************************
-// Human's Invisibility ability in Day of Defeat
+// Human's Invisibility
 // ****************************************
 
 public Skill_Invisibility(id)
@@ -402,24 +434,25 @@ public _Skill_Reincarnation_Give(id){
 
 	get_user_origin(id,origin)
 	origin[2] += 2005
-
-	if (p_data[id][P_ARMORONDEATH]){
-		if (p_data_b[id][PB_HELMET])
-			give_item(id,"item_assaultsuit")
-		else
-			give_item(id,"item_kevlar")
-
-		set_user_armor(id,p_data[id][P_ARMORONDEATH])
+	
+	// Give armor
+	if ( p_data[id][P_ARMORONDEATH] )
+	{
+		cs_set_user_armor( id, p_data[id][P_ARMORONDEATH], g_ArmorType[id] );
 	}
-
-	if (p_data_b[id][PB_DEFUSE])
-		give_item(id,"item_thighpack")
+	
+	// Give a defuse kit
+	if ( p_data_b[id][PB_DEFUSE] )
+	{
+		give_item(id, "item_thighpack");
+	}
 
 	if (p_data_b[id][PB_NIGHTVISION])
 		cs_set_user_nvg(id,1)
 
-	if(p_data_b[id][PB_SHIELD]){
-		give_item(id,"weapon_shield")
+	if( p_data_b[id][PB_SHIELD] )
+	{
+		give_item(id, "weapon_shield");
 	}
 
 	new weaponid = 0, j

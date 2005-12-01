@@ -165,26 +165,16 @@ public Item_Check(parm[]){
 	if(p_data[id][P_ITEM2]==ITEM_MOLE)
 		set_task(0.1,"_Item_Mole",TASK_FAN+id,parm,1)
 		
-	if(p_data_b[id][PB_DIEDLASTROUND]){
+	if(p_data_b[id][PB_DIEDLASTROUND])
+	{
 		p_data[id][P_ITEM]=0
 		p_data[id][P_ITEM2]=0
 		WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
 	}
 
-	p_data_b[id][PB_DIEDLASTROUND]=false
+	p_data_b[id][PB_DIEDLASTROUND] = false
 	
-	if(get_cvar_num("sv_gravity")>650){
-		if ( Verify_Skill(id, RACE_UNDEAD, SKILL3) ){		// Levitation
-			if (get_user_gravity(id)!=p_levitation[p_data[id][P_SKILL3]-1])
-				set_user_gravity(id,p_levitation[p_data[id][P_SKILL3]-1])
-		}
-		else if (p_data[id][P_ITEM2] == ITEM_SOCK)
-			set_user_gravity(id, fCvar[FT_SOCK])
-		else
-			set_user_gravity(id,1.0)
-	}
-	else
-		set_user_gravity(id,1.0)
+	Skill_UnholyAura(id);
 
 	if(p_data[id][P_ITEM2]!=ITEM_CHAMELEON && p_data[id][P_SKINCHANGED]==SKIN_SWITCH)
 		changeskin(id,SKIN_RESET)
@@ -230,10 +220,12 @@ public _Item_Glove(parm[2]){
 		return PLUGIN_CONTINUE
 
 	// If the user buys another item, we should not be continuing this
-
-	if(p_data[id][P_ITEM2]!=ITEM_GLOVES){
-		set_hudmessage(0, 100, 0, 0.05, 0.65, 2, 0.02, 10.0, 0.01, 0.1, 2)	
-		show_hudmessage(id,"")
+	if( p_data[id][P_ITEM2] != ITEM_GLOVES )
+	{
+		#if MOD == 0
+			set_hudmessage(0, 100, 0, 0.05, 0.65, 2, 0.02, 10.0, 0.01, 0.1, 2)	
+			show_hudmessage(id,"")
+		#endif
 		#if MOD == 1
 			Create_HudText(id, "", 1)
 		#endif
@@ -430,7 +422,7 @@ public traceline(Float:v1[3], Float:v2[3], noMonsters, pentToSkip)
 			
 			// Do the check to see if we should flash the screen orange
 			new Float:time = halflife_time();
-			if ( time - fLastShotFired[iAttacker] < 0.1 )
+			if ( (iAttacker >= 1) && (iAttacker <= MAXPLAYERS) && time - fLastShotFired[iAttacker] < 0.1 )
 			{
 				Create_ScreenFade(iVictim, (1<<10), (1<<10), (1<<12), 250, 164, 20, 150);
 			}

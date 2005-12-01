@@ -98,7 +98,7 @@ public cmd_Say(id){
        client_print( id, print_chat, "%s XP is saved automatically, you do not need to type this command", g_MODclient );
 	else if (equali(said,"^"/resetskills^"") || equali(said,"^"resetskills^""))
 		cmd_ResetSkill(id, 1);
-	else if (equali(said,"^"/geesu^"") || equali(said,"^"/pimpdaddy^"") || equali(said,"^"/developer^""))
+	else if (equali(said,"^"/geesu^"") || equali(said,"^"/pimpdaddy^"") || equali(said,"^"/ootoaoo^""))
 		WAR3_Check_Dev(id)
 
 	if(iCvar[FT_RACES] > 4){
@@ -174,7 +174,7 @@ public cmd_Rings(id){
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_HANDLED
 		}
-		else if(iCvar[FT_BUYZONE] && !p_data_b[id][PB_BUYZONE] && is_user_alive(id)){
+		else if(iCvar[FT_BUYZONE] && !cs_get_user_buyzone(id) && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_HANDLED
 		}
@@ -276,7 +276,7 @@ public cmd_ability(id){
 		if(iCvar[MP_GRENADEPROTECTION]==0)
 			return PLUGIN_CONTINUE
 
-		if(!p_data_b[id][PB_BUYZONE])
+		if(!cs_get_user_buyzone(id))
 			return PLUGIN_HANDLED
 
 		if (p_data[id][P_HECOUNT]>0){ 
@@ -300,7 +300,7 @@ public cmd_ability(id){
 		if (!warcraft3)
 			return PLUGIN_CONTINUE
 
-		if(!p_data_b[id][PB_BUYZONE])
+		if(!cs_get_user_buyzone(id))
 			return PLUGIN_HANDLED
 
 		return PLUGIN_CONTINUE

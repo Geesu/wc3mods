@@ -736,13 +736,19 @@ public on_Death(victim, killer, wpnindex, headshot){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
+#if MOD == 0
 	/* For some reason the damage passed by explosions is not actually correct
 		(perhaps armor adjustments weren't done yet), so lets check */
 	if ( is_user_alive(victim) && wpnindex == CSW_C4 )
 		return PLUGIN_CONTINUE
-
+	
+	// Can't remember why this is here...
 	if(p_data_b[victim][PB_DIEDLASTROUND])
-		return PLUGIN_CONTINUE
+	{
+		return PLUGIN_CONTINUE;
+	}
+
+#endif
 
 	WAR3_death_victim(victim, killer)
 	
@@ -753,20 +759,19 @@ public on_Death(victim, killer, wpnindex, headshot){
 		get_user_origin(victim, iReincarnation[victim]);
 	#endif
 
-	// If we're in CS we need to find out if the user had a shield when dying
 	#if MOD == 0
-		#if DEBUG
-			client_print(victim, print_chat, "Shield Status: %d", cs_get_user_shield(victim));
-		#endif
+		// Check for NightVision
+		p_data_b[victim][PB_NIGHTVISION] = (cs_get_user_nvg( victim )) ? true : false;
+
+		// Check if a user had a shield on death
+		p_data_b[victim][PB_SHIELD] = (cs_get_user_shield( victim )) ? true : false;
+
+		// Get the user's armor on death
+		new CsArmorType:armortype
+		p_data[victim][P_ARMORONDEATH] = cs_get_user_armor( victim, armortype );
 		
-		if ( cs_get_user_shield( victim ) )
-		{
-			p_data_b[victim][PB_SHIELD] = true;
-		}
-		else
-		{
-			p_data_b[victim][PB_SHIELD] = false;
-		}
+		// See if the user has a defuse kit
+		p_data_b[victim][PB_DEFUSE] = (cs_get_user_defuse( victim )) ? true : false;
 	#endif
 	
 	return PLUGIN_CONTINUE

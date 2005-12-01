@@ -401,7 +401,7 @@
 	#define PB_JUSTJOINED			30
 	#define PB_ISCONNECTED			31
 	
-	#define PB_BUYZONE				33		// Player in buyzone?
+//	#define PB_BUYZONE				33		// Player in buyzone?
 	#define PB_RENDER				34
 	
 	#define PB_IMMUNE_HEADSHOTS		35		// Player immune to headshots?
@@ -598,6 +598,8 @@ new g_menuSettings[33]
 	new CTSkins[5][]={"sas","gsg9","urban","gign","spetsnaz"}
 	new TSkins[5][]={"arctic","leet","guerilla","terror","militia"}
 	new spawnEntString[2][] = {"info_player_start","info_player_deathmatch"}
+
+	new CsArmorType:g_ArmorType[33];
 #endif
 #if MOD == 1
 	//new gmsgObject

@@ -86,19 +86,21 @@ public getuserinput(parm[1]){
 	return PLUGIN_HANDLED
 }
 
-public saveweapons(id){
+public saveweapons(id)
+{
 	#if ADVANCED_DEBUG
 		writeDebugInfo("saveweapons",id)
 	#endif
 
 	#if MOD == 0
-		p_data[id][P_ARMORONDEATH]=get_user_armor(id)
+		new CsArmorType:armortype
+		p_data[id][P_ARMORONDEATH] = cs_get_user_armor( id, armortype );
 	#endif
 	for (new i=0; i<32; ++i){		// Equipment Reincarnation
 		savedweapons[id][i]=0
 	}
 
-	p_data[id][P_SAVEDNUMBER]=0
+	p_data[id][P_SAVEDNUMBER] = 0;
 	get_user_weapons(id,savedweapons[id],p_data[id][P_SAVEDNUMBER])
 
 	return PLUGIN_CONTINUE

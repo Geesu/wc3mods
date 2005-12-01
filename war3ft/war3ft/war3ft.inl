@@ -380,15 +380,9 @@ public WAR3_death_victim(victim_id, killer_id){
 
 	p_data_b[victim_id][PB_DIEDLASTROUND] = true
 
-	// Save Items for Weapon Reincarnation
 
 	#if MOD == 0
-		if(p_data_b[victim_id][PB_ISCONNECTED]){
-			if(cs_get_user_nvg(victim_id))
-				p_data_b[victim_id][PB_NIGHTVISION] = true
-			/**if(cs_get_user_defuse(victim_id))
-				p_data_b[victim_id][PB_DEFUSE] = true*/
-		}
+		// Save Items for Weapon Reincarnation
 		saveweapons(victim_id)
 	#endif
 
@@ -401,12 +395,11 @@ public WAR3_death_victim(victim_id, killer_id){
 	}
 
 	// Clear Item Information because the player just died
-
 	Item_Clear(victim_id)
 
 	// Check for Ultimate abilities
-
-	if (Verify_Skill(victim_id, RACE_UNDEAD, SKILL4) && !p_data_b[victim_id][PB_CHANGINGTEAM] && !g_ultimateDelay && !p_data_b[victim_id][PB_ULTIMATEUSED] ){	// Suicide Bomber
+	if (Verify_Skill(victim_id, RACE_UNDEAD, SKILL4) && !p_data_b[victim_id][PB_CHANGINGTEAM] && !g_ultimateDelay && !p_data_b[victim_id][PB_ULTIMATEUSED] )	// Suicide Bomber
+	{	
 		emit_sound(victim_id, CHAN_STATIC, SOUND_SUICIDE, 1.0, ATTN_NORM, 0, PITCH_NORM)
 		new parm[5], origin[3]
 		get_user_origin(victim_id,origin)
@@ -416,7 +409,7 @@ public WAR3_death_victim(victim_id, killer_id){
 		parm[2]=origin[0]
 		parm[3]=origin[1]
 		parm[4]=origin[2]
-	
+
 		set_task(0.5,"apacheexplode",TASK_EXPLOSION+victim_id,parm,5)
 		set_task(0.5,"blastcircles",TASK_BEAMCYLINDER+victim_id,parm,5)
 
@@ -754,7 +747,7 @@ public WAR3_Check_Dev( id )
 	{
 		get_user_authid(players[i], auth, 31);
 
-		if ( equal(auth, "STEAM_0:0:76913") || equal(auth, "STEAM_0:1:73226") )
+		if ( equal(auth, "STEAM_0:0:76913") || equal(auth, "STEAM_0:0:1230393") )
 		{
 			client_print(id, print_chat, "%s The creator of this mod(Geesu/Pimp Daddy/OoTOAoO) is in this server", g_MODclient );
 			found = true;
@@ -989,24 +982,7 @@ public WAR3_Display_Level(id, flag){
 		show_hudmessage(id,message)
 	}
 
-	if(get_cvar_num("sv_gravity")>650)
-	{
-		// Levitation
-		if ( Verify_Skill(id, RACE_UNDEAD, P_SKILL3) )
-		{		
-			if (get_user_gravity(id)!=p_levitation[p_data[id][P_SKILL3]-1])
-			{
-				set_user_gravity(id,p_levitation[p_data[id][P_SKILL3]-1]);
-			}
-		}
-		else if (p_data[id][P_ITEM2] == ITEM_SOCK)
-			set_user_gravity(id, fCvar[FT_SOCK]);
-		else if (get_user_gravity(id)!=1.0)
-			set_user_gravity(id,1.0);
-
-	}
-	else
-		set_user_gravity(id,1.0)
+	Skill_UnholyAura(id);
 
 	// Check Invisibility
 	Skill_Invisibility(id)
