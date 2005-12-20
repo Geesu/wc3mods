@@ -274,7 +274,7 @@ MENU_RACE_OPTIONS = \yRace valgmuligheder
 MENU_ADMIN_MENU = \yAdmin Menu
 MENU_GIVE_PLAYERS_XP = \yGiv Spillere XP
 MENU_TEAM_XP = \yTeam XP Menu
-CLICK_HERE = Klik <a href="http://wc3mods.net/war3ft/online/war3info.php?game%s">her</A> for mere information omkring de nye racer, o.s.v..
+CLICK_HERE = Klik <a href="http://wc3mods.net/war3ft/online/war3info.php?game=%s">her</A> for mere information omkring de nye racer, o.s.v..
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Help
 
 WAR3HELP :
@@ -635,7 +635,7 @@ MENU_RACE_OPTIONS = \yRassen Optionen
 MENU_ADMIN_MENU = \yAdmin Menue
 MENU_GIVE_PLAYERS_XP = \yGebe Spielern XP
 MENU_TEAM_XP = \yTeam XP Menue
-CLICK_HERE = Klicke <a href="http://wc3mods.net/war3ft/online/war3info.php?game%s">hier</A> fuer mehr Informationen über neue Rassen, etc..
+CLICK_HERE = Klicke <a href="http://wc3mods.net/war3ft/online/war3info.php?game=%s">hier</A> fuer mehr Informationen über neue Rassen, etc..
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Hilfe
 
 WAR3HELP :
@@ -1003,7 +1003,7 @@ MENU_ADMIN_MENU = \yAdmin Menu
 MENU_GIVE_PLAYERS_XP = \yGive Players XP
 MENU_TEAM_XP = \yTeam XP Menu
 MENU_RESET_XP = \yAre you sure you want to Reset your XP to 0?
-CLICK_HERE = Click <a href="http://wc3mods.net/war3ft/online/war3info.php?game%s">here</A> for more information regarding the new races.
+CLICK_HERE = Click <a href="http://wc3mods.net/war3ft/online/war3info.php?game=%s">here</A> for more information regarding the new races.
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Help
 
 WAR3HELP :
@@ -1368,7 +1368,7 @@ MENU_RACE_OPTIONS = \yOpciones de Razas
 MENU_ADMIN_MENU = \yMenú del Administrador
 MENU_GIVE_PLAYERS_XP = \yDar XP a los jugadores
 MENU_TEAM_XP = \yMenú XP de Equipo
-CLICK_HERE = Haz clic <a href="http://wc3mods.net/war3ft/online/war3info.php?game%s">aquí</A> para más información sobre nuevas razas, etc...
+CLICK_HERE = Haz clic <a href="http://wc3mods.net/war3ft/online/war3info.php?game=%s">aquí</A> para más información sobre nuevas razas, etc...
 WAR3HELP_TITLE = Ayuda de Warcraft 3 Frozen Throne
 
 WAR3HELP :
@@ -2458,7 +2458,7 @@ MENU_RACE_OPTIONS = \yRas Opties
 MENU_ADMIN_MENU = \yAdmin Menu
 MENU_GIVE_PLAYERS_XP = \yGeef Spelers XP
 MENU_TEAM_XP = \yTeam XP Menu
-CLICK_HERE = Klik <a href="http://wc3mods.net/war3ft/online/war3info.php?game%s">hier</A> voor meer informatie over de nieuwe rassen, etc..(in het Engels)
+CLICK_HERE = Klik <a href="http://wc3mods.net/war3ft/online/war3info.php?game=%s">hier</A> voor meer informatie over de nieuwe rassen, etc..(in het Engels)
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Help
 
 WAR3HELP :
@@ -2823,7 +2823,7 @@ MENU_RACE_OPTIONS = \yOpcje Rasy
 MENU_ADMIN_MENU = \yAdmin Menu
 MENU_GIVE_PLAYERS_XP = \yDaj Graczom XP
 MENU_TEAM_XP = \yTeam XP Menu
-CLICK_HERE = Odwiedz <a href="http://wc3mods.net/war3ft/online/war3info.php?game%s">here</A> po wiecej informacji dotyczacych nowych ras etc
+CLICK_HERE = Odwiedz <a href="http://wc3mods.net/war3ft/online/war3info.php?game=%s">here</A> po wiecej informacji dotyczacych nowych ras etc
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Pomoc
 
 WAR3HELP :
@@ -3136,7 +3136,7 @@ MENU_RACE_OPTIONS = \yVal av Ras
 MENU_ADMIN_MENU = \yAdmin Meny
 MENU_GIVE_PLAYERS_XP = \yGe Spelare XP
 MENU_TEAM_XP = \yLag XP Meny
-CLICK_HERE = Klicka <a href="http://wc3mods.net/war3ft/online/war3info.php?game%s">h'a'r</A> f'o'r mer information om de nya raserna, etc..
+CLICK_HERE = Klicka <a href="http://wc3mods.net/war3ft/online/war3info.php?game=%s">h'a'r</A> f'o'r mer information om de nya raserna, etc..
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Hj'a'lp
 
 WAR3HELP :

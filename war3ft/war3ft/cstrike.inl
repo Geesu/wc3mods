@@ -657,7 +657,10 @@ public WAR3_Mole_Fix(){
 		
 		for(new i = 0; i < num; i++)
 		{
-			query_client_cvar(players[i], "cl_minmodels", "check_cvars") 
+			if ( !is_user_bot( players[i] ) )
+			{
+				query_client_cvar(players[i], "cl_minmodels", "check_cvars");
+			}
 		}
 
 		set_task(1.0, "WAR3_Mole_Fix", TASK_MOLEFIX)

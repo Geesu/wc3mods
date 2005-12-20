@@ -1,9 +1,13 @@
+v2.3.1
+ - Bug Fix: Link wasn't linked correctly in war3help
+
 v2.3.0
  - Addition: If there is an error on a database connection, the error is now printed to the amxx logs
  - Change: How defuse kits, armor and the buyzones are interpreted (uses cstrike module now)
  - Bug Fix: ADMIN_LEVEL_WC3 wasn't read for the give mole command
  - Bug Fix: Shield would not be given with reincarnation
  - Bug Fix: (DOD) Undead's levitiation, reincarnation, suicide bomber
+ - Bug Fix: Attempting to query cvar values for bots (thanks Corrosion X)
  - Removed: amx_wc3 (just use amx_cvar sv_warcraft3 0/1)
  - Removed: war3ft module, it is no longer needed, but fakemeta must be turned on
 

@@ -370,7 +370,7 @@
 	#define PB_DIEDLASTROUND		4
 
 	// Used for weapon Reincarnation
-	#define PB_HELMET				5		// Player had a helmet when he/she died?
+//	#define PB_HELMET				5		// Player had a helmet when he/she died?
 	#define PB_DEFUSE				6		// Player had a defuse kit when he/she died?
 	#define PB_SHIELD				7		// Player had a shield when he/she died?
 	#define PB_NIGHTVISION			8		// Player had nightvision when he/she died?

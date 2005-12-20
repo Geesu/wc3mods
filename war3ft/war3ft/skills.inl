@@ -438,6 +438,16 @@ public _Skill_Reincarnation_Give(id){
 	// Give armor
 	if ( p_data[id][P_ARMORONDEATH] )
 	{
+		// Not sure why I need to do this (shouldn't the cs_set_user_armor function do it dangit) but I do :/
+		if ( g_ArmorType[id] == CS_ARMOR_KEVLAR )
+		{
+			give_item(id, "item_kevlar");
+		}
+		else if ( g_ArmorType[id] == CS_ARMOR_VESTHELM )
+		{
+			give_item(id, "item_assaultsuit");
+		}
+
 		cs_set_user_armor( id, p_data[id][P_ARMORONDEATH], g_ArmorType[id] );
 	}
 	
@@ -447,8 +457,10 @@ public _Skill_Reincarnation_Give(id){
 		give_item(id, "item_thighpack");
 	}
 
-	if (p_data_b[id][PB_NIGHTVISION])
-		cs_set_user_nvg(id,1)
+	if ( p_data_b[id][PB_NIGHTVISION] )
+	{
+		cs_set_user_nvg(id, 1);
+	}
 
 	if( p_data_b[id][PB_SHIELD] )
 	{
