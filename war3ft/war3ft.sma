@@ -27,7 +27,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu==(Pimp Daddy==OoTOAoO)"
-new const WC3VERSION[] =	"2.3.1"
+new const WC3VERSION[] =	"2.3.1 RC"
 
 #include <amxmodx>
 #include <amxmisc>
@@ -37,14 +37,14 @@ new const WC3VERSION[] =	"2.3.1"
 #include <dbi>
 
 // Compiling Options
-#define MOD 0							// 0 = cstrike or czero, 1 = dod
+#define MOD 1							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define PRECACHE_WAR3FTSOUNDS 1
 
 // Debugging Options
 #define DEBUG 0 						// Only use this when coding.. you normally don't want it
-#define ADVANCED_DEBUG 1				// Prints debug information to a log file when every function is called, VERY LAGGY
+#define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
 #define ADVANCED_DEBUG_BOTS 1			// Print info for bots too?
 
 #if MOD == 0
