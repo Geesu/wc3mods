@@ -1,0 +1,78 @@
+Below are descriptions of how to use restrictions in war3x. See _help.txt
+in /map-specific for information on how to restrict items/races/skills/ultimates
+for specific maps only.
+
+
+Item restrictions (war3x_restrict_items)
+=================
+
+a) ankh of reincarnation
+b) boots of speed
+c) claws of attack
+d) cloak of shadows
+e) sobi mask
+f) amulet of spell shield
+g) ring of protection +5
+h) tome of experience
+
+
+EXAMPLE: war3x_restrict_items "ae" would restrict ankh and sobi mask
+
+
+
+Race restrictions (war3x_restrict_races)
+=================
+
+a) undead scourge
+b) human alliance
+c) orcish horde
+d) night elf sentinels
+
+
+EXAMPLE: war3x_restrict_races "a" would restrict undead
+
+
+
+Skill restrictions (war3x_restrict_skills)
+==================
+
+a) unholy aura
+b) vampiric aura
+c) anti-magic shell
+d) frost armor
+e) war training
+f) invisibility
+g) bash
+h) inner fire
+i) regeneration
+j) bloodlust
+k) pulverize
+l) reincarnation
+m) nature's blessing
+n) evasion
+o) moon glaive
+p) trueshot aura
+
+
+EXAMPLE: war3x_restrict_skills "fn" would restrict invisibility and evasion
+
+
+
+Ultimate restrictions (war3x_restrict_ultimates)
+=====================
+
+a) death coil
+b) impale
+c) sleep
+d) holy light
+e) flame strike
+f) thunder clap
+g) healing wave
+h) chain lightning
+i) windwalk
+j) rejuvenation
+k) entangling roots
+l) shadow strike
+
+
+EXAMPLE: war3x_restrict_ultimates "adgj" would restrict all healing ultimates

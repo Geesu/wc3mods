@@ -1,0 +1,5 @@
+W A R C R A F T 3 : Expansion
+Logging of war3x_setxp and war3x_setlevel.
+ 
+[09.29.2004 01:23:35] Counter-Strike dedicated server () used command: 'war3x_setlevel Ryan Undead 10'
+[09.08.2005 22:47:15] 4HM | Warcraft 3 Expansion () used command: 'war3x_setxp Player Undead 9999'

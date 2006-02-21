@@ -1,0 +1,14 @@
+This folder allows you to customize settings for different maps. Simply
+create a cfg file, called mapname.cfg, where mapname is the name of the map.
+
+For example: to create custom item restrictions for de_aztec, you would first
+create a file called de_aztec.cfg, and add the following line.
+
+war3x_item_restrictions "af"
+
+
+
+* this would restrict the ankh and amulet on map de_aztec. The value(s) in
+these map specific file(s) will override default war3x cvars found in war3x.cfg.
+
+* you may additionally add things such as gravity modifiers to these files.
