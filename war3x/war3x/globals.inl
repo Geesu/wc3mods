@@ -3,6 +3,7 @@
 
 /* - Race/Skill/Item Constants ---------------------------------- */
 
+#define VALUE_BOOTS               275.0     // (  float) max speed value
 
 #define RACE_UNDEAD                 1     // Player race references
 #define RACE_HUMAN                  2
@@ -425,7 +426,6 @@ new Float:g_fAmuletTime[33];
 
 new bool:g_bPlayerSaveMe[33];
 new bool:g_bPlayerDispellMe[33];
-
 
 /* - Skill Variables -------------------------------------------- */
 

@@ -44,6 +44,7 @@ Revision 3
  - Bug Fix: XP being awarded from a bomb explosion when the number of players didn't meet war3x_xp_minplayers (thanks yang)
  - Bug Fix: Crashing due to removing random entities (this would cause a crash quite often, about every hour)
  - Change: removed amx support
+ - Change: Bloodlust changed to Beserk
  - Addition: STEAM_ID_PENDING check
  - Addition: Attempted to add SQLite Support
 

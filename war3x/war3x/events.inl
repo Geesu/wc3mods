@@ -511,8 +511,8 @@ public on_Damage( victimId ) {
         switch ( g_PlayerInfo[victimId][CURRENT_RACE] )
         {
             case RACE_UNDEAD:       Skills_Defensive_UD( attackerId, victimId, weaponId, iDamage, Headshot );
-            case RACE_HUMAN:        Skills_Defensive_HU( victimId);
-            case RACE_ORC:          Skills_Defensive_OR( victimId);
+            case RACE_HUMAN:        Skills_Defensive_HU( victimId );
+            case RACE_ORC:          Skills_Defensive_OR( victimId );
             case RACE_NIGHTELF:     Skills_Defensive_NE( attackerId, victimId, weaponId, iDamage, Headshot );
         }
     }
@@ -1349,6 +1349,13 @@ public on_Health( id ) {
     {
         SRegen_Set( id );
     }
+
+	// Berserk Check
+
+    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC )
+	{
+		SBerserkSpeed( id );
+	}
 
     // Dispell Harmful Ultimate(s) ( bot )
 

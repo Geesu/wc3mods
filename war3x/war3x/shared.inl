@@ -849,7 +849,7 @@ public _WAR3_set_speed( parm_Speed[1] ) {
 
         // Bloodlust
 
-        else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && ( weaponId == CSW_KNIFE || cs_get_weapon_type_( weaponId ) == CS_WEAPON_TYPE_GRENADE ) )
+        /*else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && ( weaponId == CSW_KNIFE || cs_get_weapon_type_( weaponId ) == CS_WEAPON_TYPE_GRENADE ) )
         {
             new Float:fLustSpeed = s_BloodlustSpeed[g_PlayerInfo[id][CURRENT_SKILL1] - 1];
 
@@ -863,7 +863,14 @@ public _WAR3_set_speed( parm_Speed[1] ) {
             {
                 set_user_maxspeed( id, fLustSpeed );
             }
-        }
+        }*/
+
+		// Berserk
+
+		else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && weaponId == CSW_KNIFE )
+		{
+			SBerserkSpeed( id );
+		}
 
         // Boots of speed
 
@@ -2386,7 +2393,7 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_1:
                 {
-                    format( szValue, 31, "%0.0f%s %d %d", ( ( ( s_BloodlustSpeed[iSkillLevel] - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), "%", s_Bloodlust[iSkillLevel], BLOODLUST_KNIFEBONUS );
+                    //format( szValue, 31, "%0.0f%s %d %d", ( ( ( s_BloodlustSpeed[iSkillLevel] - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), "%", s_Bloodlust[iSkillLevel], BLOODLUST_KNIFEBONUS );
                     return ( 3 );
                 }
 

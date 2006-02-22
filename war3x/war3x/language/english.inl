@@ -95,7 +95,7 @@ new const RACE2SKILL[_TS + _TU][] =         // HUMAN SKILLS:
 new const RACE3SKILL[_TS + _TU][] =         // ORC SKILLS:
 {
     "Regeneration",                         // Racial: Regeneration
-    "Bloodlust",                            // Bloodlust
+    "Berserk",                              // Berserk
     "Pulverize",                            // Pulverize
     "Reincarnation",                        // Reincarnation
     "Healing Wave",                         // Ultimate: Healing Wave

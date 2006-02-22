@@ -4,8 +4,10 @@
 
 
 new Float:s_Regeneration[2]     = {2.8,0.8};                    // (racial) Regeneration (regeneration rate)
-new s_Bloodlust[3]              = {3,6,9};                      // (skill1) Bloodlust (bonus damage)
-new Float:s_BloodlustSpeed[3]   = {260.0,270.0,280.0};          // (skill1) Bloodlust (knife speed bonus)
+//new s_Bloodlust[3]              = {3,6,9};                      // (skill1) Bloodlust (bonus damage)
+new Float:s_BerserkDmg[3]		= {0.3,0.6,1.0};				// (skill1) Berserk (bonus % damage based on health)
+new Float:s_BerserkSpeed[3]		= {280.0,300.0,320.0};			// (skill1) Max possible speed with Berserk at health 0
+//new Float:s_BloodlustSpeed[3]   = {260.0,270.0,280.0};          // (skill1) Bloodlust (knife speed bonus)
 new Float:s_Pulverize[3]        = {0.25,0.25,0.25};             // (skill2) Pulverize (chance to pulverize)
 new s_PulverizeDamage[3]        = {10,20,30};                   // (skill2) Pulverize (damage at max range)
 new Float:s_Reincarnate[3]      = {0.3,0.6,0.9};                // (skill3) Reincarnation (percent chance)
@@ -13,6 +15,9 @@ new Float:s_Reincarnate[3]      = {0.3,0.6,0.9};                // (skill3) Rein
 
 /* - Skill Constants Configuration ------------------------------ */
 
+
+#define BERSERK_HEALTH				 75		// (integer) lowest health to start giving bonus
+#define BERSERK_MAXSPEED		  320.0		// (integer) max speed for berserk
 
 #define BLOODLUST_MODIFIER          1.0     // (  float) % of max damage that will calculate min damage
 #define BLOODLUST_KNIFEBONUS          3     // (integer) blood lust knife bonus multiplier
@@ -59,8 +64,15 @@ public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot ) 
     {
        // Bloodlust
 
+        //if ( g_PlayerInfo[attackerId][CURRENT_SKILL1] )
+        //    SBloodlust( attackerId, victimId, weaponId, headshot );
+
+		// Berserk
+
         if ( g_PlayerInfo[attackerId][CURRENT_SKILL1] )
-            SBloodlust( attackerId, victimId, weaponId, headshot );
+		{
+            SBerserkDmg( attackerId, victimId, weaponId, iDamage, headshot );
+		}
 
         // Pulverize
 
@@ -79,6 +91,8 @@ public Skills_Defensive_OR( victimId ) {
 
     if ( g_PlayerInfo[victimId][CURRENT_RACE] == RACE_ORC )
     {
+		SBerserkSpeed( victimId );
+
         // Regeneration ( taken care of in on_Health() )
     }
 
@@ -259,10 +273,82 @@ public SRegen_Remove( id ) {
 
 /* - Skills ----------------------------------------------------- */
 
+// Berserk
+
+public SBerserkSpeed( id ){
+	#if ADVANCED_DEBUG
+		log_function("SBerserkSpeed( id ){");
+	#endif
+	
+    if ( WAR3_skill_enabled( id, RACE_ORC, SKILL_1 ) && is_user_alive( id ) )
+	{
+		new iClip, iAmmo, iWeapon;			
+		iWeapon =  get_user_weapon( id, iClip, iAmmo );
+		
+		if ( iWeapon == CSW_KNIFE )
+		{
+			new iHealth = get_user_health( id );
+			new Float:fNewSpeed = 0.0;
+
+			if( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS )
+				fNewSpeed = VALUE_BOOTS + ( float(100 - iHealth)/100.0 * ( s_BerserkSpeed[g_PlayerInfo[id][CURRENT_SKILL1] - 1] - VALUE_BOOTS ) );
+			else
+				fNewSpeed = SPEED_KNIFE + ( float(100 - iHealth)/100.0 * ( s_BerserkSpeed[g_PlayerInfo[id][CURRENT_SKILL1] - 1] - SPEED_KNIFE ) );
+
+			set_user_maxspeed( id, fNewSpeed );
+		}
+	}
+
+    return PLUGIN_HANDLED;
+}
+
+public SBerserkDmg( attackerId, victimId, weaponId, damage, headshot ) {
+	#if ADVANCED_DEBUG
+		log_function("SBerserkDmg( attackerId, victimId, weaponId, headshot, damage )");
+	#endif
+
+	// Check if the attacker already had berserk enabled
+
+    if ( WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_1 ) )
+	{
+		new iHealth = get_user_health( attackerId );
+
+		if ( iHealth <= BERSERK_HEALTH )
+		{
+			// (100 - Current Health) * ( Damage * Multiplier )
+			
+			new Float:fHealthMultiplier = float((100 - iHealth))/100.0;
+
+			new iBonusDamage = floatround( fHealthMultiplier * (s_BerserkDmg[g_PlayerInfo[attackerId][CURRENT_SKILL1] - 1] * damage) );
+
+		    // Apply Damage
+
+		    WAR3_damage( attackerId, victimId, weaponId, iBonusDamage, headshot, DAMAGE_CHECKARMOR );
+			
+			client_print( attackerId, print_chat, "%d dealt, Avanderik is super gay", iBonusDamage );
+			client_print( victimId, print_chat, "%d received, Avanderik is super gay", iBonusDamage );
+
+
+		    // Add to player stats array
+
+			if ( get_cvar_num( "mp_war3stats" ) )
+			{
+				playerSkill1Info[attackerId][0] += iBonusDamage;
+			}
+
+			// Screen Fade
+
+			new iFadeAlpha = iBonusDamage * 3;
+			Create_ScreenFade( victimId, (1<<10), (1<<10), FADE_OUT, 255, 0, 0, iFadeAlpha );
+		}
+	}
+
+    return PLUGIN_HANDLED;
+}
 
 // Bloodlust
 
-public SBloodlust( Attacker, Victim, Weapon, Headshot ) {
+/*public SBloodlust( Attacker, Victim, Weapon, Headshot ) {
 #if ADVANCED_DEBUG
 	log_function("public SBloodlust( Attacker, Victim, Weapon, Headshot ) {");
 #endif
@@ -300,7 +386,7 @@ public SBloodlust( Attacker, Victim, Weapon, Headshot ) {
 
     return PLUGIN_HANDLED;
 }
-
+*/
 
 // Pulverize
 
