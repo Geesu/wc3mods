@@ -669,8 +669,8 @@ public Set_PlayerBackpack( id ) {
     if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_ANKH )
         fAnkhChance += VALUE_ANKH;
 
-    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL3] && WAR3_skill_enabled( id, RACE_ORC, SKILL_3 ) )
-        fAnkhChance += s_Reincarnate[g_PlayerInfo[id][CURRENT_SKILL3] - 1];
+    //if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL3] && WAR3_skill_enabled( id, RACE_ORC, SKILL_3 ) )
+        //fAnkhChance += s_Reincarnate[g_PlayerInfo[id][CURRENT_SKILL3] - 1];
 
     // Give Weapons
 

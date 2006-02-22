@@ -8,10 +8,10 @@ new Float:s_Regeneration[2]     = {2.8,0.8};                    // (racial) Rege
 new Float:s_BerserkDmg[3]		= {0.3,0.6,1.0};				// (skill1) Berserk (bonus % damage based on health)
 new Float:s_BerserkSpeed[3]		= {280.0,300.0,320.0};			// (skill1) Max possible speed with Berserk at health 0
 //new Float:s_BloodlustSpeed[3]   = {260.0,270.0,280.0};          // (skill1) Bloodlust (knife speed bonus)
-new Float:s_Pulverize[3]        = {0.25,0.25,0.25};             // (skill2) Pulverize (chance to pulverize)
+//new Float:s_Pulverize[3]        = {0.25,0.25,0.25};             // (skill2) Pulverize (chance to pulverize)
 new s_PulverizeDamage[3]        = {10,20,30};                   // (skill2) Pulverize (damage at max range)
-new Float:s_Reincarnate[3]      = {0.3,0.6,0.9};                // (skill3) Reincarnation (percent chance)
-
+//new Float:s_Reincarnate[3]      = {0.3,0.6,0.9};                // (skill3) Reincarnation (percent chance)
+new s_PillageAmount[3]          =  {10, 20, 30};                // (skill3) Pillage (money amount)
 
 /* - Skill Constants Configuration ------------------------------ */
 
@@ -24,7 +24,7 @@ new Float:s_Reincarnate[3]      = {0.3,0.6,0.9};                // (skill3) Rein
 
 #define PULVERIZE_ARMOR            0.25     // (  float) % armor removed on pulverize based on damage
 #define PULVERIZE_RANGE               6     // (integer) players within this range receive pulverize damage
-#define PULVERIZE_BONUS_GRENADE     4.0     // (  float) multiplier for pulverize chance when using grenades
+//#define PULVERIZE_BONUS_GRENADE     4.0     // (  float) multiplier for pulverize chance when using grenades
 #define PULVERIZE_BONUS_DAMAGE      1.5     // (  float) multiplier for pulverize damage when in PULVERIZE_BONUS_RANGE
 #define PULVERIZE_BONUS_RANGE         3     // (  float) range from target where bonus damage applied
 
@@ -77,7 +77,16 @@ public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot ) 
         // Pulverize
 
         if ( g_PlayerInfo[attackerId][CURRENT_SKILL2] )
+		{
             SPulverize( attackerId, victimId, weaponId, iDamage );
+		}
+
+		// Pillage
+
+		if ( g_PlayerInfo[attackerId][CURRENT_SKILL3] )
+		{
+			SPillage( attackerId, iDamage );
+		}
     }
 
     return PLUGIN_HANDLED;
@@ -317,7 +326,7 @@ public SBerserkDmg( attackerId, victimId, weaponId, damage, headshot ) {
 		{
 			// (100 - Current Health) * ( Damage * Multiplier )
 			
-			new Float:fHealthMultiplier = float((100 - iHealth))/100.0;
+			new Float:fHealthMultiplier = float( ( 100 - iHealth ) ) / 100.0;
 
 			new iBonusDamage = floatround( fHealthMultiplier * (s_BerserkDmg[g_PlayerInfo[attackerId][CURRENT_SKILL1] - 1] * damage) );
 
@@ -396,14 +405,14 @@ public SPulverize( attackerId, victimId, weaponId, iDamage ) {
     if ( !WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_2 ) )
         return PLUGIN_HANDLED;
 
-    new Float:fPulverizeChance = s_Pulverize[g_PlayerInfo[attackerId][CURRENT_SKILL2] - 1];
-    new Float:fRandomNum = random_float( 0.0, 1.0 );
+    //new Float:fPulverizeChance = s_Pulverize[g_PlayerInfo[attackerId][CURRENT_SKILL2] - 1];
+    //new Float:fRandomNum = random_float( 0.0, 1.0 );
 
-    if ( weaponId == CSW_HEGRENADE )
-        fPulverizeChance *= PULVERIZE_BONUS_GRENADE;
-
-    if ( fRandomNum > fPulverizeChance )
+    if ( weaponId != CSW_HEGRENADE )
         return PLUGIN_HANDLED;
+
+    //if ( fRandomNum > fPulverizeChance )
+        //return PLUGIN_HANDLED;
 
 
     new Teammates[32], szTeamName[16];
@@ -572,6 +581,25 @@ public SPulverize_Trail( id, gIndex ) {
 
     return PLUGIN_HANDLED;
 }
+
+public SPillage( attackerId, iDamage ) {
+#if ADVANCED_DEBUG
+	log_function( "public SPillage( attackerId, iDamage ) {");
+#endif
+
+	if ( !WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_3 ) )
+        return PLUGIN_HANDLED;
+
+    new iMoney = cs_get_user_money( attackerId );
+    new iNewMoney = ( iDamage * s_PillageAmount[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1]] ) + iMoney;
+    
+    if ( iNewMoney > 16000 )
+        iNewMoney = 16000;
+        
+    cs_set_user_money ( attackerId , iNewMoney );
+        
+    return PLUGIN_HANDLED;
+} 
 
 
 /* - Chain Lightning -------------------------------------------- */
