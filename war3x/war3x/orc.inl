@@ -325,10 +325,6 @@ public SBerserkDmg( attackerId, victimId, weaponId, damage, headshot ) {
 
 		    WAR3_damage( attackerId, victimId, weaponId, iBonusDamage, headshot, DAMAGE_CHECKARMOR );
 			
-			client_print( attackerId, print_chat, "%d dealt, Avanderik is super gay", iBonusDamage );
-			client_print( victimId, print_chat, "%d received, Avanderik is super gay", iBonusDamage );
-
-
 		    // Add to player stats array
 
 			if ( get_cvar_num( "mp_war3stats" ) )
