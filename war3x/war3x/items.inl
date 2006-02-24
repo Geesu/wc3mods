@@ -209,13 +209,13 @@ public Item_Equip( id, iNewItem ) {
         }
 
         // Don't give to Orcs if skill is >= Ankh value
-
+/*
         if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL3] && s_Reincarnate[g_PlayerInfo[id][CURRENT_SKILL3] - 1] > VALUE_ANKH )
         {
             client_print( id, print_center, ITEM_NOBONUS );
             return ( 0 );
         }
-
+*/
         new szMessage[128], iLen;
         iLen += format( szMessage[iLen], 127 - iLen, ITEM_ANKH_PRIMARY );
 

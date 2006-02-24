@@ -805,7 +805,8 @@ public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iChec
 	log_function("public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iCheckArmor ) {");
 #endif
 
-    // Absorb Magic Damage ( AMS )
+/*
+    // Absorb Magic Damage ( AMS ) (REMOVED)
 
     if ( g_PlayerInfo[iVictimId][CURRENT_RACE] == RACE_UNDEAD && g_PlayerInfo[iVictimId][CURRENT_SKILL2] && iDamage )
     {
@@ -813,7 +814,7 @@ public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iChec
 
         iDamage = SShell_Absorb( iVictimId, iDamage );
     }
-
+*/
     // Notify damage to wind walker (if applicable)
 
     if ( iWeaponId == CSW_WINDWALK )

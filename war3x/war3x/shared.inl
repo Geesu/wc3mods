@@ -519,7 +519,7 @@ public Slow_Remove( id ) {
 	log_function("public Slow_Remove( id ) {");
 #endif
 
-    if ( !g_bPlayerFrosted[id] && !g_PlayerStruck[id] )
+    if ( !g_bPlayerFrosted[id] && !g_PlayerStruck[id] && !g_bPlayerNova[id] )
         g_bPlayerSlowed[id] = false;
 
     return PLUGIN_HANDLED;
@@ -793,6 +793,14 @@ public _WAR3_set_speed( parm_Speed[1] ) {
             set_entity_maxspeed( id, WINDWALK_SPEED );
     }
 
+    else if ( g_bPlayerNova[id] )                       // Frost Nova
+    {
+        set_user_maxspeed( id, FROSTNOVA_SLOWSPEED );
+
+        if ( is_user_bot( id ) )
+            set_entity_maxspeed( id, FROSTNOVA_SLOWSPEED );
+    }
+
     else if ( g_bPlayerFrosted[id] )                    // Frost Slow
     {
         set_user_maxspeed( id, FROSTARMOR_SLOWSPEED );
@@ -963,6 +971,11 @@ public WAR3_death_victim( id ) {
 
     if ( g_PlayerInfo[id][CURRENT_ITEM] && random_float( 0.0, 1.0 ) >= ITEM_DROPRATE )
         Item_DropDead( id, g_PlayerInfo[id][CURRENT_ITEM] );
+
+	// Frost Nova
+
+	if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD && g_PlayerInfo[id][CURRENT_SKILL2] )
+			SFrostNova( id );
 
     // Check for Ankh / Reincarnation
 
@@ -1419,6 +1432,14 @@ public Purge_Common( id ) {
         SFrostArmor_Remove( parm_Slow );
     }
 
+    if ( g_bPlayerNova[id] )
+    {
+        new parm_Slow[1];
+        parm_Slow[0] = id;
+
+        SFrostNova_Remove( parm_Slow );
+    }
+
     if ( g_bPlayerInvis[id] )
     {
         Invis_Remove( id );
@@ -1505,7 +1526,7 @@ public Purge_PlayerInfo( id ) {
     for ( new iRaceId; iRaceId < TOTAL_RACES; iRaceId++ )
     {
 		g_iXPtotal[id][iRaceId] = 0;
-	
+
 
 		if ( get_cvar_num("war3x_save_xp_sql") == 1 )
 		{
@@ -1919,13 +1940,13 @@ public WAR3_map_start() {
 
     set_cvar_string( "Warcraft_3_Expansion", WAR3X_VERSION );
     set_cvar_string( "Warcraft_3_Expansion_Date", WAR3X_DATE );
-	
+
     // Save XP?
 
     if ( get_cvar_num( "war3x_save_xp" ) == 1 && !g_bMapRestricted )
     {
         g_bSaveXp = true;
-		
+
 		if ( get_cvar_num("war3x_save_xp_sql") == 1 )
 		{
             mysql_init();
@@ -2295,7 +2316,7 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_2:
                 {
-                    format( szValue, 31, "%0.0f%s", ( s_ShellAbsorb[iSkillLevel] * 100.0 ), "%" );
+                    format( szValue, 31, "%0.0f%s", ( s_VampiricAura[iSkillLevel] * 100.0 ), "%" );
                     return ( 2 );
                 }
 
@@ -2976,7 +2997,7 @@ stock is_war3_entity( iEnt, szClassName[] = "" )
 {
 	// Entities that war3x creates
 	new szWar3Entities[][64] = {"WAR3X_ITEM", "MOON_GLAIVE", "DEATH_COIL", "ROOT_PLANT", "IMPALE_CLAW", "SLEEP_Z", "REJUV_FLARE", "FLAME_STRIKE", "HEAL_EFFECT" };
-	
+
 	// Don't want to look up info for an invalid ent
 	if ( !is_valid_ent(iEnt) )
 	{

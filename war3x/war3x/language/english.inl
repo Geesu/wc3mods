@@ -74,7 +74,7 @@ new const RACE1SKILL[_TS + _TU][] =         // UNDEAD SKILLS:
 {
     "Unholy Aura",                          // Racial: Unholy Aura
     "Vampiric Aura",                        // Vampiric Aura
-    "Anti-Magic Shell",                     // Anti-Magic Shell
+    "Frost Nova",                     			// Frost Nova
     "Frost Armor",                          // Frost Armor
     "Death Coil",                           // Ultimate: Death Coil
     "Impale",                               // Ultimate: Impale
@@ -159,7 +159,7 @@ new const RACE1SKILL_DESC[_TS + _TU][] =    // UNDEAD SKILLS:
 {
     /* Unholy Aura          */  "Increases player's maximum speed by <%s>. All weapons move at same speed. Player's gravity is also decreased by <%s>.",
     /* Vampiric Aura        */  "Player gains <%s> of his attack damage back as health when a successful attack is made.",
-    /* Anti-Magic Shell     */  "Player is surrounded by a barrier that protects them from <%s> of all incoming skill/ultimate damage.",
+    /* Frost Nova           */  "Player is surrounded by a barrier that protects them from <%s> of all incoming skill/ultimate damage.",
     /* Frost Armor          */  "Creates a shield of frost around the player when armor is bought. The shield adds <%s> maximum armor and has a <%s> chance to slow attacking players for <%s> seconds.",
     /* Death Coil           */  "A coil of death that can deal <%s> damage to an enemy living player or heal a friendly undead unit <%s> health.",
     /* Impale               */  "Impales a target enemy player with a massive claw, which deals <%s> damage and hurls them high into the air, giving them potential to take massive fall damage.",
@@ -180,7 +180,7 @@ new const RACE2SKILL_DESC[_TS + _TU][] =    // HUMAN SKILLS:
 
 new const RACE3SKILL_DESC[_TS + _TU][] =    // ORC SKILLS:
 {
-    /* Troll Regeneration   */  "Player regenerates <%s> health/armor every <%s> second(s).",
+    /* Regeneration   			*/  "Player regenerates <%s> health/armor every <%s> second(s).",
     /* Bloodlust            */  "Increases the player's movement speed with knife and grenades by <%s>, and damage by <%s> on each successful attack. Knife attacks multiply this damage by <%s>.",
     /* Pulverize            */  "Gives the player a <%s> chance to deal <%s> area effect damage on their attacks to enemies within <%s> meters. Damage is doubled if enemy player(s) are within <%s> meters.",
     /* Reincarnation        */  "When killed, the player has a <%s> chance to spawn the next round with all items he died with.",

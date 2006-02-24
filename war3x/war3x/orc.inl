@@ -8,9 +8,9 @@ new Float:s_Regeneration[2]     = {2.8,0.8};                    // (racial) Rege
 new Float:s_BerserkDmg[3]		= {0.3,0.6,1.0};				// (skill1) Berserk (bonus % damage based on health)
 new Float:s_BerserkSpeed[3]		= {280.0,300.0,320.0};			// (skill1) Max possible speed with Berserk at health 0
 //new Float:s_BloodlustSpeed[3]   = {260.0,270.0,280.0};          // (skill1) Bloodlust (knife speed bonus)
-//new Float:s_Pulverize[3]        = {0.25,0.25,0.25};             // (skill2) Pulverize (chance to pulverize)
+new Float:s_Pulverize[3]        = {0.25,0.25,0.25};             // (skill2) Pulverize (chance to pulverize)
 new s_PulverizeDamage[3]        = {10,20,30};                   // (skill2) Pulverize (damage at max range)
-//new Float:s_Reincarnate[3]      = {0.3,0.6,0.9};                // (skill3) Reincarnation (percent chance)
+new Float:s_Reincarnate[3]      = {0.3,0.6,0.9};                // (skill3) Reincarnation (percent chance)
 new s_PillageAmount[3]          =  {10, 20, 30};                // (skill3) Pillage (money amount)
 
 /* - Skill Constants Configuration ------------------------------ */
@@ -288,12 +288,12 @@ public SBerserkSpeed( id ){
 	#if ADVANCED_DEBUG
 		log_function("SBerserkSpeed( id ){");
 	#endif
-	
+
     if ( WAR3_skill_enabled( id, RACE_ORC, SKILL_1 ) && is_user_alive( id ) )
 	{
-		new iClip, iAmmo, iWeapon;			
+		new iClip, iAmmo, iWeapon;
 		iWeapon =  get_user_weapon( id, iClip, iAmmo );
-		
+
 		if ( iWeapon == CSW_KNIFE )
 		{
 			new iHealth = get_user_health( id );
@@ -325,7 +325,7 @@ public SBerserkDmg( attackerId, victimId, weaponId, damage, headshot ) {
 		if ( iHealth <= BERSERK_HEALTH )
 		{
 			// (100 - Current Health) * ( Damage * Multiplier )
-			
+
 			new Float:fHealthMultiplier = float( ( 100 - iHealth ) ) / 100.0;
 
 			new iBonusDamage = floatround( fHealthMultiplier * (s_BerserkDmg[g_PlayerInfo[attackerId][CURRENT_SKILL1] - 1] * damage) );
@@ -333,7 +333,7 @@ public SBerserkDmg( attackerId, victimId, weaponId, damage, headshot ) {
 		    // Apply Damage
 
 		    WAR3_damage( attackerId, victimId, weaponId, iBonusDamage, headshot, DAMAGE_CHECKARMOR );
-			
+
 		    // Add to player stats array
 
 			if ( get_cvar_num( "mp_war3stats" ) )
@@ -586,20 +586,20 @@ public SPillage( attackerId, iDamage ) {
 #if ADVANCED_DEBUG
 	log_function( "public SPillage( attackerId, iDamage ) {");
 #endif
-
+/*
 	if ( !WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_3 ) )
         return PLUGIN_HANDLED;
 
     new iMoney = cs_get_user_money( attackerId );
     new iNewMoney = ( iDamage * s_PillageAmount[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1]] ) + iMoney;
-    
+
     if ( iNewMoney > 16000 )
         iNewMoney = 16000;
-        
+
     cs_set_user_money ( attackerId , iNewMoney );
-        
+*/
     return PLUGIN_HANDLED;
-} 
+}
 
 
 /* - Chain Lightning -------------------------------------------- */

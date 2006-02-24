@@ -6,7 +6,9 @@
 new Float:s_UnholyAura[2]       = {SPEED_KNIFE,300.0};  // (racial) Unholy Aura (260.0 = knife speed)
 new Float:s_UnholyGravity[2]    = {1.0,0.85};           // (racial) Unholy Aura (gravity percentage)
 new Float:s_VampiricAura[3]     = {0.15,0.30,0.45};     // (skill1) Vampiric Aura (health percent)
-new Float:s_ShellAbsorb[3]      = {0.15,0.30,0.45};     // (skill2) Anti-Magic Shell (ammount of absorbsion)
+//new Float:s_ShellAbsorb[3]      = {0.15,0.30,0.45};     // (skill2) Anti-Magic Shell (ammount of absorbsion)
+new s_fnDamage[3]               = {5,10,15};            // (skill2) Frost Nova (damage dealt)
+new s_fnRange[3]                = {4,5,6};              // (skill2) Frost Nova (range of blast)
 new s_faArmor[3]                = {110,120,130};        // (skill3) Frost Armor (armor ammount)
 new Float:s_faSlow[3]           = {0.1,0.2,0.3};        // (skill3) Frost Armor (chance to slow)
 
@@ -14,13 +16,15 @@ new Float:s_faSlow[3]           = {0.1,0.2,0.3};        // (skill3) Frost Armor 
 /* - Skill Constants Configuration ------------------------------ */
 
 
+#define FROSTNOVA_SLOWSPEED                 75.0        // (  float) max speed when slowed by frost nova
+#define FROSTNOVA_SLOWDURATION               5.0        // (  float) max duration in seconds player is slowed by frost nova ( minimum = 1 second )
 #define FROSTARMOR_ARMOR                      15        // (integer) armor removed when player slowed with frost armor
 #define FROSTARMOR_SLOWSPEED               150.0        // (  float) max speed when slowed by frost armor
 #define FROSTARMOR_SLOWDURATION              3.0        // (  float) seconds player is slowed by frost armor
 
-#define SHELL_MINDAMAGE                        5        // (integer) minimum damage that can be absorbed by Anti-Magic Shell
+//#define SHELL_MINDAMAGE                        5        // (integer) minimum damage that can be absorbed by Anti-Magic Shell
 
-new SHELL_RGB[3] =                     {40,64,0};       // (integer) RGB of glow shell when hit by bonus damage
+//new SHELL_RGB[3] =                     {40,64,0};       // (integer) RGB of glow shell when hit by bonus damage
 new FROST_RGB[3] =                    {23,42,62};       // (integer) RGB of frost slow shell ( when slowed )
 
 
@@ -50,7 +54,7 @@ new DEATHCOIL_TRAIL_RGB[3] =           {96,224,0};       // (integer) RGB of bea
 
 public Skills_Offensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) {
 #if ADVANCED_DEBUG
-	log_function("public Skills_Offensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) {");
+  log_function("public Skills_Offensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) {");
 #endif
 
     if ( g_PlayerInfo[attackerId][CURRENT_RACE] == RACE_UNDEAD && get_user_team( attackerId ) != get_user_team( victimId ) )
@@ -67,12 +71,12 @@ public Skills_Offensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) 
 
 public Skills_Defensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) {
 #if ADVANCED_DEBUG
-	log_function("public Skills_Defensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) {");
+  log_function("public Skills_Defensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) {");
 #endif
 
     if ( g_PlayerInfo[victimId][CURRENT_RACE] == RACE_UNDEAD && get_user_team( attackerId ) != get_user_team( victimId ) && attackerId )
     {
-        // Anti-Magic Shell ( called from WAR3_damage() )
+        // Anti-Magic Shell ( called from WAR3_damage() ) (REMOVED)
 
         // Frost Armor
 
@@ -86,7 +90,7 @@ public Skills_Defensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) 
 
 public Ultimates_UD( casterId, targetId ) {
 #if ADVANCED_DEBUG
-	log_function("public Ultimates_UD( casterId, targetId ) {");
+  log_function("public Ultimates_UD( casterId, targetId ) {");
 #endif
 
     // Death Coil
@@ -187,7 +191,7 @@ public Ultimates_UD( casterId, targetId ) {
 
 public Float:SUnholyAura_Get( iLevel ) {
 #if ADVANCED_DEBUG
-	log_function("public Float:SUnholyAura_Get( iLevel ) {");
+  log_function("public Float:SUnholyAura_Get( iLevel ) {");
 #endif
 
     new Float:fLevel = float( iLevel );
@@ -208,7 +212,7 @@ public Float:SUnholyAura_Get( iLevel ) {
 
 public Float:SUnholyGravity_Get( iLevel ) {
 #if ADVANCED_DEBUG
-	log_function("public Float:SUnholyGravity_Get( iLevel ) {");
+  log_function("public Float:SUnholyGravity_Get( iLevel ) {");
 #endif
 
     new Float:fLevel = float( iLevel );
@@ -225,11 +229,11 @@ public Float:SUnholyGravity_Get( iLevel ) {
 }
 
 
-// Unholy Aura (set speed)
+// Unholy Aura (set speed/gravity)
 
 public SUnholyAura_Set( id, weaponId ) {
 #if ADVANCED_DEBUG
-	log_function("public SUnholyAura_Set( id, weaponId ) {");
+  log_function("public SUnholyAura_Set( id, weaponId ) {");
 #endif
 
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
@@ -264,7 +268,7 @@ public SUnholyAura_Set( id, weaponId ) {
 
 public SVampiricAura( attackerId, victimId, iDamage ) {
 #if ADVANCED_DEBUG
-	log_function("public SVampiricAura( attackerId, victimId, iDamage ) {");
+  log_function("public SVampiricAura( attackerId, victimId, iDamage ) {");
 #endif
 
     // Check if restricted
@@ -332,11 +336,132 @@ public SVampiricAura( attackerId, victimId, iDamage ) {
 }
 
 
-// Anti-Magic Shell
+// Frost Nova
+
+public SFrostNova( id ) {
+
+    // Check if restricted
+
+    if ( !WAR3_skill_enabled( id, RACE_UNDEAD, SKILL_2 ) )
+        return PLUGIN_HANDLED;
+
+    // Play sound
+
+
+    // Blast effect
+
+    new Origin[3];
+    get_user_origin( id, Origin );
+
+    new iRingSize = s_fnRange[g_PlayerInfo[id][CURRENT_SKILL2] - 1] * 2 * 40;
+
+    new Radius[3];
+    Radius[2] = iRingSize + 40;
+
+    Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, Origin, Radius, SPR_SHOCKWAVE, 0, 0, 10, 20, 5, 255, 255, 255, 255, 0 );
+
+    // Find enemies in range
+
+    new Enemies[32], szTeamName[16];
+    new iTotalEnemies;
+
+    if ( get_user_team( id ) == CS_TEAM_TERRORIST )
+        copy( szTeamName, 15, "CT" );               // Enemy team name
+
+    else
+    {
+        copy( szTeamName, 15, "TERRORIST" );
+    }
+
+    get_players( Enemies, iTotalEnemies, "ae", szTeamName );
+
+    if ( iTotalEnemies > 0 )
+    {
+        new iRadius = s_fnRange[g_PlayerInfo[id][CURRENT_SKILL2] - 1];
+
+        for ( new iPlayerNum = 0; iPlayerNum < iTotalEnemies; iPlayerNum++ )
+        {
+            new EnemyOrigin[3];
+            new enemy = Enemies[iPlayerNum];
+
+            get_user_origin( enemy, EnemyOrigin );
+
+            if ( get_distance( Origin, EnemyOrigin ) / 40 <= iRadius && !g_bPlayerSleeping[enemy] )
+            {
+                // Glow
+
+                new Float:fDuration = random_float( 1.0, FROSTNOVA_SLOWDURATION );
+                Glow_Set( id, fDuration - 0.5, FROST_RGB, 36 );
+
+                // Damage
+
+                new iDamage = s_fnDamage[g_PlayerInfo[id][CURRENT_SKILL2] - 1];
+                WAR3_damage( id, enemy, CSW_FROSTNOVA, iDamage, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
+
+                // Slow movement
+
+                SFrostNova_Slow( enemy );
+
+                // Screen Fade
+
+                if ( !g_bPlayerSleeping[enemy] )
+                {
+                    Create_ScreenFade( enemy, (1<<10), (1<<10), FADE_OUT, 91, 168, 248, 100 );
+                }
+
+                // Cold Damage
+
+                Create_Damage( enemy, 0, 0, CS_DMG_COLD );
+            }
+        }
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+
+public SFrostNova_Slow( id ) {
+
+    g_bPlayerNova[id] = true;
+    g_bPlayerSlowed[id] = true;
+
+    new parm_Slow[1];
+    parm_Slow[0] = id;
+
+    new TaskId = TASK_NOVASLOW + id;
+
+    remove_task( TaskId, 0 );
+    new Float:fDuration = random_float( 1.0, FROSTNOVA_SLOWDURATION );
+
+    set_task( fDuration, "SFrostNova_Remove", TaskId, parm_Slow, 1 );
+
+    WAR3_set_speed( id );
+
+    return PLUGIN_HANDLED;
+}
+
+
+public SFrostNova_Remove( parm_Slow[1] ) {
+
+    new id = parm_Slow[0];
+
+    new TaskId = TASK_NOVASLOW + id;
+    remove_task( TaskId, 0 );
+
+    g_bPlayerFrosted[id] = false;
+    Slow_Remove( id );
+
+    WAR3_set_speed( id );
+
+    return PLUGIN_HANDLED;
+}
+
+/*
+// Anti-Magic Shell (Removed)
 
 public SShell_Absorb( id, iDamage ) {
 #if ADVANCED_DEBUG
-	log_function("public SShell_Absorb( id, iDamage ) {");
+  log_function("public SShell_Absorb( id, iDamage ) {");
 #endif
 
     // Check if restricted
@@ -368,13 +493,14 @@ public SShell_Absorb( id, iDamage ) {
 
     return ( iDamage );
 }
+*/
 
 
 // Frost Armor
 
 public SFrostArmor( victimId, attackerId ) {
 #if ADVANCED_DEBUG
-	log_function("public SFrostArmor( victimId, attackerId ) {");
+  log_function("public SFrostArmor( victimId, attackerId ) {");
 #endif
 
     // Check if restricted
@@ -439,7 +565,7 @@ public SFrostArmor( victimId, attackerId ) {
 
 public SFrostArmor_Slow( id ) {
 #if ADVANCED_DEBUG
-	log_function("public SFrostArmor_Slow( id ) {");
+  log_function("public SFrostArmor_Slow( id ) {");
 #endif
 
     g_bPlayerFrosted[id] = true;
@@ -461,7 +587,7 @@ public SFrostArmor_Slow( id ) {
 
 public SFrostArmor_Remove( parm_Slow[1] ) {
 #if ADVANCED_DEBUG
-	log_function("public SFrostArmor_Remove( parm_Slow[1] ) {");
+  log_function("public SFrostArmor_Remove( parm_Slow[1] ) {");
 #endif
 
     new id = parm_Slow[0];
@@ -483,7 +609,7 @@ public SFrostArmor_Remove( parm_Slow[1] ) {
 
 public UCoil_Cast( iCasterId, iTargetId ) {
 #if ADVANCED_DEBUG
-	log_function("public UCoil_Cast( iCasterId, iTargetId ) {");
+  log_function("public UCoil_Cast( iCasterId, iTargetId ) {");
 #endif
 
     // Play client sound
@@ -518,7 +644,7 @@ public UCoil_Cast( iCasterId, iTargetId ) {
 
 public UCoil_Seek( parm_Seek[1] ) {
 #if ADVANCED_DEBUG
-	log_function("public UCoil_Seek( parm_Seek[1] ) {");
+  log_function("public UCoil_Seek( parm_Seek[1] ) {");
 #endif
 
     new iSkullId = parm_Seek[0];
@@ -543,7 +669,7 @@ public UCoil_Seek( parm_Seek[1] ) {
 
 public UCoil_Damage( iCasterId, iTargetId ) {
 #if ADVANCED_DEBUG
-	log_function("public UCoil_Damage( iCasterId, iTargetId ) {");
+  log_function("public UCoil_Damage( iCasterId, iTargetId ) {");
 #endif
 
     // Play Sound
@@ -577,7 +703,7 @@ public UCoil_Damage( iCasterId, iTargetId ) {
 
 public UCoil_Heal( iCasterId, iTargetId ) {
 #if ADVANCED_DEBUG
-	log_function("public UCoil_Heal( iCasterId, iTargetId ) {");
+  log_function("public UCoil_Heal( iCasterId, iTargetId ) {");
 #endif
 
     // Play Sound
@@ -632,7 +758,7 @@ public UCoil_Heal( iCasterId, iTargetId ) {
 
 public UCoil_Effects( iTargetId ) {
 #if ADVANCED_DEBUG
-	log_function("public UCoil_Effects( iTargetId ) {");
+  log_function("public UCoil_Effects( iTargetId ) {");
 #endif
 
     // Green Screefade
@@ -666,7 +792,7 @@ public UCoil_Effects( iTargetId ) {
 
 public UCoil_Remove( iSkullId ) {
 #if ADVANCED_DEBUG
-	log_function("public UCoil_Remove( iSkullId ) {");
+  log_function("public UCoil_Remove( iSkullId ) {");
 #endif
 
     new TaskId = TASK_TEMPENTITY + iSkullId;
@@ -680,30 +806,30 @@ public UCoil_Remove( iSkullId ) {
 public UCoil_Touch( iToucherId, iPlayerId )
 {
 #if ADVANCED_DEBUG
-	log_function("public UCoil_Touch( iToucherId, iPlayerId )");
+  log_function("public UCoil_Touch( iToucherId, iPlayerId )");
 #endif
 
-	// Sanity checks
+  // Sanity checks
     if ( iPlayerId < 1 || iPlayerId > 32 || iToucherId < 1 || !is_user_alive( iPlayerId ) )
         return PLUGIN_CONTINUE;
 
-	new iCasterId = entity_get_edict( iToucherId, EV_ENT_owner );
-	new iTargetId = entity_get_edict( iToucherId, EV_ENT_enemy );
+  new iCasterId = entity_get_edict( iToucherId, EV_ENT_owner );
+  new iTargetId = entity_get_edict( iToucherId, EV_ENT_enemy );
 
-	if ( iPlayerId == iTargetId )
-	{
-		if ( get_user_team( iCasterId ) == get_user_team( iTargetId ) )
-			UCoil_Heal( iCasterId, iTargetId );
+  if ( iPlayerId == iTargetId )
+  {
+    if ( get_user_team( iCasterId ) == get_user_team( iTargetId ) )
+      UCoil_Heal( iCasterId, iTargetId );
 
-		else
-		{
-			UCoil_Damage( iCasterId, iTargetId );
-		}
+    else
+    {
+      UCoil_Damage( iCasterId, iTargetId );
+    }
 
-		UCoil_Remove( iToucherId );
-	}
+    UCoil_Remove( iToucherId );
+  }
 
-	return PLUGIN_CONTINUE;
+  return PLUGIN_CONTINUE;
 }
 
 /* - Impale ----------------------------------------------------- */
@@ -711,7 +837,7 @@ public UCoil_Touch( iToucherId, iPlayerId )
 
 public UImpale_Cast( casterId, targetId ) {
 #if ADVANCED_DEBUG
-	log_function("public UImpale_Cast( casterId, targetId ) {");
+  log_function("public UImpale_Cast( casterId, targetId ) {");
 #endif
 
     // Play Sound
@@ -818,7 +944,7 @@ public UImpale_Cast( casterId, targetId ) {
 
 public UImpale_CheckHeight( parm[3] ) {
 #if ADVANCED_DEBUG
-	log_function("public UImpale_CheckHeight( parm[3] ) {");
+  log_function("public UImpale_CheckHeight( parm[3] ) {");
 #endif
 
     new targetId = parm[0];
@@ -901,7 +1027,7 @@ public UImpale_CheckHeight( parm[3] ) {
 
 public UImpale_Remove( id ) {
 #if ADVANCED_DEBUG
-	log_function("public UImpale_Remove( id ) {");
+  log_function("public UImpale_Remove( id ) {");
 #endif
 
     new TaskId = TASK_IMPALE + id;
@@ -917,7 +1043,7 @@ public UImpale_Remove( id ) {
 
 public USleep_Cast( casterId, targetId ) {
 #if ADVANCED_DEBUG
-	log_function("public USleep_Cast( casterId, targetId ) {");
+  log_function("public USleep_Cast( casterId, targetId ) {");
 #endif
 
     USleep_Remove( targetId );
@@ -997,7 +1123,7 @@ public USleep_Cast( casterId, targetId ) {
 
 public USleep_Effect( parm_Effects[3] ) {
 #if ADVANCED_DEBUG
-	log_function("public USleep_Effect( parm_Effects[3] ) {");
+  log_function("public USleep_Effect( parm_Effects[3] ) {");
 #endif
 
     new iTargetId = parm_Effects[0];
@@ -1072,7 +1198,7 @@ public USleep_Effect( parm_Effects[3] ) {
 
 public USleep_Wake( parm_Remove[1] ) {
 #if ADVANCED_DEBUG
-	log_function("public USleep_Wake( parm_Remove[1] ) {");
+  log_function("public USleep_Wake( parm_Remove[1] ) {");
 #endif
 
     new targetId = parm_Remove[0];
@@ -1108,7 +1234,7 @@ public USleep_Wake( parm_Remove[1] ) {
 
 public USleep_Finished( parm_Remove[1] ) {
 #if ADVANCED_DEBUG
-	log_function("public USleep_Finished( parm_Remove[1] ) {");
+  log_function("public USleep_Finished( parm_Remove[1] ) {");
 #endif
 
     new targetId = parm_Remove[0];
@@ -1120,7 +1246,7 @@ public USleep_Finished( parm_Remove[1] ) {
 
 public USleep_Remove( id ) {
 #if ADVANCED_DEBUG
-	log_function("public USleep_Remove( id ) {");
+  log_function("public USleep_Remove( id ) {");
 #endif
 
     new TaskId = TASK_SLEEP + id;

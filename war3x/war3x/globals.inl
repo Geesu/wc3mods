@@ -212,6 +212,7 @@ new const GETCLASSCHECK[3] =    {0,2,5};    // (integer) levels players receive 
 #define TASK_ANKH                   672
 #define TASK_ULTIMATE               704
 #define TASK_TARGETNAME             736
+#define TASK_NOVASLOW               768
 
 #define TASK_ULTIMATEWARMUP        1000
 #define TASK_NEWROUND              1001
@@ -306,6 +307,7 @@ new const GETCLASSCHECK[3] =    {0,2,5};    // (integer) levels players receive 
 #define CSW_DEATHCOIL                38
 #define CSW_WINDWALK                 39
 #define CSW_MOONGLAIVE               40
+#define CSW_FROSTNOVA                41
 
 
 /* - XP Saving Constants ---------------------------------------- */
@@ -405,6 +407,7 @@ new bool:g_bPlayerZoomed[33];
 new bool:g_bPlayerDispelled[33];
 new bool:g_bPlayerBashed[33];
 new bool:g_bPlayerFrosted[33];
+new bool:g_bPlayerNova[33];
 new bool:g_bPlayerSleeping[33];
 new bool:g_bPlayerWalk[33];
 new bool:g_bPlayerInvis[33];
