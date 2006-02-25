@@ -590,49 +590,57 @@ public SPillage( attackerId, victimId, weaponId, iDamage ) {
 
 	if ( WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_3 ) )
 	{
-		new iMoney, iKnifeMoney;
-		new iArmor = get_user_armor( victimId );
-
-		if ( iArmor > 0 )
-		{
-			new iArmorTaken = floatround( iDamage * s_PillageArmor[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1] );
-			new iNewArmor = iArmor - iArmorTaken;
-
-			if ( iNewArmor < 0 )
-				iNewArmor = 0;
-			
-			set_user_armor( victimId, iNewArmor );
-			
-			iMoney = cs_get_user_money( attackerId );
-			iMoney += ( iDamage * s_PillageMoney[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1] );
-		}
+		new bool:bMoneyChanged;
+		new iNewMoney;
 
 		if ( weaponId == CSW_KNIFE )
 		{
-			iKnifeMoney = cs_get_user_money( attackerId );
+			bMoneyChanged = true;
+
+			iNewMoney = cs_get_user_money( attackerId );
 			new iVictimMoney = cs_get_user_money( victimId );
 			new iAmount = iDamage * g_PlayerInfo[attackerId][CURRENT_SKILL3];
 
 			if ( ( iVictimMoney - iAmount ) >= 0 )
 			{
-				iKnifeMoney += iAmount;
+				iNewMoney += iAmount;
 				iVictimMoney -= iAmount;
 			}
 			else
 			{
-				iKnifeMoney = iVictimMoney;
+				iNewMoney = iVictimMoney;
 				iVictimMoney = 0;
 			}
-
 			cs_set_user_money ( victimId , iVictimMoney );
 		}
+		else
+		{
+			new iArmor = get_user_armor( victimId );
 
-		new iNewMoney = iMoney + iKnifeMoney;
+			if ( iArmor > 0 )
+			{
+				bMoneyChanged = true;
 
-		if ( iNewMoney > 16000 )
-			iNewMoney = 16000;
+				new iArmorTaken = floatround( iDamage * s_PillageArmor[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1] );
+				new iNewArmor = iArmor - iArmorTaken;
 
-		cs_set_user_money ( attackerId , iNewMoney );
+				if ( iNewArmor < 0 )
+					iNewArmor = 0;
+			
+				set_user_armor( victimId, iNewArmor );
+			
+				iNewMoney = cs_get_user_money( attackerId );
+				iNewMoney += ( iDamage * s_PillageMoney[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1] );
+			}
+		}
+
+		if ( bMoneyChanged )
+		{
+			if ( iNewMoney > 16000 )
+				iNewMoney = 16000;
+
+			cs_set_user_money ( attackerId , iNewMoney );
+		}
 	}
 			
     return PLUGIN_HANDLED;
