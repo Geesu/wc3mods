@@ -4,10 +4,8 @@
 
 
 new Float:s_Regeneration[2]     = {2.8,0.8};                    // (racial) Regeneration (regeneration rate)
-//new s_Bloodlust[3]              = {3,6,9};                      // (skill1) Bloodlust (bonus damage)
 new Float:s_BerserkDmg[3]		= {0.3,0.6,1.0};				// (skill1) Berserk (bonus % damage based on health)
 new Float:s_BerserkSpeed[3]		= {280.0,300.0,320.0};			// (skill1) Max possible speed with Berserk at health 0
-//new Float:s_BloodlustSpeed[3]   = {260.0,270.0,280.0};          // (skill1) Bloodlust (knife speed bonus)
 new Float:s_Pulverize[3]        = {0.25,0.25,0.25};             // (skill2) Pulverize (chance to pulverize)
 new s_PulverizeDamage[3]        = {10,20,30};                   // (skill2) Pulverize (damage at max range)
 new Float:s_Reincarnate[3]      = {0.3,0.6,0.9};                // (skill3) Reincarnation (percent chance)
@@ -70,7 +68,7 @@ public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot ) 
 
 		// Berserk
 
-        if ( g_PlayerInfo[attackerId][CURRENT_SKILL1] )
+        if ( g_PlayerInfo[attackerId][CURRENT_SKILL1] && weaponId != CSW_HEGRENADE )
 		{
             SBerserkDmg( attackerId, victimId, weaponId, iDamage, headshot );
 		}

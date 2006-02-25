@@ -68,7 +68,7 @@ public mysql_init(){
 
 	// Set a default DB if it's SQLite and the user didn't supply one
 
-	if ( g_iSQLtype == SQL_SQLITE && strlen(mysqlDb) < 1 )
+	if ( g_iSQLtype == SQL_SQLITE && (strlen(mysqlDb) < 1 || equali(mysqlDb, "war3x")) )
 	{
 		copy( mysqlDb, 127, "addons/amxmodx/data/amxx.db" );
 	}
@@ -165,7 +165,7 @@ public get_mysql_xp( id ) {
 
     new mysqlQuery[256];
 
-    format( mysqlQuery, 255, "SELECT race, xp FROM `%s` WHERE playerid = '%s' AND race > 0 ORDER BY race ASC", g_mysqlTableName, g_SaveIds[id] );
+    format( mysqlQuery, 255, "SELECT `race`, `xp` FROM `%s` WHERE (`playerid` = '%s' AND `race` > '0') ORDER BY race ASC", g_mysqlTableName, g_SaveIds[id] );
 
     new Result:res = dbi_query( sql, mysqlQuery );
 
@@ -212,7 +212,7 @@ public get_mysql_skills( id, iRaceId, szData[64] ) {
 
     new mysqlQuery[256];
 
-    format( mysqlQuery, 255, "SELECT skills FROM `%s` WHERE playerid = '%s' AND race = %d LIMIT 1", g_mysqlTableName, g_SaveIds[id], iRaceId );
+    format( mysqlQuery, 255, "SELECT skills FROM `%s` WHERE playerid = '%s' AND race = '%d' LIMIT 1", g_mysqlTableName, g_SaveIds[id], iRaceId );
 
     new Result:res = dbi_query( sql, mysqlQuery );
 
@@ -259,7 +259,7 @@ public write_mysql_all( szSaveId[32], szData[32], iRaceId, iXP, bUpdate ) {
 
     else
     {
-        format( mysqlQuery, 255, "UPDATE `%s` SET xp = %d, skills = '%s', lastplayed = '%s' WHERE playerid = '%s' AND race = %d AND xp < %d", g_mysqlTableName, iXP, szData, szLastPlayed, szSaveId, iRaceId, iXP + 100 );
+        format( mysqlQuery, 255, "UPDATE `%s` SET xp = %d, skills = '%s', lastplayed = '%s' WHERE playerid = '%s' AND race = '%d' AND xp < %d", g_mysqlTableName, iXP, szData, szLastPlayed, szSaveId, iRaceId, iXP + 100 );
     }
 
     new Result:res = dbi_query( sql, mysqlQuery );

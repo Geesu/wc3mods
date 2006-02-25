@@ -418,17 +418,16 @@ public Remove_TempEnt( parm_iEnt[1] )
 	}
 #endif
 	new iEnt = parm_iEnt[0];
-	new szClassName[64];
-	entity_get_string( iEnt, EV_SZ_classname, szClassName, 63 );
 
-	if ( is_war3_entity(iEnt, szClassName) )
+	if ( is_valid_ent(iEnt) )
 	{
-		//log_amx("[Remove_TempEnt] Removed entity %d with class name %s", iEnt, szClassName);
-		remove_entity( iEnt );
-	}
-	else
-	{
-		log_amx("[Remove_TempEnt] Entity not removed, crash prevented: entity %d with class name %s", iEnt, szClassName);
+		new szClassName[64];
+		entity_get_string( iEnt, EV_SZ_classname, szClassName, 63 );
+
+		if ( is_war3_entity(iEnt, szClassName) )
+		{
+			remove_entity( iEnt );
+		}
 	}
 
     return PLUGIN_HANDLED;
@@ -451,8 +450,6 @@ public Remove_TempEnts( szClassname[32], iOwner )
         {
             new iTaskId = TASK_TEMPENTITY + iEntity;
             remove_task( iTaskId, 0 );
-			
-			log_amx("[Remove_TempEnts] Removed entity %d with class name %s", iEntity, szClassname);
             remove_entity( iEntity );
 
             iEntity = find_ent_by_class( -1, szClassname );

@@ -43,10 +43,12 @@ Revision 3
  - Bug Fix: Runtime error in on_damage due to iAttacker > MAXPLAYERS
  - Bug Fix: XP being awarded from a bomb explosion when the number of players didn't meet war3x_xp_minplayers (thanks yang)
  - Bug Fix: Crashing due to removing random entities (this would cause a crash quite often, about every hour)
+ - Bug Fix: Fixed runtime error on line 422 in UTIL_Vexd (not checking if entity was valid before getting information about it)
  - Change: removed amx support
  - Change: Bloodlust changed to Beserk
  - Addition: STEAM_ID_PENDING check
  - Addition: Attempted to add SQLite Support
+ - Addition: Error logging ability (always on)
 
 Revision 2
  - Bug Fix: Not being able to gain any XP
@@ -445,6 +447,8 @@ public plugin_init() {
     server_cmd( szCommand );
     set_task( 1.0, "WAR3_map_start" );
 
+	set_error_filter("DEBUG_Error");
+
     return PLUGIN_CONTINUE;
 }
 
@@ -511,4 +515,64 @@ public native_filter(const name[], index, trap)
             return PLUGIN_HANDLED;
 
       return PLUGIN_CONTINUE;
+}
+
+public DEBUG_Error(error_code, bool:debugging, message[])
+{
+	new buffer[512];
+	dbg_fmt_error(buffer, 511);
+	
+	// Hopefully this is always true?
+	if ( buffer[0] )
+	{
+		DEBUG_Write_File( buffer );
+	}
+	// Just in case its not
+	else
+	{
+		new msg[512];
+		format(msg, 511, "Error code: %d with message: %s", error_code, message);
+		DEBUG_Write_File( msg );
+	}
+	
+	// Can only get a trace if plugin is running in debug mode right?
+	if ( debugging )
+	{
+		new trace = dbg_trace_begin();
+		if ( !trace )
+		{
+			DEBUG_Write_File( "No trace found!" );
+		}
+
+		new num = 0;
+		new func[32], file[64], line;
+		while ( trace ) 
+		{
+			dbg_trace_info(trace, line, func, 31, file, 63);
+			new msg[256];
+			format(msg, 255, "   [%d] %s::%s (line %d)", num++, file, func, line);
+			DEBUG_Write_File( msg );
+			trace = dbg_trace_next(trace);
+		}
+	}
+
+	return PLUGIN_CONTINUE;
+}
+
+public DEBUG_Write_File( msg[] )
+{
+	new file[] = "addons/amxmodx/logs/war3x_log_file.log";
+	
+	new timeStr[64];
+	get_time("%m/%d/%Y - %H:%M:%S", timeStr, 63);
+
+	//L 02/24/2006 - 16:39:46: [ENGINE] Invalid entity 114
+	//L 02/24/2006 - 16:39:46: [AMXX] Displaying debug trace (plugin "war3x.amxx")
+	//L 02/24/2006 - 16:39:46: [AMXX] Run time error 10: native error (native "dbg_trace_next")
+	//L 02/24/2006 - 16:39:46: [AMXX]    [0] UTIL_vexd.inc::Remove_TempEnt (line 422)
+
+	new errorMsg[256];
+	format(errorMsg, 255, "L [WAR3X] %s: %s", timeStr, msg);
+
+	write_file(file, errorMsg, -1);
 }
