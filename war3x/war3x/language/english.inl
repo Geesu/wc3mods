@@ -97,7 +97,7 @@ new const RACE3SKILL[_TS + _TU][] =         // ORC SKILLS:
     "Regeneration",                         // Racial: Regeneration
     "Berserk",                              // Berserk
     "Pulverize",                            // Pulverize
-    "Reincarnation",                        // Reincarnation
+    "Pillage",                              // Pillage
     "Healing Wave",                         // Ultimate: Healing Wave
     "Chain Lightning",                      // Ultimate: Chain Lightning
     "Wind Walk"                             // Ultimate: Wind Walk

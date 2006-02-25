@@ -11,7 +11,8 @@ new Float:s_BerserkSpeed[3]		= {280.0,300.0,320.0};			// (skill1) Max possible s
 new Float:s_Pulverize[3]        = {0.25,0.25,0.25};             // (skill2) Pulverize (chance to pulverize)
 new s_PulverizeDamage[3]        = {10,20,30};                   // (skill2) Pulverize (damage at max range)
 new Float:s_Reincarnate[3]      = {0.3,0.6,0.9};                // (skill3) Reincarnation (percent chance)
-new s_PillageAmount[3]          =  {10, 20, 30};                // (skill3) Pillage (money amount)
+new s_PillageMoney[3]           = {10, 20, 30};                 // (skill3) Pillage (money amount)
+new Float:s_PillageArmor[3]     = {0.05,0.10,0.15};             // (skill3) Pillage (armor decrease percentage)
 
 /* - Skill Constants Configuration ------------------------------ */
 
@@ -85,7 +86,7 @@ public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot ) 
 
 		if ( g_PlayerInfo[attackerId][CURRENT_SKILL3] )
 		{
-			SPillage( attackerId, iDamage );
+			SPillage( attackerId, victimId, weaponId, iDamage );
 		}
     }
 
@@ -582,22 +583,58 @@ public SPulverize_Trail( id, gIndex ) {
     return PLUGIN_HANDLED;
 }
 
-public SPillage( attackerId, iDamage ) {
+public SPillage( attackerId, victimId, weaponId, iDamage ) {
 #if ADVANCED_DEBUG
-	log_function( "public SPillage( attackerId, iDamage ) {");
+	log_function( "public SPillage( attackerId, victimId, weaponId, iDamage ) {");
 #endif
-/*
-	if ( !WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_3 ) )
-        return PLUGIN_HANDLED;
 
-    new iMoney = cs_get_user_money( attackerId );
-    new iNewMoney = ( iDamage * s_PillageAmount[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1]] ) + iMoney;
+	if ( WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_3 ) )
+	{
+		new iMoney, iKnifeMoney;
+		new iArmor = get_user_armor( victimId );
 
-    if ( iNewMoney > 16000 )
-        iNewMoney = 16000;
+		if ( iArmor > 0 )
+		{
+			new iArmorTaken = floatround( iDamage * s_PillageArmor[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1] );
+			new iNewArmor = iArmor - iArmorTaken;
 
-    cs_set_user_money ( attackerId , iNewMoney );
-*/
+			if ( iNewArmor < 0 )
+				iNewArmor = 0;
+			
+			set_user_armor( victimId, iNewArmor );
+			
+			iMoney = cs_get_user_money( attackerId );
+			iMoney += ( iDamage * s_PillageMoney[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1] );
+		}
+
+		if ( weaponId == CSW_KNIFE )
+		{
+			iKnifeMoney = cs_get_user_money( attackerId );
+			new iVictimMoney = cs_get_user_money( victimId );
+			new iAmount = iDamage * g_PlayerInfo[attackerId][CURRENT_SKILL3];
+
+			if ( ( iVictimMoney - iAmount ) >= 0 )
+			{
+				iKnifeMoney += iAmount;
+				iVictimMoney -= iAmount;
+			}
+			else
+			{
+				iKnifeMoney = iVictimMoney;
+				iVictimMoney = 0;
+			}
+
+			cs_set_user_money ( victimId , iVictimMoney );
+		}
+
+		new iNewMoney = iMoney + iKnifeMoney;
+
+		if ( iNewMoney > 16000 )
+			iNewMoney = 16000;
+
+		cs_set_user_money ( attackerId , iNewMoney );
+	}
+			
     return PLUGIN_HANDLED;
 }
 
