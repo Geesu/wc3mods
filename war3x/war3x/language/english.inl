@@ -83,7 +83,7 @@ new const RACE1SKILL[_TS + _TU][] =         // UNDEAD SKILLS:
 
 new const RACE2SKILL[_TS + _TU][] =         // HUMAN SKILLS:
 {
-    "War Training",                         // War Training
+    "Fortitude",                            // Fortitude
     "Invisibility",                         // Racial: Invisibility
     "Bash",                                 // Bash
     "Inner Fire",                           // Devotion Aura
@@ -168,7 +168,7 @@ new const RACE1SKILL_DESC[_TS + _TU][] =    // UNDEAD SKILLS:
 
 new const RACE2SKILL_DESC[_TS + _TU][] =    // HUMAN SKILLS:
 {
-    /* War Training         */  "Increases the maximum hit points of the player to <%s>.",
+    /* Fortitude            */  "Increases the maximum hit points of the player to <%s>.",
     /* Invisibility         */  "Player is made <%s> less visible when wielding a knife. If the player attacks, is attacked, or casts an ultimate, he will become visible. Player is also untargetable when invisible.",
     /* Bash                 */  "Gives a <%s> chance that an attack will do <%s> bonus damage and stun an opponent for <%s> second(s).",
     /* Devotion Aura        */  //"Gives the player <%s> additional armor and starts the player with <%s> armor each round.",

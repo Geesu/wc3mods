@@ -3,7 +3,7 @@
 /* - Skill Configuration ---------------------------------------- */
 
 
-new Float:s_WarTraining[2]      = {105.0,165.0};        // (racial) War Training (hitpoints gained)
+new Float:s_Fortitude[2]        = {105.0,165.0};        // (racial) Fortitude (hitpoints gained)
 new Float:s_Invisibility[3]     = {0.60,0.70,0.80};     // (skill1) Invisibility (percent invisibility)
 new Float:s_Bash[3]             = {0.15,0.25,0.35};     // (skill2) Bash (chance to bash)
 new s_BashDamage[3]             = {1,3,6};              // (skill2) Bash (bonus damage)
@@ -172,11 +172,11 @@ public Ultimates_HU( Caster, Target ) {
 /* - Racial Ability --------------------------------------------- */
 
 
-// War Training
+// Fortitude
 
-public SWarTraining_Get( iLevel ) {
+public SFortitude_Get( iLevel ) {
 #if ADVANCED_DEBUG
-	log_function("public SWarTraining_Get( iLevel ) {");
+	log_function("public SFortitude_Get( iLevel ) {");
 #endif
 
     new Float:fLevel = float( iLevel );
@@ -184,16 +184,16 @@ public SWarTraining_Get( iLevel ) {
     if ( fLevel > LEVEL_RACIALCAP )
         fLevel = LEVEL_RACIALCAP;
 
-    new Float:fNewHealth = s_WarTraining[0] + ( ( ( s_WarTraining[1] - s_WarTraining[0] ) / LEVEL_RACIALCAP ) * fLevel );
+    new Float:fNewHealth = s_Fortitude[0] + ( ( ( s_Fortitude[1] - s_Fortitude[0] ) / LEVEL_RACIALCAP ) * fLevel );
     new iNewHealth = floatround( fNewHealth );
 
     return ( iNewHealth );
 }
 
 
-public SWarTraining_Set( id ) {
+public SFortitude_Set( id ) {
 #if ADVANCED_DEBUG
-	log_function("public SWarTraining_Set( id ) {");
+	log_function("public SFortitude_Set( id ) {");
 #endif
 
     // Check if restricted
@@ -202,7 +202,7 @@ public SWarTraining_Set( id ) {
         return PLUGIN_HANDLED;
 
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
-    new iNewHealth = SWarTraining_Get( iLevel );
+    new iNewHealth = SFortitude_Get( iLevel );
 
     set_user_health( id, iNewHealth );
 

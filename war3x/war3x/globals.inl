@@ -374,7 +374,7 @@ new bool:g_bHostageRescued;         // determines whether to penalize ct's when 
 
 new g_iPlayerArmor[33][2];          // stores player armor / armor type.
 new g_iPlayerAmmo[33][31];          // Player ammo. Stored to calculate change on CurWeapon.
-new g_iDispellHealth[33];           // stores war training bonus hps when hit with dispell
+new g_iDispellHealth[33];           // stores Fortitude bonus hps when hit with dispell
 
 new g_PlayerInfo[33][12];           // Player session array. Holds all session data.
 new g_PlayerOptions[33][_TO];       // Player session array. Holds all client-side options.

@@ -112,7 +112,7 @@ public WAR3_get_maxhealth( id ) {
     if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN )
     {
         new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
-        iMaxHealth = SWarTraining_Get( iLevel );
+        iMaxHealth = SFortitude_Get( iLevel );
     }
 
     if ( g_bPlayerAvatarGrow[id] || g_iPlayerAvatar[id] )
@@ -355,7 +355,7 @@ public WAR3_set_health( id ) {
 #endif
 
     if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN )
-        SWarTraining_Set( id );
+        SFortitude_Set( id );
 
     return PLUGIN_HANDLED;
 }
@@ -2367,7 +2367,7 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_RACIAL:
                 {
-                    format( szValue, 31, "%d", SWarTraining_Get( iSkillLevel ) );
+                    format( szValue, 31, "%d", SFortitude_Get( iSkillLevel ) );
                     return ( 1 );
                 }
 
