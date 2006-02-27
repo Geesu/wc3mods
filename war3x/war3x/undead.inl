@@ -381,26 +381,26 @@ public SFrostNova( id ) {
 
         for ( new iPlayerNum = 0; iPlayerNum < iTotalEnemies; iPlayerNum++ )
         {
-            new EnemyOrigin[3];
             new enemy = Enemies[iPlayerNum];
 
+            new EnemyOrigin[3];
             get_user_origin( enemy, EnemyOrigin );
 
             if ( get_distance( Origin, EnemyOrigin ) / 40 <= iRadius && !g_bPlayerSleeping[enemy] )
             {
-                // Glow
-
-                new Float:fDuration = random_float( 1.0, FROSTNOVA_SLOWDURATION );
-                Glow_Set( id, fDuration - 0.5, FROST_RGB, 36 );
-
                 // Damage
 
                 new iDamage = s_fnDamage[g_PlayerInfo[id][CURRENT_SKILL2] - 1];
                 WAR3_damage( id, enemy, CSW_FROSTNOVA, iDamage, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
 
-                // Slow movement
+                // Cold Damage
 
-                SFrostNova_Slow( enemy );
+                Create_Damage( enemy, 0, 0, CS_DMG_COLD );
+
+                // Glow
+
+                new Float:fDuration = random_float( 1.0, FROSTNOVA_SLOWDURATION );
+                Glow_Set( enemy, fDuration - 0.5, FROST_RGB, 36 );
 
                 // Screen Fade
 
@@ -409,9 +409,12 @@ public SFrostNova( id ) {
                     Create_ScreenFade( enemy, (1<<10), (1<<10), FADE_OUT, 91, 168, 248, 100 );
                 }
 
-                // Cold Damage
+                // Slow movement
 
-                Create_Damage( enemy, 0, 0, CS_DMG_COLD );
+                if ( get_user_health( enemy ) - iDamage > 0 )
+                {
+                    SFrostNova_Slow( enemy, fDuration );
+                }
             }
         }
     }
@@ -420,7 +423,7 @@ public SFrostNova( id ) {
 }
 
 
-public SFrostNova_Slow( id ) {
+public SFrostNova_Slow( id, Float:fDuration ) {
 
     g_bPlayerNova[id] = true;
     g_bPlayerSlowed[id] = true;
@@ -431,8 +434,6 @@ public SFrostNova_Slow( id ) {
     new TaskId = TASK_NOVASLOW + id;
 
     remove_task( TaskId, 0 );
-    new Float:fDuration = random_float( 1.0, FROSTNOVA_SLOWDURATION );
-
     set_task( fDuration, "SFrostNova_Remove", TaskId, parm_Slow, 1 );
 
     WAR3_set_speed( id );
