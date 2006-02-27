@@ -562,6 +562,17 @@ public Dispell_Negative( dispellerId, targetId )
         bHasEffects = true;
     }
 
+    // Frost Nova ( slow )
+
+    if ( g_bPlayerNova[targetId] )
+    {
+        new parm_Slow[1];
+        parm_Slow[0] = targetId;
+
+        SFrostNova_Remove( parm_Slow );
+        bHasEffects = true;
+    }
+
     // Shadow Strike
 
     if ( g_PlayerStruck[targetId] )

@@ -448,7 +448,7 @@ public SFrostNova_Remove( parm_Slow[1] ) {
     new TaskId = TASK_NOVASLOW + id;
     remove_task( TaskId, 0 );
 
-    g_bPlayerFrosted[id] = false;
+    g_bPlayerNova[id] = false;
     Slow_Remove( id );
 
     WAR3_set_speed( id );
