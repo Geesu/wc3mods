@@ -740,6 +740,66 @@ public XP_Reset(id)
 	return PLUGIN_CONTINUE;
 }	
 
+// This function will prune a single player (checks for the latest date and sets them all to the same)
+public XP_Prune_Player(id)
+{
+	if ( iCvar[MP_SAVEXP] && iCvar[FT_AUTO_PRUNING] )
+	{
+		new szPlayerID[32], szPlayerName[32], szPlayerIP[32];
+		get_user_authid(id, szPlayerID, 31);
+		get_user_name(id, szPlayerName, 31);
+		get_user_ip(id, szPlayerIP, 31);
+
+		// Update all records if we're using the vault
+		if ( !iCvar[SV_SQL] )
+		{
+			new iRace, iAttempt, szKey[128], szData[512];
+
+			// Loop through and find the latest timestamp and re-save
+			for( iRace = 1; iRace < 10; iRace++ )
+			{
+				format( szKey, 127, "%s_%d", (iCvar[FT_SAVEBY]==SAVE_NAME) ? szPlayerName : ((iCvar[FT_SAVEBY]==SAVE_IP) ? szPlayerIP : szPlayerID), iRace );
+
+				iAttempt = get_vaultdata( szKey, szData, 511 );
+				
+				// Only want to check if a key was found
+				if ( iAttempt )
+				{
+					new szXP[8], szRace[2], szSkill1[2], szSkill2[2], szSkill3[2], szSkill4[2], szIP[32];
+
+					format( szXP, 7, "" );
+
+					// Get the data that is in the vault
+					parse( szData, szPlayerID, 31, szXP, 7, szRace, 1, szSkill1, 1, szSkill2, 1, szSkill3, 1, szSkill4, 1, szIP, 31);
+					
+					// Re-save the data with the current timestamp
+					format( szData, 511, "%s %d %d %d %d %d %d %s %d %s", szPlayerID, szXP, szSkill1, szSkill2, szSkill3, szSkill4, szIP, get_systime(), szPlayerName );
+					
+					// Save the data
+					set_vaultdata(szKey, szData);
+				}
+			}
+		}
+		// Saving with SQL, lets do some sweet ass query thing that updates all of them to the current timestamp, we don't want 8 queries do we?
+		else
+		{
+			new szQuery[512];
+			format(szQuery, 511, "UPDATE `%s` SET `time` = NOW() WHERE `playerid` = '%s';", g_DBTableName, (iCvar[FT_SAVEBY]==2) ? szPlayerName : ((iCvar[FT_SAVEBY]==1) ? szPlayerIP : szPlayerID));
+
+			new Result:res = dbi_query(sql, szQuery);
+			
+			// Verify we have a result
+			if (res < RESULT_NONE)
+			{
+				XP_DBI_Error( res, szQuery, 3 );
+				return;
+			} 
+		}
+	}
+
+	return;
+}
+
 // Prune the database of old records
 public XP_Prune()
 {

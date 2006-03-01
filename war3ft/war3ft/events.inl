@@ -80,7 +80,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	if(!p_data_b[victim][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
-	if(!p_data_b[attacker][PB_ISCONNECTED] && attacker > 0)
+	if( attacker <= 0 || attacker > MAXPLAYERS || !p_data_b[attacker][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
 #if MOD == 0
