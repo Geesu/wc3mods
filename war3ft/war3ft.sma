@@ -27,7 +27,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu==(Pimp Daddy==OoTOAoO)"
-new const WC3VERSION[] =	"2.3.1 RC"
+new const WC3VERSION[] =	"2.3.2"
 
 #include <amxmodx>
 #include <amxmisc>
@@ -37,7 +37,7 @@ new const WC3VERSION[] =	"2.3.1 RC"
 #include <dbi>
 
 // Compiling Options
-#define MOD 1							// 0 = cstrike or czero, 1 = dod
+#define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define PRECACHE_WAR3FTSOUNDS 1
@@ -362,9 +362,31 @@ public client_putinserver(id){
 		_DOD_showMoney(parm)
 	#endif
 	#if MOD == 0
-		query_client_cvar(id, "cl_minmodels", "check_cvars") 
+		if ( !is_user_bot(id) )
+		{
+			query_client_cvar(id, "cl_minmodels", "check_cvars");
+		}
 	#endif
 }
+
+public client_authorized(id)
+{
+	// Check for steam ID pending
+	new szPlayerID[32];
+	get_user_authid( id, szPlayerID, 31 );
+	
+	// Then the player doesn't have a steam id, lets make them reconnect
+	if ( equal(szPlayerID, "STEAM_ID_PENDING") )
+	{
+		client_cmd(id, "reconnect");
+	}
+	// Update all XP records to the current timestamp
+	else
+	{
+		XP_Prune_Player(id);
+	}
+}
+
 
 public client_connect(id){
 	#if ADVANCED_DEBUG
@@ -585,7 +607,7 @@ public module_filter(const module[])
 	if ( equali( module, "dbi" ) )
 	{
 		log_amx("No DBI module found, defaulting to vault");
-		g_DBILoaded = false;
+		set_cvar_num("war3x_save_xp_sql", 0);
 
 		return PLUGIN_HANDLED;
 	}

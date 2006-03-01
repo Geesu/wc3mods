@@ -1,5 +1,10 @@
+v2.3.2
+ - Bug Fix: Index out of bounds in events.inl on an attacker check - thanks Striker
+
 v2.3.1
  - Bug Fix: Link wasn't linked correctly in war3help
+ - Bug Fix: If a player is STEAM_ID_PENDING they will be reconnected
+ - Change: Not all old data will be erased, the most current timestamp will be checked and all other records will be updated to that timestamp
 
 v2.3.0
  - Addition: If there is an error on a database connection, the error is now printed to the amxx logs
