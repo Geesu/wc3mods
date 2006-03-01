@@ -353,7 +353,7 @@ public SFrostNova( id ) {
     new Origin[3];
     get_user_origin( id, Origin );
 
-    new iRingSize = s_fnRange[g_PlayerInfo[id][CURRENT_SKILL2] - 1] * 2 * 40;
+    new iRingSize = s_fnRange[g_PlayerInfo[id][CURRENT_SKILL2] - 1] * 40;
 
     new Radius[3];
     Radius[2] = iRingSize + 40;
@@ -415,6 +415,14 @@ public SFrostNova( id ) {
                 {
                     SFrostNova_Slow( enemy, fDuration );
                 }
+
+                // Message
+
+                new szMessage[128];
+                format( szMessage, 127, DAMAGE_FROSTNOVA, id, iDamage );
+
+                WAR3_status_text( enemy, szMessage, 3.0 );
+
             }
         }
     }

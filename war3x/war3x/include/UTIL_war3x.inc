@@ -72,7 +72,7 @@ public WAR3_set_xp() {
     g_fWeaponXp[CSW_FLAMESTRIKE]     = 1.0;
     g_fWeaponXp[CSW_DEATHCOIL]       = 1.0;
     g_fWeaponXp[CSW_WINDWALK]        = 1.0;
-    g_fWeaponXp[CSW_MOONGLAIVE]      = 1.0;
+    g_fWeaponXp[CSW_FROSTNOVA]       = 1.0;
 
     return PLUGIN_HANDLED;
 }
@@ -801,9 +801,12 @@ public WAR3_get_last_xp( iXp ) {
 // Damage by Warcraft 3 Skill
 
 public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iCheckArmor ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iCheckArmor ) {");
-#endif
+
+    #if ADVANCED_DEBUG
+
+    	log_function( "public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iCheckArmor ) {" );
+
+    #endif
 
 /*
     // Absorb Magic Damage ( AMS ) (REMOVED)
@@ -815,6 +818,22 @@ public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iChec
         iDamage = SShell_Absorb( iVictimId, iDamage );
     }
 */
+
+    // Elune's Grace ( absorb bonus knife/ultimate damage )
+
+    if ( g_PlayerInfo[iVictimId][CURRENT_RACE] == RACE_NIGHTELF && iDamage )
+    {
+        // Set new damage amount
+
+        if ( iWeaponId == CSW_KNIFE )
+            iDamage = SElunes_Knife( iVictimId, iDamage );
+
+        else if ( WAR3_is_ultimate( iWeaponId ) )
+        {
+            iDamage = SElunes_Magic( iVictimId, iDamage );
+        }
+    }
+
     // Notify damage to wind walker (if applicable)
 
     if ( iWeaponId == CSW_WINDWALK )
@@ -985,7 +1004,7 @@ public WAR3_death( killerId, victimId, weaponId, Headshot ) {
             case CSW_WINDWALK:      copy( szWeaponName, 31, "wind walk" );
             case CSW_ROOT:          copy( szWeaponName, 31, "entangling roots" );
             case CSW_SHADOWSTRIKE:  copy( szWeaponName, 31, "shadow strike" );
-            case CSW_MOONGLAIVE:    copy( szWeaponName, 31, "moon glaive" );
+            case CSW_FROSTNOVA:     copy( szWeaponName, 31, "frost nova" );
         }
 
         Create_DeathMsg( SHOWTO_ALL, killerId, victimId, Headshot, szWeaponName );
@@ -1035,7 +1054,7 @@ public WAR3_player_init( id ) {
     for ( new iRaceId; iRaceId < TOTAL_RACES; iRaceId++ )
     {
         g_iXPtotal[id][iRaceId] = 0;
-		
+
 		if ( get_cvar_num("war3x_save_xp_sql") == 1 )
 		{
            	g_iXPfetched[id][iRaceId] = 0;
@@ -1084,9 +1103,9 @@ public WAR3_player_valid( id )
 #endif
 	if ( id > 0 && id <= get_maxplayers() )
 	{
-		return true;		
+		return true;
 	}
-	
+
 	return false;
 }
 

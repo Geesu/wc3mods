@@ -239,6 +239,7 @@ stock Create_TE_ELIGHT( ShowTo,id,Radius,Red,Green,Blue,Life,Decay )
 
     new Origin[3];
     get_user_origin( id,Origin );
+    Origin[2] += 75;
 
     write_byte( 28 );                   // TE_ELIGHT (28)
     write_short( id );                  // entity:attachment to follow

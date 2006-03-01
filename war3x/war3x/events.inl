@@ -867,14 +867,6 @@ public on_ResetHud( id ) {
         g_PlayerInfo[id][CURRENT_ITEM] = ITEM_NONE;
 
 
-    if ( g_PlayerInfo[id][CURRENT_RACE] )
-    {
-        // Activate skills ( pre-commencing )
-
-        if ( g_iCurrentRound == 0 )
-            WAR3_enable_skills( id );
-    }
-
     // Select Race ( if bot )
 
     if ( is_user_bot( id ) && !g_PlayerInfo[id][CURRENT_RACE] )
@@ -890,6 +882,18 @@ public on_ResetHud( id ) {
             War3x_CheckLevel( id, 0, g_PlayerInfo[id][CURRENT_XP] );
         }
     }
+
+    if ( g_PlayerInfo[id][CURRENT_RACE] )
+    {
+        // Activate skills ( pre-commencing )
+
+        if ( g_iCurrentRound == 0 )
+            WAR3_enable_skills( id );
+    }
+
+    // Activate Ultravision (always active)
+
+    SUltravision();
 
     return PLUGIN_CONTINUE;
 }
@@ -1492,26 +1496,6 @@ public on_Touch( entity1, entity2 ) {
             }
 
             UCoil_Remove( iToucherId );
-        }
-    }
-
-    // Moon Glaive
-
-    else if ( equali( szClassName, "MOON_GLAIVE" ) )
-    {
-        new iAttackerId    = entity_get_edict( iToucherId, EV_ENT_owner );
-        new iFirstVictimId = entity_get_edict( iToucherId, EV_ENT_enemy );
-
-        // Don't Hit First Victim / Teammates
-
-        if ( iFirstVictimId != iPlayerId && get_user_team( iAttackerId ) != get_user_team( iToucherId ) )
-        {
-            new Float:fDamage = entity_get_float( iToucherId, EV_FL_dmg );
-            new iDamage = floatround( fDamage );
-
-            SMoonGlaive_Damage( iAttackerId, iPlayerId, iDamage );
-
-            SMoonGlaive_Destroy( iToucherId );
         }
     }
 

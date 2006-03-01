@@ -141,7 +141,7 @@ public plugin_precache() {
 #if ADVANCED_DEBUG
 	log_function("public plugin_precache() {");
 #endif
-	
+
 	// Get configs directory
 
 	get_configsdir( WAR3X_DIR, 63 );
@@ -242,7 +242,7 @@ public client_authorized(id)
 	// Check for steam ID pending
 	new szPlayerID[32];
 	get_user_authid( id, szPlayerID, 31 );
-	
+
 	// Then the player doesn't have a steam id, lets make them reconnect
 	if ( equal(szPlayerID, "STEAM_ID_PENDING") )
 	{
@@ -436,7 +436,6 @@ public plugin_init() {
 
 	// Touch Events
 	register_touch("DEATH_COIL",	"player", "UCoil_Touch"			);
-	register_touch("MOON_GLAIVE",	"player", "SMoonGlaive_Touch"	);
 	register_touch("WAR3X_ITEM",	"player", "Item_Touch"			);
 
     WAR3_set_xp();
@@ -489,7 +488,7 @@ public module_filter(const module[])
 #if ADVANCED_DEBUG
 	log_function("public module_filter() {");
 #endif
-	
+
 	// Since the DBI module is missing, lets make sure we don't use it
 	if ( equali( module, "dbi" ) )
 	{
@@ -521,7 +520,7 @@ public DEBUG_Error(error_code, bool:debugging, message[])
 {
 	new buffer[512];
 	dbg_fmt_error(buffer, 511);
-	
+
 	// Hopefully this is always true?
 	if ( buffer[0] )
 	{
@@ -534,7 +533,7 @@ public DEBUG_Error(error_code, bool:debugging, message[])
 		format(msg, 511, "Error code: %d with message: %s", error_code, message);
 		DEBUG_Write_File( msg );
 	}
-	
+
 	// Can only get a trace if plugin is running in debug mode right?
 	if ( debugging )
 	{
@@ -546,7 +545,7 @@ public DEBUG_Error(error_code, bool:debugging, message[])
 
 		new num = 0;
 		new func[32], file[64], line;
-		while ( trace ) 
+		while ( trace )
 		{
 			dbg_trace_info(trace, line, func, 31, file, 63);
 			new msg[256];
@@ -562,7 +561,7 @@ public DEBUG_Error(error_code, bool:debugging, message[])
 public DEBUG_Write_File( msg[] )
 {
 	new file[] = "addons/amxmodx/logs/war3x_log_file.log";
-	
+
 	new timeStr[64];
 	get_time("%m/%d/%Y - %H:%M:%S", timeStr, 63);
 

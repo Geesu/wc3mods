@@ -38,7 +38,7 @@ new Float:s_PillageArmor[3]     = {0.05,0.10,0.15};             // (skill3) Pill
 #define HEALINGWAVE_MULTIPLIER        3     // (integer) jump health multiplier (1/X)
 #define HEALINGWAVE_JUMPS             6     // (integer) maximum healing wave jumps
 
-#define CHAINLIGHTNING_DAMAGE        50     // (integer) initial damage
+#define CHAINLIGHTNING_DAMAGE        65     // (integer) initial damage
 #define CHAINLIGHTNING_RANGE         15     // (integer) max range of jump targets
 #define CHAINLIGHTNING_MULTIPLIER     3     // (integer) jump damage multiplier (1/X)
 #define CHAINLIGHTNING_JUMPS          6     // (integer) maximum chain lightning jumps
@@ -624,9 +624,9 @@ public SPillage( attackerId, victimId, weaponId, iDamage ) {
 
 				if ( iNewArmor < 0 )
 					iNewArmor = 0;
-			
+
 				set_user_armor( victimId, iNewArmor );
-			
+
 				iNewMoney = cs_get_user_money( attackerId );
 				iNewMoney += ( iDamage * s_PillageMoney[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1] );
 			}
@@ -640,7 +640,7 @@ public SPillage( attackerId, victimId, weaponId, iDamage ) {
 			cs_set_user_money ( attackerId , iNewMoney );
 		}
 	}
-			
+
     return PLUGIN_HANDLED;
 }
 

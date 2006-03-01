@@ -206,13 +206,14 @@ new const GETCLASSCHECK[3] =    {0,2,5};    // (integer) levels players receive 
 #define TASK_FLAMESTRIKE_VICTIM     480
 #define TASK_FLAMESTRIKE_CASTER     512
 #define TASK_AVATAR                 544
-#define TASK_MOONGLAIVE             576
+#define TASK_MOONGLAIVE             576  // UNUSED
 #define TASK_SHADOWSTRIKE           608
 #define TASK_WINDWALK               640
 #define TASK_ANKH                   672
 #define TASK_ULTIMATE               704
 #define TASK_TARGETNAME             736
 #define TASK_NOVASLOW               768
+#define TASK_ULTRAVISION            800
 
 #define TASK_ULTIMATEWARMUP        1000
 #define TASK_NEWROUND              1001
@@ -306,8 +307,7 @@ new const GETCLASSCHECK[3] =    {0,2,5};    // (integer) levels players receive 
 #define CSW_FLAMESTRIKE              37
 #define CSW_DEATHCOIL                38
 #define CSW_WINDWALK                 39
-#define CSW_MOONGLAIVE               40
-#define CSW_FROSTNOVA                41
+#define CSW_FROSTNOVA                40
 
 
 /* - XP Saving Constants ---------------------------------------- */

@@ -141,9 +141,13 @@ public WAR3_get_minhealth( id ) {
 // Get max armor
 
 public WAR3_get_maxarmor( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_get_maxarmor( id ) {");
-#endif
+
+    #if ADVANCED_DEBUG
+
+    	log_function("public WAR3_get_maxarmor( id ) {");
+
+    #endif
+
 
     new iMaxArmor = 100;
 
@@ -154,10 +158,9 @@ public WAR3_get_maxarmor( id ) {
 
     // Nature's Blessing
 
-    else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF )
+    else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] )
     {
-        new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
-        iMaxArmor += SBlessing_Armor( iLevel ) - 100;
+        iMaxArmor += s_BlessingArmor[g_PlayerInfo[id][CURRENT_SKILL2] - 1] - 100;
     }
 
     // Frost Armor
@@ -898,7 +901,7 @@ public _WAR3_set_speed( parm_Speed[1] ) {
 
         // Nature's blessing
 
-        else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && get_user_armor( id ) )
+        else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] && get_user_armor( id ) )
             SBlessing_Speed_Set( id, weaponId );
 
         else
@@ -950,6 +953,11 @@ public WAR3_enable_skills( id ) {
     // Set Invisibility
 
     Invis_Set( id );
+
+    // Ultravision
+
+    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] )
+        SUltravision_Set( parm_Skills );
 
     // Enable Ultimate
 
@@ -1358,7 +1366,6 @@ public Purge_FreezeStart() {
     // Remove Temporary Models
 
     Remove_TempEnts( "WAR3X_ITEM", 0 );
-    Remove_TempEnts( "MOON_GLAIVE", 0 );
     Remove_TempEnts( "DEATH_COIL", 0 );
     Remove_TempEnts( "ROOT_PLANT", 0 );
     Remove_TempEnts( "IMPALE_CLAW", 0 );
@@ -1455,6 +1462,9 @@ public Purge_Common( id ) {
     {
         Invis_Remove( id );
     }
+
+    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF )
+        SUltravision_Remove( id );
 
     // Halt Icons
 
@@ -2469,9 +2479,10 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
             {
                 // Skills
 
-                case SKILL_RACIAL:
+                case SKILL_RACIAL: // ( CLEANUP )
                 {
-                    format( szValue, 31, "%d %0.0f%s", ( SBlessing_Armor( iSkillLevel ) - 100 ), ( ( ( ( s_BlessingSpeed[0] + SBlessing_Speed_Get( iSkillLevel ) ) / s_BlessingSpeed[0] ) - 1.0 ) * 100.0 ) , "%" );
+//                    format( szValue, 31, "%0.0f%s %0.0f%s", s_ElunesMagic[iSkillLevel]
+//                    format( szValue, 31, "%d %0.0f%s", ( s_BlessingArmor[iSkillLevel] - 100 ), ( ( s_BlessingSpeed[iSkillLevel] ) * 100.0 ) , "%" );
                     return ( 2 );
                 }
 
@@ -2481,9 +2492,9 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
                     return ( 1 );
                 }
 
-                case SKILL_2:
+                case SKILL_2: //( CLEANUP )
                 {
-                    format( szValue, 31, "%0.0f%s %0.0f%s %d", ( s_MoonGlaive[iSkillLevel] * 100.0 ), "%", ( MOONGLAIVE_DAMAGE * 100.0 ), "%", MOONGLAIVE_RANGE );
+//                    format( szValue, 31, "%0.0f%s %0.0f%s %d", ( s_MoonGlaive[iSkillLevel] * 100.0 ), "%", ( MOONGLAIVE_DAMAGE * 100.0 ), "%", MOONGLAIVE_RANGE );
                     return ( 3 );
                 }
 
@@ -3007,7 +3018,7 @@ public war3_chatskills( id, raceId, ShowHelp ) {
 stock is_war3_entity( iEnt, szClassName[] = "" )
 {
 	// Entities that war3x creates
-	new szWar3Entities[][64] = {"WAR3X_ITEM", "MOON_GLAIVE", "DEATH_COIL", "ROOT_PLANT", "IMPALE_CLAW", "SLEEP_Z", "REJUV_FLARE", "FLAME_STRIKE", "HEAL_EFFECT" };
+	new szWar3Entities[][64] = {"WAR3X_ITEM", "DEATH_COIL", "ROOT_PLANT", "IMPALE_CLAW", "SLEEP_Z", "REJUV_FLARE", "FLAME_STRIKE", "HEAL_EFFECT" };
 
 	// Don't want to look up info for an invalid ent
 	if ( !is_valid_ent(iEnt) )

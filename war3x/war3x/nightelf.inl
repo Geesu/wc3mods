@@ -3,23 +3,27 @@
 /* - Skill Configuration ---------------------------------------- */
 
 
-new Float:s_BlessingArmor[2]    = {110.0,150.0};                // (racial) Nature's Blessing (armor) {level 0,level LEVEL_RACIALCAP}
-new Float:s_BlessingSpeed[2]    = {210.0,250.0};                // (racial) Nature's Blessing (min/max speed attainable) (used to calculate % speed bonus)
+new Float:s_ElunesMagic[2]      = {0.05,0.25};                  // (racial) Elune's Grace (ultimate damage absorbsion) {level 0,level LEVEL_RACIALCAP}
+new Float:s_ElunesKnife[2]      = {0.10,0.35};                  // (racial) Elune's Grace (knife damage absorbsion) {level 0,level LEVEL_RACIALCAP}
 new Float:s_Evasion[3]          = {0.10,0.20,0.30};             // (skill1) Evasion (chance to evade)
-new Float:s_MoonGlaive[3]       = {0.15,0.30,0.45};             // (skill2) Moon Glaive (chance to occur)
+new s_BlessingArmor[3]          = {115,130,145};                // (skill2) Nature's Blessing (armor)
+new Float:s_BlessingSpeed[3]    = {0.1,0.2,0.3};                // (racial) Nature's Blessing (min/max speed attainable) (used to calculate % speed bonus)
 new Float:s_TrueshotAura[3]     = {0.15,0.30,0.45};             // (skill3) Trueshot Aura (bonus damage)
 
 
 /* - Skill Constants Configuration ------------------------------ */
 
 
-#define EVASION_MAXDAMAGE           250     // (integer) maximum damage (ish) avoidable with evasion
-#define EVASION_SHOTGAP             0.2     // (  float) seconds between evades before a consecutive shot may be evaded
+#define ELUNES_NIGHTBONUS           2.0     // (  float) bonus to regular skill during night time (via moonstone)
 
-#define MOONGLAIVE_DAMAGE          0.75     // (  float) percent of base damage to apply to glaive recipient
-#define MOONGLAIVE_RANGE             20     // (integer) maximum distance to check for glaive
-#define MOONGLAIVE_SPEED         1800.0     // (  float) speed of glaive. slower = more chance to avoid
-#define MOONGLAIVE_DURATION         1.0     // (  float) life of moonglaive before destoyed
+#define EVASION_MAXDAMAGE           250     // (integer) maximum damage (ish) avoidable with evasion
+#define EVASION_SHOTGAP             3.0     // (  float) seconds between evades before a consecutive shot may be evaded
+
+#define ULTRAVISION_SHOWTEAM          1     // (integer) illuminate teammates as well as enemies (1=yes, 0=no)
+
+#define BLESSING_MAXSPEED         260.0     // (  float) max speed of nature's blessing
+
+new ELUNES_SHELL_RGB[3] =     {80,32,96};   // (integer) RGB of elune's grace shell ( when damage absorbed )
 
 
 /* - Ultimate Configuration ------------------------------------- */
@@ -43,17 +47,15 @@ new Float:s_TrueshotAura[3]     = {0.15,0.30,0.45};             // (skill3) True
 
 
 public Skills_Offensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) {
-#if ADVANCED_DEBUG
-	log_function("public Skills_Offensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) {");
-#endif
+
+    #if ADVANCED_DEBUG
+
+    	log_function( "public Skills_Offensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) {" );
+
+    #endif
 
     if ( g_PlayerInfo[attackerId][CURRENT_RACE] == RACE_NIGHTELF && get_user_team( attackerId ) != get_user_team( victimId ) )
     {
-        // Moon Glaive
-
-        if ( g_PlayerInfo[attackerId][CURRENT_SKILL2] && weaponId != CSW_KNIFE && weaponId != CSW_HEGRENADE )
-            SMoonGlaive( attackerId, victimId, iDamage );
-
         // Trueshot Aura
 
         if ( g_PlayerInfo[attackerId][CURRENT_SKILL3] && weaponId != CSW_KNIFE && weaponId != CSW_HEGRENADE && get_user_health( victimId ) > 0 )
@@ -65,12 +67,32 @@ public Skills_Offensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) 
 
 
 public Skills_Defensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) {
-#if ADVANCED_DEBUG
-	log_function("public Skills_Defensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) {");
-#endif
+
+    #if ADVANCED_DEBUG
+
+    	log_function( "public Skills_Defensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) {" );
+
+    #endif
 
     if ( g_PlayerInfo[victimId][CURRENT_RACE] == RACE_NIGHTELF )
     {
+        // Elune's Grace ( called from WAR3_damage() as well to catch all bonus damage )
+
+        if ( iDamage && weaponId == CSW_KNIFE && get_user_team( attackerId ) != get_user_team( victimId ) )
+        {
+            // Adjust for damage dealt
+
+            if ( get_user_health( victimId ) > WAR3_get_minhealth( victimId ) )
+            {
+                new iDamageAbsorbed = iDamage - SElunes_Knife( victimId, iDamage );
+
+                set_user_health( victimId, get_user_health( victimId ) + iDamageAbsorbed );
+                WAR3_check_health( victimId );
+
+                iDamage -= iDamageAbsorbed;
+            }
+        }
+
         // Evasion
 
         if ( g_PlayerInfo[victimId][CURRENT_SKILL1] && get_user_health( victimId ) > 0 )
@@ -88,9 +110,12 @@ public Skills_Defensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) 
 
 
 public Ultimates_NE( casterId, targetId ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimates_NE( casterId, targetId ) {");
-#endif
+
+    #if ADVANCED_DEBUG
+
+    	log_function( "public Ultimates_NE( casterId, targetId ) {" );
+
+    #endif
 
     // Rejuvenation
 
@@ -173,56 +198,204 @@ public Ultimates_NE( casterId, targetId ) {
 /* - Racial Ability --------------------------------------------- */
 
 
-// Nature's Blessing ( armor )
+// Elune's Grace ( called from WAR3_damage() )
 
-public SBlessing_Armor( iLevel ) {
-#if ADVANCED_DEBUG
-	log_function("public SBlessing_Armor( iLevel ) {");
-#endif
+public SElunes_Magic( id, iDamage ) {
 
+    #if ADVANCED_DEBUG
+
+        log_function( "public SElunes_Magic( id, iDamage ) {" );
+
+    #endif
+
+    return SElunes_Absorb( id, iDamage, s_ElunesMagic );
+}
+
+
+public SElunes_Knife( id, iDamage ) {
+
+    #if ADVANCED_DEBUG
+
+        log_function( "public SElunes_Knife( id, iDamage ) {" );
+
+    #endif
+
+    return SElunes_Absorb( id, iDamage, s_ElunesKnife );
+}
+
+
+public SElunes_Absorb( id, iDamage, Float:ElunesAbsorb[2] ) {
+
+    #if ADVANCED_DEBUG
+
+        log_function( "public SElunes_Absorb( id, iDamage, Float:ElunesAbsorb[2] ) {" );
+
+    #endif
+
+    new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
     new Float:fLevel = float( iLevel );
 
     if ( fLevel > LEVEL_RACIALCAP )
         fLevel = LEVEL_RACIALCAP;
 
-    new Float:fBonusArmor = s_BlessingArmor[0] + ( ( ( s_BlessingArmor[1] - s_BlessingArmor[0] ) / LEVEL_RACIALCAP ) * fLevel );
+    new Float:fAbsorb = ElunesAbsorb[0] + ( ( ( ElunesAbsorb[1] - ElunesAbsorb[0] ) / LEVEL_RACIALCAP ) * fLevel );
 
-    if ( fBonusArmor > s_BlessingArmor[1] )
-        fBonusArmor = s_BlessingArmor[1];
+    if ( fAbsorb > ElunesAbsorb[1] )
+        fAbsorb = ElunesAbsorb[1];
 
-    return ( floatround( fBonusArmor ) );
+    // Check if Night bonus applies ( coming soon )
+
+    //  if ( g_bIsNighttime )
+    //      fAbsorb *= ELUNES_NIGHTBONUS;
+
+    new Float:fDamageAbsorbed = float( iDamage ) * fAbsorb;
+    new iDamageAbsorbed = floatround( fDamageAbsorbed );
+
+    iDamage -= iDamageAbsorbed;
+
+    if ( iDamageAbsorbed )
+    {
+        // Hud Message
+
+        new szMessage[64];
+        format( szMessage, 63, DAMAGE_ELUNE, iDamageAbsorbed );
+
+        WAR3_status_text( id, szMessage, 3.0 );
+
+
+        new iFadeAlpha = iDamageAbsorbed * 3;
+
+        if ( iFadeAlpha > GLOW_MAX )
+            iFadeAlpha = GLOW_MAX;
+
+        // Glow shell
+
+        Glow_Set( id, 0.1, ELUNES_SHELL_RGB, 48 );
+
+        // Screen Fade
+
+        Create_ScreenFade( id, (1<<10), (1<<10), FADE_OUT, ELUNES_SHELL_RGB[GLOW_R] * 2, ELUNES_SHELL_RGB[GLOW_G] * 2, ELUNES_SHELL_RGB[GLOW_B] * 2, iFadeAlpha );
+    }
+
+    return ( iDamage );
+}
+
+
+/* - Skills ----------------------------------------------------- */
+
+
+// Ultravision
+
+public SUltravision() {
+
+    new Players[32], iTotalPlayers;
+    get_players( Players, iTotalPlayers, "ac" );
+
+    for ( new iPlayerNum; iPlayerNum < iTotalPlayers; iPlayerNum++ )
+    {
+        new player = Players[iPlayerNum];
+
+        if ( g_PlayerInfo[player][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[player][CURRENT_SKILL2] )
+        {
+            new parm_Ultravision[1];
+            parm_Ultravision[0] = player;
+
+            SUltravision_Set( parm_Ultravision );
+        }
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+
+public SUltravision_Set( parm_Ultravision[1] ) {
+
+    new id = parm_Ultravision[0];
+
+    if ( g_PlayerInfo[id][CURRENT_RACE] != RACE_NIGHTELF || !g_PlayerInfo[id][CURRENT_SKILL2] )
+        return PLUGIN_HANDLED;
+
+    new Players[32], iTotalPlayers;
+
+    // Build playerlist
+
+    #if ( !ULTRAVISION_SHOWTEAM )
+
+        new szTeamName[16];
+
+        if ( get_user_team( id ) == CS_TEAM_TERRORIST )
+            copy( szTeamName, 15, "CT" );               // Enemy team name
+
+        else
+        {
+            copy( szTeamName, 15, "TERRORIST" );
+        }
+
+        get_players( Players, iTotalPlayers, "ae", szTeamName );
+
+    #else
+
+        get_players( Players, iTotalPlayers, "a" );
+
+    #endif
+
+    // Create effect(s) on each player
+
+    for ( new iPlayerNum; iPlayerNum < iTotalPlayers; iPlayerNum++ )
+    {
+        new player = Players[iPlayerNum];
+
+        if ( player != id )
+            Create_TE_ELIGHT( id, player, 180, 255, 255, 255, 100, 0 );
+    }
+
+    // Repeat again in 10 secs (max life of ELIGHT effect)
+
+    new iTaskId = TASK_ULTRAVISION + id;
+    set_task( 10.0, "SUltravision_Set", iTaskId, parm_Ultravision, 1 );
+
+
+    return PLUGIN_HANDLED;
+}
+
+public SUltravision_Remove( id ) {
+
+    // Remove task
+
+    new iTaskId = TASK_ULTRAVISION + id;
+    remove_task( iTaskId, 0 );
+
+    new Players[32], iTotalPlayers;
+    get_players( Players, iTotalPlayers, "a" );
+
+    // Remove effect(s) on each player
+
+    for ( new iPlayerNum; iPlayerNum < iTotalPlayers; iPlayerNum++ )
+    {
+        new player = Players[iPlayerNum];
+        Remove_TE_ELIGHT( id, player );
+    }
+
+    return PLUGIN_HANDLED;
 }
 
 
 // Nature's Blessing ( speed )
 
-public Float:SBlessing_Speed_Get( iLevel ) {
-#if ADVANCED_DEBUG
-	log_function("public Float:SBlessing_Speed_Get( iLevel ) {");
-#endif
-
-    new Float:fLevel = float( iLevel );
-
-    if ( fLevel > LEVEL_RACIALCAP )
-        fLevel = LEVEL_RACIALCAP;
-
-    new Float:fBlessingSpeed = ( ( ( s_BlessingSpeed[1] - s_BlessingSpeed[0] ) / LEVEL_RACIALCAP ) * fLevel );
-
-    return ( fBlessingSpeed );
-}
-
-
 public SBlessing_Speed_Set( id, iWeaponId ) {
-#if ADVANCED_DEBUG
-	log_function("public SBlessing_Speed_Set( id, iWeaponId ) {");
-#endif
+
+    #if ADVANCED_DEBUG
+
+    	log_function( "public SBlessing_Speed_Set( id, iWeaponId ) {" );
+
+    #endif
 
     // Check if restricted
 
-    if ( !WAR3_skill_enabled( id, RACE_NIGHTELF, SKILL_RACIAL ) )
+    if ( !WAR3_skill_enabled( id, RACE_NIGHTELF, SKILL_2 ) )
         return PLUGIN_HANDLED;
 
-    new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
+
     new Float:fBlessingSpeed;
 
     if ( g_bPlayerZoomed[id] )
@@ -233,242 +406,18 @@ public SBlessing_Speed_Set( id, iWeaponId ) {
         fBlessingSpeed = CS_WEAPON_SPEED[iWeaponId];
     }
 
-    // Do not slow down weapons currently faster than max speed
+    fBlessingSpeed = fBlessingSpeed + ( fBlessingSpeed * s_BlessingSpeed[g_PlayerInfo[id][CURRENT_SKILL2] - 1] );
 
-    if ( fBlessingSpeed > s_BlessingSpeed[1] )
-    {
-        set_user_maxspeed( id, fBlessingSpeed );
-        return PLUGIN_HANDLED;
-    }
+    // Do not exceed cap
 
-    fBlessingSpeed += SBlessing_Speed_Get( iLevel );
-
-    if ( fBlessingSpeed > s_BlessingSpeed[1] )
-        fBlessingSpeed = s_BlessingSpeed[1];
+    if ( fBlessingSpeed > BLESSING_MAXSPEED )
+        fBlessingSpeed = BLESSING_MAXSPEED;
 
     set_user_maxspeed( id, fBlessingSpeed );
 
     return PLUGIN_HANDLED;
 }
 
-
-/* - Skills ----------------------------------------------------- */
-
-
-// Moon Glaive
-
-public SMoonGlaive( attackerId, victimId, iDamage ) {
-#if ADVANCED_DEBUG
-	log_function("public SMoonGlaive( attackerId, victimId, iDamage ) {");
-#endif
-
-    new Float:fGlaiveChance = s_MoonGlaive[g_PlayerInfo[attackerId][CURRENT_SKILL2] - 1];
-    new Float:fRandomNum = random_float( 0.0,1.0 );
-
-    if ( fGlaiveChance < fRandomNum )
-        return PLUGIN_HANDLED;
-
-
-    new iTeamPlayers[32], szTeamName[16];
-    new iTotalPlayers;
-
-    get_user_team( victimId, szTeamName, 15 );
-    get_players( iTeamPlayers, iTotalPlayers, "ae", szTeamName );
-
-    // Make sure there are teammates to hit with glaive
-
-    if ( iTotalPlayers > 1 || ( iTotalPlayers == 1 && !is_user_alive( victimId ) ) )
-    {
-        new victimOrigin[3], teamOrigin[3];
-        get_user_origin( victimId, victimOrigin );
-
-        new iPlayerNum;
-        new iGlaiveTargets[33], iTotalTargets;
-
-        while ( iPlayerNum < iTotalPlayers )
-        {
-            new teamId = iTeamPlayers[iPlayerNum];
-            get_user_origin( teamId, teamOrigin );
-
-            if ( victimId != teamId && get_distance( victimOrigin, teamOrigin ) / 40 <= MOONGLAIVE_RANGE && ent_in_view( victimId, teamId ) && !g_bPlayerSleeping[teamId] && !g_bPlayerInvis[teamId] && !g_bPlayerWalk[teamId] )
-            {
-                // Build potential target array ( so we're not hitting the same person each time )
-
-                iGlaiveTargets[iTotalTargets] = teamId;
-                iTotalTargets++;
-            }
-
-            iPlayerNum++;
-        }
-
-        // Hit random target in-range ( if any )
-
-        if ( iTotalTargets > 0 )
-        {
-            new targetId = iGlaiveTargets[random_num( 0,iTotalTargets - 1 )];
-
-            // Create Glaive
-
-            new Float:fVictimOrigin[3];
-            entity_get_vector( victimId, EV_VEC_origin, fVictimOrigin );
-
-            new iGlaiveEnt = Create_TempEnt( "MOON_GLAIVE", "models/hornet.mdl", fVictimOrigin, MOVETYPE_FLY, SOLID_TRIGGER, MOONGLAIVE_DURATION );
-
-            // Set Glaive Properties
-
-            entity_set_edict( iGlaiveEnt, EV_ENT_owner, attackerId );
-            entity_set_edict( iGlaiveEnt, EV_ENT_enemy, victimId );
-
-            // Project Glaive towards target ( handled in vexd_pfntouch )
-
-            new Float:fTargetOrigin[3];
-            entity_get_vector( targetId, EV_VEC_origin, fTargetOrigin );
-
-            new Float:fTime = get_ent_traveltime( fVictimOrigin, fTargetOrigin, MOONGLAIVE_SPEED );
-
-            new Float:fNewTargetOrigin[3];
-            predict_ent_origin( targetId, fTime, fNewTargetOrigin );
-
-            set_velocity_to_origin( iGlaiveEnt, fNewTargetOrigin, MOONGLAIVE_SPEED );
-
-            // Create Glaive Trail
-
-            Create_TE_BEAMFOLLOW( SHOWTO_ALL_BROADCAST, iGlaiveEnt, SPR_BEAMFOLLOW, 15, 3, random_num( 127,255 ), 0, random_num( 127,255 ), 255 );
-
-            // Set Damage Ammount
-
-            new Float:fGlaiveDamage = float( iDamage ) * MOONGLAIVE_DAMAGE;
-            entity_set_float( iGlaiveEnt, EV_FL_dmg, fGlaiveDamage );
-        }
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-// Moon Glaive ( damages ) ( called from vexd_pfntouch )
-
-public SMoonGlaive_Damage( attackerId, targetId, iDamage ) {
-#if ADVANCED_DEBUG
-	log_function("public SMoonGlaive_Damage( attackerId, targetId, iDamage ) {");
-#endif
-
-    // Play Sound
-
-    // .. we'll add one sometime...
-
-    // Hud Message
-
-    new szMessage[128];
-    format( szMessage, 127, DAMAGE_MOONGLAIVE, iDamage );
-
-    WAR3_status_text( targetId, szMessage, 3.0 );
-
-    // Add to player stats array
-
-    if ( get_cvar_num( "mp_war3stats" ) )
-    {
-        playerSkill2Info[attackerId][0] += iDamage;
-    }
-
-    // Blood Sprites
-
-    new Origin[3];
-    get_user_origin( targetId, Origin );
-
-    for ( new i = 0; i < 3; i++ )
-    {
-        Origin[0] += random_num( -50,50 );
-        Origin[1] += random_num( -50,50 );
-        Origin[2] += random_num( -10,10 );
-
-        Create_TE_BLOODSPRITE( SHOWTO_ALL_BROADCAST, Origin, SPR_BLOODSPRAY, SPR_BLOODDROP, 248, 15 );
-    }
-
-    // Blood decals
-
-    for ( new i = 0; i < 3; i++ )
-    {
-        static const blood_small[7] = {190,191,192,193,194,195,197};
-
-        get_user_origin( targetId, Origin );
-
-        Origin[0] += random_num( -100,100 );
-        Origin[1] += random_num( -100,100 );
-        Origin[2] -= 36;
-
-        Create_TE_WORLDDECAL( SHOWTO_ALL_BROADCAST, Origin, blood_small[random_num(0,6)] );
-    }
-
-    // Apply Damage
-
-    WAR3_damage( attackerId, targetId, CSW_MOONGLAIVE, iDamage, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
-
-    if ( is_user_alive( targetId ) )
-    {
-        // Screen Fade
-
-        new iFadeAlpha = iDamage * 2;
-
-        if ( iFadeAlpha > GLOW_MAX )
-            iFadeAlpha = GLOW_MAX;
-
-        Create_ScreenFade( targetId, (1<<10), (1<<10), FADE_OUT, 255, 0, 255, iFadeAlpha );
-
-        // Set Velocity
-
-        new Velocity[3];
-        get_entity_velocity( targetId, Velocity );
-
-        Velocity[0] = 0;
-        Velocity[1] = 0;
-
-        set_entity_velocity( targetId, Velocity );
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
-public SMoonGlaive_Destroy( iGlaiveId ) {
-#if ADVANCED_DEBUG
-	log_function("public SMoonGlaive_Destroy( iGlaiveId ) {");
-#endif
-
-    new TaskId = TASK_TEMPENTITY + iGlaiveId;
-    remove_task( TaskId, 0 );
-
-    remove_entity( iGlaiveId );
-
-    return PLUGIN_HANDLED;
-}
-
-public SMoonGlaive_Touch( iToucherId, iPlayerId )
-{
-#if ADVANCED_DEBUG
-	log_function("public SMoonGlaive_Touch( iToucherId, iPlayerId )");
-#endif
-
-	// Sanity checks
-    if ( iPlayerId < 1 || iPlayerId > 32 || iToucherId < 1 || !is_user_alive( iPlayerId ) )
-        return PLUGIN_CONTINUE;
-
-	new iAttackerId    = entity_get_edict( iToucherId, EV_ENT_owner );
-	new iFirstVictimId = entity_get_edict( iToucherId, EV_ENT_enemy );
-
-	// Don't Hit First Victim / Teammates
-
-	if ( iFirstVictimId != iPlayerId && get_user_team( iAttackerId ) != get_user_team( iToucherId ) )
-	{
-		new Float:fDamage = entity_get_float( iToucherId, EV_FL_dmg );
-		new iDamage = floatround( fDamage );
-
-		SMoonGlaive_Damage( iAttackerId, iPlayerId, iDamage );
-
-		SMoonGlaive_Destroy( iToucherId );
-	}
-
-	return PLUGIN_CONTINUE;
-}
 
 // Trueshot Aura
 
@@ -508,7 +457,7 @@ public SEvasion( attackerId, victimId, weaponId, iDamage, headshot ) {
 	log_function("public SEvasion( attackerId, victimId, weaponId, iDamage, headshot ) {");
 #endif
 
-    // Player dies to grenade / fall with evade
+    // Player dies to Teammates / fall with evade
 
     if ( get_user_health( victimId ) <= 1024 && get_user_team( attackerId ) == get_user_team( victimId ) )
         WAR3_death( attackerId, victimId, weaponId, headshot );
@@ -517,6 +466,16 @@ public SEvasion( attackerId, victimId, weaponId, iDamage, headshot ) {
 
     else if ( get_user_health( victimId ) <= 1024 && g_bPlayerWalk[attackerId] )
         WAR3_death( attackerId, victimId, weaponId, headshot );
+
+    // Player takes grenade / knife damage ( not evadeable )
+
+    else if ( weaponId == CSW_KNIFE || weaponId == CSW_HEGRENADE )
+    {
+        if ( get_user_health( victimId ) <= 1024 )
+            WAR3_death( attackerId, victimId, weaponId, headshot );
+    }
+
+    // Evadeable damage
 
     else if ( get_user_health( victimId ) > 0 && get_user_team( victimId ) != get_user_team( attackerId ) )
     {

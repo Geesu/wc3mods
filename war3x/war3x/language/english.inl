@@ -105,9 +105,9 @@ new const RACE3SKILL[_TS + _TU][] =         // ORC SKILLS:
 
 new const RACE4SKILL[_TS + _TU][] =         // NIGHT ELF SKILLS:
 {
-    "Nature's Blessing",                    // Racial: Nature's Blessing
+    "Elune's Grace",                        // Racial: Elune's Grace
     "Evasion",                              // Evasion
-    "Moon Glaive",                          // Moon Glaive
+    "Nature's Blessing",                    // Nature's Blessing
     "Trueshot Aura",                        // Trueshot Aura
     "Rejuvination",                         // Ultimate: Rejuvination
     "Entangling Roots",                     // Ultimate: Entangling Roots
@@ -189,11 +189,11 @@ new const RACE3SKILL_DESC[_TS + _TU][] =    // ORC SKILLS:
     /* Wind Walk            */  "Player becomes <%s> invisible and moves <%s> faster for <%s> seconds. A knife attack while Wind Walking will yield an additional <%s> damage. Switching weapons will end the Wind Walk."
 };
 
-new const RACE4SKILL_DESC[_TS + _TU][] =    // NIGHT ELF SKILLS:
+new const RACE4SKILL_DESC[_TS + _TU][] =    // NIGHT ELF SKILLS: ( CLEANUP )
 {
-    /* Nature's Blessing    */  "Increases the player's maximum armor by <%s> and movement speed with various weapons by up to <%s> when armor is present. Movement speed of all weapons will not exceed knife speed",
+    /* Elune's Grace        */  "Increases the player's maximum armor by <%s> and movement speed with various weapons by up to <%s> when armor is present. Movement speed of all weapons will not exceed knife speed",
     /* Evasion              */  "Gives a <%s> chance the player will avoid an attack completely.",
-    /* Moon Glaive          */  "Gives the player a <%s> chance to strike an additional enemy player for <%s> of the initial damage within <%s> meters of the original target.",
+    /* Nature's Blessing    */  "Gives the player a <%s> chance to strike an additional enemy player for <%s> of the initial damage within <%s> meters of the original target.",
     /* Trueshot Aura        */  "Gives the player a <%s> damage bonus to his fired-weapon attacks.",
     /* Rejuvination         */  "Heals a target friendly player <%s> health over <%s> seconds.",
     /* Entangling Roots     */  "Causes roots to burst from the ground, immobilizing a target enemy unit for <%s> seconds, and dealing <%s> damage over time.",
@@ -333,9 +333,9 @@ new const FINISH_SLEEP[]                = "You no longer feel sleepy.";
 new const FINISH_WINDWALK[]             = "Your walk has ended.";
 new const FINISH_AVATAR[]               = "Your strength diminishes.";
 
-new const DAMAGE_MOONGLAIVE[]           = "A Moon Glaive hits you for %d damage.";
+new const DAMAGE_FROSTNOVA[]            = "%t's Frost Nova hits you for %d damage.";
 new const DAMAGE_PULVERIZE[]            = "You have been Pulverized for %d damage.";
-new const DAMAGE_ANTIMAGICSHELL[]       = "Your shell has absorbed %d damage.";
+new const DAMAGE_ELUNE[]                = "Elune's Grace has absorbed %d damage.";
 new const DAMAGE_EVASION[]              = "You successfully avoided %d damage.";
 
 new const REJUVINATE_SELF[]             = "You cast Rejuvinate on yourself.";
