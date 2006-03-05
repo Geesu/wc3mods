@@ -381,11 +381,11 @@ public _Ultimate_Telemenu(parm[2]){
 		get_user_origin(targetid,targetorigin)
 		distancebetween = get_distance(origin,targetorigin)
 		if (is_user_alive(targetid)){
-			format(temp,63,"^n\w%d. %s (\y%dm\w)",i+1,name,distancebetween/40)
+			format(temp,63,"\zzn\w%d. %s (\y%dm\w)",i+1,name,distancebetween/40)
 			keys |= (1<<i)
 		}
 		else
-			format(temp,63,"^n\d%d. %s",i+1,name)
+			format(temp,63,"\n\d%d. %s",i+1,name)
 		add(menu_body,255,temp)
 	}
 	format(temp,63,"%L",id,"CANCEL_TELEMENU")

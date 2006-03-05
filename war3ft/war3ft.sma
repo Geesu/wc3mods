@@ -28,6 +28,8 @@
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu==(Pimp Daddy==OoTOAoO)"
 new const WC3VERSION[] =	"2.3.2"
+new const WC3DATE[] =		__DATE__
+
 
 #include <amxmodx>
 #include <amxmisc>
@@ -107,6 +109,7 @@ public plugin_init()
 	new WC3AMXCVAR[32]
 	format(WC3AMXCVAR,31,"%s %s", WC3NAME,WC3VERSION)
 	register_cvar("amx_war3_version", WC3AMXCVAR,FCVAR_SERVER)
+	register_cvar("amx_war3_date", WC3DATE, FCVAR_SERVER);
 
 	register_clcmd("war3menu","menu_War3menu",-1,"- Show Warcraft 3 Frozen Throne Player menu")
 	register_clcmd("changerace","change_race",-1,"changerace")

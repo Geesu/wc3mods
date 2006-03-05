@@ -713,7 +713,7 @@ new const Float:p_blink[3] =			{0.333,0.666,1.0}		// Blink					(skill 2)
 new const Float:p_shadow[3] =			{0.15,0.30,0.45}		// Shadow Strike			(skill 3)
 new const Float:p_harden[11] =			{0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50}	// Hardened Skin		(Skill 4)
 
-new const Float:p_impale[3] =			{0.03,0.06,0.09}			// Impale					(skill 1)
+new const Float:p_impale[3] =			{0.03,0.06,0.09}		// Impale					(skill 1)
 new const Float:p_spiked[3] =			{0.05,0.1,0.15}			// Spiked Carapace			(skill 2)
 new const Float:p_carrion[3] =			{0.15,0.25,0.45}		// Carrion Beetle			(skill 3)
 new const Float:p_orb[11] =				{0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.15}	// Orb of Annihilation	(Skill 4)
@@ -732,4 +732,6 @@ new const itemcost[9] =					{1500,2500,1000,800,2000,800,2000,1000,4000}
 	new const itemcost2[9] =				{800,1500,550,1500,1500,1750,1000,9000,16000}
 #endif
 
-new MOTD_header[] = "<html><head><style type=^"text/css^">#title{font-family:^"Verdana, Arial, Helvetica, sans-serif^";color:#00FF00;text-align:center;font-weight:bold;}#s{text-indent:35px;width:650px;}ul{margin-top:0px;margin-bottom:10px;}</style></head><body bgcolor=#000000 text=#FFB000>"
+//new MOTD_header[] = "<html><head><style type=^"text/css^">#title{font-family:^"Verdana, Arial, Helvetica, sans-serif^";color:#00FF00;text-align:center;font-weight:bold;}#s{text-indent:35px;width:650px;}ul{margin-top:0px;margin-bottom:10px;}</style></head><body bgcolor=#000000 text=#FFB000>"
+
+new MOTD_header[] = "<html><head><LINK REL=^"StyleSheet^" HREF=^"war3ft.css^" TYPE=^"text/css^"></head><body><pre>";

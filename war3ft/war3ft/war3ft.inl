@@ -6,6 +6,8 @@ public WAR3_precache() {
 	#if ADVANCED_DEBUG
 		writeDebugInfo("WAR3_precache",0)
 	#endif
+	
+	precache_generic( "wc3.css" );
 
     #if PRECACHE_WAR3FTSOUNDS
 		copy( SOUND_VENGEANCE, 63,			"warcraft3/MiniSpiritPissed1.wav"				)  // Warden's Ultimate

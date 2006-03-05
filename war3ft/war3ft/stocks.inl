@@ -252,15 +252,3 @@ stock get_user_money(id){
 		return p_data[id][P_MONEY]
 	#endif
 }
-
-// Thanks to jtp10181 for this!
-stock replace_all( string[], len, what[], with[] )
-{
-    new withlen,charnum = 0;
-    withlen = strlen(with);
-
-    while ( replace( string[charnum], len, what, with ) != 0 )
-	{
-        charnum += contain( string[charnum], with ) + withlen;
-    }
-}
