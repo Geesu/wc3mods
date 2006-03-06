@@ -30,7 +30,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu==(Pimp Daddy==OoTOAoO)"
-new const WC3VERSION[] =	"2.3.2"
+new const WC3VERSION[] =		"2.3.2"
 new const WC3DATE[] =		__DATE__
 
 
@@ -48,7 +48,7 @@ new const WC3DATE[] =		__DATE__
 
 // Debugging Options
 #define DEBUG 0 						// Only use this when coding.. you normally don't want it
-#define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
+#define ADVANCED_DEBUG 1				// Prints debug information to a log file when every function is called, VERY LAGGY
 #define ADVANCED_DEBUG_BOTS 1			// Print info for bots too?
 
 #if MOD == 0
@@ -140,6 +140,7 @@ public plugin_init()
 	register_concmd("amx_givexp","Admin_GiveXP",-1,"amx_givexp")
 	register_concmd("amx_savexp","Admin_SaveXP",-1,"amx_savexp")
 	register_concmd("amx_givemole","Admin_GiveMole",-1,"amx_givemole")
+	
 	
 	// Server Admin Commands (used by external plugins)
 	register_srvcmd("amx_takexp","Admin_TakeXP")
@@ -433,7 +434,6 @@ public client_connect(id){
 	return PLUGIN_CONTINUE;
 }
 
-
 public client_disconnect(id){
 	#if ADVANCED_DEBUG
 		writeDebugInfo("client_disconnect",id)
@@ -613,3 +613,6 @@ public native_filter(const name[], index, trap)
 
       return PLUGIN_CONTINUE;
 }
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ deff0{\\ fonttbl{\\ f0\\ fnil Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang1033\\ f0\\ fs16 \n\\ par }
+*/
