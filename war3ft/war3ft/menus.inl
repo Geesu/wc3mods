@@ -843,11 +843,10 @@ public menu_Admin_Options(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if (!(get_user_flags(id)&ADMIN_LEVEL_WC3)) { 
-		if(id != 0){
+    if ( id && !( get_user_flags( id ) & XP_get_admin_flag() ) )
+	{
 			client_print(id,print_center,"%s %L",g_MODclient, id,"YOU_HAVE_NO_ACCESS")
 			return PLUGIN_HANDLED
-		}
 	}
 
 	new pos = 0, i, menu_body[512], menuitems[3][32]

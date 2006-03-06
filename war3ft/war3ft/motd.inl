@@ -22,27 +22,27 @@ public MOTD_Itemsinfo(id){
 
 	// Add header
 
-	pos += format(message[pos], 2048-pos, "%s", MOTD_header)
+	pos += formatex(message[pos], 2048-pos, "%s", MOTD_header)
 
-	// Add Item Information
+	// Add Item Informatexion
 
 	#if MOD == 0
-		pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[0],id,"SHOPMENU_1")
-		pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[1],id,"SHOPMENU_2")
+		pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[0],id,"SHOPMENU_1")
+		pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[1],id,"SHOPMENU_2")
 	#endif
 	#if MOD == 1
-		pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[0],id,"DOD_SHOPMENU_1")
-		pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[1],id,"DOD_SHOPMENU_2")
+		pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[0],id,"DOD_SHOPMENU_1")
+		pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[1],id,"DOD_SHOPMENU_2")
 	#endif
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[2],id,"SHOPMENU_3",iCvar[FT_CLAW],iCvar[FT_CLAW])
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[3],id,"SHOPMENU_4")
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[4],id,"SHOPMENU_5")
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[5],id,"SHOPMENU_6")
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[6],id,"SHOPMENU_7")
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[7],id,"SHOPMENU_8")
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name[8],id,"SHOPMENU_9")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[2],id,"SHOPMENU_3",iCvar[FT_CLAW],iCvar[FT_CLAW])
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[3],id,"SHOPMENU_4")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[4],id,"SHOPMENU_5")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[5],id,"SHOPMENU_6")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[6],id,"SHOPMENU_7")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[7],id,"SHOPMENU_8")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[8],id,"SHOPMENU_9")
 
-	format(title, 127, "%L",id,"SHOPMENU_TITLE")
+	formatex(title, 127, "%L",id,"SHOPMENU_TITLE")
 	show_motd(id,message,title)
 
 	return PLUGIN_HANDLED
@@ -75,21 +75,21 @@ public MOTD_Itemsinfo2(id){
 
 	// Add header
 
-	pos += format(message[pos], 2048-pos, "%s", MOTD_header)
+	pos += formatex(message[pos], 2048-pos, "%s", MOTD_header)
 
-	// Add Item Information
+	// Add Item Informatexion
 
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[0],id,"SHOPMENU2_1")
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[1],id,"SHOPMENU2_2")
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[2],id,"SHOPMENU2_3")
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[3],id,"SHOPMENU2_4")
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[4],id,"SHOPMENU2_5")
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[5],id,"SHOPMENU2_6",iCvar[FT_GLOVE_TIMER])
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[6],id,"SHOPMENU2_7")
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[7],id,"SHOPMENU2_8")
-	pos += format(message[pos], 2048-pos, "<font color='#F4D285'><li>%s</li></font><div id='s'>%L</div><br>",item_name2[8],id,"SHOPMENU2_9")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[0],id,"SHOPMENU2_1")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[1],id,"SHOPMENU2_2")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[2],id,"SHOPMENU2_3")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[3],id,"SHOPMENU2_4")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[4],id,"SHOPMENU2_5")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[5],id,"SHOPMENU2_6",iCvar[FT_GLOVE_TIMER])
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[6],id,"SHOPMENU2_7")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[7],id,"SHOPMENU2_8")
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[8],id,"SHOPMENU2_9")
 
-	format(title, 127, "%L",id,"SHOPMENU2_TITLE")
+	formatex(title, 127, "%L",id,"SHOPMENU2_TITLE")
 	show_motd(id,message,title)
 
 	return PLUGIN_HANDLED
@@ -122,13 +122,16 @@ public MOTD_War3help(id){
 	else if (is_running("dod"))
 		szGame = "dod"
 
-	format(title,127,"%L",id,"WAR3HELP_TITLE")
+	formatex(title,127,"%L",id,"WAR3HELP_TITLE")
 
-	pos += format(message[pos], 2048-pos, "<body bgcolor=#000000><font color=#FFB000>")
-	pos += format(message[pos], 2048-pos, "%L<br>",id,"THIS_MOD_WAS_DEVELOPED")
-	pos += format(message[pos], 2048-pos, "%L<br>",id,"CLICK_HERE_FOR_LATEST")	
-	pos += format(message[pos], 2048-pos, "%L<p>",id,"CLICK_HERE", szGame)
-	pos += format(message[pos], 2048-pos, "%L",id,"WAR3HELP")
+	// Add header
+
+	pos += formatex(message[pos], 2048-pos, "%s", MOTD_header)
+
+	pos += formatex(message[pos], 2048-pos, "%L<br>",id,"THIS_MOD_WAS_DEVELOPED")
+	pos += formatex(message[pos], 2048-pos, "%L<br>",id,"CLICK_HERE_FOR_LATEST")	
+	pos += formatex(message[pos], 2048-pos, "%L<p>",id,"CLICK_HERE", szGame)
+	pos += formatex(message[pos], 2048-pos, "%L",id,"WAR3HELP")
 
 	show_motd(id,message,title)
 
@@ -167,14 +170,14 @@ public MOTD_Playerskills(id, saychat){
 	}
 
 	if(saychat)
-		pos += format(message[pos],2047-pos, "<body bgcolor=#000000><font color=#FFB000>")
+		pos += formatex(message[pos], 2048-pos, "%s", MOTD_header)
 
 	for(k=1;k<(iCvar[FT_RACES]+1);k++){
 
 		if(iTotalRace[k] > 0){
 			
 			if ( saychat ) {
-				pos += format(message[pos],2047-pos, "<font color=#00FF00><b>%s</b></font><ul>",race_name[k])
+				pos += formatex(message[pos],2047-pos, "<b>%s</b><ul>",race_name[k])
 			}
 			else{
 				console_print(id, "**** %s ****", race_name[k])
@@ -193,37 +196,37 @@ public MOTD_Playerskills(id, saychat){
 							//replace(name, 127, ">", "|")
 						#if MOD == 0
 							if(get_user_team(playerid) == CTS)
-								pos += format(message[pos],2047-pos,"<li><font color='#99CCFF'>(%d) %s",p_data[playerid][P_LEVEL],name)
+								pos += formatex(message[pos],2047-pos,"<li><font color='#99CCFF'>(%d)</font> %s",p_data[playerid][P_LEVEL],name)
 							else if (get_user_team(playerid) == TS)
-								pos += format(message[pos],2047-pos,"<li><font color='#FF3F3F'>(%d) %s",p_data[playerid][P_LEVEL],name)
+								pos += formatex(message[pos],2047-pos,"<li><font color='#FF3F3F'>(%d)</font> %s",p_data[playerid][P_LEVEL],name)
 						#endif
 						#if MOD == 1
 							if(get_user_team(playerid) == ALLIES)
-								pos += format(message[pos],2047-pos,"<li><font color='#4A654A'>(%d) %s",p_data[playerid][P_LEVEL],name)
+								pos += formatex(message[pos],2047-pos,"<li><font color='#4A654A'>(%d)</font> %s",p_data[playerid][P_LEVEL],name)
 							else if(get_user_team(playerid) == AXIS)
-								pos += format(message[pos],2047-pos,"<li><font color='#FF3C42'>(%d) %s",p_data[playerid][P_LEVEL],name)
+								pos += formatex(message[pos],2047-pos,"<li><font color='#FF3C42'>(%d)</font> %s",p_data[playerid][P_LEVEL],name)
 						#endif
 							else
-								pos += format(message[pos],2047-pos,"<li><font color='#FFFFFF'>(%d) %s",p_data[playerid][P_LEVEL],name)
+								pos += formatex(message[pos],2047-pos,"<li><font color='#FFFFFF'>(%d)</font> %s",p_data[playerid][P_LEVEL],name)
 						}
 						else{
 							console_print(id, "%-2s(%d) %s","",p_data[playerid][P_LEVEL],name)
 						}
 						
 						if( saychat ) {
-							pos += format(message[pos],2047-pos,"</font></li>")
+							pos += formatex(message[pos],2047-pos,"</li>")
 						}
 					}
 				}
 			}
 			if (saychat)
-				pos += format(message[pos],2047-pos,"</ul>")
+				pos += formatex(message[pos],2047-pos,"</ul>")
 		}
 	}
 
 	if( saychat ) {
 		new motdmessage[128]
-		format(motdmessage, 127, "%L",id,"PLAYER_SKILLS")
+		formatex(motdmessage, 127, "%L",id,"PLAYER_SKILLS")
 		show_motd(id,message,motdmessage)
 	}
 	
@@ -261,10 +264,10 @@ public MOTD_Skillsinfo(id){
 
 		racename(p_data[id][P_RACE],id,race_name,RACE_NAME_LENGTH_F)
 
-		// Format the Title
+		// formatex the Title
 
-		pos += format(message[pos],2048-pos, "%s", MOTD_header)
-		pos += format(message[pos],2048-pos,"<div id=^"title^">%s</div><br><br>",race_name)
+		pos += formatex(message[pos],2048-pos, "%s", MOTD_header)
+		pos += formatex(message[pos],2048-pos,"<div id=^"title^">%s</div><br><br>",race_name)
 
 		for(i=0;i<4;i++){
 
@@ -284,35 +287,35 @@ public MOTD_Skillsinfo(id){
 			// Add each skill
 			if(0 <= i < 3){
 				if( i == 0 )
-					pos += format(message[pos],2048-pos,"<font color=^"FFEEFF^" size=+1>%L</font><br><br>", id, "WORD_TRAINABLE_SKILLS")
+					pos += formatex(message[pos],2048-pos,"<font color=^"FFEEFF^" size=+1>%L<br><br>", id, "WORD_TRAINABLE_SKILLS")
 
-				pos += format(message[pos],2048-pos,"<font color=^"#F4D285^"><li>%s</li></font><ul>%s</ul><br>", race_skill[i], skill_description[i])
+				pos += formatex(message[pos],2048-pos,"<font color=^"#F4D285^"><li>%s</li><ul>%s</ul><br>", race_skill[i], skill_description[i])
 
 			}
 
 			// Add the ultimate
 			else if( i == 3 ){
-				pos += format(message[pos],2048-pos,"<font color=^"FFEEFF^" size=+1>%L</font><br><br>",id, "WORD_ULTIMATE")
-				pos += format(message[pos],2048-pos,"<font color='#F4D285'><li>%s</li></font><ul>%s</ul>", race_skill[i], skill_description[i])
+				pos += formatex(message[pos],2048-pos,"<font color=^"FFEEFF^" size=+1>%L<br><br>",id, "WORD_ULTIMATE")
+				pos += formatex(message[pos],2048-pos,"<li>%s</li><ul>%s</ul>", race_skill[i], skill_description[i])
 
 			}
 
 			// Add the hero's passive ability
 			else if(4 < p_data[id][P_RACE] < 9 && i == 4){
-				pos += format(message[pos],2048-pos,"<br><font color=^"FFEEFF^" size=+1>%L</font><br><br>", id, "WORD_HERO_ABILITY")
+				pos += formatex(message[pos],2048-pos,"<br><font color=^"FFEEFF^" size=+1>%L<br><br>", id, "WORD_HERO_ABILITY")
 
 				new heroskillinfo[128]
 				new heroskillname[64]
 				Lang_Hero_Skill_Name(p_data[id][P_RACE], SKILL_HERO, id, heroskillname, 63)
 				Lang_Hero_Skill_Info(p_data[id][P_RACE], SKILL_HERO, id, heroskillinfo, 127)
-				pos += format(message[pos],2048-pos,"<font color='#F4D285'><li>%s</li></font><ul>%s</ul><br>", heroskillname, heroskillinfo)
+				pos += formatex(message[pos],2048-pos,"<li>%s</li><ul>%s</ul><br>", heroskillname, heroskillinfo)
 			}
 		}
 
-		pos += format(message[pos],1024-pos,"%L",id,"CLICK_HERE", szGame)
+		pos += formatex(message[pos],1024-pos,"%L",id,"CLICK_HERE", szGame)
 
 		new race_info[128]
-		format(race_info,127,"%s %L",race_name, id,"WORD_INFORMATION")
+		formatex(race_info,127,"%s %L",race_name, id,"WORD_INformatexION")
 		show_motd(id,message,race_info)
 
 	}

@@ -1105,6 +1105,16 @@ public WAR3_Set_Variables(){
 
 	new divisor
 
+	// SQL Check, must be based on if the DBI module is loaded or not
+	if ( g_DBILoaded )
+	{
+		iCvar[SV_SQL					] = get_cvar_num("sv_sql")
+	}
+	else
+	{
+		iCvar[SV_SQL					] = 0
+	}
+
 	iCvar[FT_RACE_ICONS				] =	get_cvar_num("FT_race_icons")
 	iCvar[FT_LEVEL_ICONS			] =	get_cvar_num("FT_level_icons")
 	iCvar[FT_SPEC_INFO				] =	get_cvar_num("FT_spec_info")
@@ -1127,7 +1137,6 @@ public WAR3_Set_Variables(){
 	iCvar[FT_CD						] = get_cvar_num("FT_CD")
 	iCvar[FT_WARN_SUICIDE			] = get_cvar_num("FT_warn_suicide")
 	iCvar[FT_BLINKENABLED			] = get_cvar_num("FT_blinkenabled")
-	iCvar[SV_SQL					] = get_cvar_num("sv_sql")
 	iCvar[SV_SAVE_END_ROUND			] = get_cvar_num("sv_save_end_round")
 	iCvar[FT_SAVEBY					] = get_cvar_num("FT_saveby")
 	iCvar[FT_AUTO_PRUNING			] = get_cvar_num("FT_auto_pruning")

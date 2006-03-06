@@ -27,6 +27,10 @@ ul
 	margin-bottom:10px;
 }
 
+b
+{
+	color:#00FF00;
+}
 /* Below is from war3x */
 
 h3
@@ -39,4 +43,5 @@ h3
 li
 {
 	margin-bottom: 1px;
+	color: #F4D285;
 }

@@ -25,6 +25,9 @@
 *  Lazarus Long for adding ALL of the sql-lite code and fine-tuning the existing MySQL code... It's so much pertier
 */
 
+// Sick of gay tab errors, DAMN YOU EDITPLUS!!!!
+#pragma tabsize 0
+
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu==(Pimp Daddy==OoTOAoO)"
 new const WC3VERSION[] =	"2.3.2"
@@ -40,7 +43,6 @@ new const WC3DATE[] =		__DATE__
 
 // Compiling Options
 #define MOD 0							// 0 = cstrike or czero, 1 = dod
-#define ADMIN_LEVEL_WC3 ADMIN_LEVEL_A	// set the admin level required for giving xp and accessing the admin menu (see amxconst.inc)
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define PRECACHE_WAR3FTSOUNDS 1
 
@@ -212,6 +214,7 @@ public plugin_init()
 	}
 
 	// For an explanation of these variables, please see war3ft.cfg
+	register_cvar("FT_admin_flag",				"m")
 	register_cvar("FT_query_client",			"1")
 	register_cvar("FT_impale_intensity",		"10")
 	register_cvar("FT_autoxp",					"0")
@@ -306,21 +309,10 @@ public plugin_init()
 		register_concmd("check_evasion", "Skill_Evasion_Check_C");
 		register_concmd("evasion", "Skill_Evasion_Set");
 		register_concmd("prune", "XP_Prune");
+		register_concmd("died", "died");
+
 	#endif
 
-	register_concmd("died", "died");
-}
-
-public died(id)
-{
-	if ( p_data_b[id][PB_DIEDLASTROUND] )
-	{
-		client_print(id, print_chat, "Died last round");
-	}
-	else
-	{
-		client_print(id, print_chat, "Not Died last round");
-	}
 }
 
 public plugin_end()
@@ -355,6 +347,21 @@ public client_putinserver(id){
 		writeDebugInfo("client_putinserver",id)
 	#endif
 
+	// Check for steam ID pending
+	new szPlayerID[32];
+	get_user_authid( id, szPlayerID, 31 );
+	
+	// Then the player doesn't have a steam id, lets make them reconnect
+	if ( equal(szPlayerID, "STEAM_ID_PENDING") )
+	{
+		client_cmd(id, "reconnect");
+	}
+	// Update all XP records to the current timestamp
+	else
+	{
+		XP_Prune_Player(id);
+	}
+
 	p_data_b[id][PB_ISCONNECTED] = true
 
 	#if MOD == 1
@@ -371,25 +378,6 @@ public client_putinserver(id){
 		}
 	#endif
 }
-
-public client_authorized(id)
-{
-	// Check for steam ID pending
-	new szPlayerID[32];
-	get_user_authid( id, szPlayerID, 31 );
-	
-	// Then the player doesn't have a steam id, lets make them reconnect
-	if ( equal(szPlayerID, "STEAM_ID_PENDING") )
-	{
-		client_cmd(id, "reconnect");
-	}
-	// Update all XP records to the current timestamp
-	else
-	{
-		XP_Prune_Player(id);
-	}
-}
-
 
 public client_connect(id){
 	#if ADVANCED_DEBUG
@@ -603,14 +591,14 @@ public plugin_natives()
 public module_filter(const module[])
 {
 	#if ADVANCED_DEBUG
-		writeDebugInfo("module_filter",0)
+		writeDebugInfo("module_filter", 0)
 	#endif
 
 	// Then we obviously don't want to save XP via mysql or SQLite now do we?  Lets default to vault and print an error message
 	if ( equali( module, "dbi" ) )
 	{
-		log_amx("No DBI module found, defaulting to vault");
-		set_cvar_num("war3x_save_xp_sql", 0);
+		g_DBILoaded = false;
+		log_amx("[ERROR] No DBI module found, defaulting to vault");
 
 		return PLUGIN_HANDLED;
 	}

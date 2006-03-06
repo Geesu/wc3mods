@@ -1,3 +1,15 @@
+public died(id)
+{
+	if ( p_data_b[id][PB_DIEDLASTROUND] )
+	{
+		client_print(id, print_chat, "Died last round");
+	}
+	else
+	{
+		client_print(id, print_chat, "Not Died last round");
+	}
+}
+
 public testage(id)
 {
 }

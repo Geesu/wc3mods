@@ -993,3 +993,16 @@ public XP_Check_Connection()
 
 	return true;
 }
+
+// Function from war3x thanks ryan!!!
+public XP_get_admin_flag()
+{
+#if ADVANCED_DEBUG
+	writeDebugInfo("XP_get_admin_flag", 0);
+#endif
+
+    new szFlags[24];
+    get_cvar_string( "FT_admin_flag", szFlags, 23 );
+
+    return ( read_flags( szFlags ) );
+}
