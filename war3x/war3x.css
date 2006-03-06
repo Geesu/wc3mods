@@ -1,0 +1,57 @@
+body
+	{
+	background: #000000;
+	margin-top: 8px;
+	margin-left: 16px;
+	}
+
+
+pre
+	{
+	font-family: Verdana, Tahoma;
+	font-size: 12px;
+	color: #FFB000;
+	word-wrap: break-word;
+	}
+
+
+h3
+	{
+	font-size: 16px;
+	color: #FFFFFF;
+	margin-bottom: 1px;
+	}
+
+
+li
+	{
+	margin-bottom: 1px;
+	}
+
+
+b
+        {
+	font-weight: bold;
+	color: #FFD222;
+	}
+
+.C
+	{
+	color : #6699FF;
+	}
+
+.T
+	{
+	color : #FF0000;
+	}
+
+.S
+	{
+	color : #888888;
+	}
+
+
+i
+        {
+	color : #FFFFFF;
+	}
