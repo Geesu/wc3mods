@@ -19,8 +19,6 @@ new Float:s_TrueshotAura[3]     = {0.15,0.30,0.45};             // (skill3) True
 #define EVASION_MAXDAMAGE           250     // (integer) maximum damage (ish) avoidable with evasion
 #define EVASION_SHOTGAP             3.0     // (  float) seconds between evades before a consecutive shot may be evaded
 
-#define ULTRAVISION_SHOWTEAM          1     // (integer) illuminate teammates as well as enemies (1=yes, 0=no)
-
 #define BLESSING_MAXSPEED         260.0     // (  float) max speed of nature's blessing
 
 new ELUNES_SHELL_RGB[3] =     {80,32,96};   // (integer) RGB of elune's grace shell ( when damage absorbed )
@@ -282,102 +280,6 @@ public SElunes_Absorb( id, iDamage, Float:ElunesAbsorb[2] ) {
 
 
 /* - Skills ----------------------------------------------------- */
-
-
-// Ultravision
-
-public SUltravision() {
-
-    new Players[32], iTotalPlayers;
-    get_players( Players, iTotalPlayers, "ac" );
-
-    for ( new iPlayerNum; iPlayerNum < iTotalPlayers; iPlayerNum++ )
-    {
-        new player = Players[iPlayerNum];
-
-        if ( g_PlayerInfo[player][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[player][CURRENT_SKILL2] )
-        {
-            new parm_Ultravision[1];
-            parm_Ultravision[0] = player;
-
-            SUltravision_Set( parm_Ultravision );
-        }
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
-public SUltravision_Set( parm_Ultravision[1] ) {
-
-    new id = parm_Ultravision[0];
-
-    if ( g_PlayerInfo[id][CURRENT_RACE] != RACE_NIGHTELF || !g_PlayerInfo[id][CURRENT_SKILL2] )
-        return PLUGIN_HANDLED;
-
-    new Players[32], iTotalPlayers;
-
-    // Build playerlist
-
-    #if ( !ULTRAVISION_SHOWTEAM )
-
-        new szTeamName[16];
-
-        if ( get_user_team( id ) == CS_TEAM_TERRORIST )
-            copy( szTeamName, 15, "CT" );               // Enemy team name
-
-        else
-        {
-            copy( szTeamName, 15, "TERRORIST" );
-        }
-
-        get_players( Players, iTotalPlayers, "ae", szTeamName );
-
-    #else
-
-        get_players( Players, iTotalPlayers, "a" );
-
-    #endif
-
-    // Create effect(s) on each player
-
-    for ( new iPlayerNum; iPlayerNum < iTotalPlayers; iPlayerNum++ )
-    {
-        new player = Players[iPlayerNum];
-
-        if ( player != id )
-            Create_TE_ELIGHT( id, player, 180, 255, 255, 255, 100, 0 );
-    }
-
-    // Repeat again in 10 secs (max life of ELIGHT effect)
-
-    new iTaskId = TASK_ULTRAVISION + id;
-    set_task( 10.0, "SUltravision_Set", iTaskId, parm_Ultravision, 1 );
-
-
-    return PLUGIN_HANDLED;
-}
-
-public SUltravision_Remove( id ) {
-
-    // Remove task
-
-    new iTaskId = TASK_ULTRAVISION + id;
-    remove_task( iTaskId, 0 );
-
-    new Players[32], iTotalPlayers;
-    get_players( Players, iTotalPlayers, "a" );
-
-    // Remove effect(s) on each player
-
-    for ( new iPlayerNum; iPlayerNum < iTotalPlayers; iPlayerNum++ )
-    {
-        new player = Players[iPlayerNum];
-        Remove_TE_ELIGHT( id, player );
-    }
-
-    return PLUGIN_HANDLED;
-}
 
 
 // Nature's Blessing ( speed )

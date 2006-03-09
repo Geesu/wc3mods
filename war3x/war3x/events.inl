@@ -706,6 +706,10 @@ public on_FreezeStart() {
 
     Purge_FreezeStart();
 
+    // Upkeep
+
+    Upkeep_Newround();
+
     // Retrieve skill restrictions
 
     get_cvar_string( "war3x_restrict_skills", g_RestrictedSkills, 63 );
@@ -891,10 +895,6 @@ public on_ResetHud( id ) {
             WAR3_enable_skills( id );
     }
 
-    // Activate Ultravision (always active)
-
-//    SUltravision();
-
     return PLUGIN_CONTINUE;
 }
 
@@ -971,6 +971,10 @@ public on_World_Action() {
                 }
             }
         }
+
+        // Upkeep
+
+        Upkeep_RoundStart();
     }
 
 
@@ -992,10 +996,6 @@ public on_World_Action() {
         {
             g_fBuyTime = get_gametime() + 6.0 + get_cvar_float( "mp_freezetime" );
         }
-
-        // Cancel Ultimate Warmup
-
-        remove_task( TASK_ULTIMATEWARMUP, 0 );
 
         new Players[32], iTotalPlayers;
         get_players( Players, iTotalPlayers );
@@ -1036,6 +1036,14 @@ public on_World_Action() {
 
         g_iCurrentRound ++;
 
+        // Cancel Ultimate Warmup
+
+        remove_task( TASK_ULTIMATEWARMUP, 0 );
+
+        // Cancel Upkeep Timer
+
+        remove_task( TASK_UPKEEP, 0 );
+
         // Set 5.0 Second Task for Freeze Start
 
         set_task( 5.0, "on_FreezeStart", TASK_NEWROUND );
@@ -1051,6 +1059,10 @@ public on_World_Action() {
         // Set 3.0 Second Task for Freeze Start
 
         set_task( 3.0, "on_FreezeStart", TASK_NEWROUND );
+
+        // Cancel Upkeep Timer
+
+        remove_task( TASK_UPKEEP, 0 );
     }
 
     // Round Restart
@@ -1075,6 +1087,10 @@ public on_World_Action() {
                 g_PlayerInfo[id] = {0,0,0,0,0,0,0,0,0,0,0,0};
             }
         }
+
+        // Cancel Upkeep Timer
+
+        remove_task( TASK_UPKEEP, 0 );
     }
 
     return PLUGIN_CONTINUE;
@@ -1456,64 +1472,6 @@ public on_WeapPickup( id ) {
     return PLUGIN_CONTINUE;
 }
 
-
-public on_Touch( entity1, entity2 ) {
-#if ADVANCED_DEBUG
-	new string[128];
-	format(string, 127, "public on_Touch( %d, %d ) { %d %d", entity1, entity2, is_valid_ent(entity1), is_valid_ent(entity2));
-	log_function(string);
-#endif
-
-    if ( !g_bWar3xEnabled || g_bMapDisabled )
-        return PLUGIN_CONTINUE;
-
-
-    // Make sure it's a player that's being touched
-
-    new iToucherId = entity1;
-    new iPlayerId  = entity2;
-
-    if ( iPlayerId < 1 || iPlayerId > 32 || iToucherId < 1 || !is_user_alive( iPlayerId ) )
-        return PLUGIN_CONTINUE;
-
-
-    new szClassName[16];
-    entity_get_string( iToucherId, EV_SZ_classname, szClassName, 15 );
-
-    if ( equali( szClassName, "DEATH_COIL" ) )
-    {
-        new iCasterId = entity_get_edict( iToucherId, EV_ENT_owner );
-        new iTargetId = entity_get_edict( iToucherId, EV_ENT_enemy );
-
-        if ( iPlayerId == iTargetId )
-        {
-            if ( get_user_team( iCasterId ) == get_user_team( iTargetId ) )
-                UCoil_Heal( iCasterId, iTargetId );
-
-            else
-            {
-                UCoil_Damage( iCasterId, iTargetId );
-            }
-
-            UCoil_Remove( iToucherId );
-        }
-    }
-
-    // Pick up item
-
-    else if ( equali( szClassName, "WAR3X_ITEM" ) && !g_PlayerInfo[iPlayerId][CURRENT_ITEM] )
-    {
-        // Make sure on ground
-
-        if ( get_entity_flags( iToucherId ) & FL_ONGROUND )
-        {
-            new iItemNum = entity_get_int( iToucherId, EV_ENT_owner );
-            Item_Pickup( iPlayerId, iToucherId, iItemNum );
-        }
-    }
-
-    return PLUGIN_CONTINUE;
-}
 
 
 public on_UseShield( id ) {

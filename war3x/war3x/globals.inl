@@ -213,11 +213,11 @@ new const GETCLASSCHECK[3] =    {0,2,5};    // (integer) levels players receive 
 #define TASK_ULTIMATE               704
 #define TASK_TARGETNAME             736
 #define TASK_NOVASLOW               768
-#define TASK_ULTRAVISION            800
 
 #define TASK_ULTIMATEWARMUP        1000
 #define TASK_NEWROUND              1001
 #define TASK_SHOWITEM              1002
+#define TASK_UPKEEP                1003
 #define TASK_TEMPENTITY            2000
 
 #define RACEINFO_RACIAL               0     // Race info reference values
@@ -384,6 +384,8 @@ new g_PlayerTarget[33];             // stores player target ID
 new g_PlayerTargetTeam[33];         // stores player target TEAM
 new g_TargetFormat[33][128];        // Stores format for target information
 
+new g_TeamUpkeep[2];                // Stores upkeep status for each team
+
 new bool:g_bPlayerConnected[33];    // Stores whether player is connected ( message-sensitive var )
 new bool:g_bGotDefuser[33];         // true when player has defuse kit
 
@@ -429,6 +431,7 @@ new Float:g_fAmuletTime[33];
 
 new bool:g_bPlayerSaveMe[33];
 new bool:g_bPlayerDispellMe[33];
+
 
 /* - Skill Variables -------------------------------------------- */
 

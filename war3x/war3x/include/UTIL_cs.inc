@@ -91,7 +91,7 @@
 #define CS_MP_PLAYERID_SHOWTEAM          1
 #define CS_MP_PLAYERID_SHOWNONE          2
 
-#define CS_MAX_MONEY                   16000
+#define CS_MAX_MONEY                 16000
 
 stock CS_TEAM_NAME[3][] =
 {

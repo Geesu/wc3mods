@@ -954,11 +954,6 @@ public WAR3_enable_skills( id ) {
 
     Invis_Set( id );
 
-    // Ultravision
-
-//    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] )
-//        SUltravision_Set( parm_Skills );
-
     // Enable Ultimate
 
     Ultimate_Enable( id );
@@ -1462,9 +1457,6 @@ public Purge_Common( id ) {
     {
         Invis_Remove( id );
     }
-
-//    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF )
-//        SUltravision_Remove( id );
 
     // Halt Icons
 
