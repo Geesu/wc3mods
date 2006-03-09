@@ -353,12 +353,40 @@ public SFrostNova( id ) {
     new Origin[3];
     get_user_origin( id, Origin );
 
+    Origin[2] -= 20;
+
     new iRingSize = s_fnRange[g_PlayerInfo[id][CURRENT_SKILL2] - 1] * 40;
 
-    new Radius[3];
-    Radius[2] = iRingSize + 40;
+    new Radius[3][3];
+    Radius[0][2] = iRingSize;
 
-    Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, Origin, Radius, SPR_SHOCKWAVE, 0, 0, 10, 20, 5, 255, 255, 255, 255, 0 );
+    // Outer Ring
+
+    Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, Origin, Radius[0], SPR_SMOOTHWAVE, 0, 0, 5, 12, 5, 255, 255, 255, 255, 0 );
+
+    // Entity Light
+
+    Create_TE_ELIGHT( SHOWTO_ALL_BROADCAST, id, random_num( 60,100 ), FROST_RGB[GLOW_R], FROST_RGB[GLOW_G], FROST_RGB[GLOW_B], 10, 5 );
+
+    // Inner Ring(s)
+
+    switch ( g_PlayerInfo[id][CURRENT_SKILL2] )
+    {
+        case 2:
+        {
+            Radius[1][2] = iRingSize / 2;
+            Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, Origin, Radius[1], SPR_SMOOTHWAVE, 0, 0, 5,  6, 5, FROST_RGB[GLOW_R], FROST_RGB[GLOW_G], FROST_RGB[GLOW_B], 255, 0 );
+        }
+
+        case 3:
+        {
+            Radius[1][2] = iRingSize / 3 * 2;
+            Radius[2][2] = iRingSize / 3;
+
+            Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, Origin, Radius[1], SPR_SMOOTHWAVE, 0, 0, 5,  6, 5, FROST_RGB[GLOW_R], FROST_RGB[GLOW_G], FROST_RGB[GLOW_B], 255, 0 );
+            Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, Origin, Radius[2], SPR_SMOOTHWAVE, 0, 0, 5,  4, 5, FROST_RGB[GLOW_R], FROST_RGB[GLOW_G], FROST_RGB[GLOW_B], 220, 0 );
+        }
+    }
 
     // Find enemies in range
 

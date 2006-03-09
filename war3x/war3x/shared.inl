@@ -956,8 +956,8 @@ public WAR3_enable_skills( id ) {
 
     // Ultravision
 
-    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] )
-        SUltravision_Set( parm_Skills );
+//    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] )
+//        SUltravision_Set( parm_Skills );
 
     // Enable Ultimate
 
@@ -1463,8 +1463,8 @@ public Purge_Common( id ) {
         Invis_Remove( id );
     }
 
-    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF )
-        SUltravision_Remove( id );
+//    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF )
+//        SUltravision_Remove( id );
 
     // Halt Icons
 

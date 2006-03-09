@@ -893,7 +893,7 @@ public on_ResetHud( id ) {
 
     // Activate Ultravision (always active)
 
-    SUltravision();
+//    SUltravision();
 
     return PLUGIN_CONTINUE;
 }
