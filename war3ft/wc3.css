@@ -1,5 +1,7 @@
 body
 {
+	font-family: Verdana, Tahoma;
+	font-size: 12px;
 	background: #000000;
 	color: #FFB000;
 	margin-top: 8px;
@@ -8,8 +10,7 @@ body
 
 #title
 {
-	font-family: Verdana, Tahoma;
-	font-size: 12px;
+	font-size: 14px;
 	color:#00FF00;
 	text-align:center;
 	font-weight:bold;
@@ -31,7 +32,6 @@ b
 {
 	color:#00FF00;
 }
-/* Below is from war3x */
 
 h3
 {
@@ -44,4 +44,34 @@ li
 {
 	margin-bottom: 1px;
 	color: #F4D285;
+}
+
+/* Terrorist color */
+#t
+{
+	color:#FF3F3F;
+}
+
+/* CT color */
+#c
+{
+	color:#99CCFF;
+}
+
+/* Ally color */
+#a
+{
+	color:#4A654A;
+}
+
+/* Axis color */
+#x
+{
+	color:#FF3C42;
+}
+
+/* Spectator color */
+#p
+{
+	color:#FFFFFF;
 }

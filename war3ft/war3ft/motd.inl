@@ -196,25 +196,21 @@ public MOTD_Playerskills(id, saychat){
 							//replace(name, 127, ">", "|")
 						#if MOD == 0
 							if(get_user_team(playerid) == CTS)
-								pos += formatex(message[pos],2047-pos,"<li><font color='#99CCFF'>(%d)</font> %s",p_data[playerid][P_LEVEL],name)
+								pos += formatex(message[pos],2047-pos,"<li id='c'>(%d) %s</li>",p_data[playerid][P_LEVEL],name)
 							else if (get_user_team(playerid) == TS)
-								pos += formatex(message[pos],2047-pos,"<li><font color='#FF3F3F'>(%d)</font> %s",p_data[playerid][P_LEVEL],name)
+								pos += formatex(message[pos],2047-pos,"<li id='t'>(%d) %s</li>",p_data[playerid][P_LEVEL],name)
 						#endif
 						#if MOD == 1
 							if(get_user_team(playerid) == ALLIES)
-								pos += formatex(message[pos],2047-pos,"<li><font color='#4A654A'>(%d)</font> %s",p_data[playerid][P_LEVEL],name)
+								pos += formatex(message[pos],2047-pos,"<li id='a'>(%d) %s</li>",p_data[playerid][P_LEVEL],name)
 							else if(get_user_team(playerid) == AXIS)
-								pos += formatex(message[pos],2047-pos,"<li><font color='#FF3C42'>(%d)</font> %s",p_data[playerid][P_LEVEL],name)
+								pos += formatex(message[pos],2047-pos,"<li id='x'>(%d) %s</li>",p_data[playerid][P_LEVEL],name)
 						#endif
 							else
-								pos += formatex(message[pos],2047-pos,"<li><font color='#FFFFFF'>(%d)</font> %s",p_data[playerid][P_LEVEL],name)
+								pos += formatex(message[pos],2047-pos,"<li id='p'>(%d) %s</li>",p_data[playerid][P_LEVEL],name)
 						}
 						else{
 							console_print(id, "%-2s(%d) %s","",p_data[playerid][P_LEVEL],name)
-						}
-						
-						if( saychat ) {
-							pos += formatex(message[pos],2047-pos,"</li>")
 						}
 					}
 				}

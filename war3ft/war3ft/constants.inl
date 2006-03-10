@@ -734,4 +734,4 @@ new const itemcost[9] =					{1500,2500,1000,800,2000,800,2000,1000,4000}
 
 //new MOTD_header[] = "<html><head><style type=^"text/css^">#title{font-family:^"Verdana, Arial, Helvetica, sans-serif^";color:#00FF00;text-align:center;font-weight:bold;}#s{text-indent:35px;width:650px;}ul{margin-top:0px;margin-bottom:10px;}</style></head><body bgcolor=#000000 text=#FFB000>"
 
-new MOTD_header[] = "<html><head><LINK REL=^"StyleSheet^" HREF=^"war3ft.css^" TYPE=^"text/css^"></head><body><pre>";
+new MOTD_header[] = "<html><head><LINK REL=^"StyleSheet^" HREF=^"wc3.css^" TYPE=^"text/css^"></head><body>";

@@ -48,7 +48,7 @@ new const WC3DATE[] =		__DATE__
 
 // Debugging Options
 #define DEBUG 0 						// Only use this when coding.. you normally don't want it
-#define ADVANCED_DEBUG 1				// Prints debug information to a log file when every function is called, VERY LAGGY
+#define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
 #define ADVANCED_DEBUG_BOTS 1			// Print info for bots too?
 
 #if MOD == 0
