@@ -64,7 +64,7 @@ Revision 1
 
 new const WAR3X_PLUGINNAME[] = "Warcraft 3: Expansion";
 new const WAR3X_VERSION[]    = "1.0 RC1";
-new const WAR3X_DATE[]       = "02/20/06";
+new const WAR3X_DATE[]       = __DATE__;
 new const WAR3X_AUTHORS[]    = "Ryan, WillyumYum, rACEmic, Geesu";
 
 
