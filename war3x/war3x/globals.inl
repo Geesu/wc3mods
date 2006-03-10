@@ -266,13 +266,16 @@ new const GETCLASSCHECK[3] =    {0,2,5};    // (integer) levels players receive 
 #define HUDMESSAGE_POS_INFO        0.20
 #define HUDMESSAGE_POS_LEVEL       0.25
 #define HUDMESSAGE_POS_CENTER      -1.0
+#define HUDMESSAGE_POS_UPKEEP      0.10
 
 #define HUDMESSAGE_CHAN_LEVEL         1     // Level information centered @ mid-top of screen
 #define HUDMESSAGE_CHAN_ITEM          2     // Race/Item Information @ bottom left of screen
 #define HUDMESSAGE_CHAN_XP            3     // XP Information @ bottom left of screen
 #define HUDMESSAGE_CHAN_INFO          3     // Misc info centered @ top of screen
-#define HUDMESSAGE_CHAN_STATUS        4     // WAR3 status text centered @ bottom of screen
-
+#define HUDMESSAGE_CHAN_STATUS        4     // WAR3 status text centered @ bottom of screen (for positive messages)
+#define HUDMESSAGE_CHAN_STATUS2       1     // WAR3 status text centered @ bottom of screen (for negative messages)
+#define HUDMESSAGE_CHAN_UPKEEP        1     // Upkeep text @ top of screen (dead/round start)
+#define HUDMESSAGE_CHAN_UPKEEP2       4     // Upkeep text @ top of screen (new round)
 #define HUDMESSAGE_CHAN_SERVER        2     // Server messages centered @ mid-bottom of screen
 #define HUDMESSAGE_CHAN_DEAD          2     // Follow message (spectator)
 
@@ -385,6 +388,7 @@ new g_PlayerTargetTeam[33];         // stores player target TEAM
 new g_TargetFormat[33][128];        // Stores format for target information
 
 new g_TeamUpkeep[2];                // Stores upkeep status for each team
+new g_TeamWins[2];                  // Stores team wins
 
 new bool:g_bPlayerConnected[33];    // Stores whether player is connected ( message-sensitive var )
 new bool:g_bGotDefuser[33];         // true when player has defuse kit
