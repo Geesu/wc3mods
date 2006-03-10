@@ -6,8 +6,8 @@
 new Float:s_Regeneration[2]     = {2.8,0.8};                    // (racial) Regeneration (regeneration rate)
 new Float:s_BerserkDmg[3]		= {0.3,0.6,1.0};				// (skill1) Berserk (bonus % damage based on health)
 new Float:s_BerserkSpeed[3]		= {280.0,300.0,320.0};			// (skill1) Max possible speed with Berserk at health 0
-new Float:s_Pulverize[3]        = {0.25,0.25,0.25};             // (skill2) Pulverize (chance to pulverize)
-new s_PulverizeDamage[3]        = {10,20,30};                   // (skill2) Pulverize (damage at max range)
+new Float:s_PulverizeRange[3]	= {4.0,5.0,6.0};				// (skill2) Pulverize (distance from detonation)
+new Float:s_PulverizeBonus[3]	= {1.0,2.0,3.0};				// (skill2) Pulverize (bonus damage)
 new Float:s_Reincarnate[3]      = {0.3,0.6,0.9};                // (skill3) Reincarnation (percent chance)
 new s_PillageMoney[3]           = {10, 20, 30};                 // (skill3) Pillage (money amount)
 new Float:s_PillageArmor[3]     = {0.05,0.10,0.15};             // (skill3) Pillage (armor decrease percentage)
@@ -22,10 +22,6 @@ new Float:s_PillageArmor[3]     = {0.05,0.10,0.15};             // (skill3) Pill
 #define BLOODLUST_KNIFEBONUS          3     // (integer) blood lust knife bonus multiplier
 
 #define PULVERIZE_ARMOR            0.25     // (  float) % armor removed on pulverize based on damage
-#define PULVERIZE_RANGE               6     // (integer) players within this range receive pulverize damage
-//#define PULVERIZE_BONUS_GRENADE     4.0     // (  float) multiplier for pulverize chance when using grenades
-#define PULVERIZE_BONUS_DAMAGE      1.5     // (  float) multiplier for pulverize damage when in PULVERIZE_BONUS_RANGE
-#define PULVERIZE_BONUS_RANGE         3     // (  float) range from target where bonus damage applied
 
 #define REGENERATION_AMMOUNT          1     // (integer) health gained each cycle
 
@@ -54,7 +50,7 @@ new Float:s_PillageArmor[3]     = {0.05,0.10,0.15};             // (skill3) Pill
 /* - Events ----------------------------------------------------- */
 
 
-public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot ) {
+public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot, iDamageOrigin[3] ) {
 #if ADVANCED_DEBUG
 	log_function("public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot ) {");
 #endif
@@ -77,7 +73,7 @@ public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot ) 
 
         if ( g_PlayerInfo[attackerId][CURRENT_SKILL2] )
 		{
-            SPulverize( attackerId, victimId, weaponId, iDamage );
+            SPulverize( attackerId, victimId, iDamageOrigin, iDamage );
 		}
 
 		// Pillage
@@ -350,53 +346,11 @@ public SBerserkDmg( attackerId, victimId, weaponId, damage, headshot ) {
     return PLUGIN_HANDLED;
 }
 
-// Bloodlust
-
-/*public SBloodlust( Attacker, Victim, Weapon, Headshot ) {
-#if ADVANCED_DEBUG
-	log_function("public SBloodlust( Attacker, Victim, Weapon, Headshot ) {");
-#endif
-
-    // Check if restricted
-
-    if ( !WAR3_skill_enabled( Attacker, RACE_ORC, SKILL_1 ) )
-        return PLUGIN_HANDLED;
-
-    new iMaxDamage = s_Bloodlust[g_PlayerInfo[Attacker][CURRENT_SKILL1] - 1];
-
-    new Float:fMinDamage = float( iMaxDamage ) * BLOODLUST_MODIFIER;
-    new iMinDamage = floatround( fMinDamage );
-
-    new iBonusDamage = random_num( iMinDamage, iMaxDamage );
-
-    if ( Weapon == CSW_KNIFE )
-        iBonusDamage *= BLOODLUST_KNIFEBONUS;
-
-    // Apply Damage
-
-    WAR3_damage( Attacker, Victim, Weapon, iBonusDamage, Headshot, DAMAGE_CHECKARMOR );
-
-    // Add to player stats array
-
-    if ( get_cvar_num( "mp_war3stats" ) )
-    {
-        playerSkill1Info[Attacker][0] += iBonusDamage;
-    }
-
-    // Screen Fade
-
-    new iFadeAlpha = iBonusDamage * 3;
-    Create_ScreenFade( Victim, (1<<10), (1<<10), FADE_OUT, 255, 0, 0, iFadeAlpha );
-
-    return PLUGIN_HANDLED;
-}
-*/
-
 // Pulverize
 
-public SPulverize( attackerId, victimId, weaponId, iDamage ) {
+public SPulverize( attackerId, victimId, grenadeOrigin[3], damage ) {
 #if ADVANCED_DEBUG
-	log_function("public SPulverize( attackerId, victimId, weaponId, iDamage ) {");
+	log_function("SPulverize");
 #endif
 
     // Check if restricted
@@ -404,51 +358,34 @@ public SPulverize( attackerId, victimId, weaponId, iDamage ) {
     if ( !WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_2 ) )
         return PLUGIN_HANDLED;
 
-    //new Float:fPulverizeChance = s_Pulverize[g_PlayerInfo[attackerId][CURRENT_SKILL2] - 1];
-    //new Float:fRandomNum = random_float( 0.0, 1.0 );
-
-    if ( weaponId != CSW_HEGRENADE )
-        return PLUGIN_HANDLED;
-
-    //if ( fRandomNum > fPulverizeChance )
-        //return PLUGIN_HANDLED;
-
-
     new Teammates[32], szTeamName[16];
     new iTotalPlayers;
+	new bool:bHitPlayers = false;
 
     get_user_team( victimId, szTeamName, 15 );
     get_players( Teammates, iTotalPlayers, "ae", szTeamName );
 
+	for ( new iPlayerNum = 0; iPlayerNum < iTotalPlayers; iPlayerNum++ )
+	{
+		new teamId = Teammates[iPlayerNum];
 
-    // Any Teammates Alive?
+		if ( teamId != victimId && !g_bPlayerSleeping[teamId] )
+		{
+			new teamOrigin[3];
 
-    if ( iTotalPlayers > 1 || ( iTotalPlayers == 1 && !is_user_alive( victimId ) ) )
-    {
-        new victimOrigin[3], TeammateOrigin[3];
-        get_user_origin( victimId, victimOrigin );
+			get_user_origin( teamId, teamOrigin );
 
-        new iRadius = PULVERIZE_RANGE;
-        new bool:bHitPlayers;
+			new Float:fMetricDistance = distance( get_distance( grenadeOrigin, teamOrigin ) );
+			
+			// Determine if a nearby teammate is close enough to damage
 
-        for ( new iPlayerNum = 0; iPlayerNum < iTotalPlayers; iPlayerNum++ )
-        {
-            new teamId = Teammates[iPlayerNum];
-            get_user_origin( teamId, TeammateOrigin );
+			if ( fMetricDistance <= s_PulverizeRange[g_PlayerInfo[attackerId][CURRENT_SKILL2] - 1] )
+			{
+				bHitPlayers = true;
 
-            if ( victimId != teamId && get_distance( victimOrigin, TeammateOrigin ) / 40 <= iRadius && !g_bPlayerSleeping[teamId] )
-            {
-                bHitPlayers = true;
+				// Damage Calculation
 
-                // Damage Calculation
-
-                new iPulverizeDamage = s_PulverizeDamage[g_PlayerInfo[attackerId][CURRENT_SKILL2] - 1];
-
-                if ( get_distance( victimOrigin, TeammateOrigin ) / 40 <= PULVERIZE_BONUS_RANGE )
-                {
-                    new Float:fPulverizeDamage = float( iPulverizeDamage ) * PULVERIZE_BONUS_DAMAGE;
-                    iPulverizeDamage = floatround( fPulverizeDamage );
-                }
+				new iPulverizeDamage = floatround( s_PulverizeBonus[g_PlayerInfo[attackerId][CURRENT_SKILL2] - 1] * float( damage ) );
 
                 // Armor Calculation
 
@@ -519,49 +456,50 @@ public SPulverize( attackerId, victimId, weaponId, iDamage ) {
 
                     Create_TE_WORLDDECAL( SHOWTO_ALL_BROADCAST, Origin, blood_small[random_num( 0,6 )] );
                 }
-            }
-        }
+			}
+		}
+	}
 
-        // Show Pulverize Rings
+	// Show Pulverize Rings if we hit a player
 
-        if ( bHitPlayers )
-        {
-            new iRingRed    = ( 85 * g_PlayerInfo[attackerId][CURRENT_SKILL2] );
-            new iRingGreen  = ( 85 * g_PlayerInfo[attackerId][CURRENT_SKILL2] );
-            new iRingBlue   = ( 64 * g_PlayerInfo[attackerId][CURRENT_SKILL2] );
+	if ( bHitPlayers )
+	{
+		new iRadius = floatround( s_PulverizeRange[g_PlayerInfo[attackerId][CURRENT_SKILL2] - 1] );
 
-            new iBlueMod;
+		new iRingRed    = ( 85 * g_PlayerInfo[attackerId][CURRENT_SKILL2] );
+		new iRingGreen  = ( 85 * g_PlayerInfo[attackerId][CURRENT_SKILL2] );
+		new iRingBlue   = ( 64 * g_PlayerInfo[attackerId][CURRENT_SKILL2] );
 
-            switch ( iRingBlue )
-            {
-                case 64:    iBlueMod = 64;
-                case 128:   iBlueMod = 48;
-                case 192:   iBlueMod = 32;
-            }
+		new iBlueMod;
 
-            // Play Sound
+		switch ( iRingBlue )
+		{
+			case 64:    iBlueMod = 64;
+			case 128:   iBlueMod = 48;
+			case 192:   iBlueMod = 32;
+		}
 
-            emit_sound( victimId, CHAN_STATIC, SOUND_PULVERIZE, 1.0, ATTN_NORM, 0, PITCH_NORM );
+		// Play Sound
 
-            new iRingSize = iRadius * 2 * 40;
-            new OuterRadius[3], InnerRadius[3];
+		//emit_sound( victimId, CHAN_STATIC, SOUND_PULVERIZE, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-            OuterRadius[2] = iRingSize + 40;
-            InnerRadius[2] = iRingSize / 2;
+		new iRingSize = iRadius * 2 * 40;
+		new OuterRadius[3], InnerRadius[3];
 
-            // Outer Ring
+		OuterRadius[2] = iRingSize + 40;
+		InnerRadius[2] = iRingSize / 2;
 
-            Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, victimOrigin, OuterRadius, SPR_SHOCKWAVE, 0, 0, 3, 6, 0, iRingRed, iRingGreen, iRingBlue - iBlueMod, 255, 0 );
+		// Outer Ring
 
-            // Inner Ring
+		Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, grenadeOrigin, OuterRadius, SPR_SHOCKWAVE, 0, 0, 3, 6, 0, iRingRed, iRingGreen, iRingBlue - iBlueMod, 255, 0 );
 
-            Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, victimOrigin, InnerRadius, SPR_SHOCKWAVE, 0, 0, 3, 3, 0, iRingRed, iRingGreen, iRingBlue, 255, 0 );
-        }
-    }
+		// Inner Ring
 
-    return PLUGIN_HANDLED;
+		Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, grenadeOrigin, InnerRadius, SPR_SHOCKWAVE, 0, 0, 3, 3, 0, iRingRed, iRingGreen, iRingBlue, 255, 0 );
+	}
+
+	return PLUGIN_HANDLED;
 }
-
 
 public SPulverize_Trail( id, gIndex ) {
 #if ADVANCED_DEBUG

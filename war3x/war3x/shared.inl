@@ -2433,7 +2433,7 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_2:
                 {
-                    format( szValue, 31, "%0.0f%s %d %d %d", ( s_Pulverize[iSkillLevel] * 100.0 ), "%", s_PulverizeDamage[iSkillLevel], PULVERIZE_RANGE, PULVERIZE_BONUS_RANGE );
+                    //format( szValue, 31, "%0.0f%s %d %d %d", ( s_Pulverize[iSkillLevel] * 100.0 ), "%", s_PulverizeDamage[iSkillLevel], PULVERIZE_RANGE, PULVERIZE_BONUS_RANGE );
                     return ( 4 );
                 }
 

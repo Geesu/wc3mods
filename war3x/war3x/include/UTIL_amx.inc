@@ -1551,3 +1551,7 @@ public is_weapon_fired( iNewAmmo, iOldAmmo ) {
     return ( 0 );
 }
 
+// Distance formula (metric) - from statsx
+stock Float:distance( iDistance ) {
+  return float( iDistance ) * 0.0254
+}
