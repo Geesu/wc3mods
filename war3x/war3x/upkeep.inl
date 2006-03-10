@@ -10,9 +10,9 @@
 #define UPKEEP_POINTS_LOW        3      // (integer) Points needed to reach low upkeep
 #define UPKEEP_POINTS_HIGH       8      // (integer) Points needed to reach high upkeep
 
-#define UPKEEP_STREAK          1.5      // (  float) Win Streak modifier
+#define UPKEEP_TEAMWINS        1.5      // (  float) Win Streak modifier
 #define UPKEEP_KILLRATIO       0.5      // (  float) Kill Ratio modifier
-#define UPKEEP_AVGLEVEL        1.0      // (  float) Average Level modifier
+#define UPKEEP_AVGLEVEL       0.75      // (  float) Average Level modifier
 #define UPKEEP_PLAYERS         1.5      // (  float) Total Players modifier
 
 #define UPKEEP_TIMER          10.0      // (  float) Interval to award dead players
@@ -138,21 +138,22 @@ public Upkeep_Newround() {
 
 public Upkeep_RoundStart() {
 
-    new Float:fTeamPoints[2];
-    new iTeamLevels[2], iTeamKills[2], iTeamDeaths[2];
-
+    new Float:fTeamPoints[2] = {0.0,0.0};
     new Players[32], iTotalPlayers;
 
     for ( new iTeamNum = CS_TEAM_TERRORIST; iTeamNum <= CS_TEAM_CT; iTeamNum++ )
     {
+        new iTeamLevels[2], iTeamKills[2], iTeamDeaths[2];
+
         // Check both teams
 
         if ( iTeamNum == CS_TEAM_TERRORIST )
-            get_players( Players, iTotalPlayers, "be", "TERRORIST" );
-
+        {
+            get_players( Players, iTotalPlayers, "ae", "TERRORIST" );
+        }
         else
         {
-            get_players( Players, iTotalPlayers, "be", "CT" );
+            get_players( Players, iTotalPlayers, "ae", "CT" );
         }
 
         for ( new iPlayerNum; iPlayerNum < iTotalPlayers; iPlayerNum++ )
@@ -164,16 +165,19 @@ public Upkeep_RoundStart() {
             if ( get_user_frags( player ) >= 0 )
                 iTeamKills[iTeamNum - 1] += get_user_frags( player );
 
-            iTeamDeaths[iTeamNum - 1] += cs_get_user_deaths( player );
+            iTeamDeaths[iTeamNum - 1] += get_user_deaths( player );
         }
+
+        if ( iTeamDeaths[iTeamNum - 1] == 0 )
+            iTeamDeaths[iTeamNum - 1] = 1;
 
         // Check Win Streaks and build points
 
-        fTeamPoints[iTeamNum - 1] += float( g_TeamWinStreaks[iTeamNum - 1] ) * UPKEEP_STREAK;
+        fTeamPoints[iTeamNum - 1] += ( float( g_TeamWins[iTeamNum - 1] ) * UPKEEP_TEAMWINS );
 
         // Check Average Level and build points
 
-        fTeamPoints[iTeamNum - 1] += ( float( iTeamLevels[iTeamNum - 1] ) / float( iTotalPlayers ) ) * UPKEEP_AVGLEVEL;
+        fTeamPoints[iTeamNum - 1] += ( ( float( iTeamLevels[iTeamNum - 1] ) / float( iTotalPlayers ) ) * UPKEEP_AVGLEVEL );
 
         // Check Total Players and build points
 
@@ -187,6 +191,8 @@ public Upkeep_RoundStart() {
     new iTeamPoints[2];
     iTeamPoints[0] = floatround( fTeamPoints[0] );
     iTeamPoints[1] = floatround( fTeamPoints[1] );
+
+    server_print( "Total Points -- T: %d, CT: %d", iTeamPoints[0], iTeamPoints[1] );
 
     // Find difference of points between teams
 
@@ -210,14 +216,16 @@ public Upkeep_RoundStart() {
         Upkeep_Update( 0, g_TeamUpkeep[0], UPKEEP_NO );
     }
 
+    server_print( "Modified Points -- T: %d, CT: %d", iTeamPoints[0], iTeamPoints[1] );
+
     // Set new upkeep level (if applicable)
 
     new iCurrentUpkeep;
 
-    if ( iTeamPoints[iMorePointsTeam] < UPKEEP_LOW )
+    if ( iTeamPoints[iMorePointsTeam] < UPKEEP_POINTS_LOW )
         iCurrentUpkeep = UPKEEP_NO
 
-    else if ( iTeamPoints[iMorePointsTeam] < UPKEEP_HIGH )
+    else if ( iTeamPoints[iMorePointsTeam] < UPKEEP_POINTS_HIGH )
     {
         iCurrentUpkeep = UPKEEP_LOW
     }

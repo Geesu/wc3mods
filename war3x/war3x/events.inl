@@ -1249,17 +1249,34 @@ public on_Objective_Team() {
     read_logargv( 1, szLogTeam, 31 );
     read_logargv( 3, szLogAction,63 );
 
+    // Team Wins
+
+    if ( equal( szLogAction, "CTs_Win" ) || equal( szLogAction, "Terrorists_Win" ) )
+    {
+        new szLogTwins[8], szTwins[8];
+        new szLogCTwins[8], szCTwins[8];
+        new szNull[8];
+
+        read_logargv( 4, szLogCTwins, 7 );
+        read_logargv( 5, szLogTwins, 7 );
+
+        parse( szLogCTwins, szNull, 7, szCTwins, 7 );
+        parse( szLogTwins, szNull, 7, szTwins, 7 );
+
+        g_TeamWins[0] = str_to_num( szTwins );
+        g_TeamWins[1] = str_to_num( szCTwins );
+    }
 
     // Target Bombed
 
-    if ( equal( szLogAction, "Target_Bombed" ) )
+    else if ( equal( szLogAction, "Target_Bombed" ) )
     {
         // Moved to on_TargetBombed() ( more reliable )
     }
 
     // Target Saved
 
-    if ( equal( szLogAction, "Target_Saved" ) )
+    else if ( equal( szLogAction, "Target_Saved" ) )
     {
         XP_Target_Saved_T();
         XP_Target_Saved_CT();
@@ -1267,7 +1284,7 @@ public on_Objective_Team() {
 
     // VIP not escaped
 
-    if ( equal( szLogAction, "VIP_Not_Escaped" ) )
+    else if ( equal( szLogAction, "VIP_Not_Escaped" ) )
     {
         XP_Not_Escaped_T();
         XP_Not_Escaped_VIP();

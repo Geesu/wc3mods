@@ -388,7 +388,7 @@ new g_PlayerTargetTeam[33];         // stores player target TEAM
 new g_TargetFormat[33][128];        // Stores format for target information
 
 new g_TeamUpkeep[2];                // Stores upkeep status for each team
-new g_TeamWins[2];                  // Stores team wins
+new g_TeamWins[2];                  // Stores team wins, 0=T, 1=CT
 
 new bool:g_bPlayerConnected[33];    // Stores whether player is connected ( message-sensitive var )
 new bool:g_bGotDefuser[33];         // true when player has defuse kit
