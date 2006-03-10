@@ -169,7 +169,7 @@ public get_mysql_xp( id ) {
 
     new Result:res = dbi_query( sql, mysqlQuery );
 
-    if ( res <= RESULT_NONE )
+    if ( res < RESULT_NONE )
     {
 		DB_Error( res, mysqlQuery, 3 );
     }
@@ -216,7 +216,7 @@ public get_mysql_skills( id, iRaceId, szData[64] ) {
 
     new Result:res = dbi_query( sql, mysqlQuery );
 
-    if ( res <= RESULT_NONE )
+    if ( res < RESULT_NONE )
     {
 		DB_Error( res, mysqlQuery, 4 );
     }
