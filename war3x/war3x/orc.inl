@@ -543,7 +543,7 @@ public SPillage( attackerId, victimId, iDamage ) {
 	if ( fRandomNum > fPillageChance )
         return PLUGIN_HANDLED;
 	
-	new iType = 2//random_num( 1, 4 );
+	new iType = 1//random_num( 1, 4 );
 	switch( iType )
 	{
 		case 1:
