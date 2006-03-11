@@ -8,7 +8,7 @@
 #define UPKEEP_HIGH              2      // (integer) High Upkeep ID
 
 #define UPKEEP_POINTS_LOW        3      // (integer) Points needed to reach low upkeep
-#define UPKEEP_POINTS_HIGH       8      // (integer) Points needed to reach high upkeep
+#define UPKEEP_POINTS_HIGH       7      // (integer) Points needed to reach high upkeep
 
 #define UPKEEP_TEAMWINS        1.5      // (  float) Win Streak modifier
 #define UPKEEP_KILLRATIO       0.5      // (  float) Kill Ratio modifier
@@ -88,9 +88,9 @@ public Upkeep_Dead() {
             // Display message
 
             new szMessage[32];
-            format( szMessage, 31, "%s^n+$%d", UPKEEP_NAME[iUpkeep], iDifference );
+            format( szMessage, 31, "%s   ^n+$%d   ", UPKEEP_NAME[iUpkeep], iDifference );
 
-            set_hudmessage( UPKEEP_RGB[iUpkeep][GLOW_R], UPKEEP_RGB[iUpkeep][GLOW_G], UPKEEP_RGB[iUpkeep][GLOW_B], HUDMESSAGE_POS_CENTER, 0.12, HUDMESSAGE_FX_FADEIN, 3.0, 2.0, 0.5, 1.0, HUDMESSAGE_CHAN_UPKEEP );
+            set_hudmessage( UPKEEP_RGB[iUpkeep][GLOW_R], UPKEEP_RGB[iUpkeep][GLOW_G], UPKEEP_RGB[iUpkeep][GLOW_B], 0.99, 0.40, HUDMESSAGE_FX_FADEIN, 3.0, 2.0, 0.5, 1.0, HUDMESSAGE_CHAN_UPKEEP );
             show_hudmessage( player, szMessage );
         }
     }
@@ -100,6 +100,9 @@ public Upkeep_Dead() {
 
 
 public Upkeep_Newround() {
+
+    if ( g_iCurrentRound <= 1 )
+        return PLUGIN_HANDLED;
 
     new Players[32], iTotalPlayers;
 
@@ -123,9 +126,9 @@ public Upkeep_Newround() {
         // Display message
 
         new szMessage[32];
-        format( szMessage, 31, "%s^n+$%d", UPKEEP_NAME[iUpkeep], UPKEEP_MONEY_NEWROUND[iUpkeep] );
+        format( szMessage, 31, "%s   ^n+$%d   ", UPKEEP_NAME[iUpkeep], UPKEEP_MONEY_NEWROUND[iUpkeep] );
 
-        set_hudmessage( UPKEEP_RGB[iUpkeep][GLOW_R], UPKEEP_RGB[iUpkeep][GLOW_G], UPKEEP_RGB[iUpkeep][GLOW_B], HUDMESSAGE_POS_CENTER, 0.04, HUDMESSAGE_FX_FADEIN, 1.0, 2.0, 0.5, 1.0, HUDMESSAGE_CHAN_UPKEEP2 );
+        set_hudmessage( UPKEEP_RGB[iUpkeep][GLOW_R], UPKEEP_RGB[iUpkeep][GLOW_G], UPKEEP_RGB[iUpkeep][GLOW_B], 0.99, 0.40, HUDMESSAGE_FX_FADEIN, 1.0, 2.0, 0.5, 1.0, HUDMESSAGE_CHAN_UPKEEP2 );
         show_hudmessage( player, szMessage );
 
     }
@@ -137,6 +140,9 @@ public Upkeep_Newround() {
 // Set new level of upkeep on this event
 
 public Upkeep_RoundStart() {
+
+    if ( get_playersnum() == 0 )
+        return PLUGIN_HANDLED;
 
     new Float:fTeamPoints[2] = {0.0,0.0};
     new Players[32], iTotalPlayers;
@@ -192,8 +198,6 @@ public Upkeep_RoundStart() {
     iTeamPoints[0] = floatround( fTeamPoints[0] );
     iTeamPoints[1] = floatround( fTeamPoints[1] );
 
-    server_print( "Total Points -- T: %d, CT: %d", iTeamPoints[0], iTeamPoints[1] );
-
     // Find difference of points between teams
 
     new iMorePointsTeam;
@@ -215,8 +219,6 @@ public Upkeep_RoundStart() {
 
         Upkeep_Update( 0, g_TeamUpkeep[0], UPKEEP_NO );
     }
-
-    server_print( "Modified Points -- T: %d, CT: %d", iTeamPoints[0], iTeamPoints[1] );
 
     // Set new upkeep level (if applicable)
 
@@ -250,9 +252,9 @@ public Upkeep_RoundStart() {
         new iUpkeep = g_TeamUpkeep[iTeamNum - 1];
 
         new szMessage[32];
-        format( szMessage, 31, "%s", UPKEEP_NAME[iUpkeep] );
+        format( szMessage, 31, "%s   ", UPKEEP_NAME[iUpkeep] );
 
-        set_hudmessage( UPKEEP_RGB[iUpkeep][GLOW_R], UPKEEP_RGB[iUpkeep][GLOW_G], UPKEEP_RGB[iUpkeep][GLOW_B], HUDMESSAGE_POS_CENTER, 0.04, HUDMESSAGE_FX_FADEIN, 1.0, 5.0, 0.5, 1.0, HUDMESSAGE_CHAN_UPKEEP );
+        set_hudmessage( UPKEEP_RGB[iUpkeep][GLOW_R], UPKEEP_RGB[iUpkeep][GLOW_G], UPKEEP_RGB[iUpkeep][GLOW_B], 0.99, 0.40, HUDMESSAGE_FX_FADEIN, 1.0, 5.0, 0.5, 1.0, HUDMESSAGE_CHAN_UPKEEP );
         show_hudmessage( player, szMessage );
     }
 
@@ -273,7 +275,21 @@ public Upkeep_Update( iTeamNum, iCurrentUpkeep, iNewUpkeep ) {
 
         g_TeamUpkeep[iTeamNum] = iNewUpkeep;
 
-        // Play Sound ( client side )
+        new szUpkeep[16];
+        copy( szUpkeep, 15, UPKEEP_NAME[iNewUpkeep] );
+
+        // Send message to all teammates
+
+        new Players[32], iTotalPlayers;
+        get_players( Players, iTotalPlayers, "e", CS_TEAM_NAME[iTeamNum + 1] );
+
+        for ( new iPlayerNum = 0; iPlayerNum < iTotalPlayers; iPlayerNum++ )
+        {
+            new player = Players[iPlayerNum];
+            client_print( player, print_chat, UPKEEP_MESSAGE, szUpkeep );
+
+            // Play Sound ( client side )
+        }
     }
 
     return PLUGIN_HANDLED;

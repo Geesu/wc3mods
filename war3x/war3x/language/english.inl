@@ -480,7 +480,7 @@ new const MENU_WAR3MENU_3[]             = "3. Buy Items^n";
 new const MENU_WAR3MENU_4[]             = "4. Show Level/Skills^n";
 new const MENU_WAR3MENU_5[]             = "5. Player Skills^n";
 new const MENU_WAR3MENU_6[]             = "6. Player Options^n";
-new const MENU_WAR3MENU_7[]             = "7. Race Options^n";
+new const MENU_WAR3MENU_7[]             = "7. Reset Skills/Ultimate/XP...^n";
 new const MENU_WAR3MENU_8[]             = "\d8. Admin Options\w^n";
 new const MENU_WAR3MENU_9[]             = "9. Help Topics^n^n";
 
@@ -569,6 +569,12 @@ new const XP_ALLHOSTAGESRESCUED_MESSAGE[]   = "* [WC3x] All CTs receive %d XP fo
 new const XP_MAX_MESSAGE[]                  = "* [WC3x] Your XP is already at maximum!";
 new const XP_MAX_BOMBPICKUP_MESSAGE[]       = "* [WC3x] You have the bomb! Help your teammates gain XP by planting it!";
 new const XP_MAX_VIPSPAWN_MESSAGE[]         = "* [WC3x] You are the VIP! Help your teammates gain XP by escaping!";
+
+
+/* - Upkeep Messages -------------------------------------------- */
+
+
+new const UPKEEP_MESSAGE[]                  = "* [WC3x] Your team is now at %s.";
 
 
 /* - Help Files ------------------------------------------------- */
