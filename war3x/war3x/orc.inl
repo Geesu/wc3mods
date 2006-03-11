@@ -9,8 +9,8 @@ new Float:s_BerserkSpeed[3]		= {280.0,300.0,320.0};			// (skill1) Max possible s
 new Float:s_PulverizeRange[3]	= {4.0,5.0,6.0};				// (skill2) Pulverize (distance from detonation)
 new Float:s_PulverizeBonus[3]	= {1.0,2.0,3.0};				// (skill2) Pulverize (bonus damage)
 new Float:s_Reincarnate[3]      = {0.3,0.6,0.9};                // (skill3) Reincarnation (percent chance)
-new s_PillageMoney[3]           = {10, 20, 30};                 // (skill3) Pillage (money amount)
-new Float:s_PillageArmor[3]     = {0.05,0.10,0.15};             // (skill3) Pillage (armor decrease percentage)
+new Float:s_Pillage[3]          = {0.10,0.20,1.00};             // (skill3) Pillage (percent chance)
+new s_PillageNades[3]           = {4,9,25};                     // (skill3) Pillage (nade model index)
 
 /* - Skill Constants Configuration ------------------------------ */
 
@@ -22,6 +22,10 @@ new Float:s_PillageArmor[3]     = {0.05,0.10,0.15};             // (skill3) Pill
 #define BLOODLUST_KNIFEBONUS          3     // (integer) blood lust knife bonus multiplier
 
 #define PULVERIZE_ARMOR            0.25     // (  float) % armor removed on pulverize based on damage
+
+#define PILLAGE_ARMOR              0.30
+#define PILLAGE_AMMO               0.30
+#define PILLAGE_MONEY                 4
 
 #define REGENERATION_AMMOUNT          1     // (integer) health gained each cycle
 
@@ -80,7 +84,7 @@ public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot, F
 
 		if ( g_PlayerInfo[attackerId][CURRENT_SKILL3] )
 		{
-			SPillage( attackerId, victimId, weaponId, iDamage );
+			SPillage( attackerId, victimId, iDamage );
 		}
     }
 
@@ -525,63 +529,113 @@ public SPulverize_Trail( id, gIndex ) {
     return PLUGIN_HANDLED;
 }
 
-public SPillage( attackerId, victimId, weaponId, iDamage ) {
+public SPillage( attackerId, victimId, iDamage ) {
 #if ADVANCED_DEBUG
-	log_function( "public SPillage( attackerId, victimId, weaponId, iDamage ) {");
+	log_function( "public SPillage( attackerId, victimId, iDamage ) {");
 #endif
 
-	if ( WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_3 ) )
+	if ( !WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_3 ) )
+		return PLUGIN_HANDLED;
+
+	new Float:fPillageChance = s_Pillage[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1];
+    new Float:fRandomNum = random_float( 0.0, 1.0 );
+
+	if ( fRandomNum > fPillageChance )
+        return PLUGIN_HANDLED;
+	
+	new iType = 2//random_num( 1, 4 );
+	switch( iType )
 	{
-		new bool:bMoneyChanged;
-		new iNewMoney;
-
-		if ( weaponId == CSW_KNIFE )
+		case 1:
 		{
-			bMoneyChanged = true;
+			new iVictimArmor = get_user_armor( victimId );
+			new iAttackerArmor = get_user_armor( attackerId );
 
-			iNewMoney = cs_get_user_money( attackerId );
+			if ( iVictimArmor <= 0 )
+				return PLUGIN_HANDLED;
+			
+			new iStolenArmor = floatround( PILLAGE_ARMOR * iDamage );
+			
+			if ( iVictimArmor - iStolenArmor < 0 )
+				iStolenArmor = iVictimArmor;
+
+			iVictimArmor -= iStolenArmor;
+			iAttackerArmor += iStolenArmor;
+
+			if ( iAttackerArmor > WAR3_get_maxarmor( attackerId ) )
+				iAttackerArmor = WAR3_get_maxarmor( attackerId );
+
+			set_user_armor( victimId, iVictimArmor );
+			set_user_armor( attackerId, iAttackerArmor );
+		}
+				
+		case 2:
+		{
+			new iVictimClip, iVictimAmmo;
+			new iVictimWeapon = get_user_weapon( victimId, iVictimClip, iVictimAmmo );
+			
+			new iAttackerClip, iAttackerAmmo;
+			new iAttackerWeapon = get_user_weapon( attackerId, iAttackerClip, iAttackerAmmo );
+			
+			if ( iVictimAmmo <= 0 )
+				return PLUGIN_HANDLED;
+			
+			new iStolenAmmo = floatround( PILLAGE_AMMO * iDamage );
+
+			if ( iVictimAmmo - iStolenAmmo < 0 )
+				iStolenAmmo = iVictimAmmo;
+
+			cs_update_ammo( victimId, -iStolenAmmo, iVictimWeapon );
+			cs_update_ammo( attackerId, iStolenAmmo, iAttackerWeapon );
+		}
+
+		case 3:
+		{
+			new i;
+			new bool:bHasNade;
+	
+			for ( i = 0; i < CS_MAX_NADES; i++ )
+			{
+				if ( cs_find_grenade( victimId, CS_MODEL_NAME[s_PillageNades[i]] ) )
+				{
+					client_print( attackerId, print_chat, "nade found" );
+					bHasNade = true;
+					break;
+				}
+			}	
+		
+			if ( bHasNade )
+			{
+				new iVictimClip, iVictimAmmo;
+				new iVictimWeapon = get_user_weapon( victimId, iVictimClip, iVictimAmmo );
+
+				new iAttackerClip, iAttackerAmmo;
+				get_user_weapon( attackerId, iAttackerClip, iAttackerAmmo );
+
+				if ( iVictimWeapon == s_PillageNades[i] )
+					cs_switchweapon( victimId, CS_WEAPON_GROUP_KNIFE );
+				
+				cs_update_ammo( victimId, s_PillageNades[i], -1 );
+    			cs_update_ammo( attackerId, s_PillageNades[i], 1 );
+    			
+    			bHasNade = false;
+			}
+		}	
+
+		case 4:
+		{
 			new iVictimMoney = cs_get_user_money( victimId );
-			new iAmount = iDamage * g_PlayerInfo[attackerId][CURRENT_SKILL3];
 
-			if ( ( iVictimMoney - iAmount ) >= 0 )
-			{
-				iNewMoney += iAmount;
-				iVictimMoney -= iAmount;
-			}
-			else
-			{
-				iNewMoney = iVictimMoney;
-				iVictimMoney = 0;
-			}
-			cs_set_user_money ( victimId , iVictimMoney );
-		}
-		else
-		{
-			new iArmor = get_user_armor( victimId );
+			if ( iVictimMoney <= 0 )
+				return PLUGIN_HANDLED;
+			
+			new iStolenMoney = ( PILLAGE_MONEY * iDamage );
+			
+			if ( iVictimMoney - iStolenMoney < 0 )
+				iStolenMoney = iVictimMoney;
 
-			if ( iArmor > 0 )
-			{
-				bMoneyChanged = true;
-
-				new iArmorTaken = floatround( iDamage * s_PillageArmor[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1] );
-				new iNewArmor = iArmor - iArmorTaken;
-
-				if ( iNewArmor < 0 )
-					iNewArmor = 0;
-
-				set_user_armor( victimId, iNewArmor );
-
-				iNewMoney = cs_get_user_money( attackerId );
-				iNewMoney += ( iDamage * s_PillageMoney[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1] );
-			}
-		}
-
-		if ( bMoneyChanged )
-		{
-			if ( iNewMoney > 16000 )
-				iNewMoney = 16000;
-
-			cs_set_user_money ( attackerId , iNewMoney );
+			cs_update_money( victimId, iStolenMoney, 1 );
+			cs_update_money( attackerId, iStolenMoney, 1 );
 		}
 	}
 

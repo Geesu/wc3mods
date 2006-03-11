@@ -92,6 +92,7 @@
 #define CS_MP_PLAYERID_SHOWNONE          2
 
 #define CS_MAX_MONEY                 16000
+#define CS_MAX_NADES                     3
 
 stock CS_TEAM_NAME[3][] =
 {
@@ -284,6 +285,41 @@ stock Float:CS_WEAPON_SPEED_ZOOM[31] =
     0.0
 };
 
+stock CS_MAX_AMMO[31] = 
+{
+	0,
+    90,                             // CSW_P228
+    0,
+    50,                             // CSW_SCOUT
+    1,                              // CSW_HEGRENADE
+    50,                             // CSW_XM1014
+    0,                              // CSW_C4
+    50,                             // CSW_MAC10
+    90,                             // CSW_AUG
+    1,                              // CSW_SMOKEGRENADE
+    50,                             // CSW_ELITE
+    50,                             // CSW_FIVESEVEN
+    50,                             // CSW_UMP45
+    50,                             // CSW_SG550
+    50,                             // CSW_GALI
+    50,                             // CSW_FAMAS
+    50,                             // CSW_USP
+    50,                             // CSW_GLOCK18
+    30,                             // CSW_AWP
+    50,                             // CSW_MP5NAVY
+    50,                             // CSW_M249
+    50,                             // CSW_M3
+    50,                             // CSW_M4A1
+    50,                             // CSW_TMP
+    50,                             // CSW_G3SG1
+    2,                              // CSW_FLASHBANG
+    35,                             // CSW_DEAGLE
+    50,                             // CSW_SG552
+    50,                             // CSW_AK47
+    0,                              // CSW_KNIFE
+    50                              // CSW_P90
+};
+
 
 /* -------------------------------------------------------------- */
 
@@ -436,6 +472,28 @@ public cs_update_money( id, iAmmount, iFlash ) {
 
     Create_Money( id, iOldMoney, 0 );
     Create_Money( id, iNewMoney, iFlash );
+
+    return PLUGIN_HANDLED;
+}
+
+public cs_update_ammo( id, iAmmount, iWeapon ) {
+#if ADVANCED_DEBUG
+	log_function("public cs_update_ammo( id, iAmmount, iWeapon ) {");
+#endif
+
+    if ( !is_user_connected( id ) )
+        return PLUGIN_HANDLED;
+        
+	new iAmmo = cs_get_user_bpammo( id, iWeapon );
+    new iNewAmmo = iAmmo + iAmmount;
+
+    if ( iNewAmmo > CS_MAX_AMMO[iWeapon] )
+        iNewAmmo = CS_MAX_AMMO[iWeapon];
+
+    if ( iNewAmmo < 0 )
+        iNewAmmo = 0;
+
+	cs_set_user_bpammo( id, iWeapon, iNewAmmo );
 
     return PLUGIN_HANDLED;
 }
