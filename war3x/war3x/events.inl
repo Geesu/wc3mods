@@ -447,10 +447,10 @@ public on_Damage( victimId ) {
         return PLUGIN_CONTINUE;
 
     new iDamage = read_data( 2 );
-	new iDamageOrigin[3];
-	read_data( 4, iDamageOrigin[0] );	// coord (x)
-	read_data( 5, iDamageOrigin[1] );	// coord (y)
-	read_data( 6, iDamageOrigin[2] );	// coord (z)
+	new Float:fDamageOrigin[3];
+	read_data( 4, fDamageOrigin[0] );	// coord (x)
+	read_data( 5, fDamageOrigin[1] );	// coord (y)
+	read_data( 6, fDamageOrigin[2] );	// coord (z)
 
     new weaponId, Bodypart, Headshot;
     new attackerId = get_user_attacker( victimId, weaponId, Bodypart );
@@ -498,7 +498,7 @@ public on_Damage( victimId ) {
         {
             case RACE_UNDEAD:       Skills_Offensive_UD( attackerId, victimId, weaponId, iDamage, Headshot );
             case RACE_HUMAN:        Skills_Offensive_HU( attackerId, victimId, weaponId, iDamage, Headshot );
-            case RACE_ORC:          Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, Headshot, iDamageOrigin );
+            case RACE_ORC:          Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, Headshot, fDamageOrigin );
             case RACE_NIGHTELF:     Skills_Offensive_NE( attackerId, victimId, weaponId, iDamage, Headshot );
         }
     }

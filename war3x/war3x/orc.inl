@@ -50,7 +50,7 @@ new Float:s_PillageArmor[3]     = {0.05,0.10,0.15};             // (skill3) Pill
 /* - Events ----------------------------------------------------- */
 
 
-public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot, iDamageOrigin[3] ) {
+public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot, Float:fDamageOrigin[3] ) {
 #if ADVANCED_DEBUG
 	log_function("public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot ) {");
 #endif
@@ -70,10 +70,10 @@ public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot, i
 		}
 
         // Pulverize
-
-        if ( g_PlayerInfo[attackerId][CURRENT_SKILL2] )
+		
+        if ( g_PlayerInfo[attackerId][CURRENT_SKILL2] && weaponId == CSW_HEGRENADE )
 		{
-            SPulverize( attackerId, victimId, iDamageOrigin, iDamage );
+            SPulverize( attackerId, victimId, fDamageOrigin, iDamage );
 		}
 
 		// Pillage
@@ -348,13 +348,13 @@ public SBerserkDmg( attackerId, victimId, weaponId, damage, headshot ) {
 
 // Pulverize
 
-public SPulverize( attackerId, victimId, grenadeOrigin[3], damage ) {
+public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 #if ADVANCED_DEBUG
 	log_function("SPulverize");
 #endif
 
     // Check if restricted
-
+	
     if ( !WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_2 ) )
         return PLUGIN_HANDLED;
 
@@ -364,6 +364,12 @@ public SPulverize( attackerId, victimId, grenadeOrigin[3], damage ) {
 
     get_user_team( victimId, szTeamName, 15 );
     get_players( Teammates, iTotalPlayers, "ae", szTeamName );
+
+	// Convert origin to int
+	
+	new iGrenadeOrigin[3];
+	for ( new i = 0; i < 3; i++ )
+		iGrenadeOrigin[i] = floatround( grenadeOrigin[i] );
 
 	for ( new iPlayerNum = 0; iPlayerNum < iTotalPlayers; iPlayerNum++ )
 	{
@@ -375,8 +381,8 @@ public SPulverize( attackerId, victimId, grenadeOrigin[3], damage ) {
 
 			get_user_origin( teamId, teamOrigin );
 
-			new Float:fMetricDistance = distance( get_distance( grenadeOrigin, teamOrigin ) );
-			
+			new Float:fMetricDistance = distance( get_distance( iGrenadeOrigin, teamOrigin ) );
+
 			// Determine if a nearby teammate is close enough to damage
 
 			if ( fMetricDistance <= s_PulverizeRange[g_PlayerInfo[attackerId][CURRENT_SKILL2] - 1] )
@@ -491,11 +497,11 @@ public SPulverize( attackerId, victimId, grenadeOrigin[3], damage ) {
 
 		// Outer Ring
 
-		Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, grenadeOrigin, OuterRadius, SPR_SHOCKWAVE, 0, 0, 3, 6, 0, iRingRed, iRingGreen, iRingBlue - iBlueMod, 255, 0 );
+		Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, iGrenadeOrigin, OuterRadius, SPR_SHOCKWAVE, 0, 0, 3, 6, 0, iRingRed, iRingGreen, iRingBlue - iBlueMod, 255, 0 );
 
 		// Inner Ring
 
-		Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, grenadeOrigin, InnerRadius, SPR_SHOCKWAVE, 0, 0, 3, 3, 0, iRingRed, iRingGreen, iRingBlue, 255, 0 );
+		Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, iGrenadeOrigin, InnerRadius, SPR_SHOCKWAVE, 0, 0, 3, 3, 0, iRingRed, iRingGreen, iRingBlue, 255, 0 );
 	}
 
 	return PLUGIN_HANDLED;
