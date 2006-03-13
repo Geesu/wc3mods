@@ -4,9 +4,8 @@
 
 
 new Float:s_UnholyAura[2]       = {SPEED_KNIFE,300.0};  // (racial) Unholy Aura (260.0 = knife speed)
-new Float:s_UnholyGravity[2]    = {1.0,0.85};           // (racial) Unholy Aura (gravity percentage)
+new Float:s_UnholyGravity[2]    = {1.0,0.75};           // (racial) Unholy Aura (gravity percentage)
 new Float:s_VampiricAura[3]     = {0.15,0.30,0.45};     // (skill1) Vampiric Aura (health percent)
-//new Float:s_ShellAbsorb[3]      = {0.15,0.30,0.45};     // (skill2) Anti-Magic Shell (ammount of absorbsion)
 new s_fnDamage[3]               = {5,10,15};            // (skill2) Frost Nova (damage dealt)
 new s_fnRange[3]                = {4,5,6};              // (skill2) Frost Nova (range of blast)
 new s_faArmor[3]                = {110,120,130};        // (skill3) Frost Armor (armor ammount)
@@ -16,15 +15,16 @@ new Float:s_faSlow[3]           = {0.1,0.2,0.3};        // (skill3) Frost Armor 
 /* - Skill Constants Configuration ------------------------------ */
 
 
+#define VAMPIRIC_KNIFEBONUS                 0.50        // (  float) bonus to apply to vampiric aura when using knife.
+
 #define FROSTNOVA_SLOWSPEED                 75.0        // (  float) max speed when slowed by frost nova
-#define FROSTNOVA_SLOWDURATION               5.0        // (  float) max duration in seconds player is slowed by frost nova ( minimum = 1 second )
+#define FROSTNOVA_SLOWDURATION_MIN           1.0        // (  float) min duration in seconds player is slowed by frost nova ( minimum = 1 second )
+#define FROSTNOVA_SLOWDURATION_MAX           5.0        // (  float) max duration in seconds player is slowed by frost nova ( minimum = 1 second )
+
 #define FROSTARMOR_ARMOR                      15        // (integer) armor removed when player slowed with frost armor
 #define FROSTARMOR_SLOWSPEED               150.0        // (  float) max speed when slowed by frost armor
 #define FROSTARMOR_SLOWDURATION              3.0        // (  float) seconds player is slowed by frost armor
 
-//#define SHELL_MINDAMAGE                        5        // (integer) minimum damage that can be absorbed by Anti-Magic Shell
-
-//new SHELL_RGB[3] =                     {40,64,0};       // (integer) RGB of glow shell when hit by bonus damage
 new FROST_RGB[3] =                    {23,42,62};       // (integer) RGB of frost slow shell ( when slowed )
 
 
@@ -32,7 +32,7 @@ new FROST_RGB[3] =                    {23,42,62};       // (integer) RGB of fros
 
 
 #define DEATHCOIL_HEAL                        75        // (integer) ammount of health to give friendly undead target
-#define DEATHCOIL_DAMAGE                      50        // (integer) ammount of damage to deal living enemy target
+#define DEATHCOIL_DAMAGE                      60        // (integer) ammount of damage to deal living enemy target
 #define DEATHCOIL_VELOCITY                 800.0        // (  float) velocity of death coil towards target
 #define DEATHCOIL_DURATION                   3.0        // (  float) life of deathcoil before removal
 
@@ -42,7 +42,8 @@ new FROST_RGB[3] =                    {23,42,62};       // (integer) RGB of fros
 #define IMPALE_MINDISTANCE                   200        // (integer) any impale that doesnt span this distance will assume ceiling collision
 #define IMPALE_COLLISIONDAMAGE                20        // (integer) damage dealt for collision with ceiling
 
-#define SLEEP_DURATION                      10.0        // (  float) duration player is disabled
+#define SLEEP_DURATION_MIN                   8.0        // (  float) min duration player is disabled
+#define SLEEP_DURATION_MAX                  12.0        // (  float) max duration player is disabled
 #define SLEEP_MOVETIME                       0.8        // (  float) duration after sleep is done that player is unattackable
 
 new DEATHCOIL_SHELL_RGB[3] =          {160,255,0};       // (integer) RGB of glow shell over skull
@@ -62,7 +63,7 @@ public Skills_Offensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) 
         // Vampiric Aura
 
         if ( g_PlayerInfo[attackerId][CURRENT_SKILL1] && cs_get_weapon_type_( weaponId ) != CS_WEAPON_TYPE_GRENADE )
-            SVampiricAura( attackerId, victimId, iDamage );
+            SVampiricAura( attackerId, victimId, weaponId, iDamage );
     }
 
     return PLUGIN_HANDLED;
@@ -266,22 +267,25 @@ public SUnholyAura_Set( id, weaponId ) {
 
 // Vampiric Aura
 
-public SVampiricAura( attackerId, victimId, iDamage ) {
+public SVampiricAura( attacker, victim, weapon, iDamage ) {
 #if ADVANCED_DEBUG
   log_function("public SVampiricAura( attackerId, victimId, iDamage ) {");
 #endif
 
     // Check if restricted
 
-    if ( !WAR3_skill_enabled( attackerId, RACE_UNDEAD, SKILL_1 ) )
+    if ( !WAR3_skill_enabled( attacker, RACE_UNDEAD, SKILL_1 ) )
         return PLUGIN_HANDLED;
 
-    new iVictimHealth = get_user_health( victimId ) + iDamage;
+    new iVictimHealth = get_user_health( victim ) + iDamage;
 
     if ( iDamage > iVictimHealth )
         iDamage = iVictimHealth;
 
-    new Float:fBonusHealth = float( iDamage ) * s_VampiricAura[g_PlayerInfo[attackerId][CURRENT_SKILL1] - 1];
+    new Float:fBonusHealth = float( iDamage ) * s_VampiricAura[g_PlayerInfo[attacker][CURRENT_SKILL1] - 1];
+
+    if ( weapon == CSW_KNIFE )
+        fBonusHealth += fBonusHealth * VAMPIRIC_KNIFEBONUS;
 
     // Make sure health is gained
 
@@ -291,7 +295,7 @@ public SVampiricAura( attackerId, victimId, iDamage ) {
 
     // Calculate health
 
-    new iNewHealth = get_user_health( attackerId ) + floatround( fBonusHealth );
+    new iNewHealth = get_user_health( attacker ) + floatround( fBonusHealth );
 
     if ( iNewHealth > 100 )
     {
@@ -303,14 +307,14 @@ public SVampiricAura( attackerId, victimId, iDamage ) {
 
     if ( get_cvar_num( "mp_war3stats" ) )
     {
-        playerSkill1Info[attackerId][0] += floatround( fBonusHealth );
+        playerSkill1Info[attacker][0] += floatround( fBonusHealth );
     }
 
     // Set health
 
     if ( fBonusHealth >= 1.0 )
     {
-        set_user_health( attackerId, iNewHealth );
+        set_user_health( attacker, iNewHealth );
 
         new iFadeAlpha = floatround( fBonusHealth * 2.5 );
 
@@ -322,13 +326,13 @@ public SVampiricAura( attackerId, victimId, iDamage ) {
         new iRGB[3];
         iRGB[GLOW_G] = iFadeAlpha / 4;
 
-        Glow_Set( attackerId, glow_duration( iFadeAlpha ), iRGB, 2 );
+        Glow_Set( attacker, glow_duration( iFadeAlpha ), iRGB, 2 );
 
         // Screen Fade
 
-        if ( !g_bPlayerSleeping[attackerId] )
+        if ( !g_bPlayerSleeping[attacker] )
         {
-            Create_ScreenFade( attackerId, (1<<12), (1<<10), FADE_OUT, 0, 255, 0, iFadeAlpha );
+            Create_ScreenFade( attacker, (1<<12), (1<<10), FADE_OUT, 0, 255, 0, iFadeAlpha );
         }
     }
 
@@ -427,7 +431,7 @@ public SFrostNova( id ) {
 
                 // Glow
 
-                new Float:fDuration = random_float( 1.0, FROSTNOVA_SLOWDURATION );
+                new Float:fDuration = random_float( FROSTNOVA_SLOWDURATION_MIN, FROSTNOVA_SLOWDURATION_MAX );
                 Glow_Set( enemy, fDuration - 0.5, FROST_RGB, 36 );
 
                 // Screen Fade
@@ -1129,7 +1133,11 @@ public USleep_Cast( casterId, targetId ) {
 
     // Screen Fade
 
-    new iHoldTime = floatround( SLEEP_DURATION );
+    new Float:fDuration = random_float( SLEEP_DURATION_MIN, SLEEP_DURATION_MAX );
+    new iHoldTime = floatround( fDuration );
+
+    fDuration = float( iHoldTime );
+
     Create_ScreenFade( targetId, (1<<12), (iHoldTime<<12), FADE_MODULATE_IN, 0, 0, 0, 160 );
 
     // Progress Bar
@@ -1152,7 +1160,7 @@ public USleep_Cast( casterId, targetId ) {
     new parm_Remove[1];
     parm_Remove[0] = targetId;
 
-    set_task( SLEEP_DURATION, "USleep_Wake", TaskId, parm_Remove, 1 );
+    set_task( fDuration, "USleep_Wake", TaskId, parm_Remove, 1 );
 
     return PLUGIN_HANDLED;
 }

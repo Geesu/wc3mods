@@ -2,13 +2,20 @@
 /* - AMX Mod Script --------------------------------------------- *
 
  *  Warcraft 3: Expansion
- *  (c) Copyright 2003-2004, written Ryan
+ *  (c) Copyright 2003-2006, written Ryan
+ *
  *
  *  Additional Developer(s):
+ *    Geesu ( aka: Pimp Daddy / OoTOAoO )
+ *    Avanderik
  *    Willyumyum
- *    rACEmic
- *    Geesu==Pimp Daddy==OoTOAoO
- *    Spacedude (some source)
+ *
+ *  Former Developer(s):
+ *    rACEmic ( supplied original MySQL saving implementation )
+ *
+ *  Special Thanks:
+ *    Spacedude ( for inspiring this great mod idea. Some original
+ *                Warcraft 3 Mod effects are still used. )
  *
  *
  *  Warcraft 3: Expansion expands upon the ideas of the original

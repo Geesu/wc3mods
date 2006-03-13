@@ -454,7 +454,7 @@ public Invis_Cooldown( id ) {
 #if ADVANCED_DEBUG
 	log_function("public Invis_Cooldown( id ) {");
 #endif
-	
+
     if ( ( g_PlayerInfo[id][CURRENT_RACE] != RACE_HUMAN || ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && !g_PlayerInfo[id][CURRENT_SKILL1] ) ) && g_PlayerInfo[id][CURRENT_ITEM] != ITEM_CLOAK )
         return PLUGIN_HANDLED;
 
@@ -2355,7 +2355,7 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case ULTIMATE_3:
                 {
-                    format( szValue, 31, "%0.1f", SLEEP_DURATION );
+                    format( szValue, 31, "%0.1f", SLEEP_DURATION_MAX );
                     return ( 1 );
                 }
             }
