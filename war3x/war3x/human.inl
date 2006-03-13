@@ -5,8 +5,8 @@
 
 new Float:s_Fortitude[2]        = {105.0,165.0};        // (racial) Fortitude (hitpoints gained)
 new Float:s_Invisibility[3]     = {0.60,0.70,0.80};     // (skill1) Invisibility (percent invisibility)
-new Float:s_Bash[3]             = {0.15,0.25,0.35};     // (skill2) Bash (chance to bash)
-new s_BashDamage[3]             = {1,3,6};              // (skill2) Bash (bonus damage)
+new Float:s_Bash[3]             = {0.10,0.20,0.30};     // (skill2) Bash (chance to bash)
+new s_BashDamage[3]             = {3,6,9};              // (skill2) Bash (bonus damage)
 new s_ifArmor[3]                = {130,160,190};        // (skill3) Inner Fire (max armor)
 new Float:s_ifDamage[3]         = {0.05,0.10,0.15};     // (skill3) Inner Fire (bonus damage)
 
@@ -14,10 +14,12 @@ new Float:s_ifDamage[3]         = {0.05,0.10,0.15};     // (skill3) Inner Fire (
 /* - Skill Constants Configuration ------------------------------ */
 
 
-#define BASH_DURATION                        1.0        // (  float) seconds player is bashed
+#define BASH_KNIFEBONUS                      0.5        // (  float) bonus to apply to bash chance/damage when using knife.
+#define BASH_DURATION_MIN                    0.5        // (  float) seconds player is bashed
+#define BASH_DURATION_MAX                    2.5        // (  float) seconds player is bashed
 
-#define INVISIBILITY_PRESHIFT                5.0        // (  float) length of time before invisibility shift
-#define INVISIBILITY_DURATION               25.0        // (  float) length of time to fade from max invisibility to min
+#define INVISIBILITY_PRESHIFT               10.0        // (  float) length of time before invisibility shift
+#define INVISIBILITY_DURATION               45.0        // (  float) length of time to fade from max invisibility to min
 #define INVISIBILITY_SHIFTS                   15        // (integer) number of invisibility level shifts
 #define INVISIBILITY_COOLDOWN                3.0        // (  float) seconds of cooldown after attacking / being hit with invis
 
@@ -27,7 +29,7 @@ new BASH_RGB[3] =                      {96,96,96};      // (integer) RGB of bash
 /* - Ultimate Configuration ------------------------------------- */
 
 
-#define HOLYLIGHT_DAMAGE             50     // (integer) damage
+#define HOLYLIGHT_DAMAGE             60     // (integer) damage
 #define HOLYLIGHT_HEAL               75     // (integer) heal
 #define HOLYLIGHT_BLINDTIME           2     // (integer) seconds to blind undead upon nuke
 
@@ -37,12 +39,12 @@ new BASH_RGB[3] =                      {96,96,96};      // (integer) RGB of bash
 #define FLAMESTRIKE_DURATION       10.0     // (integer) seconds flamestrike is active
 #define FLAMESTRIKE_SINGEDURATION     3     // (integer) seconds flamestrike is active
 
-#define AVATAR_DURATION            10.0     // (  float) seconds avatar is active
+#define AVATAR_DURATION            12.0     // (  float) seconds avatar is active
 #define AVATAR_STEPSIZE               5     // (integer) ammount of health to give/remove each 0.1 second when growing/shrinking
-#define AVATAR_SIZE                 160     // (integer) size of the glowshell on the player
+#define AVATAR_SIZE                 120     // (integer) size of the glowshell on the player
 #define AVATAR_HEALTH                60     // (integer) bonus health to apply
 #define AVATAR_DAMAGE                 6     // (integer) bonus damage to apply
-#define AVATAR_SPEED              180.0     // (  float) movement speed of player while in avatar
+#define AVATAR_SPEED              210.0     // (  float) movement speed of player while in avatar
 
 new AVATAR_RGB[3] =           {48,118,122};      // (integer) RGB of bash glow shell ( when bashed )
 
@@ -300,11 +302,22 @@ public SBash( iAttackerId, iVictimId, iWeaponId, iHeadshot ) {
     new Float:fBashChance = s_Bash[g_PlayerInfo[iAttackerId][CURRENT_SKILL2] - 1];
     new Float:fRandomNum  = random_float( 0.0,1.0 );
 
+    new iBonusDamage = s_BashDamage[g_PlayerInfo[iAttackerId][CURRENT_SKILL2] - 1];
+
+    // Apply bonus modifier
+
+    if ( iWeaponId == CSW_KNIFE )
+    {
+        fBashChance += fBashChance * BASH_KNIFEBONUS;
+
+        new Float:fDamageMod = float( iBonusDamage ) * BASH_KNIFEBONUS;
+        iBonusDamage += floatround( fDamageMod );
+    }
+
+    // Check if bash was successful
+
     if ( fBashChance < fRandomNum )
         return PLUGIN_HANDLED;
-
-
-    new iBonusDamage = s_BashDamage[g_PlayerInfo[iAttackerId][CURRENT_SKILL2] - 1];
 
     // Add to player stats array
 
@@ -314,9 +327,11 @@ public SBash( iAttackerId, iVictimId, iWeaponId, iHeadshot ) {
         playerSkill2Info[iAttackerId][1] += 1;
     }
 
+    new Float:fDuration = random_float( BASH_DURATION_MIN, BASH_DURATION_MAX );
+
     // Glow
 
-    Glow_Set( iVictimId, BASH_DURATION, BASH_RGB, 24 );
+    Glow_Set( iVictimId, fDuration, BASH_RGB, 24 );
 
     // Apply Damage
 
@@ -327,7 +342,7 @@ public SBash( iAttackerId, iVictimId, iWeaponId, iHeadshot ) {
     {
         // Immobilize
 
-        SBash_Stun( iVictimId );
+        SBash_Stun( iVictimId, fDuration );
 
         // Screen Fade
 
@@ -338,7 +353,7 @@ public SBash( iAttackerId, iVictimId, iWeaponId, iHeadshot ) {
 }
 
 
-public SBash_Stun( id ) {
+public SBash_Stun( id, Float:fDuration ) {
 #if ADVANCED_DEBUG
 	log_function("public SBash_Stun( id ) {");
 #endif
@@ -354,7 +369,7 @@ public SBash_Stun( id ) {
     new TaskId = TASK_BASH + id;
 
     remove_task( TaskId, 0 );
-    set_task( BASH_DURATION, "SBash_Remove", TaskId, parm_Stun, 1 );
+    set_task( fDuration, "SBash_Remove", TaskId, parm_Stun, 1 );
 
     return PLUGIN_HANDLED;
 }

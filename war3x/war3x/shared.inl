@@ -2381,7 +2381,7 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_2:
                 {
-                    format( szValue, 31, "%0.0f%s %d %0.1f", ( s_Bash[iSkillLevel] * 100.0 ), "%", s_BashDamage[iSkillLevel], BASH_DURATION );
+                    format( szValue, 31, "%0.0f%s %d %0.1f", ( s_Bash[iSkillLevel] * 100.0 ), "%", s_BashDamage[iSkillLevel], BASH_DURATION_MAX );
                     return ( 3 );
                 }
 
