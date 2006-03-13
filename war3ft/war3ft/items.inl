@@ -16,8 +16,9 @@ public _Item_ShowHUD(parm2[2]){					// Displays the player's items in the bottom
 	new id = parm2[0]
 
 	new item_name[ITEM_NAME_LENGTH], item_name2[ITEM_NAME_LENGTH]
-	itemname(p_data[id][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F)
-	itemname2(p_data[id][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F)
+
+	lang_GetItemName ( p_data[id][P_ITEM],	id, item_name,	ITEM_NAME_LENGTH_F, 1 );
+	lang_GetItemName ( p_data[id][P_ITEM2],	id, item_name2,	ITEM_NAME_LENGTH_F, 2 );
 
 	if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]!=0){			// User has 2 items
 		if (p_data[id][P_ITEM2]==ITEM_RING)
@@ -68,7 +69,7 @@ public Item_Message(id, item, shopmenu){
 
 	if(shopmenu==SHOPMENU_ONE){
 		new item_name[32]
-		itemname(item,id,item_name,31)
+		lang_GetItemName ( item, id, item_name, 31, 1 );
 		client_print(id, print_chat,"%s %s %L", g_MODclient, item_name, id, "WORD_PURCHASED")
 		switch(item){
 		#if MOD == 0
@@ -95,7 +96,7 @@ public Item_Message(id, item, shopmenu){
 	}
 	else if(shopmenu==SHOPMENU_TWO){
 		new item_name[32]
-		itemname2(item,id,item_name,31)
+		lang_GetItemName ( item, id, item_name, 31, 2)
 		client_print(id, print_chat,"%s %s %L", g_MODclient, item_name, id, "WORD_PURCHASED")
 		switch(item){
 		#if MOD == 0

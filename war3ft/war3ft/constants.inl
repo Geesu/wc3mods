@@ -221,6 +221,12 @@
 #define ICON_SHOW 1 
 #define ICON_FLASH 2 
 
+// To determine what game is running
+#define GAME_CSTRIKE		1
+#define GAME_CZERO			2
+#define GAME_DOD			3
+
+
 #define HUDMESSAGE_CHAN_LEVEL		1     // Level information centered @ mid-top of screen
 #define HUDMESSAGE_CHAN_STATUS		1     // WAR3 status text centered @ bottom of screen
 //#define HUDMESSAGE_CHAN_XP			3     // XP Information @ bottom left of screen
@@ -670,6 +676,8 @@ new iglow[33][4]
 new savedweapons[33][32]
 new bool:warcraft3
 new bool:endround
+
+new g_MOD = 0;
 
 // Constants for Abilities
 new const Float:p_vampiric[3] =			{0.10,0.20,0.30}		// Vampiric Aura			(skill 1)

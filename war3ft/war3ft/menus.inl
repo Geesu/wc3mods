@@ -41,7 +41,7 @@ public menu_Shopmenu_One(id){
 	
 	new item_name[9][ITEM_NAME_LENGTH]
 	for(new i=0;i<9;i++){
-		itemname(i+1,id,item_name[i],ITEM_NAME_LENGTH_F)
+		lang_GetItemName ( i+1, id, item_name[i], ITEM_NAME_LENGTH_F, 1 );
 
 		pos += format(menu_body[pos], 511-pos, "\w%d. %s\y\R%d^n",i+1,item_name[i],itemcost[i])
 		keys |= (1<<i)
@@ -193,7 +193,7 @@ public menu_Shopmenu_Two(id){
 
 	new item_name2[9][ITEM_NAME_LENGTH]
 	for(new i=0;i<9;i++){
-		itemname2(i+1,id,item_name2[i],ITEM_NAME_LENGTH_F)
+		lang_GetItemName ( i+1, id, item_name2[i], ITEM_NAME_LENGTH_F, 2 );
 
 	#if MOD == 1
 		if(i==ITEM_CHAMELEON-1 || i==ITEM_SCROLL-1)
@@ -409,7 +409,7 @@ public menu_Select_Skill(id,saychat){
 
 	while (skillcounter < 4){
 		new race_skill[RACE_SKILL_LENGTH]
-		raceskill(p_data[id][P_RACE],skillcounter,id,race_skill,RACE_SKILL_LENGTH_F)
+		lang_GetSkillName(p_data[id][P_RACE],skillcounter,id,race_skill,RACE_SKILL_LENGTH_F)
 		copy(skillcurrentrace[skillcounter],63,race_skill)
 
 		++skillcounter
@@ -423,7 +423,7 @@ public menu_Select_Skill(id,saychat){
 				add(message,255,temp)
 			}
 			new race_skill[RACE_SKILL_LENGTH]
-			raceskill(p_data[id][P_RACE],skillcounter,id,race_skill,RACE_SKILL_LENGTH_F)
+			lang_GetSkillName(p_data[id][P_RACE],skillcounter,id,race_skill,RACE_SKILL_LENGTH_F)
 
 			format(temp,127,"%L",id,"LEVEL_SELECT_SKILL_FUNC",skillcounter,race_skill,p_data[id][skillcounter]+1)
 			add(message,255,temp)
@@ -436,7 +436,7 @@ public menu_Select_Skill(id,saychat){
 			add(message,255,temp)
 		}
 		new race_skill[RACE_SKILL_LENGTH]
-		raceskill(p_data[id][P_RACE],4,id,race_skill,RACE_SKILL_LENGTH_F)
+		lang_GetSkillName(p_data[id][P_RACE],4,id,race_skill,RACE_SKILL_LENGTH_F)
 
 		format(temp,127,"%L",id,"ULTIMATE_SELECT_SKILL_FUNC",race_skill)
 		add(message,255,temp)
@@ -551,7 +551,7 @@ public menu_Select_Race(id, racexp[9]){
 	format(selectrace, 127, "%L",id ,"MENU_SELECT_RACE")
 
 	for(i=1;i<(iCvar[FT_RACES]+1);i++){
-		racename(i,id,race_name[i],RACE_NAME_LENGTH_F)
+		lang_GetRaceName(i,id,race_name[i],RACE_NAME_LENGTH_F)
 	}
 
 	if(iCvar[MP_SAVEXP]){

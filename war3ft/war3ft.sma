@@ -92,6 +92,19 @@ public plugin_init()
 		writeDebugInfo("plugin_init",0)
 	#endif
 
+	if ( is_running("cstrike") )
+	{
+		g_MOD = GAME_CSTRIKE;
+	}
+	else if ( is_running("czero") )
+	{
+		g_MOD = GAME_CZERO;
+	}
+	else if ( is_running("dod") )
+	{
+		g_MOD = GAME_DOD;
+	}
+
 	gmsgDeathMsg = get_user_msgid("DeathMsg")
 	gmsgScreenFade = get_user_msgid("ScreenFade")
 	gmsgScreenShake = get_user_msgid("ScreenShake")
@@ -478,17 +491,17 @@ public client_disconnect(id){
 		format(szWeapon, 63, "")
 
 		switch( weap ){
-			case CSW_LIGHTNING:     raceskill(3,4,LANG_SERVER,szWeapon,63)
-			case CSW_SUICIDE:		raceskill(1,4,LANG_SERVER,szWeapon,63)
-			case CSW_FLAME:			raceskill(5,4,LANG_SERVER,szWeapon,63)
-			case CSW_LOCUSTS:		raceskill(8,4,LANG_SERVER,szWeapon,63)
-			case CSW_SERPENTWARD:   raceskill(6,3,LANG_SERVER,szWeapon,63)
-			case CSW_SHADOW:		raceskill(7,3,LANG_SERVER,szWeapon,63)
-			case CSW_THORNS:		raceskill(4,2,LANG_SERVER,szWeapon,63)
-			case CSW_CARAPACE:		raceskill(8,2,LANG_SERVER,szWeapon,63)
-			case CSW_CARRION:		raceskill(8,3,LANG_SERVER,szWeapon,63)
-			case CSW_ORB:			Lang_Hero_Skill_Name(RACE_CRYPT,SKILL_HERO,LANG_SERVER,szWeapon,63)
-			case CSW_CONCOCTION:	Lang_Hero_Skill_Name(RACE_SHADOW,SKILL_HERO,LANG_SERVER,szWeapon,63)
+			case CSW_LIGHTNING:     lang_GetSkillName(3,4,LANG_SERVER,szWeapon,63)
+			case CSW_SUICIDE:		lang_GetSkillName(1,4,LANG_SERVER,szWeapon,63)
+			case CSW_FLAME:			lang_GetSkillName(5,4,LANG_SERVER,szWeapon,63)
+			case CSW_LOCUSTS:		lang_GetSkillName(8,4,LANG_SERVER,szWeapon,63)
+			case CSW_SERPENTWARD:   lang_GetSkillName(6,3,LANG_SERVER,szWeapon,63)
+			case CSW_SHADOW:		lang_GetSkillName(7,3,LANG_SERVER,szWeapon,63)
+			case CSW_THORNS:		lang_GetSkillName(4,2,LANG_SERVER,szWeapon,63)
+			case CSW_CARAPACE:		lang_GetSkillName(8,2,LANG_SERVER,szWeapon,63)
+			case CSW_CARRION:		lang_GetSkillName(8,3,LANG_SERVER,szWeapon,63)
+			case CSW_ORB:			lang_GetSkillName(RACE_CRYPT,	SKILL_HERO,	LANG_SERVER,	szWeapon,63)
+			case CSW_CONCOCTION:	lang_GetSkillName(RACE_SHADOW,	SKILL_HERO,	LANG_SERVER,	szWeapon,63)
 		}
 		
 		replace(szWeapon, 63, " ", "_")
@@ -613,6 +626,3 @@ public native_filter(const name[], index, trap)
 
       return PLUGIN_CONTINUE;
 }
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ deff0{\\ fonttbl{\\ f0\\ fnil Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang1033\\ f0\\ fs16 \n\\ par }
-*/

@@ -635,17 +635,17 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 	case DODW_K43_BUTT:			copy(weaponname, 31, "k43butt")
 #endif
 
-	case CSW_LIGHTNING:     raceskill(3,4,LANG_SERVER,weaponname,31)
-	case CSW_SUICIDE:		raceskill(1,4,LANG_SERVER,weaponname,31)
-	case CSW_FLAME:			raceskill(5,4,LANG_SERVER,weaponname,31)
-	case CSW_LOCUSTS:		raceskill(8,4,LANG_SERVER,weaponname,31)
-	case CSW_SERPENTWARD:   raceskill(6,3,LANG_SERVER,weaponname,31)
-	case CSW_SHADOW:		raceskill(7,3,LANG_SERVER,weaponname,31)
-	case CSW_THORNS:		raceskill(4,2,LANG_SERVER,weaponname,31)
-	case CSW_CARAPACE:		raceskill(8,2,LANG_SERVER,weaponname,31)
-	case CSW_CARRION:		raceskill(8,3,LANG_SERVER,weaponname,31)
-	case CSW_ORB:			Lang_Hero_Skill_Name(RACE_CRYPT,SKILL_HERO,LANG_SERVER,weaponname,31)
-	case CSW_CONCOCTION:	Lang_Hero_Skill_Name(RACE_SHADOW,SKILL_HERO,LANG_SERVER,weaponname,31)
+	case CSW_LIGHTNING:     lang_GetSkillName(3,4,LANG_SERVER,weaponname,31)
+	case CSW_SUICIDE:		lang_GetSkillName(1,4,LANG_SERVER,weaponname,31)
+	case CSW_FLAME:			lang_GetSkillName(5,4,LANG_SERVER,weaponname,31)
+	case CSW_LOCUSTS:		lang_GetSkillName(8,4,LANG_SERVER,weaponname,31)
+	case CSW_SERPENTWARD:   lang_GetSkillName(6,3,LANG_SERVER,weaponname,31)
+	case CSW_SHADOW:		lang_GetSkillName(7,3,LANG_SERVER,weaponname,31)
+	case CSW_THORNS:		lang_GetSkillName(4,2,LANG_SERVER,weaponname,31)
+	case CSW_CARAPACE:		lang_GetSkillName(8,2,LANG_SERVER,weaponname,31)
+	case CSW_CARRION:		lang_GetSkillName(8,3,LANG_SERVER,weaponname,31)
+	case CSW_ORB:			lang_GetSkillName(RACE_CRYPT,SKILL_HERO,LANG_SERVER,weaponname,31)
+	case CSW_CONCOCTION:	lang_GetSkillName(RACE_SHADOW,SKILL_HERO,LANG_SERVER,weaponname,31)
 
 		}
 	#if MOD == 0
@@ -804,11 +804,11 @@ public WAR3_Display_Level(id, flag){
 	}
 		
 	new race_name[RACE_NAME_LENGTH]
-	racename(p_data[id][P_RACE],id,race_name,RACE_NAME_LENGTH_F)
+	lang_GetRaceName(p_data[id][P_RACE],id,race_name,RACE_NAME_LENGTH_F)
 
 	new xpstring[512]
 	new short_race_name[SHORT_RACE_NAME_LENGTH]
-	shortracename(p_data[id][P_RACE],id,short_race_name,SHORT_RACE_NAME_LENGTH_F)
+	lang_GetRaceName(p_data[id][P_RACE],id,short_race_name,SHORT_RACE_NAME_LENGTH_F, true)
 
 #if MOD == 0
 	if(iCvar[FT_ITEMS_IN_HUD]){
@@ -834,8 +834,8 @@ public WAR3_Display_Level(id, flag){
 
 		if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]!=0){
 			new short_item_name[SHORT_ITEM_NAME_LENGTH], short_item_name2[SHORT_ITEM_NAME_LENGTH]
-			shortitemname(p_data[id][P_ITEM],id,short_item_name,SHORT_ITEM_NAME_LENGTH_F)
-			shortitemname2(p_data[id][P_ITEM2],id,short_item_name2,SHORT_ITEM_NAME_LENGTH_F)
+			lang_GetItemName(p_data[id][P_ITEM],id,short_item_name,SHORT_ITEM_NAME_LENGTH_F, 1, true)
+			lang_GetItemName(p_data[id][P_ITEM2],id,short_item_name2,SHORT_ITEM_NAME_LENGTH_F, 2, true)
 
 			if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
 				format(temp2,127,"%L",id,"PLAYERITEM_AND_REGEN",short_item_name,short_item_name2,p_data[id][P_RINGS])
@@ -844,7 +844,7 @@ public WAR3_Display_Level(id, flag){
 		}
 		else if (p_data[id][P_ITEM]==0 && p_data[id][P_ITEM2]!=0){
 			new short_item_name2[SHORT_ITEM_NAME_LENGTH]
-			shortitemname2(p_data[id][P_ITEM2],id,short_item_name2,SHORT_ITEM_NAME_LENGTH_F)
+			lang_GetItemName(p_data[id][P_ITEM2],id,short_item_name2,SHORT_ITEM_NAME_LENGTH_F, 2, true)
 
 			if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
 				format(temp2,127,"%s x%d ",short_item_name2,p_data[id][P_RINGS])
@@ -853,7 +853,7 @@ public WAR3_Display_Level(id, flag){
 		}
 		else if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]==0){
 			new short_item_name[SHORT_ITEM_NAME_LENGTH]
-			shortitemname(p_data[id][P_ITEM],id,short_item_name,SHORT_ITEM_NAME_LENGTH_F)
+			lang_GetItemName(p_data[id][P_ITEM],id,short_item_name,SHORT_ITEM_NAME_LENGTH_F, 1, true)
 
 			format(temp2,127,"%s",short_item_name)
 		}
@@ -870,8 +870,8 @@ public WAR3_Display_Level(id, flag){
 				new szHUD[256], itemString[256]
 				if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]!=0){
 					new item_name[ITEM_NAME_LENGTH], item_name2[ITEM_NAME_LENGTH]
-					itemname(p_data[id][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F)
-					itemname2(p_data[id][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F)
+					lang_GetItemName(p_data[id][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F, 1)
+					lang_GetItemName(p_data[id][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F, 2)
 
 					if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
 						format(itemString,127,"%L",id,"PLAYERITEM_AND_REGEN",item_name,item_name2,p_data[id][P_RINGS])
@@ -880,7 +880,7 @@ public WAR3_Display_Level(id, flag){
 				}
 				else if (p_data[id][P_ITEM]==0 && p_data[id][P_ITEM2]!=0){
 					new item_name2[ITEM_NAME_LENGTH]
-					itemname2(p_data[id][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F)
+					lang_GetItemName(p_data[id][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F, 2)
 
 					if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
 						format(itemString,127,"%s x%d ",item_name2,p_data[id][P_RINGS])
@@ -889,7 +889,7 @@ public WAR3_Display_Level(id, flag){
 				}
 				else if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]==0){
 					new item_name[ITEM_NAME_LENGTH]
-					itemname(p_data[id][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F)
+					lang_GetItemName(p_data[id][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F, 1)
 
 					format(itemString,127,"%s",item_name)
 				}
@@ -954,7 +954,7 @@ public WAR3_Display_Level(id, flag){
 		new race_skill[4][RACE_SKILL_LENGTH]
 		new i=0
 		for(i=0;i<4;i++){
-			raceskill(p_data[id][P_RACE],i+1,id,race_skill[i],RACE_SKILL_LENGTH_F)
+			lang_GetSkillName(p_data[id][P_RACE],i+1,id,race_skill[i],RACE_SKILL_LENGTH_F)
 		}
 
 		if (p_data[id][P_SKILL1]){
@@ -975,7 +975,7 @@ public WAR3_Display_Level(id, flag){
 		}
 		if (4 < p_data[id][P_RACE] < 9){
 			new heroskillname[64]
-			Lang_Hero_Skill_Name(p_data[id][P_RACE], SKILL_HERO, id, heroskillname, 63)
+			lang_GetSkillName(p_data[id][P_RACE], SKILL_HERO, id, heroskillname, 63)
 			format(temp,127,"^n%s", heroskillname)
 
 			add(message,255,temp)
@@ -1010,7 +1010,7 @@ WAR3_Show_Spectator_Info(id, targetid){
 	new message[1048]
 
 	new short_race_name[SHORT_RACE_NAME_LENGTH]
-	shortracename(p_data[targetid][0],id,short_race_name,SHORT_RACE_NAME_LENGTH_F)
+	lang_GetRaceName(p_data[targetid][0],id,short_race_name,SHORT_RACE_NAME_LENGTH_F, true)
 
 	if (p_data[targetid][P_LEVEL]==0)
 		format(temp,511,"%s   XP: %d/%d",short_race_name,p_data[targetid][P_XP],xplevel[p_data[targetid][P_LEVEL]+1])
@@ -1023,8 +1023,8 @@ WAR3_Show_Spectator_Info(id, targetid){
 
 	if (p_data[targetid][P_ITEM]!=0 && (p_data[targetid][P_ITEM2]!=0 && p_data[targetid][P_ITEM2]!=ITEM_MOLE)){
 		new item_name[ITEM_NAME_LENGTH], item_name2[ITEM_NAME_LENGTH]
-		itemname(p_data[targetid][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F)
-		itemname2(p_data[targetid][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F)
+		lang_GetItemName(p_data[targetid][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F, 1)
+		lang_GetItemName(p_data[targetid][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F, 2)
 
 		if (p_data[targetid][P_ITEM2]==ITEM_RING)
 			format(temp,511,"%L",id,"SHOWRANK_PLAYERITEM",item_name,item_name2,p_data[targetid][P_RINGS])
@@ -1033,7 +1033,7 @@ WAR3_Show_Spectator_Info(id, targetid){
 	}
 	else if (p_data[targetid][P_ITEM]==0 && (p_data[targetid][P_ITEM2]!=0 && p_data[targetid][P_ITEM2]!=ITEM_MOLE)){
 		new item_name2[ITEM_NAME_LENGTH]
-		itemname2(p_data[targetid][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F)
+		lang_GetItemName(p_data[targetid][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F, 2)
 
 		if (p_data[targetid][P_ITEM2]==ITEM_RING)
 			format(temp,511,"^n%s x%d",item_name2,p_data[targetid][P_RINGS])

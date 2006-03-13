@@ -17,7 +17,7 @@ public MOTD_Itemsinfo(id){
 	new item_name[9][ITEM_NAME_LENGTH]
 
 	for(new i=0;i<9;i++){
-		itemname(i+1,id,item_name[i],ITEM_NAME_LENGTH_F)
+		lang_GetItemName ( i+1, id, item_name[i], ITEM_NAME_LENGTH_F, 1 );
 	}
 
 	// Add header
@@ -70,7 +70,7 @@ public MOTD_Itemsinfo2(id){
 	new item_name2[9][64]
 
 	for(new i=0;i<9;i++){
-		itemname2(i+1,id,item_name2[i],64)
+		lang_GetItemName ( i+1, id, item_name2[i], 64, 2)
 	}
 
 	// Add header
@@ -166,7 +166,7 @@ public MOTD_Playerskills(id, saychat){
 
 	for(k=1;k<iCvar[FT_RACES]+1;k++){
 		if( iTotalRace[k] > 0 )
-			racename(k,id,race_name[k],64)
+			lang_GetRaceName(k,id,race_name[k],64)
 	}
 
 	if(saychat)
@@ -258,7 +258,7 @@ public MOTD_Skillsinfo(id){
 
 		// Get the Race Name
 
-		racename(p_data[id][P_RACE],id,race_name,RACE_NAME_LENGTH_F)
+		lang_GetRaceName(p_data[id][P_RACE],id,race_name,RACE_NAME_LENGTH_F)
 
 		// formatex the Title
 
@@ -268,7 +268,7 @@ public MOTD_Skillsinfo(id){
 		for(i=0;i<4;i++){
 
 			// Get Skill Name
-			raceskill(p_data[id][P_RACE],i+1,id,race_skill[i],64)
+			lang_GetSkillName(p_data[id][P_RACE],i+1,id,race_skill[i],64)
 
 			// Get Skill Description
 			if(p_data[id][P_RACE] == RACE_CHAMELEON)
@@ -302,7 +302,7 @@ public MOTD_Skillsinfo(id){
 
 				new heroskillinfo[128]
 				new heroskillname[64]
-				Lang_Hero_Skill_Name(p_data[id][P_RACE], SKILL_HERO, id, heroskillname, 63)
+				lang_GetSkillName(p_data[id][P_RACE], SKILL_HERO, id, heroskillname, 63)
 				Lang_Hero_Skill_Info(p_data[id][P_RACE], SKILL_HERO, id, heroskillinfo, 127)
 				pos += formatex(message[pos],2048-pos,"<li>%s</li><ul>%s</ul><br>", heroskillname, heroskillinfo)
 			}
