@@ -17,7 +17,7 @@ new Float:s_TrueshotAura[3]     = {0.15,0.30,0.45};             // (skill3) True
 #define ELUNES_NIGHTBONUS           2.0     // (  float) bonus to regular skill during night time (via moonstone)
 
 #define EVASION_MAXDAMAGE           250     // (integer) maximum damage (ish) avoidable with evasion
-#define EVASION_SHOTGAP             3.0     // (  float) seconds between evades before a consecutive shot may be evaded
+#define EVASION_SHOTGAP             5.0     // (  float) min duration between evades before a consecutive shot may be evaded
 
 #define BLESSING_MAXSPEED         260.0     // (  float) max speed of nature's blessing
 
@@ -27,18 +27,18 @@ new ELUNES_SHELL_RGB[3] =     {80,32,96};   // (integer) RGB of elune's grace sh
 /* - Ultimate Configuration ------------------------------------- */
 
 
-#define ROOT_DURATION               5.0     // (  float) seconds player will be rooted
-#define ROOT_MAXDAMAGE               25     // (integer) total damage taken over time for duration of root
+#define ROOT_DURATION               8.0     // (  float) seconds player will be rooted
+#define ROOT_MAXDAMAGE               40     // (integer) total damage taken over time for duration of root
 
-#define REJUVENATION_MAXHEALTH       60     // (integer) health gained per wave
+#define REJUVENATION_MAXHEALTH       75     // (integer) health gained per wave
 #define REJUVENATION_WAVES            5     // (integer) number of waves
-#define REJUVENATION_DURATION       8.0     // (  float) duration of effect
+#define REJUVENATION_DURATION      16.0     // (  float) duration of effect
 
 #define SHADOWSTRIKE_DURATION        10
-#define SHADOWSTRIKE_DAMAGE          25
+#define SHADOWSTRIKE_DAMAGE          35
 #define SHADOWSTRIKE_ARMOR           15
 #define SHADOWSTRIKE_DOT             20
-#define SHADOWSTRIKE_SPEED        150.0
+#define SHADOWSTRIKE_SPEED        120.0
 
 
 /* - Events ----------------------------------------------------- */
@@ -56,7 +56,7 @@ public Skills_Offensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) 
     {
         // Trueshot Aura
 
-        if ( g_PlayerInfo[attackerId][CURRENT_SKILL3] && weaponId != CSW_KNIFE && weaponId != CSW_HEGRENADE && get_user_health( victimId ) > 0 )
+        if ( g_PlayerInfo[attackerId][CURRENT_SKILL3] && weaponId != CSW_KNIFE && weaponId != CSW_HEGRENADE && cs_get_weapon_type_( weaponId ) != CS_WEAPON_TYPE_SNIPER && get_user_health( victimId ) > 0 )
             STrueshotAura( attackerId, victimId, weaponId, iDamage, headshot );
     }
 
@@ -266,9 +266,19 @@ public SElunes_Absorb( id, iDamage, Float:ElunesAbsorb[2] ) {
         if ( iFadeAlpha > GLOW_MAX )
             iFadeAlpha = GLOW_MAX;
 
+        new Shell[3];
+        for ( new i = 0; i < TOTAL_LEVELS; i++ )
+        {
+            new Float:fColor = float( ELUNES_SHELL_RGB[i] ) / float( TOTAL_LEVELS );
+            fColor += fColor * float( iLevel );
+            new iColor = floatround( fColor );
+
+            Shell[0] = iColor;
+        }
+
         // Glow shell
 
-        Glow_Set( id, 0.1, ELUNES_SHELL_RGB, 48 );
+        Glow_Set( id, 0.1, Shell, 48 );
 
         // Screen Fade
 
