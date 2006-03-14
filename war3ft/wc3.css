@@ -1,16 +1,21 @@
 body
 {
+	color:#FFB000;
 	font-family: Verdana, Tahoma;
 	font-size: 12px;
 	background: #000000;
-	color: #FFB000;
 	margin-top: 8px;
 	margin-left: 16px;
 }
 
+div
+{
+	color:#FFB000;
+}
+
 #title
 {
-	font-size: 14px;
+	font-size: 16px;
 	color:#00FF00;
 	text-align:center;
 	font-weight:bold;
@@ -26,11 +31,21 @@ ul
 {
 	margin-top:0px;
 	margin-bottom:10px;
+	color:#FFB000;
 }
 
 b
 {
 	color:#00FF00;
+}
+
+h1
+{
+	font-size:14px;
+	color: #FFEEFF;
+	border:0;
+	margin:0;
+	margin-bottom:10px;
 }
 
 h3

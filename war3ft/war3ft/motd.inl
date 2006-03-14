@@ -283,22 +283,22 @@ public MOTD_Skillsinfo(id){
 			// Add each skill
 			if(0 <= i < 3){
 				if( i == 0 )
-					pos += formatex(message[pos],2048-pos,"<font color=^"FFEEFF^" size=+1>%L<br><br>", id, "WORD_TRAINABLE_SKILLS")
+					pos += formatex(message[pos],2048-pos,"<h1>%L</h1>", id, "WORD_TRAINABLE_SKILLS")
 
-				pos += formatex(message[pos],2048-pos,"<font color=^"#F4D285^"><li>%s</li><ul>%s</ul><br>", race_skill[i], skill_description[i])
+				pos += formatex(message[pos],2048-pos,"<li>%s</li><ul>%s</ul><br>", race_skill[i], skill_description[i])
 
 			}
 
 			// Add the ultimate
 			else if( i == 3 ){
-				pos += formatex(message[pos],2048-pos,"<font color=^"FFEEFF^" size=+1>%L<br><br>",id, "WORD_ULTIMATE")
+				pos += formatex(message[pos],2048-pos,"<h1>%L</h1>",id, "WORD_ULTIMATE")
 				pos += formatex(message[pos],2048-pos,"<li>%s</li><ul>%s</ul>", race_skill[i], skill_description[i])
 
 			}
 
 			// Add the hero's passive ability
 			else if(4 < p_data[id][P_RACE] < 9 && i == 4){
-				pos += formatex(message[pos],2048-pos,"<br><font color=^"FFEEFF^" size=+1>%L<br><br>", id, "WORD_HERO_ABILITY")
+				pos += formatex(message[pos],2048-pos,"<br><h1>%L</h1>", id, "WORD_HERO_ABILITY")
 
 				new heroskillinfo[128]
 				new heroskillname[64]
@@ -308,10 +308,10 @@ public MOTD_Skillsinfo(id){
 			}
 		}
 
-		pos += formatex(message[pos],1024-pos,"%L",id,"CLICK_HERE", szGame)
+		pos += formatex(message[pos],1024-pos,"<br><div>%L</div>",id,"CLICK_HERE", szGame)
 
 		new race_info[128]
-		formatex(race_info,127,"%s %L",race_name, id,"WORD_INformatexION")
+		formatex(race_info,127,"%s %L",race_name, id,"WORD_INFORMATION")
 		show_motd(id,message,race_info)
 
 	}
