@@ -82,12 +82,18 @@ public Skills_Defensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) 
 
             if ( get_user_health( victimId ) > WAR3_get_minhealth( victimId ) )
             {
-                new iDamageAbsorbed = iDamage - SElunes_Knife( victimId, iDamage );
+                new iLevel = WAR3_get_level( g_PlayerInfo[victimId][CURRENT_XP] );
 
-                set_user_health( victimId, get_user_health( victimId ) + iDamageAbsorbed );
+                // Set new damage amount
+
+                new Float:fAbsorb = float( iDamage ) * SElunes_Knife_Get( iLevel );
+                new iAbsorb = floatround( fAbsorb );
+
+                set_user_health( victimId, get_user_health( victimId ) + iAbsorb );
                 WAR3_check_health( victimId );
 
-                iDamage -= iDamageAbsorbed;
+                iDamage -= iAbsorb;
+                SElunes_Absorb( victimId, iAbsorb );
             }
         }
 
@@ -198,82 +204,94 @@ public Ultimates_NE( casterId, targetId ) {
 
 // Elune's Grace ( called from WAR3_damage() )
 
-public SElunes_Magic( id, iDamage ) {
+public Float:SElunes_Knife_Get( iLevel ) {
 
     #if ADVANCED_DEBUG
 
-        log_function( "public SElunes_Magic( id, iDamage ) {" );
+      log_function("public Float:SElunes_Magic_Get( iLevel ) {");
 
     #endif
 
-    return SElunes_Absorb( id, iDamage, s_ElunesMagic );
-}
-
-
-public SElunes_Knife( id, iDamage ) {
-
-    #if ADVANCED_DEBUG
-
-        log_function( "public SElunes_Knife( id, iDamage ) {" );
-
-    #endif
-
-    return SElunes_Absorb( id, iDamage, s_ElunesKnife );
-}
-
-
-public SElunes_Absorb( id, iDamage, Float:ElunesAbsorb[2] ) {
-
-    #if ADVANCED_DEBUG
-
-        log_function( "public SElunes_Absorb( id, iDamage, Float:ElunesAbsorb[2] ) {" );
-
-    #endif
-
-    new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
     new Float:fLevel = float( iLevel );
 
     if ( fLevel > LEVEL_RACIALCAP )
         fLevel = LEVEL_RACIALCAP;
 
-    new Float:fAbsorb = ElunesAbsorb[0] + ( ( ( ElunesAbsorb[1] - ElunesAbsorb[0] ) / LEVEL_RACIALCAP ) * fLevel );
+    new Float:fAbsorb = s_ElunesKnife[0] + ( ( ( s_ElunesKnife[1] - s_ElunesKnife[0] ) / LEVEL_RACIALCAP ) * fLevel );
 
-    if ( fAbsorb > ElunesAbsorb[1] )
-        fAbsorb = ElunesAbsorb[1];
+    if ( fAbsorb < s_ElunesKnife[1] )
+        fAbsorb = s_ElunesKnife[1];
 
     // Check if Night bonus applies ( coming soon )
 
     //  if ( g_bIsNighttime )
     //      fAbsorb *= ELUNES_NIGHTBONUS;
 
-    new Float:fDamageAbsorbed = float( iDamage ) * fAbsorb;
-    new iDamageAbsorbed = floatround( fDamageAbsorbed );
+    return ( fAbsorb );
+}
 
-    iDamage -= iDamageAbsorbed;
 
-    if ( iDamageAbsorbed )
+public Float:SElunes_Magic_Get( iLevel ) {
+
+    #if ADVANCED_DEBUG
+
+      log_function("public Float:SElunes_Magic_Get( iLevel ) {");
+
+    #endif
+
+    new Float:fLevel = float( iLevel );
+
+    if ( fLevel > LEVEL_RACIALCAP )
+        fLevel = LEVEL_RACIALCAP;
+
+    new Float:fAbsorb = s_ElunesMagic[0] + ( ( ( s_ElunesMagic[1] - s_ElunesMagic[0] ) / LEVEL_RACIALCAP ) * fLevel );
+
+    if ( fAbsorb < s_ElunesMagic[1] )
+        fAbsorb = s_ElunesMagic[1];
+
+    // Check if Night bonus applies ( coming soon )
+
+    //  if ( g_bIsNighttime )
+    //      fAbsorb *= ELUNES_NIGHTBONUS;
+
+    return ( fAbsorb );
+}
+
+
+
+public SElunes_Absorb( id, iAbsorbed ) {
+
+    #if ADVANCED_DEBUG
+
+        log_function( "public SElunes_Absorb( id, iAbsorbed ) {" );
+
+    #endif
+
+    if ( iAbsorbed )
     {
+        new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
+
         // Hud Message
 
         new szMessage[64];
-        format( szMessage, 63, DAMAGE_ELUNE, iDamageAbsorbed );
+        format( szMessage, 63, DAMAGE_ELUNE, iAbsorbed );
 
         WAR3_status_text( id, szMessage, 3.0 );
 
 
-        new iFadeAlpha = iDamageAbsorbed * 3;
+        new iFadeAlpha = iAbsorbed * 3;
 
         if ( iFadeAlpha > GLOW_MAX )
             iFadeAlpha = GLOW_MAX;
 
         new Shell[3];
-        for ( new i = 0; i < TOTAL_LEVELS; i++ )
+        for ( new i = 0; i < 3; i++ )
         {
-            new Float:fColor = float( ELUNES_SHELL_RGB[i] ) / float( TOTAL_LEVELS );
+            new Float:fColor = float( ELUNES_SHELL_RGB[i] ) / LEVEL_RACIALCAP;
             fColor += fColor * float( iLevel );
             new iColor = floatround( fColor );
 
-            Shell[0] = iColor;
+            Shell[i] = iColor;
         }
 
         // Glow shell
@@ -285,7 +303,7 @@ public SElunes_Absorb( id, iDamage, Float:ElunesAbsorb[2] ) {
         Create_ScreenFade( id, (1<<10), (1<<10), FADE_OUT, ELUNES_SHELL_RGB[GLOW_R] * 2, ELUNES_SHELL_RGB[GLOW_G] * 2, ELUNES_SHELL_RGB[GLOW_B] * 2, iFadeAlpha );
     }
 
-    return ( iDamage );
+    return PLUGIN_HANDLED;
 }
 
 
@@ -898,7 +916,7 @@ public USstrike_Cast( casterId, targetId ) {
     new szMessage[128];
     format( szMessage, 127, CAST_SHADOWSTRIKE, szPlayerName );
 
-    WAR3_status_text( targetId, szMessage, 3.0 );
+    WAR3_status_text2( targetId, szMessage, 3.0 );
 
     // Adjust Armor
 
@@ -1148,7 +1166,16 @@ public URejuv_Hot( parmHot[3] ) {              // Heal-Over Time
 
     // Adjust Health
 
-    new iBonusHealth = REJUVENATION_MAXHEALTH / REJUVENATION_WAVES;
+    new iWaves = REJUVENATION_WAVES;
+    new iHealAmount = REJUVENATION_MAXHEALTH;
+
+    new Float:fBonusHealth = float( iHealAmount ) / float( iWaves );
+
+    if ( casterId == targetId )
+        fBonusHealth *= SELFHEAL_MODIFIER;
+
+    new iBonusHealth = floatround( fBonusHealth );
+
     new iNewHealth = get_user_health( targetId ) + iBonusHealth;
     new iMaxHealth = WAR3_get_maxhealth( targetId );
 

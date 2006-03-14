@@ -515,7 +515,7 @@ public UHolyLight_Dmg( Caster, Target ) {
     new iBlindTime = HOLYLIGHT_BLINDTIME;
     new Float:fDuration = float( iBlindTime ) + 3.0;
 
-    WAR3_status_text( Target, szMessage, fDuration );
+    WAR3_status_text2( Target, szMessage, fDuration );
 
     // Apply Damage
 
@@ -626,7 +626,7 @@ public UFstrike_Cast( parmCast[2] ) {
 
         format( szMessage, 127, CAST_FLAMESTRIKE, szPlayerName );
 
-        WAR3_status_text( Target, szMessage, 3.0 );
+        WAR3_status_text2( Target, szMessage, 3.0 );
 
         // Cast Flamestrike
 

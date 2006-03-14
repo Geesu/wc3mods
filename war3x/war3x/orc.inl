@@ -4,7 +4,7 @@
 
 
 new Float:s_Regeneration[2]     = {2.8,0.8};                    // (racial) Regeneration (regeneration rate)
-new Float:s_BerserkDmg[3]		= {0.3,0.6,1.0};				// (skill1) Berserk (bonus % damage based on health)
+new Float:s_BerserkDmg[3]		= {0.3,0.8,1.2};				// (skill1) Berserk (bonus % damage based on health)
 new Float:s_BerserkSpeed[3]		= {280.0,300.0,320.0};			// (skill1) Max possible speed with Berserk at health 0
 new Float:s_PulverizeRange[3]	= {4.0,5.0,6.0};				// (skill2) Pulverize (distance from detonation)
 new Float:s_PulverizeBonus[3]	= {1.0,2.0,3.0};				// (skill2) Pulverize (bonus damage)
@@ -15,11 +15,8 @@ new s_PillageNades[3]           = {4,9,25};                     // (skill3) Pill
 /* - Skill Constants Configuration ------------------------------ */
 
 
-#define BERSERK_HEALTH				 75		// (integer) lowest health to start giving bonus
+#define BERSERK_HEALTH				 50		// (integer) lowest health to start giving bonus
 #define BERSERK_MAXSPEED		  320.0		// (integer) max speed for berserk
-
-#define BLOODLUST_MODIFIER          1.0     // (  float) % of max damage that will calculate min damage
-#define BLOODLUST_KNIFEBONUS          3     // (integer) blood lust knife bonus multiplier
 
 #define PULVERIZE_ARMOR            0.25     // (  float) % armor removed on pulverize based on damage
 
@@ -33,7 +30,7 @@ new s_PillageNades[3]           = {4,9,25};                     // (skill3) Pill
 /* - Ultimate Configuration ------------------------------------- */
 
 
-#define HEALINGWAVE_HEAL             50     // (integer) initial heal
+#define HEALINGWAVE_HEAL             60     // (integer) initial heal
 #define HEALINGWAVE_RANGE            20     // (integer) max range of jump targets
 #define HEALINGWAVE_MULTIPLIER        3     // (integer) jump health multiplier (1/X)
 #define HEALINGWAVE_JUMPS             6     // (integer) maximum healing wave jumps
@@ -61,11 +58,6 @@ public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot, F
 
     if ( g_PlayerInfo[attackerId][CURRENT_RACE] == RACE_ORC && get_user_team( attackerId ) != get_user_team( victimId ) && get_user_health( victimId ) > 0 )
     {
-       // Bloodlust
-
-        //if ( g_PlayerInfo[attackerId][CURRENT_SKILL1] )
-        //    SBloodlust( attackerId, victimId, weaponId, headshot );
-
 		// Berserk
 
         if ( g_PlayerInfo[attackerId][CURRENT_SKILL1] && weaponId != CSW_HEGRENADE )
@@ -74,7 +66,7 @@ public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot, F
 		}
 
         // Pulverize
-		
+
         if ( g_PlayerInfo[attackerId][CURRENT_SKILL2] && weaponId == CSW_HEGRENADE )
 		{
             SPulverize( attackerId, victimId, fDamageOrigin, iDamage );
@@ -358,7 +350,7 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 #endif
 
     // Check if restricted
-	
+
     if ( !WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_2 ) )
         return PLUGIN_HANDLED;
 
@@ -370,7 +362,7 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
     get_players( Teammates, iTotalPlayers, "ae", szTeamName );
 
 	// Convert origin to int
-	
+
 	new iGrenadeOrigin[3];
 	for ( new i = 0; i < 3; i++ )
 		iGrenadeOrigin[i] = floatround( grenadeOrigin[i] );
@@ -413,7 +405,7 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
                 new szMessage[128];
                 format( szMessage, 127, DAMAGE_PULVERIZE, iPulverizeDamage );
 
-                WAR3_status_text( teamId, szMessage, 3.0 );
+                WAR3_status_text2( teamId, szMessage, 3.0 );
 
                 // Add to player stats array
 
@@ -542,7 +534,7 @@ public SPillage( attackerId, victimId, iDamage ) {
 
 	if ( fRandomNum > fPillageChance )
         return PLUGIN_HANDLED;
-	
+
 	new iType = 1//random_num( 1, 4 );
 	switch( iType )
 	{
@@ -553,9 +545,9 @@ public SPillage( attackerId, victimId, iDamage ) {
 
 			if ( iVictimArmor <= 0 )
 				return PLUGIN_HANDLED;
-			
+
 			new iStolenArmor = floatround( PILLAGE_ARMOR * iDamage );
-			
+
 			if ( iVictimArmor - iStolenArmor < 0 )
 				iStolenArmor = iVictimArmor;
 
@@ -568,18 +560,18 @@ public SPillage( attackerId, victimId, iDamage ) {
 			set_user_armor( victimId, iVictimArmor );
 			set_user_armor( attackerId, iAttackerArmor );
 		}
-				
+
 		case 2:
 		{
 			new iVictimClip, iVictimAmmo;
 			new iVictimWeapon = get_user_weapon( victimId, iVictimClip, iVictimAmmo );
-			
+
 			new iAttackerClip, iAttackerAmmo;
 			new iAttackerWeapon = get_user_weapon( attackerId, iAttackerClip, iAttackerAmmo );
-			
+
 			if ( iVictimAmmo <= 0 )
 				return PLUGIN_HANDLED;
-			
+
 			new iStolenAmmo = floatround( PILLAGE_AMMO * iDamage );
 
 			if ( iVictimAmmo - iStolenAmmo < 0 )
@@ -593,7 +585,7 @@ public SPillage( attackerId, victimId, iDamage ) {
 		{
 			new i;
 			new bool:bHasNade;
-	
+
 			for ( i = 0; i < CS_MAX_NADES; i++ )
 			{
 				if ( cs_find_grenade( victimId, CS_MODEL_NAME[s_PillageNades[i]] ) )
@@ -602,8 +594,8 @@ public SPillage( attackerId, victimId, iDamage ) {
 					bHasNade = true;
 					break;
 				}
-			}	
-		
+			}
+
 			if ( bHasNade )
 			{
 				new iVictimClip, iVictimAmmo;
@@ -614,13 +606,13 @@ public SPillage( attackerId, victimId, iDamage ) {
 
 				if ( iVictimWeapon == s_PillageNades[i] )
 					cs_switchweapon( victimId, CS_WEAPON_GROUP_KNIFE );
-				
+
 				cs_update_ammo( victimId, s_PillageNades[i], -1 );
     			cs_update_ammo( attackerId, s_PillageNades[i], 1 );
-    			
+
     			bHasNade = false;
 			}
-		}	
+		}
 
 		case 4:
 		{
@@ -628,9 +620,9 @@ public SPillage( attackerId, victimId, iDamage ) {
 
 			if ( iVictimMoney <= 0 )
 				return PLUGIN_HANDLED;
-			
+
 			new iStolenMoney = ( PILLAGE_MONEY * iDamage );
-			
+
 			if ( iVictimMoney - iStolenMoney < 0 )
 				iStolenMoney = iVictimMoney;
 
@@ -676,7 +668,7 @@ public UClightning_Cast( Caster, Target ) {
 
         format( szMessage, 127, CAST_CHAINLIGHTNING, szPlayerName, CHAINLIGHTNING_DAMAGE );
 
-        WAR3_status_text( Target, szMessage, 3.0 );
+        WAR3_status_text2( Target, szMessage, 3.0 );
 
         // Shock Damage
 
@@ -792,7 +784,7 @@ public UClightning_Jump( parmJump[2] ) {
 
                     format( szMessage, 127, CAST_CHAINLIGHTNING_JUMP, szPlayerName, iBoltDamage );
 
-                    WAR3_status_text( NextTarget, szMessage, 3.0 );
+                    WAR3_status_text2( NextTarget, szMessage, 3.0 );
 
                     // Shock Damage
 
@@ -836,21 +828,24 @@ public UHealWave_Cast( Caster, Target ) {
 	log_function("public UHealWave_Cast( Caster, Target ) {");
 #endif
 
-    // Play Sound
-
-    emit_sound( Caster, CHAN_STATIC, SOUND_HEALINGWAVE, 1.0, ATTN_NORM, 0, PITCH_NORM );
-    emit_sound( Target, CHAN_STATIC, SOUND_HEALINGWAVE, 1.0, ATTN_NORM, 0, PITCH_NORM );
-
     // Status Text
 
     WAR3_status_text( Caster, HEAL_CAST, 1.0 );
+
+    // Play Sound
+
+    emit_sound( Caster, CHAN_STATIC, SOUND_HEALINGWAVE, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
     // Healing Wave
 
     if ( Caster != Target )
     {
+        emit_sound( Target, CHAN_STATIC, SOUND_HEALINGWAVE, 1.0, ATTN_NORM, 0, PITCH_NORM );
+
         Create_TE_BEAMENTS( SHOWTO_ALL_BROADCAST, Caster, Target, SPR_SMOOTHBEAM, 0, 10, 15, 100, 4, 255, 255, 128, 255, 0 );
         Create_TE_BEAMENTS( SHOWTO_ALL_BROADCAST, Caster, Target, SPR_CHAINLIGHTNING, 0, 15, 15, 80, 4, 255, 255, 255, 255, 0 );
+
+        Create_TE_ELIGHT( SHOWTO_ALL_BROADCAST, Target, 100, 255, 255, 128, 10, 0 );
     }
 
     // Heal Effect
@@ -860,13 +855,18 @@ public UHealWave_Cast( Caster, Target ) {
     // Light Effects
 
     Create_TE_ELIGHT( SHOWTO_ALL_BROADCAST, Caster, 100, 255, 255, 128, 10, 0 );
-    Create_TE_ELIGHT( SHOWTO_ALL_BROADCAST, Target, 100, 255, 255, 128, 10, 0 );
 
 
     new iNewHealth = get_user_health( Target ) + HEALINGWAVE_HEAL;
     new iMaxHealth = WAR3_get_maxhealth( Target );
 
     new iHealthGiven = HEALINGWAVE_HEAL;
+
+    if ( Target == Caster )
+    {
+        new Float:fHealthGiven = float( iHealthGiven ) * SELFHEAL_MODIFIER;
+        iHealthGiven = floatround( fHealthGiven );
+    }
 
     if ( iNewHealth > iMaxHealth )
     {

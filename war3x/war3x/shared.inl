@@ -2103,7 +2103,12 @@ public Icon_SaveMe( id ) {
 #endif
 
     if ( !is_user_alive( id ) )
+    {
+        if ( Ultimate_Type( id ) & ULTIMATE_TYPE_HEAL )
+            Icon_SaveMe_Undraw( id );
+
         return PLUGIN_HANDLED;
+    }
 
     if ( WAR3_is_lowhealth( id ) )
     {
@@ -2164,6 +2169,40 @@ public Icon_SaveMe_Draw( iVictimId ) {
             if ( bTargetable )
                 Create_TE_PLAYERATTACHMENT( iHealerId, iVictimId, 40, ICON_SAVEME, 9999 );
         }
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+public Icon_SaveMe_Undraw( id ) {
+
+    #if ADVANCED_DEBUG
+
+    	log_function("public Icon_SaveMe_Draw( iVictimId ) {");
+
+    #endif
+
+    new TeamPlayers[32], iTotalPlayers;
+    new szTeamName[16];
+
+    if ( get_user_team( id ) == CS_TEAM_TERRORIST )
+        copy( szTeamName, 15, "TERRORIST" );
+
+    else
+    {
+        copy( szTeamName, 15, "CT" );
+    }
+
+    get_players( TeamPlayers, iTotalPlayers, "a", szTeamName );
+
+    // Remove health icon from low health teammates
+
+    for ( new iPlayerNum = 0; iPlayerNum < iTotalPlayers; iPlayerNum++ )
+    {
+        new teammate = TeamPlayers[iPlayerNum];
+
+        if ( g_bPlayerSaveMe[teammate] )
+            Remove_TE_PLAYERATTACHMENT( id, teammate );
     }
 
     return PLUGIN_HANDLED;

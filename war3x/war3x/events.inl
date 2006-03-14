@@ -639,6 +639,11 @@ public on_CurWeapon( id ) {
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
 
+    // Player has now officially spawned at least once!
+
+    if ( !g_bPlayerConnected[id] )
+        g_bPlayerConnected[id] = true;
+
     // Display Race Select Menu
 
     if ( !g_PlayerInfo[id][CURRENT_RACE] )

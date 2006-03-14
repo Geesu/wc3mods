@@ -33,7 +33,7 @@ public Ultimate_Target( id ) {
         {
             switch ( Ultimate )
             {
-                case ULTIMATE_HEALINGWAVE:  return ULTIMATE_TARGET_TEAM;
+                case ULTIMATE_HEALINGWAVE:  return ULTIMATE_TARGET_SELF|ULTIMATE_TARGET_TEAM;
                 case ULTIMATE_LIGHTNING:    return ULTIMATE_TARGET_ENEMY;
                 case ULTIMATE_WINDWALK:     return ULTIMATE_TARGET_SELFONLY;
             }

@@ -149,6 +149,8 @@ new const DISPELL_TARGETS[_TR][] =
 
 #define SKILLDAMAGE_MULTIPLIER      1.5     // (  float) multiplier for armor lost on skill damage
 
+#define SELFHEAL_MODIFIER           0.6     // (  float) modifier to apply to all self healing when player is first target
+
 new const GETSKILLCHECK[3] =    {1,3,5};    // (integer) levels can you get same skill upgrades
 new const GETCLASSCHECK[3] =    {0,2,5};    // (integer) levels players receive new class titles
 
@@ -200,7 +202,7 @@ new const GETCLASSCHECK[3] =    {0,2,5};    // (integer) levels players receive 
 #define TASK_SLEEP                  288
 #define TASK_REJUV                  320
 #define TASK_ULTIMATECOOLDOWN       352
-#define TASK_ANTIMAGICSHELL         384
+#define TASK_ANTIMAGICSHELL         384 // UNUSED
 #define TASK_ROOT                   416
 #define TASK_DETONATE               448
 #define TASK_FLAMESTRIKE_VICTIM     480
@@ -240,9 +242,6 @@ new const GETCLASSCHECK[3] =    {0,2,5};    // (integer) levels players receive 
 #define GLOW_DURATION_BASE        0.025     // Glow calc numbers
 #define GLOW_DURATION_MIN           0.5
 #define GLOW_DURATION_MAX           5.0
-
-#define SLOW_FROST                    1     // Slow types
-#define SLOW_ELF                      2
 
 #define IMMOBILIZE_BASH               1     // Immobilize types
 #define IMMOBILIZE_ROOT               2

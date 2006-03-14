@@ -411,6 +411,8 @@ public WAR3_precache() {
     return PLUGIN_HANDLED;
 }
 
+// Status Text ( beneficial )
+
 public WAR3_status_text( id, szMessage[], Float:fDuration ) {
 #if ADVANCED_DEBUG
 	log_function("public WAR3_status_text( id, szMessage[], Float:fDuration ) {");
@@ -418,7 +420,30 @@ public WAR3_status_text( id, szMessage[], Float:fDuration ) {
 
     // Print to status area
 
-    set_hudmessage( 255, 208, 0, -1.0, 0.85, 0, 6.0, fDuration, 0.1, 0.5, 4 );
+    set_hudmessage( 255, 208, 0, -1.0, 0.82, 0, 6.0, fDuration, 0.1, 0.5, 4 );
+    show_hudmessage( id, szMessage );
+
+    // Print important messages to console
+
+    if ( fDuration >= 3.0 )
+    {
+        client_print( id, print_console, "%s%s", STATUS_PREFIX, szMessage );
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+
+// Status Text ( harmful )
+
+public WAR3_status_text2( id, szMessage[], Float:fDuration ) {
+#if ADVANCED_DEBUG
+	log_function("public WAR3_status_text2( id, szMessage[], Float:fDuration ) {");
+#endif
+
+    // Print to status area
+
+    set_hudmessage( 224, 180, 0, -1.0, 0.88, 0, 6.0, fDuration, 0.1, 0.5, 4 );
     show_hudmessage( id, szMessage );
 
     // Print important messages to console
@@ -684,7 +709,10 @@ public WAR3_is_lowhealth( id ) {
     new iHealth = get_user_health( id );
 
     if ( g_bEvadeNextShot[id] )
+    {
         iHealth -= 1024;
+        iMaxHealth -= 1024;
+    }
 
     if ( float( iHealth ) / float( iMaxHealth ) <= HEAL_NOTIFYHEALTH )
         return ( 1 );
@@ -808,29 +836,30 @@ public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iChec
 
     #endif
 
-/*
-    // Absorb Magic Damage ( AMS ) (REMOVED)
-
-    if ( g_PlayerInfo[iVictimId][CURRENT_RACE] == RACE_UNDEAD && g_PlayerInfo[iVictimId][CURRENT_SKILL2] && iDamage )
-    {
-        // Set new damage ammount
-
-        iDamage = SShell_Absorb( iVictimId, iDamage );
-    }
-*/
-
     // Elune's Grace ( absorb bonus knife/ultimate damage )
 
     if ( g_PlayerInfo[iVictimId][CURRENT_RACE] == RACE_NIGHTELF && iDamage )
     {
+        new iLevel = WAR3_get_level( g_PlayerInfo[iVictimId][CURRENT_XP] );
+
         // Set new damage amount
 
         if ( iWeaponId == CSW_KNIFE )
-            iDamage = SElunes_Knife( iVictimId, iDamage );
+        {
+            new Float:fAbsorb = float( iDamage ) * SElunes_Knife_Get( iLevel );
+            iDamage -= floatround( fAbsorb );
+
+            new iAbsorb = floatround( fAbsorb );
+            SElunes_Absorb( iVictimId, iAbsorb );
+        }
 
         else if ( WAR3_is_ultimate( iWeaponId ) )
         {
-            iDamage = SElunes_Magic( iVictimId, iDamage );
+            new Float:fAbsorb = float( iDamage ) * SElunes_Magic_Get( iLevel );
+            iDamage -= floatround( fAbsorb );
+
+            new iAbsorb = floatround( fAbsorb );
+            SElunes_Absorb( iVictimId, iAbsorb );
         }
     }
 

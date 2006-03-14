@@ -77,8 +77,6 @@ public Skills_Defensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) 
 
     if ( g_PlayerInfo[victimId][CURRENT_RACE] == RACE_UNDEAD && get_user_team( attackerId ) != get_user_team( victimId ) && attackerId )
     {
-        // Anti-Magic Shell ( called from WAR3_damage() ) (REMOVED)
-
         // Frost Armor
 
         if ( g_PlayerInfo[victimId][CURRENT_SKILL3] && get_user_armor( victimId ) )
@@ -221,7 +219,7 @@ public Float:SUnholyGravity_Get( iLevel ) {
     if ( fLevel > LEVEL_RACIALCAP )
         fLevel = LEVEL_RACIALCAP;
 
-    new Float:fUnholyGravity = s_UnholyGravity[0] + ( ( ( s_UnholyGravity[1] - s_UnholyGravity[0] ) / LEVEL_RACIALCAP ) * fLevel );
+    new Float:fUnholyGravity = s_UnholyGravity[1] + ( ( ( s_UnholyGravity[0] - s_UnholyGravity[1] ) / LEVEL_RACIALCAP ) * fLevel );
 
     if ( fUnholyGravity < s_UnholyGravity[1] )
         fUnholyGravity = s_UnholyGravity[1];
@@ -453,7 +451,7 @@ public SFrostNova( id ) {
                 new szMessage[128];
                 format( szMessage, 127, DAMAGE_FROSTNOVA, id, iDamage );
 
-                WAR3_status_text( enemy, szMessage, 3.0 );
+                WAR3_status_text2( enemy, szMessage, 3.0 );
 
             }
         }
@@ -496,45 +494,6 @@ public SFrostNova_Remove( parm_Slow[1] ) {
 
     return PLUGIN_HANDLED;
 }
-
-/*
-// Anti-Magic Shell (Removed)
-
-public SShell_Absorb( id, iDamage ) {
-#if ADVANCED_DEBUG
-  log_function("public SShell_Absorb( id, iDamage ) {");
-#endif
-
-    // Check if restricted
-
-    if ( !WAR3_skill_enabled( id, RACE_UNDEAD, SKILL_2 ) )
-        return ( iDamage );
-
-    if ( iDamage < SHELL_MINDAMAGE )
-        return ( iDamage );
-
-    new Float:fDamageAbsorbed = float( iDamage ) * s_ShellAbsorb[g_PlayerInfo[id][CURRENT_SKILL2] - 1];
-    new iDamageAbsorbed = floatround( fDamageAbsorbed );
-
-    iDamage -= iDamageAbsorbed;
-
-    if ( iDamageAbsorbed )
-    {
-        // Hud Message
-
-        new szMessage[64];
-        format( szMessage, 63, DAMAGE_ANTIMAGICSHELL, iDamageAbsorbed );
-
-        WAR3_status_text( id, szMessage, 3.0 );
-
-        // Glow shell
-
-        Glow_Set( id, 0.1, SHELL_RGB, 48 );
-    }
-
-    return ( iDamage );
-}
-*/
 
 
 // Frost Armor
@@ -1120,7 +1079,7 @@ public USleep_Cast( casterId, targetId ) {
 
     format( szMessage, 127, CAST_SLEEP, szPlayerName );
 
-    WAR3_status_text( targetId, szMessage, 3.0 );
+    WAR3_status_text2( targetId, szMessage, 3.0 );
 
     // Hit Zones ( remove )
 
@@ -1257,7 +1216,7 @@ public USleep_Wake( parm_Remove[1] ) {
     new szMessage[128];
     format( szMessage, 127, FINISH_SLEEP );
 
-    WAR3_status_text( targetId, szMessage, 3.0 );
+    WAR3_status_text2( targetId, szMessage, 3.0 );
 
     // Enable Attack for an additional second ( to prevent sniper exploiting ).
 

@@ -13,11 +13,11 @@ public cmd_Ultimate( iCasterId ) {
 
     new iTargetId = g_PlayerTarget[iCasterId];
 
-    // Press when dead ( target skills )
+    // Press when dead ( target skills ) *REMOVED TEMPORARILY*
 
     if ( !is_user_alive( iCasterId ) )
     {
-        motd_Skills( iCasterId, iTargetId );
+        //motd_Skills( iCasterId, iTargetId );
         return PLUGIN_HANDLED;
     }
 

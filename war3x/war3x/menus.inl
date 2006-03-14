@@ -94,10 +94,10 @@ public menu_SelectRace( id ) {
 	log_function("public menu_SelectRace( id ) {");
 #endif
 
-    if ( !g_bWar3xEnabled || ( get_user_team( id ) != CS_TEAM_CT && get_user_team( id ) != CS_TEAM_TERRORIST ) )
+    if ( !g_bWar3xEnabled || !g_bPlayerConnected[id] )
         return PLUGIN_HANDLED;
 
-    g_bPlayerConnected[id] = true;
+//    g_bPlayerConnected[id] = true;
 
     new iKeys;
     new szMenu[512], iLen;
@@ -366,13 +366,13 @@ public menu_SelectSkills( id ) {
 				else if ( g_PlayerInfo[id][CURRENT_ULTIMATE] )
 				{
 						new iSkillsFull = 0;
-				
+
 						for ( iSkillNum = 0 + OFFSET_CURRENT_SKILLS; iSkillNum < TOTAL_SKILLSTRAINED + OFFSET_CURRENT_SKILLS; iSkillNum++ )
 						{
 								if ( g_PlayerInfo[id][iSkillNum] == TOTAL_SKILLLEVELS )
 								iSkillsFull++;
 						}
-				
+
 						if ( iSkillsFull == TOTAL_SKILLSTRAINED - 1 )
 						{
 								for ( iSkillNum = 0 + OFFSET_CURRENT_SKILLS; iSkillNum < TOTAL_SKILLSTRAINED + OFFSET_CURRENT_SKILLS; iSkillNum++ )
