@@ -284,7 +284,7 @@ public WAR3_armorskill_on( id ) {
         client_cmd( id, "speak warcraft3/bonus/BerzerkerCaster.wav" );
     }
 
-    else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF )
+    else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] )
     {
         new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] ) + 1;
 
@@ -332,10 +332,10 @@ public WAR3_armorskill_off( id ) {
     else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL3] )
         copy( szMessage, 127, ARMOR_MESSAGE_FADE_HU );
 
-    else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL3] )
+    else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC )
         copy( szMessage, 127, ARMOR_MESSAGE_FADE_OR );
 
-    else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF )
+    else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] )
         copy( szMessage, 127, ARMOR_MESSAGE_FADE_NE );
 
     else

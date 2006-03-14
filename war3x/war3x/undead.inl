@@ -875,8 +875,8 @@ public UImpale_Cast( casterId, targetId ) {
 
     Create_TE_BEAMFOLLOW( SHOWTO_ALL_BROADCAST, targetId, SPR_BEAMFOLLOW, 5, 3, 160, 0, 48, 128 );
 
-    // Blood Sprites
-
+    // Blood Sprites *REMOVED TEMPORARILY*
+/*
     for ( new i = 0; i < 5; i++ )
     {
         get_user_origin( targetId, Origin );
@@ -905,6 +905,7 @@ public UImpale_Cast( casterId, targetId ) {
 
         Create_TE_WORLDDECAL( SHOWTO_ALL, Origin, BLOOD_SMALL[random_num( 0,6 )] );
     }
+*/
 
     // Remove Armor
 

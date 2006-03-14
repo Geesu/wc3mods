@@ -367,6 +367,8 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 	for ( new i = 0; i < 3; i++ )
 		iGrenadeOrigin[i] = floatround( grenadeOrigin[i] );
 
+    iGrenadeOrigin[2] += 40;
+
 	for ( new iPlayerNum = 0; iPlayerNum < iTotalPlayers; iPlayerNum++ )
 	{
 		new teamId = Teammates[iPlayerNum];
@@ -429,8 +431,8 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 
                     Create_ScreenFade( teamId, (1<<10), (1<<10), FADE_OUT, 147, 115, 78, iFadeAlpha );
                 }
-
-                // Blood Sprites
+/*
+                // Blood Sprites *REMOVED TEMPORARILY*
 
                 new Origin[3];
                 get_user_origin( teamId, Origin );
@@ -458,6 +460,7 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 
                     Create_TE_WORLDDECAL( SHOWTO_ALL_BROADCAST, Origin, blood_small[random_num( 0,6 )] );
                 }
+*/
 			}
 		}
 	}
@@ -481,7 +484,7 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 			case 192:   iBlueMod = 32;
 		}
 
-		// Play Sound
+		// Play Sound *REMOVED TEMPORARILY*
 
 		//emit_sound( victimId, CHAN_STATIC, SOUND_PULVERIZE, 1.0, ATTN_NORM, 0, PITCH_NORM );
 

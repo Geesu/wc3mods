@@ -629,8 +629,8 @@ public URoot_Dot( parm[2] ) {
 
     new iDamage = ( ROOT_MAXDAMAGE / iDuration );
 
-    // Blood Sprites
-
+    // Blood Sprites *REMOVED TEMPORARILY*
+/*
     new Origin[3];
     get_user_origin( targetId, Origin );
 
@@ -654,7 +654,7 @@ public URoot_Dot( parm[2] ) {
 
         Create_TE_WORLDDECAL( SHOWTO_ALL_BROADCAST, Origin, BLOOD_SMALL[random_num(0,6)] );
     }
-
+*/
     // Apply Damage
 
     WAR3_damage( casterId, targetId, CSW_ROOT, iDamage, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
