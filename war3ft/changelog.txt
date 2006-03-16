@@ -2,6 +2,7 @@ v2.3.2
  - Bug Fix: Index out of bounds in events.inl on an attacker check - thanks Striker
  - Bug Fix: Changed where the STEAM_ID_PENDING code exists
  - Update: Database fallback code (if no DBI module is found)
+ - Update: Entire language file
 
 v2.3.1
  - Bug Fix: Link wasn't linked correctly in war3help

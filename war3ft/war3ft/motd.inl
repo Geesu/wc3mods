@@ -272,9 +272,9 @@ public MOTD_Skillsinfo(id){
 
 			// Get Skill Description
 			if(p_data[id][P_RACE] == RACE_CHAMELEON)
-				Lang_Skill_Info(race9Options[i+1], i+1, id, skill_description[i], 256)
+				lang_GetSkillInfo(race9Options[i+1], i+1, id, skill_description[i], 256)
 			else
-				Lang_Skill_Info(p_data[id][P_RACE], i+1, id, skill_description[i], 256)
+				lang_GetSkillInfo(p_data[id][P_RACE], i+1, id, skill_description[i], 256)
 
 		}
 
@@ -303,7 +303,7 @@ public MOTD_Skillsinfo(id){
 				new heroskillinfo[128]
 				new heroskillname[64]
 				lang_GetSkillName(p_data[id][P_RACE], SKILL_HERO, id, heroskillname, 63)
-				Lang_Hero_Skill_Info(p_data[id][P_RACE], SKILL_HERO, id, heroskillinfo, 127)
+				lang_GetSkillInfo(p_data[id][P_RACE], SKILL_HERO, id, heroskillinfo, 127)
 				pos += formatex(message[pos],2048-pos,"<li>%s</li><ul>%s</ul><br>", heroskillname, heroskillinfo)
 			}
 		}

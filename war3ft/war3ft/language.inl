@@ -1,106 +1,74 @@
 
-public Lang_Set_Menus(){
+#define TOTAL_MENUS 13
+
+
+// This is the list of menu titles that are in war3ft.txt
+new const MENU_NAMES[TOTAL_MENUS][] = 
+{
+	"MENU_BUY_ITEM",
+	"MENU_BUY_ITEM2",
+	"MENU_SELECT_SKILL",
+	"MENU_TELEPORT_TO",
+	"MENU_SELECT_RACE",
+	"MENU_WAR3_FT_MENU",
+	"MENU_SKILLS_OPTIONS",
+	"MENU_ITEM_OPTIONS",
+	"MENU_RACE_OPTIONS",
+	"MENU_ADMIN_MENU",
+	"MENU_GIVE_PLAYERS_XP",
+	"MENU_TEAM_XP",
+	"MENU_RESET_XP"
+};
+
+// Callback functions for the above menu names
+new const MENU_CALLBACK[TOTAL_MENUS][] = 
+{
+	"_menu_Shopmenu_One",
+	"_menu_Shopmenu_Two",
+	"_menu_Select_Skill",
+	"_menu_Teleport",
+	"_menu_Select_Race",
+	"_menu_War3menu",
+	"_menu_Skill_Options",
+	"_menu_Item_Options",
+	"_menu_Race_Options",
+	"_menu_Admin_Options",
+	"_menu_PlayerXP_Options",
+	"_menu_TeamXP_Options",
+	"_menu_ResetXP"
+};
+
+public lang_SetMenus(){
 	#if ADVANCED_DEBUG
-		writeDebugInfo("lang_Set_Menus",0)
+		writeDebugInfo( "lang_SetMenus", 0 );
 	#endif
 
-	new total_languages = get_langsnum()
-	new lang[3], i = 0, menu[128]
-	new curMenuId = -1, highestMenuId = -1
+	new total_languages = get_langsnum();
+	new lang[3], menu[128];
+	new curMenuId = -1, highestMenuId = -1;
+	new iLang, iMenu;
 
-	for(i=0;i<total_languages;i++){
-		get_lang(i,lang)
-		if(lang_exists(lang)){
 
-			formatex(menu,127,"%L",lang,"MENU_BUY_ITEM")
-			curMenuId = register_menuid(menu)
-			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"_menu_Shopmenu_One")
-				highestMenuId = curMenuId
-			}
+	// Loop through every menu
 
-			formatex(menu,127,"%L",lang,"MENU_BUY_ITEM2")
-			curMenuId = register_menuid(menu)
-			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"_menu_Shopmenu_Two")
-				highestMenuId = curMenuId
-			}
+	for ( iMenu = 0; iMenu < TOTAL_MENUS; iMenu++ )
+	{
+		// Register the menu names for each language
 
-			formatex(menu,127,"%L",lang,"MENU_SELECT_SKILL")
-			curMenuId = register_menuid(menu)
-			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"_menu_Select_Skill")
-				highestMenuId = curMenuId
-			}
+		for( iLang = 0; iLang < total_languages; iLang++ )
+		{
+			get_lang ( iLang, lang );
 
-			formatex(menu,127,"%L",lang,"MENU_TELEPORT_TO")
-			curMenuId = register_menuid(menu)
-			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"_menu_Teleport")
-				highestMenuId = curMenuId
-			}
+			if( lang_exists( lang ) )
+			{
+				formatex ( menu, 127, "%L", lang, MENU_NAMES[iMenu] );
+				curMenuId = register_menuid ( menu );
 
-			formatex(menu,127,"%L",lang,"MENU_SELECT_RACE")
-			curMenuId = register_menuid(menu)
-			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"_menu_Select_Race")
-				highestMenuId = curMenuId
-			}
-
-			formatex(menu,127,"%L",lang,"MENU_WAR3_FT_MENU")
-			curMenuId = register_menuid(menu)
-			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"_menu_War3menu")
-				highestMenuId = curMenuId
-			}
-
-			formatex(menu,127,"%L",lang,"MENU_SKILLS_OPTIONS")
-			curMenuId = register_menuid(menu)
-			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"_menu_Skill_Options")
-				highestMenuId = curMenuId
-			}
-
-			formatex(menu,127,"%L",lang,"MENU_ITEM_OPTIONS")
-			curMenuId = register_menuid(menu)
-			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"_menu_Item_Options")
-				highestMenuId = curMenuId
-			}
-
-			formatex(menu,127,"%L",lang,"MENU_RACE_OPTIONS")
-			curMenuId = register_menuid(menu)
-			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"_menu_Race_Options")
-				highestMenuId = curMenuId
-			}
-
-			formatex(menu,127,"%L",lang,"MENU_ADMIN_MENU")
-			curMenuId = register_menuid(menu)
-			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"_menu_Admin_Options")
-				highestMenuId = curMenuId
-			}
-
-			formatex(menu,127,"%L",lang,"MENU_GIVE_PLAYERS_XP")
-			curMenuId = register_menuid(menu)
-			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"_menu_PlayerXP_Options")
-				highestMenuId = curMenuId
-			}
-
-			formatex(menu,127,"%L",lang,"MENU_TEAM_XP")
-			curMenuId = register_menuid(menu)
-			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"_menu_TeamXP_Options")
-				highestMenuId = curMenuId
-			}
-
-			formatex(menu,127,"%L",lang,"MENU_RESET_XP")
-			curMenuId = register_menuid(menu)
-			if(curMenuId>highestMenuId){
-				register_menucmd(curMenuId,1023,"_menu_ResetXP")
-				highestMenuId = curMenuId
+				if( curMenuId > highestMenuId )
+				{
+					register_menucmd ( curMenuId, 1023, MENU_CALLBACK[iMenu] );
+					highestMenuId = curMenuId;
+				}
 			}
 		}
 	}
@@ -211,107 +179,135 @@ lang_GetSkillName( race_id, skill_id, id, skill_name[], len )
 	}
 }
 
+// We really should just build an HTML file when the server starts then send that to the user (like war3x)
 
-public Lang_Hero_Skill_Info(race, skill, id, skill_description[], iDescLen){
-	new skill_lookup[64]
-	formatex(skill_lookup,63,"RACE%d_SKILL5_INFO",race)
+lang_GetSkillInfo( race_id, skill_id, id, skill_description[], len )
+{
+	#if ADVANCED_DEBUG
+		writeDebugInfo( "lang_GetSkillInfo", id );
+	#endif
 
-	switch(race){
-		case RACE_BLOOD:	formatex(skill_description,iDescLen-1,"%L",id,skill_lookup,(100.0 * p_resistant[p_data[id][P_LEVEL]]))
-		case RACE_SHADOW:	formatex(skill_description,iDescLen-1,"%L",id,skill_lookup,(100.0 * p_concoction[p_data[id][P_LEVEL]]), CONCOCTION_DAMAGE)
-		case RACE_WARDEN:	formatex(skill_description,iDescLen-1,"%L",id,skill_lookup,(100.0 * p_harden[p_data[id][P_LEVEL]]))
-		case RACE_CRYPT:	formatex(skill_description,iDescLen-1,"%L",id,skill_lookup,(100.0 * p_orb[p_data[id][P_LEVEL]]), ORB_DAMAGE)
-	}
-}
+	switch( race_id )
+	{
 
-public Lang_Skill_Info(race, skill, id, skill_description[], iDescLen){
+		// Undead Scourge
 
-	switch(race){
-		case RACE_UNDEAD:{
-			switch(skill){
-				case SKILL1: formatex(skill_description,iDescLen-1,"%L",id,"RACE1_SKILL1_INFO",floatround(p_vampiric[0]*100),floatround(p_vampiric[1]*100),floatround(p_vampiric[2]*100))
+		case RACE_UNDEAD:
+		{
+			switch( skill_id )
+			{
+				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE1_SKILL1_INFO",floatround(p_vampiric[0]*100), floatround(p_vampiric[1]*100), floatround(p_vampiric[2]*100) );
 			#if MOD == 1
-				case SKILL2: formatex(skill_description,iDescLen-1,"%L",id,"DOD_RACE1_SKILL2_INFO")
-			#else
-				case SKILL2: formatex(skill_description,iDescLen-1,"%L",id,"RACE1_SKILL2_INFO")
+				case SKILL2: formatex ( skill_description, len-1, "%L", id, "DOD_RACE1_SKILL2_INFO" );
+			#elseif MOD == 0
+				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE1_SKILL2_INFO" );
 			#endif
-				case SKILL3: formatex(skill_description,iDescLen-1,"%L",id,"RACE1_SKILL3_INFO")
-				case SKILL4: formatex(skill_description,iDescLen-1,"%L",id,"RACE1_SKILL4_INFO")
+				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE1_SKILL3_INFO" );
+				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE1_SKILL4_INFO" );
 			}
 		}
-		case RACE_HUMAN:{
-			switch(skill){
 
-				case SKILL1: formatex(skill_description,iDescLen-1,"%L",id,"RACE2_SKILL1_INFO")
-				case SKILL2: formatex(skill_description,iDescLen-1,"%L",id,"RACE2_SKILL2_INFO",p_devotion[0],p_devotion[1],p_devotion[2])
-				case SKILL3: formatex(skill_description,iDescLen-1,"%L",id,"RACE2_SKILL3_INFO",floatround(p_bash[0]*100),floatround(p_bash[1]*100),floatround(p_bash[2]*100))
-				case SKILL4: {
-					if (iCvar[FT_BLINKENABLED])
-						formatex(skill_description,iDescLen-1,"%L",id,"RACE2_SKILL4_INFO_B")
-					else
-						formatex(skill_description,iDescLen-1,"%L",id,"RACE2_SKILL4_INFO_T")
-				}
+		// Human Alliance
+
+		case RACE_HUMAN:
+		{
+			switch(skill_id)
+			{
+				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL1_INFO" );
+				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL2_INFO", p_devotion[0], p_devotion[1], p_devotion[2] );
+				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL3_INFO", floatround(p_bash[0]*100), floatround(p_bash[1]*100), floatround(p_bash[2]*100) );
+				case SKILL4: formatex ( skill_description, len-1, "%L", id, (iCvar[FT_BLINKENABLED]) ? "RACE2_SKILL4_INFO_B" : "RACE2_SKILL4_INFO_T" );
 			}
 		}
-		case RACE_ORC:{
-			switch(skill){
-				case SKILL1: formatex(skill_description,iDescLen-1,"%L",id,"RACE3_SKILL1_INFO",floatround(p_critical[0]*100))
+
+		// Orcish Horde
+
+		case RACE_ORC:
+		{
+			switch(skill_id)
+			{
+				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE3_SKILL1_INFO", floatround(p_critical[0]*100) );
 			#if MOD == 1
-				case SKILL2: formatex(skill_description,iDescLen-1,"%L",id,"DOD_RACE3_SKILL2_INFO",floatround(p_grenade[0]),floatround(p_grenade[1]),floatround(p_grenade[2]))
-			#else
-				case SKILL2: formatex(skill_description,iDescLen-1,"%L",id,"RACE3_SKILL2_INFO",floatround(p_grenade[0]),floatround(p_grenade[1]),floatround(p_grenade[2]))
+				case SKILL2: formatex ( skill_description, len-1, "%L", id, "DOD_RACE3_SKILL2_INFO", floatround(p_grenade[0]), floatround(p_grenade[1]), floatround(p_grenade[2]) );
+				case SKILL3: formatex ( skill_description, len-1, "%L", id, "DOD_RACE3_SKILL3_INFO", floatround(p_ankh[0]*100), floatround(p_ankh[1]*100), floatround(p_ankh[2]*100) );
+			#elseif MOD == 0
+				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE3_SKILL2_INFO", floatround(p_grenade[0]), floatround(p_grenade[1]), floatround(p_grenade[2]) );
+				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE3_SKILL3_INFO", floatround(p_ankh[0]*100), floatround(p_ankh[1]*100), floatround(p_ankh[2]*100) );
 			#endif
+				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE3_SKILL4_INFO" );
+			}
+		}
+
+		// Night Elf
+
+		case RACE_ELF:
+		{
+			switch(skill_id)
+			{
+				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE4_SKILL1_INFO", floatround(p_evasion[0]*100), floatround(p_evasion[1]*100), floatround(p_evasion[2]*100) );
+				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE4_SKILL2_INFO", floatround(p_thorns[0]*100), floatround(p_thorns[1]*100), floatround(p_thorns[2]*100) );
+				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE4_SKILL3_INFO", floatround(p_trueshot[0]*100), floatround(p_trueshot[1]*100), floatround(p_trueshot[2]*100) );
+				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE4_SKILL4_INFO" );
+			}
+		}
+
+		// Blood Mage
+
+		case RACE_BLOOD:
+		{
+			switch(skill_id)
+			{
 			#if MOD == 1
-				case SKILL3: formatex(skill_description,iDescLen-1,"%L",id,"DOD_RACE3_SKILL3_INFO",floatround(p_ankh[0]*100),floatround(p_ankh[1]*100),floatround(p_ankh[2]*100))
-			#else
-				case SKILL3: formatex(skill_description,iDescLen-1,"%L",id,"RACE3_SKILL3_INFO",floatround(p_ankh[0]*100),floatround(p_ankh[1]*100),floatround(p_ankh[2]*100))
+				case SKILL1: formatex ( skill_description, len-1, "%L", id, "DOD_RACE5_SKILL1_INFO", p_pheonix[0], p_pheonix[1], p_pheonix[2] );
+			#elseif MOD == 0
+				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE5_SKILL1_INFO", floatround(p_pheonix[0]*100), floatround(p_pheonix[1]*100), floatround(p_pheonix[2]*100) );
 			#endif
-				case SKILL4: formatex(skill_description,iDescLen-1,"%L",id,"RACE3_SKILL4_INFO")
+				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE5_SKILL2_INFO", floatround(p_banish[0]*100), floatround(p_banish[1]*100), floatround(p_banish[2]*100) );
+				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE5_SKILL3_INFO", floatround(p_mana[0]*100), floatround(p_mana[1]*100), floatround(p_mana[2]*100) );
+				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE5_SKILL4_INFO" );
+				case SKILL5: formatex ( skill_description, len-1, "%L", id, "RACE5_SKILL5_INFO", (100.0 * p_resistant[p_data[id][P_LEVEL]]) );
 			}
 		}
-		case RACE_ELF: {
-			switch(skill){
-				case SKILL1: formatex(skill_description,iDescLen-1,"%L",id,"RACE4_SKILL1_INFO",floatround(p_evasion[0]*100),floatround(p_evasion[1]*100),floatround(p_evasion[2]*100))
-				case SKILL2: formatex(skill_description,iDescLen-1,"%L",id,"RACE4_SKILL2_INFO",floatround(p_thorns[0]*100),floatround(p_thorns[1]*100),floatround(p_thorns[2]*100))
-				case SKILL3: formatex(skill_description,iDescLen-1,"%L",id,"RACE4_SKILL3_INFO",floatround(p_trueshot[0]*100),floatround(p_trueshot[1]*100),floatround(p_trueshot[2]*100))
-				case SKILL4: formatex(skill_description,iDescLen-1,"%L",id,"RACE4_SKILL4_INFO")
+
+		// Shadow Hunter
+
+		case RACE_SHADOW:
+		{
+			switch(skill_id)
+			{
+				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL1_INFO", floatround(p_heal[0]), floatround(p_heal[1]), floatround(p_heal[2]) );
+				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL2_INFO", floatround(p_hex[0]*100), floatround(p_hex[1]*100), floatround(p_hex[2]*100) );
+				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL3_INFO", p_serpent[0], p_serpent[1], p_serpent[2])
+				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL4_INFO" );
+				case SKILL5: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL5_INFO",(100.0 * p_concoction[p_data[id][P_LEVEL]]), CONCOCTION_DAMAGE)
 			}
 		}
-		case RACE_BLOOD :{
-			switch(skill){
-			#if MOD == 0
-				case SKILL1: formatex(skill_description,iDescLen-1,"%L",id,"RACE5_SKILL1_INFO",floatround(p_pheonix[0]*100),floatround(p_pheonix[1]*100),floatround(p_pheonix[2]*100))
-			#endif
-			#if MOD == 1
-				case SKILL1: formatex(skill_description,iDescLen-1,"%L",id,"DOD_RACE5_SKILL1_INFO",p_pheonix[0],p_pheonix[1],p_pheonix[2])
-			#endif
-				case SKILL2: formatex(skill_description,iDescLen-1,"%L",id,"RACE5_SKILL2_INFO",floatround(p_banish[0]*100),floatround(p_banish[1]*100),floatround(p_banish[2]*100))
-				case SKILL3: formatex(skill_description,iDescLen-1,"%L",id,"RACE5_SKILL3_INFO",floatround(p_mana[0]*100),floatround(p_mana[1]*100),floatround(p_mana[2]*100))
-				case SKILL4: formatex(skill_description,iDescLen-1,"%L",id,"RACE5_SKILL4_INFO")
+
+		// Warden
+
+		case RACE_WARDEN:
+		{
+			switch(skill_id)
+			{
+				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE7_SKILL1_INFO",  floatround(p_fan[0]*100), floatround(p_fan[1]*100), floatround(p_fan[2]*100) );
+				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE7_SKILL2_INFO", floatround(p_blink[0]*100), floatround(p_blink[1]*100), floatround(p_blink[2]*100) );
+				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE7_SKILL3_INFO", floatround(p_shadow[0]*100), floatround(p_shadow[1]*100), floatround(p_shadow[2]*100) );
+				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE7_SKILL4_INFO" );
+				case SKILL5: formatex ( skill_description, len-1, "%L", id, "RACE7_SKILL5_INFO", (100.0 * p_harden[p_data[id][P_LEVEL]]) );
 			}
 		}
-		case RACE_SHADOW: {
-			switch(skill){
-				case SKILL1: formatex(skill_description,iDescLen-1,"%L",id,"RACE6_SKILL1_INFO",floatround(p_heal[0]),floatround(p_heal[1]),floatround(p_heal[2]))
-				case SKILL2: formatex(skill_description,iDescLen-1,"%L",id,"RACE6_SKILL2_INFO",floatround(p_hex[0]*100),floatround(p_hex[1]*100),floatround(p_hex[2]*100))
-				case SKILL3: formatex(skill_description,iDescLen-1,"%L",id,"RACE6_SKILL3_INFO",p_serpent[0],p_serpent[1],p_serpent[2])
-				case SKILL4: formatex(skill_description,iDescLen-1,"%L",id,"RACE6_SKILL4_INFO")
-			}
-		}
-		case RACE_WARDEN: {
-			switch(skill){
-				case SKILL1: formatex(skill_description,iDescLen-1,"%L",id,"RACE7_SKILL1_INFO",floatround(p_fan[0]*100),floatround(p_fan[1]*100),floatround(p_fan[2]*100))
-				case SKILL2: formatex(skill_description,iDescLen-1,"%L",id,"RACE7_SKILL2_INFO",floatround(p_blink[0]*100),floatround(p_blink[1]*100),floatround(p_blink[2]*100))
-				case SKILL3: formatex(skill_description,iDescLen-1,"%L",id,"RACE7_SKILL3_INFO",floatround(p_shadow[0]*100),floatround(p_shadow[1]*100),floatround(p_shadow[2]*100))
-				case SKILL4: formatex(skill_description,iDescLen-1,"%L",id,"RACE7_SKILL4_INFO")
-			}
-		}
-		case RACE_CRYPT: {
-			switch(skill){
-				case SKILL1: formatex(skill_description,iDescLen-1,"%L",id,"RACE8_SKILL1_INFO",floatround(p_impale[0]*100),floatround(p_impale[1]*100),floatround(p_impale[2]*100))
-				case SKILL2: formatex(skill_description,iDescLen-1,"%L",id,"RACE8_SKILL2_INFO",floatround(p_spiked[0]*100),floatround(p_spiked[1]*100),floatround(p_spiked[2]*100))
-				case SKILL3: formatex(skill_description,iDescLen-1,"%L",id,"RACE8_SKILL3_INFO",floatround(p_carrion[0]*100),floatround(p_carrion[1]*100),floatround(p_carrion[2]*100))
-				case SKILL4: formatex(skill_description,iDescLen-1,"%L",id,"RACE8_SKILL4_INFO")
+
+		// Crypt Lord
+
+		case RACE_CRYPT:
+		{
+			switch(skill_id)
+			{
+				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE8_SKILL1_INFO", floatround(p_impale[0]*100), floatround(p_impale[1]*100), floatround(p_impale[2]*100) );
+				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE8_SKILL2_INFO", floatround(p_spiked[0]*100), floatround(p_spiked[1]*100), floatround(p_spiked[2]*100) );
+				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE8_SKILL3_INFO", floatround(p_carrion[0]*100), floatround(p_carrion[1]*100), floatround(p_carrion[2]*100) );
+				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE8_SKILL4_INFO" );
+				case SKILL5: formatex ( skill_description, len-1, "%L", id, "RACE8_SKILL5_INFO", (100.0 * p_orb[p_data[id][P_LEVEL]]), ORB_DAMAGE)
 			}
 		}
 	}

@@ -277,6 +277,7 @@
 #define SKILL2						2
 #define SKILL3						3
 #define SKILL4						4
+#define SKILL5						5
 
 #define SKILL_1						1
 #define SKILL_2						2

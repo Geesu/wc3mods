@@ -1213,7 +1213,7 @@ public WAR3_Set_Variables(){
 		g_MODclient = "* [WAR3FT]"	
 	}
 
-	Lang_Set_Menus()
+	lang_SetMenus()
 	XP_Set_DBI()
 	XP_Set()
 	checkmap()
