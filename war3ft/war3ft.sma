@@ -30,7 +30,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu==(Pimp Daddy==OoTOAoO)"
-new const WC3VERSION[] =		"2.3.2"
+new const WC3VERSION[] =	"2.3.2 RC1"
 new const WC3DATE[] =		__DATE__
 
 
