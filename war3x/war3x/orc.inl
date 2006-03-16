@@ -538,7 +538,7 @@ public SPillage( attackerId, victimId, iDamage ) {
 	if ( fRandomNum > fPillageChance )
         return PLUGIN_HANDLED;
 
-	new iType = 1//random_num( 1, 4 );
+	new iType = random_num( 1, 4 );
 	switch( iType )
 	{
 		case 1:
@@ -580,8 +580,9 @@ public SPillage( attackerId, victimId, iDamage ) {
 			if ( iVictimAmmo - iStolenAmmo < 0 )
 				iStolenAmmo = iVictimAmmo;
 
-			cs_update_ammo( victimId, -iStolenAmmo, iVictimWeapon );
-			cs_update_ammo( attackerId, iStolenAmmo, iAttackerWeapon );
+			give_item( attackerId, CS_AMMO_NAME[iAttackerWeapon] );
+			//cs_update_ammo( victimId, -iStolenAmmo, iVictimWeapon );
+			//cs_update_ammo( attackerId, iStolenAmmo, iAttackerWeapon );
 		}
 
 		case 3:
@@ -609,9 +610,11 @@ public SPillage( attackerId, victimId, iDamage ) {
 
 				if ( iVictimWeapon == s_PillageNades[i] )
 					cs_switchweapon( victimId, CS_WEAPON_GROUP_KNIFE );
-
-				cs_update_ammo( victimId, s_PillageNades[i], -1 );
-    			cs_update_ammo( attackerId, s_PillageNades[i], 1 );
+				
+				if ( iAttackerAmmo < 1 )
+					give_item( attackerId, CS_WEAPON_NAME[s_PillageNades[i]] );
+				//cs_update_ammo( victimId, -1, s_PillageNades[i] );
+    			//cs_update_ammo( attackerId, 1, s_PillageNades[i] );
 
     			bHasNade = false;
 			}
