@@ -9,8 +9,7 @@ new Float:s_BerserkSpeed[3]		= {280.0,300.0,320.0};			// (skill1) Max possible s
 new Float:s_PulverizeRange[3]	= {4.0,5.0,6.0};				// (skill2) Pulverize (distance from detonation)
 new Float:s_PulverizeBonus[3]	= {1.0,2.0,3.0};				// (skill2) Pulverize (bonus damage)
 new Float:s_Reincarnate[3]      = {0.3,0.6,0.9};                // (skill3) Reincarnation (percent chance)
-new Float:s_Pillage[3]          = {0.10,0.20,1.00};             // (skill3) Pillage (percent chance)
-new s_PillageNades[3]           = {4,9,25};                     // (skill3) Pillage (nade model index)
+new Float:s_Pillage[3]          = {0.25,0.50,0.75};             // (skill3) Pillage (percent chance)
 
 /* - Skill Constants Configuration ------------------------------ */
 
@@ -20,11 +19,19 @@ new s_PillageNades[3]           = {4,9,25};                     // (skill3) Pill
 
 #define PULVERIZE_ARMOR            0.25     // (  float) % armor removed on pulverize based on damage
 
-#define PILLAGE_ARMOR              0.30     // (  float) % damage used to calculate armor stolen.
-#define PILLAGE_AMMO               0.30     // (  float) % damage used to calculate ammo stolen.
-#define PILLAGE_MONEY                 4     // (  float) % damage used to calculate money stolen.
+#define PILLAGE_KNIFEBONUS          0.5     // (  float) bonus to apply to pillage chance/money stolen when using knife.
+//#define PILLAGE_AMMO               0.30     // (  float) % damage used to calculate ammo stolen.
+#define PILLAGE_AMMO                  1     // (integer) number of ammo clips to award player.
+#define PILLAGE_MONEY               4.0     // (  float) % damage used to calculate money stolen.
 
 #define REGENERATION_AMMOUNT          1     // (integer) health gained each cycle
+
+enum {                                      // Pillage type index
+    INDEX_MONEY = 1,
+//    INDEX_ARMOR,
+    INDEX_AMMO,
+    INDEX_GRENADE
+};
 
 
 /* - Ultimate Configuration ------------------------------------- */
@@ -76,7 +83,7 @@ public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot, F
 
 		if ( g_PlayerInfo[attackerId][CURRENT_SKILL3] )
 		{
-			SPillage( attackerId, victimId, iDamage );
+			SPillage( attackerId, victimId, iDamage, weaponId );
 		}
     }
 
@@ -525,117 +532,156 @@ public SPulverize_Trail( id, gIndex ) {
     return PLUGIN_HANDLED;
 }
 
-public SPillage( attackerId, victimId, iDamage ) {
+
+public SPillage( attacker, victim, iDamage, Weapon ) {
 #if ADVANCED_DEBUG
 	log_function( "public SPillage( attackerId, victimId, iDamage ) {");
 #endif
 
-	if ( !WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_3 ) )
+	if ( !WAR3_skill_enabled( attacker, RACE_ORC, SKILL_3 ) )
 		return PLUGIN_HANDLED;
 
-	new Float:fPillageChance = s_Pillage[g_PlayerInfo[attackerId][CURRENT_SKILL3] - 1];
+	new Float:fPillageChance = s_Pillage[g_PlayerInfo[attacker][CURRENT_SKILL3] - 1];
     new Float:fRandomNum = random_float( 0.0, 1.0 );
 
-	if ( fRandomNum > fPillageChance )
+    if ( Weapon == CSW_KNIFE )
+    {
+        fPillageChance += fPillageChance * PILLAGE_KNIFEBONUS;
+
+    	if ( fRandomNum > fPillageChance )
+            return PLUGIN_HANDLED;
+
+        // Steal Money and Grenades (if applicable)
+
+	    SPillage_Money( attacker, victim, iDamage, Weapon );
+        SPillage_Grenade( attacker, victim, iDamage );
+    }
+
+    else
+    {
+    	if ( fRandomNum > fPillageChance )
+            return PLUGIN_HANDLED;
+
+        // Steal random type (if applicable)
+
+    	new iType = random_num( 1, 3 );
+
+    	switch( iType )
+    	{
+    		case INDEX_MONEY:   SPillage_Money( attacker, victim, iDamage, Weapon );
+    		case INDEX_AMMO:    SPillage_Ammo( attacker, victim, iDamage );
+    		case INDEX_GRENADE: SPillage_Grenade( attacker, victim );
+    	}
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+
+static SPillage_Money( attacker, victim, iDamage, Weapon ) {
+
+    new Float:fDamage = float( iDamage );
+
+	new iVictimMoney = cs_get_user_money( victim );
+
+	if ( iVictimMoney <= 0 )
+		return PLUGIN_HANDLED;
+
+	new Float:fStolenMoney = PILLAGE_MONEY * fDamage;
+
+	if ( Weapon == CSW_KNIFE )
+	    fStolenMoney += fStolenMoney * PILLAGE_KNIFEBONUS;
+
+	new iStolenMoney = floatround( fStolenMoney );
+
+	if ( iVictimMoney - iStolenMoney < 0 )
+		iStolenMoney = iVictimMoney;
+
+	cs_update_money( victim, iStolenMoney, 1 );
+	cs_update_money( attacker, iStolenMoney, 0 );
+
+    return PLUGIN_HANDLED;
+}
+
+
+static SPillage_Ammo( attacker, victim, iDamage ) {
+
+    //new Float:fDamage = float( iDamage );
+
+	//new iVictimClip, iVictimAmmo;
+	//new iVictimWeapon = get_user_weapon( victimId, iVictimClip, iVictimAmmo );
+
+	new iAttackerClip, iAttackerAmmo;
+	new iAttackerWeapon = get_user_weapon( attacker, iAttackerClip, iAttackerAmmo );
+
+    if ( iAttackerWeapon == CSW_KNIFE )
         return PLUGIN_HANDLED;
 
-	new iType = random_num( 1, 4 );
-	switch( iType )
-	{
-		case 1:
-		{
-			new iVictimArmor = get_user_armor( victimId );
-			new iAttackerArmor = get_user_armor( attackerId );
+	//if ( iVictimAmmo <= 0 )
+	//	return PLUGIN_HANDLED;
 
-			if ( iVictimArmor <= 0 )
-				return PLUGIN_HANDLED;
+	//new iStolenAmmo = floatround( PILLAGE_AMMO * fDamage );
 
-			new iStolenArmor = floatround( PILLAGE_ARMOR * iDamage );
+	//if ( iVictimAmmo - iStolenAmmo < 0 )
+	//	iStolenAmmo = iVictimAmmo;
 
-			if ( iVictimArmor - iStolenArmor < 0 )
-				iStolenArmor = iVictimArmor;
 
-			iVictimArmor -= iStolenArmor;
-			iAttackerArmor += iStolenArmor;
+    // Temporary Solution
 
-			if ( iAttackerArmor > WAR3_get_maxarmor( attackerId ) )
-				iAttackerArmor = WAR3_get_maxarmor( attackerId );
+    for ( new i = 1; i <= PILLAGE_AMMO; i++ )
+		give_item( attacker, CS_AMMO_NAME[iAttackerWeapon] );
 
-			set_user_armor( victimId, iVictimArmor );
-			set_user_armor( attackerId, iAttackerArmor );
-		}
 
-		case 2:
-		{
-			new iVictimClip, iVictimAmmo;
-			new iVictimWeapon = get_user_weapon( victimId, iVictimClip, iVictimAmmo );
+	//cs_update_ammo( victimId, -iStolenAmmo, iVictimWeapon );
+	//cs_update_ammo( attackerId, iStolenAmmo, iAttackerWeapon );
 
-			new iAttackerClip, iAttackerAmmo;
-			new iAttackerWeapon = get_user_weapon( attackerId, iAttackerClip, iAttackerAmmo );
+    return PLUGIN_HANDLED;
+}
 
-			if ( iVictimAmmo <= 0 )
-				return PLUGIN_HANDLED;
 
-			new iStolenAmmo = floatround( PILLAGE_AMMO * iDamage );
+static SPillage_Grenade( attacker, victim ) {
 
-			if ( iVictimAmmo - iStolenAmmo < 0 )
-				iStolenAmmo = iVictimAmmo;
+    new Grenades[3], iTotalGrenades;
 
-			give_item( attackerId, CS_AMMO_NAME[iAttackerWeapon] );
-			//cs_update_ammo( victimId, -iStolenAmmo, iVictimWeapon );
-			//cs_update_ammo( attackerId, iStolenAmmo, iAttackerWeapon );
-		}
+    new Weapons[32], iTotalWeapons;
+    get_user_weapons( victim, Weapons, iTotalWeapons );
 
-		case 3:
-		{
-			new i;
-			new bool:bHasNade;
+    for ( new iWeaponNum = 0; iWeaponNum < iTotalWeapons; iWeaponNum++ )
+    {
+        new weaponId = Weapons[iWeaponNum];
 
-			for ( i = 0; i < CS_MAX_NADES; i++ )
-			{
-				if ( cs_find_grenade( victimId, CS_MODEL_NAME[s_PillageNades[i]] ) )
-				{
-					client_print( attackerId, print_chat, "nade found" );
-					bHasNade = true;
-					break;
-				}
-			}
+        if ( cs_get_weapon_type_( weaponId ) == CS_WEAPON_TYPE_GRENADE )
+        {
+            new iClip, iAmmo;
+            get_user_ammo( attacker, weaponId, iClip, iAmmo );
 
-			if ( bHasNade )
-			{
-				new iVictimClip, iVictimAmmo;
-				new iVictimWeapon = get_user_weapon( victimId, iVictimClip, iVictimAmmo );
+            if ( !iAmmo || ( weaponId == CSW_FLASHBANG && iAmmo < 2 ) )
+            {
+                Grenades[iTotalGrenades] = weaponId;
+                iTotalGrenades++;
+            }
+        }
+    }
 
-				new iAttackerClip, iAttackerAmmo;
-				get_user_weapon( attackerId, iAttackerClip, iAttackerAmmo );
+    if ( iTotalGrenades > 0 )
+    {
+        new j = random_num( 0, iTotalGrenades - 1 );
+        new grenade = Grenades[j];
 
-				if ( iVictimWeapon == s_PillageNades[i] )
-					cs_switchweapon( victimId, CS_WEAPON_GROUP_KNIFE );
+		//new iVictimClip, iVictimAmmo;
+		//new iVictimWeapon = get_user_weapon( victimId, iVictimClip, iVictimAmmo );
 
-				if ( iAttackerAmmo < 1 )
-					give_item( attackerId, CS_WEAPON_NAME[s_PillageNades[i]] );
-				//cs_update_ammo( victimId, -1, s_PillageNades[i] );
-    			//cs_update_ammo( attackerId, 1, s_PillageNades[i] );
+		//if ( iVictimWeapon == grenade )
+		//	engclient_cmd( victimId, "lastinv" );
 
-    			bHasNade = false;
-			}
-		}
 
-		case 4:
-		{
-			new iVictimMoney = cs_get_user_money( victimId );
+        // Temporary Solution
 
-			if ( iVictimMoney <= 0 )
-				return PLUGIN_HANDLED;
+		give_item( attacker, CS_WEAPON_NAME[grenade] );
 
-			new iStolenMoney = ( PILLAGE_MONEY * iDamage );
 
-			if ( iVictimMoney - iStolenMoney < 0 )
-				iStolenMoney = iVictimMoney;
-
-			cs_update_money( victimId, iStolenMoney, 1 );
-			cs_update_money( attackerId, iStolenMoney, 1 );
-		}
+		//cs_update_ammo( victimId, -1, s_PillageNades[i] );
+		//cs_update_ammo( attackerId, 1, s_PillageNades[i] );
 	}
 
     return PLUGIN_HANDLED;

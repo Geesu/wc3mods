@@ -889,7 +889,7 @@ public _WAR3_set_speed( parm_Speed[1] ) {
 
 		// Berserk
 
-		else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && weaponId == CSW_KNIFE )
+		else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && ( weaponId == CSW_KNIFE || cs_get_weapon_type_( weaponId ) == CS_WEAPON_TYPE_GRENADE ) )
 		{
 			SBerserkSpeed( id );
 		}
