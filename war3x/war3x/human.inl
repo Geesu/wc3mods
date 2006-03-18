@@ -502,8 +502,11 @@ public UHolyLight_Dmg( Caster, Target ) {
 
     // Check for Amulet
 
-    if ( IAmulet_Ready( Caster, Target ) )
+    if ( g_PlayerInfo[Target][CURRENT_ITEM] == ITEM_AMULET )
+    {
+        IAmulet_Block( Target, Caster );
         return PLUGIN_HANDLED;
+    }
 
     // Hud Message
 

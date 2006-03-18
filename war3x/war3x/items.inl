@@ -18,7 +18,7 @@
 #define VALUE_CLAWS                   6     // (integer) extra damage on each attack
 #define VALUE_CLOAK                0.60     // (  float) invisibility percentage
 #define VALUE_MASK                 20.0     // (  float) seconds removed from ultimate cooldown
-#define VALUE_AMULET               40.0     // (  float) seconds between absorbsions
+#define VALUE_AMULET                  1     // (integer) number of ultimates that can be blocked
 #define VALUE_RING                   50     // (integer) extra armor
 #define VALUE_TOME                   25     // (integer) experience
 
@@ -30,7 +30,7 @@ new const ITEMCOST[_TSI + 1] =
     800,            // Claws of Attack
     750,            // Cloak of Shadows
     600,            // Sobi Mask
-    1200,           // Amulet of Spell Shield
+    800,            // Amulet of Shielding
     400,            // Ring of Protection
     4000            // Tome of Experience
 };
@@ -43,7 +43,7 @@ new const ITEMCOLOR[_TSI + 1][3] =
     {255,0,0},      // Claws of Attack          (    RED )
     {0,255,255},    // Cloak of Shadows         (   BLUE )
     {255,0,255},    // Sobi Mask                ( PURPLE )
-    {255,255,0},    // Amulet of Spell Shield   ( YELLOW )
+    {255,255,0},    // Amulet of Shielding      ( YELLOW )
     {0,255,0},      // Ring of Protection       (  GREEN )
     {128,128,128}   // Tome of Experience       (   NONE )
 };
@@ -52,8 +52,8 @@ new const ITEMCOLOR[_TSI + 1][3] =
 #define ITEM_DROPLIFE              30.0     // (  float) seconds dropped items stay on ground
 
 #define CLOAK_COOLDOWN              5.0     // (  float) cooldown for cloak of invisibility
-new AMULET_RGB[3] =         {124,103,60};   // (integer) rgb of glowshell when amulet takes effect
 
+new AMULET_RGB[3] =         {124,103,60};   // (integer) rgb of glowshell when amulet takes effect
 
 
 /* - Buy/Drop Item Functions ------------------------------------ */
@@ -303,10 +303,11 @@ public Item_Equip( id, iNewItem ) {
         client_print( id, print_chat, ITEM_MASK_MESSAGE, ULTIMATE_COOLDOWNDEFAULT, ULTIMATE_COOLDOWNDEFAULT - VALUE_MASK );
     }
 
-    // Amulet of Spell Shield
+    // Amulet of Shielding
 
     else if ( iNewItem == ITEM_AMULET )
     {
+        g_iAmuletCharges[id] = VALUE_AMULET;
         client_print( id, print_chat, ITEM_AMULET_MESSAGE, VALUE_AMULET );
     }
 
@@ -564,60 +565,66 @@ public ICloak_Set( id ) {
 }
 
 
-// Amulet of Spell Shield
+// Amulet of Shielding
 
-public IAmulet_Ready( cIndex, tIndex ) {
-#if ADVANCED_DEBUG
-	log_function("public IAmulet_Ready( cIndex, tIndex ) {");
-#endif
+public IAmulet_Block( target, caster ) {
 
-    if ( g_PlayerInfo[tIndex][CURRENT_ITEM] == ITEM_AMULET && get_gametime() - g_fAmuletTime[tIndex] >= VALUE_AMULET )
-    {
-        IAmulet_Block( cIndex, tIndex );
-        return ( 1 );
-    }
+    #if ADVANCED_DEBUG
 
-    return ( 0 );
-}
+    	log_function("public IAmulet_Block( cIndex, tIndex ) {");
 
-public IAmulet_Block( cIndex, tIndex ) {
-#if ADVANCED_DEBUG
-	log_function("public IAmulet_Block( cIndex, tIndex ) {");
-#endif
-
-    g_fAmuletTime[tIndex] = get_gametime();
+    #endif
 
     // Message
 
-    new szMessage[128], szCasterName[32];
-    get_user_name( cIndex, szCasterName, 31 );
+    new szMessage[128];
 
     format( szMessage, 127, BLOCK_ULTIMATE_T );
-    WAR3_status_text( tIndex, szMessage, 3.0 );
+    WAR3_status_text( target, szMessage, 3.0 );
 
     format( szMessage, 127, BLOCK_ULTIMATE_C );
-    WAR3_status_text( cIndex, szMessage, 3.0 );
+    WAR3_status_text( caster, szMessage, 3.0 );
+
+    // Screen Fade
+
+    if ( !g_bPlayerSleeping[target] )
+    {
+        Create_ScreenFade( target, (1<<10), (1<<10), FADE_OUT, AMULET_RGB[GLOW_R], AMULET_RGB[GLOW_G], AMULET_RGB[GLOW_B], 160 );
+    }
 
     // Glow
 
-    Glow_Set( tIndex, 1.0, AMULET_RGB, 48 );
+    Glow_Set( target, 1.0, AMULET_RGB, 48 );
 
     // Sparks
 
-    for ( new i = 0; i < 8; i++ )
+    for ( new i = 0; i < 4; i++ )
     {
-        new iOrigin[3];
-        get_user_origin( tIndex, iOrigin );
+        new Origin[3];
+        get_user_origin( target, Origin );
 
-        iOrigin[0] += random_num( -20, 20 );
-        iOrigin[1] += random_num( -20, 20 );
-        iOrigin[2] += random_num( -20, 20 );
+        Origin[0] += random_num( -20, 20 );
+        Origin[1] += random_num( -20, 20 );
+        Origin[2] += random_num( -20, 20 );
 
-        Create_TE_SPARKS( SHOWTO_ALL_BROADCAST, iOrigin );
+        Create_TE_SPARKS( SHOWTO_ALL_BROADCAST, Origin );
+    }
+
+    // Remove charge, destroy if 0 left
+
+    g_iAmuletCharges[target]--;
+
+    if ( g_iAmuletCharges[target] == 0 )
+    {
+        g_PlayerInfo[target][CURRENT_ITEM] = ITEM_NONE;
+
+        WAR3_hud_item( target, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 2.0, 3.0 );
+        client_print( target, print_chat, ITEM_AMULET_DESTROYED );
     }
 
     return PLUGIN_HANDLED;
 }
+
 
 public Item_Touch( iToucherId, iPlayerId )
 {

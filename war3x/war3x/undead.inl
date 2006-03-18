@@ -682,8 +682,11 @@ public UCoil_Damage( iCasterId, iTargetId ) {
 
     // Check for Amulet
 
-    if ( IAmulet_Ready( iCasterId, iTargetId ) )
+    if ( g_PlayerInfo[iTargetId][CURRENT_ITEM] == ITEM_AMULET )
+    {
+        IAmulet_Block( iTargetId, iCasterId );
         return PLUGIN_HANDLED;
+    }
 
     // Unset Velocity
 
@@ -860,8 +863,11 @@ public UImpale_Cast( casterId, targetId ) {
 
     // Check for Amulet
 
-    if ( IAmulet_Ready( casterId, targetId ) )
+    if ( g_PlayerInfo[targetId][CURRENT_ITEM] == ITEM_AMULET )
+    {
+        IAmulet_Block( targetId, casterId );
         return PLUGIN_HANDLED;
+    }
 
     // Launch into Air
 
@@ -1055,8 +1061,11 @@ public USleep_Cast( casterId, targetId ) {
 
     // Check for Amulet
 
-    if ( IAmulet_Ready( casterId, targetId ) )
+    if ( g_PlayerInfo[targetId][CURRENT_ITEM] == ITEM_AMULET )
+    {
+        IAmulet_Block( targetId, casterId );
         return PLUGIN_HANDLED;
+    }
 
     // Switch to knife
 

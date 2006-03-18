@@ -15,7 +15,7 @@ new const ITEMNAME[_TSI + 1][] =     // ITEM NAMES:
     "Claws of Attack +6",           // Claws of Attack +6
     "Cloak of Shadows",             // Cloak of Shadows
     "Sobi Mask",                    // Sobi Mask
-    "Amulet of Spell Shield",       // Amulet of Spell Shield
+    "Amulet of Shielding",          // Amulet of Shielding
     "Ring of Protection +5",        // Ring of Protection +5
     "Tome of Experience"            // Tome of Experience
 };
@@ -212,7 +212,7 @@ new const ITEM_DESC[_TSI + 1][] =
     /* Claws of Attack +6"    */  "Adds <%s> damage to each successful attack.",
     /* Cloak of Shadows"      */  "Makes the player <%s> invisible. If the player attacks, is attacked, or casts an ultimate, he will become visible.",
     /* Sobi Mask"             */  "Decreases ultimate cooldown of the player by <%s> seconds after every cast.",
-    /* Amulet of Spell Shield */  "Blocks a harmful ultimate that an enemy casts on the player once every <%s> seconds.",
+    /* Amulet of Shielding    */  "Allows the player to block <%s> harmful ultimate(s) cast on them.",
     /* Ring of Protection     */  "Player receives <%s> armor, and increases their max armor by the same ammount if armor is present.",
     /* Tome of Experience"    */  "Player instantly receives <%s> experience. Item is expended upon purchase, and does not require an item slot."
 };
@@ -402,10 +402,12 @@ new const ITEM_BOOTS_MESSAGE[]          = "* [WC3x] Your maximum speed has incre
 new const ITEM_CLAWS_MESSAGE[]          = "* [WC3x] All of your attacks will deal an additional %d damage.";
 new const ITEM_CLOAK_MESSAGE[]          = "* [WC3x] You are now less visible by %0.0f%s, and untargetable by ultimates when invisible.";
 new const ITEM_MASK_MESSAGE[]           = "* [WC3x] Your ultimate cooldown has decreased from %0.1f seconds to %0.1f.";
-new const ITEM_AMULET_MESSAGE[]         = "* [WC3x] You can now block a harmful ultimate once every %0.0f seconds.";
+new const ITEM_AMULET_MESSAGE[]         = "* [WC3x] You are now able to block %d harmful ultimate(s) cast on you.";
 new const ITEM_RING_MESSAGE[]           = "* [WC3x] Your maximum armor has increased to %d.";
 new const ITEM_TOME_MESSAGE[]           = "* You gain %d experience from the tome. *";
 new const ITEM_BUYBACK_MESSAGE[]        = "* [WC3x] You sold your %s for $%d!";
+
+new const ITEM_AMULET_DESTROYED[]       = "* [WC3x] Your Amulet has been destroyed.";
 
 new const VIP_ANKH_MESSAGE[]            = "* [WC3x] Your weapons will be restored when you are no longer the VIP.";
 new const VIP_NOSKILLS[]                = "* [WC3x] The VIP does not have access to skills or ultimates.";

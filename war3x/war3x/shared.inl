@@ -1333,6 +1333,10 @@ public Purge_Death( id ) {
 
     g_iPlayerArmor[id] = {0,0};
 
+    // Clear amulet charges (if applicable)
+
+    g_iAmuletCharges[id] = 0;
+
     // Clear StatusIcons
 
     Ultimate_Icon( id, ICON_HIDE );
@@ -1478,7 +1482,6 @@ public Purge_Common( id ) {
 
     g_iEvasionDamage[id]    = 0;
     g_fEvasionTime[id]      = 0.0;
-    g_fAmuletTime[id]       = 0.0;
 
     g_PlayerTarget[id]      = 0;
     g_PlayerTargetTeam[id]  = 0;
@@ -2318,7 +2321,7 @@ public ItemHelp_GetValues( iItemNum, szValue[32] ) {
 
         case ITEM_AMULET:
         {
-            format( szValue, 31, "%0.0f", VALUE_AMULET );
+            format( szValue, 31, "%d", VALUE_AMULET );
             return ( 1 );
         }
 

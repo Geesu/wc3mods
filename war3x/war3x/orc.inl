@@ -20,9 +20,9 @@ new s_PillageNades[3]           = {4,9,25};                     // (skill3) Pill
 
 #define PULVERIZE_ARMOR            0.25     // (  float) % armor removed on pulverize based on damage
 
-#define PILLAGE_ARMOR              0.30
-#define PILLAGE_AMMO               0.30
-#define PILLAGE_MONEY                 4
+#define PILLAGE_ARMOR              0.30     // (  float) % damage used to calculate armor stolen.
+#define PILLAGE_AMMO               0.30     // (  float) % damage used to calculate ammo stolen.
+#define PILLAGE_MONEY                 4     // (  float) % damage used to calculate money stolen.
 
 #define REGENERATION_AMMOUNT          1     // (integer) health gained each cycle
 
@@ -369,6 +369,8 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 
     iGrenadeOrigin[2] += 40;
 
+    // Check for teammates in range
+
 	for ( new iPlayerNum = 0; iPlayerNum < iTotalPlayers; iPlayerNum++ )
 	{
 		new teamId = Teammates[iPlayerNum];
@@ -376,7 +378,6 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 		if ( teamId != victimId && !g_bPlayerSleeping[teamId] )
 		{
 			new teamOrigin[3];
-
 			get_user_origin( teamId, teamOrigin );
 
 			new Float:fMetricDistance = distance( get_distance( iGrenadeOrigin, teamOrigin ) );
@@ -429,7 +430,7 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
                     if ( iFadeAlpha > GLOW_MAX )
                         iFadeAlpha = GLOW_MAX;
 
-                    Create_ScreenFade( teamId, (1<<10), (1<<10), FADE_OUT, 147, 115, 78, iFadeAlpha );
+                    Create_ScreenFade( teamId, (1<<10), (1<<10), FADE_OUT, 160, 0, 0, iFadeAlpha );
                 }
 /*
                 // Blood Sprites *REMOVED TEMPORARILY*
@@ -610,7 +611,7 @@ public SPillage( attackerId, victimId, iDamage ) {
 
 				if ( iVictimWeapon == s_PillageNades[i] )
 					cs_switchweapon( victimId, CS_WEAPON_GROUP_KNIFE );
-				
+
 				if ( iAttackerAmmo < 1 )
 					give_item( attackerId, CS_WEAPON_NAME[s_PillageNades[i]] );
 				//cs_update_ammo( victimId, -1, s_PillageNades[i] );
@@ -665,7 +666,10 @@ public UClightning_Cast( Caster, Target ) {
 
     // Check for Amulet
 
-    if ( !IAmulet_Ready( Caster, Target ) )
+    if ( g_PlayerInfo[Target][CURRENT_ITEM] == ITEM_AMULET )
+        IAmulet_Block( Target, Caster );
+
+    else
     {
         // Hud Message
 
@@ -781,7 +785,10 @@ public UClightning_Jump( parmJump[2] ) {
 
                 // Check for Amulet
 
-                if ( !IAmulet_Ready( Caster, NextTarget ) )
+                if ( g_PlayerInfo[NextTarget][CURRENT_ITEM] == ITEM_AMULET )
+                    IAmulet_Block( NextTarget, Caster );
+
+                else
                 {
                     // Hud Message
 
@@ -1208,7 +1215,13 @@ public UWindwalk_Strike( Attacker, Victim, Weapon, Headshot ) {
 
     // Check for Amulet
 
-    if ( !IAmulet_Ready( Attacker, Victim ) && !g_iPlayerAvatar[Victim] && Victim != g_Vip )
+    if ( g_PlayerInfo[Victim][CURRENT_ITEM] == ITEM_AMULET )
+    {
+        IAmulet_Block( Victim, Attacker );
+        return PLUGIN_HANDLED;
+    }
+
+    if ( !g_iPlayerAvatar[Victim] && Victim != g_Vip )
     {
         // Deal Damage
 

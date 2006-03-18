@@ -580,9 +580,11 @@ public URoot_Immobilize( parmRoot[1] ) {
 
         // Check for Amulet
 
-        if ( IAmulet_Ready( g_PlayerRooted[targetId], targetId ) )
+        if ( g_PlayerInfo[targetId][CURRENT_ITEM] == ITEM_AMULET )
         {
+            IAmulet_Block( targetId, g_PlayerRooted[targetId] );
             g_PlayerRooted[targetId] = 0;
+
             return PLUGIN_HANDLED;
         }
 
@@ -905,8 +907,11 @@ public USstrike_Cast( casterId, targetId ) {
 
     // Check for Amulet
 
-    if ( IAmulet_Ready( casterId, targetId ) )
+    if ( g_PlayerInfo[targetId][CURRENT_ITEM] == ITEM_AMULET )
+    {
+        IAmulet_Block( targetId, casterId );
         return PLUGIN_HANDLED;
+    }
 
     // Hud Message
 

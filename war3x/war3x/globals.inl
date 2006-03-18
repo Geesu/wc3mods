@@ -204,7 +204,7 @@ new const GETCLASSCHECK[3] =    {0,2,5};    // (integer) levels players receive 
 #define TASK_ULTIMATECOOLDOWN       352
 #define TASK_ANTIMAGICSHELL         384 // UNUSED
 #define TASK_ROOT                   416
-#define TASK_DETONATE               448
+#define TASK_DETONATE               448 // UNUSED
 #define TASK_FLAMESTRIKE_VICTIM     480
 #define TASK_FLAMESTRIKE_CASTER     512
 #define TASK_AVATAR                 544
@@ -430,7 +430,8 @@ new g_iEvasionDamage[33];
 new g_iPlayerAvatar[33];
 
 new Float:g_fEvasionTime[33];
-new Float:g_fAmuletTime[33];
+
+new g_iAmuletCharges[33];           // Item amount arrays
 
 new bool:g_bPlayerSaveMe[33];
 new bool:g_bPlayerDispellMe[33];
