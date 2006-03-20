@@ -355,7 +355,10 @@ public SFrostNova( id ) {
     new Origin[3];
     get_user_origin( id, Origin );
 
-    Origin[2] -= 20;
+    if ( get_user_button( id ) & IN_DUCK )
+        Origin[2] += 20;
+
+    Origin[2] -= 40;
 
     new iRingSize = s_fnRange[g_PlayerInfo[id][CURRENT_SKILL2] - 1] * 40;
 

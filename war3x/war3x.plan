@@ -58,12 +58,16 @@ check invis cooldown? possible crashing...
 
 
 -%t on nova
-first player level
+-first player level
 sounds
-hudmessage on death follow
-reduce range of chains
-height of nova
+-reduce range of chains (20-12, 15-12)
+-height of nova
+message before able to select race...
 
+make check for cfg file, if not found, don't load
+same for sprites, etc
+
+hudmessage on death follow
 
 
 sounds:

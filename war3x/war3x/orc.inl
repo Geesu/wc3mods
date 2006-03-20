@@ -36,12 +36,12 @@ enum {                                      // Pillage type index
 
 
 #define HEALINGWAVE_HEAL             60     // (integer) initial heal
-#define HEALINGWAVE_RANGE            20     // (integer) max range of jump targets
+#define HEALINGWAVE_RANGE            12     // (integer) max range of jump targets
 #define HEALINGWAVE_MULTIPLIER        3     // (integer) jump health multiplier (1/X)
 #define HEALINGWAVE_JUMPS             6     // (integer) maximum healing wave jumps
 
 #define CHAINLIGHTNING_DAMAGE        65     // (integer) initial damage
-#define CHAINLIGHTNING_RANGE         15     // (integer) max range of jump targets
+#define CHAINLIGHTNING_RANGE         12     // (integer) max range of jump targets
 #define CHAINLIGHTNING_MULTIPLIER     3     // (integer) jump damage multiplier (1/X)
 #define CHAINLIGHTNING_JUMPS          6     // (integer) maximum chain lightning jumps
 

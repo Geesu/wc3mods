@@ -573,6 +573,13 @@ new SOUND_ROOTS[64];
 new SOUND_SHADOWSTRIKE[64];
 
 
+/* - CVAR Pointer variables ------------------------------------- */
+
+
+new CVAR_startlevel_first;
+new CVAR_startlevel_other;
+
+
 /* -------------------------------------------------------------- */
 
 
@@ -580,5 +587,6 @@ new const HTML_HEADER[] = "<html><head><link rel='stylesheet' href='war3x.css'><
 
 
 /* -------------------------------------------------------------- */
+
 
 // End of GLOBALS.INL

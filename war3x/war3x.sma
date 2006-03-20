@@ -377,7 +377,7 @@ public plugin_init() {
     register_menucmd(                             -34,          (1<<0)|(1<<1), "on_BuyArmor"    );   // Buy Armor (VGUI)
 
 
-    // CVARS
+    // CVARS    ** WILL ADD POINTERS FOR ALL CVARS NEXT VERSION **
 
     register_cvar( "war3x_sql_host",	"" );               // MySQL CVARs
     register_cvar( "war3x_sql_user",	"" );
@@ -396,6 +396,9 @@ public plugin_init() {
     register_cvar( "war3x_vote_ratio",  "" );
     register_cvar( "war3x_setxp_flag",  "" );
 
+    CVAR_startlevel_first = register_cvar( "war3x_startlevel_first", "4" );        // Added v1.0
+    CVAR_startlevel_other = register_cvar( "war3x_startlevel_other", "0" );
+
     register_cvar( "war3x_xp_normal",       "" );           // Gameplay CVARs
     register_cvar( "war3x_xp_objective",    "" );
     register_cvar( "war3x_xp_minplayers",   "" );
@@ -408,7 +411,7 @@ public plugin_init() {
     register_cvar( "war3x_ankhgrenades",    "" );
     register_cvar( "war3x_statusicons",     "" );
 
-    register_cvar( "war3x_restrict_items",     "" );
+    register_cvar( "war3x_restrict_items",     "" );        // Restriction CVARs
     register_cvar( "war3x_restrict_races",     "" );
     register_cvar( "war3x_restrict_skills",    "" );
     register_cvar( "war3x_restrict_ultimates", "" );

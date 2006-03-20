@@ -747,6 +747,25 @@ public on_FreezeStart() {
             {
                 new iNextRaceId = g_PlayerInfo[id][CURRENT_NEXTRACE] - 1;
 
+                // Check if 0 xp
+
+                if ( !g_iXPtotal[id][iNextRaceId] )
+                {
+                    new iLevel = get_pcvar_num( CVAR_startlevel_other );
+
+                    if ( iLevel )
+                    {
+                        g_iXPtotal[id][iNextRaceId] = g_iLevelXp[iLevel];
+
+                        new szMessage[128];
+                        format( szMessage, 127, INFO_LEVEL_OTHER, iLevel );
+
+                        client_print( id, print_chat, szMessage );
+                    }
+                }
+
+                // Update Race Info
+
                 War3x_StoreSession( id, iNextRaceId );
                 WAR3_hud_level( id );
                 war3_chatskills( id, iNextRaceId, 1 );

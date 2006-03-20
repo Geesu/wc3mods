@@ -94,10 +94,14 @@ public menu_SelectRace( id ) {
 	log_function("public menu_SelectRace( id ) {");
 #endif
 
-    if ( !g_bWar3xEnabled || !g_bPlayerConnected[id] )
+    if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
 
-//    g_bPlayerConnected[id] = true;
+    if ( !g_bPlayerConnected[id] )
+    {
+        client_print( id, print_center, INFO_NOTCONNECTED );
+        return PLUGIN_HANDLED;
+    }
 
     new iKeys;
     new szMenu[512], iLen;
@@ -257,6 +261,40 @@ public _menu_SelectRace( id, iKey ) {
 
     else
     {
+        // Check if first race chosen on server
+
+        if ( WAR3_is_first_race( id ) )
+        {
+            new iLevel = get_pcvar_num( CVAR_startlevel_first );
+
+            if ( iLevel )
+            {
+                g_iXPtotal[id][iKey] = g_iLevelXp[iLevel];
+
+                new szMessage[128];
+                format( szMessage, 127, INFO_LEVEL_FIRST, iLevel );
+
+                client_print( id, print_chat, szMessage );
+            }
+        }
+
+        // Check if 0 xp
+
+        else if ( !g_PlayerInfo[id][CURRENT_XP] )
+        {
+            new iLevel = get_pcvar_num( CVAR_startlevel_other );
+
+            if ( iLevel )
+            {
+                g_iXPtotal[id][iKey] = g_iLevelXp[iLevel];
+
+                new szMessage[128];
+                format( szMessage, 127, INFO_LEVEL_OTHER, iLevel );
+
+                client_print( id, print_chat, szMessage );
+            }
+        }
+
         // Update Race Info
 
         War3x_StoreSession( id, iKey );
@@ -985,6 +1023,40 @@ public _menu_RaceOptions( id, iKey ) {
 
             g_PlayerInfo[id][CURRENT_RACE] = iCurrentRace;
             g_PlayerInfo[id][CURRENT_ITEM] = iCurrentItem;
+
+            // Check if first race chosen on server
+
+            if ( WAR3_is_first_race( id ) )
+            {
+                new iLevel = get_pcvar_num( CVAR_startlevel_first );
+
+                if ( iLevel )
+                {
+                    g_iXPtotal[id][g_PlayerInfo[id][CURRENT_RACE] - 1] = g_iLevelXp[iLevel];
+                    g_PlayerInfo[id][CURRENT_XP] = g_iLevelXp[iLevel];
+
+                    new szMessage[128];
+                    format( szMessage, 127, INFO_LEVEL_FIRST, iLevel );
+
+                    client_print( id, print_chat, szMessage );
+                }
+            }
+
+            else
+            {
+                new iLevel = get_pcvar_num( CVAR_startlevel_other );
+
+                if ( iLevel )
+                {
+                    g_iXPtotal[id][g_PlayerInfo[id][CURRENT_RACE] - 1] = g_iLevelXp[iLevel];
+                    g_PlayerInfo[id][CURRENT_XP] = g_iLevelXp[iLevel];
+
+                    new szMessage[128];
+                    format( szMessage, 127, INFO_LEVEL_OTHER, iLevel );
+
+                    client_print( id, print_chat, szMessage );
+                }
+            }
 
             WAR3_hud_item( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 2.0, 3.0 );
             WAR3_hud_level( id );

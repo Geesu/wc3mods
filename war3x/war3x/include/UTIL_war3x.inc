@@ -1139,4 +1139,15 @@ public WAR3_player_valid( id )
 }
 
 
+public WAR3_is_first_race( id ) {
+
+    for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
+    {
+        if ( g_iXPtotal[id][iRaceNum] )
+            return ( 0 );
+    }
+
+    return ( 1 );
+}
+
 // End of UTIL_WAR3X.INC

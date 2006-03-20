@@ -416,6 +416,11 @@ new const INFO_SHOP_DISABLED[]          = "Server has disabled Shop menus!";
 new const INFO_SHOP_VIP[]               = "VIP can not buy items!";
 new const INFO_SHOP_BUYZONE[]           = "You must be in a buy zone!";
 
+new const INFO_NOTCONNECTED[]           = "You must wait until next round.";
+
+new const INFO_LEVEL_FIRST[]            = "^n* [WC3x] Your first selected race has automatically been given level %d!^n";
+new const INFO_LEVEL_OTHER[]            = "^n* [WC3x] Your selected race has been given level %d.^n";
+
 new const INFO_CURRENTSKILLS[]          = "* [WC3x] Current Skills: %s (%0.0f%s)%s";
 new const INFO_SKILLDETAILS[]           = "* [WC3x] Type '/skills' in chat for detailed skill information.";
 
