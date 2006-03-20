@@ -1,0 +1,191 @@
+1.0 plan
+------
+
+-unholy aura gravity change (from .85 to .75)
+-vampiric aura knife damange leech increase 50%
+-death coil damage change (50-60 damage)
+-sleep change (target sleeps for 8-12 seconds)
+remove frost nova
+add disease cloud. upon death, player will take 20/40/60 damage over 90 seconds.
+-
+-invisibility change (slower timer for reappearing)
+-bash chance change (10/20/30%)
+-bash knife increase 50% (damage/chance)
+-bash damage change (3/6/9)
+-bash duration change (.5-2.5 seconds)
+-holy light damage change (50-60 heal)
+-avatar change (speed increase, longer duration, smaller shell)
+-
+-berserk change (40/80/120 dmg, 50% health)
+-pulverize change (MAJOR)
+-pillage change (MAJOR)
+-chain lightning change (50-65 damage)
+-healing wave change (50-60 health)
+-healing wave change (selfheal .60)
+-healing wave change (selfhealable)
+-
+-added elune's grace
+-elune's grace change (brightness increased w/ level)
+-evasion change (no grenades/knives)
+-evasion change (shotgap 5 seconds)
+-nature's blessing change (racial - trainable)
+-trueshot aura change (exclude all snipers)
+-entangling roots change (duration 8 seconds, damage increase to 40)
+-rejuvenation change (60-75)
+-rejuvenation change (duration 8-16 seconds)
+-shadow strike change (initial damage 25-35)
+-shadow strike change (decrease speed from 150 - 120)
+-rejuvenation change (selfheal .60)
+
+- other changes -
+-second status text
+-self healing change (60% of max)
+-fix health icons on evading players
+-fix health icons for dead players
+-minimize total tempents
+-bugfix - fix the damn race selection before you spawn at least once... (health event?) this will 
+ also prevent database from being read prematurely
+MAKE SURE TO EDIT ALL HELP FILE MESSAGES
+-fix all racial skills, make sure we're doing 10...
+-remove anti-magic shell/bloodlust
+-bugfix - temporarily remove the targetskills from ultimate
+-check unholygravity
+-rename Amulet of Spell Shield: Amulet of shielding
+-amulet of shielding change: block only 1 ultimate, then destroy
+-price change in amulet
+sleep not stopping! (HMM WEIRD)
+check invis cooldown? possible crashing...
+
+
+-%t on nova
+first player level
+sounds
+hudmessage on death follow
+reduce range of chains
+height of nova
+
+
+
+sounds:
+frost nova
+berserk (client)
+
+
+1.1 plan
+--------
+major - REDO ALL FORMATS (i think this causes ALL crashes)
+flame strike mod - more damage each second in the strike. countdown from that amount when outside.
+flame strike change - implement with touch, rather than timers
+flame strike change - make targetable on ground
+use 'dynamic' hudmessage positions
+impale change (stun on land 1-3 secs)
+figure out how to change evasion shotgap given all the checks on the current constant
+berserk recode speed change
+keep autosnipers disabled?
+figure out how to set random number for root because of 2 diff functions that call
+remove 'buyback' from item purchasing and just have modified price in list
+implement some kind of last target variable that can be used for target skills etc.
+restructure all code with file_h.inl files, static calls, and function headers WOO!
+remove voting
+value boots????? -- in global.inl (need to recode everything to get it right)
+
+
+IDEAS:!
+=======
+- make a rough (small) page with all skills (with images) that pass server values via php script
+  to show accurate numbers
+- implement language changes
+
+
+quick reference
+
+UD
+unholy aura
+-
+vamp aura
+frost armor
+frost nova
+-
+death coil
+impale
+sleep		(cripple)
+
+
+HU
+fortitude
+-
+invisibility
+bash
+inner fire
+-
+holy light
+flame strike	(barrage)
+avatar
+
+
+OR
+regeneration
+-
+berserk
+pillage
+pulverize
+-
+chain lightning
+chain healing	(healing totem)
+wind walk
+
+
+NE
+elune's grace
+-
+evasion
+nature's blessing
+trueshot aura
+-
+entangling roots
+rejuvenation
+shadow strike	(?)(maybe faerie fire)(able to be teleported to!)
+
+-----------------
+
+GOB
+kaboom!
+-
+
+engineering upgrades
+-
+healing spray
+
+
+BE
+magic immunity
+-
+defend
+?
+inner fire
+-
+polymorph
+flame strike
+flash heal	(heal amt, hot rest)
+
+
+DR
+Avoidance?
+-
+liquid fire
+howl of terror?
+-
+immolation
+healing wave
+shadow strike
+
+
+NA
+spiked shell
+-
+frost arrows
+abolish magic
+
+-
+frost bolt
+healing stream
