@@ -159,7 +159,7 @@ new const RACE1SKILL_DESC[_TS + _TU][] =    // UNDEAD SKILLS:
 {
     /* Unholy Aura          */  "Increases player's maximum speed by <%s>. All weapons move at same speed. Player's gravity is also decreased by <%s>.",
     /* Vampiric Aura        */  "Player gains <%s> of his attack damage back as health when a successful attack is made.",
-    /* Frost Nova           */  "Player is surrounded by a barrier that protects them from <%s> of all incoming skill/ultimate damage.",
+    /* Frost Nova           */  "Upon death, nearby enemies within <%s> meters of the player are blasted for <%s> damage and slowed for up to <%s> seconds.",
     /* Frost Armor          */  "Creates a shield of frost around the player when armor is bought. The shield adds <%s> maximum armor and has a <%s> chance to slow attacking players for <%s> seconds.",
     /* Death Coil           */  "A coil of death that can deal <%s> damage to an enemy living player or heal a friendly undead unit <%s> health.",
     /* Impale               */  "Impales a target enemy player with a massive claw, which deals <%s> damage and hurls them high into the air, giving them potential to take massive fall damage.",
@@ -180,20 +180,20 @@ new const RACE2SKILL_DESC[_TS + _TU][] =    // HUMAN SKILLS:
 
 new const RACE3SKILL_DESC[_TS + _TU][] =    // ORC SKILLS:
 {
-    /* Regeneration   			*/  "Player regenerates <%s> health/armor every <%s> second(s).",
-    /* Bloodlust            */  "Increases the player's movement speed with knife and grenades by <%s>, and damage by <%s> on each successful attack. Knife attacks multiply this damage by <%s>.",
-    /* Pulverize            */  "Gives the player a <%s> chance to deal <%s> area effect damage on their attacks to enemies within <%s> meters. Damage is doubled if enemy player(s) are within <%s> meters.",
-    /* Reincarnation        */  "When killed, the player has a <%s> chance to spawn the next round with all items he died with.",
+    /* Regeneration   		*/  "Player regenerates <%s> health/armor every <%s> second(s).",
+    /* Berserk              */  "As the player loses health, their speed with knives and grenades increases by up to <%s>. When health drops below <%s>, damage will increase by up to <%s>. Effects increase the closer to 0 the player's health is.",
+    /* Pulverize            */  "All grenade attacks deal <%s> area effect damage to enemies within <%s> meters.",
+    /* Pillage              */  "Player has a <%s> chance to steal ammo, grenades, or money from the target with each successful attack.",
     /* Healing Wave         */  "Calls forth a wave of healing energy that bounces up to <%s> times, restoring <%s> health to the initial target. Each bounce restores <%s> less health.",
     /* Chain Lightning      */  "Hurls a bolt of lightning that deals <%s> damage to a target enemy and jumps to up to <%s> nearby enemies. Each jump deals <%s> less damage.",
     /* Wind Walk            */  "Player becomes <%s> invisible and moves <%s> faster for <%s> seconds. A knife attack while Wind Walking will yield an additional <%s> damage. Switching weapons will end the Wind Walk."
 };
 
-new const RACE4SKILL_DESC[_TS + _TU][] =    // NIGHT ELF SKILLS: ( CLEANUP )
+new const RACE4SKILL_DESC[_TS + _TU][] =    // NIGHT ELF SKILLS:
 {
-    /* Elune's Grace        */  "Increases the player's maximum armor by <%s> and movement speed with various weapons by up to <%s> when armor is present. Movement speed of all weapons will not exceed knife speed",
+    /* Elune's Grace        */  "All knife damage on the player is reduced by <%s>, and all ultimate damage is reduced by <%s>.",
     /* Evasion              */  "Gives a <%s> chance the player will avoid an attack completely.",
-    /* Nature's Blessing    */  "Gives the player a <%s> chance to strike an additional enemy player for <%s> of the initial damage within <%s> meters of the original target.",
+    /* Nature's Blessing    */  "Increases the player's maximum armor by <%s> and movement speed with various weapons by up to <%s> when armor is present. Movement speed of all weapons will not exceed knife speed.",
     /* Trueshot Aura        */  "Gives the player a <%s> damage bonus to his fired-weapon attacks.",
     /* Rejuvination         */  "Heals a target friendly player <%s> health over <%s> seconds.",
     /* Entangling Roots     */  "Causes roots to burst from the ground, immobilizing a target enemy unit for <%s> seconds, and dealing <%s> damage over time.",
@@ -333,7 +333,7 @@ new const FINISH_SLEEP[]                = "You no longer feel sleepy.";
 new const FINISH_WINDWALK[]             = "Your walk has ended.";
 new const FINISH_AVATAR[]               = "Your strength diminishes.";
 
-new const DAMAGE_FROSTNOVA[]            = "%t's Frost Nova hits you for %d damage.";
+new const DAMAGE_FROSTNOVA[]            = "%s's Frost Nova hits you for %d damage.";
 new const DAMAGE_PULVERIZE[]            = "You have been Pulverized for %d damage.";
 new const DAMAGE_ELUNE[]                = "Elune's Grace has absorbed %d damage.";
 new const DAMAGE_EVASION[]              = "You successfully avoided %d damage.";

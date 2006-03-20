@@ -8,14 +8,13 @@ new Float:s_BerserkDmg[3]		= {0.3,0.8,1.2};				// (skill1) Berserk (bonus % dama
 new Float:s_BerserkSpeed[3]		= {280.0,300.0,320.0};			// (skill1) Max possible speed with Berserk at health 0
 new Float:s_PulverizeRange[3]	= {4.0,5.0,6.0};				// (skill2) Pulverize (distance from detonation)
 new Float:s_PulverizeBonus[3]	= {1.0,2.0,3.0};				// (skill2) Pulverize (bonus damage)
-new Float:s_Reincarnate[3]      = {0.3,0.6,0.9};                // (skill3) Reincarnation (percent chance)
 new Float:s_Pillage[3]          = {0.25,0.50,0.75};             // (skill3) Pillage (percent chance)
+
 
 /* - Skill Constants Configuration ------------------------------ */
 
 
 #define BERSERK_HEALTH				 50		// (integer) lowest health to start giving bonus
-#define BERSERK_MAXSPEED		  320.0		// (integer) max speed for berserk
 
 #define PULVERIZE_ARMOR            0.25     // (  float) % armor removed on pulverize based on damage
 
@@ -28,7 +27,6 @@ new Float:s_Pillage[3]          = {0.25,0.50,0.75};             // (skill3) Pill
 
 enum {                                      // Pillage type index
     INDEX_MONEY = 1,
-//    INDEX_ARMOR,
     INDEX_AMMO,
     INDEX_GRENADE
 };
@@ -554,7 +552,7 @@ public SPillage( attacker, victim, iDamage, Weapon ) {
         // Steal Money and Grenades (if applicable)
 
 	    SPillage_Money( attacker, victim, iDamage, Weapon );
-        SPillage_Grenade( attacker, victim, iDamage );
+        SPillage_Grenade( attacker, victim );
     }
 
     else

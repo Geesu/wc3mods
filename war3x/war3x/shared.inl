@@ -2371,8 +2371,8 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_2:
                 {
-                    format( szValue, 31, "%0.0f%s", ( s_VampiricAura[iSkillLevel] * 100.0 ), "%" );
-                    return ( 2 );
+                    format( szValue, 31, "%d %d %0.0f", s_fnRange[iSkillLevel], s_fnDamage[iSkillLevel], FROSTNOVA_SLOWDURATION_MAX );
+                    return ( 3 );
                 }
 
                 case SKILL_3:
@@ -2469,19 +2469,19 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_1:
                 {
-                    //format( szValue, 31, "%0.0f%s %d %d", ( ( ( s_BloodlustSpeed[iSkillLevel] - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), "%", s_Bloodlust[iSkillLevel], BLOODLUST_KNIFEBONUS );
+                    format( szValue, 31, "%0.0f%s %d %0.0f%s", ( ( ( s_BerserkSpeed[iSkillLevel] - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), "%", BERSERK_HEALTH, ( s_BerserkDmg[iSkillLevel] * 100.0 ), "%" );
                     return ( 3 );
                 }
 
                 case SKILL_2:
                 {
-                    //format( szValue, 31, "%0.0f%s %d %d %d", ( s_Pulverize[iSkillLevel] * 100.0 ), "%", s_PulverizeDamage[iSkillLevel], PULVERIZE_RANGE, PULVERIZE_BONUS_RANGE );
-                    return ( 4 );
+                    format( szValue, 31, "%0.0f%s %0.0f", ( s_PulverizeBonus[iSkillLevel] * 100.0 ), "%", s_PulverizeRange[iSkillLevel] );
+                    return ( 2 );
                 }
 
                 case SKILL_3:
                 {
-                    format( szValue, 31, "%0.0f%s", ( s_Reincarnate[iSkillLevel] * 100.0 ), "%" );
+                    format( szValue, 31, "%0.0f%s", ( s_Pillage[iSkillLevel] * 100.0 ), "%" );
                     return ( 1 );
                 }
 
@@ -2513,10 +2513,9 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
             {
                 // Skills
 
-                case SKILL_RACIAL: // ( CLEANUP )
+                case SKILL_RACIAL:
                 {
-//                    format( szValue, 31, "%0.0f%s %0.0f%s", s_ElunesMagic[iSkillLevel]
-//                    format( szValue, 31, "%d %0.0f%s", ( s_BlessingArmor[iSkillLevel] - 100 ), ( ( s_BlessingSpeed[iSkillLevel] ) * 100.0 ) , "%" );
+                    format( szValue, 31, "%0.0f%s %0.0f%s", ( SElunes_Knife_Get( iSkillLevel ) * 100.0 ), "%", ( SElunes_Magic_Get( iSkillLevel ) * 100.0 ), "%" );
                     return ( 2 );
                 }
 
@@ -2526,10 +2525,10 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
                     return ( 1 );
                 }
 
-                case SKILL_2: //( CLEANUP )
+                case SKILL_2:
                 {
-//                    format( szValue, 31, "%0.0f%s %0.0f%s %d", ( s_MoonGlaive[iSkillLevel] * 100.0 ), "%", ( MOONGLAIVE_DAMAGE * 100.0 ), "%", MOONGLAIVE_RANGE );
-                    return ( 3 );
+                    format( szValue, 31, "%d %0.0f%s", ( s_BlessingArmor[iSkillLevel] - 100 ), ( ( s_BlessingSpeed[iSkillLevel] ) * 100.0 ) , "%" );
+                    return ( 2 );
                 }
 
                 case SKILL_3:

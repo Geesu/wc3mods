@@ -17,7 +17,7 @@ new Float:s_faSlow[3]           = {0.1,0.2,0.3};        // (skill3) Frost Armor 
 
 #define VAMPIRIC_KNIFEBONUS                 0.50        // (  float) bonus to apply to vampiric aura when using knife.
 
-#define FROSTNOVA_SLOWSPEED                 75.0        // (  float) max speed when slowed by frost nova
+#define FROSTNOVA_SLOWSPEED                 60.0        // (  float) max speed when slowed by frost nova
 #define FROSTNOVA_SLOWDURATION_MIN           1.0        // (  float) min duration in seconds player is slowed by frost nova ( minimum = 1 second )
 #define FROSTNOVA_SLOWDURATION_MAX           5.0        // (  float) max duration in seconds player is slowed by frost nova ( minimum = 1 second )
 
@@ -448,8 +448,10 @@ public SFrostNova( id ) {
 
                 // Message
 
-                new szMessage[128];
-                format( szMessage, 127, DAMAGE_FROSTNOVA, id, iDamage );
+                new szMessage[128], szPlayer[32];
+
+                get_user_name( id, szPlayer, 31 );
+                format( szMessage, 127, DAMAGE_FROSTNOVA, szPlayer, iDamage );
 
                 WAR3_status_text2( enemy, szMessage, 3.0 );
 
