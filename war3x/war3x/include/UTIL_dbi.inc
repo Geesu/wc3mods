@@ -255,8 +255,16 @@ public write_mysql_all( szSaveId[32], szData[32], iRaceId, iXP, bUpdate ) {
     get_time( "%Y-%m-%d", szLastPlayed, 15 );
 
     if ( !bUpdate )
-        format( mysqlQuery, 255, "INSERT DELAYED INTO `%s` VALUES ('%s', %d, %d, '%s', '%s')", g_mysqlTableName, szSaveId, iRaceId, iXP, szData, szLastPlayed );
-
+	{
+		if ( g_iSQLtype == SQL_SQLITE )
+		{
+			format( mysqlQuery, 255, "INSERT INTO `%s` VALUES ('%s', %d, %d, '%s', '%s')", g_mysqlTableName, szSaveId, iRaceId, iXP, szData, szLastPlayed );
+		}
+		else
+		{
+			format( mysqlQuery, 255, "INSERT DELAYED INTO `%s` VALUES ('%s', %d, %d, '%s', '%s')", g_mysqlTableName, szSaveId, iRaceId, iXP, szData, szLastPlayed );
+		}
+	}
     else
     {
         format( mysqlQuery, 255, "UPDATE `%s` SET xp = %d, skills = '%s', lastplayed = '%s' WHERE playerid = '%s' AND race = '%d' AND xp < %d", g_mysqlTableName, iXP, szData, szLastPlayed, szSaveId, iRaceId, iXP + 100 );
