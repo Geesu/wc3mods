@@ -571,6 +571,7 @@ new SOUND_WINDWALK[64];
 new SOUND_REJUVENATION[64];
 new SOUND_ROOTS[64];
 new SOUND_SHADOWSTRIKE[64];
+new SOUND_FROSTNOVA[64];
 
 
 /* - CVAR Pointer variables ------------------------------------- */

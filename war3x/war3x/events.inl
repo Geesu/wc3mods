@@ -476,6 +476,14 @@ public on_Damage( victimId ) {
     if ( g_PlayerImpaled[victimId] && victimId == attackerId )
         UImpale_Remove( victimId );
 
+    // Check if Berserk Active ( COMING SOON )
+/*
+    if ( g_PlayerInfo[victimId][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[victimId][CURRENT_SKILL1] )
+    {
+        if ( get_user_health( victimId ) + iDamage >= BERSERK_HEALTH && get_user_health( victimId ) <= BERSERK_HEALTH )
+            SBerserk_Effect( victimId );
+    }
+*/
     // Check if Offensive Skills Should Be Ignored
 
     new bool:bAllowOffensive = true;

@@ -641,22 +641,20 @@ public URoot_Dot( parm[2] ) {
     Origin[2] += random_num( -10,10 );
 
     Create_TE_BLOODSPRITE( SHOWTO_ALL_BROADCAST, Origin, SPR_BLOODSPRAY, SPR_BLOODDROP, 248, 15 );
-
+*/
     // Blood decals
 
-    for ( new i = 0; i < 3; i++ )
-    {
-        static const BLOOD_SMALL[7] = {190,191,192,193,194,195,197};
+    static const BLOOD_SMALL[7] = {190,191,192,193,194,195,197};
 
-        get_user_origin( targetId, Origin );
+    new Origin[3];
+    get_user_origin( targetId, Origin );
 
-        Origin[0] += random_num( -100,100 );
-        Origin[1] += random_num( -100,100 );
-        Origin[2] -= 36;
+    Origin[0] += random_num( -100,100 );
+    Origin[1] += random_num( -100,100 );
+    Origin[2] -= 36;
 
-        Create_TE_WORLDDECAL( SHOWTO_ALL_BROADCAST, Origin, BLOOD_SMALL[random_num(0,6)] );
-    }
-*/
+    Create_TE_WORLDDECAL( SHOWTO_ALL_BROADCAST, Origin, BLOOD_SMALL[random_num(0,6)] );
+
     // Apply Damage
 
     WAR3_damage( casterId, targetId, CSW_ROOT, iDamage, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );

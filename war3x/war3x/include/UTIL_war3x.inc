@@ -262,6 +262,7 @@ public WAR3_precache() {
         copy( SOUND_REJUVENATION, 63,     "warcraft3/RejuvenationTarget1.wav"           );  // Rejuvenation
         copy( SOUND_ROOTS, 63,            "warcraft3/EntanglingRootsTarget1.wav"        );  // Entangling Roots
         copy( SOUND_SHADOWSTRIKE, 63,     "warcraft3/ShadowStrikeBirth1.wav"            );  // Shadow Strike
+        copy( SOUND_FROSTNOVA, 63,        "warcraft3/FrostNova.wav"                     );
 
         // Miscellaneous
 
@@ -289,6 +290,7 @@ public WAR3_precache() {
         copy( SOUND_REJUVENATION, 63,     "bullchicken/bc_acid1.wav"   );   // Rejuvenation
         copy( SOUND_ROOTS, 63,            "weapons/electro5.wav"       );   // Entangling Roots
         copy( SOUND_SHADOWSTRIKE, 63,     "controller/con_attack3.wav" );   // Shadow Strike
+        copy( SOUND_FROSTNOVA, 63,        "houndeye/he_blast1.wav"     );   // Frost Nova
 
         // Miscellaneous
 
@@ -316,6 +318,7 @@ public WAR3_precache() {
     precache_sound( SOUND_REJUVENATION );
     precache_sound( SOUND_ROOTS );
     precache_sound( SOUND_SHADOWSTRIKE );
+    precache_sound( SOUND_FROSTNOVA );
 
     // Miscellaneous
 
@@ -330,15 +333,18 @@ public WAR3_precache() {
 
     #if PRECACHE_WAR3BONUSSOUNDS
 
-        precache_sound( "warcraft3/bonus/BarkSkinTarget1.wav"         );
-        precache_sound( "warcraft3/bonus/BerzerkerCaster.wav"         );
-        precache_sound( "warcraft3/bonus/DeathCoilMissileLaunch1.wav" );
-        precache_sound( "warcraft3/bonus/EntanglingRootsDecay1.wav"   );
-        precache_sound( "warcraft3/bonus/Error.wav"                   );
-        precache_sound( "warcraft3/bonus/FrostArmorTarget1.wav"       );
-        precache_sound( "warcraft3/bonus/InnerFireBirth.wav"          );
-        precache_sound( "warcraft3/bonus/Reincarnation.wav"           );
-        precache_sound( "warcraft3/bonus/ShadowMeld1.wav"             );
+        precache_sound( "warcraft3/bonus/BarkSkinTarget1.wav"         );    // Nature's Blessing
+        precache_sound( "warcraft3/bonus/BerzerkerCaster.wav"         );    // Berserk
+        precache_sound( "warcraft3/bonus/DeathCoilMissileLaunch1.wav" );    // Death Coil (cast)
+        precache_sound( "warcraft3/bonus/EntanglingRootsDecay1.wav"   );    // Entangling Roots (end)
+        precache_sound( "warcraft3/bonus/Error.wav"                   );    // Error
+        precache_sound( "warcraft3/bonus/FrostArmorTarget1.wav"       );    // Frost Armor
+        precache_sound( "warcraft3/bonus/InnerFireBirth.wav"          );    // Inner Fire
+        precache_sound( "warcraft3/bonus/Reincarnation.wav"           );    // Reincarnation
+        precache_sound( "warcraft3/bonus/FrostNovaStateEnd.wav"       );    // Frost Nova (frozen)
+        precache_sound( "warcraft3/bonus/OrcBurrowBattleStations.wav" );    // Regeneration
+        precache_sound( "warcraft3/bonus/UpkeepRing.wav"              );    // Upkeep
+        precache_sound( "warcraft3/bonus/ShadowMeld1.wav"             );    // Armor Gone
 
     #endif
 

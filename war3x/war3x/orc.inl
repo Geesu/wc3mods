@@ -8,20 +8,20 @@ new Float:s_BerserkDmg[3]		= {0.3,0.8,1.2};				// (skill1) Berserk (bonus % dama
 new Float:s_BerserkSpeed[3]		= {280.0,300.0,320.0};			// (skill1) Max possible speed with Berserk at health 0
 new Float:s_PulverizeRange[3]	= {4.0,5.0,6.0};				// (skill2) Pulverize (distance from detonation)
 new Float:s_PulverizeBonus[3]	= {1.0,2.0,3.0};				// (skill2) Pulverize (bonus damage)
-new Float:s_Pillage[3]          = {0.25,0.50,0.75};             // (skill3) Pillage (percent chance)
+new Float:s_Pillage[3]          = {0.30,0.60,0.90};             // (skill3) Pillage (percent chance)
 
 
 /* - Skill Constants Configuration ------------------------------ */
 
 
-#define BERSERK_HEALTH				 50		// (integer) lowest health to start giving bonus
+#define BERSERK_HEALTH				 60		// (integer) lowest health to start giving bonus
 
 #define PULVERIZE_ARMOR            0.25     // (  float) % armor removed on pulverize based on damage
 
 #define PILLAGE_KNIFEBONUS          0.5     // (  float) bonus to apply to pillage chance/money stolen when using knife.
 //#define PILLAGE_AMMO               0.30     // (  float) % damage used to calculate ammo stolen.
 #define PILLAGE_AMMO                  1     // (integer) number of ammo clips to award player.
-#define PILLAGE_MONEY               4.0     // (  float) % damage used to calculate money stolen.
+#define PILLAGE_MONEY               3.0     // (  float) % damage used to calculate money stolen.
 
 #define REGENERATION_AMMOUNT          1     // (integer) health gained each cycle
 
@@ -347,6 +347,21 @@ public SBerserkDmg( attackerId, victimId, weaponId, damage, headshot ) {
     return PLUGIN_HANDLED;
 }
 
+
+// ( COMING SOON )
+
+public SBerserk_Effect( id ) {
+
+    // Screen Fade
+
+//	Create_ScreenFade( id, (1<<10), (1<<10), FADE_OUT, 255, 0, 0, 100 );
+
+    // Play Status Text
+
+    return PLUGIN_HANDLED;
+}
+
+
 // Pulverize
 
 public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
@@ -567,7 +582,7 @@ public SPillage( attacker, victim, iDamage, Weapon ) {
     	switch( iType )
     	{
     		case INDEX_MONEY:   SPillage_Money( attacker, victim, iDamage, Weapon );
-    		case INDEX_AMMO:    SPillage_Ammo( attacker, victim, iDamage );
+    		case INDEX_AMMO:    SPillage_Ammo( attacker/*, victim, iDamage*/ );
     		case INDEX_GRENADE: SPillage_Grenade( attacker, victim );
     	}
     }
@@ -602,7 +617,7 @@ static SPillage_Money( attacker, victim, iDamage, Weapon ) {
 }
 
 
-static SPillage_Ammo( attacker, victim, iDamage ) {
+static SPillage_Ammo( attacker/*, victim, iDamage*/ ) {
 
     //new Float:fDamage = float( iDamage );
 

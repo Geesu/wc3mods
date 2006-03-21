@@ -1,25 +1,6 @@
 1.0 plan
 ------
 
-sounds:
-frost nova
-berserk (client)
-upkeep
-
-last minute:
-berserk: 60 health
-pillage 30/60/90
-
-
-
-sleep not stopping! (HMM WEIRD)
-check invis cooldown? possible crashing...
-add disease cloud. upon death, player will take 20/40/60 damage over 90 seconds.
-make check for cfg file, if not found, don't load
-same for sprites, etc
-hudmessage on death follow
-
-
 
 
 1.1 plan
@@ -39,6 +20,14 @@ implement some kind of last target variable that can be used for target skills e
 restructure all code with file_h.inl files, static calls, and function headers WOO!
 remove voting
 value boots????? -- in global.inl (need to recode everything to get it right)
+sleep not stopping! (HMM WEIRD)
+check invis cooldown? possible crashing...
+add disease cloud. upon death, player will take 20/40/60 damage over 90 seconds.
+make check for cfg file, if not found, don't load
+same for sprites, etc
+hudmessage on death follow
+
+
 
 
 IDEAS:!

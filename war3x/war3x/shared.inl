@@ -281,7 +281,7 @@ public WAR3_armorskill_on( id ) {
 
         // Play Client Sound
 
-        client_cmd( id, "speak warcraft3/bonus/BerzerkerCaster.wav" );
+        client_cmd( id, "speak warcraft3/bonus/OrcBurrowBattleStations.wav" );
     }
 
     else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] )

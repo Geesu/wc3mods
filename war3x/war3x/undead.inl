@@ -25,6 +25,7 @@ new Float:s_faSlow[3]           = {0.1,0.2,0.3};        // (skill3) Frost Armor 
 #define FROSTARMOR_SLOWSPEED               150.0        // (  float) max speed when slowed by frost armor
 #define FROSTARMOR_SLOWDURATION              3.0        // (  float) seconds player is slowed by frost armor
 
+new NOVA_RGB[3] =                     {35,63,93};       // (integer) RGB of frost nova shell ( when slowed )
 new FROST_RGB[3] =                    {23,42,62};       // (integer) RGB of frost slow shell ( when slowed )
 
 
@@ -349,6 +350,7 @@ public SFrostNova( id ) {
 
     // Play sound
 
+    emit_sound( id, CHAN_STATIC, SOUND_FROSTNOVA, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
     // Blast effect
 
@@ -358,7 +360,7 @@ public SFrostNova( id ) {
     if ( get_user_button( id ) & IN_DUCK )
         Origin[2] += 20;
 
-    Origin[2] -= 40;
+    Origin[2] -= 35;
 
     new iRingSize = s_fnRange[g_PlayerInfo[id][CURRENT_SKILL2] - 1] * 40;
 
@@ -433,13 +435,13 @@ public SFrostNova( id ) {
                 // Glow
 
                 new Float:fDuration = random_float( FROSTNOVA_SLOWDURATION_MIN, FROSTNOVA_SLOWDURATION_MAX );
-                Glow_Set( enemy, fDuration - 0.5, FROST_RGB, 36 );
+                Glow_Set( enemy, fDuration - 0.5, NOVA_RGB, 36 );
 
                 // Screen Fade
 
                 if ( !g_bPlayerSleeping[enemy] )
                 {
-                    Create_ScreenFade( enemy, (1<<10), (1<<10), FADE_OUT, 91, 168, 248, 100 );
+                    Create_ScreenFade( enemy, (1<<10), (1<<10), FADE_OUT, NOVA_RGB[GLOW_R], NOVA_RGB[GLOW_G], NOVA_RGB[GLOW_B], 100 );
                 }
 
                 // Slow movement
@@ -458,6 +460,9 @@ public SFrostNova( id ) {
 
                 WAR3_status_text2( enemy, szMessage, 3.0 );
 
+                // Play Client Sound
+
+                client_cmd( enemy, "speak warcraft3/bonus/FrostNovaStateEnd.wav" );
             }
         }
     }
@@ -886,9 +891,9 @@ public UImpale_Cast( casterId, targetId ) {
 
     Create_TE_BEAMFOLLOW( SHOWTO_ALL_BROADCAST, targetId, SPR_BEAMFOLLOW, 5, 3, 160, 0, 48, 128 );
 
-    // Blood Sprites *REMOVED TEMPORARILY*
-/*
-    for ( new i = 0; i < 5; i++ )
+    // Blood Sprites
+
+    for ( new i = 0; i < 2; i++ )
     {
         get_user_origin( targetId, Origin );
 
@@ -904,7 +909,7 @@ public UImpale_Cast( casterId, targetId ) {
 
     // Blood decals
 
-    for ( new i = 0; i < 20; i++ )
+    for ( new i = 0; i < 5; i++ )
     {
         static const BLOOD_SMALL[7] = {190,191,192,193,194,195,197};
 
@@ -916,7 +921,6 @@ public UImpale_Cast( casterId, targetId ) {
 
         Create_TE_WORLDDECAL( SHOWTO_ALL, Origin, BLOOD_SMALL[random_num( 0,6 )] );
     }
-*/
 
     // Remove Armor
 
@@ -997,7 +1001,7 @@ public UImpale_CheckHeight( parm[3] ) {
 
             Origin[2] += 10;
 
-            for ( new i = 0; i < 5; i++ )
+            for ( new i = 0; i < 2; i++ )
             {
                 new Vector[3];
                 Vector[0] = random_num( 20,300 );

@@ -44,35 +44,12 @@
  * -------------------------------------------------------------- */
 
 
-/****    Changelog - changes done by Geesu    *****
-
-Revision 3
- - Bug Fix: Runtime error in on_damage due to iAttacker > MAXPLAYERS
- - Bug Fix: XP being awarded from a bomb explosion when the number of players didn't meet war3x_xp_minplayers (thanks yang)
- - Bug Fix: Crashing due to removing random entities (this would cause a crash quite often, about every hour)
- - Bug Fix: Fixed runtime error on line 422 in UTIL_Vexd (not checking if entity was valid before getting information about it)
- - Change: removed amx support
- - Change: Bloodlust changed to Beserk
- - Addition: STEAM_ID_PENDING check
- - Addition: Attempted to add SQLite Support
- - Addition: Error logging ability (always on)
-
-Revision 2
- - Bug Fix: Not being able to gain any XP
- - Recompiled for amxx 1.60
-
-Revision 1
- - Bug Fix: Updated dbi code to display errors correctly with amxx
- - Recompiled for amxx 1.55 (thanks to BAILOPAN for fixing BIG compiler errors)
-
-**************************************************/
-
 #pragma tabsize 0
 
 new const WAR3X_PLUGINNAME[] = "Warcraft 3: Expansion";
-new const WAR3X_VERSION[]    = "1.0 RC1";
-new const WAR3X_DATE[]       = "03/10/2006";
-new const WAR3X_AUTHORS[]    = "Ryan, WillyumYum, rACEmic, Geesu, Avanderik";
+new const WAR3X_VERSION[]    = "1.0";
+new const WAR3X_DATE[]       = "03/21/2006";
+new const WAR3X_AUTHORS[]    = "Ryan, Geesu, Avanderik";
 
 
 /* -------------------------------------------------------------- */

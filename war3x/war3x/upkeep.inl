@@ -289,6 +289,8 @@ public Upkeep_Update( iTeamNum, iCurrentUpkeep, iNewUpkeep ) {
             client_print( player, print_chat, UPKEEP_MESSAGE, szUpkeep );
 
             // Play Sound ( client side )
+
+            client_cmd( player, "speak warcraft3/bonus/UpkeepRing.wav" );
         }
     }
 
