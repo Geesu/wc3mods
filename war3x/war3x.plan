@@ -1,78 +1,25 @@
 1.0 plan
 ------
 
--unholy aura gravity change (from .85 to .75)
--vampiric aura knife damange leech increase 50%
--death coil damage change (50-60 damage)
--sleep change (target sleeps for 8-12 seconds)
-remove frost nova
-add disease cloud. upon death, player will take 20/40/60 damage over 90 seconds.
--
--invisibility change (slower timer for reappearing)
--bash chance change (10/20/30%)
--bash knife increase 50% (damage/chance)
--bash damage change (3/6/9)
--bash duration change (.5-2.5 seconds)
--holy light damage change (50-60 heal)
--avatar change (speed increase, longer duration, smaller shell)
--
--berserk change (40/80/120 dmg, 50% health)
--pulverize change (MAJOR)
--pillage change (MAJOR)
--chain lightning change (50-65 damage)
--healing wave change (50-60 health)
--healing wave change (selfheal .60)
--healing wave change (selfhealable)
--
--added elune's grace
--elune's grace change (brightness increased w/ level)
--evasion change (no grenades/knives)
--evasion change (shotgap 5 seconds)
--nature's blessing change (racial - trainable)
--trueshot aura change (exclude all snipers)
--entangling roots change (duration 8 seconds, damage increase to 40)
--rejuvenation change (60-75)
--rejuvenation change (duration 8-16 seconds)
--shadow strike change (initial damage 25-35)
--shadow strike change (decrease speed from 150 - 120)
--rejuvenation change (selfheal .60)
-
-- other changes -
--second status text
--self healing change (60% of max)
--fix health icons on evading players
--fix health icons for dead players
--minimize total tempents
--bugfix - fix the damn race selection before you spawn at least once... (health event?) this will 
- also prevent database from being read prematurely
-MAKE SURE TO EDIT ALL HELP FILE MESSAGES
--fix all racial skills, make sure we're doing 10...
--remove anti-magic shell/bloodlust
--bugfix - temporarily remove the targetskills from ultimate
--check unholygravity
--rename Amulet of Spell Shield: Amulet of shielding
--amulet of shielding change: block only 1 ultimate, then destroy
--price change in amulet
-sleep not stopping! (HMM WEIRD)
-check invis cooldown? possible crashing...
-
-
--%t on nova
--first player level
-sounds
--reduce range of chains (20-12, 15-12)
--height of nova
-message before able to select race...
-
-make check for cfg file, if not found, don't load
-same for sprites, etc
-
-hudmessage on death follow
-
-
 sounds:
 frost nova
 berserk (client)
+upkeep
+
+last minute:
+berserk: 60 health
+pillage 30/60/90
+
+
+
+sleep not stopping! (HMM WEIRD)
+check invis cooldown? possible crashing...
+add disease cloud. upon death, player will take 20/40/60 damage over 90 seconds.
+make check for cfg file, if not found, don't load
+same for sprites, etc
+hudmessage on death follow
+
+
 
 
 1.1 plan
