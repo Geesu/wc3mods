@@ -2,9 +2,6 @@
 
 
 public on_StatusIcon( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_StatusIcon( id ) {");
-#endif
 
     if ( !get_cvar_num( "war3x_enabled" ) )
         return PLUGIN_CONTINUE;
@@ -41,9 +38,6 @@ public on_StatusIcon( id ) {
 // Armor Bought
 
 public on_BuyArmor( id, iKey ) {
-#if ADVANCED_DEBUG
-    log_function("public on_BuyArmor( id, iKey ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -156,9 +150,6 @@ public on_BuyArmor( id, iKey ) {
 // Armor Picked Up
 
 public on_ArmorPickup( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_ArmorPickup( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -176,9 +167,6 @@ public on_ArmorPickup( id ) {
 // Armor Type
 
 public on_ArmorType( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_ArmorType( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -199,11 +187,8 @@ public on_ArmorType( id ) {
 // Target (team)
 
 public on_Target_Team( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_Target_Team( id ) {");
-#endif
 
-    if ( !g_bWar3xEnabled )
+	if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
 
 
@@ -217,9 +202,6 @@ public on_Target_Team( id ) {
 // Target (id)
 
 public on_Target_Id( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_Target_Id( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -389,9 +371,6 @@ public on_Target_Id( id ) {
 // Target ( heath ) ( teammates/hostages only )
 
 public on_Target_Health( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_Target_Health( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -439,9 +418,6 @@ public on_Target_Health( id ) {
 // Normal Damage
 
 public on_Damage( victimId ) {
-#if ADVANCED_DEBUG
-    log_function("public on_Damage( victimId ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -582,9 +558,6 @@ public on_Damage( victimId ) {
 // Normal Death
 
 public on_Death() {
-#if ADVANCED_DEBUG
-    log_function("public on_Death() {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -640,9 +613,6 @@ public on_Death() {
 // Weapon fired / changed / etc
 
 public on_CurWeapon( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_CurWeapon( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -714,9 +684,6 @@ public on_CurWeapon( id ) {
 // Global New Round
 
 public on_FreezeStart() {
-#if ADVANCED_DEBUG
-    log_function("public on_FreezeStart() {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
@@ -878,9 +845,6 @@ public on_FreezeStart() {
 // Player Spawn
 
 public on_ResetHud( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_ResetHud( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled || !is_user_connected( id ) )
         return PLUGIN_CONTINUE;
@@ -940,9 +904,6 @@ public on_ResetHud( id ) {
 // Global Events
 
 public on_World_Action() {
-#if ADVANCED_DEBUG
-    log_function("public on_World_Action() {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -1143,9 +1104,6 @@ public on_World_Action() {
 // Map Change
 
 public on_Intermission() {
-#if ADVANCED_DEBUG
-    log_function("public on_Intermission() {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -1163,9 +1121,6 @@ public on_Intermission() {
 // Player based
 
 public on_Objective_Player() {
-#if ADVANCED_DEBUG
-    log_function("public on_Objective_Player() {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -1283,9 +1238,6 @@ public on_Objective_Player() {
 // Team based
 
 public on_Objective_Team() {
-#if ADVANCED_DEBUG
-    log_function("public on_Objective_Team() {");
-#endif
 
     if ( !g_bWar3xEnabled || get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
         return PLUGIN_CONTINUE;
@@ -1359,9 +1311,6 @@ public on_Objective_Team() {
 // Bomb Plant / Defuse
 
 public on_BarTime( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_BarTime( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -1394,9 +1343,6 @@ public on_BarTime( id ) {
 
 
 public on_ThrowGren( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_ThrowGren( id ) {");
-#endif
 
     new iAmmoType = read_data( 1 );
     new iAmmoCount = read_data( 2 );
@@ -1423,9 +1369,6 @@ public on_ThrowGren( id ) {
 
 
 public on_Health( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_Health( id ) {");
-#endif
 
     // Regeneration
 
@@ -1464,9 +1407,6 @@ public on_Health( id ) {
 
 
 public on_ArmorZero( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_ArmorZero( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled || !get_user_team( id ) || !g_PlayerInfo[id][CURRENT_RACE] )
         return PLUGIN_CONTINUE;
@@ -1483,9 +1423,6 @@ public on_ArmorZero( id ) {
 
 
 public on_TargetBombed() {
-#if ADVANCED_DEBUG
-    log_function("public on_TargetBombed() {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -1504,9 +1441,6 @@ public on_TargetBombed() {
 
 
 public on_Zoom( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_Zoom( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -1526,9 +1460,6 @@ public on_Zoom( id ) {
 
 
 public on_WeapPickup( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_WeapPickup( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -1539,9 +1470,6 @@ public on_WeapPickup( id ) {
 
 
 public on_UseShield( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_UseShield( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -1553,9 +1481,6 @@ public on_UseShield( id ) {
 
 
 public on_Target_Type( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_Target_Type( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -1569,9 +1494,6 @@ public on_Target_Type( id ) {
 
 
 public on_ResetHud_NOWAR3( id ) {
-#if ADVANCED_DEBUG
-    log_function("public on_ResetHud_NOWAR3( id ) {");
-#endif
 
     if ( !g_bDisabledNotify[id] && is_user_alive( id ) )
     {

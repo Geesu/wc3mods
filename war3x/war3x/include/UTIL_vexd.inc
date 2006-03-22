@@ -24,9 +24,6 @@
 
 stock get_entity_velocity( ent, velocity[3] )
 {
-#if ADVANCED_DEBUG
-	log_function("stock get_entity_velocity( ent, velocity[3] )");
-#endif
     new Float:fVelocity[3];
     entity_get_vector( ent, EV_VEC_velocity, fVelocity );
 
@@ -42,9 +39,6 @@ stock get_entity_velocity( ent, velocity[3] )
 
 stock set_entity_velocity( ent, velocity[3] )
 {
-#if ADVANCED_DEBUG
-	log_function("stock set_entity_velocity( ent, velocity[3] )");
-#endif
     new Float:fVelocity[3];
 
     fVelocity[0] = float( velocity[0] );
@@ -61,9 +55,6 @@ stock set_entity_velocity( ent, velocity[3] )
 
 stock get_entity_origin( ent, origin[3] )
 {
-#if ADVANCED_DEBUG
-	log_function("stock get_entity_origin( ent, origin[3] )");
-#endif
     new Float:fOrigin[3];
     entity_get_vector( ent, EV_VEC_origin, fOrigin );
 
@@ -79,9 +70,6 @@ stock get_entity_origin( ent, origin[3] )
 
 stock set_entity_origin(ent, origin[3])
 {
-#if ADVANCED_DEBUG
-	log_function("stock set_entity_origin(ent, origin[3])");
-#endif
     new Float:fOrigin[3];
 
     fOrigin[0] = float( origin[0] );
@@ -120,9 +108,6 @@ stock set_entity_origin(ent, origin[3])
 
 stock get_velocity_to_origin( ent, Float:fOrigin[3], Float:fSpeed, Float:fVelocity[3] )
 {
-#if ADVANCED_DEBUG
-	log_function("stock get_velocity_to_origin( ent, Float:fOrigin[3], Float:fSpeed, Float:fVelocity[3] )");
-#endif
     new Float:fEntOrigin[3];
     entity_get_vector( ent, EV_VEC_origin, fEntOrigin );
 
@@ -147,9 +132,6 @@ stock get_velocity_to_origin( ent, Float:fOrigin[3], Float:fSpeed, Float:fVeloci
 
 stock set_velocity_to_origin( ent, Float:fOrigin[3], Float:fSpeed )
 {
-#if ADVANCED_DEBUG
-	log_function("stock set_velocity_to_origin( ent, Float:fOrigin[3], Float:fSpeed )");
-#endif
     new Float:fVelocity[3];
     get_velocity_to_origin( ent, fOrigin, fSpeed, fVelocity );
 
@@ -163,9 +145,6 @@ stock set_velocity_to_origin( ent, Float:fOrigin[3], Float:fSpeed )
 
 stock set_velocity_to_ent( ent1, ent2, Float:fSpeed )
 {
-#if ADVANCED_DEBUG
-	log_function("stock set_velocity_to_ent( ent1, ent2, Float:fSpeed )");
-#endif
     new Float:fOrigin[3], Float:fVelocity[3];
 
     entity_get_vector( ent2, EV_VEC_origin, fOrigin );
@@ -181,9 +160,6 @@ stock set_velocity_to_ent( ent1, ent2, Float:fSpeed )
 
 stock get_velocity_from_origin( ent, Float:fOrigin[3], Float:fSpeed, Float:fVelocity[3] )
 {
-#if ADVANCED_DEBUG
-	log_function("stock get_velocity_from_origin( ent, Float:fOrigin[3], Float:fSpeed, Float:fVelocity[3] )");
-#endif
     new Float:fEntOrigin[3];
     entity_get_vector( ent, EV_VEC_origin, fEntOrigin );
 
@@ -208,9 +184,6 @@ stock get_velocity_from_origin( ent, Float:fOrigin[3], Float:fSpeed, Float:fVelo
 
 stock set_velocity_from_origin( ent, Float:fOrigin[3], Float:fSpeed )
 {
-#if ADVANCED_DEBUG
-	log_function("stock set_velocity_from_origin( ent, Float:fOrigin[3], Float:fSpeed )");
-#endif
     new Float:fVelocity[3];
     get_velocity_from_origin( ent, fOrigin, fSpeed, fVelocity )
 
@@ -224,9 +197,6 @@ stock set_velocity_from_origin( ent, Float:fOrigin[3], Float:fSpeed )
 
 stock set_velocity_from_ent( ent1, ent2, Float:fSpeed )
 {
-#if ADVANCED_DEBUG
-	log_function("stock set_velocity_from_ent( ent1, ent2, Float:fSpeed )");
-#endif
     new Float:fOrigin[3], Float:fVelocity[3];
 
     entity_get_vector( ent2, EV_VEC_origin, fOrigin );
@@ -241,9 +211,6 @@ stock set_velocity_from_ent( ent1, ent2, Float:fSpeed )
 // Sets maxspeed of an entity ( corrects issues with setting maxspeed on bots )
 
 stock set_entity_maxspeed( ent, Float:fMaxSpeed ) {
-#if ADVANCED_DEBUG
-	log_function("stock set_entity_maxspeed( ent, Float:fMaxSpeed ) {");
-#endif
 
     entity_set_float( ent, EV_FL_maxspeed, fMaxSpeed );
     return ( 1 );
@@ -254,9 +221,6 @@ stock set_entity_maxspeed( ent, Float:fMaxSpeed ) {
 
 stock set_entity_rendering( ent, iRenderFx, iR, iG, iB, iRenderType, iAmmount )
 {
-#if ADVANCED_DEBUG
-	log_function("stock set_entity_rendering( ent, iRenderFx, iR, iG, iB, iRenderType, iAmmount )");
-#endif
     entity_set_int( ent, EV_INT_renderfx, iRenderFx );
 
     new Float:fRGB[3];
@@ -279,9 +243,6 @@ stock set_entity_rendering( ent, iRenderFx, iR, iG, iB, iRenderType, iAmmount )
 
 stock ent_in_view( iStartEnt, iEndEnt )
 {
-#if ADVANCED_DEBUG
-	log_function("stock ent_in_view( iStartEnt, iEndEnt )");
-#endif
     new Float:fStartOrigin[3];
     entity_get_vector( iStartEnt, EV_VEC_origin, fStartOrigin );
 
@@ -289,14 +250,6 @@ stock ent_in_view( iStartEnt, iEndEnt )
     entity_get_vector( iEndEnt, EV_VEC_origin, fEndOrigin );
 
     new Float:vReturn[3];
-
-	// DEBUG
-	/*log_amx("*** START traceline");
-	log_amx("fStartOrigin(%d) (%f, %f, %f)", iStartEnt, fStartOrigin[0], fStartOrigin[1], fStartOrigin[2]);
-	log_amx("fEndOrigin(%d) (%f, %f, %f)", iEndEnt, fEndOrigin[0], fEndOrigin[1], fEndOrigin[2]);
-	log_amx("vReturn (%f, %f, %f)", vReturn[0], vReturn[1], vReturn[2]);*/
-
-	// DEBUG
 
     new iHitEnt = trace_line( iStartEnt, fStartOrigin, fEndOrigin, vReturn );
 
@@ -308,11 +261,6 @@ stock ent_in_view( iStartEnt, iEndEnt )
             return ( 1 );
 
         entity_get_vector( iHitEnt, EV_VEC_origin, fStartOrigin );
-
-		// DEBUG
-		/*log_amx("*** START traceline: %d", iHitEnt);
-		log_amx("fStartOrigin (%f, %f, %f)", fStartOrigin[0], fStartOrigin[1], fStartOrigin[2]);*/
-		// DEBUG
 
         iHitEnt = trace_line( iHitEnt, fStartOrigin, fEndOrigin, vReturn );
     }
@@ -330,9 +278,6 @@ stock ent_in_view( iStartEnt, iEndEnt )
 
 stock predict_ent_origin( iEnt, Float:fTime, Float:fNewOrigin[3] )
 {
-#if ADVANCED_DEBUG
-	log_function("stock predict_ent_origin( iEnt, Float:fTime, Float:fNewOrigin[3] )");
-#endif
     new Float:fVelocity[3];
     entity_get_vector( iEnt, EV_VEC_velocity, fVelocity );
 
@@ -358,9 +303,6 @@ stock predict_ent_origin( iEnt, Float:fTime, Float:fNewOrigin[3] )
 
 stock Float:get_ent_traveltime( Float:fStartOrigin[3], Float:fEndOrigin[3], Float:fSpeed )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Float:get_ent_traveltime( Float:fStartOrigin[3], Float:fEndOrigin[3], Float:fSpeed )");
-#endif
     // Time = Distance / Velocity
 
     new Float:fTime = ( vector_distance( fStartOrigin,fEndOrigin ) / fSpeed );
@@ -373,11 +315,6 @@ stock Float:get_ent_traveltime( Float:fStartOrigin[3], Float:fEndOrigin[3], Floa
 
 public Create_TempEnt( szClassName[32], szModel[64], Float:fOrigin[3], iMoveType, iSolidType, Float:fLife )
 {
-#if ADVANCED_DEBUG
-	new longstring[512];
-	format(longstring, 511, "public Create_TempEnt( %s, %s, Float:fOrigin[3], %d, %d, %f )", szClassName, szModel, iMoveType, iSolidType, fLife);
-	log_function(longstring);
-#endif
     new iEnt = create_entity( "info_target" );
     entity_set_string( iEnt, EV_SZ_classname, szClassName );
 
@@ -395,28 +332,6 @@ public Create_TempEnt( szClassName[32], szModel[64], Float:fOrigin[3], iMoveType
 
 public Remove_TempEnt( parm_iEnt[1] )
 {
-#if ADVANCED_DEBUG
-	new string[128];
-	format(string, 127, "public Remove_TempEnt( %d ) %d", parm_iEnt[0], is_valid_ent(parm_iEnt[0]));
-	log_function(string);
-	
-	if ( is_valid_ent(parm_iEnt[0]) )
-	{
-		new iOwner = entity_get_edict( parm_iEnt[0], EV_ENT_owner );
-		new Float:vVector[3];
-		new szClassName[64], szGlobalName[64], szModel[64], szTarget[64];
-
-		entity_get_vector( parm_iEnt[0], EV_VEC_origin, vVector );
-		entity_get_string( parm_iEnt[0], EV_SZ_classname, szClassName, 63 );
-		entity_get_string( parm_iEnt[0], EV_SZ_globalname, szGlobalName, 63 );
-		entity_get_string( parm_iEnt[0], EV_SZ_model, szModel, 63 );
-		entity_get_string( parm_iEnt[0], EV_SZ_target, szTarget, 63 );
-
-		new chars[256];
-		format(chars, 255, "%d:%s:%s:%s:%s (%f, %f, %f)", iOwner, szClassName, szGlobalName, szModel, szTarget, vVector[0], vVector[1], vVector[2] );
-		log_function(chars);
-	}
-#endif
 	new iEnt = parm_iEnt[0];
 
 	if ( is_valid_ent(iEnt) )
@@ -436,11 +351,6 @@ public Remove_TempEnt( parm_iEnt[1] )
 
 public Remove_TempEnts( szClassname[32], iOwner )
 {
-#if ADVANCED_DEBUG
-	new string[128];
-	format(string, 127, "public Remove_TempEnts( %s, %d )", szClassname, iOwner);
-	log_function(string);
-#endif
 
     new iEntity = find_ent_by_class( -1, szClassname );
 
@@ -466,11 +376,6 @@ public Remove_TempEnts( szClassname[32], iOwner )
 
 public Create_TempSprite( szClassName[32], szModel[64], Float:fOrigin[3], iMoveType, iSolidType, Float:fFramerate, Float:fScale, Float:fLife )
 {
-#if ADVANCED_DEBUG
-	new longstring[512];
-	format(longstring, 511, "public Create_TempSprite( %s, %s, Float:fOrigin[3], %d, %d, %f, %f, %f )", szClassName, szModel, iMoveType, iSolidType, fFramerate, fScale, fLife);
-	log_function(longstring);
-#endif
     new iSprite = create_entity( "env_sprite" );
 
     entity_set_model( iSprite, szModel );
@@ -494,9 +399,6 @@ public Create_TempSprite( szClassName[32], szModel[64], Float:fOrigin[3], iMoveT
 
 
 public Timer_TempEnt( iEnt, Float:fLife ) {
-#if ADVANCED_DEBUG
-	log_function("public Timer_TempEnt( iEnt, Float:fLife ) {");
-#endif
 
     if ( fLife > 0.0 )
     {

@@ -6,9 +6,6 @@
 // Get Save ID
 
 public Get_SaveId( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Get_SaveId( id ) {");
-#endif
 
     if ( get_cvar_num( "war3x_save_by_ip" ) )
         get_user_ip( id, g_SaveIds[id], 31 );
@@ -28,9 +25,6 @@ public Get_SaveId( id ) {
 // Retrieve Player XP from Database
 
 public Retrieve_Xp( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Retrieve_Xp( id ) {");
-#endif
 	
 
 	if ( get_cvar_num("war3x_save_xp_sql") == 1 )
@@ -72,9 +66,6 @@ public Retrieve_Xp( id ) {
 // Retrieve Player Skills from Database
 
 public Retrieve_Skills( id, iRaceId ) {
-#if ADVANCED_DEBUG
-	log_function("public Retrieve_Skills( id, iRaceId ) {");
-#endif
 
     new szData[64];
 
@@ -104,9 +95,6 @@ public Retrieve_Skills( id, iRaceId ) {
 // Retrieve Player Options from Database
 
 public Retrieve_Options( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Retrieve_Options( id ) {");
-#endif
 
     new szData[64];
 
@@ -179,9 +167,6 @@ public Retrieve_Options( id ) {
 
 
 public Retrieve_Defaults( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Retrieve_Defaults( id ) {");
-#endif
 
     for ( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
     {
@@ -223,9 +208,6 @@ public Retrieve_Defaults( id ) {
 // Stores all Player XP to Database
 
 public Store_Xp( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Store_Xp( id ) {");
-#endif
 
     if ( !g_PlayerInfo[id][CURRENT_RACE] )
         return PLUGIN_HANDLED;
@@ -289,9 +271,6 @@ public Store_Xp( id ) {
 // Store Player Options to Database
 
 public Store_Options( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Store_Options( id ) {");
-#endif
 
     if ( !g_PlayerInfo[id][CURRENT_RACE] )
         return PLUGIN_HANDLED;
@@ -350,9 +329,6 @@ public Store_Options( id ) {
 // Store Player Skills to Database ( vault only )
 
 public Store_Skills( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Store_Skills( id ) {");
-#endif
 
     if ( !g_PlayerInfo[id][CURRENT_RACE] )
         return PLUGIN_HANDLED;
@@ -386,9 +362,6 @@ public Store_Skills( id ) {
 // Stores XP of Queued Player to Database
 
 public Store_Queue_Xp( iArrayIndex, szSaveId[32] ) {
-#if ADVANCED_DEBUG
-	log_function("public Store_Queue_Xp( iArrayIndex, szSaveId[32] ) {");
-#endif
 
 	if ( get_cvar_num("war3x_save_xp_sql") == 1 )
 	{
@@ -447,9 +420,6 @@ public Store_Queue_Xp( iArrayIndex, szSaveId[32] ) {
 // Stores Queued Player Skills to Database ( vault only )
 
 public Store_Queue_Skills( iArrayIndex, szSaveId[32] ) {
-#if ADVANCED_DEBUG
-	log_function("public Store_Queue_Skills( iArrayIndex, szSaveId[32] ) {");
-#endif
 
     new szKeyName[64], szKeyData[64], iLen;
     new iLastRace = g_SaveQueue_iInfo[iArrayIndex][CURRENT_RACE] - 1;
@@ -476,9 +446,6 @@ public Store_Queue_Skills( iArrayIndex, szSaveId[32] ) {
 // Stores Queued Player Options to Database
 
 public Store_Queue_Options( iArrayIndex, szSaveId[32] ) {
-#if ADVANCED_DEBUG
-	log_function("public Store_Queue_Options( iArrayIndex, szSaveId[32] ) {");
-#endif
 
 	if ( get_cvar_num("war3x_save_xp_sql") == 1 )
 	{
@@ -529,9 +496,6 @@ public Store_Queue_Options( iArrayIndex, szSaveId[32] ) {
 // Stores Queued Player Options to Database ( vault only )
 
 public Store_Queue_CurDate( szSaveId[32] ) {
-#if ADVANCED_DEBUG
-	log_function("public Store_Queue_CurDate( szSaveId[32] ) {");
-#endif
 
     new szKeyName[64], szKeyData[64], szLastPlayed[16];
 
@@ -620,9 +584,6 @@ public Queue_Check( szSaveId[32] ) {
 // Copies Information from Queue to Globals
 
 public Queue_Retrieve( id, iArrayIndex ) {
-#if ADVANCED_DEBUG
-	log_function("public Queue_Retrieve( id, iArrayIndex ) {");
-#endif
 
     // Retrieve XP from Queue
 
@@ -654,9 +615,6 @@ public Queue_Retrieve( id, iArrayIndex ) {
 // Clears Data from Given Queue Array Index
 
 public Queue_Remove( iArrayIndex ) {
-#if ADVANCED_DEBUG
-	log_function("public Queue_Remove( iArrayIndex ) {");
-#endif
 
     // Clar Authid
 
@@ -700,9 +658,6 @@ public Queue_Remove( iArrayIndex ) {
 // Reset Skills for Current Race
 
 public Reset_Skills( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Reset_Skills( id ) {");
-#endif
 
     // Reset Skills
 
@@ -721,9 +676,6 @@ public Reset_Skills( id ) {
 // Reset Ultimate for Current Race
 
 public Reset_Ultimate( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Reset_Ultimate( id ) {");
-#endif
 
     // Reset Skills
 
@@ -740,9 +692,6 @@ public Reset_Ultimate( id ) {
 // Reset XP for Current Race
 
 public Reset_XP( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Reset_XP( id ) {");
-#endif
 
     new iRaceNum = g_PlayerInfo[id][CURRENT_RACE] - 1;
 
@@ -775,9 +724,6 @@ public Reset_XP( id ) {
 // Stores all Current Player data to Database
 
 public Store_ActivePlayer( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Store_ActivePlayer( id ) {");
-#endif
 
     if ( is_user_bot( id ) || !g_PlayerInfo[id][CURRENT_RACE] )
         return PLUGIN_HANDLED;
@@ -817,9 +763,6 @@ public Store_ActivePlayer( id ) {
 // Stores all Queued Player data to Database
 
 public Store_Queue_All() {
-#if ADVANCED_DEBUG
-	log_function("public Store_Queue_All() {");
-#endif
 
     if ( !g_SaveQueue_iTotal )
         return PLUGIN_HANDLED;

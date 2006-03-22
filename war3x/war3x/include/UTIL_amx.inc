@@ -116,9 +116,6 @@ static MSG_TYPE( Type )
 
 stock Remove_TE_PLAYERATTACHMENT( SeenBy,id )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Remove_TE_PLAYERATTACHMENT( SeenBy,id )");
-#endif
     if ( SeenBy == SEENBY_ALL )
     {
         message_begin( MSG_ALL,SVC_TEMPENTITY );
@@ -145,9 +142,6 @@ stock Remove_TE_PLAYERATTACHMENT( SeenBy,id )
 
 stock Create_TE_PLAYERATTACHMENT( ShowTo,id,Offset,ModelIndex,Duration )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_PLAYERATTACHMENT( ShowTo,id,Offset,ModelIndex,Duration )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -177,9 +171,6 @@ stock Create_TE_PLAYERATTACHMENT( ShowTo,id,Offset,ModelIndex,Duration )
 
 stock Remove_TE_ELIGHT( SeenBy,id )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Remove_TE_ELIGHT( SeenBy,id )");
-#endif
     if ( SeenBy == SEENBY_ALL )
     {
         message_begin( MSG_ALL,SVC_TEMPENTITY );
@@ -218,9 +209,6 @@ stock Remove_TE_ELIGHT( SeenBy,id )
 
 stock Create_TE_ELIGHT( ShowTo,id,Radius,Red,Green,Blue,Life,Decay )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_ELIGHT( ShowTo,id,Radius,Red,Green,Blue,Life,Decay )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -260,9 +248,6 @@ stock Create_TE_ELIGHT( ShowTo,id,Radius,Red,Green,Blue,Life,Decay )
 
 stock Create_ScreenFade( ShowTo,Duration,HoldTime,FadeType,Red,Green,Blue,Alpha )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_ScreenFade( ShowTo,Duration,HoldTime,FadeType,Red,Green,Blue,Alpha )");
-#endif
     new gmsgScreenFade = get_user_msgid( "ScreenFade" );
 
     if ( ShowTo > MAX_PLAYERS )         // Force Reliable
@@ -296,9 +281,6 @@ stock Create_ScreenFade( ShowTo,Duration,HoldTime,FadeType,Red,Green,Blue,Alpha 
 
 stock Remove_ScreenFade( SeenBy )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Remove_ScreenFade( SeenBy )");
-#endif
     new gmsgScreenFade = get_user_msgid( "ScreenFade" );
 
     if ( SeenBy == SEENBY_ALL )
@@ -332,9 +314,6 @@ stock Remove_ScreenFade( SeenBy )
 
 stock Create_Damage( ShowTo,DamageSave,DamageTake,DamageType )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_Damage( ShowTo,DamageSave,DamageTake,DamageType )");
-#endif
     new gmsgDamage = get_user_msgid( "Damage" );
 
     if ( ShowTo > MAX_PLAYERS )         // Force Reliable
@@ -370,9 +349,6 @@ stock Create_Damage( ShowTo,DamageSave,DamageTake,DamageType )
 
 stock Create_DeathMsg( ShowTo,KillerId,VictimId,Headshot,WeaponName[] )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_DeathMsg( ShowTo,KillerId,VictimId,Headshot,WeaponName[] )");
-#endif
     new gmsgDeathMsg = get_user_msgid( "DeathMsg" );
 
     if ( ShowTo > MAX_PLAYERS )         // Force Reliable
@@ -403,9 +379,6 @@ stock Create_DeathMsg( ShowTo,KillerId,VictimId,Headshot,WeaponName[] )
 
 stock Create_ScoreInfo( ShowTo,id,Frags,Deaths,PlayerClass,Team )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_ScoreInfo( ShowTo,id,Frags,Deaths,PlayerClass,Team )");
-#endif
     new gmsgScoreInfo = get_user_msgid( "ScoreInfo" );
 
     if ( ShowTo > MAX_PLAYERS )         // Force Reliable
@@ -437,9 +410,6 @@ stock Create_ScoreInfo( ShowTo,id,Frags,Deaths,PlayerClass,Team )
 
 stock Create_SetFOV( ShowTo, iAmmount )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_SetFOV( ShowTo, iAmmount )");
-#endif
     new gmsgSetFOV = get_user_msgid( "SetFOV" );
 
     if ( ShowTo > MAX_PLAYERS )         // Force Reliable
@@ -467,9 +437,6 @@ stock Create_SetFOV( ShowTo, iAmmount )
 
 stock Remove_SetFOV( ShowTo )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Remove_SetFOV( ShowTo )");
-#endif
     new gmsgSetFOV = get_user_msgid( "SetFOV" );
 
     if ( ShowTo > MAX_PLAYERS )         // Force Reliable
@@ -497,9 +464,6 @@ stock Remove_SetFOV( ShowTo )
 
 stock Create_TE_BEAMFOLLOW( ShowTo,Entity,SpriteIndex,Life,Width,Red,Green,Blue,Brightness )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_BEAMFOLLOW( ShowTo,Entity,SpriteIndex,Life,Width,Red,Green,Blue,Brightness )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -532,9 +496,6 @@ stock Create_TE_BEAMFOLLOW( ShowTo,Entity,SpriteIndex,Life,Width,Red,Green,Blue,
 
 stock Remove_TE_BEAMFOLLOW( SeenBy, id )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Remove_TE_BEAMFOLLOW( SeenBy, id )");
-#endif
     if ( SeenBy == SEENBY_ALL )
     {
         message_begin( MSG_ALL,SVC_TEMPENTITY );
@@ -561,9 +522,6 @@ stock Remove_TE_BEAMFOLLOW( SeenBy, id )
 
 stock Create_BarTime( ShowTo,Duration )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_BarTime( ShowTo,Duration )");
-#endif
     new gmsgBarTime = get_user_msgid( "BarTime" );
 
     if ( ShowTo > MAX_PLAYERS )         // Force Reliable
@@ -592,9 +550,6 @@ stock Create_BarTime( ShowTo,Duration )
 
 stock Remove_BarTime( SeenBy )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Remove_BarTime( SeenBy )");
-#endif
     new gmsgBarTime = get_user_msgid("BarTime");
 
     if ( SeenBy == SEENBY_ALL )
@@ -623,9 +578,6 @@ stock Remove_BarTime( SeenBy )
 
 stock Create_TE_MODEL( ShowTo,Origin[3],Velocity[3],Yaw,ModelIndex,Sound,Life )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_MODEL( ShowTo,Origin[3],Velocity[3],Yaw,ModelIndex,Sound,Life )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -660,9 +612,6 @@ stock Create_TE_MODEL( ShowTo,Origin[3],Velocity[3],Yaw,ModelIndex,Sound,Life )
 
 stock Create_TE_BLOODSTREAM( ShowTo,Origin[3],Vector[3],Color,Speed )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_BLOODSTREAM( ShowTo,Origin[3],Vector[3],Color,Speed )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -695,9 +644,6 @@ stock Create_TE_BLOODSTREAM( ShowTo,Origin[3],Vector[3],Color,Speed )
 
 stock Create_TE_WORLDDECAL( ShowTo,Origin[3],DecalIndex )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_WORLDDECAL( ShowTo,Origin[3],DecalIndex )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -726,9 +672,6 @@ stock Create_TE_WORLDDECAL( ShowTo,Origin[3],DecalIndex )
 
 stock Create_TE_BLOODSPRITE( ShowTo,Origin[3],SpriteIndex1,SpriteIndex2,Color,Scale )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_BLOODSPRITE( ShowTo,Origin[3],SpriteIndex1,SpriteIndex2,Color,Scale )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -761,9 +704,6 @@ stock Create_TE_BLOODSPRITE( ShowTo,Origin[3],SpriteIndex1,SpriteIndex2,Color,Sc
 
 stock Create_TE_BEAMENTS( ShowTo,StartEntity,EndEntity,SpriteIndex,StartingFrame,FrameRate,Life,Width,Amplitude,Red,Green,Blue,Brightness,Speed )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_BEAMENTS( ShowTo,StartEntity,EndEntity,SpriteIndex,StartingFrame,FrameRate,Life,Width,Amplitude,Red,Green,Blue,Brightness,Speed )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -802,9 +742,6 @@ stock Create_TE_BEAMENTS( ShowTo,StartEntity,EndEntity,SpriteIndex,StartingFrame
 
 stock Create_StatusIcon( ShowTo,Status,SpriteName[],Red,Green,Blue )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_StatusIcon( ShowTo,Status,SpriteName[],Red,Green,Blue )");
-#endif
     new gmsgStatusIcon = get_user_msgid( "StatusIcon" );
 
     if ( ShowTo > MAX_PLAYERS )         // Force Reliable
@@ -836,9 +773,6 @@ stock Create_StatusIcon( ShowTo,Status,SpriteName[],Red,Green,Blue )
 
 stock Remove_StatusIcon( SeenBy,SpriteName[] )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Remove_StatusIcon( SeenBy,SpriteName[] )");
-#endif
     new gmsgStatusIcon = get_user_msgid( "StatusIcon" );
 
     if ( SeenBy == SEENBY_ALL )
@@ -870,9 +804,6 @@ stock Remove_StatusIcon( SeenBy,SpriteName[] )
 
 stock Create_TE_BEAMCYLINDER( ShowTo,Origin[3],Axis[3],SpriteIndex,StartFrame,FrameRate,Life,Width,Amplitude,Red,Green,Blue,Brightness,Speed )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_BEAMCYLINDER( ShowTo,Origin[3],Axis[3],SpriteIndex,StartFrame,FrameRate,Life,Width,Amplitude,Red,Green,Blue,Brightness,Speed )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -914,9 +845,6 @@ stock Create_TE_BEAMCYLINDER( ShowTo,Origin[3],Axis[3],SpriteIndex,StartFrame,Fr
 
 stock Create_TE_SPRITE( ShowTo,Origin[3],SpriteIndex,Scale,Brightness )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_SPRITE( ShowTo,Origin[3],SpriteIndex,Scale,Brightness )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -948,9 +876,6 @@ stock Create_TE_SPRITE( ShowTo,Origin[3],SpriteIndex,Scale,Brightness )
 
 stock Create_TE_BEAMPOINTS( ShowTo,Origin1[3],Origin2[3],SpriteIndex,StartFrame,FrameRate,Life,Width,Amplitude,Red,Green,Blue,Brightness,Speed )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_BEAMPOINTS( ShowTo,Origin1[3],Origin2[3],SpriteIndex,StartFrame,FrameRate,Life,Width,Amplitude,Red,Green,Blue,Brightness,Speed )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -993,9 +918,6 @@ stock Create_TE_BEAMPOINTS( ShowTo,Origin1[3],Origin2[3],SpriteIndex,StartFrame,
 
 stock Create_TE_SPARKS( ShowTo,Origin[3] )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_SPARKS( ShowTo,Origin[3] )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -1024,9 +946,6 @@ stock Create_TE_SPARKS( ShowTo,Origin[3] )
 
 stock Create_TE_SMOKE( ShowTo,Origin[3],SpriteIndex,Scale,FrameRate )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_SMOKE( ShowTo,Origin[3],SpriteIndex,Scale,FrameRate )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -1058,9 +977,6 @@ stock Create_TE_SMOKE( ShowTo,Origin[3],SpriteIndex,Scale,FrameRate )
 
 stock Create_TE_PROJECTILE( ShowTo,Origin[3],Velocity[3],ModelIndex,Life,Owner )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_PROJECTILE( ShowTo,Origin[3],Velocity[3],ModelIndex,Life,Owner )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -1094,9 +1010,6 @@ stock Create_TE_PROJECTILE( ShowTo,Origin[3],Velocity[3],ModelIndex,Life,Owner )
 
 stock Create_TE_IMPLOSION( ShowTo, Origin[3], Radius, Count, Life )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_IMPLOSION( ShowTo, Origin[3], Radius, Count, Life )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -1128,9 +1041,6 @@ stock Create_TE_IMPLOSION( ShowTo, Origin[3], Radius, Count, Life )
 
 stock Create_TE_EXPLODEMODEL( ShowTo, Origin[3], Velocity, ModelIndex, Count, Life )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_EXPLODEMODEL( ShowTo, Origin[3], Velocity, ModelIndex, Count, Life )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -1162,9 +1072,6 @@ stock Create_TE_EXPLODEMODEL( ShowTo, Origin[3], Velocity, ModelIndex, Count, Li
 
 stock Create_TE_EXPLOSION( ShowTo, Origin[3], SpriteIndex, Scale, FrameRate, Flags )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_EXPLOSION( ShowTo, Origin[3], SpriteIndex, Scale, FrameRate, Flags )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -1197,9 +1104,6 @@ stock Create_TE_EXPLOSION( ShowTo, Origin[3], SpriteIndex, Scale, FrameRate, Fla
 
 stock Create_TE_SPRITETRAIL( ShowTo, Start[3], End[3], SpriteIndex, Count, Life, Scale, Velocity, Random )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TE_SPRITETRAIL( ShowTo, Start[3], End[3], SpriteIndex, Count, Life, Scale, Velocity, Random )");
-#endif
     if ( ShowTo > MAX_PLAYERS )         // Show to all ( w/ specified type )
     {
         message_begin( MSG_TYPE( ShowTo ),SVC_TEMPENTITY );
@@ -1237,9 +1141,6 @@ stock Create_TE_SPRITETRAIL( ShowTo, Start[3], End[3], SpriteIndex, Count, Life,
 
 stock Create_StatusText( ShowTo, LineNumber, StatusText[] )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_StatusText( ShowTo, LineNumber, StatusText[] )");
-#endif
     new gmsgStatusText = get_user_msgid( "StatusText" );
 
     if ( ShowTo > MAX_PLAYERS )         // Force Reliable
@@ -1268,9 +1169,6 @@ stock Create_StatusText( ShowTo, LineNumber, StatusText[] )
 
 stock Create_ScreenShake( ShowTo,Amplitude,Duration,Frequency )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_ScreenShake( ShowTo,Amplitude,Duration,Frequency )");
-#endif
     new gmsgShake = get_user_msgid( "ScreenShake" );
 
     if ( ShowTo > MAX_PLAYERS )         // Force Reliable
@@ -1300,9 +1198,6 @@ stock Create_ScreenShake( ShowTo,Amplitude,Duration,Frequency )
 
 stock Create_HideWeapon( ShowTo,Ammount )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_HideWeapon( ShowTo,Ammount )");
-#endif
     new gmsgHideWeapon = get_user_msgid( "HideWeapon" );
 
     if ( ShowTo > MAX_PLAYERS )         // Force Reliable
@@ -1330,9 +1225,6 @@ stock Create_HideWeapon( ShowTo,Ammount )
 
 stock Create_TextMsg( ShowTo,Destination,Message[64] )
 {
-#if ADVANCED_DEBUG
-	log_function("stock Create_TextMsg( ShowTo,Destination,Message[64] )");
-#endif
     new gmsgTextMsg = get_user_msgid( "TextMsg" );
 
     if ( ShowTo > MAX_PLAYERS )         // Force Reliable
@@ -1369,9 +1261,6 @@ stock Create_TextMsg( ShowTo,Destination,Message[64] )
 // Returns an integer token found after iToken'th cChar
 
 public iGettok( szData[64], iToken, cChar ) {
-#if ADVANCED_DEBUG
-	log_function("public iGettok( szData[64], iToken, cChar ) {");
-#endif
 
     new szTokenData[64], szTempData[64];
     copy( szTempData, 63, szData );
@@ -1400,9 +1289,6 @@ public iGettok( szData[64], iToken, cChar ) {
 // Prints szMessage to server (id=0), or client num.
 
 public status_print( id, szMessage[256] ) {
-#if ADVANCED_DEBUG
-	log_function("public status_print( id, szMessage[256] ) {");
-#endif
 
     if ( id > 0 && id <= MAX_PLAYERS )
         client_print( id, print_console, szMessage );
@@ -1417,9 +1303,6 @@ public status_print( id, szMessage[256] ) {
 
 
 public get_cvar_bitsum( szCvar[] ) {
-#if ADVANCED_DEBUG
-	log_function("public get_cvar_bitsum( szCvar[] ) {");
-#endif
 
     new szFlags[64];
     get_cvar_string( szCvar, szFlags, 63 );
@@ -1429,9 +1312,6 @@ public get_cvar_bitsum( szCvar[] ) {
 
 
 public sqrt( iNum ) {       // Written by Spacedude
-#if ADVANCED_DEBUG
-	log_function("public sqrt( iNum ) {       // Written by Spacedude");
-#endif
 
     new iDiv = iNum;
     new iResult = 1;
@@ -1452,9 +1332,6 @@ public sqrt( iNum ) {       // Written by Spacedude
 // Returns letter matching iLetterNum
 
 public get_letter( iLetterNum, szLetter[2] ) {
-#if ADVANCED_DEBUG
-	log_function("public get_letter( iLetterNum, szLetter[2] ) {");
-#endif
 
     new bool:bUpper;
 
@@ -1504,9 +1381,6 @@ public get_letter( iLetterNum, szLetter[2] ) {
 // Glow Durations
 
 public Float:glow_duration( iCalcNum ) {
-#if ADVANCED_DEBUG
-	log_function("public Float:glow_duration( iCalcNum ) {");
-#endif
 
     // Min = 0.5 secs / Max = 5.0 secs
 
@@ -1526,9 +1400,6 @@ public Float:glow_duration( iCalcNum ) {
 
 
 public AMX_get_opposite( iNum ) {
-#if ADVANCED_DEBUG
-	log_function("public AMX_get_opposite( iNum ) {");
-#endif
 
     if ( iNum == 0 )
         iNum = 1;
@@ -1541,9 +1412,6 @@ public AMX_get_opposite( iNum ) {
 
 
 public is_weapon_fired( iNewAmmo, iOldAmmo ) {
-#if ADVANCED_DEBUG
-	log_function("public is_weapon_fired( iNewAmmo, iOldAmmo ) {");
-#endif
 
     if ( iNewAmmo < iOldAmmo )
         return ( 1 );

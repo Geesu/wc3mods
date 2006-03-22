@@ -78,9 +78,6 @@ new const SHORTTERM_XP[11]  = {             // (integer) XP required to gain eac
 // Set Level Xp Values
 
 public Set_LevelXp() {
-#if ADVANCED_DEBUG
-	log_function("public Set_LevelXp() {");
-#endif
 
     // Long Term XP
 
@@ -107,9 +104,6 @@ public Set_LevelXp() {
 
 
 public get_setxp_flag() {
-#if ADVANCED_DEBUG
-	log_function("public get_setxp_flag() {");
-#endif
 
     new szFlags[24];
     get_cvar_string( "war3x_setxp_flag", szFlags, 23 );
@@ -119,9 +113,6 @@ public get_setxp_flag() {
 
 
 public Cmd_SetXp( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Cmd_SetXp( id ) {");
-#endif
 
     if ( id && !( get_user_flags( id ) & get_setxp_flag() ) )
     {
@@ -150,9 +141,6 @@ public Cmd_SetXp( id ) {
 
 
 public Cmd_SetLevel( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Cmd_SetLevel( id ) {");
-#endif
 
     if ( id && !( get_user_flags( id ) & get_setxp_flag() ) )
     {
@@ -181,9 +169,6 @@ public Cmd_SetLevel( id ) {
 
 
 public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
-#if ADVANCED_DEBUG
-	log_function("public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {");
-#endif
 
     new iSetType;
 
@@ -426,9 +411,6 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
 
 
 public XP_Log_to_file( id, szCommand[16], szPlayerName[32], szRaceName[16], szNewValue[16] ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Log_to_file( id, szCommand[16], szPlayerName[32], szRaceName[16], szNewValue[16] ) {");
-#endif
 
     new szLogFile[64];
     format( szLogFile, 63, "%s/setxp_log.txt", WAR3X_DIR );
@@ -458,9 +440,6 @@ public XP_Log_to_file( id, szCommand[16], szPlayerName[32], szRaceName[16], szNe
 // Calculate / Give XP
 
 public XP_Give( id, iOldXp, iNewXp ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Give( id, iOldXp, iNewXp ) {");
-#endif
 
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
     new iRaceNum = g_PlayerInfo[id][CURRENT_RACE] - 1;
@@ -490,9 +469,6 @@ public XP_Give( id, iOldXp, iNewXp ) {
 // Calculate / Give XP Loss
 
 public XP_Remove( id, iOldXp, iNewXp ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Remove( id, iOldXp, iNewXp ) {");
-#endif
 
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
@@ -531,9 +507,6 @@ public XP_Remove( id, iOldXp, iNewXp ) {
 // Calculate / Give Objective Xp
 
 public XP_Objective_Player( id, Float:fObjectiveXp ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Objective_Player( id, Float:fObjectiveXp ) {");
-#endif
 
     new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
     new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
@@ -557,9 +530,6 @@ public XP_Objective_Player( id, Float:fObjectiveXp ) {
 // Calculate / Give Shared Objective Xp
 
 public XP_Objective_Share( id, teamId, iRadius, Float:fShareXp ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Objective_Share( id, teamId, iRadius, Float:fShareXp ) {");
-#endif
 
     new Origin[3], teamOrigin[3];
 
@@ -593,9 +563,6 @@ public XP_Objective_Share( id, teamId, iRadius, Float:fShareXp ) {
 // Calculate / Give Team Objective XP
 
 public XP_Objective_Team( szTeamName[], iTeamXp ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Objective_Team( szTeamName[], iTeamXp ) {");
-#endif
 
     new TeamPlayers[32], iTotalPlayers;
     get_players( TeamPlayers, iTotalPlayers, "e", szTeamName );
@@ -624,9 +591,6 @@ public XP_Objective_Team( szTeamName[], iTeamXp ) {
 // XP Awarded on Kill
 
 public XP_Kill( killerId, victimId, weaponId, Headshot ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Kill( killerId, victimId, weaponId, Headshot ) {");
-#endif
 
     // Update streaks
 
@@ -740,9 +704,6 @@ public XP_Kill( killerId, victimId, weaponId, Headshot ) {
 // XP Loss on Teamkill
 
 public XP_Kill_Teammate( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Kill_Teammate( id ) {");
-#endif
 
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
@@ -773,9 +734,6 @@ public XP_Kill_Teammate( id ) {
 // XP Loss on Death
 
 public XP_Death( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Death( id ) {");
-#endif
 
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
@@ -796,9 +754,6 @@ public XP_Death( id ) {
 // Hostage Touched
 
 public XP_Hostage_Touch( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Hostage_Touch( id ) {");
-#endif
 
     if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
         return PLUGIN_HANDLED;
@@ -829,9 +784,6 @@ public XP_Hostage_Touch( id ) {
 // Hostage Rescued
 
 public XP_Hostage_Rescued( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Hostage_Rescued( id ) {");
-#endif
 
     if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
         return PLUGIN_HANDLED;
@@ -887,9 +839,6 @@ public XP_Hostage_Rescued( id ) {
 // Hostage Killed
 
 public XP_Hostage_Killed( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Hostage_Killed( id ) {");
-#endif
 
     if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) || !g_PlayerInfo[id][CURRENT_RACE] )
         return PLUGIN_HANDLED;
@@ -926,9 +875,6 @@ public XP_Hostage_Killed( id ) {
 // Spawn with Bomb / Pickup Bomb
 
 public XP_Bomb_Pickup( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Bomb_Pickup( id ) {");
-#endif
 
     if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) || get_user_team( id ) != CS_TEAM_TERRORIST )
         return PLUGIN_HANDLED;
@@ -966,9 +912,6 @@ public XP_Bomb_Pickup( id ) {
 // Bomb Dropped
 
 public XP_Bomb_Drop( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Bomb_Drop( id ) {");
-#endif
 
     if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
         return PLUGIN_HANDLED;
@@ -984,9 +927,6 @@ public XP_Bomb_Drop( id ) {
 // Bomb Planted ( planter )
 
 public XP_Bomb_Plant( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Bomb_Plant( id ) {");
-#endif
 
     if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
         return PLUGIN_HANDLED;
@@ -1017,9 +957,6 @@ public XP_Bomb_Plant( id ) {
 // Bomb Planted ( supporters )
 
 public XP_Bomb_Share( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Bomb_Share( id ) {");
-#endif
 
     if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
         return PLUGIN_HANDLED;
@@ -1056,9 +993,6 @@ public XP_Bomb_Share( id ) {
 // Bomb Defused ( defuser )
 
 public XP_Bomb_Defuse( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Bomb_Defuse( id ) {");
-#endif
 
     if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
         return PLUGIN_HANDLED;
@@ -1089,9 +1023,6 @@ public XP_Bomb_Defuse( id ) {
 // Bomb Defused ( supporters )
 
 public XP_Defuse_Share( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Defuse_Share( id ) {");
-#endif
 
     if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
         return PLUGIN_HANDLED;
@@ -1128,9 +1059,6 @@ public XP_Defuse_Share( id ) {
 // Vip Spawn
 
 public XP_Vip_Spawn( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Vip_Spawn( id ) {");
-#endif
 
     if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
         return PLUGIN_HANDLED;
@@ -1166,9 +1094,6 @@ public XP_Vip_Spawn( id ) {
 // Vip Escape ( vip )
 
 public XP_Vip_Escape( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Vip_Escape( id ) {");
-#endif
 
     if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
         return PLUGIN_HANDLED;
@@ -1199,9 +1124,6 @@ public XP_Vip_Escape( id ) {
 // Vip Escape ( protectors )
 
 public XP_Vip_Share( id ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Vip_Share( id ) {");
-#endif
 
     if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
         return PLUGIN_HANDLED;
@@ -1242,9 +1164,6 @@ public XP_Vip_Share( id ) {
 // Occurs when target is successfully bombed
 
 public XP_Target_Bombed_T() {
-#if ADVANCED_DEBUG
-	log_function("public XP_Target_Bombed_T() {");
-#endif
 
     #if XP_TARGETBOMBED
 
@@ -1273,9 +1192,6 @@ public XP_Target_Bombed_T() {
 // Occurs when round time elapses and no bomb plants attempted
 
 public XP_Target_Saved_T() {
-#if ADVANCED_DEBUG
-	log_function("public XP_Target_Saved_T() {");
-#endif
 
     if ( g_bBombPlanted )
         return PLUGIN_HANDLED;
@@ -1320,9 +1236,6 @@ public XP_Target_Saved_T() {
 // Occurs when round time elapses and no bomb plants attempted -and- when bomb defused
 
 public XP_Target_Saved_CT() {
-#if ADVANCED_DEBUG
-	log_function("public XP_Target_Saved_CT() {");
-#endif
 
     #if XP_TARGETSAVED_CT
 
@@ -1348,9 +1261,6 @@ public XP_Target_Saved_CT() {
 // Occurs when round time elapses and vip has not escaped -and- when VIP assassinated
 
 public XP_Not_Escaped_T() {
-#if ADVANCED_DEBUG
-	log_function("public XP_Not_Escaped_T() {");
-#endif
 
     #if XP_VIPNOTESCAPE_T
 
@@ -1376,9 +1286,6 @@ public XP_Not_Escaped_T() {
 // Occurs when round time elapses and vip has not escaped
 
 public XP_Not_Escaped_VIP() {
-#if ADVANCED_DEBUG
-	log_function("public XP_Not_Escaped_VIP() {");
-#endif
 
     if ( !g_Vip )
         return PLUGIN_HANDLED;
@@ -1411,9 +1318,6 @@ public XP_Not_Escaped_VIP() {
 // Occurs when round time elapses and no hostages have been rescued
 
 public XP_Not_Rescued_T() {
-#if ADVANCED_DEBUG
-	log_function("public XP_Not_Rescued_T() {");
-#endif
 
     #if XP_HOSTAGENOTRESCUED_T
 
@@ -1439,9 +1343,6 @@ public XP_Not_Rescued_T() {
 // Occurs when round time elapses and no hostages have been rescued
 
 public XP_Not_Rescued_CT() {
-#if ADVANCED_DEBUG
-	log_function("public XP_Not_Rescued_CT() {");
-#endif
 
     if ( g_bHostageRescued )
         return PLUGIN_HANDLED;
@@ -1486,9 +1387,6 @@ public XP_Not_Rescued_CT() {
 // Occurs when all hostages have been rescued ( duh! )
 
 public XP_All_Hostages_CT() {
-#if ADVANCED_DEBUG
-	log_function("public XP_All_Hostages_CT() {");
-#endif
 
     #if XP_ALLHOSTAGESRESCUED
 
@@ -1516,9 +1414,6 @@ public XP_All_Hostages_CT() {
 // Give Support XP
 
 public XP_Support_Heal( iCasterId, iHealthGiven ) {
-#if ADVANCED_DEBUG
-	log_function("public XP_Support_Heal( iCasterId, iHealthGiven ) {");
-#endif
 
     if ( !iHealthGiven )
         return PLUGIN_HANDLED;

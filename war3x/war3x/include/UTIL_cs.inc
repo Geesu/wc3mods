@@ -327,9 +327,6 @@ stock CS_MAX_AMMO[31] =
 // Forces a player to switch weapon to WeaponGroup.
 
 public cs_switchweapon( id, WeaponGroup ) {
-#if ADVANCED_DEBUG
-	log_function("public cs_switchweapon( id, WeaponGroup ) {");
-#endif
 
     new Weapons[32], iTotalWeapons = 0;
     get_user_weapons( id, Weapons, iTotalWeapons );
@@ -349,9 +346,6 @@ public cs_switchweapon( id, WeaponGroup ) {
 // Returns weapon type of Weapon
 
 public cs_get_weapon_type_( Weapon ) {
-#if ADVANCED_DEBUG
-	log_function("public cs_get_weapon_type_( Weapon ) {");
-#endif
 
     switch ( Weapon )
     {
@@ -393,9 +387,6 @@ public cs_get_weapon_type_( Weapon ) {
 // Returns weapon group of Weapon
 
 public cs_get_weapon_group( Weapon ) {
-#if ADVANCED_DEBUG
-	log_function("public cs_get_weapon_group( Weapon ) {");
-#endif
 
     switch ( cs_get_weapon_type_( Weapon ) )
     {
@@ -420,9 +411,6 @@ public cs_get_weapon_group( Weapon ) {
 
 
 public Create_Money( id, iAmmount, iFlash ) {
-#if ADVANCED_DEBUG
-	log_function("public Create_Money( id, iAmmount, iFlash ) {");
-#endif
 
     new iMsgMoney = get_user_msgid( "Money" );
 
@@ -451,9 +439,6 @@ public Create_Money( id, iAmmount, iFlash ) {
 // Update HUD $ (linux fix)
 
 public cs_update_money( id, iAmmount, iFlash ) {
-#if ADVANCED_DEBUG
-	log_function("public cs_update_money( id, iAmmount, iFlash ) {");
-#endif
 
     if ( !is_user_connected( id ) )
         return PLUGIN_HANDLED;
@@ -477,9 +462,6 @@ public cs_update_money( id, iAmmount, iFlash ) {
 }
 
 public cs_update_ammo( id, iAmmount, iWeapon ) {
-#if ADVANCED_DEBUG
-	log_function("public cs_update_ammo( id, iAmmount, iWeapon ) {");
-#endif
 
     if ( !is_user_connected( id ) )
         return PLUGIN_HANDLED;
@@ -502,9 +484,6 @@ public cs_update_ammo( id, iAmmount, iWeapon ) {
 // Hide status text
 
 public cs_status_hide( id ) {
-#if ADVANCED_DEBUG
-	log_function("public cs_status_hide( id ) {");
-#endif
 
     Create_StatusText( id, 0, "0" );
 
@@ -514,9 +493,6 @@ public cs_status_hide( id ) {
 // Display current target ( center )
 
 public cs_status_target( id ) {
-#if ADVANCED_DEBUG
-	log_function("public cs_status_target( id ) {");
-#endif
 
     if ( g_bNewTargetType[id] )
     {
@@ -532,9 +508,6 @@ public cs_status_target( id ) {
 // Find grenade
 
 public cs_find_grenade( id, szGrenade[] ) {
-#if ADVANCED_DEBUG
-	log_function("public cs_find_grenade( id, szGrenade[] ) {");
-#endif
 
     new eIndex = find_ent_by_class( -1, "grenade" );
 

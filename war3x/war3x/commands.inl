@@ -4,9 +4,6 @@
 // Ultimate Command
 
 public cmd_Ultimate( iCasterId ) {
-#if ADVANCED_DEBUG
-	log_function("public cmd_Ultimate( iCasterId ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
@@ -138,9 +135,6 @@ public cmd_Ultimate( iCasterId ) {
 
 
 public Cmd_Say( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Cmd_Say( id ) {");
-#endif
 
     new szText[32];
     read_args( szText, 31 );
@@ -197,9 +191,6 @@ public Cmd_Say( id ) {
 
 
 public Cmd_Drop( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Cmd_Drop( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -218,9 +209,6 @@ public Cmd_Drop( id ) {
 
 
 public cmd_DropItem( id ) {
-#if ADVANCED_DEBUG
-	log_function("public cmd_DropItem( id ) {");
-#endif
 
     Item_Drop( id );
     return PLUGIN_HANDLED;
@@ -228,9 +216,6 @@ public cmd_DropItem( id ) {
 
 
 public cmd_War3menu( id ) {
-#if ADVANCED_DEBUG
-	log_function("public cmd_War3menu( id ) {");
-#endif
 
     menu_War3menu( id );
     return PLUGIN_HANDLED;
@@ -238,9 +223,6 @@ public cmd_War3menu( id ) {
 
 
 public cmd_Shopmenu( id ) {
-#if ADVANCED_DEBUG
-	log_function("public cmd_Shopmenu( id ) {");
-#endif
 
     menu_ItemShop( id );
     return PLUGIN_HANDLED;

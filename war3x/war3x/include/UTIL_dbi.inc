@@ -27,9 +27,6 @@ new g_SaveQueue_iXPfetched[_TQ][_TR];
 // sql Initialization
 
 public mysql_init(){
-	#if ADVANCED_DEBUG
-		log_function("mysql_init");
-	#endif
 
 	// Check the DBI loaded variable
 
@@ -151,9 +148,6 @@ public mysql_init(){
 // Retrieve Player XP from Database
 
 public get_mysql_xp( id ) {
-	#if ADVANCED_DEBUG
-		log_function("get_mysql_xp");
-	#endif
 
 	// Make sure we have a valid SQL Connection
 
@@ -198,9 +192,6 @@ public get_mysql_xp( id ) {
 // Retrieve Player Skills from Database
 
 public get_mysql_skills( id, iRaceId, szData[64] ) {
-	#if ADVANCED_DEBUG
-		log_function("get_mysql_skills");
-	#endif
 
 
 	// Make sure we have a valid SQL Connection
@@ -238,9 +229,6 @@ public get_mysql_skills( id, iRaceId, szData[64] ) {
 // Stores all Player info to Database
 
 public write_mysql_all( szSaveId[32], szData[32], iRaceId, iXP, bUpdate ) {
-	#if ADVANCED_DEBUG
-		log_function("write_mysql_all");
-	#endif
 
 	// Make sure we have a valid SQL Connection
 
@@ -284,9 +272,6 @@ public write_mysql_all( szSaveId[32], szData[32], iRaceId, iXP, bUpdate ) {
 // Stores all Player XP to Database
 
 public write_mysql_xp( szSaveId[32], iRaceId, iXP, bUpdate ) {
-	#if ADVANCED_DEBUG
-		log_function("write_mysql_xp");
-	#endif
 
 	// Make sure we have a valid SQL Connection
 
@@ -322,9 +307,6 @@ public write_mysql_xp( szSaveId[32], iRaceId, iXP, bUpdate ) {
 // Stores all Player options to Database
 
 public write_mysql_options( szSaveId[32], szData[32] ) {
-	#if ADVANCED_DEBUG
-		log_function("write_mysql_options");
-	#endif
 
 	// Make sure we have a valid SQL Connection
 
@@ -354,9 +336,6 @@ public write_mysql_options( szSaveId[32], szData[32] ) {
 // Stores all Player skills to Database
 
 public write_mysql_skills( szSaveId[32], iRaceId, szData[32] ) {
-	#if ADVANCED_DEBUG
-		log_function("write_mysql_skills");
-	#endif
 
 	// Make sure we have a valid SQL Connection
 
@@ -384,9 +363,6 @@ public write_mysql_skills( szSaveId[32], iRaceId, szData[32] ) {
 
 
 public mysql_close_all() {
-	#if ADVANCED_DEBUG
-		log_function("mysql_close_all");
-	#endif
 
 	// Make sure we have a valid SQL Connection
 
@@ -405,9 +381,6 @@ public mysql_close_all() {
 
 public DB_Error( Result:res, query[], id )
 {
-	#if ADVANCED_DEBUG
-		log_function("DB_Error");
-	#endif
 
 	// Get the error message and log it
 	new szError[255];
@@ -428,9 +401,6 @@ public DB_Error( Result:res, query[], id )
 
 public Check_DBI_Connection()
 {
-	#if ADVANCED_DEBUG
-		log_function("Check_DBI_Connection");
-	#endif
 
 	if( sql < SQL_OK )
 	{

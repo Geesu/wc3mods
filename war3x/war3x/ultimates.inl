@@ -1,9 +1,6 @@
 
 
 public Ultimate_Target( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimate_Target( id ) {");
-#endif
 
     new Ultimate = g_PlayerInfo[id][CURRENT_ULTIMATE];
 
@@ -56,9 +53,6 @@ public Ultimate_Target( id ) {
 
 
 public Ultimate_Type( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimate_Type( id ) {");
-#endif
 
     new Ultimate = g_PlayerInfo[id][CURRENT_ULTIMATE];
 
@@ -111,9 +105,6 @@ public Ultimate_Type( id ) {
 
 
 public Ultimate_Icon( id, iStatus ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimate_Icon( id, iStatus ) {");
-#endif
 
     // Make sure server enabled
 
@@ -233,9 +224,6 @@ public Ultimate_Icon( id, iStatus ) {
 // Ping
 
 public Ultimate_Scan( parm_Scan[1] ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimate_Scan( parm_Scan[1] ) {");
-#endif
 
     new id = parm_Scan[0];
 
@@ -259,9 +247,6 @@ public Ultimate_Scan( parm_Scan[1] ) {
 // Cast Ultimate
 
 public Ultimate_Cast( Caster, Target ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimate_Cast( Caster, Target ) {");
-#endif
 
     if ( g_fUltimateCooldown[Caster] || !is_user_alive( Caster ) || !is_user_alive( Target ) )
         return PLUGIN_HANDLED;
@@ -369,9 +354,6 @@ public Ultimate_Cast( Caster, Target ) {
 // Beep (if no/invalid target)
 
 public Ultimate_Beep( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimate_Beep( id ) {");
-#endif
 
     if ( !g_iChargeUltimate[id] )
     {
@@ -393,9 +375,6 @@ public Ultimate_Beep( id ) {
 // Cooldown
 
 public Ultimate_Cooldown( id, Float:fCooldown ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimate_Cooldown( id, Float:fCooldown ) {");
-#endif
 
     // Stop Scanning
 
@@ -430,9 +409,6 @@ public Ultimate_Cooldown( id, Float:fCooldown ) {
 // Restore
 
 public Ultimate_Restore( parm_Restore[1] ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimate_Restore( parm_Restore[1] ) {");
-#endif
 
     new id = parm_Restore[0];
     Ultimate_Ready( id );
@@ -442,9 +418,6 @@ public Ultimate_Restore( parm_Restore[1] ) {
 
 
 public Ultimate_Enable( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimate_Enable( id ) {");
-#endif
 
     if ( g_bChangeUltimate[id] )
         return PLUGIN_HANDLED;
@@ -466,9 +439,6 @@ public Ultimate_Enable( id ) {
 
 
 public Ultimate_Disable( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimate_Disable( id ) {");
-#endif
 
     new TaskId = TASK_ULTIMATECOOLDOWN + id;
     remove_task( TaskId, 0 );
@@ -480,9 +450,6 @@ public Ultimate_Disable( id ) {
 // Sounds / Message
 
 public Ultimate_Ready( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimate_Ready( id ) {");
-#endif
 
     if ( g_bUltimateWarmup || id == g_Vip )
         return PLUGIN_HANDLED;
@@ -524,9 +491,6 @@ public Ultimate_Ready( id ) {
 // Warmup done
 
 public Ultimate_Warmup() {
-#if ADVANCED_DEBUG
-	log_function("public Ultimate_Warmup() {");
-#endif
 
     g_bUltimateWarmup = false;
 

@@ -72,10 +72,6 @@ new WAR3X_DIR[64];                          // Stores WAR3X working directory
 #include <fun>
 #include <engine>
 
-#if ADVANCED_DEBUG
-    #include "war3x/debug.inl"
-#endif
-
 /* - Inline Inclusions ------------------------------------------ */
 
 
@@ -124,9 +120,6 @@ new WAR3X_DIR[64];                          // Stores WAR3X working directory
 /* - Core Functions --------------------------------------------- */
 
 public plugin_precache() {
-#if ADVANCED_DEBUG
-	log_function("public plugin_precache() {");
-#endif
 
 	// Get configs directory
 
@@ -173,9 +166,6 @@ public plugin_precache() {
 
 
 public client_connect( id ) {
-#if ADVANCED_DEBUG
-	log_function("public client_connect( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -221,9 +211,6 @@ public client_connect( id ) {
 
 public client_authorized(id)
 {
-#if ADVANCED_DEBUG
-	log_function("public client_authorized(id)");
-#endif
 
 	// Check for steam ID pending
 	new szPlayerID[32];
@@ -237,9 +224,6 @@ public client_authorized(id)
 }
 
 public client_putinserver( id ) {
-#if ADVANCED_DEBUG
-	log_function("public client_putinserver( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled || g_bMapDisabled )
         return PLUGIN_CONTINUE;
@@ -249,9 +233,6 @@ public client_putinserver( id ) {
 
 
 public client_disconnect( id ) {
-#if ADVANCED_DEBUG
-	log_function("public client_disconnect( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -300,9 +281,6 @@ public client_disconnect( id ) {
 
 
 public plugin_init() {
-#if ADVANCED_DEBUG
-	log_function("public plugin_init() {");
-#endif
 
     register_plugin( WAR3X_PLUGINNAME, WAR3X_VERSION, WAR3X_AUTHORS );
 
@@ -442,9 +420,6 @@ public plugin_init() {
 
 
 public plugin_end() {
-#if ADVANCED_DEBUG
-	log_function("public plugin_end() {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -464,9 +439,6 @@ public plugin_end() {
 // This functionality allows us to no longer requires a DBI module to be loaded
 public plugin_natives()
 {
-#if ADVANCED_DEBUG
-	log_function("public plugin_natives() {");
-#endif
 
 	set_module_filter("module_filter");
 	set_native_filter("native_filter");
@@ -474,9 +446,6 @@ public plugin_natives()
 
 public module_filter(const module[])
 {
-#if ADVANCED_DEBUG
-	log_function("public module_filter() {");
-#endif
 
 	// Since the DBI module is missing, lets make sure we don't use it
 	if ( equali( module, "dbi" ) )
@@ -495,9 +464,6 @@ public module_filter(const module[])
 
 public native_filter(const name[], index, trap)
 {
-#if ADVANCED_DEBUG
-	log_function("public native_filter() {");
-#endif
 
       if (!trap)
             return PLUGIN_HANDLED;

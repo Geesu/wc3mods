@@ -23,9 +23,6 @@
 // Display
 
 public menu_War3menu( id ) {
-#if ADVANCED_DEBUG
-	log_function("public menu_War3menu( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -57,9 +54,6 @@ public menu_War3menu( id ) {
 // Commands
 
 public _menu_War3menu( id, iKey ) {
-#if ADVANCED_DEBUG
-	log_function("public _menu_War3menu( id, iKey ) {");
-#endif
 
     if ( iKey == KEY_CANCEL )
         return PLUGIN_HANDLED;
@@ -90,9 +84,6 @@ public _menu_War3menu( id, iKey ) {
 // Display
 
 public menu_SelectRace( id ) {
-#if ADVANCED_DEBUG
-	log_function("public menu_SelectRace( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
@@ -230,9 +221,6 @@ public menu_SelectRace( id ) {
 // Commands
 
 public _menu_SelectRace( id, iKey ) {
-#if ADVANCED_DEBUG
-	log_function("public _menu_SelectRace( id, iKey ) {");
-#endif
 
     if ( iKey == KEY_CANCEL )
         return PLUGIN_HANDLED;
@@ -354,9 +342,6 @@ public _menu_SelectRace( id, iKey ) {
 // Display
 
 public menu_SelectSkills( id ) {
-#if ADVANCED_DEBUG
-	log_function("public menu_SelectSkills( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )	return PLUGIN_HANDLED;
 
@@ -596,9 +581,6 @@ public menu_SelectSkills( id ) {
 // Commands
 
 public _menu_SelectSkills( id, iKey ) {
-#if ADVANCED_DEBUG
-	log_function("public _menu_SelectSkills( id, iKey ) {");
-#endif
 
     if ( iKey == KEY_CANCEL )
         return PLUGIN_HANDLED;
@@ -640,9 +622,6 @@ public _menu_SelectSkills( id, iKey ) {
 // Display
 
 public menu_ItemShop( id ) {
-#if ADVANCED_DEBUG
-	log_function("public menu_ItemShop( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled || !is_user_alive( id ) )
         return PLUGIN_HANDLED;
@@ -735,9 +714,6 @@ public menu_ItemShop( id ) {
 // Commands
 
 public _menu_ItemShop( id, iKey ) {
-#if ADVANCED_DEBUG
-	log_function("public _menu_ItemShop( id, iKey ) {");
-#endif
 
     if ( iKey == KEY_CANCEL )
         return PLUGIN_HANDLED;
@@ -770,9 +746,6 @@ public _menu_ItemShop( id, iKey ) {
 // Display
 
 public menu_SkillsHelp( id ) {
-#if ADVANCED_DEBUG
-	log_function("public menu_SkillsHelp( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
@@ -799,9 +772,6 @@ public menu_SkillsHelp( id ) {
 // Commands
 
 public _menu_SkillsHelp( id, iKey ) {
-#if ADVANCED_DEBUG
-	log_function("public _menu_SkillsHelp( id, iKey ) {");
-#endif
 
     if ( iKey == KEY_CANCEL )
         return PLUGIN_HANDLED;
@@ -829,9 +799,6 @@ public _menu_SkillsHelp( id, iKey ) {
 */
 
 public menu_PlayerOptions( id ) {
-#if ADVANCED_DEBUG
-	log_function("public menu_PlayerOptions( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
@@ -874,9 +841,6 @@ public menu_PlayerOptions( id ) {
 
 
 public _menu_PlayerOptions( id, iKey ) {
-#if ADVANCED_DEBUG
-	log_function("public _menu_PlayerOptions( id, iKey ) {");
-#endif
 
     if ( iKey == KEY_CANCEL )
         return PLUGIN_HANDLED;
@@ -914,9 +878,6 @@ public _menu_PlayerOptions( id, iKey ) {
 // Display
 
 public menu_RaceOptions( id ) {
-#if ADVANCED_DEBUG
-	log_function("public menu_RaceOptions( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
@@ -985,9 +946,6 @@ public menu_RaceOptions( id ) {
 // Race Options
 
 public _menu_RaceOptions( id, iKey ) {
-#if ADVANCED_DEBUG
-	log_function("public _menu_RaceOptions( id, iKey ) {");
-#endif
 
     if ( iKey == KEY_CANCEL )
         return PLUGIN_HANDLED;
@@ -1089,9 +1047,6 @@ public _menu_RaceOptions( id, iKey ) {
 
 
 public menu_HelpTopics( id ) {
-#if ADVANCED_DEBUG
-	log_function("public menu_HelpTopics( id ) {");
-#endif
 
     new iKeys = (1<<0)|(1<<1)|(1<<8)|(1<<9);
     new szMenu[512], iLen;
@@ -1112,9 +1067,6 @@ public menu_HelpTopics( id ) {
 
 
 public _menu_HelpTopics( id, iKey ) {
-#if ADVANCED_DEBUG
-	log_function("public _menu_HelpTopics( id, iKey ) {");
-#endif
 
     if ( iKey == KEY_CANCEL )
         return PLUGIN_HANDLED;

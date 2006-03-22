@@ -22,9 +22,6 @@
 // Weapon XP Multiplier
 
 public WAR3_set_xp() {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_set_xp() {");
-#endif
 
     g_fWeaponXp[CSW_WORLDSPAWN]      = 0.0;
 
@@ -80,9 +77,6 @@ public WAR3_set_xp() {
 
 public WAR3_get_damage( weaponId, iBonusDamage )
 {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_get_damage( weaponId, iBonusDamage )");
-#endif
     new Float:fBonusDamage = float( iBonusDamage );
 
     switch ( cs_get_weapon_type_( weaponId ) )
@@ -105,9 +99,6 @@ public WAR3_get_damage( weaponId, iBonusDamage )
 // Get race skill/ultimate string
 
 public WAR3_race_info( id, iRaceId, iSkillNum, szData[64] ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_race_info( id, iRaceId, iSkillNum, szData[64] ) {");
-#endif
 
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
     new iUltimateNum = g_PlayerInfo[id][CURRENT_ULTIMATE];
@@ -177,9 +168,6 @@ public WAR3_race_info( id, iRaceId, iSkillNum, szData[64] ) {
 // Warcraft 3: Expansion Precaching
 
 public WAR3_precache_sound( szWar3Sound[], szDefaultSound[] ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_precache_sound( szWar3Sound[], szDefaultSound[] ) {");
-#endif
 
     new szWar3SoundPath[64];
     format( szWar3SoundPath, 63, "sound/%s", szWar3Sound );
@@ -196,9 +184,6 @@ public WAR3_precache_sound( szWar3Sound[], szDefaultSound[] ) {
 }
 
 public WAR3_precache_model( szWar3Model[], szDefaultModel[] ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_precache_model( szWar3Model[], szDefaultModel[] ) {");
-#endif
 
     if ( file_exists( szWar3Model ) )
         precache_model( szWar3Model );
@@ -212,9 +197,6 @@ public WAR3_precache_model( szWar3Model[], szDefaultModel[] ) {
 }
 
 public WAR3_precache() {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_precache() {");
-#endif
 
     // Race Icons
 
@@ -420,9 +402,6 @@ public WAR3_precache() {
 // Status Text ( beneficial )
 
 public WAR3_status_text( id, szMessage[], Float:fDuration ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_status_text( id, szMessage[], Float:fDuration ) {");
-#endif
 
     // Print to status area
 
@@ -443,9 +422,6 @@ public WAR3_status_text( id, szMessage[], Float:fDuration ) {
 // Status Text ( harmful )
 
 public WAR3_status_text2( id, szMessage[], Float:fDuration ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_status_text2( id, szMessage[], Float:fDuration ) {");
-#endif
 
     // Print to status area
 
@@ -466,9 +442,6 @@ public WAR3_status_text2( id, szMessage[], Float:fDuration ) {
 // Gets flag of an item
 
 public WAR3_get_item_flag( iItemNum ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_get_item_flag( iItemNum ) {");
-#endif
 
     new szFlag[2];
     get_letter( iItemNum , szFlag );
@@ -480,9 +453,6 @@ public WAR3_get_item_flag( iItemNum ) {
 // Gets flag of a skill
 
 public WAR3_get_skill_flag( iRaceNum, iSkillNum ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_get_skill_flag( iRaceNum, iSkillNum ) {");
-#endif
 
     new iLetterNum = ( iRaceNum - 1 ) * TOTAL_SKILLS;
     iLetterNum += ( iSkillNum + 1 );
@@ -497,9 +467,6 @@ public WAR3_get_skill_flag( iRaceNum, iSkillNum ) {
 // Gets flag of an ultimate
 
 public WAR3_get_ult_flag( iRaceNum, iUltimateNum ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_get_ult_flag( iRaceNum, iUltimateNum ) {");
-#endif
 
     new iLetterNum = ( iRaceNum - 1 ) * TOTAL_ULTIMATES;
     iLetterNum += iUltimateNum;
@@ -514,9 +481,6 @@ public WAR3_get_ult_flag( iRaceNum, iUltimateNum ) {
 // Gets flag of an ultimate
 
 public WAR3_get_race_flag( iRaceNum ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_get_race_flag( iRaceNum ) {");
-#endif
 
     new szFlag[2];
     get_letter( iRaceNum + 1, szFlag );
@@ -528,9 +492,6 @@ public WAR3_get_race_flag( iRaceNum ) {
 // Restriction check(s) **INCOMPLETE**
 
 public WAR3_restrict_check( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_restrict_check( id ) {");
-#endif
 
     // Check current item
 
@@ -565,9 +526,6 @@ public WAR3_restrict_check( id ) {
 
 
 public WAR3_hud_xp( id, iEffect, Float:fFxTime, Float:fFadeIn, Float:fFadeOut, Float:fHoldTime ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_hud_xp( id, iEffect, Float:fFxTime, Float:fFadeIn, Float:fFadeOut, Float:fHoldTime ) {");
-#endif
 
     if ( !is_user_alive( id ) || !g_PlayerInfo[id][CURRENT_RACE] )
         return PLUGIN_HANDLED;
@@ -595,9 +553,6 @@ public WAR3_hud_xp( id, iEffect, Float:fFxTime, Float:fFadeIn, Float:fFadeOut, F
 }
 
 public WAR3_hud_item( id, iEffect, Float:fFxTime, Float:fFadeIn, Float:fFadeOut, Float:fHoldTime ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_hud_item( id, iEffect, Float:fFxTime, Float:fFadeIn, Float:fFadeOut, Float:fHoldTime ) {");
-#endif
 
     if ( !is_user_alive( id ) || !g_PlayerInfo[id][CURRENT_RACE] )
         return PLUGIN_HANDLED;
@@ -621,9 +576,6 @@ public WAR3_hud_item( id, iEffect, Float:fFxTime, Float:fFadeIn, Float:fFadeOut,
 }
 
 public _WAR3_hud_item() {
-#if ADVANCED_DEBUG
-	log_function("public _WAR3_hud_item() {");
-#endif
 
     new Players[32], iTotalPlayers;
     get_players( Players, iTotalPlayers, "a" );
@@ -641,9 +593,6 @@ public _WAR3_hud_item() {
 
 
 public WAR3_skill_enabled( id, iRaceNum, iSkillNum ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_skill_enabled( id, iRaceNum, iSkillNum ) {");
-#endif
 
     if ( id == g_Vip || read_flags( g_RestrictedSkills ) & WAR3_get_skill_flag( iRaceNum, iSkillNum ) )
         return ( 0 );
@@ -652,9 +601,6 @@ public WAR3_skill_enabled( id, iRaceNum, iSkillNum ) {
 }
 
 public WAR3_is_ultimate( wIndex ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_is_ultimate( wIndex ) {");
-#endif
 
     if ( wIndex == CSW_DEATHCOIL || wIndex == CSW_IMPALE )
         return ( 1 );
@@ -673,9 +619,6 @@ public WAR3_is_ultimate( wIndex ) {
 
 
 public WAR3_skills_left( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_skills_left( id ) {");
-#endif
 
     new iUsedPoints = 0;
     new iTotalPoints = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
@@ -690,9 +633,6 @@ public WAR3_skills_left( id ) {
 
 
 public WAR3_get_onoff( iStatus, szOnOff[8] ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_get_onoff( iStatus, szOnOff[8] ) {");
-#endif
 
     if ( iStatus )
         copy( szOnOff, 7, LANGUAGE_COMMON_ON );
@@ -707,9 +647,6 @@ public WAR3_get_onoff( iStatus, szOnOff[8] ) {
 
 
 public WAR3_is_lowhealth( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_is_lowhealth( id ) {");
-#endif
 
     new iMaxHealth = WAR3_get_maxhealth( id );
     new iHealth = get_user_health( id );
@@ -728,9 +665,6 @@ public WAR3_is_lowhealth( id ) {
 
 
 public WAR3_is_dispellable( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_is_dispellable( id ) {");
-#endif
 
     new bool:bDispellMe;
 
@@ -747,9 +681,6 @@ public WAR3_is_dispellable( id ) {
 // Checks that cIndex's ultimate can heal tIndex
 
 public WAR3_can_heal( cIndex, tIndex ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_can_heal( cIndex, tIndex ) {");
-#endif
 
     new cRaceId = g_PlayerInfo[cIndex][CURRENT_RACE] - 1;
     new tRaceId = g_PlayerInfo[tIndex][CURRENT_RACE] - 1;
@@ -767,9 +698,6 @@ public WAR3_can_heal( cIndex, tIndex ) {
 // Get Level from current XP
 
 public WAR3_get_level( iXp ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_get_level( iXp ) {");
-#endif
 
     if ( iXp < 0 )
         return ( 0 );
@@ -787,9 +715,6 @@ public WAR3_get_level( iXp ) {
 // Get XP needed for next Level
 
 public WAR3_get_next_xp( iXp ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_get_next_xp( iXp ) {");
-#endif
 
     for ( new iLevel = TOTAL_LEVELS; iLevel >= 0; iLevel-- )
     {
@@ -810,9 +735,6 @@ public WAR3_get_next_xp( iXp ) {
 
 
 public WAR3_get_last_xp( iXp ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_get_last_xp( iXp ) {");
-#endif
 
     for ( new iLevel = TOTAL_LEVELS; iLevel >= 0; iLevel-- )
     {
@@ -835,12 +757,6 @@ public WAR3_get_last_xp( iXp ) {
 // Damage by Warcraft 3 Skill
 
 public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iCheckArmor ) {
-
-    #if ADVANCED_DEBUG
-
-    	log_function( "public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iCheckArmor ) {" );
-
-    #endif
 
     // Elune's Grace ( absorb bonus knife/ultimate damage )
 
@@ -918,9 +834,6 @@ public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iChec
 // Death by Warcraft 3 Skill
 
 public WAR3_death( killerId, victimId, weaponId, Headshot ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_death( killerId, victimId, weaponId, Headshot ) {");
-#endif
 
     if ( !is_user_alive( victimId ) && !g_PlayerImpaled[victimId] )
         return PLUGIN_HANDLED;
@@ -1063,9 +976,6 @@ public WAR3_death( killerId, victimId, weaponId, Headshot ) {
 
 
 public WAR3_is_invisible( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_is_invisible( id ) {");
-#endif
 
     new iRenderMode = entity_get_int( id, EV_INT_rendermode );
     new iRenderFx = entity_get_int( id, EV_INT_renderfx );
@@ -1078,9 +988,6 @@ public WAR3_is_invisible( id ) {
 
 
 public WAR3_player_init( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_player_init( id ) {");
-#endif
 
     g_iPlayerRounds[id] = 0;
 
@@ -1114,9 +1021,6 @@ public WAR3_player_init( id ) {
 
 
 public WAR3_players_init() {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_players_init() {");
-#endif
 
     new Players[32], iTotalPlayers;
     get_players( Players, iTotalPlayers );
@@ -1133,9 +1037,6 @@ public WAR3_players_init() {
 // Added by Geesu
 public WAR3_player_valid( id )
 {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_player_valid( id )");
-#endif
 	if ( id > 0 && id <= get_maxplayers() )
 	{
 		return true;

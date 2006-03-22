@@ -6,9 +6,6 @@
 // Warcraft 3 Help
 
 public motd_War3xHelp( id ) {
-#if ADVANCED_DEBUG
-	log_function("public motd_War3xHelp( id ) {");
-#endif
 
     new szFilename[64];
     format( szFilename, 63, "%s/help/war3help.html", WAR3X_DIR );
@@ -23,9 +20,6 @@ public motd_War3xHelp( id ) {
 
 public motd_ItemsHelp( id )
 {
-#if ADVANCED_DEBUG
-	log_function("public motd_ItemsHelp( id )");
-#endif
     if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
 
@@ -39,9 +33,6 @@ public motd_ItemsHelp( id )
 
 
 public motd_SkillsHelp( id, iRaceNum ) {
-#if ADVANCED_DEBUG
-	log_function("public motd_SkillsHelp( id, iRaceNum ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
@@ -61,9 +52,6 @@ public motd_SkillsHelp( id, iRaceNum ) {
 // Player Skills
 
 public motd_PlayerSkills( id ) {
-#if ADVANCED_DEBUG
-	log_function("public motd_PlayerSkills( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
@@ -157,9 +145,6 @@ public motd_PlayerSkills( id ) {
 // Skills
 
 public motd_Skills( id, targetId ) {
-#if ADVANCED_DEBUG
-	log_function("public motd_Skills( id, targetId ) {");
-#endif
 
     new szMotd[2048], szData[64], szTitle[64], iLen;
     new szSkillDesc[256], szSkillName[32], szSkillLevel[16];
