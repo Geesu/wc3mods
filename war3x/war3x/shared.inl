@@ -166,7 +166,7 @@ public WAR3_get_maxarmor( id ) {
     // Frost Armor
 
     else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD && g_PlayerInfo[id][CURRENT_SKILL3] )
-        iMaxArmor += s_faArmor[g_PlayerInfo[id][CURRENT_SKILL3] - 1] - 100;
+        iMaxArmor += UD_iFrostArmor_armor[g_PlayerInfo[id][CURRENT_SKILL3] - 1] - 100;
 
     // Inner Fire
 
@@ -561,7 +561,7 @@ public Dispell_Negative( dispellerId, targetId )
         new parm_Slow[1];
         parm_Slow[0] = targetId;
 
-        SFrostArmor_Remove( parm_Slow );
+        UD_S_FROSTARMOR_remove( parm_Slow );
         bHasEffects = true;
     }
 
@@ -572,7 +572,7 @@ public Dispell_Negative( dispellerId, targetId )
         new parm_Slow[1];
         parm_Slow[0] = targetId;
 
-        SFrostNova_Remove( parm_Slow );
+        UD_S_FROSTNOVA_remove( parm_Slow );
         bHasEffects = true;
     }
 
@@ -809,10 +809,10 @@ public _WAR3_set_speed( parm_Speed[1] ) {
 
     else if ( g_bPlayerNova[id] )                       // Frost Nova
     {
-        set_user_maxspeed( id, FROSTNOVA_SLOWSPEED );
+        set_user_maxspeed( id, FROSTARMOR_SLOWDURATION );
 
         if ( is_user_bot( id ) )
-            set_entity_maxspeed( id, FROSTNOVA_SLOWSPEED );
+            set_entity_maxspeed( id, FROSTARMOR_SLOWDURATION );
     }
 
     else if ( g_bPlayerFrosted[id] )                    // Frost Slow
@@ -854,20 +854,7 @@ public _WAR3_set_speed( parm_Speed[1] ) {
         // Unholy Aura
 
         if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD )
-        {
-            SUnholyAura_Set( id, weaponId );
-
-            if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS )
-            {
-                new Float:fCurrentSpeed = get_user_maxspeed( id );
-                new Float:fNewSpeed = fCurrentSpeed + VALUE_BOOTS;
-
-                if ( fNewSpeed > CAP_SPEEDBONUS )
-                    fNewSpeed = CAP_SPEEDBONUS;
-
-                set_user_maxspeed( id, fNewSpeed );
-            }
-        }
+            UD_S_UNHOLY_set_speed( id, weaponId );
 
         // Bloodlust
 
@@ -989,7 +976,7 @@ public WAR3_death_victim( id ) {
 	// Frost Nova
 
 	if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD && g_PlayerInfo[id][CURRENT_SKILL2] )
-			SFrostNova( id );
+			UD_S_FROSTNOVA( id );
 
     // Check for Ankh / Reincarnation
 
@@ -1422,7 +1409,7 @@ public Purge_Common( id ) {
         URejuv_Remove( id );
 
     if ( g_PlayerImpaled[id] )
-        UImpale_Remove( id );
+        UD_U_IMPALE_remove( id );
 
     if ( g_bPlayerBashed[id] )
     {
@@ -1433,7 +1420,7 @@ public Purge_Common( id ) {
     }
 
     if ( g_bPlayerSleeping[id] )
-        USleep_Remove( id );
+        UD_U_SLEEP_remove( id );
 
     if ( g_PlayerInfo[id][CURRENT_ULTIMATE] == ULTIMATE_WINDWALK )
         UWindwalk_Remove( id );
@@ -1446,7 +1433,7 @@ public Purge_Common( id ) {
         new parm_Slow[1];
         parm_Slow[0] = id;
 
-        SFrostArmor_Remove( parm_Slow );
+        UD_S_FROSTARMOR_remove( parm_Slow );
     }
 
     if ( g_bPlayerNova[id] )
@@ -1454,7 +1441,7 @@ public Purge_Common( id ) {
         new parm_Slow[1];
         parm_Slow[0] = id;
 
-        SFrostNova_Remove( parm_Slow );
+        UD_S_FROSTNOVA_remove( parm_Slow );
     }
 
     if ( g_bPlayerInvis[id] )
@@ -2359,25 +2346,25 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_RACIAL:
                 {
-                    format( szValue, 31, "%0.0f%s %0.0f%s", ( ( ( SUnholyAura_Get( iSkillLevel ) - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), "%", ( 1.0 - SUnholyGravity_Get( iSkillLevel ) ) * 100.0, "%" );
+                    format( szValue, 31, "%0.0f%s %0.0f%s", ( ( ( UD_S_UNHOLY_get_speed( iSkillLevel ) - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), "%", ( 1.0 - UD_S_UNHOLY_get_gravity( iSkillLevel ) ) * 100.0, "%" );
                     return ( 2 );
                 }
 
                 case SKILL_1:
                 {
-                    format( szValue, 31, "%0.0f%s", ( s_VampiricAura[iSkillLevel] * 100.0 ), "%" );
+                    format( szValue, 31, "%0.0f%s", ( UD_fVampiricAura[iSkillLevel] * 100.0 ), "%" );
                     return ( 1 );
                 }
 
                 case SKILL_2:
                 {
-                    format( szValue, 31, "%d %d %0.0f", s_fnRange[iSkillLevel], s_fnDamage[iSkillLevel], FROSTNOVA_SLOWDURATION_MAX );
+                    format( szValue, 31, "%d %d %0.0f", UD_iFrostNova_range[iSkillLevel], UD_iFrostNova_damage[iSkillLevel], FROSTNOVA_SLOWDURATION_MAX );
                     return ( 3 );
                 }
 
                 case SKILL_3:
                 {
-                    format( szValue, 31, "%d %0.0f%s %0.1f", ( s_faArmor[iSkillLevel] - 100 ), ( s_faSlow[iSkillLevel] * 100.0 ), "%", FROSTARMOR_SLOWDURATION );
+                    format( szValue, 31, "%d %0.0f%s %0.1f", ( UD_iFrostArmor_armor[iSkillLevel] - 100 ), ( UD_fFrostArmor_slow[iSkillLevel] * 100.0 ), "%", FROSTARMOR_SLOWDURATION );
                     return ( 3 );
                 }
 

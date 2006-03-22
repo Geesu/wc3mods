@@ -1,8 +1,3 @@
-1.0 plan
-------
-
-
-
 1.1 plan
 --------
 major - REDO ALL FORMATS (i think this causes ALL crashes)
@@ -26,8 +21,19 @@ add disease cloud. upon death, player will take 20/40/60 damage over 90 seconds.
 make check for cfg file, if not found, don't load
 same for sprites, etc
 hudmessage on death follow
+regeneration requires armor to use
+
+!g_bPlayerSleeping (make some generalize invuln thing)
+replace all distance/40 by get_distance (statsx stock)
+add valid model check to deathcoil seek
+add WAR3_heal command?
+
+TODO
+---
+REPLACE:
 
 
+parm_* -> arg_write/arg_read
 
 
 IDEAS:!
@@ -59,7 +65,7 @@ bash
 inner fire
 -
 holy light
-flame strike	(barrage)
+flame strike	(barrage) (or polymorph)
 avatar
 
 
@@ -91,20 +97,23 @@ shadow strike	(?)(maybe faerie fire)(able to be teleported to!)
 GOB
 kaboom!
 -
-
+acid bomb
+transmute
 engineering upgrades
 -
 healing spray
+cluster rockets
+robo-goblin
 
 
 BE
 magic immunity
 -
 defend
-?
+spell steal	(% chance on attack to gain random ability from target for round)
 inner fire
 -
-polymorph
+banish
 flame strike
 flash heal	(heal amt, hot rest)
 
@@ -112,10 +121,11 @@ flash heal	(heal amt, hot rest)
 DR
 Avoidance?
 -
+Critical Strike
 liquid fire
-howl of terror?
--
 immolation
+-
+howl of terror
 healing wave
 shadow strike
 
@@ -125,7 +135,9 @@ spiked shell
 -
 frost arrows
 abolish magic
-
+hardened skin
 -
 frost bolt
-healing stream
+healing stream	(or mana shield)
+parasite
+

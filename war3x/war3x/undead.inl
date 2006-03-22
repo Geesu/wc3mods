@@ -1,133 +1,75 @@
 // Begin UNDEAD.INL
 
-/* - Skill Configuration ---------------------------------------- */
-
-
-new Float:s_UnholyAura[2]       = {SPEED_KNIFE,300.0};  // (racial) Unholy Aura (260.0 = knife speed)
-new Float:s_UnholyGravity[2]    = {1.0,0.75};           // (racial) Unholy Aura (gravity percentage)
-new Float:s_VampiricAura[3]     = {0.15,0.30,0.45};     // (skill1) Vampiric Aura (health percent)
-new s_fnDamage[3]               = {5,10,15};            // (skill2) Frost Nova (damage dealt)
-new s_fnRange[3]                = {4,5,6};              // (skill2) Frost Nova (range of blast)
-new s_faArmor[3]                = {110,120,130};        // (skill3) Frost Armor (armor ammount)
-new Float:s_faSlow[3]           = {0.1,0.2,0.3};        // (skill3) Frost Armor (chance to slow)
-
-
-/* - Skill Constants Configuration ------------------------------ */
-
-
-#define VAMPIRIC_KNIFEBONUS                 0.50        // (  float) bonus to apply to vampiric aura when using knife.
-
-#define FROSTNOVA_SLOWSPEED                 60.0        // (  float) max speed when slowed by frost nova
-#define FROSTNOVA_SLOWDURATION_MIN           1.0        // (  float) min duration in seconds player is slowed by frost nova ( minimum = 1 second )
-#define FROSTNOVA_SLOWDURATION_MAX           5.0        // (  float) max duration in seconds player is slowed by frost nova ( minimum = 1 second )
-
-#define FROSTARMOR_ARMOR                      15        // (integer) armor removed when player slowed with frost armor
-#define FROSTARMOR_SLOWSPEED               150.0        // (  float) max speed when slowed by frost armor
-#define FROSTARMOR_SLOWDURATION              3.0        // (  float) seconds player is slowed by frost armor
-
-new NOVA_RGB[3] =                     {35,63,93};       // (integer) RGB of frost nova shell ( when slowed )
-new FROST_RGB[3] =                    {23,42,62};       // (integer) RGB of frost slow shell ( when slowed )
-
-
-/* - Ultimate Configuration ------------------------------------- */
-
-
-#define DEATHCOIL_HEAL                        75        // (integer) ammount of health to give friendly undead target
-#define DEATHCOIL_DAMAGE                      60        // (integer) ammount of damage to deal living enemy target
-#define DEATHCOIL_VELOCITY                 800.0        // (  float) velocity of death coil towards target
-#define DEATHCOIL_DURATION                   3.0        // (  float) life of deathcoil before removal
-
-#define IMPALE_DAMAGE                         15        // (integer) initial impale damage
-#define IMPALE_ARMORDAMAGE                    20        // (integer) initial impale damage
-#define IMPALE_VELOCITY                      630        // (integer) upward velocity (620 ~ 30 damage)
-#define IMPALE_MINDISTANCE                   200        // (integer) any impale that doesnt span this distance will assume ceiling collision
-#define IMPALE_COLLISIONDAMAGE                20        // (integer) damage dealt for collision with ceiling
-
-#define SLEEP_DURATION_MIN                   8.0        // (  float) min duration player is disabled
-#define SLEEP_DURATION_MAX                  12.0        // (  float) max duration player is disabled
-#define SLEEP_MOVETIME                       0.8        // (  float) duration after sleep is done that player is unattackable
-
-new DEATHCOIL_SHELL_RGB[3] =          {160,255,0};       // (integer) RGB of glow shell over skull
-new DEATHCOIL_TRAIL_RGB[3] =           {96,224,0};       // (integer) RGB of beamfollow trail from skull
-
-
 /* - Events ----------------------------------------------------- */
 
 
-public Skills_Offensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) {
-#if ADVANCED_DEBUG
-  log_function("public Skills_Offensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) {");
-#endif
+public UD_skills_offensive( attacker, victim, weapon, iDamage, headshot ) {
 
-    if ( g_PlayerInfo[attackerId][CURRENT_RACE] == RACE_UNDEAD && get_user_team( attackerId ) != get_user_team( victimId ) )
+    if ( g_PlayerInfo[attacker][CURRENT_RACE] == RACE_UNDEAD && get_user_team( attacker ) != get_user_team( victim ) )
     {
         // Vampiric Aura
 
-        if ( g_PlayerInfo[attackerId][CURRENT_SKILL1] && cs_get_weapon_type_( weaponId ) != CS_WEAPON_TYPE_GRENADE )
-            SVampiricAura( attackerId, victimId, weaponId, iDamage );
+        if ( g_PlayerInfo[attacker][CURRENT_SKILL1] && cs_get_weapon_type_( weapon ) != CS_WEAPON_TYPE_GRENADE )
+            UD_S_VAMPIRIC( attacker, victim, weapon, iDamage );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public Skills_Defensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) {
-#if ADVANCED_DEBUG
-  log_function("public Skills_Defensive_UD( attackerId, victimId, weaponId, iDamage, headshot ) {");
-#endif
+public UD_skills_defensive( attacker, victim, weapon, iDamage, headshot ) {
 
-    if ( g_PlayerInfo[victimId][CURRENT_RACE] == RACE_UNDEAD && get_user_team( attackerId ) != get_user_team( victimId ) && attackerId )
+    if ( g_PlayerInfo[victim][CURRENT_RACE] == RACE_UNDEAD && get_user_team( attacker ) != get_user_team( victim ) && attacker )
     {
+        // Frost Nova ( called from on_Death )
+
         // Frost Armor
 
-        if ( g_PlayerInfo[victimId][CURRENT_SKILL3] && get_user_armor( victimId ) )
-            SFrostArmor( victimId, attackerId );
+        if ( g_PlayerInfo[victim][CURRENT_SKILL3] && get_user_armor( victim ) )
+            UD_S_FROSTARMOR( victim, attacker );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public Ultimates_UD( casterId, targetId ) {
-#if ADVANCED_DEBUG
-  log_function("public Ultimates_UD( casterId, targetId ) {");
-#endif
+public UD_ultimates( caster, target ) {
 
     // Death Coil
 
-    if ( g_PlayerInfo[casterId][CURRENT_ULTIMATE] == ULTIMATE_DEATHCOIL )
+    if ( g_PlayerInfo[caster][CURRENT_ULTIMATE] == ULTIMATE_DEATHCOIL )
     {
         // Heal
 
-        if ( get_user_team( targetId ) == get_user_team( casterId ) && g_PlayerInfo[targetId][CURRENT_RACE] == RACE_UNDEAD )
+        if ( get_user_team( target ) == get_user_team( caster ) && g_PlayerInfo[target][CURRENT_RACE] == RACE_UNDEAD )
         {
-            if ( get_user_health( targetId ) == WAR3_get_maxhealth( targetId ) && casterId != targetId )
+            if ( get_user_health( target ) == WAR3_get_maxhealth( target ) && caster != target )
             {
                 new szMessage[128];
                 copy( szMessage, 127, FULLHEALTH_TARGET );
 
-                WAR3_status_text( casterId, szMessage, 0.5 );
+                WAR3_status_text( caster, szMessage, 0.5 );
 
-                Ultimate_Beep( casterId );
+                Ultimate_Beep( caster );
             }
 
             else
             {
-                UCoil_Cast( casterId, targetId );
-                Ultimate_Cooldown( casterId, ULTIMATE_COOLDOWNDEFAULT );
+                UD_U_DEATHCOIL( caster, target );
+                Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-                Invis_Cooldown( casterId );
+                Invis_Cooldown( caster );
             }
         }
 
         // Damage
 
-        else if ( get_user_team( targetId ) != get_user_team( casterId ) && g_PlayerInfo[targetId][CURRENT_RACE] != RACE_UNDEAD )
+        else if ( get_user_team( target ) != get_user_team( caster ) && g_PlayerInfo[target][CURRENT_RACE] != RACE_UNDEAD )
         {
-            UCoil_Cast( casterId, targetId );
-            Ultimate_Cooldown( casterId, ULTIMATE_COOLDOWNDEFAULT );
+            UD_U_DEATHCOIL( caster, target );
+            Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-            Invis_Cooldown( casterId );
+            Invis_Cooldown( caster );
         }
 
         else
@@ -135,48 +77,48 @@ public Ultimates_UD( casterId, targetId ) {
             new szMessage[128];
             copy( szMessage, 127, CANT_TARGET_DEATHCOIL );
 
-            WAR3_status_text( casterId, szMessage, 0.5 );
+            WAR3_status_text( caster, szMessage, 0.5 );
 
-            Ultimate_Beep( casterId );
+            Ultimate_Beep( caster );
         }
     }
 
     // Impale
 
-    else if ( g_PlayerInfo[casterId][CURRENT_ULTIMATE] == ULTIMATE_IMPALE && get_user_team( targetId ) != get_user_team( casterId ) )
+    else if ( g_PlayerInfo[caster][CURRENT_ULTIMATE] == ULTIMATE_IMPALE && get_user_team( target ) != get_user_team( caster ) )
     {
-        if ( !( get_entity_flags( targetId ) & FL_ONGROUND ) )
+        if ( !( get_entity_flags( target ) & FL_ONGROUND ) )
         {
             new szMessage[128];
             copy( szMessage, 127, CANT_TARGET_AIR );
 
-            WAR3_status_text( casterId, szMessage, 0.5 );
+            WAR3_status_text( caster, szMessage, 0.5 );
 
-            Ultimate_Beep( casterId );
+            Ultimate_Beep( caster );
         }
 
         else
         {
-            UImpale_Cast( casterId, targetId );
-            Ultimate_Cooldown( casterId, ULTIMATE_COOLDOWNDEFAULT );
+            UD_U_IMPALE( caster, target );
+            Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-            Invis_Cooldown( casterId );
+            Invis_Cooldown( caster );
         }
     }
 
     // Sleep
 
-    else if ( g_PlayerInfo[casterId][CURRENT_ULTIMATE] == ULTIMATE_SLEEP && get_user_team( targetId ) != get_user_team( casterId ) )
+    else if ( g_PlayerInfo[caster][CURRENT_ULTIMATE] == ULTIMATE_SLEEP && get_user_team( target ) != get_user_team( caster ) )
     {
-        USleep_Cast( casterId, targetId );
-        Ultimate_Cooldown( casterId, ULTIMATE_COOLDOWNDEFAULT );
+        UD_U_SLEEP( caster, target );
+        Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-        Invis_Cooldown( casterId );
+        Invis_Cooldown( caster );
     }
 
     else
     {
-        Ultimate_Beep( casterId );
+        Ultimate_Beep( caster );
         return PLUGIN_HANDLED;
     }
 
@@ -187,101 +129,104 @@ public Ultimates_UD( casterId, targetId ) {
 /* - Racial Ability --------------------------------------------- */
 
 
-// Unholy Aura (get speed)
+// Unholy Aura ( get speed )
 
-public Float:SUnholyAura_Get( iLevel ) {
-#if ADVANCED_DEBUG
-  log_function("public Float:SUnholyAura_Get( iLevel ) {");
-#endif
+public Float:UD_S_UNHOLY_get_speed( iLevel ) {
 
     new Float:fLevel = float( iLevel );
 
     if ( fLevel > LEVEL_RACIALCAP )
         fLevel = LEVEL_RACIALCAP;
 
-    new Float:fUnholySpeed = s_UnholyAura[0] + ( ( ( s_UnholyAura[1] - s_UnholyAura[0] ) / LEVEL_RACIALCAP ) * fLevel );
+    new Float:fUnholySpeed = UD_fUnholyAura_speed[0] + ( ( ( UD_fUnholyAura_speed[1] - UD_fUnholyAura_speed[0] ) / LEVEL_RACIALCAP ) * fLevel );
 
-    if ( fUnholySpeed > s_UnholyAura[1] )
-        fUnholySpeed = s_UnholyAura[1];
+    if ( fUnholySpeed > UD_fUnholyAura_speed[1] )
+        fUnholySpeed = UD_fUnholyAura_speed[1];
 
     return ( fUnholySpeed );
 }
 
 
-// Unholy Aura (get gravity)
+// Unholy Aura ( get gravity )
 
-public Float:SUnholyGravity_Get( iLevel ) {
-#if ADVANCED_DEBUG
-  log_function("public Float:SUnholyGravity_Get( iLevel ) {");
-#endif
+public Float:UD_S_UNHOLY_get_gravity( iLevel ) {
 
     new Float:fLevel = float( iLevel );
 
     if ( fLevel > LEVEL_RACIALCAP )
         fLevel = LEVEL_RACIALCAP;
 
-    new Float:fUnholyGravity = s_UnholyGravity[1] + ( ( ( s_UnholyGravity[0] - s_UnholyGravity[1] ) / LEVEL_RACIALCAP ) * fLevel );
+    new Float:fUnholyGravity = UD_fUnholyAura_gravity[1] + ( ( ( UD_fUnholyAura_gravity[0] - UD_fUnholyAura_gravity[1] ) / LEVEL_RACIALCAP ) * fLevel );
 
-    if ( fUnholyGravity < s_UnholyGravity[1] )
-        fUnholyGravity = s_UnholyGravity[1];
+    if ( fUnholyGravity < UD_fUnholyAura_gravity[1] )
+        fUnholyGravity = UD_fUnholyAura_gravity[1];
 
     return ( fUnholyGravity );
 }
 
 
-// Unholy Aura (set speed/gravity)
+// Unholy Aura ( set speed/gravity )
 
-public SUnholyAura_Set( id, weaponId ) {
-#if ADVANCED_DEBUG
-  log_function("public SUnholyAura_Set( id, weaponId ) {");
-#endif
-
-    new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
-    new Float:fUnholySpeed = SUnholyAura_Get( iLevel );
+public UD_S_UNHOLY_set_speed( id, weapon ) {
 
     // Check if restricted
 
     if ( !WAR3_skill_enabled( id, RACE_UNDEAD, SKILL_RACIAL ) )
         return PLUGIN_HANDLED;
 
-    if ( fUnholySpeed < SPEED_KNIFE && weaponId == CSW_KNIFE )
-        set_user_maxspeed( id, SPEED_KNIFE );
+    // Get speed amount(s)
 
-    else
+    new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
+    new Float:fUnholySpeed = UD_S_UNHOLY_get_speed( iLevel );
+
+    // Check for boots and stack
+
+    if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS && VALUE_BOOTS > SPEED_KNIFE )
     {
-        set_user_maxspeed( id, fUnholySpeed );
+        fUnholySpeed += ( VALUE_BOOTS - SPEED_KNIFE );
+
+        if ( fUnholySpeed > CAP_SPEEDBONUS )
+            fUnholySpeed = CAP_SPEEDBONUS;
     }
+
+    // Final checks
+
+    if ( fUnholySpeed < SPEED_KNIFE )
+        fUnholySpeed = SPEED_KNIFE;
+
+    // Set speed
+
+    set_user_maxspeed( id, fUnholySpeed );
 
     // Set gravity
 
-    new Float:fUnholyGravity = SUnholyGravity_Get( iLevel );
+    new Float:fUnholyGravity = UD_S_UNHOLY_get_gravity( iLevel );
     set_user_gravity( id, fUnholyGravity );
 
     return PLUGIN_HANDLED;
 }
 
 
-/* - Skills ----------------------------------------------------- */
+/* - Trainable Skills ------------------------------------------- */
 
 
 // Vampiric Aura
 
-public SVampiricAura( attacker, victim, weapon, iDamage ) {
-#if ADVANCED_DEBUG
-  log_function("public SVampiricAura( attackerId, victimId, iDamage ) {");
-#endif
+static UD_S_VAMPIRIC( attacker, victim, weapon, iDamage ) {
 
     // Check if restricted
 
     if ( !WAR3_skill_enabled( attacker, RACE_UNDEAD, SKILL_1 ) )
         return PLUGIN_HANDLED;
 
+    // Calculate health gained
+
     new iVictimHealth = get_user_health( victim ) + iDamage;
 
     if ( iDamage > iVictimHealth )
         iDamage = iVictimHealth;
 
-    new Float:fBonusHealth = float( iDamage ) * s_VampiricAura[g_PlayerInfo[attacker][CURRENT_SKILL1] - 1];
+    new Float:fBonusHealth = float( iDamage ) * UD_fVampiricAura[g_PlayerInfo[attacker][CURRENT_SKILL1] - 1];
 
     if ( weapon == CSW_KNIFE )
         fBonusHealth += fBonusHealth * VAMPIRIC_KNIFEBONUS;
@@ -291,8 +236,7 @@ public SVampiricAura( attacker, victim, weapon, iDamage ) {
     if ( fBonusHealth < 1.0 )
         return PLUGIN_HANDLED;
 
-
-    // Calculate health
+    // Make sure health does not exceed max
 
     new iNewHealth = get_user_health( attacker ) + floatround( fBonusHealth );
 
@@ -327,7 +271,7 @@ public SVampiricAura( attacker, victim, weapon, iDamage ) {
 
         Glow_Set( attacker, glow_duration( iFadeAlpha ), iRGB, 2 );
 
-        // Screen Fade
+        // Screen fade
 
         if ( !g_bPlayerSleeping[attacker] )
         {
@@ -341,7 +285,7 @@ public SVampiricAura( attacker, victim, weapon, iDamage ) {
 
 // Frost Nova
 
-public SFrostNova( id ) {
+public UD_S_FROSTNOVA( id ) {
 
     // Check if restricted
 
@@ -357,32 +301,34 @@ public SFrostNova( id ) {
     new Origin[3];
     get_user_origin( id, Origin );
 
+    Origin[2] -= 35;
+
     if ( get_user_button( id ) & IN_DUCK )
         Origin[2] += 20;
 
-    Origin[2] -= 35;
+    // Create rings
 
-    new iRingSize = s_fnRange[g_PlayerInfo[id][CURRENT_SKILL2] - 1] * 40;
+    new iRingSize = UD_iFrostNova_range[g_PlayerInfo[id][CURRENT_SKILL2] - 1] * 40;
 
     new Radius[3][3];
     Radius[0][2] = iRingSize;
 
-    // Outer Ring
+    // Outer ring
 
     Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, Origin, Radius[0], SPR_SMOOTHWAVE, 0, 0, 5, 12, 5, 255, 255, 255, 255, 0 );
 
-    // Entity Light
+    // Entity light
 
-    Create_TE_ELIGHT( SHOWTO_ALL_BROADCAST, id, random_num( 60,100 ), FROST_RGB[GLOW_R], FROST_RGB[GLOW_G], FROST_RGB[GLOW_B], 10, 5 );
+    Create_TE_ELIGHT( SHOWTO_ALL_BROADCAST, id, random_num( 60,100 ), FROSTARMOR_RGB[GLOW_R], FROSTARMOR_RGB[GLOW_G], FROSTARMOR_RGB[GLOW_B], 10, 5 );
 
-    // Inner Ring(s)
+    // Inner ring(s)
 
     switch ( g_PlayerInfo[id][CURRENT_SKILL2] )
     {
         case 2:
         {
             Radius[1][2] = iRingSize / 2;
-            Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, Origin, Radius[1], SPR_SMOOTHWAVE, 0, 0, 5,  6, 5, FROST_RGB[GLOW_R], FROST_RGB[GLOW_G], FROST_RGB[GLOW_B], 255, 0 );
+            Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, Origin, Radius[1], SPR_SMOOTHWAVE, 0, 0, 5,  6, 5, FROSTARMOR_RGB[GLOW_R], FROSTARMOR_RGB[GLOW_G], FROSTARMOR_RGB[GLOW_B], 255, 0 );
         }
 
         case 3:
@@ -390,8 +336,8 @@ public SFrostNova( id ) {
             Radius[1][2] = iRingSize / 3 * 2;
             Radius[2][2] = iRingSize / 3;
 
-            Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, Origin, Radius[1], SPR_SMOOTHWAVE, 0, 0, 5,  6, 5, FROST_RGB[GLOW_R], FROST_RGB[GLOW_G], FROST_RGB[GLOW_B], 255, 0 );
-            Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, Origin, Radius[2], SPR_SMOOTHWAVE, 0, 0, 5,  4, 5, FROST_RGB[GLOW_R], FROST_RGB[GLOW_G], FROST_RGB[GLOW_B], 220, 0 );
+            Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, Origin, Radius[1], SPR_SMOOTHWAVE, 0, 0, 5,  6, 5, FROSTARMOR_RGB[GLOW_R], FROSTARMOR_RGB[GLOW_G], FROSTARMOR_RGB[GLOW_B], 255, 0 );
+            Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, Origin, Radius[2], SPR_SMOOTHWAVE, 0, 0, 5,  4, 5, FROSTARMOR_RGB[GLOW_R], FROSTARMOR_RGB[GLOW_G], FROSTARMOR_RGB[GLOW_B], 220, 0 );
         }
     }
 
@@ -412,7 +358,7 @@ public SFrostNova( id ) {
 
     if ( iTotalEnemies > 0 )
     {
-        new iRadius = s_fnRange[g_PlayerInfo[id][CURRENT_SKILL2] - 1];
+        new iRadius = UD_iFrostNova_range[g_PlayerInfo[id][CURRENT_SKILL2] - 1];
 
         for ( new iPlayerNum = 0; iPlayerNum < iTotalEnemies; iPlayerNum++ )
         {
@@ -425,30 +371,30 @@ public SFrostNova( id ) {
             {
                 // Damage
 
-                new iDamage = s_fnDamage[g_PlayerInfo[id][CURRENT_SKILL2] - 1];
+                new iDamage = UD_iFrostNova_damage[g_PlayerInfo[id][CURRENT_SKILL2] - 1];
                 WAR3_damage( id, enemy, CSW_FROSTNOVA, iDamage, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
 
-                // Cold Damage
+                // Cold damage
 
                 Create_Damage( enemy, 0, 0, CS_DMG_COLD );
 
                 // Glow
 
                 new Float:fDuration = random_float( FROSTNOVA_SLOWDURATION_MIN, FROSTNOVA_SLOWDURATION_MAX );
-                Glow_Set( enemy, fDuration - 0.5, NOVA_RGB, 36 );
+                Glow_Set( enemy, fDuration - 0.5, FROSTNOVA_RGB, 36 );
 
-                // Screen Fade
+                // Screen fade
 
                 if ( !g_bPlayerSleeping[enemy] )
                 {
-                    Create_ScreenFade( enemy, (1<<10), (1<<10), FADE_OUT, NOVA_RGB[GLOW_R], NOVA_RGB[GLOW_G], NOVA_RGB[GLOW_B], 100 );
+                    Create_ScreenFade( enemy, (1<<10), (1<<10), FADE_OUT, FROSTNOVA_RGB[GLOW_R], FROSTNOVA_RGB[GLOW_G], FROSTNOVA_RGB[GLOW_B], 100 );
                 }
 
                 // Slow movement
 
                 if ( get_user_health( enemy ) - iDamage > 0 )
                 {
-                    SFrostNova_Slow( enemy, fDuration );
+                    UD_S_FROSTNOVA_slow( enemy, fDuration );
                 }
 
                 // Message
@@ -460,7 +406,7 @@ public SFrostNova( id ) {
 
                 WAR3_status_text2( enemy, szMessage, 3.0 );
 
-                // Play Client Sound
+                // Play client sound
 
                 client_cmd( enemy, "speak warcraft3/bonus/FrostNovaStateEnd.wav" );
             }
@@ -471,18 +417,18 @@ public SFrostNova( id ) {
 }
 
 
-public SFrostNova_Slow( id, Float:fDuration ) {
+static UD_S_FROSTNOVA_slow( id, Float:fDuration ) {
 
     g_bPlayerNova[id] = true;
     g_bPlayerSlowed[id] = true;
 
-    new parm_Slow[1];
-    parm_Slow[0] = id;
+    new arg_write[1];
+    arg_write[0] = id;
 
-    new TaskId = TASK_NOVASLOW + id;
+    new task = TASK_NOVASLOW + id;
 
-    remove_task( TaskId, 0 );
-    set_task( fDuration, "SFrostNova_Remove", TaskId, parm_Slow, 1 );
+    remove_task( task, 0 );
+    set_task( fDuration, "UD_S_FROSTNOVA_remove", task, arg_write, 1 );
 
     WAR3_set_speed( id );
 
@@ -490,12 +436,12 @@ public SFrostNova_Slow( id, Float:fDuration ) {
 }
 
 
-public SFrostNova_Remove( parm_Slow[1] ) {
+public UD_S_FROSTNOVA_remove( arg_read[1] ) {
 
-    new id = parm_Slow[0];
+    new id = arg_read[0];
 
-    new TaskId = TASK_NOVASLOW + id;
-    remove_task( TaskId, 0 );
+    new task = TASK_NOVASLOW + id;
+    remove_task( task, 0 );
 
     g_bPlayerNova[id] = false;
     Slow_Remove( id );
@@ -508,86 +454,80 @@ public SFrostNova_Remove( parm_Slow[1] ) {
 
 // Frost Armor
 
-public SFrostArmor( victimId, attackerId ) {
-#if ADVANCED_DEBUG
-  log_function("public SFrostArmor( victimId, attackerId ) {");
-#endif
+public UD_S_FROSTARMOR( victim, attacker ) {
 
     // Check if restricted
 
-    if ( !WAR3_skill_enabled( victimId, RACE_UNDEAD, SKILL_3 ) )
+    if ( !WAR3_skill_enabled( victim, RACE_UNDEAD, SKILL_3 ) )
         return PLUGIN_HANDLED;
 
-    new Float:fSlowChance = s_faSlow[g_PlayerInfo[victimId][CURRENT_SKILL3] - 1];
+    new Float:fSlowChance = UD_fFrostArmor_slow[g_PlayerInfo[victim][CURRENT_SKILL3] - 1];
     new Float:fRandomNum = random_float( 0.0,1.0 );
 
     if ( fSlowChance >= fRandomNum )
     {
-        if ( get_user_armor( attackerId ) )
+        if ( get_user_armor( attacker ) )
         {
-            new iNewArmor = get_user_armor( attackerId ) - FROSTARMOR_ARMOR;
+            new iNewArmor = get_user_armor( attacker ) - FROSTARMOR_ARMOR;
 
             if ( iNewArmor < 0 )
                 iNewArmor = 0;
 
-            set_user_armor( attackerId, iNewArmor );
+            set_user_armor( attacker, iNewArmor );
 
             // Regenerate Armor (if orc)
 
-            if ( g_PlayerInfo[attackerId][CURRENT_RACE] == RACE_ORC && !g_bPlayerRegen[attackerId] )
-                SRegen_Set( attackerId );
+            if ( g_PlayerInfo[attacker][CURRENT_RACE] == RACE_ORC && !g_bPlayerRegen[attacker] )
+                SRegen_Set( attacker );
         }
 
         // Add to player stats array
 
         if ( get_cvar_num( "mp_war3stats" ) )
         {
-            playerSkill3Info[victimId][0] += 1;
+            playerSkill3Info[victim][0] += 1;
         }
 
         // Slow movement
 
-        SFrostArmor_Slow( attackerId );
+        UD_S_FROSTARMOR_slow( attacker );
 
         // Glow
 
-        Glow_Set( attackerId, FROSTARMOR_SLOWDURATION - 0.5, FROST_RGB, 36 );
+        Glow_Set( attacker, FROSTARMOR_SLOWDURATION - 0.5, FROSTARMOR_RGB, 36 );
 
-        // Screen Fade
+        // Screen fade
 
-        if ( !g_bPlayerSleeping[attackerId] )
+        if ( !g_bPlayerSleeping[attacker] )
         {
-            Create_ScreenFade( attackerId, (1<<10), (1<<10), FADE_OUT, 91, 168, 248, 100 );
+            Create_ScreenFade( attacker, (1<<10), (1<<10), FADE_OUT, 91, 168, 248, 100 );
         }
 
-        // Cold Damage
+        // Cold damage
 
-        Create_Damage( attackerId, 0, 0, CS_DMG_COLD );
+        Create_Damage( attacker, 0, 0, CS_DMG_COLD );
 
-        // Slow Icon (client pack)
+        // Slow icon ( client pack )
 
-        Create_StatusIcon( victimId, ICON_SHOW, "slow", 255, 170, 0 );
+        Create_StatusIcon( victim, ICON_SHOW, "slow", 255, 170, 0 );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public SFrostArmor_Slow( id ) {
-#if ADVANCED_DEBUG
-  log_function("public SFrostArmor_Slow( id ) {");
-#endif
+static UD_S_FROSTARMOR_slow( id ) {
 
     g_bPlayerFrosted[id] = true;
     g_bPlayerSlowed[id] = true;
 
-    new parm_Slow[1];
-    parm_Slow[0] = id;
+    new arg_write[1];
+    arg_write[0] = id;
 
-    new TaskId = TASK_FROSTSLOW + id;
+    new task = TASK_FROSTSLOW + id;
 
-    remove_task( TaskId, 0 );
-    set_task( FROSTARMOR_SLOWDURATION, "SFrostArmor_Remove", TaskId, parm_Slow, 1 );
+    remove_task( task, 0 );
+    set_task( FROSTARMOR_SLOWDURATION, "UD_S_FROSTARMOR_remove", task, arg_write, 1 );
 
     WAR3_set_speed( id );
 
@@ -595,15 +535,12 @@ public SFrostArmor_Slow( id ) {
 }
 
 
-public SFrostArmor_Remove( parm_Slow[1] ) {
-#if ADVANCED_DEBUG
-  log_function("public SFrostArmor_Remove( parm_Slow[1] ) {");
-#endif
+public UD_S_FROSTARMOR_remove( arg_read[1] ) {
 
-    new id = parm_Slow[0];
+    new id = arg_read[0];
 
-    new TaskId = TASK_FROSTSLOW + id;
-    remove_task( TaskId, 0 );
+    new task = TASK_FROSTSLOW + id;
+    remove_task( task, 0 );
 
     g_bPlayerFrosted[id] = false;
     Slow_Remove( id );
@@ -617,120 +554,107 @@ public SFrostArmor_Remove( parm_Slow[1] ) {
 /* - Death Coil ------------------------------------------------- */
 
 
-public UCoil_Cast( iCasterId, iTargetId ) {
-#if ADVANCED_DEBUG
-  log_function("public UCoil_Cast( iCasterId, iTargetId ) {");
-#endif
+static UD_U_DEATHCOIL( caster, target ) {
 
     // Play client sound
 
-    client_cmd( iCasterId, "speak warcraft3/bonus/DeathCoilMissileLaunch1.wav" );
+    client_cmd( caster, "speak warcraft3/bonus/DeathCoilMissileLaunch1.wav" );
 
-    // Create Model
+    // Create skull model
 
     new Float:fOrigin[3];
-    entity_get_vector( iCasterId, EV_VEC_origin, fOrigin );
+    entity_get_vector( caster, EV_VEC_origin, fOrigin );
 
-    new iSkullId = Create_TempEnt( "DEATH_COIL", "models/bskull_template1.mdl", fOrigin, MOVETYPE_NOCLIP, SOLID_TRIGGER, DEATHCOIL_DURATION );
+    new skull = Create_TempEnt( "DEATH_COIL", "models/bskull_template1.mdl", fOrigin, MOVETYPE_NOCLIP, SOLID_TRIGGER, DEATHCOIL_DURATION );
 
-    entity_set_edict( iSkullId, EV_ENT_owner, iCasterId );
-    entity_set_edict( iSkullId, EV_ENT_enemy, iTargetId );
+    entity_set_edict( skull, EV_ENT_owner, caster );
+    entity_set_edict( skull, EV_ENT_enemy, target );
 
-    // Skull Effects
+    // Skull effects
 
-    set_entity_rendering( iSkullId, kRenderFxGlowShell, DEATHCOIL_SHELL_RGB[GLOW_R], DEATHCOIL_SHELL_RGB[GLOW_G], DEATHCOIL_SHELL_RGB[GLOW_B], kRenderNormal, 48 );
-    Create_TE_BEAMFOLLOW( SHOWTO_ALL_BROADCAST, iSkullId, SPR_BEAMFOLLOW, 5, 8, DEATHCOIL_TRAIL_RGB[GLOW_R], DEATHCOIL_TRAIL_RGB[GLOW_G], DEATHCOIL_TRAIL_RGB[GLOW_B], 160 );
+    set_entity_rendering( skull, kRenderFxGlowShell, DEATHCOIL_SHELL_RGB[GLOW_R], DEATHCOIL_SHELL_RGB[GLOW_G], DEATHCOIL_SHELL_RGB[GLOW_B], kRenderNormal, 48 );
+    Create_TE_BEAMFOLLOW( SHOWTO_ALL_BROADCAST, skull, SPR_BEAMFOLLOW, 5, 8, DEATHCOIL_TRAIL_RGB[GLOW_R], DEATHCOIL_TRAIL_RGB[GLOW_G], DEATHCOIL_TRAIL_RGB[GLOW_B], 160 );
 
-    // Seek Target
+    // Seek target
 
-    new parm_Seek[1];
-    parm_Seek[0] = iSkullId;
+    new arg_write[1];
+    arg_write[0] = skull;
 
-    UCoil_Seek( parm_Seek );
+    UD_U_DEATHCOIL_seek( arg_write );
 
     return PLUGIN_HANDLED;
 }
 
 
-public UCoil_Seek( parm_Seek[1] ) {
-#if ADVANCED_DEBUG
-  log_function("public UCoil_Seek( parm_Seek[1] ) {");
-#endif
+public UD_U_DEATHCOIL_seek( arg_read[1] ) {
 
-    new iSkullId = parm_Seek[0];
-    new iTargetId = entity_get_edict( iSkullId, EV_ENT_enemy );
+    new skull = arg_read[0];
+    new target = entity_get_edict( skull, EV_ENT_enemy );
 
-    if ( !is_user_alive( iTargetId ) )
+    if ( !is_user_alive( target ) )
         return PLUGIN_HANDLED;
 
+    // Project skull towards target
 
-    // Project Skull Towards Target
+    set_velocity_to_ent( skull, target, DEATHCOIL_VELOCITY );
 
-    set_velocity_to_ent( iSkullId, iTargetId, DEATHCOIL_VELOCITY );
+    // Repeat until target is hit
 
-    // Repeat Until Target is Hit
-
-    new TaskId = TASK_TEMPENTITY + iSkullId;
-    set_task( 0.1, "UCoil_Seek", TaskId, parm_Seek, 1 );
+    new task = TASK_TEMPENTITY + skull;
+    set_task( 0.1, "UD_U_DEATHCOIL_seek", task, arg_read, 1 );
 
     return PLUGIN_HANDLED;
 }
 
 
-public UCoil_Damage( iCasterId, iTargetId ) {
-#if ADVANCED_DEBUG
-  log_function("public UCoil_Damage( iCasterId, iTargetId ) {");
-#endif
+static UD_U_DEATHCOIL_damage( caster, target ) {
 
-    // Play Sound
+    // Play sound
 
-    emit_sound( iTargetId, CHAN_STATIC, SOUND_DEATHCOIL, 1.0, ATTN_NORM, 0, PITCH_NORM );
+    emit_sound( target, CHAN_STATIC, SOUND_DEATHCOIL, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-    // Generate Effects
+    // Generate effects
 
-    UCoil_Effects( iTargetId );
+    UD_U_DEATHCOIL_effects( target );
 
     // Check for Amulet
 
-    if ( g_PlayerInfo[iTargetId][CURRENT_ITEM] == ITEM_AMULET )
+    if ( g_PlayerInfo[target][CURRENT_ITEM] == ITEM_AMULET )
     {
-        IAmulet_Block( iTargetId, iCasterId );
+        IAmulet_Block( target, caster );
         return PLUGIN_HANDLED;
     }
 
-    // Unset Velocity
+    // Unset velocity
 
     new Float:fVelocity[3];
-    entity_get_vector( iTargetId, EV_VEC_velocity, fVelocity );
+    entity_get_vector( target, EV_VEC_velocity, fVelocity );
 
     fVelocity[0] = 0.0;
     fVelocity[1] = 0.0;
 
-    // Apply Damage
+    // Apply damage
 
-    WAR3_damage( iCasterId, iTargetId, CSW_DEATHCOIL, DEATHCOIL_DAMAGE, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
+    WAR3_damage( caster, target, CSW_DEATHCOIL, DEATHCOIL_DAMAGE, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
 
     return PLUGIN_HANDLED;
 }
 
 
-public UCoil_Heal( iCasterId, iTargetId ) {
-#if ADVANCED_DEBUG
-  log_function("public UCoil_Heal( iCasterId, iTargetId ) {");
-#endif
+static UD_U_DEATHCOIL_heal( caster, target ) {
 
-    // Play Sound
+    // Play sound
 
-    emit_sound( iTargetId, CHAN_STATIC, SOUND_DEATHCOIL, 1.0, ATTN_NORM, 0, PITCH_NORM );
+    emit_sound( target, CHAN_STATIC, SOUND_DEATHCOIL, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-    // Status Text
+    // Status text
 
-    WAR3_status_text( iCasterId, HEAL_CAST, 1.0);
+    WAR3_status_text( caster, HEAL_CAST, 1.0);
 
-    // Calculate New Health
+    // Calculate new health
 
-    new iNewHealth = get_user_health( iTargetId ) + DEATHCOIL_HEAL;
-    new iMaxHealth = WAR3_get_maxhealth( iTargetId );
+    new iNewHealth = get_user_health( target ) + DEATHCOIL_HEAL;
+    new iMaxHealth = WAR3_get_maxhealth( target );
 
     new iHealthGiven = DEATHCOIL_HEAL;
 
@@ -740,162 +664,142 @@ public UCoil_Heal( iCasterId, iTargetId ) {
         iNewHealth = iMaxHealth;
     }
 
-    // Hud Message
+    // Hud message
 
     new szMessage[128], szPlayerName[32];
-    get_user_name( iCasterId, szPlayerName, 31 );
+    get_user_name( caster, szPlayerName, 31 );
 
     format( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
 
-    WAR3_status_text( iTargetId, szMessage, 3.0 );
+    WAR3_status_text( target, szMessage, 3.0 );
 
-    // Apply Health
+    // Apply health
 
-    set_user_health( iTargetId, iNewHealth );
+    set_user_health( target, iNewHealth );
 
-    // Display Effects
+    // Display effects
 
-    UCoil_Effects( iTargetId );
+    UD_U_DEATHCOIL_effects( target );
 
-    // Give Support XP
+    // Give support XP
 
-    XP_Support_Heal( iCasterId, iHealthGiven );
+    XP_Support_Heal( caster, iHealthGiven );
 
-    // Invisibility Cooldown
+    // Invisibility cooldown
 
-    Invis_Cooldown( iTargetId );
+    Invis_Cooldown( target );
 
     return PLUGIN_HANDLED;
 }
 
 
-public UCoil_Effects( iTargetId ) {
-#if ADVANCED_DEBUG
-  log_function("public UCoil_Effects( iTargetId ) {");
-#endif
+static UD_U_DEATHCOIL_effects( target ) {
 
-    // Green Screefade
+    // Green screefade
 
-    Create_ScreenFade( iTargetId, (1<<10), (1<<10), FADE_OUT, DEATHCOIL_TRAIL_RGB[GLOW_R], DEATHCOIL_TRAIL_RGB[GLOW_G], DEATHCOIL_TRAIL_RGB[GLOW_B], 160 );
+    Create_ScreenFade( target, (1<<10), (1<<10), FADE_OUT, DEATHCOIL_TRAIL_RGB[GLOW_R], DEATHCOIL_TRAIL_RGB[GLOW_G], DEATHCOIL_TRAIL_RGB[GLOW_B], 160 );
 
-    // Play Explosion
+    // Play explosion
 
     new Origin[3];
-    get_user_origin( iTargetId, Origin );
+    get_user_origin( target, Origin );
 
     Create_TE_EXPLOSION( SHOWTO_ALL_BROADCAST, Origin, SPR_DEATHCOIL, 20, 24, 4 );
 
-/*
-    // Sparks
-
-    new StartOrigin[3];
-    StartOrigin[0] = Origin[0];
-    StartOrigin[1] = Origin[1];
-    StartOrigin[2] = Origin[2] + 40;
-
-    Create_TE_SPRITETRAIL( SHOWTO_ALL_BROADCAST, StartOrigin, Origin, SPR_DEATHCOIL, 24, 10, 1, 36, 10 );
-*/
     // Glow
 
-    Create_TE_ELIGHT( SHOWTO_ALL_BROADCAST, iTargetId, 100, DEATHCOIL_TRAIL_RGB[GLOW_R], DEATHCOIL_TRAIL_RGB[GLOW_G], DEATHCOIL_TRAIL_RGB[GLOW_B], 10, 0 );
+    Create_TE_ELIGHT( SHOWTO_ALL_BROADCAST, target, 100, DEATHCOIL_TRAIL_RGB[GLOW_R], DEATHCOIL_TRAIL_RGB[GLOW_G], DEATHCOIL_TRAIL_RGB[GLOW_B], 10, 0 );
 
     return PLUGIN_HANDLED;
 }
 
 
-public UCoil_Remove( iSkullId ) {
-#if ADVANCED_DEBUG
-  log_function("public UCoil_Remove( iSkullId ) {");
-#endif
+static UD_U_DEATHCOIL_remove( skull ) {
 
-    new TaskId = TASK_TEMPENTITY + iSkullId;
-    remove_task( TaskId, 0 );
+    new task = TASK_TEMPENTITY + skull;
+    remove_task( task, 0 );
 
-    remove_entity( iSkullId );
+    remove_entity( skull );
 
     return PLUGIN_HANDLED;
 }
 
-public UCoil_Touch( iToucherId, iPlayerId )
-{
-#if ADVANCED_DEBUG
-  log_function("public UCoil_Touch( iToucherId, iPlayerId )");
-#endif
 
-  // Sanity checks
-    if ( iPlayerId < 1 || iPlayerId > 32 || iToucherId < 1 || !is_user_alive( iPlayerId ) )
+public UD_U_DEATHCOIL_touch( skull, player ) {
+
+    // Sanity checks
+
+    if ( player < 1 || player > 32 || skull < 1 || !is_user_alive( player ) )
         return PLUGIN_CONTINUE;
 
-  new iCasterId = entity_get_edict( iToucherId, EV_ENT_owner );
-  new iTargetId = entity_get_edict( iToucherId, EV_ENT_enemy );
+    new caster = entity_get_edict( skull, EV_ENT_owner );
+    new target = entity_get_edict( skull, EV_ENT_enemy );
 
-  if ( iPlayerId == iTargetId )
-  {
-    if ( get_user_team( iCasterId ) == get_user_team( iTargetId ) )
-      UCoil_Heal( iCasterId, iTargetId );
-
-    else
+    if ( player == target )
     {
-      UCoil_Damage( iCasterId, iTargetId );
+        if ( get_user_team( caster ) == get_user_team( target ) )
+            UD_U_DEATHCOIL_heal( caster, target );
+
+        else
+        {
+            UD_U_DEATHCOIL_damage( caster, target );
+        }
+
+        UD_U_DEATHCOIL_remove( skull );
     }
 
-    UCoil_Remove( iToucherId );
-  }
-
-  return PLUGIN_CONTINUE;
+    return PLUGIN_CONTINUE;
 }
+
 
 /* - Impale ----------------------------------------------------- */
 
 
-public UImpale_Cast( casterId, targetId ) {
-#if ADVANCED_DEBUG
-  log_function("public UImpale_Cast( casterId, targetId ) {");
-#endif
+static UD_U_IMPALE( caster, target ) {
 
-    // Play Sound
+    // Play sound
 
-    emit_sound( targetId, CHAN_STATIC, SOUND_IMPALE, 1.0, ATTN_NORM, 0, PITCH_NORM );
+    emit_sound( target, CHAN_STATIC, SOUND_IMPALE, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-    // Raise Claw
+    // Raise claw
 
     new Float:fOrigin[3], Origin[3];
-    entity_get_vector( targetId, EV_VEC_origin, fOrigin );
+    entity_get_vector( target, EV_VEC_origin, fOrigin );
 
     fOrigin[2] += 180.0;
-    new iClawEnt = Create_TempEnt( "IMPALE_CLAW", "models/tentacle2.mdl", fOrigin, MOVETYPE_TOSS, SOLID_NOT, 1.5 );
+    new claw = Create_TempEnt( "IMPALE_CLAW", "models/tentacle2.mdl", fOrigin, MOVETYPE_TOSS, SOLID_NOT, 1.5 );
 
-    new Float:fVelocity[3] = {0.0,0.0,500.0};
-    entity_set_vector( iClawEnt, EV_VEC_velocity, fVelocity );
-    entity_set_float( iClawEnt, EV_FL_gravity, 1.5 );
+    new Float:fVelocity[3] = { 0.0, 0.0, 500.0 };
+    entity_set_vector( claw, EV_VEC_velocity, fVelocity );
+    entity_set_float( claw, EV_FL_gravity, 1.5 );
 
-    set_entity_rendering( iClawEnt, kRenderFxGlowShell, 128, 96, 160, kRenderTransTexture, 32 );
+    set_entity_rendering( claw, kRenderFxGlowShell, 128, 96, 160, kRenderTransTexture, 32 );
 
     // Check for Amulet
 
-    if ( g_PlayerInfo[targetId][CURRENT_ITEM] == ITEM_AMULET )
+    if ( g_PlayerInfo[target][CURRENT_ITEM] == ITEM_AMULET )
     {
-        IAmulet_Block( targetId, casterId );
+        IAmulet_Block( target, caster );
         return PLUGIN_HANDLED;
     }
 
-    // Launch into Air
+    // Launch into air
 
     new Velocity[3];
-    get_entity_velocity( targetId, Velocity );
+    get_entity_velocity( target, Velocity );
 
     Velocity[2] = IMPALE_VELOCITY;
-    set_entity_velocity( targetId, Velocity );
+    set_entity_velocity( target, Velocity );
 
-    // Beam Trail
+    // Beam trail
 
-    Create_TE_BEAMFOLLOW( SHOWTO_ALL_BROADCAST, targetId, SPR_BEAMFOLLOW, 5, 3, 160, 0, 48, 128 );
+    Create_TE_BEAMFOLLOW( SHOWTO_ALL_BROADCAST, target, SPR_BEAMFOLLOW, 5, 3, 160, 0, 48, 128 );
 
-    // Blood Sprites
+    // Blood sprites
 
     for ( new i = 0; i < 2; i++ )
     {
-        get_user_origin( targetId, Origin );
+        get_user_origin( target, Origin );
 
         for ( new j = 0; j < 5; j++ )
         {
@@ -913,7 +817,7 @@ public UImpale_Cast( casterId, targetId ) {
     {
         static const BLOOD_SMALL[7] = {190,191,192,193,194,195,197};
 
-        get_user_origin( targetId, Origin );
+        get_user_origin( target, Origin );
 
         Origin[0] += random_num( -100,100 );
         Origin[1] += random_num( -100,100 );
@@ -922,69 +826,65 @@ public UImpale_Cast( casterId, targetId ) {
         Create_TE_WORLDDECAL( SHOWTO_ALL, Origin, BLOOD_SMALL[random_num( 0,6 )] );
     }
 
-    // Remove Armor
+    // Remove armor
 
-    if ( get_user_armor( targetId ) )
+    if ( get_user_armor( target ) )
     {
-        new iNewArmor = get_user_armor( targetId ) - IMPALE_ARMORDAMAGE;
+        new iNewArmor = get_user_armor( target ) - IMPALE_ARMORDAMAGE;
 
         if ( iNewArmor < 0 )
             iNewArmor = 0;
 
-        set_user_armor( targetId, iNewArmor );
+        set_user_armor( target, iNewArmor );
     }
 
-    // Remove Health
+    // Remove health
 
-    WAR3_damage( casterId, targetId, CSW_IMPALE, IMPALE_DAMAGE, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
+    WAR3_damage( caster, target, CSW_IMPALE, IMPALE_DAMAGE, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
 
-    if ( is_user_alive( targetId ) )
+    if ( is_user_alive( target ) )
     {
         // Screen Fade
 
-        Create_ScreenFade( targetId, (1<<10), (1<<10), FADE_OUT, 160, 0, 48, 160 );
+        Create_ScreenFade( target, (1<<10), (1<<10), FADE_OUT, 160, 0, 48, 160 );
 
-        new parm[3];
-        parm[0] = targetId;
-        parm[1] = Origin[2];
+        new arg_write[3];
+        arg_write[0] = target;
+        arg_write[1] = Origin[2];
 
-        g_PlayerImpaled[targetId] = casterId;
+        g_PlayerImpaled[target] = caster;
 
-        new TaskId = TASK_IMPALE + targetId;
-        set_task( 0.1, "UImpale_CheckHeight", TaskId, parm, 3 );
+        new task = TASK_IMPALE + target;
+        set_task( 0.1, "UD_U_IMPALE_collision", task, arg_write, 3 );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public UImpale_CheckHeight( parm[3] ) {
-#if ADVANCED_DEBUG
-  log_function("public UImpale_CheckHeight( parm[3] ) {");
-#endif
+public UD_U_IMPALE_collision( arg_read[3] ) {
 
-    new targetId = parm[0];
-    new casterId = g_PlayerImpaled[targetId];
+    new target = arg_read[0];
+    new caster = g_PlayerImpaled[target];
 
-    new oldOrigin = parm[1];
-    new oldVelocity = parm[2];
+    new OldOrigin = arg_read[1];
+    new OldVelocity = arg_read[2];
 
     new Velocity[3];
-    get_entity_velocity( targetId, Velocity );
+    get_entity_velocity( target, Velocity );
 
-    // Check for Collision
-    // ( Checks player height on descent, assumes collision if < IMPALE_MINDISTANCE )
+    // Checks player height on descent, assumes collision if < IMPALE_MINDISTANCE
 
-    if ( oldVelocity >= 0 && Velocity[2] <= 0 )
+    if ( OldVelocity >= 0 && Velocity[2] <= 0 )
     {
         new Origin[3];
-        get_user_origin( targetId, Origin );
+        get_user_origin( target, Origin );
 
-        new iDistance = Origin[2] - oldOrigin;
+        new iDistance = Origin[2] - OldOrigin;
 
         if ( iDistance < IMPALE_MINDISTANCE )
         {
-            // Collision Sound
+            // Collision sound
 
             new szSoundfile[32];
 
@@ -995,9 +895,9 @@ public UImpale_CheckHeight( parm[3] ) {
                 case 3: copy( szSoundfile, 31, "player/headshot3.wav" );
             }
 
-            emit_sound( targetId, CHAN_STATIC, szSoundfile, 1.0, ATTN_NORM, 0, PITCH_NORM );
+            emit_sound( target, CHAN_STATIC, szSoundfile, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-            // Blood Streams
+            // Blood streams
 
             Origin[2] += 10;
 
@@ -1011,43 +911,38 @@ public UImpale_CheckHeight( parm[3] ) {
                 Create_TE_BLOODSTREAM( SHOWTO_ALL_BROADCAST, Origin, Vector, 70, random_num( 100,200 ) );
             }
 
-            // Apply Damage
+            // Apply damage
 
-            WAR3_damage( casterId, targetId, CSW_IMPALE, IMPALE_COLLISIONDAMAGE, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
+            WAR3_damage( caster, target, CSW_IMPALE, IMPALE_COLLISIONDAMAGE, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
 
-            if ( is_user_alive( targetId ) )
-            {
-                // Screenfade (for victim)
+            // Screen fade
 
-                Create_ScreenFade( targetId, (1<<10), (1<<10), FADE_MODULATE_OUT, 0, 0, 0, 160 );
-            }
+            if ( is_user_alive( target ) )
+                Create_ScreenFade( target, (1<<10), (1<<10), FADE_MODULATE_OUT, 0, 0, 0, 160 );
         }
     }
 
-    if ( !( get_entity_flags( targetId ) & FL_ONGROUND ) && g_PlayerImpaled[targetId] )
+    if ( !( get_entity_flags( target ) & FL_ONGROUND ) && g_PlayerImpaled[target] )
     {
-        parm[2] = Velocity[2];
+        arg_read[2] = Velocity[2];
 
-        new TaskId = TASK_IMPALE + targetId;
-        set_task( 0.1, "UImpale_CheckHeight", TaskId, parm, 3 );
+        new task = TASK_IMPALE + target;
+        set_task( 0.1, "UD_U_IMPALE_collision", task, arg_read, 3 );
     }
 
     else
     {
-        UImpale_Remove( targetId );
+        UD_U_IMPALE_remove( target );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public UImpale_Remove( id ) {
-#if ADVANCED_DEBUG
-  log_function("public UImpale_Remove( id ) {");
-#endif
+public UD_U_IMPALE_remove( id ) {
 
-    new TaskId = TASK_IMPALE + id;
-    remove_task( TaskId, 0 );
+    new task = TASK_IMPALE + id;
+    remove_task( task, 0 );
 
     g_PlayerImpaled[id] = 0;
     Remove_TE_BEAMFOLLOW( SEENBY_ALL, id );
@@ -1057,118 +952,112 @@ public UImpale_Remove( id ) {
 /* - Sleep ------------------------------------------------------ */
 
 
-public USleep_Cast( casterId, targetId ) {
-#if ADVANCED_DEBUG
-  log_function("public USleep_Cast( casterId, targetId ) {");
-#endif
+static UD_U_SLEEP( caster, target ) {
 
-    USleep_Remove( targetId );
+    UD_U_SLEEP_remove( target );
 
-    // Play Sound
+    // Play sound
 
-    emit_sound( targetId, CHAN_STATIC, SOUND_SLEEP, 1.0, ATTN_NORM, 0, PITCH_NORM );
+    emit_sound( target, CHAN_STATIC, SOUND_SLEEP, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
     // Check for Amulet
 
-    if ( g_PlayerInfo[targetId][CURRENT_ITEM] == ITEM_AMULET )
+    if ( g_PlayerInfo[target][CURRENT_ITEM] == ITEM_AMULET )
     {
-        IAmulet_Block( targetId, casterId );
+        IAmulet_Block( target, caster );
         return PLUGIN_HANDLED;
     }
 
     // Switch to knife
 
-    new iWeaponId, iClip, iAmmo;
-    iWeaponId = get_user_weapon( targetId, iClip, iAmmo );
+    new weapon, iClip, iAmmo;
+    weapon = get_user_weapon( target, iClip, iAmmo );
 
-    if ( iWeaponId != CSW_KNIFE )
-        engclient_cmd( targetId, "weapon_knife" );
+    if ( weapon != CSW_KNIFE )
+        engclient_cmd( target, "weapon_knife" );
 
     // Immobilize
 
-    g_bPlayerSleeping[targetId] = true;
-    g_bPlayerCantMove[targetId] = true;
+    g_bPlayerSleeping[target] = true;
+    g_bPlayerCantMove[target] = true;
 
-    WAR3_set_speed( targetId );
+    WAR3_set_speed( target );
 
     // Hud Message
 
     new szMessage[128], szPlayerName[32];
-    get_user_name( casterId, szPlayerName, 31 );
+    get_user_name( caster, szPlayerName, 31 );
 
     format( szMessage, 127, CAST_SLEEP, szPlayerName );
 
-    WAR3_status_text2( targetId, szMessage, 3.0 );
+    WAR3_status_text2( target, szMessage, 3.0 );
 
-    // Hit Zones ( remove )
+    // Hit zones ( remove )
 
-    set_user_hitzones( targetId, 0, 0 );
-    entity_set_float( targetId, EV_FL_takedamage, 0.0 );
+    set_user_hitzones( target, 0, 0 );
+    entity_set_float( target, EV_FL_takedamage, 0.0 );
 
     // Render
 
-    set_user_rendering( targetId, kRenderFxNone, 0, 0, 0, kRenderTransAdd, 128 );
+    set_user_rendering( target, kRenderFxNone, 0, 0, 0, kRenderTransAdd, 128 );
 
-    // Screen Fade
+    // Screen fade
 
     new Float:fDuration = random_float( SLEEP_DURATION_MIN, SLEEP_DURATION_MAX );
     new iHoldTime = floatround( fDuration );
 
     fDuration = float( iHoldTime );
 
-    Create_ScreenFade( targetId, (1<<12), (iHoldTime<<12), FADE_MODULATE_IN, 0, 0, 0, 160 );
+    Create_ScreenFade( target, (1<<12), (iHoldTime<<12), FADE_MODULATE_IN, 0, 0, 0, 160 );
 
-    // Progress Bar
+    // Progress bar
 
-    Create_BarTime( targetId, iHoldTime );
+    Create_BarTime( target, iHoldTime );
 
     // Effects
 
-    new parm_Z1[3], parm_Z2[3];
-    parm_Z1[0] = targetId;
-    parm_Z2[0] = targetId;
+    new arg_Z1[3], arg_Z2[3];
+    arg_Z1[0] = target;
+    arg_Z2[0] = target;
 
-    USleep_Effect( parm_Z1 );
+    UD_U_SLEEP_effect( arg_Z1 );
 
-    new TaskId = TASK_SLEEP + targetId;
-    set_task( 0.4, "USleep_Effect", TaskId, parm_Z2, 3 );
+    new task = TASK_SLEEP + target;
+    set_task( 0.4, "UD_U_SLEEP_effect", task, arg_Z2, 3 );
 
-    // Wake Task
+    // Wake task
 
-    new parm_Remove[1];
-    parm_Remove[0] = targetId;
+    new arg_write[1];
+    arg_write[0] = target;
 
-    set_task( fDuration, "USleep_Wake", TaskId, parm_Remove, 1 );
+    set_task( fDuration, "UD_U_SLEEP_wake", task, arg_write, 1 );
 
     return PLUGIN_HANDLED;
 }
 
 
-public USleep_Effect( parm_Effects[3] ) {
-#if ADVANCED_DEBUG
-  log_function("public USleep_Effect( parm_Effects[3] ) {");
-#endif
+public UD_U_SLEEP_effect( arg_read[3] ) {
 
-    new iTargetId = parm_Effects[0];
-    new iSleepEnt = parm_Effects[1];
-    new iCounter  = parm_Effects[2];
+    new target = arg_read[0];
+    new sleep_z = arg_read[1];
+    new iCounter  = arg_read[2];
 
     if ( !iCounter )
     {
         // Create Z's
 
         new Float:fTargetOrigin[3];
-        entity_get_vector( iTargetId, EV_VEC_origin, fTargetOrigin );
+        entity_get_vector( target, EV_VEC_origin, fTargetOrigin );
 
         fTargetOrigin[2] += 36.0;
 
-        iSleepEnt = Create_TempEnt( "SLEEP_Z", "sprites/warcraft3/sleep.spr", fTargetOrigin, MOVETYPE_NOCLIP, SOLID_NOT, 1.5 );
+        sleep_z = Create_TempEnt( "SLEEP_Z", "sprites/warcraft3/sleep.spr", fTargetOrigin, MOVETYPE_NOCLIP, SOLID_NOT, 1.5 );
 
-        entity_set_float( iSleepEnt, EV_FL_renderamt, 128.0 );
-        entity_set_int( iSleepEnt, EV_INT_rendermode, kRenderTransAdd );
-        entity_set_int( iSleepEnt, EV_INT_renderfx, kRenderFxClampMinScale );
+        entity_set_float( sleep_z, EV_FL_renderamt, 128.0 );
+        entity_set_int( sleep_z, EV_INT_rendermode, kRenderTransAdd );
+        entity_set_int( sleep_z, EV_INT_renderfx, kRenderFxClampMinScale );
 
-        entity_set_edict( iSleepEnt, EV_ENT_owner, iTargetId );
+        entity_set_edict( sleep_z, EV_ENT_owner, target );
 
         // Project Upwards
 
@@ -1177,107 +1066,98 @@ public USleep_Effect( parm_Effects[3] ) {
         fVelocity[1] = random_float( -10.0, 10.0 );
         fVelocity[2] = 25.0;
 
-        entity_set_vector( iSleepEnt, EV_VEC_velocity, fVelocity );
-        entity_set_float( iSleepEnt, EV_FL_scale, random_float( 0.3, 0.4 ) );
+        entity_set_vector( sleep_z, EV_VEC_velocity, fVelocity );
+        entity_set_float( sleep_z, EV_FL_scale, random_float( 0.3, 0.4 ) );
     }
 
     if ( iCounter <= 10 )
     {
-        if ( iCounter > 5 && is_valid_ent( iSleepEnt ) )
+        if ( iCounter > 5 && is_valid_ent( sleep_z ) )
         {
-            new Float:fScale = entity_get_float( iSleepEnt, EV_FL_scale );
+            new Float:fScale = entity_get_float( sleep_z, EV_FL_scale );
 
             fScale -= 0.02;
-            entity_set_float( iSleepEnt, EV_FL_scale, fScale );
+            entity_set_float( sleep_z, EV_FL_scale, fScale );
         }
 
-        // Re-Render Player ( HACKHACK )
+        // Re-render player ( HACKHACK )
 
-        set_user_rendering( iTargetId, kRenderFxNone, 0, 0, 0, kRenderTransAdd, 128 );
+        set_user_rendering( target, kRenderFxNone, 0, 0, 0, kRenderTransAdd, 128 );
 
         // Do it all again!
 
         iCounter++;
 
-        parm_Effects[1] = iSleepEnt;
-        parm_Effects[2] = iCounter;
+        arg_read[1] = sleep_z;
+        arg_read[2] = iCounter;
 
-        new TaskId = TASK_TEMPENTITY + iSleepEnt;
-        set_task( 0.1, "USleep_Effect", TaskId, parm_Effects, 3 );
+        new task = TASK_TEMPENTITY + sleep_z;
+        set_task( 0.1, "UD_U_SLEEP_effect", task, arg_read, 3 );
     }
 
-    else if ( g_bPlayerSleeping[iTargetId] )
+    else if ( g_bPlayerSleeping[target] )
     {
-        parm_Effects[1] = 0;
-        parm_Effects[2] = 0;
+        arg_read[1] = 0;
+        arg_read[2] = 0;
 
-        new TaskId = TASK_TEMPENTITY + iSleepEnt;
-        set_task( 0.5, "USleep_Effect", TaskId, parm_Effects, 3 );
+        new task = TASK_TEMPENTITY + sleep_z;
+        set_task( 0.5, "UD_U_SLEEP_effect", task, arg_read, 3 );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public USleep_Wake( parm_Remove[1] ) {
-#if ADVANCED_DEBUG
-  log_function("public USleep_Wake( parm_Remove[1] ) {");
-#endif
+public UD_U_SLEEP_wake( arg_read[1] ) {
 
-    new targetId = parm_Remove[0];
+    new target = arg_read[0];
 
-    // Screen Fade
+    // Screen fade
 
-    Create_ScreenFade( targetId, (1<<12), 0, FADE_MODULATE_OUT, 0, 0, 0, 160 );
+    Create_ScreenFade( target, (1<<12), 0, FADE_MODULATE_OUT, 0, 0, 0, 160 );
 
-    // Hudmessage
+    // Hud message
 
     new szMessage[128];
     format( szMessage, 127, FINISH_SLEEP );
 
-    WAR3_status_text2( targetId, szMessage, 3.0 );
+    WAR3_status_text2( target, szMessage, 3.0 );
 
-    // Enable Attack for an additional second ( to prevent sniper exploiting ).
+    // Enable attack for an additional second ( to prevent sniper exploiting ).
 
-    set_user_hitzones( targetId, 0, 255 );
+    set_user_hitzones( target, 0, 255 );
 
-    new TaskId = TASK_SLEEP + targetId;
-    set_task( SLEEP_MOVETIME, "USleep_Finished", TaskId, parm_Remove, 1 );
+    new task = TASK_SLEEP + target;
+    set_task( SLEEP_MOVETIME, "UD_U_SLEEP_finish", task, arg_read, 1 );
 
-    g_bPlayerSleeping[targetId] = false;
+    g_bPlayerSleeping[target] = false;
 
-    // Set Player Speed
+    // Set player speed
 
-    Immobilize_Remove( targetId );
-    WAR3_set_speed( targetId );
-
-    return PLUGIN_HANDLED;
-}
-
-
-public USleep_Finished( parm_Remove[1] ) {
-#if ADVANCED_DEBUG
-  log_function("public USleep_Finished( parm_Remove[1] ) {");
-#endif
-
-    new targetId = parm_Remove[0];
-    USleep_Remove( targetId );
+    Immobilize_Remove( target );
+    WAR3_set_speed( target );
 
     return PLUGIN_HANDLED;
 }
 
 
-public USleep_Remove( id ) {
-#if ADVANCED_DEBUG
-  log_function("public USleep_Remove( id ) {");
-#endif
+public UD_U_SLEEP_finish( arg_read[1] ) {
 
-    new TaskId = TASK_SLEEP + id;
-    remove_task( TaskId, 0 );
+    new target = arg_read[0];
+    UD_U_SLEEP_remove( target );
+
+    return PLUGIN_HANDLED;
+}
+
+
+public UD_U_SLEEP_remove( id ) {
+
+    new task = TASK_SLEEP + id;
+    remove_task( task, 0 );
 
     g_bPlayerSleeping[id] = false;
 
-    // Hit Zones ( restore )
+    // Hit zones ( restore )
 
     set_user_hitzones( id, 0, 255 );
     entity_set_float( id, EV_FL_takedamage, 2.0 );
@@ -1286,16 +1166,16 @@ public USleep_Remove( id ) {
 
     set_user_rendering( id );
 
-    // Invis Cooldown
+    // Invis cooldown
 
     Invis_Cooldown( id );
 
-    // Set Player Speed
+    // Set player speed
 
     Immobilize_Remove( id );
     WAR3_set_speed( id );
 
-    // Remove Z's
+    // Remove z's
 
     Remove_TempEnts( "SLEEP_Z", id );
 
@@ -1303,5 +1183,3 @@ public USleep_Remove( id ) {
 
     return PLUGIN_HANDLED;
 }
-
-// End of UNDEAD.INL

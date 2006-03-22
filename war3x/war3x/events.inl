@@ -474,7 +474,7 @@ public on_Damage( victimId ) {
     // Check if Impaled
 
     if ( g_PlayerImpaled[victimId] && victimId == attackerId )
-        UImpale_Remove( victimId );
+        UD_U_IMPALE_remove( victimId );
 
     // Check if Berserk Active ( COMING SOON )
 /*
@@ -505,7 +505,7 @@ public on_Damage( victimId ) {
     {
         switch ( g_PlayerInfo[attackerId][CURRENT_RACE] )
         {
-            case RACE_UNDEAD:       Skills_Offensive_UD( attackerId, victimId, weaponId, iDamage, Headshot );
+            case RACE_UNDEAD:       UD_skills_offensive( attackerId, victimId, weaponId, iDamage, Headshot );
             case RACE_HUMAN:        Skills_Offensive_HU( attackerId, victimId, weaponId, iDamage, Headshot );
             case RACE_ORC:          Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, Headshot, fDamageOrigin );
             case RACE_NIGHTELF:     Skills_Offensive_NE( attackerId, victimId, weaponId, iDamage, Headshot );
@@ -523,7 +523,7 @@ public on_Damage( victimId ) {
     {
         switch ( g_PlayerInfo[victimId][CURRENT_RACE] )
         {
-            case RACE_UNDEAD:       Skills_Defensive_UD( attackerId, victimId, weaponId, iDamage, Headshot );
+            case RACE_UNDEAD:       UD_skills_defensive( attackerId, victimId, weaponId, iDamage, Headshot );
             case RACE_HUMAN:        Skills_Defensive_HU( victimId );
             case RACE_ORC:          Skills_Defensive_OR( victimId );
             case RACE_NIGHTELF:     Skills_Defensive_NE( attackerId, victimId, weaponId, iDamage, Headshot );

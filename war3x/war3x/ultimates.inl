@@ -353,7 +353,7 @@ public Ultimate_Cast( Caster, Target ) {
 
     switch ( g_PlayerInfo[Caster][CURRENT_RACE] )
     {
-        case RACE_UNDEAD:   Ultimates_UD( Caster, Target );
+        case RACE_UNDEAD:   UD_ultimates( Caster, Target );
         case RACE_HUMAN:    Ultimates_HU( Caster, Target );
         case RACE_ORC:      Ultimates_OR( Caster, Target );
         case RACE_NIGHTELF: Ultimates_NE( Caster, Target );

@@ -1,4 +1,3 @@
-// Begin GLOBALS.INL
 
 
 /* - Race/Skill/Item Constants ---------------------------------- */
@@ -590,4 +589,12 @@ new const HTML_HEADER[] = "<html><head><link rel='stylesheet' href='war3x.css'><
 /* -------------------------------------------------------------- */
 
 
-// End of GLOBALS.INL
+// Race / Item header inlines
+
+#include "war3x/undead_h.inl"
+#include "war3x/human_h.inl"
+#include "war3x/orc_h.inl"
+#include "war3x/nightelf_h.inl"
+
+#include "war3x/items_h.inl"
+

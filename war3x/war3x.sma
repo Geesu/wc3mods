@@ -104,6 +104,8 @@ new WAR3X_DIR[64];                          // Stores WAR3X working directory
 
 #include "war3x/xp.inl"                     // XP Functions
 
+#include "war3x/shared.inl"                 // Shared Functions
+
 #include "war3x/undead.inl"                 // Racial Inlines
 #include "war3x/human.inl"
 #include "war3x/orc.inl"
@@ -114,7 +116,6 @@ new WAR3X_DIR[64];                          // Stores WAR3X working directory
 #include "war3x/upkeep.inl"                 // Upkeep Functions
 #include "war3x/motd.inl"                   // Motd Functions
 #include "war3x/save.inl"                   // War3x Save Functions
-#include "war3x/shared.inl"                 // Shared Functions
 #include "war3x/menus.inl"                  // Menu Functions
 
 #include "war3x/events.inl"                 // Events
@@ -423,7 +424,7 @@ public plugin_init() {
     register_event( "AmmoX",       "on_ThrowGren",     "b",  "1=11",          "1=12",              "1=13" );
 
 	// Touch Events
-	register_touch("DEATH_COIL",	"player", "UCoil_Touch"			);
+	register_touch("DEATH_COIL",	"player", "UD_U_DEATHCOIL_touch"			);
 	register_touch("WAR3X_ITEM",	"player", "Item_Touch"			);
 
     WAR3_set_xp();
