@@ -1,32 +1,50 @@
 1.1 plan
 --------
-major - REDO ALL FORMATS (i think this causes ALL crashes)
-flame strike mod - more damage each second in the strike. countdown from that amount when outside.
-flame strike change - implement with touch, rather than timers
-flame strike change - make targetable on ground
-use 'dynamic' hudmessage positions
-impale change (stun on land 1-3 secs)
-figure out how to change evasion shotgap given all the checks on the current constant
-berserk recode speed change
-keep autosnipers disabled?
-figure out how to set random number for root because of 2 diff functions that call
-remove 'buyback' from item purchasing and just have modified price in list
-implement some kind of last target variable that can be used for target skills etc.
-restructure all code with file_h.inl files, static calls, and function headers WOO!
-remove voting
-value boots????? -- in global.inl (need to recode everything to get it right)
-sleep not stopping! (HMM WEIRD)
-check invis cooldown? possible crashing...
-add disease cloud. upon death, player will take 20/40/60 damage over 90 seconds.
-make check for cfg file, if not found, don't load
-same for sprites, etc
-hudmessage on death follow
-regeneration requires armor to use
 
-!g_bPlayerSleeping (make some generalize invuln thing)
-replace all distance/40 by get_distance (statsx stock)
-add valid model check to deathcoil seek
-add WAR3_heal command?
+BIG CHANGES:
+------------
+
+* Modified Skill - Holy Light
+  (Icon will be made to show targetable players)
+* Modified Skill - Death Coil
+  (Icon will be made to show targetable players)
+* New Feature - Kill Assists
+  (If you deal more than 50% of damage to a player, you will receive some xp.)
+* New Feature - Stats System
+  (This will be the implementation of our stats system. We will reward for support, aggression, and all types of gameplay. These will be used locally on the game server for patch 1.1 and will be loaded into the database for version 1.2.)
+* OPTIMIZATION
+  (format/formatex/cvar pointers/function renaming/etc)
+
+* use 'dynamic' hudmessage positions (UNSURE YET..)
+* keep autosnipers disabled? - or just disable them on a per-skill basis?
+
+
+SKILL CHANGES:
+--------------
+* frost nova - increase range, maybe damage. I kinda like this skill now with sounds :)
+* impale change (stun on land 1-3 secs)
+
+* flame strike mod - more damage each second in the strike. countdown from that amount when outside.
+* flame strike change - implement with touch, rather than timers
+* flame strike change - make targetable on ground
+
+* regeneration requires armor to use
+
+MISC CHANGES:
+
+* berserk recode speed change to include boots
+* figure out how to set random number for root because of 2 diff functions that call
+* remove 'buyback' from item purchasing and just have modified price in list
+* implement some kind of last target variable that can be used for target skills etc.
+* remove voting????
+* sleep not stopping! (HMM WEIRD)
+* check invis cooldown? possible crashing...
+* make check for cfg and sprite file(s), if not found, don't load
+* !g_bPlayerSleeping (make some generalize invuln thing)
+* replace all distance/40 by get_distance (statsx stock)
+* add valid model check to deathcoil seek
+* add WAR3_heal command?
+
 
 TODO
 ---
@@ -41,6 +59,15 @@ IDEAS:!
 - make a rough (small) page with all skills (with images) that pass server values via php script
   to show accurate numbers
 - implement language changes
+
+
+
+FUTURE:
+-------
+figure out how to change evasion shotgap given all the checks on the current constant
+ * this requires non-prediction health gain...
+
+
 
 
 quick reference
