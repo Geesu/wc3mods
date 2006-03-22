@@ -2,73 +2,73 @@
 /* - Events ----------------------------------------------------- */
 
 
-public Skills_Offensive_HU( attackerId, victimId, weaponId, iDamage, headshot ) {
+public HU_skills_offensive( attacker, victim, weapon, iDamage, headshot ) {
 
-    if ( g_PlayerInfo[attackerId][CURRENT_RACE] == RACE_HUMAN && get_user_team( attackerId ) != get_user_team( victimId ) && get_user_health( victimId ) > 0 )
+    if ( g_PlayerInfo[attacker][CURRENT_RACE] == RACE_HUMAN && get_user_team( attacker ) != get_user_team( victim ) && get_user_health( victim ) > 0 )
     {
         // Bash
 
-        if ( g_PlayerInfo[attackerId][CURRENT_SKILL2] )
-            SBash( attackerId, victimId, weaponId, headshot );
+        if ( g_PlayerInfo[attacker][CURRENT_SKILL2] )
+            HU_S_BASH( attacker, victim, weapon, headshot );
 
         // Inner Fire
 
-        if ( g_PlayerInfo[attackerId][CURRENT_SKILL3] && get_user_armor(attackerId) )
-            SInnerFire( attackerId, victimId, weaponId, iDamage, headshot );
+        if ( g_PlayerInfo[attacker][CURRENT_SKILL3] && get_user_armor( attacker ) )
+            HU_S_INNERFIRE( attacker, victim, weapon, iDamage, headshot );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public Skills_Defensive_HU( victimId ) {
+public HU_skills_defensive( victim ) {
 
-    if ( g_PlayerInfo[victimId][CURRENT_RACE] == RACE_HUMAN )
+    if ( g_PlayerInfo[victim][CURRENT_RACE] == RACE_HUMAN )
     {
-        // Invisibility Cooldown ( taken care of in on_Damage() )
+        // Invisibility cooldown ( taken care of in on_Damage() )
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public Ultimates_HU( Caster, Target ) {
+public HU_ultimates( caster, target ) {
 
     // Holy Light
 
-    if ( g_PlayerInfo[Caster][CURRENT_ULTIMATE] == ULTIMATE_HOLYLIGHT )
+    if ( g_PlayerInfo[caster][CURRENT_ULTIMATE] == ULTIMATE_HOLYLIGHT )
     {
         // Heal
 
-        if ( get_user_team( Target ) == get_user_team( Caster ) && g_PlayerInfo[Target][CURRENT_RACE] != RACE_UNDEAD )
+        if ( get_user_team( target ) == get_user_team( caster ) && g_PlayerInfo[target][CURRENT_RACE] != RACE_UNDEAD )
         {
-            if ( get_user_health( Target ) == WAR3_get_maxhealth( Target ) && Caster != Target )
+            if ( get_user_health( target ) == WAR3_get_maxhealth( target ) && caster != target )
             {
                 new szMessage[128];
                 copy( szMessage, 127, FULLHEALTH_TARGET );
 
-                WAR3_status_text( Caster, szMessage, 0.5 );
+                WAR3_status_text( caster, szMessage, 0.5 );
 
-                Ultimate_Beep( Caster );
+                Ultimate_Beep( caster );
             }
 
             else
             {
-                UHolyLight_Heal( Caster, Target );
-                Ultimate_Cooldown( Caster, ULTIMATE_COOLDOWNDEFAULT );
+                HU_U_HOLYLIGHT_heal( caster, target );
+                Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-                Invis_Cooldown( Caster );
+                Invis_Cooldown( caster );
             }
         }
 
         // Damage
 
-        else if ( get_user_team( Target ) != get_user_team( Caster ) && g_PlayerInfo[Target][CURRENT_RACE] == RACE_UNDEAD )
+        else if ( get_user_team( target ) != get_user_team( caster ) && g_PlayerInfo[target][CURRENT_RACE] == RACE_UNDEAD )
         {
-            UHolyLight_Dmg( Caster, Target );
-            Ultimate_Cooldown( Caster, ULTIMATE_COOLDOWNDEFAULT );
+            HU_U_HOLYLIGHT_damage( caster, target );
+            Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-            Invis_Cooldown( Caster );
+            Invis_Cooldown( caster );
         }
 
         else
@@ -76,35 +76,35 @@ public Ultimates_HU( Caster, Target ) {
             new szMessage[128];
             copy( szMessage, 127, CANT_TARGET_HOLYLIGHT );
 
-            WAR3_status_text( Caster, szMessage, 0.5 );
+            WAR3_status_text( caster, szMessage, 0.5 );
 
-            Ultimate_Beep( Caster );
+            Ultimate_Beep( caster );
         }
     }
 
     // Flame Strike
 
-    else if ( g_PlayerInfo[Caster][CURRENT_ULTIMATE] == ULTIMATE_FLAMESTRIKE && get_user_team( Target ) != get_user_team( Caster ) )
+    else if ( g_PlayerInfo[caster][CURRENT_ULTIMATE] == ULTIMATE_FLAMESTRIKE && get_user_team( target ) != get_user_team( caster ) )
     {
-        UFstrike_Init( Caster, Target );
-        Ultimate_Cooldown( Caster, ULTIMATE_COOLDOWNDEFAULT );
+        HU_U_FLAMESTRIKE_init( caster, target );
+        Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-        Invis_Cooldown( Caster );
+        Invis_Cooldown( caster );
     }
 
     // Avatar
 
-    else if ( g_PlayerInfo[Caster][CURRENT_ULTIMATE] == ULTIMATE_AVATAR )
+    else if ( g_PlayerInfo[caster][CURRENT_ULTIMATE] == ULTIMATE_AVATAR )
     {
-        UAvatar_Cast( Caster );
-        Ultimate_Cooldown( Caster, ULTIMATE_COOLDOWNDEFAULT );
+        HU_U_AVATAR( caster );
+        Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-        Invis_Cooldown( Caster );
+        Invis_Cooldown( caster );
     }
 
     else
     {
-        Ultimate_Beep( Caster );
+        Ultimate_Beep( caster );
         return PLUGIN_HANDLED;
     }
 
@@ -117,7 +117,7 @@ public Ultimates_HU( Caster, Target ) {
 
 // Fortitude
 
-public SFortitude_Get( iLevel ) {
+public HU_S_FORTITUDE_get( iLevel ) {
 
     new Float:fLevel = float( iLevel );
 
@@ -131,7 +131,7 @@ public SFortitude_Get( iLevel ) {
 }
 
 
-public SFortitude_Set( id ) {
+public HU_S_FORTITUDE_set( id ) {
 
     // Check if restricted
 
@@ -139,7 +139,7 @@ public SFortitude_Set( id ) {
         return PLUGIN_HANDLED;
 
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
-    new iNewHealth = SFortitude_Get( iLevel );
+    new iNewHealth = HU_S_FORTITUDE_get( iLevel );
 
     set_user_health( id, iNewHealth );
 
@@ -152,7 +152,7 @@ public SFortitude_Set( id ) {
 
 // Invisibility
 
-public SInvis_Set( id ) {
+public HU_S_INVISIBILITY_set( id ) {
 
     g_bPlayerInvis[id] = true;
 
@@ -166,19 +166,19 @@ public SInvis_Set( id ) {
 
     // Set shift task
 
-    new parmInvis[1];
-    parmInvis[0] = id;
+    new arg_write[1];
+    arg_write[0] = id;
 
-    new iTaskId = TASK_INVIS + id;
-    set_task( INVISIBILITY_PRESHIFT, "_SInvis_Shift", iTaskId, parmInvis, 1 );
+    new task = TASK_INVIS + id;
+    set_task( INVISIBILITY_PRESHIFT, "HU_S_INVISIBILITY_shift", task, arg_write, 1 );
 
     return PLUGIN_HANDLED;
 }
 
 
-public _SInvis_Shift( parmInvis[1] ) {
+public HU_S_INVISIBILITY_shift( arg_read[1] ) {
 
-    new id = parmInvis[0];
+    new id = arg_read[0];
 
     if ( !is_user_connected( id ) )
         return PLUGIN_HANDLED;
@@ -202,14 +202,14 @@ public _SInvis_Shift( parmInvis[1] ) {
 
         new Float:fNextCheck = INVISIBILITY_DURATION / float( INVISIBILITY_SHIFTS );
 
-        new iTaskId = TASK_INVIS + id;
-        set_task( fNextCheck, "_SInvis_Shift", iTaskId, parmInvis, 1 );
+        new task = TASK_INVIS + id;
+        set_task( fNextCheck, "HU_S_INVISIBILITY_shift", task, arg_read, 1 );
     }
 
     else
     {
-        new iTaskId = TASK_INVIS + id;
-        remove_task( iTaskId, 0 );
+        new task = TASK_INVIS + id;
+        remove_task( task, 0 );
     }
 
     return PLUGIN_HANDLED;
@@ -218,21 +218,21 @@ public _SInvis_Shift( parmInvis[1] ) {
 
 // Bash
 
-public SBash( iAttackerId, iVictimId, iWeaponId, iHeadshot ) {
+static HU_S_BASH( attacker, victim, weapon, headshot ) {
 
     // Check if restricted
 
-    if ( !WAR3_skill_enabled( iAttackerId, RACE_HUMAN, SKILL_2 ) )
+    if ( !WAR3_skill_enabled( attacker, RACE_HUMAN, SKILL_2 ) )
         return PLUGIN_HANDLED;
 
-    new Float:fBashChance = s_Bash[g_PlayerInfo[iAttackerId][CURRENT_SKILL2] - 1];
+    new Float:fBashChance = s_Bash[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1];
     new Float:fRandomNum  = random_float( 0.0,1.0 );
 
-    new iBonusDamage = s_BashDamage[g_PlayerInfo[iAttackerId][CURRENT_SKILL2] - 1];
+    new iBonusDamage = s_BashDamage[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1];
 
     // Apply bonus modifier
 
-    if ( iWeaponId == CSW_KNIFE )
+    if ( weapon == CSW_KNIFE )
     {
         fBashChance += fBashChance * BASH_KNIFEBONUS;
 
@@ -249,61 +249,61 @@ public SBash( iAttackerId, iVictimId, iWeaponId, iHeadshot ) {
 
     if ( get_cvar_num( "mp_war3stats" ) )
     {
-        playerSkill2Info[iAttackerId][0] += iBonusDamage;
-        playerSkill2Info[iAttackerId][1] += 1;
+        playerSkill2Info[attacker][0] += iBonusDamage;
+        playerSkill2Info[attacker][1] += 1;
     }
 
     new Float:fDuration = random_float( BASH_DURATION_MIN, BASH_DURATION_MAX );
 
     // Glow
 
-    Glow_Set( iVictimId, fDuration, BASH_RGB, 24 );
+    Glow_Set( victim, fDuration, BASH_RGB, 24 );
 
-    // Apply Damage
+    // Apply damage
 
     if ( iBonusDamage > 0 )
-        WAR3_damage( iAttackerId, iVictimId, iWeaponId, iBonusDamage, iHeadshot, DAMAGE_CHECKARMOR );
+        WAR3_damage( attacker, victim, weapon, iBonusDamage, headshot, DAMAGE_CHECKARMOR );
 
-    if ( is_user_alive( iVictimId ) )
+    if ( is_user_alive( victim ) )
     {
         // Immobilize
 
-        SBash_Stun( iVictimId, fDuration );
+        HU_S_BASH_stun( victim, fDuration );
 
-        // Screen Fade
+        // Screen fade
 
-        Create_ScreenFade( iVictimId, (1<<10), (1<<10), FADE_OUT, 255, 255, 255, 100 );
+        Create_ScreenFade( victim, (1<<10), (1<<10), FADE_OUT, 255, 255, 255, 100 );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public SBash_Stun( id, Float:fDuration ) {
+static HU_S_BASH_stun( id, Float:fDuration ) {
 
     g_bPlayerBashed[id] = true;
     g_bPlayerCantMove[id] = true;
 
     WAR3_set_speed( id );
 
-    new parm_Stun[1];
-    parm_Stun[0] = id;
+    new arg_write[1];
+    arg_write[0] = id;
 
-    new TaskId = TASK_BASH + id;
+    new task = TASK_BASH + id;
 
-    remove_task( TaskId, 0 );
-    set_task( fDuration, "SBash_Remove", TaskId, parm_Stun, 1 );
+    remove_task( task, 0 );
+    set_task( fDuration, "SBash_Remove", task, arg_write, 1 );
 
     return PLUGIN_HANDLED;
 }
 
 
-public SBash_Remove( parm_Stun[1] ) {
+public SBash_Remove( arg_read[1] ) {
 
-    new id = parm_Stun[0];
+    new id = arg_read[0];
 
-    new TaskId = TASK_BASH + id;
-    remove_task( TaskId, 0 );
+    new task = TASK_BASH + id;
+    remove_task( task, 0 );
 
     g_bPlayerBashed[id] = false;
 
@@ -316,27 +316,27 @@ public SBash_Remove( parm_Stun[1] ) {
 
 // Inner Fire
 
-public SInnerFire( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot ) {
+static HU_S_INNERFIRE( attacker, victim, weapon, iDamage, headshot ) {
 
     // Check if restricted
 
-    if ( !WAR3_skill_enabled( iAttackerId, RACE_HUMAN, SKILL_3 ) )
+    if ( !WAR3_skill_enabled( attacker, RACE_HUMAN, SKILL_3 ) )
         return PLUGIN_HANDLED;
 
-    new Float:fBonusDamage = float( iDamage ) * s_ifDamage[g_PlayerInfo[iAttackerId][CURRENT_SKILL3] - 1];
+    new Float:fBonusDamage = float( iDamage ) * s_ifDamage[g_PlayerInfo[attacker][CURRENT_SKILL3] - 1];
     new iBonusDamage = floatround( fBonusDamage );
 
     // Add to player stats array
 
     if ( get_cvar_num( "mp_war3stats" ) )
     {
-        playerSkill3Info[iAttackerId][0] += iBonusDamage;
+        playerSkill3Info[attacker][0] += iBonusDamage;
     }
 
-    // Apply Damage
+    // Apply damage
 
     if ( iBonusDamage > 0 )
-        WAR3_damage( iAttackerId, iVictimId, iWeaponId, iBonusDamage, iHeadshot, DAMAGE_CHECKARMOR );
+        WAR3_damage( attacker, victim, weapon, iBonusDamage, headshot, DAMAGE_CHECKARMOR );
 
     return PLUGIN_HANDLED;
 }
@@ -347,20 +347,20 @@ public SInnerFire( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot ) {
 
 // Healing Version
 
-public UHolyLight_Heal( iCasterId, iTargetId ) {
+static HU_U_HOLYLIGHT_heal( caster, target ) {
 
-    // Play Sound
+    // Play sound
 
-    emit_sound( iTargetId, CHAN_STATIC, SOUND_HOLYLIGHT, 1.0, ATTN_NORM, 0, PITCH_NORM );
+    emit_sound( target, CHAN_STATIC, SOUND_HOLYLIGHT, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-    // Status Text
+    // Status text
 
-    WAR3_status_text( iCasterId, HEAL_CAST, 1.0 );
+    WAR3_status_text( caster, HEAL_CAST, 1.0 );
 
-    // Calculate New Health
+    // Calculate new health
 
-    new iNewHealth = get_user_health( iTargetId ) + HOLYLIGHT_HEAL;
-    new iMaxHealth = WAR3_get_maxhealth( iTargetId );
+    new iNewHealth = get_user_health( target ) + HOLYLIGHT_HEAL;
+    new iMaxHealth = WAR3_get_maxhealth( target );
 
     new iHealthGiven = HOLYLIGHT_HEAL;
 
@@ -370,30 +370,30 @@ public UHolyLight_Heal( iCasterId, iTargetId ) {
         iNewHealth = iMaxHealth;
     }
 
-    // Hud Message
+    // Hud message
 
     new szMessage[128], szPlayerName[32];
-    get_user_name( iCasterId, szPlayerName, 31 );
+    get_user_name( caster, szPlayerName, 31 );
 
     format( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
 
-    WAR3_status_text( iTargetId, szMessage, 3.0 );
+    WAR3_status_text( target, szMessage, 3.0 );
 
-    // Apply Health
+    // Apply health
 
-    set_user_health( iTargetId, iNewHealth );
+    set_user_health( target, iNewHealth );
 
-    // Display Effects
+    // Display effects
 
-    UHolyLight_Effects( iTargetId );
+    HU_U_HOLYLIGHT_effects( target );
 
-    // Give Support XP
+    // Give support XP
 
-    XP_Support_Heal( iCasterId, iHealthGiven );
+    XP_Support_Heal( caster, iHealthGiven );
 
-    // Invisibility Cooldown
+    // Invisibility cooldown
 
-    Invis_Cooldown( iTargetId );
+    Invis_Cooldown( target );
 
     return PLUGIN_HANDLED;
 }
@@ -401,55 +401,55 @@ public UHolyLight_Heal( iCasterId, iTargetId ) {
 
 // Damage Version
 
-public UHolyLight_Dmg( Caster, Target ) {
+static HU_U_HOLYLIGHT_damage( caster, target ) {
 
-    // Play Sound
+    // Play sound
 
-    emit_sound( Target, CHAN_STATIC, SOUND_HOLYLIGHT, 1.0, ATTN_NORM, 0, PITCH_NORM );
+    emit_sound( target, CHAN_STATIC, SOUND_HOLYLIGHT, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-    // Display Effects
+    // Display effects
 
-    UHolyLight_Effects( Target );
+    HU_U_HOLYLIGHT_effects( target );
 
     // Check for Amulet
 
-    if ( g_PlayerInfo[Target][CURRENT_ITEM] == ITEM_AMULET )
+    if ( g_PlayerInfo[target][CURRENT_ITEM] == ITEM_AMULET )
     {
-        IAmulet_Block( Target, Caster );
+        IAmulet_Block( target, caster );
         return PLUGIN_HANDLED;
     }
 
-    // Hud Message
+    // Hud message
 
     new szMessage[128], szPlayerName[32];
-    get_user_name( Caster, szPlayerName, 31 );
+    get_user_name( caster, szPlayerName, 31 );
 
     format( szMessage, 127, CAST_HOLYLIGHT, szPlayerName, HOLYLIGHT_DAMAGE );
 
     new iBlindTime = HOLYLIGHT_BLINDTIME;
     new Float:fDuration = float( iBlindTime ) + 3.0;
 
-    WAR3_status_text2( Target, szMessage, fDuration );
+    WAR3_status_text2( target, szMessage, fDuration );
 
     // Apply Damage
 
-    WAR3_damage( Caster, Target, CSW_HOLYLIGHT, HOLYLIGHT_DAMAGE, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
+    WAR3_damage( caster, target, CSW_HOLYLIGHT, HOLYLIGHT_DAMAGE, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
 
-    if ( is_user_alive( Target ) )
+    if ( is_user_alive( target ) )
     {
         // Set Velocity
 
         new Velocity[3];
-        get_entity_velocity( Target, Velocity );
+        get_entity_velocity( target, Velocity );
 
         Velocity[0] = 0;
         Velocity[1] = 0;
 
-        set_entity_velocity( Target, Velocity );
+        set_entity_velocity( target, Velocity );
 
         // Screen Fade
 
-        Create_ScreenFade( Target, (1<<10), (HOLYLIGHT_BLINDTIME<<12), FADE_OUT, 255, 255, 255, 255 );
+        Create_ScreenFade( target, (1<<10), (HOLYLIGHT_BLINDTIME<<12), FADE_OUT, 255, 255, 255, 255 );
     }
 
     return PLUGIN_HANDLED;
@@ -458,29 +458,29 @@ public UHolyLight_Dmg( Caster, Target ) {
 
 // Effect
 
-public UHolyLight_Effects( Target ) {
+static HU_U_HOLYLIGHT_effects( target ) {
 
     new Origin[3], Radius[3];
 
-    // Main Cone
+    // Main cone
 
-    get_user_origin( Target, Origin );
+    get_user_origin( target, Origin );
     Origin[2] += 16;
     Radius[2] = 50;
 
     Create_TE_BEAMCYLINDER( SHOWTO_ALL, Origin, Radius, SPR_SHOCKWAVE, 0, 0, 3, 50, 0, 255, 245, 220, 128, 0 );
 
-    // Dark Ring
+    // Dark ring
 
-    get_user_origin( Target, Origin );
+    get_user_origin( target, Origin );
     Origin[2] += 4;
     Radius[2] = 160;
 
     Create_TE_BEAMCYLINDER( SHOWTO_ALL, Origin, Radius, SPR_SMOOTHWAVE, 0, 0, 3, 6, 0, 255, 180, 36, 128, 0 );
 
-   // Light Ring
+   // Light ring
 
-    get_user_origin( Target, Origin );
+    get_user_origin( target, Origin );
     Origin[2] += 16;
     Radius[2] = 200;
 
@@ -488,7 +488,7 @@ public UHolyLight_Effects( Target ) {
 
     // Light
 
-    Create_TE_ELIGHT( SHOWTO_ALL, Target, 100, 255, 245, 220, 3, 0 );
+    Create_TE_ELIGHT( SHOWTO_ALL, target, 100, 255, 245, 220, 3, 0 );
 
     return PLUGIN_HANDLED;
 }
@@ -497,17 +497,17 @@ public UHolyLight_Effects( Target ) {
 /* - Flame Strike ----------------------------------------------- */
 
 
-public UFstrike_Init( Caster, Target ) {
+static HU_U_FLAMESTRIKE_init( caster, target ) {
 
     // Play Sound
 
-    emit_sound( Target, CHAN_STATIC, SOUND_FLAMESTRIKE, 1.0, ATTN_NORM, 0, PITCH_NORM );
+    emit_sound( target, CHAN_STATIC, SOUND_FLAMESTRIKE, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-    new parmCast[2];
-    parmCast[0] = Caster;
-    parmCast[1] = Target;
+    new arg_write[2];
+    arg_write[0] = caster;
+    arg_write[1] = target;
 
-    UFstrike_Cast( parmCast );
+    HU_U_FLAMESTRIKE( arg_write );
 
     return PLUGIN_HANDLED;
 }
@@ -515,51 +515,51 @@ public UFstrike_Init( Caster, Target ) {
 
 // Cast Flame Strike
 
-public UFstrike_Cast( parmCast[2] ) {
+public HU_U_FLAMESTRIKE( arg_read[2] ) {
 
-    new Caster = parmCast[0];
-    new Target = parmCast[1];
+    new caster = arg_read[0];
+    new target = arg_read[1];
 
-    // Make Sure Player is on Ground
+    // Make sure player is on ground
 
-    if ( get_entity_flags( Target ) & FL_ONGROUND )
+    if ( get_entity_flags( target ) & FL_ONGROUND )
     {
-        // Hud Message
+        // Hud message
 
         new szMessage[128], szPlayerName[32];
-        get_user_name( Caster, szPlayerName, 31 );
+        get_user_name( caster, szPlayerName, 31 );
 
         format( szMessage, 127, CAST_FLAMESTRIKE, szPlayerName );
 
-        WAR3_status_text2( Target, szMessage, 3.0 );
+        WAR3_status_text2( target, szMessage, 3.0 );
 
-        // Cast Flamestrike
+        // Cast
 
         new Origin[3];
-        get_user_origin( Target, Origin );
+        get_user_origin( target, Origin );
 
-        UFstrike_Effects( Origin );
-        g_bFlameStrikeCast[Caster] = true;
+        HU_U_FLAMESTRIKE_effects( Origin );
+        g_bFlameStrikeCast[caster] = true;
 
         new Float:fDuration = FLAMESTRIKE_DURATION;
         new iDuration = floatround( fDuration );
 
         new iCounter = ( iDuration * 5 );
 
-        new parmCheck[5];
-        parmCheck[0] = Caster;
-        parmCheck[1] = iCounter;
-        parmCheck[2] = Origin[0];
-        parmCheck[3] = Origin[1];
-        parmCheck[4] = Origin[2];
+        new arg_write[5];
+        arg_write[0] = caster;
+        arg_write[1] = iCounter;
+        arg_write[2] = Origin[0];
+        arg_write[3] = Origin[1];
+        arg_write[4] = Origin[2];
 
-        UFstrike_Check( parmCheck );
+        HU_U_FLAMESTRIKE_think( arg_write );
     }
 
     else
     {
-        new TaskId = TASK_FLAMESTRIKE_CASTER + Caster;
-        set_task( 0.1, "UFstrike_Cast", TaskId, parmCast, 2 );
+        new task = TASK_FLAMESTRIKE_CASTER + caster;
+        set_task( 0.1, "HU_U_FLAMESTRIKE", task, arg_read, 2 );
     }
 
     return PLUGIN_HANDLED;
@@ -568,59 +568,59 @@ public UFstrike_Cast( parmCast[2] ) {
 
 // Fire Check
 
-public UFstrike_Check( parmCheck[5] ) {
+public HU_U_FLAMESTRIKE_think( arg_read[5] ) {
 
-    new Caster   = parmCheck[0];
-    new iCounter = parmCheck[1];
+    new caster = arg_read[0];
+    new iCounter = arg_read[1];
 
-    if ( iCounter && g_bFlameStrikeCast[Caster] )
+    if ( iCounter && g_bFlameStrikeCast[caster] )
     {
         new Origin[3];
-        Origin[0] = parmCheck[2];
-        Origin[1] = parmCheck[3];
-        Origin[2] = parmCheck[4];
+        Origin[0] = arg_read[2];
+        Origin[1] = arg_read[3];
+        Origin[2] = arg_read[4];
 
         iCounter--;
 
-        // Check for Players in Range
+        // Check for players in range
 
-        new Victims[32], iTotalPlayers, VictimOrigin[3];
-        get_players( Victims, iTotalPlayers, "a" );
+        new Players[32], iTotalPlayers, PlayerOrigin[3];
+        get_players( Players, iTotalPlayers, "a" );
 
-        // Find player Distance(s)
+        // Find player distance(s)
 
         for ( new iPlayerNum = 0; iPlayerNum < iTotalPlayers; iPlayerNum++ )
         {
-            new Victim = Victims[iPlayerNum];
-            get_user_origin( Victim, VictimOrigin );
+            new player = Players[iPlayerNum];
+            get_user_origin( player, PlayerOrigin );
 
             new bool:bPlayerImmune;
 
-            if ( g_PlayerOnFire[Victim] || g_bPlayerSleeping[Victim] || g_iPlayerAvatar[Victim] || Victim == g_Vip )
+            if ( g_PlayerOnFire[player] || g_bPlayerSleeping[player] || g_iPlayerAvatar[player] || player == g_Vip )
                 bPlayerImmune = true;
 
-            if ( !bPlayerImmune && get_distance( Origin, VictimOrigin ) / 40 <= FLAMESTRIKE_RADIUS )
+            if ( !bPlayerImmune && get_distance( Origin, PlayerOrigin ) / 40 <= FLAMESTRIKE_RADIUS )
             {
-                new parmDot[5];
-                parmDot[0] = Caster;
-                parmDot[1] = Victim;
-                parmDot[2] = VictimOrigin[0];
-                parmDot[3] = VictimOrigin[1];
-                parmDot[4] = VictimOrigin[2];
+                new arg_write[5];
+                arg_write[0] = caster;
+                arg_write[1] = player;
+                arg_write[2] = PlayerOrigin[0];
+                arg_write[3] = PlayerOrigin[1];
+                arg_write[4] = PlayerOrigin[2];
 
-                UFstrike_FireDmg( parmDot );
+                HU_U_FLAMESTRIKE_damage( arg_write );
             }
         }
 
-        parmCheck[1] = iCounter;
+        arg_read[1] = iCounter;
 
-        new TaskId = TASK_FLAMESTRIKE_CASTER + Caster;
-        set_task( 0.2, "UFstrike_Check", TaskId, parmCheck, 6 );
+        new task = TASK_FLAMESTRIKE_CASTER + caster;
+        set_task( 0.2, "HU_U_FLAMESTRIKE_think", task, arg_read, 5 );
     }
 
     else
     {
-        g_bFlameStrikeCast[Caster] = false;
+        g_bFlameStrikeCast[caster] = false;
     }
 
     return PLUGIN_HANDLED;
@@ -629,47 +629,47 @@ public UFstrike_Check( parmCheck[5] ) {
 
 // Fire Damage
 
-public UFstrike_FireDmg( parmDot[5] ) {
+public HU_U_FLAMESTRIKE_damage( arg_read[5] ) {
 
-    new Caster = parmDot[0];
-    new Victim = parmDot[1];
+    new caster = arg_read[0];
+    new victim = arg_read[1];
 
     // Play sound!
 
-    emit_sound( Victim, CHAN_STATIC, SOUND_FLAMESTRIKE_BURN, 0.5, ATTN_NORM, 0, PITCH_NORM );
+    emit_sound( victim, CHAN_STATIC, SOUND_FLAMESTRIKE_BURN, 0.5, ATTN_NORM, 0, PITCH_NORM );
 
     // Burn Effect(s)
 
     new Origin[3];
-    Origin[0] = parmDot[2];
-    Origin[1] = parmDot[3];
-    Origin[2] = parmDot[4];
+    Origin[0] = arg_read[2];
+    Origin[1] = arg_read[3];
+    Origin[2] = arg_read[4];
 
     Create_TE_SPRITE( SHOWTO_ALL_BROADCAST, Origin, SPR_FLAMEBURST, 5, 200 );
 
     // Apply Damage
 
-    WAR3_damage( Caster, Victim, CSW_FLAMESTRIKE, FLAMESTRIKE_DAMAGEIN, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
+    WAR3_damage( caster, victim, CSW_FLAMESTRIKE, FLAMESTRIKE_DAMAGEIN, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
 
-    if ( is_user_alive( Victim ) )
+    if ( is_user_alive( victim ) )
     {
         // Fire Damage
 
-        Create_Damage( Victim, 0, 0, CS_DMG_BURN );
+        Create_Damage( victim, 0, 0, CS_DMG_BURN );
 
         // Screen Fade
 
-        Create_ScreenFade( Victim, (1<<10), (1<<10), FADE_OUT, 255, 108, 0, 160 );
+        Create_ScreenFade( victim, (1<<10), (1<<10), FADE_OUT, 255, 108, 0, 160 );
 
         // Set Globals
 
-        g_PlayerSingeing[Victim] = 0;
-        g_PlayerOnFire[Victim]   = Caster;
+        g_PlayerSingeing[victim] = 0;
+        g_PlayerOnFire[victim]   = caster;
 
-        new TaskId = TASK_FLAMESTRIKE_VICTIM + Victim;
-        set_task( 1.0, "UFstrike_OnFire", TaskId, parmDot, 5 );
+        new task = TASK_FLAMESTRIKE_VICTIM + victim;
+        set_task( 1.0, "HU_U_FLAMESTRIKE_onfire", task, arg_read, 5 );
 
-        Icon_DispellMe( Victim );
+        Icon_DispellMe( victim );
     }
 
     return PLUGIN_HANDLED;
@@ -678,80 +678,82 @@ public UFstrike_FireDmg( parmDot[5] ) {
 
 // Fire Task
 
-public UFstrike_OnFire( parmDot[5] ) {
+public HU_U_FLAMESTRIKE_onfire( arg_read[5] ) {
 
-    new Caster = parmDot[0];
-    new Victim = parmDot[1];
+    new caster = arg_read[0];
+    new victim = arg_read[1];
 
     new Origin[3];
-    Origin[0] = parmDot[2];
-    Origin[1] = parmDot[3];
-    Origin[2] = parmDot[4];
+    Origin[0] = arg_read[2];
+    Origin[1] = arg_read[3];
+    Origin[2] = arg_read[4];
 
     new VictimOrigin[3];
-    get_user_origin( Victim, VictimOrigin );
+    get_user_origin( victim, VictimOrigin );
 
     new bool:bPlayerImmune;
 
-    if ( g_bPlayerSleeping[Victim] || g_iPlayerAvatar[Victim] )
+    if ( g_bPlayerSleeping[victim] || g_iPlayerAvatar[victim] )
         bPlayerImmune = true;
 
-    if ( !bPlayerImmune && get_distance( Origin, VictimOrigin ) / 40 <= FLAMESTRIKE_RADIUS && g_bFlameStrikeCast[Caster] )
-        UFstrike_FireDmg( parmDot );
+    if ( !bPlayerImmune && get_distance( Origin, VictimOrigin ) / 40 <= FLAMESTRIKE_RADIUS && g_bFlameStrikeCast[caster] )
+        HU_U_FLAMESTRIKE_damage( arg_read );
 
     else
     {
-        g_PlayerOnFire[Victim] = 0;
-        g_PlayerSingeing[Victim] = Caster;
+        g_PlayerOnFire[victim] = 0;
+        g_PlayerSingeing[victim] = caster;
 
-        new parmSinge[3];
-        parmSinge[0] = Caster;
-        parmSinge[1] = Victim;
-        parmSinge[2] = FLAMESTRIKE_SINGEDURATION;
+        new arg_write[3];
+        arg_write[0] = caster;
+        arg_write[1] = victim;
+        arg_write[2] = FLAMESTRIKE_SINGEDURATION;
 
-        UFstrike_Singe( parmSinge );
+        HU_U_FLAMESTRIKE_singe( arg_write );
     }
 
     return PLUGIN_HANDLED;
 }
 
+
 // Singe Damage
 
-public UFstrike_Singe( parmSinge[3] ) {
+public HU_U_FLAMESTRIKE_singe( arg_read[3] ) {
 
-    new Caster   = parmSinge[0];
-    new Victim   = parmSinge[1];
-    new iCounter = parmSinge[2];
+    new caster = arg_read[0];
+    new victim = arg_read[1];
 
-    // Apply Damage
+    new iCounter = arg_read[2];
 
-    WAR3_damage( Caster, Victim, CSW_FLAMESTRIKE, FLAMESTRIKE_DAMAGEOUT, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
+    // Apply damage
 
-    if ( !g_PlayerOnFire[Victim] && is_user_alive( Victim ) )
+    WAR3_damage( caster, victim, CSW_FLAMESTRIKE, FLAMESTRIKE_DAMAGEOUT, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
+
+    if ( !g_PlayerOnFire[victim] && is_user_alive( victim ) )
     {
-        // Screen Fade
+        // Screen fade
 
-        if ( !g_bPlayerSleeping[Victim] )
+        if ( !g_bPlayerSleeping[victim] )
         {
-            Create_ScreenFade( Victim, (1<<10), (1<<10), FADE_OUT, 255, 108, 0, 20 );
+            Create_ScreenFade( victim, (1<<10), (1<<10), FADE_OUT, 255, 108, 0, 20 );
         }
 
-        // Check DOT Counter
+        // Check DOT counter
 
         iCounter--;
 
         if ( iCounter )
         {
-            parmSinge[2] = iCounter;
+            arg_read[2] = iCounter;
 
-            new TaskId = TASK_FLAMESTRIKE_VICTIM + Victim;
-            set_task( 1.0, "UFstrike_Singe", TaskId, parmSinge, 5 );
+            new task = TASK_FLAMESTRIKE_VICTIM + victim;
+            set_task( 1.0, "HU_U_FLAMESTRIKE_singe", task, arg_read, 3 );
         }
     }
 
     else
     {
-        UFstrike_Remove( Victim );
+        HU_U_FLAMESTRIKE_remove( victim );
     }
 
     return PLUGIN_HANDLED;
@@ -760,15 +762,15 @@ public UFstrike_Singe( parmSinge[3] ) {
 
 // Remove
 
-public UFstrike_Remove( Victim ) {
+public HU_U_FLAMESTRIKE_remove( victim ) {
 
-    g_PlayerOnFire[Victim]   = 0;
-    g_PlayerSingeing[Victim] = 0;
+    g_PlayerOnFire[victim] = 0;
+    g_PlayerSingeing[victim] = 0;
 
-    new TaskId = TASK_FLAMESTRIKE_VICTIM + Victim;
-    remove_task( TaskId, 0 );
+    new task = TASK_FLAMESTRIKE_VICTIM + victim;
+    remove_task( task, 0 );
 
-    Icon_DispellMe( Victim );
+    Icon_DispellMe( victim );
 
     return PLUGIN_HANDLED;
 }
@@ -776,14 +778,12 @@ public UFstrike_Remove( Victim ) {
 
 // Flame Pillar Effects
 
-public UFstrike_Effects( Origin[3] ) {
+static HU_U_FLAMESTRIKE_effects( Origin[3] ) {
 
     Origin[2] -= 5;
 
     new Float:fFlameBorder = 75.0;
     new Float:fTempOrigin[3];
-
-    //new szSpriteName[32];
 
     // Border
 
@@ -804,8 +804,7 @@ public UFstrike_Effects( Origin[3] ) {
         Create_TempSprite( "FLAME_STRIKE", "sprites/cexplo.spr", fTempOrigin, MOVETYPE_NONE, SOLID_TRIGGER, random_float( 10.0, 20.0 ), random_float( 0.4, 0.8 ), FLAMESTRIKE_DURATION + 1.5 );
     }
 
-
-    // Inner Diagonal
+    // Inner diagonal
 
     fFlameBorder = 2.0 * ( fFlameBorder / 3.0 );
 
@@ -843,7 +842,7 @@ public UFstrike_Effects( Origin[3] ) {
     }
 
 
-    // Inner Square
+    // Inner square
 
     fFlameBorder = 2.0 * ( fFlameBorder / 3.0 );
 
@@ -871,49 +870,47 @@ public UFstrike_Effects( Origin[3] ) {
 /* - Avatar ----------------------------------------------------- */
 
 
-public UAvatar_Cast( cIndex ) {
+static HU_U_AVATAR( id ) {
 
-    g_bPlayerCantMove[cIndex] = true;
-    g_bPlayerAvatarGrow[cIndex] = true;
+    g_bPlayerCantMove[id] = true;
+    g_bPlayerAvatarGrow[id] = true;
 
-    g_iPlayerAvatar[cIndex] = 0;
+    g_iPlayerAvatar[id] = 0;
 
     // Play sound
 
-    emit_sound( cIndex, CHAN_STATIC, SOUND_AVATAR, 1.0, ATTN_NORM, 0, PITCH_NORM );
+    emit_sound( id, CHAN_STATIC, SOUND_AVATAR, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
     // Immobilize
 
-    set_user_maxspeed( cIndex, SPEED_IMMOBILIZE );
+    set_user_maxspeed( id, SPEED_IMMOBILIZE );
 
-    // Status Text
+    // Status text
 
     new szMessage[128];
     format( szMessage, 127, CAST_AVATAR );
 
-    WAR3_status_text( cIndex, szMessage, 3.0 );
+    WAR3_status_text( id, szMessage, 3.0 );
 
     // Screenshake
 
-    Create_ScreenShake( cIndex, (10<<12), (2<<12), (5<<12) );
+    Create_ScreenShake( id, (10<<12), (2<<12), (5<<12) );
 
     // Add health/effects
 
-    new parmGrow[2];
-    parmGrow[0] = cIndex;
+    new arg_write[2];
+    arg_write[0] = id;
 
-    UAvatar_Grow( parmGrow );
-
-    // Stop beeping
+    HU_U_AVATAR_grow( arg_write );
 
     return PLUGIN_HANDLED;
 }
 
 
-public UAvatar_Grow( parmGrow[2] ) {
+public HU_U_AVATAR_grow( arg_read[2] ) {
 
-    new pIndex = parmGrow[0];
-    new iCounter = parmGrow[1];
+    new id = arg_read[0];
+    new iCounter = arg_read[1];
 
     new iMaxCounts = AVATAR_HEALTH / AVATAR_STEPSIZE;
 
@@ -921,67 +918,66 @@ public UAvatar_Grow( parmGrow[2] ) {
 
     // Increase health
 
-    new iNewHealth = get_user_health( pIndex ) + AVATAR_STEPSIZE;
+    new iNewHealth = get_user_health( id ) + AVATAR_STEPSIZE;
 
-    if ( iNewHealth > WAR3_get_maxhealth( pIndex ) )
-        iNewHealth = WAR3_get_maxhealth( pIndex );
+    if ( iNewHealth > WAR3_get_maxhealth( id ) )
+        iNewHealth = WAR3_get_maxhealth( id );
 
-    set_user_health( pIndex, iNewHealth );
+    set_user_health( id, iNewHealth );
 
     // Increase shell size
 
     new iShellSize = ( AVATAR_SIZE / iMaxCounts ) * iCounter;
-    set_entity_rendering( pIndex, kRenderFxGlowShell, AVATAR_RGB[GLOW_R], AVATAR_RGB[GLOW_G], AVATAR_RGB[GLOW_B], kRenderNormal, iShellSize );
+    set_entity_rendering( id, kRenderFxGlowShell, AVATAR_RGB[GLOW_R], AVATAR_RGB[GLOW_G], AVATAR_RGB[GLOW_B], kRenderNormal, iShellSize );
 
     // Loop again
 
     if ( iCounter < iMaxCounts )
     {
-        parmGrow[1] = iCounter;
+        arg_read[1] = iCounter;
 
-        new iTaskId = TASK_AVATAR + pIndex;
-        set_task( 0.1, "UAvatar_Grow", iTaskId, parmGrow, 2 );
+        new task = TASK_AVATAR + id;
+        set_task( 0.1, "HU_U_AVATAR_grow", task, arg_read, 2 );
     }
 
     else
     {
-        UAvatar_Immunity( pIndex );
+        HU_U_AVATAR_immune( id );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public UAvatar_Immunity( pIndex ) {
+static HU_U_AVATAR_immune( id ) {
 
-    g_bPlayerAvatarGrow[pIndex] = false;
-    g_iPlayerAvatar[pIndex] = get_user_health( pIndex );
+    g_bPlayerAvatarGrow[id] = false;
+    g_iPlayerAvatar[id] = get_user_health( id );
 
-    Immobilize_Remove( pIndex );
-    WAR3_set_speed( pIndex );
+    Immobilize_Remove( id );
+    WAR3_set_speed( id );
 
 	// Bartime
 
     new iDuration = floatround( AVATAR_DURATION );
-    Create_BarTime( pIndex, iDuration );
+    Create_BarTime( id, iDuration );
 
     // Set duration timer
 
-    new parmShrink[3];
-    parmShrink[0] = pIndex;
+    new arg_write[3];
+    arg_write[0] = id;
 
-    new iTaskId = TASK_AVATAR + pIndex;
-    set_task( AVATAR_DURATION, "UAvatar_Shrink", iTaskId, parmShrink, 3 );
+    new task = TASK_AVATAR + id;
+    set_task( AVATAR_DURATION, "HU_U_AVATAR_shrink", task, arg_write, 2 );
 
     return PLUGIN_HANDLED;
 }
 
 
-public UAvatar_Shrink( parmShrink[3] ) {
+public HU_U_AVATAR_shrink( arg_read[2] ) {
 
-    new pIndex = parmShrink[0];
-    new iCounter = parmShrink[1];
-    //new iHealth = parmShrink[2];
+    new id = arg_read[0];
+    new iCounter = arg_read[1];
 
 
     new iMaxCounts = AVATAR_HEALTH / AVATAR_STEPSIZE;
@@ -990,101 +986,99 @@ public UAvatar_Shrink( parmShrink[3] ) {
 
     // Decrease health
 
-    new iNewHealth = get_user_health( pIndex ) - AVATAR_STEPSIZE;
+    new iNewHealth = get_user_health( id ) - AVATAR_STEPSIZE;
 
      // Don't kill player
 
     if ( iNewHealth < 1 )
         iNewHealth = 1;
 
-    set_user_health( pIndex, iNewHealth );
+    set_user_health( id, iNewHealth );
 
     // Decrease shell size
 
     new iShellSize = AVATAR_SIZE - ( ( AVATAR_SIZE / iMaxCounts ) * iCounter );
-    set_entity_rendering( pIndex, kRenderFxGlowShell, AVATAR_RGB[GLOW_R], AVATAR_RGB[GLOW_G], AVATAR_RGB[GLOW_B], kRenderNormal, iShellSize );
+    set_entity_rendering( id, kRenderFxGlowShell, AVATAR_RGB[GLOW_R], AVATAR_RGB[GLOW_G], AVATAR_RGB[GLOW_B], kRenderNormal, iShellSize );
 
     // Loop again
 
     if ( iCounter < iMaxCounts )
     {
-        parmShrink[1] = iCounter;
+        arg_read[1] = iCounter;
 
-        new iTaskId = TASK_AVATAR + pIndex;
-        set_task( 0.1, "UAvatar_Shrink", iTaskId, parmShrink, 2 );
+        new task = TASK_AVATAR + id;
+        set_task( 0.1, "HU_U_AVATAR_shrink", task, arg_read, 2 );
     }
 
     else
     {
-        UAvatar_Finished( pIndex );
+        HU_U_AVATAR_finish( id );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public UAvatar_Finished( pIndex ) {
+static HU_U_AVATAR_finish( id ) {
 
-    // Status Text
+    // Status text
 
     new szMessage[128];
     format( szMessage, 127, FINISH_AVATAR );
 
-    WAR3_status_text( pIndex, szMessage, 3.0 );
+    WAR3_status_text( id, szMessage, 3.0 );
 
-    UAvatar_Remove( pIndex );
+    HU_U_AVATAR_remove( id );
 
-    // Remove Shell
+    // Remove shell
 
-    set_user_rendering( pIndex );
+    set_user_rendering( id );
 
-    // Invisibility Cooldown
+    // Invisibility cooldown
 
-    Invis_Cooldown( pIndex );
+    Invis_Cooldown( id );
 
-    // Reset Speed
+    // Reset speed
 
-    WAR3_set_speed( pIndex );
+    WAR3_set_speed( id );
 
     // Cooldown
 
-    Ultimate_Cooldown( pIndex, ULTIMATE_COOLDOWNDEFAULT );
+    Ultimate_Cooldown( id, ULTIMATE_COOLDOWNDEFAULT );
 
     return PLUGIN_HANDLED;
 }
 
 
-public UAvatar_Damage( aIndex, vIndex, wIndex, iHeadshot ) {
+public HU_U_AVATAR_damage( attacker, victim, weapon, headshot ) {
 
     // Add to bonus damage array
 
-    WAR3_damage( aIndex, vIndex, wIndex, AVATAR_DAMAGE, iHeadshot, DAMAGE_CHECKARMOR );
+    WAR3_damage( attacker, victim, weapon, AVATAR_DAMAGE, headshot, DAMAGE_CHECKARMOR );
 
-    if ( is_user_alive( vIndex ) )
+    // Screen fade
+
+    if ( is_user_alive( victim ) && !g_bPlayerSleeping[victim] )
     {
-        // Screen Fade
-
         new iFadeAlpha = AVATAR_DAMAGE * 3;
-        Create_ScreenFade( vIndex, (1<<10), (1<<10), FADE_OUT, AVATAR_RGB[GLOW_R], AVATAR_RGB[GLOW_G], AVATAR_RGB[GLOW_B], iFadeAlpha );
+        Create_ScreenFade( victim, (1<<10), (1<<10), FADE_OUT, AVATAR_RGB[GLOW_R], AVATAR_RGB[GLOW_G], AVATAR_RGB[GLOW_B], iFadeAlpha );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public UAvatar_Remove( pIndex ) {
+public HU_U_AVATAR_remove( id ) {
 
-    g_bPlayerAvatarGrow[pIndex] = false;
-    g_iPlayerAvatar[pIndex] = 0;
+    g_bPlayerAvatarGrow[id] = false;
+    g_iPlayerAvatar[id] = 0;
 
-    // Remove BarTime
+    // Remove bartime
 
-    Remove_BarTime( pIndex );
+    Remove_BarTime( id );
 
-    new iTaskId = TASK_AVATAR + pIndex;
-    remove_task( iTaskId, 0 );
+    new task = TASK_AVATAR + id;
+    remove_task( task, 0 );
 
     return PLUGIN_HANDLED;
 }
-
-// End of HUMAN.INL

@@ -855,14 +855,14 @@ static UD_U_IMPALE( caster, target ) {
         g_PlayerImpaled[target] = caster;
 
         new task = TASK_IMPALE + target;
-        set_task( 0.1, "UD_U_IMPALE_collision", task, arg_write, 3 );
+        set_task( 0.1, "UD_U_IMPALE_think", task, arg_write, 3 );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public UD_U_IMPALE_collision( arg_read[3] ) {
+public UD_U_IMPALE_think( arg_read[3] ) {
 
     new target = arg_read[0];
     new caster = g_PlayerImpaled[target];
@@ -927,7 +927,7 @@ public UD_U_IMPALE_collision( arg_read[3] ) {
         arg_read[2] = Velocity[2];
 
         new task = TASK_IMPALE + target;
-        set_task( 0.1, "UD_U_IMPALE_collision", task, arg_read, 3 );
+        set_task( 0.1, "UD_U_IMPALE_think", task, arg_read, 3 );
     }
 
     else

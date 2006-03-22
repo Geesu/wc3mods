@@ -100,7 +100,7 @@ public WAR3_get_maxhealth( id ) {
     if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN )
     {
         new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
-        iMaxHealth = SFortitude_Get( iLevel );
+        iMaxHealth = HU_S_FORTITUDE_get( iLevel );
     }
 
     if ( g_bPlayerAvatarGrow[id] || g_iPlayerAvatar[id] )
@@ -321,7 +321,7 @@ public WAR3_armorskill_off( id ) {
 public WAR3_set_health( id ) {
 
     if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN )
-        SFortitude_Set( id );
+        HU_S_FORTITUDE_set( id );
 
     return PLUGIN_HANDLED;
 }
@@ -369,7 +369,7 @@ public _Invis_Set( parm_Invis[1] ) {
 
         else
         {
-            SInvis_Set( id );
+            HU_S_INVISIBILITY_set( id );
         }
     }
 
@@ -543,7 +543,7 @@ public Dispell_Negative( dispellerId, targetId )
 
     if ( g_PlayerOnFire[targetId] || g_PlayerSingeing[targetId] )
     {
-        UFstrike_Remove( targetId );
+        HU_U_FLAMESTRIKE_remove( targetId );
         bHasEffects = true;
     }
 
@@ -1303,7 +1303,7 @@ public Purge_Common( id ) {
         URoot_Remove( id );
 
     if ( g_PlayerOnFire[id] || g_PlayerSingeing[id] )
-        UFstrike_Remove( id );
+        HU_U_FLAMESTRIKE_remove( id );
 
     if ( g_PlayerRejuv[id] )
         URejuv_Remove( id );
@@ -1326,7 +1326,7 @@ public Purge_Common( id ) {
         UWindwalk_Remove( id );
 
     if ( g_bPlayerAvatarGrow[id] || g_iPlayerAvatar[id] )
-        UAvatar_Remove( id );
+        HU_U_AVATAR_remove( id );
 
     if ( g_bPlayerFrosted[id] )
     {
@@ -2226,7 +2226,7 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_RACIAL:
                 {
-                    format( szValue, 31, "%d", SFortitude_Get( iSkillLevel ) );
+                    format( szValue, 31, "%d", HU_S_FORTITUDE_get( iSkillLevel ) );
                     return ( 1 );
                 }
 

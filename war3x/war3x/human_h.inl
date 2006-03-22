@@ -38,7 +38,7 @@ new BASH_RGB[3] =                      {96,96,96};      // (integer) RGB of bash
 #define FLAMESTRIKE_SINGEDURATION     3     // (integer) seconds flamestrike is active
 
 #define AVATAR_DURATION            12.0     // (  float) seconds avatar is active
-#define AVATAR_STEPSIZE               5     // (integer) ammount of health to give/remove each 0.1 second when growing/shrinking
+#define AVATAR_STEPSIZE               5     // (integer) amount of health to give/remove each 0.1 second when growing/shrinking
 #define AVATAR_SIZE                 120     // (integer) size of the glowshell on the player
 #define AVATAR_HEALTH                60     // (integer) bonus health to apply
 #define AVATAR_DAMAGE                 6     // (integer) bonus damage to apply

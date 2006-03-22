@@ -3,29 +3,29 @@
 /* - Events ----------------------------------------------------- */
 
 
-public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot, Float:fDamageOrigin[3] ) {
+public OR_skills_offensive( attacker, victim, weapon, iDamage, headshot, Float:fDamageOrigin[3] ) {
 
-    if ( g_PlayerInfo[attackerId][CURRENT_RACE] == RACE_ORC && get_user_team( attackerId ) != get_user_team( victimId ) && get_user_health( victimId ) > 0 )
+    if ( g_PlayerInfo[attacker][CURRENT_RACE] == RACE_ORC && get_user_team( attacker ) != get_user_team( victim ) && get_user_health( victim ) > 0 )
     {
 		// Berserk
 
-        if ( g_PlayerInfo[attackerId][CURRENT_SKILL1] && weaponId != CSW_HEGRENADE )
+        if ( g_PlayerInfo[attacker][CURRENT_SKILL1] && weapon != CSW_HEGRENADE )
 		{
-            SBerserkDmg( attackerId, victimId, weaponId, iDamage, headshot );
+            SBerserkDmg( attacker, victim, weapon, iDamage, headshot );
 		}
 
         // Pulverize
 
-        if ( g_PlayerInfo[attackerId][CURRENT_SKILL2] && weaponId == CSW_HEGRENADE )
+        if ( g_PlayerInfo[attacker][CURRENT_SKILL2] && weapon == CSW_HEGRENADE )
 		{
-            SPulverize( attackerId, victimId, fDamageOrigin, iDamage );
+            SPulverize( attacker, victim, fDamageOrigin, iDamage );
 		}
 
 		// Pillage
 
-		if ( g_PlayerInfo[attackerId][CURRENT_SKILL3] )
+		if ( g_PlayerInfo[attacker][CURRENT_SKILL3] && weapon != CSW_HEGRENADE )
 		{
-			SPillage( attackerId, victimId, iDamage, weaponId );
+			SPillage( attacker, victim, iDamage, weapon );
 		}
     }
 
@@ -33,11 +33,11 @@ public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot, F
 }
 
 
-public Skills_Defensive_OR( victimId ) {
+public Skills_Defensive_OR( victim ) {
 
-    if ( g_PlayerInfo[victimId][CURRENT_RACE] == RACE_ORC )
+    if ( g_PlayerInfo[victim][CURRENT_RACE] == RACE_ORC )
     {
-		SBerserkSpeed( victimId );
+		SBerserkSpeed( victim );
 
         // Regeneration ( taken care of in on_Health() )
     }
@@ -230,13 +230,13 @@ public SBerserkSpeed( id ){
     return PLUGIN_HANDLED;
 }
 
-public SBerserkDmg( attackerId, victimId, weaponId, damage, headshot ) {
+public SBerserkDmg( attacker, victim, weapon, damage, headshot ) {
 
 	// Check if the attacker already had berserk enabled
 
-    if ( WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_1 ) )
+    if ( WAR3_skill_enabled( attacker, RACE_ORC, SKILL_1 ) )
 	{
-		new iHealth = get_user_health( attackerId );
+		new iHealth = get_user_health( attacker );
 
 		if ( iHealth <= BERSERK_HEALTH )
 		{
@@ -244,23 +244,23 @@ public SBerserkDmg( attackerId, victimId, weaponId, damage, headshot ) {
 
 			new Float:fHealthMultiplier = float( ( 100 - iHealth ) ) / 100.0;
 
-			new iBonusDamage = floatround( fHealthMultiplier * (s_BerserkDmg[g_PlayerInfo[attackerId][CURRENT_SKILL1] - 1] * damage) );
+			new iBonusDamage = floatround( fHealthMultiplier * (s_BerserkDmg[g_PlayerInfo[attacker][CURRENT_SKILL1] - 1] * damage) );
 
 		    // Apply Damage
 
-		    WAR3_damage( attackerId, victimId, weaponId, iBonusDamage, headshot, DAMAGE_CHECKARMOR );
+		    WAR3_damage( attacker, victim, weapon, iBonusDamage, headshot, DAMAGE_CHECKARMOR );
 
 		    // Add to player stats array
 
 			if ( get_cvar_num( "mp_war3stats" ) )
 			{
-				playerSkill1Info[attackerId][0] += iBonusDamage;
+				playerSkill1Info[attacker][0] += iBonusDamage;
 			}
 
 			// Screen Fade
 
 			new iFadeAlpha = iBonusDamage * 3;
-			Create_ScreenFade( victimId, (1<<10), (1<<10), FADE_OUT, 255, 0, 0, iFadeAlpha );
+			Create_ScreenFade( victim, (1<<10), (1<<10), FADE_OUT, 255, 0, 0, iFadeAlpha );
 		}
 	}
 
@@ -284,18 +284,18 @@ public SBerserk_Effect( id ) {
 
 // Pulverize
 
-public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
+public SPulverize( attacker, victim, Float:grenadeOrigin[3], damage ) {
 
     // Check if restricted
 
-    if ( !WAR3_skill_enabled( attackerId, RACE_ORC, SKILL_2 ) )
+    if ( !WAR3_skill_enabled( attacker, RACE_ORC, SKILL_2 ) )
         return PLUGIN_HANDLED;
 
     new Teammates[32], szTeamName[16];
     new iTotalPlayers;
 	new bool:bHitPlayers = false;
 
-    get_user_team( victimId, szTeamName, 15 );
+    get_user_team( victim, szTeamName, 15 );
     get_players( Teammates, iTotalPlayers, "ae", szTeamName );
 
 	// Convert origin to int
@@ -312,7 +312,7 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 	{
 		new teamId = Teammates[iPlayerNum];
 
-		if ( teamId != victimId && !g_bPlayerSleeping[teamId] )
+		if ( teamId != victim && !g_bPlayerSleeping[teamId] )
 		{
 			new teamOrigin[3];
 			get_user_origin( teamId, teamOrigin );
@@ -321,13 +321,13 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 
 			// Determine if a nearby teammate is close enough to damage
 
-			if ( fMetricDistance <= s_PulverizeRange[g_PlayerInfo[attackerId][CURRENT_SKILL2] - 1] )
+			if ( fMetricDistance <= s_PulverizeRange[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1] )
 			{
 				bHitPlayers = true;
 
 				// Damage Calculation
 
-				new iPulverizeDamage = floatround( s_PulverizeBonus[g_PlayerInfo[attackerId][CURRENT_SKILL2] - 1] * float( damage ) );
+				new iPulverizeDamage = floatround( s_PulverizeBonus[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1] * float( damage ) );
 
                 // Armor Calculation
 
@@ -351,12 +351,12 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 
                 if ( get_cvar_num( "mp_war3stats" ) )
                 {
-                    playerSkill2Info[attackerId][0] += iPulverizeDamage;
+                    playerSkill2Info[attacker][0] += iPulverizeDamage;
                 }
 
                 // Apply Damage
 
-                WAR3_damage( attackerId, teamId, CSW_PULVERIZE, iPulverizeDamage, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
+                WAR3_damage( attacker, teamId, CSW_PULVERIZE, iPulverizeDamage, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
 
                 // Screen Fade
 
@@ -407,11 +407,11 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 
 	if ( bHitPlayers )
 	{
-		new iRadius = floatround( s_PulverizeRange[g_PlayerInfo[attackerId][CURRENT_SKILL2] - 1] );
+		new iRadius = floatround( s_PulverizeRange[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1] );
 
-		new iRingRed    = ( 85 * g_PlayerInfo[attackerId][CURRENT_SKILL2] );
-		new iRingGreen  = ( 85 * g_PlayerInfo[attackerId][CURRENT_SKILL2] );
-		new iRingBlue   = ( 64 * g_PlayerInfo[attackerId][CURRENT_SKILL2] );
+		new iRingRed    = ( 85 * g_PlayerInfo[attacker][CURRENT_SKILL2] );
+		new iRingGreen  = ( 85 * g_PlayerInfo[attacker][CURRENT_SKILL2] );
+		new iRingBlue   = ( 64 * g_PlayerInfo[attacker][CURRENT_SKILL2] );
 
 		new iBlueMod;
 
@@ -424,7 +424,7 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 
 		// Play Sound *REMOVED TEMPORARILY*
 
-		//emit_sound( victimId, CHAN_STATIC, SOUND_PULVERIZE, 1.0, ATTN_NORM, 0, PITCH_NORM );
+		//emit_sound( victim, CHAN_STATIC, SOUND_PULVERIZE, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 		new iRingSize = iRadius * 2 * 40;
 		new OuterRadius[3], InnerRadius[3];
@@ -533,7 +533,7 @@ static SPillage_Ammo( attacker/*, victim, iDamage*/ ) {
     //new Float:fDamage = float( iDamage );
 
 	//new iVictimClip, iVictimAmmo;
-	//new iVictimWeapon = get_user_weapon( victimId, iVictimClip, iVictimAmmo );
+	//new iVictimWeapon = get_user_weapon( victim, iVictimClip, iVictimAmmo );
 
 	new iAttackerClip, iAttackerAmmo;
 	new iAttackerWeapon = get_user_weapon( attacker, iAttackerClip, iAttackerAmmo );
@@ -556,8 +556,8 @@ static SPillage_Ammo( attacker/*, victim, iDamage*/ ) {
 		give_item( attacker, CS_AMMO_NAME[iAttackerWeapon] );
 
 
-	//cs_update_ammo( victimId, -iStolenAmmo, iVictimWeapon );
-	//cs_update_ammo( attackerId, iStolenAmmo, iAttackerWeapon );
+	//cs_update_ammo( victim, -iStolenAmmo, iVictimWeapon );
+	//cs_update_ammo( attacker, iStolenAmmo, iAttackerWeapon );
 
     return PLUGIN_HANDLED;
 }
@@ -572,16 +572,16 @@ static SPillage_Grenade( attacker, victim ) {
 
     for ( new iWeaponNum = 0; iWeaponNum < iTotalWeapons; iWeaponNum++ )
     {
-        new weaponId = Weapons[iWeaponNum];
+        new weapon = Weapons[iWeaponNum];
 
-        if ( cs_get_weapon_type_( weaponId ) == CS_WEAPON_TYPE_GRENADE )
+        if ( cs_get_weapon_type_( weapon ) == CS_WEAPON_TYPE_GRENADE )
         {
             new iClip, iAmmo;
-            get_user_ammo( attacker, weaponId, iClip, iAmmo );
+            get_user_ammo( attacker, weapon, iClip, iAmmo );
 
-            if ( !iAmmo || ( weaponId == CSW_FLASHBANG && iAmmo < 2 ) )
+            if ( !iAmmo || ( weapon == CSW_FLASHBANG && iAmmo < 2 ) )
             {
-                Grenades[iTotalGrenades] = weaponId;
+                Grenades[iTotalGrenades] = weapon;
                 iTotalGrenades++;
             }
         }
@@ -593,10 +593,10 @@ static SPillage_Grenade( attacker, victim ) {
         new grenade = Grenades[j];
 
 		//new iVictimClip, iVictimAmmo;
-		//new iVictimWeapon = get_user_weapon( victimId, iVictimClip, iVictimAmmo );
+		//new iVictimWeapon = get_user_weapon( victim, iVictimClip, iVictimAmmo );
 
 		//if ( iVictimWeapon == grenade )
-		//	engclient_cmd( victimId, "lastinv" );
+		//	engclient_cmd( victim, "lastinv" );
 
 
         // Temporary Solution
@@ -604,8 +604,8 @@ static SPillage_Grenade( attacker, victim ) {
 		give_item( attacker, CS_WEAPON_NAME[grenade] );
 
 
-		//cs_update_ammo( victimId, -1, s_PillageNades[i] );
-		//cs_update_ammo( attackerId, 1, s_PillageNades[i] );
+		//cs_update_ammo( victim, -1, s_PillageNades[i] );
+		//cs_update_ammo( attacker, 1, s_PillageNades[i] );
 	}
 
     return PLUGIN_HANDLED;

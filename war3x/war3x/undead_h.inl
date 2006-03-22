@@ -34,7 +34,7 @@ new FROSTNOVA_RGB[3]                =          {35,63,93};  // (integer) RGB of 
 
 // Frost Armor
 
-new UD_iFrostArmor_armor[3]         =       {110,120,130};  // (integer) Frost Armor (armor ammount)
+new UD_iFrostArmor_armor[3]         =       {110,120,130};  // (integer) Frost Armor (armor amount)
 new Float:UD_fFrostArmor_slow[3]    =       {0.1,0.2,0.3};  // (  float) Frost Armor (chance to slow)
 
 new FROSTARMOR_RGB[3]               =          {23,42,62};  // (integer) RGB of frost slow shell ( when slowed )
@@ -48,8 +48,8 @@ new FROSTARMOR_RGB[3]               =          {23,42,62};  // (integer) RGB of 
 
 // Death Coil
 
-#define DEATHCOIL_HEAL                                75    // (integer) ammount of health to give friendly undead target
-#define DEATHCOIL_DAMAGE                              60    // (integer) ammount of damage to deal living enemy target
+#define DEATHCOIL_HEAL                                75    // (integer) amount of health to give friendly undead target
+#define DEATHCOIL_DAMAGE                              60    // (integer) amount of damage to deal living enemy target
 #define DEATHCOIL_VELOCITY                         800.0    // (  float) velocity of death coil towards target
 #define DEATHCOIL_DURATION                           3.0    // (  float) life of deathcoil before removal
 
