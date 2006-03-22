@@ -280,7 +280,7 @@ public _menu_SelectRace( id, iKey ) {
 
         // Check if 0 xp
 
-        else if ( !g_PlayerInfo[id][CURRENT_XP] )
+        else if ( !g_iXPtotal[id][iKey] )
         {
             new iLevel = get_pcvar_num( CVAR_startlevel_other );
 

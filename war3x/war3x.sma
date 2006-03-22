@@ -47,7 +47,7 @@
 #pragma tabsize 0
 
 new const WAR3X_PLUGINNAME[] = "Warcraft 3: Expansion";
-new const WAR3X_VERSION[]    = "1.0";
+new const WAR3X_VERSION[]    = "v1.0.1 Official";
 new const WAR3X_DATE[]       = "03/21/2006";
 new const WAR3X_AUTHORS[]    = "Ryan, Geesu, Avanderik";
 
