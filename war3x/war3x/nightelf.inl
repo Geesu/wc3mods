@@ -6,12 +6,6 @@
 
 public Skills_Offensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) {
 
-    #if ADVANCED_DEBUG
-
-    	log_function( "public Skills_Offensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) {" );
-
-    #endif
-
     if ( g_PlayerInfo[attackerId][CURRENT_RACE] == RACE_NIGHTELF && get_user_team( attackerId ) != get_user_team( victimId ) )
     {
         // Trueshot Aura
@@ -25,12 +19,6 @@ public Skills_Offensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) 
 
 
 public Skills_Defensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) {
-
-    #if ADVANCED_DEBUG
-
-    	log_function( "public Skills_Defensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) {" );
-
-    #endif
 
     if ( g_PlayerInfo[victimId][CURRENT_RACE] == RACE_NIGHTELF )
     {
@@ -74,12 +62,6 @@ public Skills_Defensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) 
 
 
 public Ultimates_NE( casterId, targetId ) {
-
-    #if ADVANCED_DEBUG
-
-    	log_function( "public Ultimates_NE( casterId, targetId ) {" );
-
-    #endif
 
     // Rejuvenation
 
@@ -166,12 +148,6 @@ public Ultimates_NE( casterId, targetId ) {
 
 public Float:SElunes_Knife_Get( iLevel ) {
 
-    #if ADVANCED_DEBUG
-
-      log_function("public Float:SElunes_Magic_Get( iLevel ) {");
-
-    #endif
-
     new Float:fLevel = float( iLevel );
 
     if ( fLevel > LEVEL_RACIALCAP )
@@ -192,12 +168,6 @@ public Float:SElunes_Knife_Get( iLevel ) {
 
 
 public Float:SElunes_Magic_Get( iLevel ) {
-
-    #if ADVANCED_DEBUG
-
-      log_function("public Float:SElunes_Magic_Get( iLevel ) {");
-
-    #endif
 
     new Float:fLevel = float( iLevel );
 
@@ -220,12 +190,6 @@ public Float:SElunes_Magic_Get( iLevel ) {
 
 
 public SElunes_Absorb( id, iAbsorbed ) {
-
-    #if ADVANCED_DEBUG
-
-        log_function( "public SElunes_Absorb( id, iAbsorbed ) {" );
-
-    #endif
 
     if ( iAbsorbed )
     {
@@ -274,12 +238,6 @@ public SElunes_Absorb( id, iAbsorbed ) {
 
 public SBlessing_Speed_Set( id, iWeaponId ) {
 
-    #if ADVANCED_DEBUG
-
-    	log_function( "public SBlessing_Speed_Set( id, iWeaponId ) {" );
-
-    #endif
-
     // Check if restricted
 
     if ( !WAR3_skill_enabled( id, RACE_NIGHTELF, SKILL_2 ) )
@@ -312,9 +270,6 @@ public SBlessing_Speed_Set( id, iWeaponId ) {
 // Trueshot Aura
 
 public STrueshotAura( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot ) {
-#if ADVANCED_DEBUG
-	log_function("public STrueshotAura( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot ) {");
-#endif
 
     // Check if restricted
 
@@ -343,9 +298,6 @@ public STrueshotAura( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot ) {
 // Evasion
 
 public SEvasion( attackerId, victimId, weaponId, iDamage, headshot ) {
-#if ADVANCED_DEBUG
-	log_function("public SEvasion( attackerId, victimId, weaponId, iDamage, headshot ) {");
-#endif
 
     // Player dies to Teammates / fall with evade
 
@@ -423,9 +375,6 @@ public SEvasion( attackerId, victimId, weaponId, iDamage, headshot ) {
 
 
 public SEvasion_Check( id ) {
-#if ADVANCED_DEBUG
-	log_function("public SEvasion_Check( id ) {");
-#endif
 
     if ( !WAR3_skill_enabled( id, RACE_NIGHTELF, SKILL_1 ) || g_iEvasionDamage[id] >= EVASION_MAXDAMAGE )
     {
@@ -449,9 +398,6 @@ public SEvasion_Check( id ) {
 
 
 public SEvasion_ReCheck( parm_Evasion[1] ) {
-#if ADVANCED_DEBUG
-	log_function("public SEvasion_ReCheck( parm_Evasion[1] ) {");
-#endif
 
     new id = parm_Evasion[0];
 
@@ -465,9 +411,6 @@ public SEvasion_ReCheck( parm_Evasion[1] ) {
 
 
 public SEvasion_Health( id ) {
-#if ADVANCED_DEBUG
-	log_function("public SEvasion_Health( id ) {");
-#endif
 
     new iMaxHealth = 100;
 
@@ -494,9 +437,6 @@ public SEvasion_Health( id ) {
 
 
 public URoot_Cast( casterId, targetId ) {
-#if ADVANCED_DEBUG
-	log_function("public URoot_Cast( casterId, targetId ) {");
-#endif
 
     g_PlayerRooted[targetId] = casterId;
 
@@ -522,9 +462,6 @@ public URoot_Cast( casterId, targetId ) {
 }
 
 public URoot_Immobilize( parmRoot[1] ) {
-#if ADVANCED_DEBUG
-	log_function("public URoot_Immobilize( parmRoot[1] ) {");
-#endif
 
     new targetId = parmRoot[0];
 
@@ -578,9 +515,6 @@ public URoot_Immobilize( parmRoot[1] ) {
 
 
 public URoot_Dot( parm[2] ) {
-#if ADVANCED_DEBUG
-	log_function("public URoot_Dot( parm[2] ) {");
-#endif
 
     new targetId = parm[0];
     new casterId = g_PlayerRooted[targetId];
@@ -657,9 +591,6 @@ public URoot_Dot( parm[2] ) {
 
 
 public URoot_CreatePlant( iTargetId, Origin[3] ) {
-#if ADVANCED_DEBUG
-	log_function("public URoot_CreatePlant( iTargetId, Origin[3] ) {");
-#endif
 
     // Select Plant Model
 
@@ -692,9 +623,6 @@ public URoot_CreatePlant( iTargetId, Origin[3] ) {
 
 
 public URoot_Effects( targetId ) {
-#if ADVANCED_DEBUG
-	log_function("public URoot_Effects( targetId ) {");
-#endif
 
     new x1, y1, x2, y2;
     new iRadius = 20, iCounter = 0;
@@ -821,9 +749,6 @@ public URoot_Effects( targetId ) {
 
 
 public URoot_Remove( id ) {
-#if ADVANCED_DEBUG
-	log_function("public URoot_Remove( id ) {");
-#endif
 
     new TaskId = TASK_ROOT + id;
     remove_task( TaskId, 0 );
@@ -844,9 +769,6 @@ public URoot_Remove( id ) {
 
 
 public USstrike_Cast( casterId, targetId ) {
-#if ADVANCED_DEBUG
-	log_function("public USstrike_Cast( casterId, targetId ) {");
-#endif
 
     // Play Sound
 
@@ -933,9 +855,6 @@ public USstrike_Cast( casterId, targetId ) {
 
 
 public USstrike_Dot( parm_Dot[3] ) {
-#if ADVANCED_DEBUG
-	log_function("public USstrike_Dot( parm_Dot[3] ) {");
-#endif
 
     new casterId = parm_Dot[0];
     new targetId = parm_Dot[1];
@@ -983,9 +902,6 @@ public USstrike_Dot( parm_Dot[3] ) {
 
 
 public USstrike_Remove( targetId ) {
-#if ADVANCED_DEBUG
-	log_function("public USstrike_Remove( targetId ) {");
-#endif
 
     new casterId = g_PlayerStruck[targetId];
 
@@ -1007,9 +923,6 @@ public USstrike_Remove( targetId ) {
 
 
 public URejuv_Cast( casterId, targetId ) {
-#if ADVANCED_DEBUG
-	log_function("public URejuv_Cast( casterId, targetId ) {");
-#endif
 
     g_PlayerRejuv[targetId] = casterId;
 
@@ -1048,9 +961,6 @@ public URejuv_Cast( casterId, targetId ) {
 
 
 public URejuv_Effects( parm_Effects[2] ) {             // Shared Effect(s)
-#if ADVANCED_DEBUG
-	log_function("public URejuv_Effects( parm_Effects[2] ) {             // Shared Effect(s)");
-#endif
 
     new targetId = parm_Effects[0];
     new iCounter = parm_Effects[1];
@@ -1119,9 +1029,6 @@ public URejuv_Effects( parm_Effects[2] ) {             // Shared Effect(s)
 
 
 public URejuv_Hot( parmHot[3] ) {              // Heal-Over Time
-#if ADVANCED_DEBUG
-	log_function("public URejuv_Hot( parmHot[3] ) {              // Heal-Over Time");
-#endif
 
     new casterId = parmHot[0];
     new targetId = parmHot[1];
@@ -1191,9 +1098,6 @@ public URejuv_Hot( parmHot[3] ) {              // Heal-Over Time
 
 
 public URejuv_Remove( iTargetId ) {                    // Remove
-#if ADVANCED_DEBUG
-	log_function("public URejuv_Remove( iTargetId ) {                    // Remove");
-#endif
 
     new iCasterId = g_PlayerRejuv[iTargetId];
 

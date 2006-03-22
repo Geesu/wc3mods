@@ -4,9 +4,6 @@
 
 
 public Glow_Set( id, Float:fGlowTime, iRGB[3], iAmmount ) {
-#if ADVANCED_DEBUG
-	log_function("public Glow_Set( id, Float:fGlowTime, iRGB[3], iAmmount ) {");
-#endif
 
     if ( g_iPlayerAvatar[id] || g_bPlayerAvatarGrow[id] || g_bPlayerSleeping[id] )
         return PLUGIN_HANDLED;
@@ -33,9 +30,6 @@ public Glow_Set( id, Float:fGlowTime, iRGB[3], iAmmount ) {
 
 
 public Glow_Fade( parm_Fade[3] ) {
-#if ADVANCED_DEBUG
-	log_function("public Glow_Fade( parm_Fade[3] ) {");
-#endif
 
     new id       = parm_Fade[GLOW_ID];
     new iAmmount = parm_Fade[GLOW_AMMOUNT];
@@ -72,9 +66,6 @@ public Glow_Fade( parm_Fade[3] ) {
 
 
 public Glow_Remove( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Glow_Remove( id ) {");
-#endif
 
     g_bPlayerGlowing[id] = false;
 
@@ -100,9 +91,6 @@ public Glow_Remove( id ) {
 // Get max health
 
 public WAR3_get_maxhealth( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_get_maxhealth( id ) {");
-#endif
 
     new iMaxHealth = 100;
 
@@ -125,9 +113,6 @@ public WAR3_get_maxhealth( id ) {
 // Get min health
 
 public WAR3_get_minhealth( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_get_minhealth( id ) {");
-#endif
 
     new iMinHealth = 0;
 
@@ -141,13 +126,6 @@ public WAR3_get_minhealth( id ) {
 // Get max armor
 
 public WAR3_get_maxarmor( id ) {
-
-    #if ADVANCED_DEBUG
-
-    	log_function("public WAR3_get_maxarmor( id ) {");
-
-    #endif
-
 
     new iMaxArmor = 100;
 
@@ -186,9 +164,6 @@ public WAR3_get_maxarmor( id ) {
 // Check max armor
 
 public WAR3_check_armor( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_check_armor( id ) {");
-#endif
 
     if ( get_user_armor( id ) > WAR3_get_maxarmor( id ) )
         set_user_armor( id, WAR3_get_maxarmor( id ) );
@@ -200,9 +175,6 @@ public WAR3_check_armor( id ) {
 // Check Max Health
 
 public WAR3_check_health( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_check_health( id ) {");
-#endif
 
     if ( get_user_health( id ) > WAR3_get_maxhealth( id ) )
         set_user_health( id, WAR3_get_maxhealth( id ) );
@@ -214,9 +186,6 @@ public WAR3_check_health( id ) {
 // Enable Armor Skill
 
 public WAR3_armorskill_on( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_armorskill_on( id ) {");
-#endif
 
     if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD && g_PlayerInfo[id][CURRENT_SKILL3] )
     {
@@ -320,9 +289,6 @@ public WAR3_armorskill_on( id ) {
 // Disable Armor Skill
 
 public WAR3_armorskill_off( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_armorskill_off( id ) {");
-#endif
 
     new szMessage[128];
 
@@ -353,9 +319,6 @@ public WAR3_armorskill_off( id ) {
 // Give bonus health
 
 public WAR3_set_health( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_set_health( id ) {");
-#endif
 
     if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN )
         SFortitude_Set( id );
@@ -367,9 +330,6 @@ public WAR3_set_health( id ) {
 // Invisibility set ( shared )
 
 public Invis_Set( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Invis_Set( id ) {");
-#endif
 
     new parmInvis[1];
     parmInvis[0] = id;
@@ -381,9 +341,6 @@ public Invis_Set( id ) {
 
 
 public _Invis_Set( parm_Invis[1] ) {
-#if ADVANCED_DEBUG
-	log_function("public _Invis_Set( parm_Invis[1] ) {");
-#endif
 
     new id = parm_Invis[0];
 
@@ -435,9 +392,6 @@ public _Invis_Set( parm_Invis[1] ) {
 
 
 public Invis_Remove( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Invis_Remove( id ) {");
-#endif
 
     if ( !g_bPlayerGlowing[id] && !g_bPlayerSleeping[id] && !g_iPlayerAvatar[id] )
         set_user_rendering( id );
@@ -451,9 +405,6 @@ public Invis_Remove( id ) {
 
 
 public Invis_Cooldown( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Invis_Cooldown( id ) {");
-#endif
 
     if ( ( g_PlayerInfo[id][CURRENT_RACE] != RACE_HUMAN || ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && !g_PlayerInfo[id][CURRENT_SKILL1] ) ) && g_PlayerInfo[id][CURRENT_ITEM] != ITEM_CLOAK )
         return PLUGIN_HANDLED;
@@ -482,9 +433,6 @@ public Invis_Cooldown( id ) {
 
 
 public Invis_Icon( id, iStatus ) {
-#if ADVANCED_DEBUG
-	log_function("public Invis_Icon( id, iStatus ) {");
-#endif
 
     // Make sure server enabled
 
@@ -506,9 +454,6 @@ public Invis_Icon( id, iStatus ) {
 
 
 public Immobilize_Remove( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Immobilize_Remove( id ) {");
-#endif
 
     if ( !g_bPlayerBashed[id] && !g_PlayerRooted[id] && !g_bPlayerSleeping[id] && !g_bPlayerAvatarGrow[id] )
         g_bPlayerCantMove[id] = false;
@@ -518,9 +463,6 @@ public Immobilize_Remove( id ) {
 
 
 public Slow_Remove( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Slow_Remove( id ) {");
-#endif
 
     if ( !g_bPlayerFrosted[id] && !g_PlayerStruck[id] && !g_bPlayerNova[id] )
         g_bPlayerSlowed[id] = false;
@@ -533,9 +475,6 @@ public Slow_Remove( id ) {
 
 public Dispell_Negative( dispellerId, targetId )
 {
-#if ADVANCED_DEBUG
-	log_function("public Dispell_Negative( dispellerId, targetId )");
-#endif
     new szMessage[128], szPlayerName[32];
     get_user_name( dispellerId, szPlayerName, 31 );
 
@@ -624,9 +563,6 @@ public Dispell_Negative( dispellerId, targetId )
 
 public Dispell_Positive( dispellerId, targetId )
 {
-#if ADVANCED_DEBUG
-	log_function("public Dispell_Positive( dispellerId, targetId )");
-#endif
     if ( g_PlayerRejuv[targetId] )             // Rejuvenation
         URejuv_Remove( targetId );
 
@@ -643,9 +579,6 @@ public Dispell_Positive( dispellerId, targetId )
 // Remove Dispell (UNUSED ATM)
 
 public Dispell_Remove( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Dispell_Remove( id ) {");
-#endif
 
     if ( !g_bPlayerRespawned[id] )
     {
@@ -669,9 +602,6 @@ public Dispell_Remove( id ) {
 
 
 public Set_PlayerBackpack( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Set_PlayerBackpack( id ) {");
-#endif
 
     if ( id == g_Vip || g_iCurrentRound < 1 )
         return PLUGIN_HANDLED;
@@ -760,9 +690,6 @@ public Set_PlayerBackpack( id ) {
 // Set player speed
 
 public WAR3_set_speed( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_set_speed( id ) {");
-#endif
 
     new parmSpeed[1];
     parmSpeed[0] = id;
@@ -774,9 +701,6 @@ public WAR3_set_speed( id ) {
 
 
 public _WAR3_set_speed( parm_Speed[1] ) {
-#if ADVANCED_DEBUG
-	log_function("public _WAR3_set_speed( parm_Speed[1] ) {");
-#endif
 
     new id = parm_Speed[0];
 
@@ -913,9 +837,6 @@ public _WAR3_set_speed( parm_Speed[1] ) {
 // Activate all skills (round start/spend skill)
 
 public WAR3_enable_skills( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_enable_skills( id ) {");
-#endif
 
     new parm_Skills[1];
     parm_Skills[0] = id;
@@ -960,9 +881,6 @@ public WAR3_enable_skills( id ) {
 // Actions to perform on victim
 
 public WAR3_death_victim( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_death_victim( id ) {");
-#endif
 
     // XP Actions
 
@@ -1031,9 +949,6 @@ public WAR3_death_victim( id ) {
 
 
 public Ankh_DropItems( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Ankh_DropItems( id ) {");
-#endif
 
     if ( id == g_Vip )
     {
@@ -1133,9 +1048,6 @@ public Ankh_DropItems( id ) {
 
 
 public Ankh_GiveItems( parm_Ankh[1] ) {
-#if ADVANCED_DEBUG
-	log_function("public Ankh_GiveItems( parm_Ankh[1] ) {");
-#endif
 
     new id = parm_Ankh[0];
 
@@ -1303,9 +1215,6 @@ public Ankh_GiveItems( parm_Ankh[1] ) {
 
 
 public Purge_Death( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Purge_Death( id ) {");
-#endif
 
     // Common Purges
 
@@ -1333,9 +1242,6 @@ public Purge_Death( id ) {
 
 
 public Purge_FreezeStart() {
-#if ADVANCED_DEBUG
-	log_function("public Purge_FreezeStart() {");
-#endif
 
     // Remove Duplicate Start Timers
 
@@ -1365,9 +1271,6 @@ public Purge_FreezeStart() {
 
 
 public Purge_NewRound( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Purge_NewRound( id ) {");
-#endif
 
     // Common Purges
 
@@ -1387,9 +1290,6 @@ public Purge_NewRound( id ) {
 
 
 public Purge_Common( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Purge_Common( id ) {");
-#endif
 
     // Ultimate / Skill Effects
 
@@ -1496,9 +1396,6 @@ public Purge_Common( id ) {
 
 
 public Purge_PlayerInfo( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Purge_PlayerInfo( id ) {");
-#endif
 
     if ( g_Vip == id )
         g_Vip = 0;
@@ -1545,9 +1442,6 @@ public Purge_PlayerInfo( id ) {
 // Enable / Disable Warcraft 3
 
 public WAR3_toggle( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_toggle( id ) {");
-#endif
 
     if ( !( get_user_flags( id ) & ADMIN_RCON ) )
     {
@@ -1574,9 +1468,6 @@ public WAR3_toggle( id ) {
 
 
 public WAR3_enable( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_enable( id ) {");
-#endif
 
     if ( g_bWar3xEnabled )
     {
@@ -1601,9 +1492,6 @@ public WAR3_enable( id ) {
 
 
 public WAR3_disable( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_disable( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
     {
@@ -1663,9 +1551,6 @@ public WAR3_disable( id ) {
 // War3 Vote
 
 public WAR3_vote_start( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_vote_start( id ) {");
-#endif
 
     if ( !get_cvar_num( "war3x_vote_allow" ) && !( get_user_flags( id ) & ADMIN_VOTE ) )
     {
@@ -1719,9 +1604,6 @@ public WAR3_vote_start( id ) {
 
 
 public WAR3_vote_count( id, iKey ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_vote_count( id, iKey ) {");
-#endif
 
     if ( get_cvar_float( "amx_vote_answers" ) )
     {
@@ -1738,9 +1620,6 @@ public WAR3_vote_count( id, iKey ) {
 
 
 public WAR3_vote_tally() {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_vote_tally() {");
-#endif
 
     new szWar3Status[32];
     new Players[32], iTotalPlayers;
@@ -1801,9 +1680,6 @@ public WAR3_vote_tally() {
 
 
 public War3x_GenerateHelp( id ) {
-#if ADVANCED_DEBUG
-	log_function("public War3x_GenerateHelp( id ) {");
-#endif
 
     // Generate files
 
@@ -1821,9 +1697,6 @@ public War3x_GenerateHelp( id ) {
 
 
 public War3x_CheckLevel( id, iOldXp, iNewXp ) {
-#if ADVANCED_DEBUG
-	log_function("public War3x_CheckLevel( id, iOldXp, iNewXp ) {");
-#endif
 
     if ( WAR3_get_level( iOldXp ) < WAR3_get_level( iNewXp ) )
     {
@@ -1854,9 +1727,6 @@ public War3x_CheckLevel( id, iOldXp, iNewXp ) {
 
 
 public War3x_CheckSkills( id ) {
-#if ADVANCED_DEBUG
-	log_function("public War3x_CheckSkills( id ) {");
-#endif
 
     new Ultimate = 0;
 
@@ -1877,9 +1747,6 @@ public War3x_CheckSkills( id ) {
 
 
 public War3x_StoreSession( id, iRaceId ) {
-#if ADVANCED_DEBUG
-	log_function("public War3x_StoreSession( id, iRaceId ) {");
-#endif
 
     g_PlayerInfo[id][CURRENT_RACE] = iRaceId + 1;
 
@@ -1906,9 +1773,6 @@ public War3x_StoreSession( id, iRaceId ) {
 // Check if skill is available to get
 
 public War3x_GetSkillCheck( iLevel, iSkillLevel ) {
-#if ADVANCED_DEBUG
-	log_function("public War3x_GetSkillCheck( iLevel, iSkillLevel ) {");
-#endif
 
     if ( iSkillLevel > TOTAL_SKILLLEVELS )
         return ( 0 );
@@ -1930,9 +1794,6 @@ public War3x_GetSkillCheck( iLevel, iSkillLevel ) {
 // Map Start event
 
 public WAR3_map_start() {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_map_start() {");
-#endif
 
     if ( !get_cvar_num( "war3x_enabled" ) )
         return PLUGIN_HANDLED;
@@ -2007,9 +1868,6 @@ public WAR3_map_start() {
 // Check if Map is Restricted to Short-Term XP
 
 public Map_Restricted() {
-#if ADVANCED_DEBUG
-	log_function("public Map_Restricted() {");
-#endif
 
     new szRestrictFile[64];
     format( szRestrictFile, 63, "%s/short_term_maps.cfg", WAR3X_DIR );
@@ -2037,9 +1895,6 @@ public Map_Restricted() {
 
 
 public Map_Disabled() {
-#if ADVANCED_DEBUG
-	log_function("public Map_Disabled() {");
-#endif
 
     new szDisabledFile[64];
     format( szDisabledFile, 63, "%s/disabled_maps.cfg", WAR3X_DIR );
@@ -2067,9 +1922,6 @@ public Map_Disabled() {
 
 
 public Check_BombDeath( parm_Bomb[1] ) {
-#if ADVANCED_DEBUG
-	log_function("public Check_BombDeath( parm_Bomb[1] ) {");
-#endif
 
     new id = parm_Bomb[0];
 
@@ -2088,9 +1940,6 @@ public Check_BombDeath( parm_Bomb[1] ) {
 // Save Me!
 
 public Icon_SaveMe( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Icon_SaveMe( id ) {");
-#endif
 
     if ( !is_user_alive( id ) )
     {
@@ -2123,9 +1972,6 @@ public Icon_SaveMe( id ) {
 
 
 public Icon_SaveMe_Draw( iVictimId ) {
-#if ADVANCED_DEBUG
-	log_function("public Icon_SaveMe_Draw( iVictimId ) {");
-#endif
 
     new TeamPlayers[32], iTotalPlayers;
     new szTeamName[16];
@@ -2166,12 +2012,6 @@ public Icon_SaveMe_Draw( iVictimId ) {
 
 public Icon_SaveMe_Undraw( id ) {
 
-    #if ADVANCED_DEBUG
-
-    	log_function("public Icon_SaveMe_Draw( iVictimId ) {");
-
-    #endif
-
     new TeamPlayers[32], iTotalPlayers;
     new szTeamName[16];
 
@@ -2202,9 +2042,6 @@ public Icon_SaveMe_Undraw( id ) {
 // Dispell Me!
 
 public Icon_DispellMe( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Icon_DispellMe( id ) {");
-#endif
 
     if ( g_PlayerOptions[id][OPTION_HEALICONS] )
         return PLUGIN_HANDLED;
@@ -2232,9 +2069,6 @@ public Icon_DispellMe( id ) {
 
 
 public Icon_DispellMe_Draw( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Icon_DispellMe_Draw( id ) {");
-#endif
 
     if ( g_PlayerOptions[id][OPTION_HEALICONS] )
         return PLUGIN_HANDLED;
@@ -2268,9 +2102,6 @@ public Icon_DispellMe_Draw( id ) {
 // Item Descriptions ( returns number of parameters )
 
 public ItemHelp_GetValues( iItemNum, szValue[32] ) {
-#if ADVANCED_DEBUG
-	log_function("public ItemHelp_GetValues( iItemNum, szValue[32] ) {");
-#endif
 
     switch ( iItemNum )
     {
@@ -2332,9 +2163,6 @@ public ItemHelp_GetValues( iItemNum, szValue[32] ) {
 // Skill Descriptions ( returns number of parameters )
 
 public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
-#if ADVANCED_DEBUG
-	log_function("public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {");
-#endif
 
     switch ( iRaceId + 1 )
     {
@@ -2554,9 +2382,6 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 // omg this crap is so sloppy right now. oh well.
 
 public SkillHelp_MakeFile() {
-#if ADVANCED_DEBUG
-	log_function("public SkillHelp_MakeFile() {");
-#endif
 
     new szFileName[64], szText[256];
 
@@ -2681,9 +2506,6 @@ public SkillHelp_MakeFile() {
 
 
 public SkillHelp_Racial( iRaceNum, szDescription[256], iLevel ) {
-#if ADVANCED_DEBUG
-	log_function("public SkillHelp_Racial( iRaceNum, szDescription[256], iLevel ) {");
-#endif
 
     // Grab skill description template
 
@@ -2746,9 +2568,6 @@ public SkillHelp_Racial( iRaceNum, szDescription[256], iLevel ) {
 
 
 public SkillHelp_Skills( iRaceNum, iSkillNum, szDescription[256], iLevel ) {
-#if ADVANCED_DEBUG
-	log_function("public SkillHelp_Skills( iRaceNum, iSkillNum, szDescription[256], iLevel ) {");
-#endif
 
     // Grab skill description template
 
@@ -2816,9 +2635,6 @@ public SkillHelp_Skills( iRaceNum, iSkillNum, szDescription[256], iLevel ) {
 
 
 public SkillHelp_Ultimate( iRaceNum, iUltimateNum, szDescription[256] ) {
-#if ADVANCED_DEBUG
-	log_function("public SkillHelp_Ultimate( iRaceNum, iUltimateNum, szDescription[256] ) {");
-#endif
 
     // Grab skill description template
 
@@ -2856,9 +2672,6 @@ public SkillHelp_Ultimate( iRaceNum, iUltimateNum, szDescription[256] ) {
 
 
 public Get_SkillName( iRaceId, iSkillNum, szSkillName[32] ) {
-#if ADVANCED_DEBUG
-	log_function("public Get_SkillName( iRaceId, iSkillNum, szSkillName[32] ) {");
-#endif
 
     switch ( iRaceId + 1 )
     {
@@ -2875,9 +2688,6 @@ public Get_SkillName( iRaceId, iSkillNum, szSkillName[32] ) {
 // Generic Healing Effect
 
 public Shared_Heal_Effect( iTargetId ) {             // Shared Effect(s)
-#if ADVANCED_DEBUG
-	log_function("public Shared_Heal_Effect( iTargetId ) {             // Shared Effect(s)");
-#endif
 
     // Flutters!
 
@@ -2933,9 +2743,6 @@ public Shared_Heal_Effect( iTargetId ) {             // Shared Effect(s)
 // Level / Rank hud message
 
 public WAR3_hud_level( id ) {
-#if ADVANCED_DEBUG
-	log_function("public WAR3_hud_level( id ) {");
-#endif
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
@@ -2975,9 +2782,6 @@ public WAR3_hud_level( id ) {
 // Skill Info Messages
 
 public war3_chatskills( id, raceId, ShowHelp ) {
-#if ADVANCED_DEBUG
-	log_function("public war3_chatskills( id, raceId, ShowHelp ) {");
-#endif
 
     // VIP Skills and/or Ultimates Disabled
 

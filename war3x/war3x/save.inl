@@ -25,7 +25,7 @@ public Get_SaveId( id ) {
 // Retrieve Player XP from Database
 
 public Retrieve_Xp( id ) {
-	
+
 
 	if ( get_cvar_num("war3x_save_xp_sql") == 1 )
 	{
@@ -522,9 +522,6 @@ public Store_Queue_CurDate( szSaveId[32] ) {
 // Add Player to Save Queue
 
 public Queue_Add( id, iArrayIndex, szSaveId[32] ) {
-#if ADVANCED_DEBUG
-	log_function("public Queue_Add( id, iArrayIndex, szSaveId[32] ) {");
-#endif
 
     // Copy Authid to the SaveQueue Authid Array
 
@@ -565,9 +562,6 @@ public Queue_Add( id, iArrayIndex, szSaveId[32] ) {
 // Returns Array Index if szSaveId found in Queue Array
 
 public Queue_Check( szSaveId[32] ) {
-#if ADVANCED_DEBUG
-	log_function("public Queue_Check( szSaveId[32] ) {");
-#endif
 
     for ( new iArrayIndex = 0; iArrayIndex < TOTAL_QUEUES; iArrayIndex++ )
     {

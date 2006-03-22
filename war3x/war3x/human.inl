@@ -3,9 +3,6 @@
 
 
 public Skills_Offensive_HU( attackerId, victimId, weaponId, iDamage, headshot ) {
-#if ADVANCED_DEBUG
-	log_function("public Skills_Offensive_HU( attackerId, victimId, weaponId, iDamage, headshot ) {");
-#endif
 
     if ( g_PlayerInfo[attackerId][CURRENT_RACE] == RACE_HUMAN && get_user_team( attackerId ) != get_user_team( victimId ) && get_user_health( victimId ) > 0 )
     {
@@ -25,9 +22,6 @@ public Skills_Offensive_HU( attackerId, victimId, weaponId, iDamage, headshot ) 
 
 
 public Skills_Defensive_HU( victimId ) {
-#if ADVANCED_DEBUG
-	log_function("public Skills_Defensive_HU( victimId ) {");
-#endif
 
     if ( g_PlayerInfo[victimId][CURRENT_RACE] == RACE_HUMAN )
     {
@@ -39,9 +33,6 @@ public Skills_Defensive_HU( victimId ) {
 
 
 public Ultimates_HU( Caster, Target ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimates_HU( Caster, Target ) {");
-#endif
 
     // Holy Light
 
@@ -127,9 +118,6 @@ public Ultimates_HU( Caster, Target ) {
 // Fortitude
 
 public SFortitude_Get( iLevel ) {
-#if ADVANCED_DEBUG
-	log_function("public SFortitude_Get( iLevel ) {");
-#endif
 
     new Float:fLevel = float( iLevel );
 
@@ -144,9 +132,6 @@ public SFortitude_Get( iLevel ) {
 
 
 public SFortitude_Set( id ) {
-#if ADVANCED_DEBUG
-	log_function("public SFortitude_Set( id ) {");
-#endif
 
     // Check if restricted
 
@@ -168,9 +153,6 @@ public SFortitude_Set( id ) {
 // Invisibility
 
 public SInvis_Set( id ) {
-#if ADVANCED_DEBUG
-	log_function("public SInvis_Set( id ) {");
-#endif
 
     g_bPlayerInvis[id] = true;
 
@@ -195,9 +177,6 @@ public SInvis_Set( id ) {
 
 
 public _SInvis_Shift( parmInvis[1] ) {
-#if ADVANCED_DEBUG
-	log_function("public _SInvis_Shift( parmInvis[1] ) {");
-#endif
 
     new id = parmInvis[0];
 
@@ -240,9 +219,6 @@ public _SInvis_Shift( parmInvis[1] ) {
 // Bash
 
 public SBash( iAttackerId, iVictimId, iWeaponId, iHeadshot ) {
-#if ADVANCED_DEBUG
-	log_function("public SBash( iAttackerId, iVictimId, iWeaponId, iHeadshot ) {");
-#endif
 
     // Check if restricted
 
@@ -304,9 +280,6 @@ public SBash( iAttackerId, iVictimId, iWeaponId, iHeadshot ) {
 
 
 public SBash_Stun( id, Float:fDuration ) {
-#if ADVANCED_DEBUG
-	log_function("public SBash_Stun( id ) {");
-#endif
 
     g_bPlayerBashed[id] = true;
     g_bPlayerCantMove[id] = true;
@@ -326,9 +299,6 @@ public SBash_Stun( id, Float:fDuration ) {
 
 
 public SBash_Remove( parm_Stun[1] ) {
-#if ADVANCED_DEBUG
-	log_function("public SBash_Remove( parm_Stun[1] ) {");
-#endif
 
     new id = parm_Stun[0];
 
@@ -347,9 +317,6 @@ public SBash_Remove( parm_Stun[1] ) {
 // Inner Fire
 
 public SInnerFire( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot ) {
-#if ADVANCED_DEBUG
-	log_function("public SInnerFire( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot ) {");
-#endif
 
     // Check if restricted
 
@@ -381,9 +348,6 @@ public SInnerFire( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot ) {
 // Healing Version
 
 public UHolyLight_Heal( iCasterId, iTargetId ) {
-#if ADVANCED_DEBUG
-	log_function("public UHolyLight_Heal( iCasterId, iTargetId ) {");
-#endif
 
     // Play Sound
 
@@ -438,9 +402,6 @@ public UHolyLight_Heal( iCasterId, iTargetId ) {
 // Damage Version
 
 public UHolyLight_Dmg( Caster, Target ) {
-#if ADVANCED_DEBUG
-	log_function("public UHolyLight_Dmg( Caster, Target ) {");
-#endif
 
     // Play Sound
 
@@ -498,9 +459,6 @@ public UHolyLight_Dmg( Caster, Target ) {
 // Effect
 
 public UHolyLight_Effects( Target ) {
-#if ADVANCED_DEBUG
-	log_function("public UHolyLight_Effects( Target ) {");
-#endif
 
     new Origin[3], Radius[3];
 
@@ -540,9 +498,6 @@ public UHolyLight_Effects( Target ) {
 
 
 public UFstrike_Init( Caster, Target ) {
-#if ADVANCED_DEBUG
-	log_function("public UFstrike_Init( Caster, Target ) {");
-#endif
 
     // Play Sound
 
@@ -561,9 +516,6 @@ public UFstrike_Init( Caster, Target ) {
 // Cast Flame Strike
 
 public UFstrike_Cast( parmCast[2] ) {
-#if ADVANCED_DEBUG
-	log_function("public UFstrike_Cast( parmCast[2] ) {");
-#endif
 
     new Caster = parmCast[0];
     new Target = parmCast[1];
@@ -617,9 +569,6 @@ public UFstrike_Cast( parmCast[2] ) {
 // Fire Check
 
 public UFstrike_Check( parmCheck[5] ) {
-#if ADVANCED_DEBUG
-	log_function("public UFstrike_Check( parmCheck[5] ) {");
-#endif
 
     new Caster   = parmCheck[0];
     new iCounter = parmCheck[1];
@@ -681,9 +630,6 @@ public UFstrike_Check( parmCheck[5] ) {
 // Fire Damage
 
 public UFstrike_FireDmg( parmDot[5] ) {
-#if ADVANCED_DEBUG
-	log_function("public UFstrike_FireDmg( parmDot[5] ) {");
-#endif
 
     new Caster = parmDot[0];
     new Victim = parmDot[1];
@@ -733,9 +679,6 @@ public UFstrike_FireDmg( parmDot[5] ) {
 // Fire Task
 
 public UFstrike_OnFire( parmDot[5] ) {
-#if ADVANCED_DEBUG
-	log_function("public UFstrike_OnFire( parmDot[5] ) {");
-#endif
 
     new Caster = parmDot[0];
     new Victim = parmDot[1];
@@ -775,9 +718,6 @@ public UFstrike_OnFire( parmDot[5] ) {
 // Singe Damage
 
 public UFstrike_Singe( parmSinge[3] ) {
-#if ADVANCED_DEBUG
-	log_function("public UFstrike_Singe( parmSinge[3] ) {");
-#endif
 
     new Caster   = parmSinge[0];
     new Victim   = parmSinge[1];
@@ -821,9 +761,6 @@ public UFstrike_Singe( parmSinge[3] ) {
 // Remove
 
 public UFstrike_Remove( Victim ) {
-#if ADVANCED_DEBUG
-	log_function("public UFstrike_Remove( Victim ) {");
-#endif
 
     g_PlayerOnFire[Victim]   = 0;
     g_PlayerSingeing[Victim] = 0;
@@ -840,9 +777,6 @@ public UFstrike_Remove( Victim ) {
 // Flame Pillar Effects
 
 public UFstrike_Effects( Origin[3] ) {
-#if ADVANCED_DEBUG
-	log_function("public UFstrike_Effects( Origin[3] ) {");
-#endif
 
     Origin[2] -= 5;
 
@@ -938,9 +872,6 @@ public UFstrike_Effects( Origin[3] ) {
 
 
 public UAvatar_Cast( cIndex ) {
-#if ADVANCED_DEBUG
-	log_function("public UAvatar_Cast( cIndex ) {");
-#endif
 
     g_bPlayerCantMove[cIndex] = true;
     g_bPlayerAvatarGrow[cIndex] = true;
@@ -980,9 +911,6 @@ public UAvatar_Cast( cIndex ) {
 
 
 public UAvatar_Grow( parmGrow[2] ) {
-#if ADVANCED_DEBUG
-	log_function("public UAvatar_Grow( parmGrow[2] ) {");
-#endif
 
     new pIndex = parmGrow[0];
     new iCounter = parmGrow[1];
@@ -1025,9 +953,6 @@ public UAvatar_Grow( parmGrow[2] ) {
 
 
 public UAvatar_Immunity( pIndex ) {
-#if ADVANCED_DEBUG
-	log_function("public UAvatar_Immunity( pIndex ) {");
-#endif
 
     g_bPlayerAvatarGrow[pIndex] = false;
     g_iPlayerAvatar[pIndex] = get_user_health( pIndex );
@@ -1053,9 +978,6 @@ public UAvatar_Immunity( pIndex ) {
 
 
 public UAvatar_Shrink( parmShrink[3] ) {
-#if ADVANCED_DEBUG
-	log_function("public UAvatar_Shrink( parmShrink[3] ) {");
-#endif
 
     new pIndex = parmShrink[0];
     new iCounter = parmShrink[1];
@@ -1102,9 +1024,6 @@ public UAvatar_Shrink( parmShrink[3] ) {
 
 
 public UAvatar_Finished( pIndex ) {
-#if ADVANCED_DEBUG
-	log_function("public UAvatar_Finished( pIndex ) {");
-#endif
 
     // Status Text
 
@@ -1136,9 +1055,6 @@ public UAvatar_Finished( pIndex ) {
 
 
 public UAvatar_Damage( aIndex, vIndex, wIndex, iHeadshot ) {
-#if ADVANCED_DEBUG
-	log_function("public UAvatar_Damage( aIndex, vIndex, wIndex, iHeadshot ) {");
-#endif
 
     // Add to bonus damage array
 
@@ -1157,9 +1073,6 @@ public UAvatar_Damage( aIndex, vIndex, wIndex, iHeadshot ) {
 
 
 public UAvatar_Remove( pIndex ) {
-#if ADVANCED_DEBUG
-	log_function("public UAvatar_Remove( pIndex ) {");
-#endif
 
     g_bPlayerAvatarGrow[pIndex] = false;
     g_iPlayerAvatar[pIndex] = 0;

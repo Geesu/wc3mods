@@ -16,9 +16,6 @@
 // Buy Normal Item
 
 public Item_Buy( id, iNewItem ) {
-#if ADVANCED_DEBUG
-	log_function("public Item_Buy( id, iNewItem ) {");
-#endif
 
     new iOldItem = g_PlayerInfo[id][CURRENT_ITEM];
 
@@ -100,9 +97,6 @@ public Item_Buy( id, iNewItem ) {
 // Buy Tome function
 
 public Item_BuyTome( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Item_BuyTome( id ) {");
-#endif
 
     // Level 10 ( no bonus )
 
@@ -144,9 +138,6 @@ public Item_BuyTome( id ) {
 
 
 public Item_Equip( id, iNewItem ) {
-#if ADVANCED_DEBUG
-	log_function("public Item_Equip( id, iNewItem ) {");
-#endif
 
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
@@ -284,9 +275,6 @@ public Item_Equip( id, iNewItem ) {
 
 
 public Item_Change( id, iOldItem, iNewItem ) {
-#if ADVANCED_DEBUG
-	log_function("public Item_Change( id, iOldItem, iNewItem ) {");
-#endif
 
     // Remove Speed Bonus if New Item is not Boots
 
@@ -346,9 +334,6 @@ public Item_Change( id, iOldItem, iNewItem ) {
 
 
 public Item_Create( id, iItemNum ) {
-#if ADVANCED_DEBUG
-	log_function("public Item_Create( id, iItemNum ) {");
-#endif
 
     new Float:fOrigin[3];
     entity_get_vector( id, EV_VEC_origin, fOrigin );
@@ -373,9 +358,6 @@ public Item_Create( id, iItemNum ) {
 
 
 public Item_Drop( id ) {
-#if ADVANCED_DEBUG
-	log_function("public Item_Drop( id ) {");
-#endif
 
     if ( !g_PlayerInfo[id][CURRENT_ITEM] )
     {
@@ -417,9 +399,6 @@ public Item_Drop( id ) {
 
 
 public Item_Pickup( id, iItemEnt, iNewItem ) {
-#if ADVANCED_DEBUG
-	log_function("public Item_Pickup( id, iItemEnt, iNewItem ) {");
-#endif
 
     // Check if restricted
 
@@ -450,9 +429,6 @@ public Item_Pickup( id, iItemEnt, iNewItem ) {
 
 
 public Item_DropDead( id, iItemNum ) {
-#if ADVANCED_DEBUG
-	log_function("public Item_DropDead( id, iItemNum ) {");
-#endif
 
     // Create Item
 
@@ -479,9 +455,6 @@ public Item_DropDead( id, iItemNum ) {
 // Claws of Attack +6
 
 public IClaws_Damage( iAttackerId, iVictimId, iWeaponId, iHeadshot ) {
-#if ADVANCED_DEBUG
-	log_function("public IClaws_Damage( iAttackerId, iVictimId, iWeaponId, iHeadshot ) {");
-#endif
 
     // Add to bonus damage array
 
@@ -502,9 +475,6 @@ public IClaws_Damage( iAttackerId, iVictimId, iWeaponId, iHeadshot ) {
 // Cloak of Invisibility
 
 public ICloak_Set( id ) {
-#if ADVANCED_DEBUG
-	log_function("public ICloak_Set( id ) {");
-#endif
 
     g_bPlayerInvis[id] = true;
 
@@ -522,12 +492,6 @@ public ICloak_Set( id ) {
 // Amulet of Shielding
 
 public IAmulet_Block( target, caster ) {
-
-    #if ADVANCED_DEBUG
-
-    	log_function("public IAmulet_Block( cIndex, tIndex ) {");
-
-    #endif
 
     // Message
 
@@ -582,9 +546,6 @@ public IAmulet_Block( target, caster ) {
 
 public Item_Touch( iToucherId, iPlayerId )
 {
-#if ADVANCED_DEBUG
-	log_function("public Item_Touch( iToucherId, iPlayerId )");
-#endif
 
 	// Sanity checks
     if ( iPlayerId < 1 || iPlayerId > 32 || iToucherId < 1 || !is_user_alive( iPlayerId ) )

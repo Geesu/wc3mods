@@ -4,9 +4,6 @@
 
 
 public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot, Float:fDamageOrigin[3] ) {
-#if ADVANCED_DEBUG
-	log_function("public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot ) {");
-#endif
 
     if ( g_PlayerInfo[attackerId][CURRENT_RACE] == RACE_ORC && get_user_team( attackerId ) != get_user_team( victimId ) && get_user_health( victimId ) > 0 )
     {
@@ -37,9 +34,6 @@ public Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, headshot, F
 
 
 public Skills_Defensive_OR( victimId ) {
-#if ADVANCED_DEBUG
-	log_function("public Skills_Defensive_OR( victimId ) {");
-#endif
 
     if ( g_PlayerInfo[victimId][CURRENT_RACE] == RACE_ORC )
     {
@@ -53,9 +47,6 @@ public Skills_Defensive_OR( victimId ) {
 
 
 public Ultimates_OR( Caster, Target ) {
-#if ADVANCED_DEBUG
-	log_function("public Ultimates_OR( Caster, Target ) {");
-#endif
 
     // Chain Lightning
 
@@ -122,9 +113,6 @@ public Ultimates_OR( Caster, Target ) {
 // Regeneration
 
 public Float:SRegen_Get( iLevel ) {
-#if ADVANCED_DEBUG
-	log_function("public Float:SRegen_Get( iLevel ) {");
-#endif
 
     new Float:fLevel = float( iLevel );
 
@@ -141,9 +129,6 @@ public Float:SRegen_Get( iLevel ) {
 
 
 public SRegen_Set( id ) {
-#if ADVANCED_DEBUG
-	log_function("public SRegen_Set( id ) {");
-#endif
 
     if ( g_bPlayerRegen[id] || ( WAR3_get_maxhealth( id ) == get_user_health( id ) && ( !get_user_armor( id ) || get_user_armor( id ) == WAR3_get_maxarmor( id ) ) ) )
         return PLUGIN_HANDLED;
@@ -166,9 +151,6 @@ public SRegen_Set( id ) {
 
 
 public SRegen_Heal( parm_Regen[1] ) {
-#if ADVANCED_DEBUG
-	log_function("public SRegen_Heal( parm_Regen[1] ) {");
-#endif
 
     new id = parm_Regen[0];
 
@@ -208,9 +190,6 @@ public SRegen_Heal( parm_Regen[1] ) {
 }
 
 public SRegen_Remove( id ) {
-#if ADVANCED_DEBUG
-	log_function("public SRegen_Remove( id ) {");
-#endif
 
     g_bPlayerRegen[id] = false;
 
@@ -228,9 +207,6 @@ public SRegen_Remove( id ) {
 // Berserk
 
 public SBerserkSpeed( id ){
-	#if ADVANCED_DEBUG
-		log_function("SBerserkSpeed( id ){");
-	#endif
 
     if ( WAR3_skill_enabled( id, RACE_ORC, SKILL_1 ) && is_user_alive( id ) )
 	{
@@ -255,9 +231,6 @@ public SBerserkSpeed( id ){
 }
 
 public SBerserkDmg( attackerId, victimId, weaponId, damage, headshot ) {
-	#if ADVANCED_DEBUG
-		log_function("SBerserkDmg( attackerId, victimId, weaponId, headshot, damage )");
-	#endif
 
 	// Check if the attacker already had berserk enabled
 
@@ -312,9 +285,6 @@ public SBerserk_Effect( id ) {
 // Pulverize
 
 public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
-#if ADVANCED_DEBUG
-	log_function("SPulverize");
-#endif
 
     // Check if restricted
 
@@ -475,9 +445,6 @@ public SPulverize( attackerId, victimId, Float:grenadeOrigin[3], damage ) {
 }
 
 public SPulverize_Trail( id, gIndex ) {
-#if ADVANCED_DEBUG
-	log_function("public SPulverize_Trail( id, gIndex ) {");
-#endif
 
     // Check if restricted
 
@@ -494,9 +461,6 @@ public SPulverize_Trail( id, gIndex ) {
 
 
 public SPillage( attacker, victim, iDamage, Weapon ) {
-#if ADVANCED_DEBUG
-	log_function( "public SPillage( attackerId, victimId, iDamage ) {");
-#endif
 
 	if ( !WAR3_skill_enabled( attacker, RACE_ORC, SKILL_3 ) )
 		return PLUGIN_HANDLED;
@@ -652,9 +616,6 @@ static SPillage_Grenade( attacker, victim ) {
 
 
 public UClightning_Cast( Caster, Target ) {
-#if ADVANCED_DEBUG
-	log_function("public UClightning_Cast( Caster, Target ) {");
-#endif
 
     // Play Sound
 
@@ -709,9 +670,6 @@ public UClightning_Cast( Caster, Target ) {
 
 
 public UClightning_Jump( parmJump[2] ) {
-#if ADVANCED_DEBUG
-	log_function("public UClightning_Jump( parmJump[2] ) {");
-#endif
 
     new Caster       = parmJump[0];
     new iCurrentJump = parmJump[1];
@@ -843,9 +801,6 @@ public UClightning_Jump( parmJump[2] ) {
 
 
 public UHealWave_Cast( Caster, Target ) {
-#if ADVANCED_DEBUG
-	log_function("public UHealWave_Cast( Caster, Target ) {");
-#endif
 
     // Status Text
 
@@ -929,9 +884,6 @@ public UHealWave_Cast( Caster, Target ) {
 
 
 public UHealWave_Jump( parmJump[2] ) {
-#if ADVANCED_DEBUG
-	log_function("public UHealWave_Jump( parmJump[2] ) {");
-#endif
 
     new Caster       = parmJump[0];
     new iCurrentJump = parmJump[1];
@@ -1081,9 +1033,6 @@ public UHealWave_Jump( parmJump[2] ) {
 
 
 public UWindwalk_Cast( id ) {
-#if ADVANCED_DEBUG
-	log_function("public UWindwalk_Cast( id ) {");
-#endif
 
     UWindwalk_Remove( id );
 
@@ -1123,9 +1072,6 @@ public UWindwalk_Cast( id ) {
 
 
 public UWindwalk_Prewalk( parmCast[3] ) {
-#if ADVANCED_DEBUG
-	log_function("public UWindwalk_Prewalk( parmCast[3] ) {");
-#endif
 
     new id         = parmCast[0];
     new iCounter   = parmCast[1];
@@ -1158,9 +1104,6 @@ public UWindwalk_Prewalk( parmCast[3] ) {
 
 
 public UWindwalk_Effects( id, iBaseTrans, iCounter ) {
-#if ADVANCED_DEBUG
-	log_function("public UWindwalk_Effects( id, iBaseTrans, iCounter ) {");
-#endif
 
     // Fade Into Invisibility From Current Invis Level
 
@@ -1177,9 +1120,6 @@ public UWindwalk_Effects( id, iBaseTrans, iCounter ) {
 
 
 public UWindwalk_Walk( parmWalk[1] ) {
-#if ADVANCED_DEBUG
-	log_function("public UWindwalk_Walk( parmWalk[1] ) {");
-#endif
 
     new id = parmWalk[0];
 
@@ -1208,9 +1148,6 @@ public UWindwalk_Walk( parmWalk[1] ) {
 
 
 public UWindwalk_Strike( Attacker, Victim, Weapon, Headshot ) {
-#if ADVANCED_DEBUG
-	log_function("public UWindwalk_Strike( Attacker, Victim, Weapon, Headshot ) {");
-#endif
 
     // Remove Windwalk
 
@@ -1267,9 +1204,6 @@ public UWindwalk_Strike( Attacker, Victim, Weapon, Headshot ) {
 
 
 public UWindwalk_Notify( id, iTotalDamage ) {
-#if ADVANCED_DEBUG
-	log_function("public UWindwalk_Notify( id, iTotalDamage ) {");
-#endif
 
     new szMessage[128];
     format( szMessage, 127, CAST_WINDWALK, iTotalDamage );
@@ -1283,9 +1217,6 @@ public UWindwalk_Notify( id, iTotalDamage ) {
 
 
 public UWindwalk_Postwalk( parmPost[2] ) {
-#if ADVANCED_DEBUG
-	log_function("public UWindwalk_Postwalk( parmPost[2] ) {");
-#endif
 
     new id       = parmPost[0];
     new iCounter = parmPost[1];
@@ -1335,9 +1266,6 @@ public UWindwalk_Postwalk( parmPost[2] ) {
 
 
 public UWindwalk_Remove( id ) {
-#if ADVANCED_DEBUG
-	log_function("public UWindwalk_Remove( id ) {");
-#endif
 
     g_bPlayerWalk[id]  = false;
     g_bPlayerInvis[id] = false;
