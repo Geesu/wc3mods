@@ -81,7 +81,7 @@ new WAR3X_DIR[64];                          // Stores WAR3X working directory
 // Language Include
 
 #include "war3x/language/english.inl"
-
+#include "war3x/language.inl"
 
 // Saving Include(s)
 #include <dbi>
@@ -404,8 +404,11 @@ public plugin_init() {
     register_event( "AmmoX",       "on_ThrowGren",     "b",  "1=11",          "1=12",              "1=13" );
 
 	// Touch Events
-	register_touch("DEATH_COIL",	"player", "UD_U_DEATHCOIL_touch"			);
-	register_touch("WAR3X_ITEM",	"player", "Item_Touch"			);
+	register_touch( "DEATH_COIL",	"player", "UD_U_DEATHCOIL_touch"			);
+	register_touch( "WAR3X_ITEM",	"player", "Item_Touch"			);
+
+	// Register Dictionary
+	register_dictionary( "war3x.txt" );
 
     WAR3_set_xp();
 
@@ -415,7 +418,7 @@ public plugin_init() {
     server_cmd( szCommand );
     set_task( 1.0, "WAR3_map_start" );
 
-	set_error_filter("DEBUG_Error");
+	set_error_filter( "DEBUG_Error" );
 
     return PLUGIN_CONTINUE;
 }

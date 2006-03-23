@@ -33,7 +33,7 @@ new const RACENAME[_TR][] =         // RACE NAMES:
 
     /*
     "Blood Elf Refugees",           // Blood Elf Refugees
-    "Naga ",                        // Naga
+    "Naga",                         // Naga
     "Draenei Elders"                // Draenei Elders
     */
 };
@@ -74,7 +74,7 @@ new const RACE1SKILL[_TS + _TU][] =         // UNDEAD SKILLS:
 {
     "Unholy Aura",                          // Racial: Unholy Aura
     "Vampiric Aura",                        // Vampiric Aura
-    "Frost Nova",                     			// Frost Nova
+    "Frost Nova",                     		// Frost Nova
     "Frost Armor",                          // Frost Armor
     "Death Coil",                           // Ultimate: Death Coil
     "Impale",                               // Ultimate: Impale
@@ -83,8 +83,8 @@ new const RACE1SKILL[_TS + _TU][] =         // UNDEAD SKILLS:
 
 new const RACE2SKILL[_TS + _TU][] =         // HUMAN SKILLS:
 {
-    "Fortitude",                            // Fortitude
-    "Invisibility",                         // Racial: Invisibility
+    "Fortitude",                            // Racial: Fortitude
+    "Invisibility",                         // Invisibility
     "Bash",                                 // Bash
     "Inner Fire",                           // Devotion Aura
     "Holy Light",                           // Ultimate: Holy Light
