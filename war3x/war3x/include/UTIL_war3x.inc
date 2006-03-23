@@ -129,7 +129,7 @@ public WAR3_race_info( id, iRaceId, iSkillNum, szData[64] ) {
             switch ( iSkillNum )
             {
                 case RACEINFO_CLASSNAME:    copy( szData, 63, RACE1CLASS[iUltimateNum] );
-                default:                    copy( szData, 63, RACE1SKILL[iSkillNum] );
+                default:                    LANG_GetSkillNameHelper( RACE_UNDEAD, iSkillNum, id, szData, 63 );
             }
         }
 
@@ -138,7 +138,7 @@ public WAR3_race_info( id, iRaceId, iSkillNum, szData[64] ) {
             switch ( iSkillNum )
             {
                 case RACEINFO_CLASSNAME:    copy( szData, 63, RACE2CLASS[iUltimateNum] );
-                default:                    copy( szData, 63, RACE2SKILL[iSkillNum] );
+                default:                    LANG_GetSkillNameHelper( RACE_HUMAN, iSkillNum, id, szData, 63 );
             }
         }
 
@@ -147,7 +147,7 @@ public WAR3_race_info( id, iRaceId, iSkillNum, szData[64] ) {
             switch ( iSkillNum )
             {
                 case RACEINFO_CLASSNAME:    copy( szData, 63, RACE3CLASS[iUltimateNum] );
-                default:                    copy( szData, 63, RACE3SKILL[iSkillNum] );
+                default:                    LANG_GetSkillNameHelper( RACE_ORC, iSkillNum, id, szData, 63 );
             }
         }
 
@@ -156,7 +156,7 @@ public WAR3_race_info( id, iRaceId, iSkillNum, szData[64] ) {
             switch ( iSkillNum )
             {
                 case RACEINFO_CLASSNAME:    copy( szData, 63, RACE4CLASS[iUltimateNum] );
-                default:                    copy( szData, 63, RACE4SKILL[iSkillNum] );
+                default:                    LANG_GetSkillNameHelper( RACE_NIGHTELF, iSkillNum, id, szData, 63 );
             }
         }
     }
@@ -557,8 +557,14 @@ public WAR3_hud_item( id, iEffect, Float:fFxTime, Float:fFadeIn, Float:fFadeOut,
     new iRaceNum = g_PlayerInfo[id][CURRENT_RACE] - 1;
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
-    new szMessage[64];
-    format( szMessage, 63, "%s Level %i   Item: %s", RACENAME_SHORT[iRaceNum], iLevel, ITEMNAME[g_PlayerInfo[id][CURRENT_ITEM]] );
+    new szMessage[64], szItemName[32];
+	LANG_GetItemName ( g_PlayerInfo[id][CURRENT_ITEM], SHOP_COMMON, id, szItemName, 31 )
+
+	
+	new szShortRaceName[16];
+	LANG_GetRaceName( iRaceNum, id, szShortRaceName, 15, true );
+
+    format( szMessage, 63, "%s Level %i   Item: %s", szShortRaceName, iLevel, szItemName );
 
     // Get Coordinates
 

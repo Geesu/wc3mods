@@ -257,28 +257,31 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
                 return PLUGIN_HANDLED;
             }
 
+			new szShortRaceName[32];
+			LANG_GetRaceName( iRaceId, id, szShortRaceName, 31, true );
+
             // Set Message(s)
 
             if ( bAddXp )
             {
-                format( szMessage, 127, "%s has rewarded %d experience to your^n%s character", szAdminName, iNewValue, RACENAME_SHORT[iRaceId] );
-                client_print( playerId, print_chat, "* [WC3x] %s has rewarded %d experience to your %s character", szAdminName, iNewValue, RACENAME_SHORT[iRaceId] );
+                format( szMessage, 127, "%s has rewarded %d experience to your^n%s character", szAdminName, iNewValue, szShortRaceName );
+                client_print( playerId, print_chat, "* [WC3x] %s has rewarded %d experience to your %s character", szAdminName, iNewValue, szShortRaceName );
 
                 iNewValue = iOldValue + iNewValue;
             }
 
             else if ( iNewValue < 0 )
             {
-                format( szMessage, 127, "%s has removed %d experience from your^n%s character", szAdminName, iNewValue * -1, RACENAME_SHORT[iRaceId] );
-                client_print( playerId, print_chat, "* [WC3x] %s has removed %d experience from your %s character", szAdminName, iNewValue * -1, RACENAME_SHORT[iRaceId] );
+                format( szMessage, 127, "%s has removed %d experience from your^n%s character", szAdminName, iNewValue * -1, szShortRaceName );
+                client_print( playerId, print_chat, "* [WC3x] %s has removed %d experience from your %s character", szAdminName, iNewValue * -1, szShortRaceName );
 
                 iNewValue = iOldValue + iNewValue;
             }
 
             else
             {
-                format( szMessage, 127, "%s has set your %s experience to %d", szAdminName, RACENAME_SHORT[iRaceId], iNewValue );
-                client_print( playerId, print_chat, "* [WC3x] %s has set your %s experience to %d", szAdminName, RACENAME_SHORT[iRaceId], iNewValue );
+                format( szMessage, 127, "%s has set your %s experience to %d", szAdminName, szShortRaceName, iNewValue );
+                client_print( playerId, print_chat, "* [WC3x] %s has set your %s experience to %d", szAdminName, szShortRaceName, iNewValue );
             }
         }
 
@@ -301,26 +304,29 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
 
             // Set Message(s)
 
+			new szShortRaceName[32];
+			LANG_GetRaceName( iRaceId, id, szShortRaceName, 31, true );
+
             if ( bAddXp )
             {
-                format( szMessage, 127, "%s has rewarded %d level(s) to your^n%s character", szAdminName, iNewValue, RACENAME_SHORT[iRaceId] );
-                client_print( playerId, print_chat, "* [WC3x] %s has rewarded %d level(s) to your %s character", szAdminName, iNewValue, RACENAME_SHORT[iRaceId] );
+                format( szMessage, 127, "%s has rewarded %d level(s) to your^n%s character", szAdminName, iNewValue, szShortRaceName );
+                client_print( playerId, print_chat, "* [WC3x] %s has rewarded %d level(s) to your %s character", szAdminName, iNewValue, szShortRaceName );
 
                 iNewValue = iOldValue + iNewValue;
             }
 
             else if ( iNewValue < 0 )
             {
-                format( szMessage, 127, "%s has removed %d level(s) from your^n%s character", szAdminName, iNewValue * -1, RACENAME_SHORT[iRaceId] );
-                client_print( playerId, print_chat, "* [WC3x] %s has removed %d level(s) from your %s character", szAdminName, iNewValue * -1, RACENAME_SHORT[iRaceId] );
+                format( szMessage, 127, "%s has removed %d level(s) from your^n%s character", szAdminName, iNewValue * -1, szShortRaceName );
+                client_print( playerId, print_chat, "* [WC3x] %s has removed %d level(s) from your %s character", szAdminName, iNewValue * -1, szShortRaceName );
 
                 iNewValue = iOldValue + iNewValue;
             }
 
             else
             {
-                format( szMessage, 127, "%s has set your %s character to level %d", szAdminName, RACENAME_SHORT[iRaceId], iNewValue );
-                client_print( playerId, print_chat, "* [WC3x] %s has set your %s character to level %d", szAdminName, RACENAME_SHORT[iRaceId], iNewValue );
+                format( szMessage, 127, "%s has set your %s character to level %d", szAdminName, szShortRaceName, iNewValue );
+                client_print( playerId, print_chat, "* [WC3x] %s has set your %s character to level %d", szAdminName, szShortRaceName, iNewValue );
            }
 
             if ( iNewValue < 0 )
@@ -387,22 +393,24 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
     if ( g_bSaveXp )
         g_bStoreXp[playerId] = true;
 
-    // Log Usage
 
-    copy( szRaceName, 15, RACENAME_SHORT[iRaceId] );
+    // Log Usage
+	
+	new szShortRaceName[16];
+	LANG_GetRaceName( iRaceId, id, szShortRaceName, 15, true );
 
     if ( iSetType == WAR3X_SETLEVEL )
-        XP_Log_to_file( id, "war3x_setlevel", szPlayerName, szRaceName, szNewValue );
+        XP_Log_to_file( id, "war3x_setlevel", szPlayerName, szShortRaceName, szNewValue );
 
     else
     {
-        XP_Log_to_file( id, "war3x_setxp", szPlayerName, szRaceName, szNewValue );
+        XP_Log_to_file( id, "war3x_setxp", szPlayerName, szShortRaceName, szNewValue );
     }
 
     // Echo to Player that Issued Command
 
     new szConfirm[256];
-    format( szConfirm, 255, "* [WC3x] New value(s) set for %s's %s character. Old XP: %d, New XP: %d", szPlayerName, szRaceName, iOldValue, iNewValue );
+    format( szConfirm, 255, "* [WC3x] New value(s) set for %s's %s character. Old XP: %d, New XP: %d", szPlayerName, szShortRaceName, iOldValue, iNewValue );
 
     status_print( id, szConfirm );
 

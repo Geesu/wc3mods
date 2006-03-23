@@ -1730,15 +1730,9 @@ public Icon_DispellMe_Draw( id ) {
 
 
 
-public Get_SkillName( iRaceId, iSkillNum, szSkillName[32] ) {
+public Get_SkillName( iRaceId, iSkillNum, id, szSkillName[32] ) {
 
-    switch ( iRaceId + 1 )
-    {
-        case RACE_UNDEAD:   copy( szSkillName, 31, RACE1SKILL[iSkillNum] );
-        case RACE_HUMAN:    copy( szSkillName, 31, RACE2SKILL[iSkillNum] );
-        case RACE_ORC:      copy( szSkillName, 31, RACE3SKILL[iSkillNum] );
-        case RACE_NIGHTELF: copy( szSkillName, 31, RACE4SKILL[iSkillNum] );
-    }
+	LANG_GetSkillNameHelper( iRaceId + 1, iSkillNum, id, szSkillName, 31 )
 
     return PLUGIN_HANDLED;
 }
@@ -1816,11 +1810,12 @@ public WAR3_hud_level( id ) {
 
     new iRaceNum = g_PlayerInfo[id][CURRENT_RACE] - 1;
 
-    new szMessage[73], szData[64], iLen;
+    new szMessage[73], szData[64], iLen, szRaceName[32];
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
-
+	
+	LANG_GetRaceName( iRaceNum, id, szRaceName, 31 );
     WAR3_race_info( id, iRaceNum, RACEINFO_CLASSNAME, szData );
-    iLen += format( szMessage[iLen], 72 - iLen, "%s^nLevel %d ( %s )", RACENAME[iRaceNum], iLevel, szData );
+    iLen += format( szMessage[iLen], 72 - iLen, "%s^nLevel %d ( %s )", szRaceName, iLevel, szData );
 
     if ( g_PlayerInfo[id][CURRENT_ULTIMATE] )
     {

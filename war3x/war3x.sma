@@ -110,7 +110,6 @@ new WAR3X_DIR[64];                          // Stores WAR3X working directory
 #include "war3x/items.inl"                  // Item Functions
 #include "war3x/ultimates.inl"              // Ultimate Functions
 #include "war3x/upkeep.inl"                 // Upkeep Functions
-#include "war3x/motd.inl"                   // Motd Functions
 #include "war3x/save.inl"                   // War3x Save Functions
 #include "war3x/menus.inl"                  // Menu Functions
 

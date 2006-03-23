@@ -77,8 +77,10 @@ public Item_Buy( id, iNewItem ) {
 
         // Inform player
 
-        new szMessage[128];
-        format( szMessage, 127, ITEM_BUYBACK_MESSAGE, ITEMNAME[iOldItem], iOldCost );
+        new szMessage[128], szItemName[32];
+
+		LANG_GetItemName ( iOldItem, SHOP_COMMON, id, szItemName, 31 )
+        format( szMessage, 127, ITEM_BUYBACK_MESSAGE, szItemName, iOldCost );
 
         client_print( id, print_chat, szMessage );
     }

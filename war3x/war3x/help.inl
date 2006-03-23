@@ -59,8 +59,10 @@ public HELP_motd_race( id, iRaceNum ) {
     new szFilename[64];
     format( szFilename, 63, "%s/help/%s.html", WAR3X_DIR, RACEKEYNAME[iRaceNum] );
 
-    new szMOTDHeader[32];
-    format( szMOTDHeader, 31, "%s %s", RACENAME_SHORT[iRaceNum], LANGUAGE_COMMON_SKILLS );
+    new szMOTDHeader[32], szRaceName[32];
+	LANG_GetRaceName( iRaceNum, id, szRaceName, 31, true );
+
+    format( szMOTDHeader, 31, "%s %s", szRaceName, LANGUAGE_COMMON_SKILLS );
 
     show_motd( id, szFilename, szMOTDHeader );
 
@@ -111,8 +113,11 @@ public HELP_motd_players( id ) {
 
             if ( bRaceFound )
                 iLen += format( szMotd[iLen], 2047 - iLen, "^n^n^n" );
+			
+			new szRaceName[32];
+			LANG_GetRaceName( iRaceNum, id, szRaceName, 31 );
 
-            iLen += format( szMotd[iLen], 2047 - iLen, "<h3>%s</h3>(%i players)^n", RACENAME[iRaceNum], iRaceTotal );
+            iLen += format( szMotd[iLen], 2047 - iLen, "<h3>%s</h3>(%i players)^n", szRaceName, iRaceTotal );
             bRaceFound = true;
 
             // Sort by Team
@@ -189,7 +194,9 @@ public HELP_motd_target( id, targetId ) {
         new raceId = g_PlayerInfo[targetId][CURRENT_RACE] - 1;
         new iLevel  = WAR3_get_level( g_PlayerInfo[targetId][CURRENT_XP] );
 
-        iLen += format( szMotd[iLen], 2047 - iLen, "<h3>%s</h3>", RACENAME[raceId] );
+		new szRaceName[32];
+		LANG_GetRaceName( raceId, id, szRaceName, 31 );
+        iLen += format( szMotd[iLen], 2047 - iLen, "<h3>%s</h3>", szRaceName );
 
         // Level
 
@@ -230,7 +237,7 @@ public HELP_motd_target( id, targetId ) {
 
             if ( iSkillNum == SKILL_RACIAL )
             {
-                HELP_description_racial( raceId, szSkillDesc, iLevel );
+                HELP_description_racial( raceId, id, szSkillDesc, iLevel );
 
                 new Float:fRacialPercentage = ( ( float( iLevel ) + 1.0 ) / ( LEVEL_RACIALCAP + 1.0 ) ) * 100.0;
 
@@ -246,7 +253,7 @@ public HELP_motd_target( id, targetId ) {
             {
                 new iSkillLvl = g_PlayerInfo[targetId][iSkillNum + 1];
 
-                HELP_description_trained( raceId, iSkillNum, szSkillDesc, iSkillLvl );
+                HELP_description_trained( raceId, iSkillNum, id, szSkillDesc, iSkillLvl );
                 format( szSkillLevel, 15, "(%s %i)", LANGUAGE_COMMON_LEVEL, iSkillLvl );
             }
 
@@ -256,7 +263,7 @@ public HELP_motd_target( id, targetId ) {
                 format( szSkillLevel, 15, "" );
             }
 
-            Get_SkillName( raceId, iSkillNum, szSkillName );
+            Get_SkillName( raceId, iSkillNum, id, szSkillName );
             iLen += format( szMotd[iLen], 2047 - iLen, "<b>%s</b> %s^n%s^n^n", szSkillName, szSkillLevel, szSkillDesc );
         }
 
@@ -268,8 +275,8 @@ public HELP_motd_target( id, targetId ) {
 
             new iUltimateNum = g_PlayerInfo[targetId][CURRENT_ULTIMATE] + TOTAL_SKILLS - 1;
 
-            Get_SkillName( raceId, iUltimateNum, szSkillName );
-            HELP_description_ultimate( raceId, iUltimateNum, szSkillDesc );
+            Get_SkillName( raceId, iUltimateNum, id, szSkillName );
+            HELP_description_ultimate( raceId, iUltimateNum, id, szSkillDesc );
 
             iLen += format( szMotd[iLen], 2047 - iLen, "<b>%s</b>^n%s", szSkillName, szSkillDesc );
         }
@@ -286,7 +293,9 @@ public HELP_motd_target( id, targetId ) {
             if ( iRaceNum > 0 )
                 iLen += format( szMotd[iLen], 2047 - iLen, ", " );
 
-            iLen += format( szMotd[iLen], 2047 - iLen, "<b>%s</b> (%d)", RACENAME[iRaceNum], WAR3_get_level( g_iXPtotal[targetId][iRaceNum] ) );
+			new szRaceName[32];
+			LANG_GetRaceName( iRaceNum, id, szRaceName, 31 );
+            iLen += format( szMotd[iLen], 2047 - iLen, "<b>%s</b> (%d)", szRaceName, WAR3_get_level( g_iXPtotal[targetId][iRaceNum] ) );
         }
     }
 
@@ -613,7 +622,7 @@ public HELP_create_files() {
                 format( szSkillHeader, 191, "%s", HELP_HEADER_RACIAL );
                 write_file( szFileName, szSkillHeader, -1 );
 
-                HELP_description_racial( iRaceNum, szSkillDesc, LEVEL_ALL );
+                HELP_description_racial( iRaceNum, LANG_SERVER, szSkillDesc, LEVEL_ALL );
             }
 
             // Trainable Skills
@@ -626,10 +635,10 @@ public HELP_create_files() {
                     write_file( szFileName, szSkillHeader, -1 );
                 }
 
-                HELP_description_trained( iRaceNum, iSkillNum, szSkillDesc, LEVEL_ALL );
+                HELP_description_trained( iRaceNum, iSkillNum, LANG_SERVER, szSkillDesc, LEVEL_ALL );
             }
 
-            Get_SkillName( iRaceNum, iSkillNum, szSkillName );
+            Get_SkillName( iRaceNum, iSkillNum, LANG_SERVER, szSkillName );
 
             format( szText, 255, "<li><b>%s</b>^n%s", szSkillName, szSkillDesc );
 
@@ -649,8 +658,8 @@ public HELP_create_files() {
                 write_file( szFileName, szSkillHeader, -1 );
             }
 
-            Get_SkillName( iRaceNum, iUltimateNum, szSkillName );
-            HELP_description_ultimate( iRaceNum, iUltimateNum, szSkillDesc );
+            Get_SkillName( iRaceNum, iUltimateNum, LANG_SERVER, szSkillName );
+            HELP_description_ultimate( iRaceNum, iUltimateNum, LANG_SERVER, szSkillDesc );
 
             format( szText, 255, "<li><b>%s</b>^n%s", szSkillName, szSkillDesc );
             write_file( szFileName, szText, -1 );
@@ -680,8 +689,8 @@ public HELP_create_files() {
 
     for ( new iItemNum = 1; iItemNum <= TOTAL_SHOPITEMS; iItemNum++ )
     {
-        copy( szItemName, 31, ITEMNAME[iItemNum] );
-        copy( szItemDesc, 255, ITEM_DESC[iItemNum] );
+		LANG_GetItemName ( iItemNum, SHOP_COMMON, LANG_SERVER, szItemName, 31 )
+		LANG_GetItemDesc ( iItemNum, SHOP_COMMON, LANG_SERVER, szItemDesc, 255 )
 
         // Grab values
 
@@ -704,17 +713,11 @@ public HELP_create_files() {
 }
 
 
-static HELP_description_racial( iRaceNum, szDescription[256], iLevel ) {
+static HELP_description_racial( iRaceNum, id, szDescription[256], iLevel ) {
 
     // Grab skill description template
-
-    switch ( iRaceNum + 1 )
-    {
-        case RACE_UNDEAD:   copy( szDescription, 255, RACE1SKILL_DESC[SKILL_RACIAL] );
-        case RACE_HUMAN:    copy( szDescription, 255, RACE2SKILL_DESC[SKILL_RACIAL] );
-        case RACE_ORC:      copy( szDescription, 255, RACE3SKILL_DESC[SKILL_RACIAL] );
-        case RACE_NIGHTELF: copy( szDescription, 255, RACE4SKILL_DESC[SKILL_RACIAL] );
-    }
+	
+	LANG_GetSkillDesc( iRaceNum + 1, 1, SKILL_T_RACIAL, id, szDescription, 255 )
 
     // Grab values
 
@@ -766,17 +769,11 @@ static HELP_description_racial( iRaceNum, szDescription[256], iLevel ) {
 }
 
 
-static HELP_description_trained( iRaceNum, iSkillNum, szDescription[256], iLevel ) {
+static HELP_description_trained( iRaceNum, iSkillNum, id, szDescription[256], iLevel ) {
 
     // Grab skill description template
 
-    switch ( iRaceNum + 1 )
-    {
-        case RACE_UNDEAD:   copy( szDescription, 255, RACE1SKILL_DESC[iSkillNum] );
-        case RACE_HUMAN:    copy( szDescription, 255, RACE2SKILL_DESC[iSkillNum] );
-        case RACE_ORC:      copy( szDescription, 255, RACE3SKILL_DESC[iSkillNum] );
-        case RACE_NIGHTELF: copy( szDescription, 255, RACE4SKILL_DESC[iSkillNum] );
-    }
+	LANG_GetSkillDesc( iRaceNum + 1, iSkillNum + 1, SKILL_T_TRAINED, id, szDescription, 255 )
 
     // Grab values
 
@@ -833,17 +830,11 @@ static HELP_description_trained( iRaceNum, iSkillNum, szDescription[256], iLevel
 }
 
 
-static HELP_description_ultimate( iRaceNum, iUltimateNum, szDescription[256] ) {
+static HELP_description_ultimate( iRaceNum, iUltimateNum, id, szDescription[256] ) {
 
     // Grab skill description template
 
-    switch ( iRaceNum + 1 )
-    {
-        case RACE_UNDEAD:   copy( szDescription, 255, RACE1SKILL_DESC[iUltimateNum] );
-        case RACE_HUMAN:    copy( szDescription, 255, RACE2SKILL_DESC[iUltimateNum] );
-        case RACE_ORC:      copy( szDescription, 255, RACE3SKILL_DESC[iUltimateNum] );
-        case RACE_NIGHTELF: copy( szDescription, 255, RACE4SKILL_DESC[iUltimateNum] );
-    }
+	LANG_GetSkillDesc( iRaceNum + 1, iUltimateNum + 1, SKILL_T_ULTIMATE, id, szDescription, 255 )
 
     // Grab values
 

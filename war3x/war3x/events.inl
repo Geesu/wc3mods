@@ -316,13 +316,13 @@ public on_Target_Id( id ) {
 
             new Float:fPercentage = ( float( iXp ) - float( iLastlvlXp ) ) / ( float( iNextlvlXp ) - float( iLastlvlXp ) ) * 100.0;
             new iPercentage = floatround( fPercentage );
-			
+
 			// Get Item and Race Name
 
 			new szItemName[32], szRaceName[32];
 			
-			LANG_GetItemName( iItemNum, SHOP_COMMON, id, szItemName, 32 );
-			LANG_GetRaceName ( iRaceNum, id, szRaceName, 32, true )
+			LANG_GetItemName( iItemNum, SHOP_COMMON, id, szItemName, 31 );
+			LANG_GetRaceName ( iRaceNum, id, szRaceName, 31, true )
 
             // Create Message
 
@@ -446,12 +446,12 @@ public on_Damage( victim ) {
 
     if ( get_gametime() - g_fBombTime < 1.0 && !attacker )
     {
-        Set_PlayerBackpack( victim );
+        ITEM_ANKH_set( victim );
 
         new parm_Bomb[1];
         parm_Bomb[0] = victim;
 
-        set_task( 0.1, "Check_BombDeath", 0, parm_Bomb, 1 );
+        set_task( 0.1, "on_BombDeath", 0, parm_Bomb, 1 );
     }
 
     // Check if Impaled
@@ -508,7 +508,7 @@ public on_Damage( victim ) {
     // Claws of Attack +6
 
     if ( WAR3_player_valid(attacker) && g_PlayerInfo[attacker][CURRENT_ITEM] == ITEM_CLAWS && get_user_health( victim ) > 0 && get_user_team( attacker ) != get_user_team( victim ) && bAllowOffensive )
-        IClaws_Damage( attacker, victim, weapon, Headshot );
+        ITEM_CLAWS_damage( attacker, victim, weapon, Headshot );
 
     // Check if Attacked by Avatar
 
@@ -525,7 +525,7 @@ public on_Damage( victim ) {
 
     // Invisibility Cooldown
 
-    Invis_Cooldown( victim );
+    SHARED_INVIS_cooldown( victim );
 
     // Bot Ultimates ( Defensive )
 
@@ -626,30 +626,30 @@ public on_CurWeapon( id ) {
     if ( !g_PlayerInfo[id][CURRENT_RACE] )
         menu_SelectRace( id );
 
-    new Weapon = read_data( 2 );
+    new weapon = read_data( 2 );
     new iAmmo = read_data( 3 );
 
     // Invisibility Cooldown
 
-    if ( is_weapon_fired( iAmmo, g_iPlayerAmmo[id][Weapon] ) && Weapon != CSW_KNIFE && Weapon != CSW_C4 && cs_get_weapon_type_( Weapon ) != CS_WEAPON_TYPE_GRENADE )
+    if ( is_weapon_fired( iAmmo, g_iPlayerAmmo[id][weapon] ) && weapon != CSW_KNIFE && weapon != CSW_C4 && cs_get_weapon_type_( weapon ) != CS_WEAPON_TYPE_GRENADE )
     {
-        Invis_Cooldown( id );
+        SHARED_INVIS_cooldown( id );
     }
 
     // Update run speed
 
-    if ( !is_weapon_fired( iAmmo, g_iPlayerAmmo[id][Weapon] ) || Weapon == CSW_KNIFE || Weapon == CSW_C4 || cs_get_weapon_type_( Weapon ) == CS_WEAPON_TYPE_GRENADE )
+    if ( !is_weapon_fired( iAmmo, g_iPlayerAmmo[id][weapon] ) || weapon == CSW_KNIFE || weapon == CSW_C4 || cs_get_weapon_type_( weapon ) == CS_WEAPON_TYPE_GRENADE )
     {
         WAR3_set_speed( id );
     }
 
-    // Update Ammo for Current Weapon;
+    // Update Ammo for Current weapon;
 
-    g_iPlayerAmmo[id][Weapon] = iAmmo;
+    g_iPlayerAmmo[id][weapon] = iAmmo;
 
     // End Windwalk
 
-    if ( g_bPlayerWalk[id] && Weapon != CSW_KNIFE )
+    if ( g_bPlayerWalk[id] && weapon != CSW_KNIFE )
     {
         new parm_Walk[2];
         parm_Walk[0] = id;
@@ -659,7 +659,7 @@ public on_CurWeapon( id ) {
 
     // Prevent weapon switching while sleeping
 
-    if ( g_bPlayerSleeping[id] && Weapon != CSW_KNIFE )
+    if ( g_bPlayerSleeping[id] && weapon != CSW_KNIFE )
     {
         engclient_cmd( id, "weapon_knife" );
         WAR3_set_speed( id );
@@ -669,12 +669,12 @@ public on_CurWeapon( id ) {
 
     if ( g_bPlayerInvis[id] )
     {
-        new iTaskId = TASK_INVIS + id;
-        remove_task( iTaskId, 0 );
+        new task = TASK_INVIS + id;
+        remove_task( task, 0 );
     }
 
     if ( !g_bInvisCooldown[id] )
-        Invis_Set( id );
+        SHARED_INVIS_set( id );
 
     return PLUGIN_CONTINUE;
 }
@@ -743,7 +743,7 @@ public on_FreezeStart() {
                 War3x_StoreSession( id, iNextRaceId );
                 WAR3_hud_level( id );
                 war3_chatskills( id, iNextRaceId, 1 );
-                War3x_CheckSkills( id );
+                WAR3_check_skills( id );
 
                 g_PlayerInfo[id][CURRENT_NEXTRACE] = 0;
 
@@ -755,7 +755,7 @@ public on_FreezeStart() {
             if ( g_PlayerBackpack[id][CURRENT_PRIMARY] || g_PlayerBackpack[id][CURRENT_SECONDARY] || g_PlayerBackpack[id][CURRENT_HEGRENADE] || g_PlayerBackpack[id][CURRENT_FLASHBANG] || g_PlayerBackpack[id][CURRENT_SMOKEGRENADE] || g_PlayerBackpack[id][CURRENT_ARMOR] || g_PlayerBackpack[id][CURRENT_DEFUSE] )
             {
                 if ( id == g_OldVip || g_PlayerInfo[id][CURRENT_ITEM] == ITEM_ANKH || g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC )
-                    Ankh_DropItems( id );
+                    ITEM_ANKH_drop( id );
 
                 // Race Change from Orc
 
@@ -770,7 +770,7 @@ public on_FreezeStart() {
             // Set Invisibility
 
             if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN || g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK )
-                Invis_Set( id );
+                SHARED_INVIS_set( id );
 
             // Set Bonus Health
 
@@ -799,7 +799,7 @@ public on_FreezeStart() {
 
             WAR3_hud_level( id );
             war3_chatskills( id, iCurrentRace, 0 );
-            War3x_CheckSkills( id );
+            WAR3_check_skills( id );
 
             // Hudmessages
 
@@ -824,13 +824,6 @@ public on_FreezeStart() {
         g_iXPsupport[id][XP_TOTAL] += g_iXPsupport[id][XP_ROUND];
         g_iXPsupport[id][XP_ROUND] = 0;
     }
-
-    // Reset Objective Globals
-
-    g_BombPlanter     = 0;
-    g_BombDefuser     = 0;
-    g_bBombPlanted    = false;
-    g_bHostageRescued = false;
 
     // Save Player Queue
 
@@ -884,7 +877,7 @@ public on_ResetHud( id ) {
         if ( g_bSaveXp )
         {
             g_PlayerInfo[id][CURRENT_XP] = random_num( 0, LONGTERM_XP[TOTAL_LEVELS] );
-            War3x_CheckLevel( id, 0, g_PlayerInfo[id][CURRENT_XP] );
+            WAR3_check_level( id, 0, g_PlayerInfo[id][CURRENT_XP] );
         }
     }
 
@@ -1012,8 +1005,10 @@ public on_World_Action() {
                 {
                     new iNextRaceId = g_PlayerInfo[id][CURRENT_NEXTRACE] - 1;
 
-                    new szMessage[64];
-                    format( szMessage, 63, INFO_NEWRACENOW, RACENAME_SHORT[iNextRaceId] );
+                    new szMessage[64], szRaceName[32];
+					LANG_GetRaceName( iNextRaceId, id, szRaceName, 31, true )
+
+                    format( szMessage, 63, INFO_NEWRACENOW, szRaceName );
 
                     set_hudmessage( 255, 208, 0, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_INFO, 0, 6.0, 1.0, 0.1, 0.5, HUDMESSAGE_CHAN_INFO );
                     show_hudmessage( id, szMessage );
@@ -1022,7 +1017,7 @@ public on_World_Action() {
                 else
                 {
                     WAR3_hud_level( id );
-                    War3x_CheckSkills( id );
+                    WAR3_check_skills( id );
                 }
             }
 
@@ -1042,7 +1037,7 @@ public on_World_Action() {
 
         remove_task( TASK_UPKEEP, 0 );
 
-        // Set 5.0 Second Task for Freeze Start
+        // Set 5.0 Second task for Freeze Start
 
         set_task( 5.0, "on_FreezeStart", TASK_NEWROUND );
     }
@@ -1054,7 +1049,7 @@ public on_World_Action() {
         g_bRoundEnd = true;
         g_iCurrentRound = 0;
 
-        // Set 3.0 Second Task for Freeze Start
+        // Set 3.0 Second task for Freeze Start
 
         set_task( 3.0, "on_FreezeStart", TASK_NEWROUND );
 
@@ -1215,7 +1210,7 @@ public on_Objective_Player() {
             g_OldVip = g_Vip;
 
         if ( is_user_alive( id ) && id != g_OldVip )
-            Set_PlayerBackpack( id );
+            ITEM_ANKH_set( id );
 
         g_Vip = id;
         XP_Vip_Spawn( id );
@@ -1399,7 +1394,7 @@ public on_Health( id ) {
 
     // Save Me!
 
-    Icon_SaveMe( id );
+    WAR3_icon_lowhealth( id );
 
     return PLUGIN_CONTINUE;
 }
@@ -1502,3 +1497,20 @@ public on_ResetHud_NOWAR3( id ) {
 
     return PLUGIN_CONTINUE;
 }
+
+
+public on_BombDeath( parm_Bomb[1] ) {
+
+    new id = parm_Bomb[0];
+
+    if ( !is_user_alive( id ) )
+        WAR3_death_victim( id );
+
+    else
+    {
+        g_PlayerBackpack[id] = {0,0,0,0,0,0,0,0};
+    }
+
+    return PLUGIN_HANDLED;
+}
+

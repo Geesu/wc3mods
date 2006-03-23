@@ -135,9 +135,13 @@ public menu_SelectRace( id ) {
 
         for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
         {
-            if ( get_cvar_bitsum( "war3x_restrict_races" ) & WAR3_get_race_flag( iRaceNum ) )
+			new szRaceName[32];
+			LANG_GetRaceName( iRaceNum, id, szRaceName, 31 );
+            
+			if ( get_cvar_bitsum( "war3x_restrict_races" ) & WAR3_get_race_flag( iRaceNum ) )
             {
-                iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led          ^n", iRaceNum + 1, RACENAME[iRaceNum] );
+				LANG_GetRaceName( iRaceNum, id, szRaceName, 31 )
+                iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led          ^n", iRaceNum + 1, szRaceName );
             }
 
             else
@@ -160,7 +164,7 @@ public menu_SelectRace( id ) {
 
                 // Draw Text
 
-                iLen += format( szMenu[iLen], 512 - iLen, "%s%d. %s\R\dLeve l %d          ^n", szLineColor, iRaceNum + 1, RACENAME[iRaceNum], iCurrentLevel );
+                iLen += format( szMenu[iLen], 512 - iLen, "%s%d. %s\R\dLeve l %d          ^n", szLineColor, iRaceNum + 1, szRaceName, iCurrentLevel );
             }
         }
     }
@@ -174,9 +178,12 @@ public menu_SelectRace( id ) {
 
         for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
         {
+			new szRaceName[32];
+			LANG_GetRaceName( iRaceNum, id, szRaceName, 31 );
+
             if ( get_cvar_bitsum( "war3x_restrict_races" ) & WAR3_get_race_flag( iRaceNum ) )
             {
-                iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led          ^n", iRaceNum + 1, RACENAME[iRaceNum] );
+                iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led          ^n", iRaceNum + 1, szRaceName );
             }
 
             else
@@ -196,7 +203,7 @@ public menu_SelectRace( id ) {
                     copy( szLineColor, 2, "\d" );
                 }
 
-                iLen += format( szMenu[iLen], 512 - iLen, "%s%d. %s^n", szLineColor, iRaceNum + 1, RACENAME[iRaceNum] );
+                iLen += format( szMenu[iLen], 512 - iLen, "%s%d. %s^n", szLineColor, iRaceNum + 1, szRaceName );
             }
         }
     }
@@ -243,7 +250,10 @@ public _menu_SelectRace( id, iKey ) {
 
         set_hudmessage( 255, 160, 0, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_INFO, 0, 6.0, 5.0, 0.5, 1.0, HUDMESSAGE_CHAN_INFO );
 
-        show_hudmessage( id, INFO_NEWRACENEXTROUND, RACENAME_SHORT[iKey] );
+		new szRaceName[32];
+		LANG_GetRaceName( iKey, id, szRaceName, 31, true );
+
+        show_hudmessage( id, INFO_NEWRACENEXTROUND, szRaceName );
         g_PlayerInfo[id][CURRENT_NEXTRACE] = iKey + 1;
     }
 
@@ -420,8 +430,11 @@ public menu_SelectSkills( id ) {
 
     iKeys = (1<<9)|(1<<8);
 
+	new szRaceName[32];
+	LANG_GetRaceName( iRaceNum - 1, id, szRaceName, 31 );
+
     iLen += format( szMenu[iLen], 512 - iLen, MENU_SELECTSKILLS_TITLE );
-    iLen += format( szMenu[iLen], 512 - iLen, "\d%s^n", RACENAME[iRaceNum - 1] );
+    iLen += format( szMenu[iLen], 512 - iLen, "\d%s^n", szRaceName );
 
     // Primary Skills
 
@@ -683,22 +696,25 @@ public menu_ItemShop( id ) {
 
     for ( new iItemNum = 1; iItemNum <= TOTAL_SHOPITEMS; iItemNum++ )
     {
+		new szItemName[32];
+		LANG_GetItemName ( iItemNum, SHOP_COMMON, id, szItemName, 31 )
+
         // Item Restricted
 
         if ( get_cvar_bitsum( "war3x_restrict_items" ) & WAR3_get_item_flag( iItemNum ) )
-            iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led ^n", iItemNum, ITEMNAME[iItemNum] );
+            iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led ^n", iItemNum, szItemName );
 
         // Not enough players for Tome
 
         else if ( iItemNum == ITEM_TOME && get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
         {
-            iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\y%d ^n", iItemNum, ITEMNAME[iItemNum], ITEMCOST[iItemNum] );
+            iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\y%d ^n", iItemNum, szItemName, ITEMCOST[iItemNum] );
         }
 
         else
         {
             iKeys |= ( 1<<iItemNum - 1 );
-            iLen += format( szMenu[iLen], 512 - iLen, "\w%d. %s\R\y%d ^n", iItemNum, ITEMNAME[iItemNum], ITEMCOST[iItemNum] );
+            iLen += format( szMenu[iLen], 512 - iLen, "\w%d. %s\R\y%d ^n", iItemNum, szItemName, ITEMCOST[iItemNum] );
         }
     }
 
@@ -757,7 +773,10 @@ public menu_SkillsHelp( id ) {
 
     for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
     {
-        iLen += format( szMenu[iLen], 512 - iLen, "%d. %s^n", iRaceNum + 1, RACENAME[iRaceNum] );
+		new szRaceName[32];
+		LANG_GetRaceName( iRaceNum, id, szRaceName, 31 );
+
+        iLen += format( szMenu[iLen], 512 - iLen, "%d. %s^n", iRaceNum + 1, szRaceName );
         iKeys |= ( 1<<iRaceNum );
     }
 
@@ -895,8 +914,11 @@ public menu_RaceOptions( id ) {
 
     new raceId = g_PlayerInfo[id][CURRENT_RACE] - 1;
 
+	new szRaceName[32];
+	LANG_GetRaceName( raceId, id, szRaceName, 31 );
+
     iLen += format( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_TITLE );
-    iLen += format( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_TITLE2, RACENAME[raceId] );
+    iLen += format( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_TITLE2, szRaceName );
 
     // Reset Skills
 
@@ -1032,8 +1054,10 @@ public _menu_RaceOptions( id, iKey ) {
 
             Reset_XP( id );
 
-            new szMessage[128];
-            format( szMessage, 127, INFO_RESETXP, RACENAME[iRaceId] );
+            new szMessage[128], szRaceName[32];
+
+			LANG_GetRaceName( iRaceId, id, szRaceName, 31 );
+            format( szMessage, 127, INFO_RESETXP, szRaceName );
 
             client_print( id, print_chat, szMessage );
         }
