@@ -65,7 +65,7 @@ public _menu_War3menu( id, iKey ) {
         case 3:     menu_ItemShop( id );
 
         case 4:     WAR3_hud_level( id );
-        case 5:     motd_PlayerSkills( id );
+        case 5:     HELP_motd_players( id );
 
         case 6:     menu_PlayerOptions( id );
         case 7:     menu_RaceOptions( id );
@@ -300,7 +300,7 @@ public _menu_SelectRace( id, iKey ) {
 
         WAR3_hud_level( id );
         war3_chatskills( id, iKey, 1 );
-        War3x_CheckSkills( id );
+        WAR3_check_skills( id );
 
         // Hudmessage
 
@@ -592,7 +592,7 @@ public _menu_SelectSkills( id, iKey ) {
         case 3:         g_PlayerInfo[id][CURRENT_SKILL3] += 1;
         case 4,5,6:     g_PlayerInfo[id][CURRENT_ULTIMATE] = iKey - ( TOTAL_SKILLSTRAINED - 1 );
 
-        case 9:         motd_SkillsHelp( id, g_PlayerInfo[id][CURRENT_RACE] - 1 );
+        case 9:         HELP_motd_race( id, g_PlayerInfo[id][CURRENT_RACE] - 1 );
     }
 
     // Check to See if More Skills can be Selected
@@ -720,7 +720,7 @@ public _menu_ItemShop( id, iKey ) {
 
     if ( iKey == KEY_HELP )
     {
-        motd_ItemsHelp( id );
+        HELP_motd_items( id );
         return PLUGIN_HANDLED;
     }
 
@@ -776,7 +776,7 @@ public _menu_SkillsHelp( id, iKey ) {
     if ( iKey == KEY_CANCEL )
         return PLUGIN_HANDLED;
 
-    motd_SkillsHelp( id, iKey );
+    HELP_motd_race( id, iKey );
 
     return PLUGIN_HANDLED;
 }
@@ -1074,9 +1074,9 @@ public _menu_HelpTopics( id, iKey ) {
     switch ( iKey + 1 )
     {
         case 1:     menu_SkillsHelp( id );
-        case 2:     motd_ItemsHelp( id );
+        case 2:     HELP_motd_items( id );
 
-        case 9:     motd_War3xHelp( id );
+        case 9:     HELP_motd_war3x( id );
     }
 
     return PLUGIN_HANDLED;

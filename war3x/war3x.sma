@@ -116,6 +116,8 @@ new WAR3X_DIR[64];                          // Stores WAR3X working directory
 
 #include "war3x/events.inl"                 // Events
 #include "war3x/commands.inl"               // Client Commands
+#include "war3x/help.inl"                   // Help functions
+
 
 /* - Core Functions --------------------------------------------- */
 
@@ -267,7 +269,7 @@ public client_disconnect( id ) {
         }
     }
 
-    // Remove All Player Tasks
+    // Remove All Player tasks
 
     Purge_Death( id );
     Purge_NewRound( id );
@@ -298,7 +300,7 @@ public plugin_init() {
     register_clcmd( "dropitem",       "cmd_DropItem",       -1, " -- Press to drop item on the ground"                           );
 
     register_concmd( "war3x",         "WAR3_toggle",        ADMIN_RCON, " -- Enables/Disables the Warcraft 3 Plugin" );
-    register_concmd( "war3x_help",    "War3x_GenerateHelp", ADMIN_RCON, " -- Generates War3x help files"             );
+    register_concmd( "war3x_help",    "HELP_generate", ADMIN_RCON, " -- Generates War3x help files"             );
 
     register_concmd( "war3x_setlevel", "Cmd_SetLevel" );    // Alter Level
     register_concmd( "war3x_setxp",    "Cmd_SetXp"    );    // Alter XP

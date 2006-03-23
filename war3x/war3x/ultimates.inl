@@ -235,8 +235,8 @@ public Ultimate_Scan( parm_Scan[1] ) {
         {
             emit_sound( id, CHAN_STATIC, SOUND_ULTIMATESCAN, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-            new TaskId = TASK_ULTIMATE + id;
-            set_task( 1.0, "Ultimate_Scan", TaskId, parm_Scan, 1 );
+            new task = TASK_ULTIMATE + id;
+            set_task( 1.0, "Ultimate_Scan", task, parm_Scan, 1 );
         }
     }
 
@@ -341,7 +341,7 @@ public Ultimate_Cast( Caster, Target ) {
         case RACE_UNDEAD:   UD_ultimates( Caster, Target );
         case RACE_HUMAN:    HU_ultimates( Caster, Target );
         case RACE_ORC:      OR_ultimates( Caster, Target );
-        case RACE_NIGHTELF: Ultimates_NE( Caster, Target );
+        case RACE_NIGHTELF: NE_ultimates( Caster, Target );
     }
 
     return PLUGIN_HANDLED;
@@ -360,8 +360,8 @@ public Ultimate_Beep( id ) {
         new parm_Beep[1];
         parm_Beep[0] = id;
 
-        new TaskId = TASK_ULTIMATE + id;
-        set_task( 1.0, "Ultimate_Scan", TaskId, parm_Beep, 1 );
+        new task = TASK_ULTIMATE + id;
+        set_task( 1.0, "Ultimate_Scan", task, parm_Beep, 1 );
 
         g_iChargeUltimate[id] = DURATION_ULTIMATEPING;
 
@@ -397,10 +397,10 @@ public Ultimate_Cooldown( id, Float:fCooldown ) {
     new parm_Cooldown[1];
     parm_Cooldown[0] = id;
 
-    new TaskId = TASK_ULTIMATECOOLDOWN + id;
-    remove_task( TaskId, 0 );
+    new task = TASK_ULTIMATECOOLDOWN + id;
+    remove_task( task, 0 );
 
-    set_task( fCooldown, "Ultimate_Restore", TaskId, parm_Cooldown, 1 );
+    set_task( fCooldown, "Ultimate_Restore", task, parm_Cooldown, 1 );
 
     return PLUGIN_HANDLED;
 }
@@ -440,8 +440,8 @@ public Ultimate_Enable( id ) {
 
 public Ultimate_Disable( id ) {
 
-    new TaskId = TASK_ULTIMATECOOLDOWN + id;
-    remove_task( TaskId, 0 );
+    new task = TASK_ULTIMATECOOLDOWN + id;
+    remove_task( task, 0 );
 
     return PLUGIN_HANDLED;
 }

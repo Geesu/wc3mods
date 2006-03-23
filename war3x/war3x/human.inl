@@ -57,7 +57,7 @@ public HU_ultimates( caster, target ) {
                 HU_U_HOLYLIGHT_heal( caster, target );
                 Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-                Invis_Cooldown( caster );
+                SHARED_INVIS_cooldown( caster );
             }
         }
 
@@ -68,7 +68,7 @@ public HU_ultimates( caster, target ) {
             HU_U_HOLYLIGHT_damage( caster, target );
             Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-            Invis_Cooldown( caster );
+            SHARED_INVIS_cooldown( caster );
         }
 
         else
@@ -89,7 +89,7 @@ public HU_ultimates( caster, target ) {
         HU_U_FLAMESTRIKE_init( caster, target );
         Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-        Invis_Cooldown( caster );
+        SHARED_INVIS_cooldown( caster );
     }
 
     // Avatar
@@ -98,8 +98,6 @@ public HU_ultimates( caster, target ) {
     {
         HU_U_AVATAR( caster );
         Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
-
-        Invis_Cooldown( caster );
     }
 
     else
@@ -162,7 +160,7 @@ public HU_S_INVISIBILITY_set( id ) {
     new iInvis = floatround( fInvis );
     set_user_rendering( id, kRenderFxNone, 0, 0, 0, kRenderTransTexture, iInvis );
 
-    Invis_Icon( id, ICON_SHOW );
+    SHARED_INVIS_icon( id, ICON_SHOW );
 
     // Set shift task
 
@@ -196,7 +194,7 @@ public HU_S_INVISIBILITY_shift( arg_read[1] ) {
         new Float:fInvisShift = ( fMinLevel - fMaxLevel ) / float( INVISIBILITY_SHIFTS );
         entity_set_float( id, EV_FL_renderamt, fCurrentInvis + fInvisShift );
 
-        Invis_Icon( id, ICON_SHOW );
+        SHARED_INVIS_icon( id, ICON_SHOW );
 
         // Repeat
 
@@ -257,7 +255,7 @@ static HU_S_BASH( attacker, victim, weapon, headshot ) {
 
     // Glow
 
-    Glow_Set( victim, fDuration, BASH_RGB, 24 );
+    SHARED_GLOW_set( victim, fDuration, BASH_RGB, 24 );
 
     // Apply damage
 
@@ -307,7 +305,7 @@ public SBash_Remove( arg_read[1] ) {
 
     g_bPlayerBashed[id] = false;
 
-    Immobilize_Remove( id );
+    SHARED_IMMOBILIZE_remove( id );
     WAR3_set_speed( id );
 
     return PLUGIN_HANDLED;
@@ -393,7 +391,7 @@ static HU_U_HOLYLIGHT_heal( caster, target ) {
 
     // Invisibility cooldown
 
-    Invis_Cooldown( target );
+    SHARED_INVIS_cooldown( target );
 
     return PLUGIN_HANDLED;
 }
@@ -415,7 +413,7 @@ static HU_U_HOLYLIGHT_damage( caster, target ) {
 
     if ( g_PlayerInfo[target][CURRENT_ITEM] == ITEM_AMULET )
     {
-        IAmulet_Block( target, caster );
+        ITEM_AMULET_block( target, caster );
         return PLUGIN_HANDLED;
     }
 
@@ -676,7 +674,7 @@ public HU_U_FLAMESTRIKE_damage( arg_read[5] ) {
 }
 
 
-// Fire Task
+// Fire task
 
 public HU_U_FLAMESTRIKE_onfire( arg_read[5] ) {
 
@@ -872,6 +870,8 @@ static HU_U_FLAMESTRIKE_effects( Origin[3] ) {
 
 static HU_U_AVATAR( id ) {
 
+    SHARED_INVIS_remove( id );
+
     g_bPlayerCantMove[id] = true;
     g_bPlayerAvatarGrow[id] = true;
 
@@ -954,7 +954,7 @@ static HU_U_AVATAR_immune( id ) {
     g_bPlayerAvatarGrow[id] = false;
     g_iPlayerAvatar[id] = get_user_health( id );
 
-    Immobilize_Remove( id );
+    SHARED_IMMOBILIZE_remove( id );
     WAR3_set_speed( id );
 
 	// Bartime
@@ -1036,7 +1036,7 @@ static HU_U_AVATAR_finish( id ) {
 
     // Invisibility cooldown
 
-    Invis_Cooldown( id );
+    SHARED_INVIS_cooldown( id );
 
     // Reset speed
 

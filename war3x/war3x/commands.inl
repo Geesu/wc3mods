@@ -3,71 +3,71 @@
 
 // Ultimate Command
 
-public cmd_Ultimate( iCasterId ) {
+public cmd_Ultimate( caster ) {
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
 
-    new iTargetId = g_PlayerTarget[iCasterId];
+    new iTargetId = g_PlayerTarget[caster];
 
     // Press when dead ( target skills ) *REMOVED TEMPORARILY*
 
-    if ( !is_user_alive( iCasterId ) )
+    if ( !is_user_alive( caster ) )
     {
-        //motd_Skills( iCasterId, iTargetId );
+        //HELP_motd_target( caster, iTargetId );
         return PLUGIN_HANDLED;
     }
 
     // Press when restricted
 
-    else if ( get_cvar_bitsum( "war3x_restrict_ultimates" ) & WAR3_get_ult_flag( g_PlayerInfo[iCasterId][CURRENT_RACE], g_PlayerInfo[iCasterId][CURRENT_ULTIMATE] ) )
+    else if ( get_cvar_bitsum( "war3x_restrict_ultimates" ) & WAR3_get_ult_flag( g_PlayerInfo[caster][CURRENT_RACE], g_PlayerInfo[caster][CURRENT_ULTIMATE] ) )
     {
         new szMessage[128];
         copy( szMessage, 127, ULTIMATE_RESTRICTED );
 
-        WAR3_status_text( iCasterId, szMessage, 0.5 );
+        WAR3_status_text( caster, szMessage, 0.5 );
 
         return PLUGIN_HANDLED;
     }
 
     // Press when sleeping
 
-    else if ( g_bPlayerSleeping[iCasterId] )
+    else if ( g_bPlayerSleeping[caster] )
     {
         new szMessage[128];
         copy( szMessage, 127, ULTIMATE_NOCAST_SLEEP );
 
-        WAR3_status_text( iCasterId, szMessage, 1.0 );
+        WAR3_status_text( caster, szMessage, 1.0 );
     }
 
     // Pressing Key During Cooldown
 
-    else if ( g_fUltimateCooldown[iCasterId] && is_user_alive( iCasterId ) )
+    else if ( g_fUltimateCooldown[caster] && is_user_alive( caster ) )
     {
-        if ( iCasterId == g_Vip )
+        if ( caster == g_Vip )
         {
             new szMessage[128];
             copy( szMessage, 127, ULTIMATE_NOCAST_VIP );
 
-            WAR3_status_text( iCasterId, szMessage, 1.0 );
+            WAR3_status_text( caster, szMessage, 1.0 );
         }
 
-        else if ( g_PlayerInfo[iCasterId][CURRENT_ULTIMATE] && g_iCurrentRound <= 1 )
+        else if ( g_PlayerInfo[caster][CURRENT_ULTIMATE] && g_iCurrentRound <= 1 )
         {
             new szMessage[128];
             copy( szMessage, 127, ULTIMATE_NOCAST_PISTOL );
 
-            WAR3_status_text( iCasterId, szMessage, 1.0 );
+            WAR3_status_text( caster, szMessage, 1.0 );
         }
 
-        else if ( g_PlayerInfo[iCasterId][CURRENT_ULTIMATE] )
+        else if ( g_PlayerInfo[caster][CURRENT_ULTIMATE] )
         {
             if ( g_bFreezeTime )
             {
                 new szMessage[128];
                 copy( szMessage, 127, ULTIMATE_NOTREADY );
 
-                WAR3_status_text( iCasterId, szMessage, 0.5 );
+                WAR3_status_text( caster, szMessage, 0.5 );
             }
 
             else
@@ -85,12 +85,12 @@ public cmd_Ultimate( iCasterId ) {
                     fCooldownTime = ULTIMATE_COOLDOWNDEFAULT;
                 }
 
-                iRemainingTime = floatround( fCooldownTime - ( get_gametime() - g_fUltimateCooldown[iCasterId] ) );
+                iRemainingTime = floatround( fCooldownTime - ( get_gametime() - g_fUltimateCooldown[caster] ) );
 
                 new szMessage[64];
                 format( szMessage, 63, ULTIMATE_NOTREADY_COOLDOWN, iRemainingTime );
 
-                WAR3_status_text( iCasterId, szMessage, 0.5 );
+                WAR3_status_text( caster, szMessage, 0.5 );
             }
         }
 
@@ -99,35 +99,35 @@ public cmd_Ultimate( iCasterId ) {
             new szMessage[128];
             copy( szMessage, 127, ULTIMATE_NOTFOUND );
 
-            WAR3_status_text( iCasterId, szMessage, 0.5 );
+            WAR3_status_text( caster, szMessage, 0.5 );
         }
 
         // play client sound
 
-        client_cmd( iCasterId, "speak warcraft3/bonus/Error.wav" );
+        client_cmd( caster, "speak warcraft3/bonus/Error.wav" );
     }
 
     // Cast on Self ( some ultimates )
 
-    else if ( ( g_iChargeUltimate[iCasterId] && Ultimate_Target( iCasterId ) & ULTIMATE_TARGET_SELFONLY ) || ( g_iChargeUltimate[iCasterId] && Ultimate_Target( iCasterId ) & ULTIMATE_TARGET_SELF ) )
-        Ultimate_Cast( iCasterId, iCasterId );
+    else if ( ( g_iChargeUltimate[caster] && Ultimate_Target( caster ) & ULTIMATE_TARGET_SELFONLY ) || ( g_iChargeUltimate[caster] && Ultimate_Target( caster ) & ULTIMATE_TARGET_SELF ) )
+        Ultimate_Cast( caster, caster );
 
     // Cast on Target
 
-    else if ( iTargetId && !( Ultimate_Target( iCasterId ) & ULTIMATE_TARGET_SELFONLY ) )
-        Ultimate_Cast( iCasterId, iTargetId );
+    else if ( iTargetId && !( Ultimate_Target( caster ) & ULTIMATE_TARGET_SELFONLY ) )
+        Ultimate_Cast( caster, iTargetId );
 
     else
     {
-        if ( g_iChargeUltimate[iCasterId] && !( Ultimate_Target( iCasterId ) & ULTIMATE_TARGET_SELF ) )
+        if ( g_iChargeUltimate[caster] && !( Ultimate_Target( caster ) & ULTIMATE_TARGET_SELF ) )
         {
             new szMessage[128];
             copy( szMessage, 127, CANT_TARGET_SELF );
 
-            WAR3_status_text( iCasterId, szMessage, 0.5 );
+            WAR3_status_text( caster, szMessage, 0.5 );
         }
 
-        Ultimate_Beep( iCasterId );
+        Ultimate_Beep( caster );
     }
 
     return PLUGIN_HANDLED;
@@ -163,7 +163,7 @@ public Cmd_Say( id ) {
         menu_SelectSkills( id );
 
     else if ( equali( szText, "playerskills" ) )
-        motd_PlayerSkills( id );
+        HELP_motd_players( id );
 
     else if ( equali( szText, "skillinfo" ) || equali( szText, "skillsinfo" ) || equali( szText, "skillhelp" ) || equali( szText, "skillshelp" ) )
         menu_SkillsHelp( id );
@@ -175,10 +175,10 @@ public Cmd_Say( id ) {
         WAR3_hud_level( id );
 
     else if ( equali( szText, "skills" ) || equali( szText, "myskills" ) )
-        motd_Skills( id, id );
+        HELP_motd_target( id, id );
 
     else if ( equali( szText, "iteminfo" ) || equali( szText, "itemsinfo" ) || equali( szText, "itemhelp" ) || equali( szText, "itemshelp" ) )
-        motd_ItemsHelp( id );
+        HELP_motd_items( id );
 
     else if ( equali( szText, "war3menu" ) || equali( szText, "wc3menu" ) || equali( szText, "war3xmenu" ) || equali( szText, "wc3xmenu" ) )
         menu_War3menu( id );
@@ -201,7 +201,7 @@ public Cmd_Drop( id ) {
         parm_Ankh[0] = id;
 
         remove_task( TASK_ANKH + id, 0 );
-        set_task( 0.1, "Ankh_GiveItems", TASK_ANKH + id, parm_Ankh, 1 );
+        set_task( 0.1, "ITEM_ANKH_give", TASK_ANKH + id, parm_Ankh, 1 );
     }
 
     return PLUGIN_CONTINUE;

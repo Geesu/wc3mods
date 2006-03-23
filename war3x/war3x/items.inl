@@ -211,7 +211,7 @@ public Item_Equip( id, iNewItem ) {
     else if ( iNewItem == ITEM_CLOAK )
     {
         client_print( id, print_chat, ITEM_CLOAK_MESSAGE, ( VALUE_CLOAK * 100.0 ), "%" );
-        Invis_Set( id );
+        SHARED_INVIS_set( id );
     }
 
     // Sobi Mask
@@ -228,8 +228,8 @@ public Item_Equip( id, iNewItem ) {
 
         if ( g_fUltimateCooldown[id] && ( g_fBuyTime + get_cvar_float( "war3x_ultimatewarmup" ) ) < get_gametime() )
         {
-            new TaskId = TASK_ULTIMATECOOLDOWN + id;
-            remove_task( TaskId, 0 );
+            new task = TASK_ULTIMATECOOLDOWN + id;
+            remove_task( task, 0 );
 
             new Float:fCurrentCooldown = get_gametime() - g_fUltimateCooldown[id];
             new Float:fRemainingCooldown = ULTIMATE_COOLDOWNDEFAULT - fCurrentCooldown;
@@ -242,7 +242,7 @@ public Item_Equip( id, iNewItem ) {
             new parm_Cooldown[1];
             parm_Cooldown[0] = id;
 
-            set_task( fNewCooldown, "Ultimate_Restore", TaskId, parm_Cooldown, 1 );
+            set_task( fNewCooldown, "Ultimate_Restore", task, parm_Cooldown, 1 );
         }
 
         client_print( id, print_chat, ITEM_MASK_MESSAGE, ULTIMATE_COOLDOWNDEFAULT, ULTIMATE_COOLDOWNDEFAULT - VALUE_MASK );
@@ -290,8 +290,8 @@ public Item_Change( id, iOldItem, iNewItem ) {
         new weapon, iClip, iAmmo;
         weapon = get_user_weapon( id, iClip, iAmmo );
 
-        if ( !( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL1] && weapon == CSW_KNIFE ) )
-            Invis_Remove( id );
+        if ( g_PlayerInfo[id][CURRENT_RACE] != RACE_HUMAN || ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && !g_PlayerInfo[id][CURRENT_SKILL1] ) || weapon != CSW_KNIFE )
+            SHARED_INVIS_remove( id );
     }
 
     // Remove Cooldown Bonus if New Item is not Sobi Mask
@@ -300,8 +300,8 @@ public Item_Change( id, iOldItem, iNewItem ) {
     {
         if ( g_fUltimateCooldown[id] )
         {
-            new TaskId = TASK_ULTIMATECOOLDOWN + id;
-            remove_task( TaskId, 0 );
+            new task = TASK_ULTIMATECOOLDOWN + id;
+            remove_task( task, 0 );
 
             new Float:fCurrentCooldown = get_gametime() - ( g_fUltimateCooldown[id] + VALUE_MASK );
             new Float:fCooldownUsed = fCurrentCooldown / ( ULTIMATE_COOLDOWNDEFAULT - VALUE_MASK );
@@ -313,7 +313,7 @@ public Item_Change( id, iOldItem, iNewItem ) {
             new parm_Cooldown[1];
             parm_Cooldown[0] = id;
 
-            set_task( fNewCooldown, "Ultimate_Restore", TaskId, parm_Cooldown, 1 );
+            set_task( fNewCooldown, "Ultimate_Restore", task, parm_Cooldown, 1 );
         }
     }
 
@@ -449,12 +449,393 @@ public Item_DropDead( id, iItemNum ) {
 }
 
 
+public Item_Touch( iToucherId, iPlayerId ) {
+
+	// Sanity checks
+
+    if ( iPlayerId < 1 || iPlayerId > 32 || iToucherId < 1 || !is_user_alive( iPlayerId ) )
+        return PLUGIN_CONTINUE;
+
+    if ( !g_PlayerInfo[iPlayerId][CURRENT_ITEM] )
+    {
+        // Make sure on ground
+
+        if ( get_entity_flags( iToucherId ) & FL_ONGROUND )
+        {
+            new iItemNum = entity_get_int( iToucherId, EV_ENT_owner );
+            Item_Pickup( iPlayerId, iToucherId, iItemNum );
+        }
+    }
+
+	return PLUGIN_CONTINUE;
+}
+
+
 /* - Item Functions --------------------------------------------- */
+
+
+// Ankh of Reincarnation
+
+public ITEM_ANKH_set( id ) {
+
+    if ( id == g_Vip || g_iCurrentRound < 1 )
+        return PLUGIN_HANDLED;
+
+
+    new Float:fAnkhChance;
+    new Float:fRandomNum = random_float( 0.0,1.0 );
+
+    if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_ANKH )
+        fAnkhChance += VALUE_ANKH;
+
+    // Give Weapons
+
+    if ( fAnkhChance >= fRandomNum )
+    {
+        new Weapons[32], iTotalWeapons;
+        get_user_weapons( id, Weapons, iTotalWeapons );
+
+        for ( new iWeaponNum = 0; iWeaponNum < iTotalWeapons; iWeaponNum++ )
+        {
+            new weapon = Weapons[iWeaponNum];
+
+            switch ( cs_get_weapon_group( weapon ) )
+            {
+                case CS_WEAPON_GROUP_PRIMARY:
+                {
+                    if ( get_cvar_num( "war3x_ankhautosnipers" ) || ( !get_cvar_num( "war3x_ankhautosnipers" ) && cs_get_weapon_type_( weapon ) != CS_WEAPON_TYPE_AUTOSNIPER ) )
+                    {
+                        g_PlayerBackpack[id][CURRENT_PRIMARY] = weapon;
+                    }
+                }
+
+                case CS_WEAPON_GROUP_SECONDARY:
+                {
+                    if ( get_cvar_num( "war3x_ankhpistols" ) )
+                    {
+                        g_PlayerBackpack[id][CURRENT_SECONDARY] = weapon;
+                    }
+                }
+
+                case CS_WEAPON_GROUP_GRENADE:
+                {
+                    if ( get_cvar_num( "war3x_ankhgrenades" ) )
+                    {
+                        new iClip, iAmmo;
+
+                        switch ( weapon )
+                        {
+                            case CSW_HEGRENADE:
+                            {
+                                get_user_ammo( id, CSW_HEGRENADE, iClip, iAmmo );
+                                g_PlayerBackpack[id][CURRENT_HEGRENADE] = iAmmo;
+                            }
+
+                            case CSW_SMOKEGRENADE:
+                            {
+                                get_user_ammo( id, CSW_SMOKEGRENADE, iClip, iAmmo );
+                                g_PlayerBackpack[id][CURRENT_SMOKEGRENADE] = iAmmo;
+                            }
+
+                            case CSW_FLASHBANG:
+                            {
+                                get_user_ammo( id, CSW_FLASHBANG, iClip, iAmmo );
+                                g_PlayerBackpack[id][CURRENT_FLASHBANG] = iAmmo;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        g_PlayerBackpack[id][CURRENT_ARMOR] = get_user_armor( id );
+        g_PlayerBackpack[id][CURRENT_ARMORTYPE] = g_iPlayerArmor[id][ARMOR_TYPE];
+
+        if ( g_bGotDefuser[id] )
+            g_PlayerBackpack[id][CURRENT_DEFUSE] = 1;
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+
+public ITEM_ANKH_drop( id ) {
+
+    if ( id == g_Vip )
+    {
+        client_print( id, print_chat, VIP_ANKH_MESSAGE );
+        return PLUGIN_HANDLED;
+    }
+
+    g_bAnkhDropWeapons[id] = false;
+
+    new CurrentWeapons[2];
+
+    new Weapons[32], iTotalWeapons;
+    get_user_weapons( id, Weapons, iTotalWeapons );
+
+    // Drop Dupilcate/Extra Weapon(s)
+
+    for ( new iWeaponNum = 0; iWeaponNum < iTotalWeapons; iWeaponNum++ )
+    {
+        new weapon = Weapons[iWeaponNum];
+
+        // If Weapon(s) are saved in Ankh array, Drop all of the same
+        // type to make room. If Weapon(s) stored already exist, don't
+        // drop (or give) the item. If no Weapon is set to reincarnate,
+        // but one exists, drop all others of the same type.
+
+        switch ( cs_get_weapon_group( weapon ) )
+        {
+            // Primary Weapon(s)
+
+            case CS_WEAPON_GROUP_PRIMARY:
+            {
+                if ( g_PlayerBackpack[id][CURRENT_PRIMARY] )
+                {
+                    if ( weapon == g_PlayerBackpack[id][CURRENT_PRIMARY] )
+                        g_PlayerBackpack[id][CURRENT_PRIMARY] = 0;
+
+                    else
+                    {
+                        g_bAnkhDropWeapons[id] = true;
+                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weapon] );
+                    }
+                }
+
+                else
+                {
+                    if ( CurrentWeapons[CURRENT_PRIMARY] )
+                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weapon] );
+
+                    else
+                    {
+                        CurrentWeapons[CURRENT_PRIMARY] = weapon;
+                    }
+                }
+            }
+
+            // Sidearm(s)
+
+            case CS_WEAPON_GROUP_SECONDARY:
+            {
+                if ( g_PlayerBackpack[id][CURRENT_SECONDARY] )
+                {
+                    if ( weapon == g_PlayerBackpack[id][CURRENT_SECONDARY] )
+                        g_PlayerBackpack[id][CURRENT_SECONDARY] = 0;
+
+                    else
+                    {
+                        g_bAnkhDropWeapons[id] = true;
+                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weapon] );
+                    }
+                }
+
+                else
+                {
+                    if ( CurrentWeapons[CURRENT_SECONDARY] )
+                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weapon] );
+
+                    else
+                    {
+
+                        CurrentWeapons[CURRENT_SECONDARY] = weapon;
+                    }
+                }
+            }
+        }
+    }
+
+    if ( !g_bAnkhDropWeapons[id] )
+    {
+        new parm_Ankh[1];
+        parm_Ankh[0] = id;
+
+        ITEM_ANKH_give( parm_Ankh );
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+
+public ITEM_ANKH_give( parm_Ankh[1] ) {
+
+    new id = parm_Ankh[0];
+
+    g_bAnkhDropWeapons[id] = false;
+    new bool:bWeaponsGiven, bool:bArmorSkill;
+
+    // Give Primary Weapon
+
+    if ( g_PlayerBackpack[id][CURRENT_PRIMARY] )
+    {
+        bWeaponsGiven = true;
+        give_item( id, CS_WEAPON_NAME[g_PlayerBackpack[id][CURRENT_PRIMARY]] );
+
+        for ( new i = 0; i < ANKH_AMMOCLIPS; i++ )
+        {
+            give_item( id, CS_AMMO_NAME[g_PlayerBackpack[id][CURRENT_PRIMARY]] );
+
+            /*
+            switch ( g_PlayerBackpack[id][CURRENT_PRIMARY] )
+            {
+                case CSW_M3:        give_item( id, "ammo_buckshot" );
+                case CSW_XM1014:    give_item( id, "ammo_buckshot" );
+                case CSW_MP5NAVY:   give_item( id, "ammo_9mm" );
+                case CSW_TMP:       give_item( id, "ammo_9mm" );
+                case CSW_P90:       give_item( id, "ammo_57mm" );
+                case CSW_MAC10:     give_item( id, "ammo_45acp" );
+                case CSW_UMP45:     give_item( id, "ammo_45acp" );
+                case CSW_AK47:      give_item( id, "ammo_762nato" );
+                case CSW_SG552:     give_item( id, "ammo_556nato" );
+                case CSW_GALI:      give_item( id, "ammo_556nato" );
+                case CSW_FAMAS:     give_item( id, "ammo_556nato" );
+                case CSW_M4A1:      give_item( id, "ammo_556nato" );
+                case CSW_AUG:       give_item( id, "ammo_556nato" );
+                case CSW_SCOUT:     give_item( id, "ammo_762nato" );
+                case CSW_AWP:       give_item( id, "ammo_338magnum" );
+                case CSW_G3SG1:     give_item( id, "ammo_762nato" );
+                case CSW_SG550:     give_item( id, "ammo_556nato" );
+                case CSW_M249:      give_item( id, "ammo_556natobox" );
+            }
+            */
+        }
+    }
+
+    // Give Sidearm
+
+    if ( g_PlayerBackpack[id][CURRENT_SECONDARY] )
+    {
+        bWeaponsGiven = true;
+        give_item( id, CS_WEAPON_NAME[g_PlayerBackpack[id][CURRENT_SECONDARY]] );
+
+        for ( new i = 0; i < ANKH_AMMOCLIPS; i++ )
+        {
+            give_item( id, CS_AMMO_NAME[g_PlayerBackpack[id][CURRENT_SECONDARY]] );
+
+            /*
+            switch ( g_PlayerBackpack[id][CURRENT_SECONDARY] )
+            {
+                case CSW_USP:       give_item( id, "ammo_45acp" );
+                case CSW_DEAGLE:    give_item( id, "ammo_50ae" );
+                case CSW_GLOCK18:   give_item( id, "ammo_9mm" );
+                case CSW_ELITE:     give_item( id, "ammo_9mm" );
+                case CSW_P228:      give_item( id, "ammo_357sig" );
+                case CSW_FIVESEVEN: give_item( id, "ammo_57mm" );
+            }
+            */
+        }
+    }
+
+    // Give Grenade(s)
+
+    if ( g_PlayerBackpack[id][CURRENT_HEGRENADE] )
+    {
+        give_item( id, CS_WEAPON_NAME[CSW_HEGRENADE] );
+        bWeaponsGiven = true;
+    }
+
+    if ( g_PlayerBackpack[id][CURRENT_SMOKEGRENADE] )
+    {
+        give_item( id, CS_WEAPON_NAME[CSW_SMOKEGRENADE] );
+        bWeaponsGiven = true;
+    }
+
+    if ( g_PlayerBackpack[id][CURRENT_FLASHBANG] )
+    {
+        give_item( id, CS_WEAPON_NAME[CSW_FLASHBANG] );
+        bWeaponsGiven = true;
+
+//        if ( g_PlayerBackpack[id][CURRENT_FLASHBANG] == 2)
+//            give_item( id, "ammo_flashbang" );
+    }
+
+    // Give Armor
+
+    if ( g_PlayerBackpack[id][CURRENT_ARMOR] )
+    {
+        if ( g_PlayerBackpack[id][CURRENT_ARMORTYPE] )
+            give_item( id, "item_assaultsuit" );
+
+        else
+        {
+            give_item( id, "item_kevlar" );
+        }
+
+        set_user_armor( id, g_PlayerBackpack[id][CURRENT_ARMOR] );
+        WAR3_check_armor( id );
+
+        g_bArmorDepleted[id] = false;
+        bWeaponsGiven = true;
+    }
+
+    // Give Defuser
+
+    if ( g_PlayerBackpack[id][CURRENT_DEFUSE] )
+    {
+        give_item( id, "item_thighpack" );
+        bWeaponsGiven = true;
+    }
+
+
+    if ( bWeaponsGiven )
+    {
+        // Play armor skill effect if armor given
+
+        if ( g_PlayerBackpack[id][CURRENT_ARMOR] && get_user_armor(id) == g_PlayerBackpack[id][CURRENT_ARMOR] )
+        {
+            if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD && g_PlayerInfo[id][CURRENT_SKILL3] )
+            {
+                bArmorSkill = true;
+                WAR3_armorskill_on( id );
+            }
+
+            else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL3] )
+            {
+                bArmorSkill = true;
+                WAR3_armorskill_on( id );
+            }
+
+            else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL3] )
+            {
+                bArmorSkill = true;
+                WAR3_armorskill_on( id );
+            }
+
+            else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF )
+            {
+                bArmorSkill = true;
+                WAR3_armorskill_on( id );
+            }
+        }
+
+        if ( !bArmorSkill )
+        {
+            // Play Client Sound
+
+            client_cmd( id, "speak warcraft3/bonus/Reincarnation.wav" );
+
+            // Screen Fade
+
+            Create_ScreenFade( id, (1<<10), (1<<10), FADE_OUT, 0, 255, 0, 96 );
+        }
+    }
+
+    else
+    {
+        client_print( id, print_center, ITEM_ANKH_NOITEMS );
+    }
+
+
+    g_PlayerBackpack[id] = {0,0,0,0,0,0,0,0};
+
+    return PLUGIN_HANDLED;
+}
 
 
 // Claws of Attack +6
 
-public IClaws_Damage( attacker, victim, weapon, headshot ) {
+public ITEM_CLAWS_damage( attacker, victim, weapon, headshot ) {
 
     // Add to bonus damage array
 
@@ -474,7 +855,7 @@ public IClaws_Damage( attacker, victim, weapon, headshot ) {
 
 // Cloak of Invisibility
 
-public ICloak_Set( id ) {
+public ITEM_CLOAK_set( id ) {
 
     g_bPlayerInvis[id] = true;
 
@@ -483,7 +864,7 @@ public ICloak_Set( id ) {
 
     set_user_rendering( id, kRenderFxNone, 0, 0, 0, kRenderTransTexture, iInvis );
 
-    Invis_Icon( id, ICON_SHOW );
+    SHARED_INVIS_icon( id, ICON_SHOW );
 
     return PLUGIN_HANDLED;
 }
@@ -491,7 +872,7 @@ public ICloak_Set( id ) {
 
 // Amulet of Shielding
 
-public IAmulet_Block( target, caster ) {
+public ITEM_AMULET_block( target, caster ) {
 
     // Message
 
@@ -512,7 +893,7 @@ public IAmulet_Block( target, caster ) {
 
     // Glow
 
-    Glow_Set( target, 1.0, AMULET_RGB, 48 );
+    SHARED_GLOW_set( target, 1.0, AMULET_RGB, 48 );
 
     // Sparks
 
@@ -541,26 +922,4 @@ public IAmulet_Block( target, caster ) {
     }
 
     return PLUGIN_HANDLED;
-}
-
-
-public Item_Touch( iToucherId, iPlayerId )
-{
-
-	// Sanity checks
-    if ( iPlayerId < 1 || iPlayerId > 32 || iToucherId < 1 || !is_user_alive( iPlayerId ) )
-        return PLUGIN_CONTINUE;
-
-    if ( !g_PlayerInfo[iPlayerId][CURRENT_ITEM] )
-    {
-        // Make sure on ground
-
-        if ( get_entity_flags( iToucherId ) & FL_ONGROUND )
-        {
-            new iItemNum = entity_get_int( iToucherId, EV_ENT_owner );
-            Item_Pickup( iPlayerId, iToucherId, iItemNum );
-        }
-    }
-
-	return PLUGIN_CONTINUE;
 }

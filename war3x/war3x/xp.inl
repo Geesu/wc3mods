@@ -379,8 +379,8 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
 
         else if ( WAR3_get_level( iNewValue ) )
         {
-            War3x_CheckLevel( playerId, iOldValue, iNewValue );
-            War3x_CheckSkills( playerId );
+            WAR3_check_level( playerId, iOldValue, iNewValue );
+            WAR3_check_skills( playerId );
         }
     }
 
@@ -449,7 +449,7 @@ public XP_Give( id, iOldXp, iNewXp ) {
         if ( iNewXp > g_iLevelXp[TOTAL_LEVELS] )
             iNewXp = g_iLevelXp[TOTAL_LEVELS];
 
-        War3x_CheckLevel( id, iOldXp, iNewXp );
+        WAR3_check_level( id, iOldXp, iNewXp );
 
         g_PlayerInfo[id][CURRENT_XP] = iNewXp;
         g_iXPtotal[id][iRaceNum] = iNewXp;
@@ -1413,14 +1413,14 @@ public XP_All_Hostages_CT() {
 
 // Give Support XP
 
-public XP_Support_Heal( iCasterId, iHealthGiven ) {
+public XP_Support_Heal( caster, iHealthGiven ) {
 
     if ( !iHealthGiven )
         return PLUGIN_HANDLED;
 
-    if ( WAR3_get_level( g_PlayerInfo[iCasterId][CURRENT_XP] ) == TOTAL_LEVELS )
+    if ( WAR3_get_level( g_PlayerInfo[caster][CURRENT_XP] ) == TOTAL_LEVELS )
     {
-        client_print( iCasterId, print_chat, XP_SUPPORT_HEALMSG_MAX, iHealthGiven );
+        client_print( caster, print_chat, XP_SUPPORT_HEALMSG_MAX, iHealthGiven );
         return PLUGIN_HANDLED;
     }
 
@@ -1428,14 +1428,14 @@ public XP_Support_Heal( iCasterId, iHealthGiven ) {
     new Float:fSupportXp = float( iHealthGiven ) * XP_SUPPORT_HEAL * get_cvar_float( "war3x_xp_normal" );
     new iSupportXp = floatround( fSupportXp );
 
-    g_iXPsupport[iCasterId][XP_ROUND] += iSupportXp;
+    g_iXPsupport[caster][XP_ROUND] += iSupportXp;
 
-    new iOldXp = g_PlayerInfo[iCasterId][CURRENT_XP];
+    new iOldXp = g_PlayerInfo[caster][CURRENT_XP];
     new iNewXp = iOldXp + iSupportXp;
 
-    XP_Give( iCasterId, iOldXp, iNewXp );
+    XP_Give( caster, iOldXp, iNewXp );
 
-    client_print( iCasterId, print_chat, XP_SUPPORT_HEALMSG, iSupportXp, iHealthGiven );
+    client_print( caster, print_chat, XP_SUPPORT_HEALMSG, iSupportXp, iHealthGiven );
 
     return PLUGIN_HANDLED;
 }

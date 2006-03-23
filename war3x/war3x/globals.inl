@@ -2,7 +2,6 @@
 
 /* - Race/Skill/Item Constants ---------------------------------- */
 
-#define VALUE_BOOTS               275.0     // (  float) max speed value
 
 #define RACE_UNDEAD                 1     // Player race references
 #define RACE_HUMAN                  2
@@ -189,7 +188,7 @@ new const GETCLASSCHECK[3] =    {0,2,5};    // (integer) levels players receive 
 #define KEY_HELP                      8
 #define KEY_CANCEL                    9
 
-#define TASK_REGEN                    0     // Task id numbers
+#define TASK_REGEN                    0     // task id numbers
 #define TASK_FROSTSLOW               32
 #define TASK_GLOW                    64
 #define TASK_EVASION                 96

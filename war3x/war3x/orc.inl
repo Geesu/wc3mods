@@ -54,7 +54,7 @@ public OR_ultimates( caster, target ) {
         OR_U_CHAINLIGHTNING( caster, target );
         Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-        Invis_Cooldown( caster );
+        SHARED_INVIS_cooldown( caster );
     }
 
     // Healing Wave
@@ -84,7 +84,7 @@ public OR_ultimates( caster, target ) {
             OR_U_HEALINGWAVE( caster, target );
             Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-            Invis_Cooldown( caster );
+            SHARED_INVIS_cooldown( caster );
         }
     }
 
@@ -140,8 +140,8 @@ public OR_S_REGENERATION_set( id ) {
     new parm_Regen[1];
     parm_Regen[0] = id;
 
-    new iTaskId = TASK_REGEN + id;
-    set_task( fRegenRate, "OR_S_REGENERATION_heal", iTaskId, parm_Regen, 1 );
+    new task = TASK_REGEN + id;
+    set_task( fRegenRate, "OR_S_REGENERATION_heal", task, parm_Regen, 1 );
 
     // Regeneration Icon
 
@@ -181,8 +181,8 @@ public OR_S_REGENERATION_heal( parm_Regen[1] ) {
         new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
         new Float:fRegenRate = OR_S_REGENERATION_get( iLevel );
 
-        new iTaskId = TASK_REGEN + id;
-        set_task( fRegenRate, "OR_S_REGENERATION_heal", iTaskId, parm_Regen, 1 );
+        new task = TASK_REGEN + id;
+        set_task( fRegenRate, "OR_S_REGENERATION_heal", task, parm_Regen, 1 );
     }
 
     return PLUGIN_HANDLED;
@@ -192,8 +192,8 @@ public OR_S_REGENERATION_remove( id ) {
 
     g_bPlayerRegen[id] = false;
 
-    new iTaskId = TASK_REGEN + id;
-    remove_task( iTaskId, 0 );
+    new task = TASK_REGEN + id;
+    remove_task( task, 0 );
 
     // Regeneration Icon
 
@@ -605,7 +605,7 @@ static OR_U_CHAINLIGHTNING( caster, target ) {
     // Check for Amulet
 
     if ( g_PlayerInfo[target][CURRENT_ITEM] == ITEM_AMULET )
-        IAmulet_Block( target, caster );
+        ITEM_AMULET_block( target, caster );
 
     else
     {
@@ -633,8 +633,8 @@ static OR_U_CHAINLIGHTNING( caster, target ) {
     parmJump[0] = caster;
     parmJump[1] = 1;
 
-    new TaskId = TASK_ULTIMATE + caster;
-    set_task( 0.2, "OR_U_CHAINLIGHTNING_jump", TaskId, parmJump, 2 );
+    new task = TASK_ULTIMATE + caster;
+    set_task( 0.2, "OR_U_CHAINLIGHTNING_jump", task, parmJump, 2 );
 
     return PLUGIN_HANDLED;
 }
@@ -721,7 +721,7 @@ public OR_U_CHAINLIGHTNING_jump( parmJump[2] ) {
                 // Check for Amulet
 
                 if ( g_PlayerInfo[NextTarget][CURRENT_ITEM] == ITEM_AMULET )
-                    IAmulet_Block( NextTarget, caster );
+                    ITEM_AMULET_block( NextTarget, caster );
 
                 else
                 {
@@ -752,8 +752,8 @@ public OR_U_CHAINLIGHTNING_jump( parmJump[2] ) {
     {
         parmJump[1] = iCurrentJump + 1;
 
-        new TaskId = TASK_ULTIMATE + caster;
-        set_task( 0.2, "OR_U_CHAINLIGHTNING_jump", TaskId, parmJump, 2 );
+        new task = TASK_ULTIMATE + caster;
+        set_task( 0.2, "OR_U_CHAINLIGHTNING_jump", task, parmJump, 2 );
     }
 
     else
@@ -839,7 +839,7 @@ static OR_U_HEALINGWAVE( caster, target ) {
 
     // Invisibility Cooldown
 
-    Invis_Cooldown( target );
+    SHARED_INVIS_cooldown( target );
 
     g_ChainJumps[caster][0] = target;
 
@@ -847,8 +847,8 @@ static OR_U_HEALINGWAVE( caster, target ) {
     parmJump[0] = caster;
     parmJump[1] = 1;
 
-    new TaskId = TASK_ULTIMATE + caster;
-    set_task( 0.2, "OR_U_HEALINGWAVE_jump", TaskId, parmJump, 2 );
+    new task = TASK_ULTIMATE + caster;
+    set_task( 0.2, "OR_U_HEALINGWAVE_jump", task, parmJump, 2 );
 
     return PLUGIN_HANDLED;
 }
@@ -967,7 +967,7 @@ public OR_U_HEALINGWAVE_jump( parmJump[2] ) {
 
                 // Invisibility Cooldown
 
-                Invis_Cooldown( NextTarget );
+                SHARED_INVIS_cooldown( NextTarget );
             }
         }
 
@@ -978,8 +978,8 @@ public OR_U_HEALINGWAVE_jump( parmJump[2] ) {
     {
         parmJump[1] = iCurrentJump + 1;
 
-        new TaskId = TASK_ULTIMATE + caster;
-        set_task( 0.2, "OR_U_HEALINGWAVE_jump", TaskId, parmJump, 2 );
+        new task = TASK_ULTIMATE + caster;
+        set_task( 0.2, "OR_U_HEALINGWAVE_jump", task, parmJump, 2 );
     }
 
     else
@@ -1058,8 +1058,8 @@ public OR_U_WINDWALK_in( parmCast[3] ) {
     {
         parmCast[1] = iCounter;
 
-        new TaskId = TASK_WINDWALK + id;
-        set_task( 0.1, "UWindwalk_Prewalk", TaskId, parmCast, 3 );
+        new task = TASK_WINDWALK + id;
+        set_task( 0.1, "UWindwalk_Prewalk", task, parmCast, 3 );
     }
 
     else
@@ -1102,17 +1102,17 @@ public OR_U_WINDWALK_invis( parmWalk[1] ) {
 
     Create_BarTime( id, WINDWALK_DURATION );
 
-    // Set Task to Make Visible
+    // Set task to Make Visible
 
     new parmPost[2];
     parmPost[0] = id;
 
-    new TaskId = TASK_WINDWALK + id;
+    new task = TASK_WINDWALK + id;
 
     new iDuration = WINDWALK_DURATION;
     new Float:fDuration = float( iDuration );
 
-    set_task( fDuration, "OR_U_WINDWALK_out", TaskId, parmPost, 2 );
+    set_task( fDuration, "OR_U_WINDWALK_out", task, parmPost, 2 );
 
     return PLUGIN_HANDLED;
 }
@@ -1131,7 +1131,7 @@ public OR_U_WINDWALK_strike( attacker, victim, weapon, headshot ) {
 
     if ( g_PlayerInfo[victim][CURRENT_ITEM] == ITEM_AMULET )
     {
-        IAmulet_Block( victim, attacker );
+        ITEM_AMULET_block( victim, attacker );
         return PLUGIN_HANDLED;
     }
 
@@ -1146,7 +1146,7 @@ public OR_U_WINDWALK_strike( attacker, victim, weapon, headshot ) {
         new iRGB[3];
         iRGB[GLOW_R] = 255;
 
-        Glow_Set( victim, 2.0, iRGB, 36 );
+        SHARED_GLOW_set( victim, 2.0, iRGB, 36 );
 
         // Screen Fade
 
@@ -1196,10 +1196,10 @@ public OR_U_WINDWALK_out( parmPost[2] ) {
     {
         g_bPlayerWalk[id] = false;
 
-        // Make sure Task is Unset
+        // Make sure task is Unset
 
-        new TaskId = TASK_WINDWALK + id;
-        remove_task( TaskId, 0 );
+        new task = TASK_WINDWALK + id;
+        remove_task( task, 0 );
 
         // Remove Bartime
 
@@ -1228,8 +1228,8 @@ public OR_U_WINDWALK_out( parmPost[2] ) {
     {
         parmPost[1] = iCounter;
 
-        new TaskId = TASK_WINDWALK + id;
-        set_task( 0.1, "OR_U_WINDWALK_out", TaskId, parmPost, 2 );
+        new task = TASK_WINDWALK + id;
+        set_task( 0.1, "OR_U_WINDWALK_out", task, parmPost, 2 );
     }
 
     return PLUGIN_HANDLED;
@@ -1241,8 +1241,8 @@ public OR_U_WINDWALK_remove( id ) {
     g_bPlayerWalk[id]  = false;
     g_bPlayerInvis[id] = false;
 
-    new TaskId = TASK_WINDWALK + id;
-    remove_task( TaskId, 0 );
+    new task = TASK_WINDWALK + id;
+    remove_task( task, 0 );
 
     // Remove Invisiblity
 
@@ -1266,7 +1266,7 @@ public OR_U_WINDWALK_remove( id ) {
 
     // Invisibility Cooldown
 
-    Invis_Cooldown( id );
+    SHARED_INVIS_cooldown( id );
 
     return PLUGIN_HANDLED;
 }

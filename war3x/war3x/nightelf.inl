@@ -11,7 +11,7 @@ public NE_skills_offensive( attacker, victim, weapon, iDamage, headshot ) {
         // Trueshot Aura
 
         if ( g_PlayerInfo[attacker][CURRENT_SKILL3] && weapon != CSW_KNIFE && weapon != CSW_HEGRENADE && cs_get_weapon_type_( weapon ) != CS_WEAPON_TYPE_SNIPER && get_user_health( victim ) > 0 )
-            STrueshotAura( attacker, victim, weapon, iDamage, headshot );
+            NE_S_TRUESHOT( attacker, victim, weapon, iDamage, headshot );
     }
 
     return PLUGIN_HANDLED;
@@ -34,10 +34,10 @@ public NE_skills_defensive( attacker, victim, weapon, iDamage, headshot ) {
         if ( g_PlayerInfo[victim][CURRENT_SKILL1] && get_user_health( victim ) > 0 )
         {
             if ( g_bEvadeNextShot[victim] )
-                SEvasion( attacker, victim, weapon, iDamage, headshot );
+                NE_S_EVASION( attacker, victim, weapon, iDamage, headshot );
 
-            SEvasion_Check( victim );
-            SEvasion_Health( victim );
+            NE_S_EVASION_prep( victim );
+            NE_S_EVASION_health( victim );
         }
     }
 
@@ -45,29 +45,29 @@ public NE_skills_defensive( attacker, victim, weapon, iDamage, headshot ) {
 }
 
 
-public Ultimates_NE( casterId, targetId ) {
+public NE_ultimates( caster, target ) {
 
     // Rejuvenation
 
-    if ( g_PlayerInfo[casterId][CURRENT_ULTIMATE] == ULTIMATE_REJUVENATION && get_user_team( targetId ) == get_user_team( casterId ) )
+    if ( g_PlayerInfo[caster][CURRENT_ULTIMATE] == ULTIMATE_REJUVENATION && get_user_team( target ) == get_user_team( caster ) )
     {
-        if ( g_PlayerRejuv[targetId] )
+        if ( g_PlayerRejuv[target] )
         {
             new szMessage[128];
             copy( szMessage, 127, REJUVINATE_ALREADY );
 
-            WAR3_status_text( casterId, szMessage, 0.5 );
+            WAR3_status_text( caster, szMessage, 0.5 );
 
-            Ultimate_Beep( casterId );
+            Ultimate_Beep( caster );
         }
 
         else
         {
-            if ( get_user_health( targetId ) == WAR3_get_maxhealth( targetId ) )
+            if ( get_user_health( target ) == WAR3_get_maxhealth( target ) )
             {
                 new szMessage[64];
 
-                if ( casterId == targetId )
+                if ( caster == target )
                 {
                     format( szMessage, 63, FULLHEALTH_SELF );
                 }
@@ -77,47 +77,47 @@ public Ultimates_NE( casterId, targetId ) {
                     format( szMessage, 63, FULLHEALTH_TARGET );
                 }
 
-                WAR3_status_text( casterId, szMessage, 0.5 );
+                WAR3_status_text( caster, szMessage, 0.5 );
 
-                Ultimate_Beep( casterId );
+                Ultimate_Beep( caster );
             }
 
             else
             {
-                URejuv_Cast( casterId, targetId );
-                Ultimate_Cooldown( casterId, ULTIMATE_COOLDOWNDEFAULT );
+                NE_U_REJUVENATION( caster, target );
+                Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-                Invis_Cooldown( casterId );
+                SHARED_INVIS_cooldown( caster );
             }
         }
     }
 
     // Entangling Roots
 
-    else if ( g_PlayerInfo[casterId][CURRENT_ULTIMATE] == ULTIMATE_ROOTS && get_user_team( targetId ) != get_user_team( casterId ) && !g_PlayerRooted[targetId] )
+    else if ( g_PlayerInfo[caster][CURRENT_ULTIMATE] == ULTIMATE_ROOTS && get_user_team( target ) != get_user_team( caster ) && !g_PlayerRooted[target] )
     {
-        URoot_Cast( casterId, targetId );
-        Ultimate_Cooldown( casterId, ULTIMATE_COOLDOWNDEFAULT );
+        NE_U_ROOT( caster, target );
+        Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-        Invis_Cooldown( casterId );
+        SHARED_INVIS_cooldown( caster );
     }
 
     // Shadowstrike
 
-    else if ( g_PlayerInfo[casterId][CURRENT_ULTIMATE] == ULTIMATE_SHADOWSTRIKE && get_user_team( targetId ) != get_user_team( casterId ) )
+    else if ( g_PlayerInfo[caster][CURRENT_ULTIMATE] == ULTIMATE_SHADOWSTRIKE && get_user_team( target ) != get_user_team( caster ) )
     {
-        if ( g_PlayerStruck[targetId] )
-            USstrike_Remove( targetId );
+        if ( g_PlayerStruck[target] )
+            NE_U_SHADOWSTRIKE_remove( target );
 
-        USstrike_Cast( casterId, targetId );
-        Ultimate_Cooldown( casterId, ULTIMATE_COOLDOWNDEFAULT );
+        NE_U_SHADOWSTRIKE( caster, target );
+        Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-        Invis_Cooldown( casterId );
+        SHARED_INVIS_cooldown( caster );
     }
 
     else
     {
-        Ultimate_Beep( casterId );
+        Ultimate_Beep( caster );
         return PLUGIN_HANDLED;
     }
 
@@ -138,11 +138,11 @@ public NE_S_ELUNES_get_physical( id, weapon, iDamage ) {
 
         // Set new damage amount
 
-        new Float:fAbsorb = float( iDamage ) * SElunes_Knife_Get( iLevel );
+        new Float:fAbsorb = float( iDamage ) * NE_S_ELUNES_get_knife( iLevel );
         new iAbsorb = floatround( fAbsorb );
 
         iDamage -= iAbsorb;
-        SElunes_Absorb( id, iAbsorb );
+        NE_S_ELUNES_absorb( id, iAbsorb );
 
         // Give health back ( physical damage has already been dealt )
 
@@ -164,20 +164,20 @@ public NE_S_ELUNES_get_bonus( id, weapon, iDamage ) {
 
     if ( weapon == CSW_KNIFE )
     {
-        new Float:fAbsorb = float( iDamage ) * SElunes_Knife_Get( iLevel );
+        new Float:fAbsorb = float( iDamage ) * NE_S_ELUNES_get_knife( iLevel );
         new iAbsorb = floatround( fAbsorb );
 
-        SElunes_Absorb( id, iAbsorb );
+        NE_S_ELUNES_absorb( id, iAbsorb );
 
         return ( iAbsorb );
     }
 
     else if ( WAR3_is_ultimate( weapon ) )
     {
-        new Float:fAbsorb = float( iDamage ) * SElunes_Magic_Get( iLevel );
+        new Float:fAbsorb = float( iDamage ) * NE_S_ELUNES_get_magic( iLevel );
         new iAbsorb = floatround( fAbsorb );
 
-        SElunes_Absorb( id, iAbsorb );
+        NE_S_ELUNES_absorb( id, iAbsorb );
 
         return ( iAbsorb );
     }
@@ -186,7 +186,7 @@ public NE_S_ELUNES_get_bonus( id, weapon, iDamage ) {
 }
 
 
-public Float:SElunes_Knife_Get( iLevel ) {
+public Float:NE_S_ELUNES_get_knife( iLevel ) {
 
     new Float:fLevel = float( iLevel );
 
@@ -207,7 +207,7 @@ public Float:SElunes_Knife_Get( iLevel ) {
 }
 
 
-public Float:SElunes_Magic_Get( iLevel ) {
+public Float:NE_S_ELUNES_get_magic( iLevel ) {
 
     new Float:fLevel = float( iLevel );
 
@@ -228,8 +228,7 @@ public Float:SElunes_Magic_Get( iLevel ) {
 }
 
 
-
-public SElunes_Absorb( id, iAbsorbed ) {
+static NE_S_ELUNES_absorb( id, iAbsorbed ) {
 
     if ( iAbsorbed )
     {
@@ -260,7 +259,7 @@ public SElunes_Absorb( id, iAbsorbed ) {
 
         // Glow shell
 
-        Glow_Set( id, 0.1, Shell, 48 );
+        SHARED_GLOW_set( id, 0.1, Shell, 48 );
 
         // Screen Fade
 
@@ -276,25 +275,19 @@ public SElunes_Absorb( id, iAbsorbed ) {
 
 // Nature's Blessing ( speed )
 
-public SBlessing_Speed_Set( id, weapon ) {
+public NE_S_BLESSING_set_speed( id, weapon ) {
 
     // Check if restricted
 
     if ( !WAR3_skill_enabled( id, RACE_NIGHTELF, SKILL_2 ) )
         return PLUGIN_HANDLED;
 
-
-    new Float:fBlessingSpeed;
+    new Float:fSpeed = CS_WEAPON_SPEED[weapon];
 
     if ( g_bPlayerZoomed[id] )
-        fBlessingSpeed = CS_WEAPON_SPEED_ZOOM[weapon];
+        fSpeed = CS_WEAPON_SPEED_ZOOM[weapon];
 
-    else
-    {
-        fBlessingSpeed = CS_WEAPON_SPEED[weapon];
-    }
-
-    fBlessingSpeed = fBlessingSpeed + ( fBlessingSpeed * s_BlessingSpeed[g_PlayerInfo[id][CURRENT_SKILL2] - 1] );
+    new Float:fBlessingSpeed = fSpeed + ( fSpeed * s_BlessingSpeed[g_PlayerInfo[id][CURRENT_SKILL2] - 1] );
 
     // Do not exceed cap
 
@@ -307,9 +300,17 @@ public SBlessing_Speed_Set( id, weapon ) {
 }
 
 
+public NE_S_BLESSING_set_armor( id ) {
+
+    // coming soon..
+
+    return PLUGIN_HANDLED;
+}
+
+
 // Trueshot Aura
 
-public STrueshotAura( attacker, victim, weapon, iDamage, headshot ) {
+static NE_S_TRUESHOT( attacker, victim, weapon, iDamage, headshot ) {
 
     // Check if restricted
 
@@ -337,9 +338,9 @@ public STrueshotAura( attacker, victim, weapon, iDamage, headshot ) {
 
 // Evasion
 
-public SEvasion( attacker, victim, weapon, iDamage, headshot ) {
+static NE_S_EVASION( attacker, victim, weapon, iDamage, headshot ) {
 
-    // Player dies to Teammates / fall with evade
+    // Player dies to team attack / fall with evade
 
     if ( get_user_health( victim ) <= 1024 && get_user_team( attacker ) == get_user_team( victim ) )
         WAR3_death( attacker, victim, weapon, headshot );
@@ -371,7 +372,7 @@ public SEvasion( attacker, victim, weapon, iDamage, headshot ) {
         g_fEvasionTime[victim] = get_gametime();
         g_iEvasionDamage[victim] += iDamage;
 
-        // Inform Player
+        // Inform player
 
         new szMessage[128];
         format( szMessage, 127, DAMAGE_EVASION, iDamage );
@@ -383,8 +384,8 @@ public SEvasion( attacker, victim, weapon, iDamage, headshot ) {
         new parm_Evasion[1];
         parm_Evasion[0] = victim;
 
-        new TaskId = TASK_EVASION + victim;
-        set_task( EVASION_SHOTGAP, "SEvasion_ReCheck", TaskId, parm_Evasion, 1 );
+        new task = TASK_EVASION + victim;
+        set_task( EVASION_SHOTGAP, "NE_S_EVASION_cooldown", task, parm_Evasion, 1 );
 
         // Add to player stats array
 
@@ -403,7 +404,7 @@ public SEvasion( attacker, victim, weapon, iDamage, headshot ) {
         new iRGB[3];
         iRGB[GLOW_B] = iFadeAlpha;
 
-        Glow_Set( victim, glow_duration( iFadeAlpha ), iRGB, 36 );
+        SHARED_GLOW_set( victim, glow_duration( iFadeAlpha ), iRGB, 36 );
 
         // Screen Fade
 
@@ -414,7 +415,7 @@ public SEvasion( attacker, victim, weapon, iDamage, headshot ) {
 }
 
 
-public SEvasion_Check( id ) {
+public NE_S_EVASION_prep( id ) {
 
     if ( !WAR3_skill_enabled( id, RACE_NIGHTELF, SKILL_1 ) || g_iEvasionDamage[id] >= EVASION_MAXDAMAGE )
     {
@@ -437,20 +438,20 @@ public SEvasion_Check( id ) {
 }
 
 
-public SEvasion_ReCheck( parm_Evasion[1] ) {
+public NE_S_EVASION_cooldown( parm_Evasion[1] ) {
 
     new id = parm_Evasion[0];
 
     g_fEvasionTime[id] = 0.0;
 
-    SEvasion_Check( id );
-    SEvasion_Health( id );
+    NE_S_EVASION_prep( id );
+    NE_S_EVASION_health( id );
 
     return PLUGIN_HANDLED;
 }
 
 
-public SEvasion_Health( id ) {
+public NE_S_EVASION_health( id ) {
 
     new iMaxHealth = 100;
 
@@ -476,88 +477,89 @@ public SEvasion_Health( id ) {
 /* - Entangling Roots ------------------------------------------- */
 
 
-public URoot_Cast( casterId, targetId ) {
+static NE_U_ROOT( caster, target ) {
 
-    g_PlayerRooted[targetId] = casterId;
+    g_PlayerRooted[target] = caster;
 
-    // Display Message ( to target )
+    // Display message ( to target )
 
     new szMessage[128], szPlayerName[32];
-    get_user_name( casterId, szPlayerName, 31 );
+    get_user_name( caster, szPlayerName, 31 );
 
     format( szMessage, 127, CAST_ROOTS, szPlayerName );
 
-    WAR3_status_text( targetId, szMessage, 3.0 );
+    WAR3_status_text( target, szMessage, 3.0 );
 
-    // Trail Effect
+    // Trail effect
 
-    Create_TE_BEAMFOLLOW( SHOWTO_ALL_BROADCAST, targetId, SPR_BEAMFOLLOW, 10, 3, 10, 108, 23, 255 );
+    Create_TE_BEAMFOLLOW( SHOWTO_ALL_BROADCAST, target, SPR_BEAMFOLLOW, 10, 3, 10, 108, 23, 255 );
 
     new parm[1];
-    parm[0] = targetId;
+    parm[0] = target;
 
-    URoot_Immobilize( parm );
+    NE_U_ROOT_immobilize( parm );
 
     return PLUGIN_HANDLED;
 }
 
-public URoot_Immobilize( parmRoot[1] ) {
 
-    new targetId = parmRoot[0];
+public NE_U_ROOT_immobilize( parmRoot[1] ) {
 
-    if ( get_entity_flags( targetId ) & FL_ONGROUND )
+    new target = parmRoot[0];
+
+    if ( get_entity_flags( target ) & FL_ONGROUND )
     {
         // Effect(s)
 
-        URoot_Effects( targetId );
+        NE_U_ROOT_effects( target );
 
         // Remove Trail
 
-        Remove_TE_BEAMFOLLOW( SEENBY_ALL, targetId );
+        Remove_TE_BEAMFOLLOW( SEENBY_ALL, target );
 
         // Check for Amulet
 
-        if ( g_PlayerInfo[targetId][CURRENT_ITEM] == ITEM_AMULET )
+        if ( g_PlayerInfo[target][CURRENT_ITEM] == ITEM_AMULET )
         {
-            IAmulet_Block( targetId, g_PlayerRooted[targetId] );
-            g_PlayerRooted[targetId] = 0;
+            ITEM_AMULET_block( target, g_PlayerRooted[target] );
+            g_PlayerRooted[target] = 0;
 
             return PLUGIN_HANDLED;
         }
 
-        set_entity_velocity( targetId, {0,0,0} );
+        set_entity_velocity( target, {0,0,0} );
 
-        g_bPlayerCantMove[targetId] = true;
+        g_bPlayerCantMove[target] = true;
 
-        WAR3_set_speed( targetId );
+        WAR3_set_speed( target );
 
-        Icon_DispellMe( targetId );
+        Icon_DispellMe( target );
 
         new Float:fDuration = ROOT_DURATION;
         new iCounter = floatround( fDuration );
 
         new parm_Dot[2];
-        parm_Dot[0] = targetId;
+        parm_Dot[0] = target;
         parm_Dot[1] = iCounter;
 
-        new TaskId = TASK_ROOT + targetId;
-        set_task( 1.0, "URoot_Dot", TaskId, parm_Dot, 2 );
+        new task = TASK_ROOT + target;
+        set_task( 1.0, "NE_U_ROOT_dot", task, parm_Dot, 2 );
     }
 
     else
     {
-        new TaskId = TASK_ROOT + targetId;
-        set_task( 0.1, "URoot_Immobilize", TaskId, parmRoot, 1 );
+        new task = TASK_ROOT + target;
+        set_task( 0.1, "NE_U_ROOT_immobilize", task, parmRoot, 1 );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public URoot_Dot( parm[2] ) {
+public NE_U_ROOT_dot( parm[2] ) {
 
-    new targetId = parm[0];
-    new casterId = g_PlayerRooted[targetId];
+    new target = parm[0];
+    new caster = g_PlayerRooted[target];
     new iCounter = parm[1];
 
     new Float:fDuration = ROOT_DURATION;
@@ -565,23 +567,12 @@ public URoot_Dot( parm[2] ) {
 
     new iDamage = ( ROOT_MAXDAMAGE / iDuration );
 
-    // Blood Sprites *REMOVED TEMPORARILY*
-/*
-    new Origin[3];
-    get_user_origin( targetId, Origin );
-
-    Origin[0] += random_num( -50,50 );
-    Origin[1] += random_num( -50,50 );
-    Origin[2] += random_num( -10,10 );
-
-    Create_TE_BLOODSPRITE( SHOWTO_ALL_BROADCAST, Origin, SPR_BLOODSPRAY, SPR_BLOODDROP, 248, 15 );
-*/
     // Blood decals
 
     static const BLOOD_SMALL[7] = {190,191,192,193,194,195,197};
 
     new Origin[3];
-    get_user_origin( targetId, Origin );
+    get_user_origin( target, Origin );
 
     Origin[0] += random_num( -100,100 );
     Origin[1] += random_num( -100,100 );
@@ -591,19 +582,19 @@ public URoot_Dot( parm[2] ) {
 
     // Apply Damage
 
-    WAR3_damage( casterId, targetId, CSW_ROOT, iDamage, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
+    WAR3_damage( caster, target, CSW_ROOT, iDamage, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
 
-    if ( is_user_alive( targetId ) )
+    if ( is_user_alive( target ) )
     {
         // Poison Damage
 
-        Create_Damage( targetId, 0, 0, CS_DMG_POISON );
+        Create_Damage( target, 0, 0, CS_DMG_POISON );
 
         // Screen Fade
 
-        if ( !g_bPlayerSleeping[targetId] )
+        if ( !g_bPlayerSleeping[target] )
         {
-            Create_ScreenFade( targetId, (1<<10), (1<<10), FADE_OUT, 10, 108, 23, 20 );
+            Create_ScreenFade( target, (1<<10), (1<<10), FADE_OUT, 10, 108, 23, 20 );
         }
 
         iCounter--;
@@ -612,17 +603,17 @@ public URoot_Dot( parm[2] ) {
         {
             parm[1] = iCounter;
 
-            new TaskId = TASK_ROOT + targetId;
-            set_task( 1.0, "URoot_Dot", TaskId, parm, 2 );
+            new task = TASK_ROOT + target;
+            set_task( 1.0, "NE_U_ROOT_dot", task, parm, 2 );
         }
 
         else
         {
             // Play Client-Only Soundfile
 
-            client_cmd( targetId, "speak warcraft3/bonus/EntanglingRootsDecay1.wav" );
+            client_cmd( target, "speak warcraft3/bonus/EntanglingRootsDecay1.wav" );
 
-            URoot_Remove( targetId );
+            NE_U_ROOT_remove( target );
         }
     }
 
@@ -630,39 +621,7 @@ public URoot_Dot( parm[2] ) {
 }
 
 
-public URoot_CreatePlant( iTargetId, Origin[3] ) {
-
-    // Select Plant Model
-
-    new szModelName[64];
-
-    switch ( random_num( 1,3 ) )
-    {
-        case 1:     copy( szModelName, 63, "models/uplant1.mdl" );
-        case 2:     copy( szModelName, 63, "models/uplant2.mdl" );
-        case 3:     copy( szModelName, 63, "models/uplant3.mdl" );
-    }
-
-    new Float:fOrigin[3];
-    fOrigin[0] = float( Origin[0] );
-    fOrigin[1] = float( Origin[1] );
-    fOrigin[2] = float( Origin[2] );
-
-    new iPlantEnt = Create_TempEnt( "ROOT_PLANT", szModelName, fOrigin, MOVETYPE_TOSS, SOLID_NOT, 0.0 );
-
-    entity_set_edict( iPlantEnt, EV_ENT_owner, iTargetId );
-
-    // Animate
-
-    entity_set_int( iPlantEnt, EV_INT_sequence, 0 );
-    entity_set_float( iPlantEnt, EV_FL_frame, random_float( 1.0, 50.0 ) );
-    entity_set_float( iPlantEnt, EV_FL_framerate, random_float( 1.0, 2.0 ) );
-
-    return PLUGIN_HANDLED;
-}
-
-
-public URoot_Effects( targetId ) {
+static NE_U_ROOT_effects( target ) {
 
     new x1, y1, x2, y2;
     new iRadius = 20, iCounter = 0;
@@ -670,12 +629,12 @@ public URoot_Effects( targetId ) {
     new Float:fDuration = ROOT_DURATION;
     new iDuration = floatround( fDuration );
 
-    new targetOrigin[3];
-    get_user_origin( targetId, targetOrigin );
+    new TargetOrigin[3];
+    get_user_origin( target, TargetOrigin );
 
     // Play Sound
 
-    emit_sound( targetId, CHAN_STATIC, SOUND_ROOTS, 1.0, ATTN_NORM, 0, PITCH_NORM );
+    emit_sound( target, CHAN_STATIC, SOUND_ROOTS, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
     // Draw Coil
 
@@ -720,14 +679,14 @@ public URoot_Effects( targetId ) {
         while ( iHeight > -40 )
         {
             new Origin1[3];
-            Origin1[0] = targetOrigin[0] + x1;
-            Origin1[1] = targetOrigin[1] + y1;
-            Origin1[2] = targetOrigin[2] + iHeight;
+            Origin1[0] = TargetOrigin[0] + x1;
+            Origin1[1] = TargetOrigin[1] + y1;
+            Origin1[2] = TargetOrigin[2] + iHeight;
 
             new Origin2[3];
-            Origin2[0] = targetOrigin[0] + x2;
-            Origin2[1] = targetOrigin[1] + y2;
-            Origin2[2] = targetOrigin[2] + iHeight + 2;
+            Origin2[0] = TargetOrigin[0] + x2;
+            Origin2[1] = TargetOrigin[1] + y2;
+            Origin2[2] = TargetOrigin[2] + iHeight + 2;
 
             Create_TE_BEAMPOINTS( SHOWTO_ALL_BROADCAST, Origin1, Origin2, SPR_ROOT, 0, 0, iDuration * 10, 10, 5, 10, 108, 23, 255, 0 );
 
@@ -774,29 +733,61 @@ public URoot_Effects( targetId ) {
         }
 
         new plantOrigin[3];
-        plantOrigin[0] = targetOrigin[0] + xOffset;
-        plantOrigin[1] = targetOrigin[1] + yOffset;
-        plantOrigin[2] = targetOrigin[2] - 34;
+        plantOrigin[0] = TargetOrigin[0] + xOffset;
+        plantOrigin[1] = TargetOrigin[1] + yOffset;
+        plantOrigin[2] = TargetOrigin[2] - 34;
 
-        if ( get_user_button( targetId ) & IN_DUCK )
+        if ( get_user_button( target ) & IN_DUCK )
             plantOrigin[2] += 18;
 
-        URoot_CreatePlant( targetId, plantOrigin );
+        NE_U_ROOT_effect_plant( target, plantOrigin );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public URoot_Remove( id ) {
+static NE_U_ROOT_effect_plant( target, Origin[3] ) {
 
-    new TaskId = TASK_ROOT + id;
-    remove_task( TaskId, 0 );
+    // Select plant model
+
+    new szModelName[64];
+
+    switch ( random_num( 1,3 ) )
+    {
+        case 1:     copy( szModelName, 63, "models/uplant1.mdl" );
+        case 2:     copy( szModelName, 63, "models/uplant2.mdl" );
+        case 3:     copy( szModelName, 63, "models/uplant3.mdl" );
+    }
+
+    new Float:fOrigin[3];
+    fOrigin[0] = float( Origin[0] );
+    fOrigin[1] = float( Origin[1] );
+    fOrigin[2] = float( Origin[2] );
+
+    new plant = Create_TempEnt( "ROOT_PLANT", szModelName, fOrigin, MOVETYPE_TOSS, SOLID_NOT, 0.0 );
+
+    entity_set_edict( plant, EV_ENT_owner, target );
+
+    // Animate
+
+    entity_set_int( plant, EV_INT_sequence, 0 );
+    entity_set_float( plant, EV_FL_frame, random_float( 1.0, 50.0 ) );
+    entity_set_float( plant, EV_FL_framerate, random_float( 1.0, 2.0 ) );
+
+    return PLUGIN_HANDLED;
+}
+
+
+public NE_U_ROOT_remove( id ) {
+
+    new task = TASK_ROOT + id;
+    remove_task( task, 0 );
 
     g_PlayerRooted[id] = 0;
-    Remove_TE_BEAMFOLLOW( SEENBY_ALL,id );
+    Remove_TE_BEAMFOLLOW( SEENBY_ALL, id );
 
-    Immobilize_Remove( id );
+    SHARED_IMMOBILIZE_remove( id );
     WAR3_set_speed( id );
 
     Icon_DispellMe( id );
@@ -808,115 +799,115 @@ public URoot_Remove( id ) {
 /* - Shadow Strike ---------------------------------------------- */
 
 
-public USstrike_Cast( casterId, targetId ) {
+static NE_U_SHADOWSTRIKE( caster, target ) {
 
-    // Play Sound
+    // Play sound
 
-    emit_sound( targetId, CHAN_STATIC, SOUND_SHADOWSTRIKE, 1.0, ATTN_NORM, 0, PITCH_NORM );
+    emit_sound( target, CHAN_STATIC, SOUND_SHADOWSTRIKE, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
     // Implosion
 
-    new targetOrigin[3];
-    get_user_origin( targetId, targetOrigin );
+    new TargetOrigin[3];
+    get_user_origin( target, TargetOrigin );
 
-    Create_TE_IMPLOSION( SHOWTO_ALL_BROADCAST, targetOrigin, 100, 120, 4 );
+    Create_TE_IMPLOSION( SHOWTO_ALL_BROADCAST, TargetOrigin, 100, 120, 4 );
 
-    // "Fizzy" Explosion
+    // "Fizzy" explosion
 
-    Create_TE_EXPLODEMODEL( SHOWTO_ALL_BROADCAST, targetOrigin, 250, MDL_HORNET, 40, 50 );
+    Create_TE_EXPLODEMODEL( SHOWTO_ALL_BROADCAST, TargetOrigin, 250, MDL_HORNET, 40, 50 );
 
     // Check for Amulet
 
-    if ( g_PlayerInfo[targetId][CURRENT_ITEM] == ITEM_AMULET )
+    if ( g_PlayerInfo[target][CURRENT_ITEM] == ITEM_AMULET )
     {
-        IAmulet_Block( targetId, casterId );
+        ITEM_AMULET_block( target, caster );
         return PLUGIN_HANDLED;
     }
 
-    // Hud Message
+    // Hud message
 
     new szPlayerName[32];
-    get_user_name( casterId, szPlayerName, 31 );
+    get_user_name( caster, szPlayerName, 31 );
 
     new szMessage[128];
     format( szMessage, 127, CAST_SHADOWSTRIKE, szPlayerName );
 
-    WAR3_status_text2( targetId, szMessage, 3.0 );
+    WAR3_status_text2( target, szMessage, 3.0 );
 
-    // Adjust Armor
+    // Adjust armor
 
-    if ( get_user_armor( targetId ) )
+    if ( get_user_armor( target ) )
     {
-        new iNewArmor = get_user_armor( targetId ) - SHADOWSTRIKE_ARMOR;
+        new iNewArmor = get_user_armor( target ) - SHADOWSTRIKE_ARMOR;
 
         if ( iNewArmor < 0 )
             iNewArmor = 0;
 
-        set_user_armor( targetId, iNewArmor );
+        set_user_armor( target, iNewArmor );
     }
 
-    // Apply Damage
+    // Apply damage
 
-    WAR3_damage( casterId, targetId, CSW_SHADOWSTRIKE, SHADOWSTRIKE_DAMAGE, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
+    WAR3_damage( caster, target, CSW_SHADOWSTRIKE, SHADOWSTRIKE_DAMAGE, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
 
-    if ( is_user_alive( targetId ) )
+    if ( is_user_alive( target ) )
     {
-        // Set Globals
+        // Set globals
 
-        g_PlayerStruck[targetId] = casterId;
-        g_bPlayerSlowed[targetId] = true;
+        g_PlayerStruck[target] = caster;
+        g_bPlayerSlowed[target] = true;
 
-        // Set Player Speed
+        // Set player speed
 
         new Velocity[3];
-        get_entity_velocity( targetId, Velocity );
+        get_entity_velocity( target, Velocity );
 
         Velocity[0] = 0;
         Velocity[1] = 0;
 
-        set_entity_velocity( targetId, Velocity );
-        WAR3_set_speed( targetId );
+        set_entity_velocity( target, Velocity );
+        WAR3_set_speed( target );
 
-        // Set Damage Over Time
+        // Set damage over time
 
         new parm_Dot[3];
-        parm_Dot[0] = casterId;
-        parm_Dot[1] = targetId;
+        parm_Dot[0] = caster;
+        parm_Dot[1] = target;
         parm_Dot[2] = SHADOWSTRIKE_DURATION;
 
-        new TaskId = TASK_SHADOWSTRIKE + casterId;
-        set_task( 1.0, "USstrike_Dot", TaskId, parm_Dot, 3 );
+        new task = TASK_SHADOWSTRIKE + caster;
+        set_task( 1.0, "NE_U_SHADOWSTRIKE_dot", task, parm_Dot, 3 );
 
-        Icon_DispellMe( targetId );
+        Icon_DispellMe( target );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public USstrike_Dot( parm_Dot[3] ) {
+public NE_U_SHADOWSTRIKE_dot( parm_Dot[3] ) {
 
-    new casterId = parm_Dot[0];
-    new targetId = parm_Dot[1];
+    new caster = parm_Dot[0];
+    new target = parm_Dot[1];
     new iCounter = parm_Dot[2];
 
     new iDamage = SHADOWSTRIKE_DOT / SHADOWSTRIKE_DURATION;
 
     // Apply Damage
 
-    WAR3_damage( casterId, targetId, CSW_SHADOWSTRIKE, iDamage, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
+    WAR3_damage( caster, target, CSW_SHADOWSTRIKE, iDamage, CS_HEADSHOT_NO, DAMAGE_NOCHECKARMOR );
 
-    if ( is_user_alive( targetId ) )
+    if ( is_user_alive( target ) )
     {
         // Poison Damage
 
-        Create_Damage( targetId, 0, 0, CS_DMG_POISON );
+        Create_Damage( target, 0, 0, CS_DMG_POISON );
 
         // Screen Fade
 
-        if ( !g_bPlayerSleeping[targetId] )
+        if ( !g_bPlayerSleeping[target] )
         {
-            Create_ScreenFade( targetId, (1<<10), (1<<10), FADE_OUT, 255, 255, 0, 20 );
+            Create_ScreenFade( target, (1<<10), (1<<10), FADE_OUT, 255, 255, 0, 20 );
         }
 
         // Check DOT Counter
@@ -927,13 +918,13 @@ public USstrike_Dot( parm_Dot[3] ) {
         {
             parm_Dot[2] = iCounter;
 
-            new TaskId = TASK_SHADOWSTRIKE + casterId;
-            set_task( 1.0, "USstrike_Dot", TaskId, parm_Dot, 3 );
+            new task = TASK_SHADOWSTRIKE + caster;
+            set_task( 1.0, "NE_U_SHADOWSTRIKE_dot", task, parm_Dot, 3 );
         }
 
         else
         {
-            USstrike_Remove( targetId );
+            NE_U_SHADOWSTRIKE_remove( target );
         }
     }
 
@@ -941,19 +932,19 @@ public USstrike_Dot( parm_Dot[3] ) {
 }
 
 
-public USstrike_Remove( targetId ) {
+public NE_U_SHADOWSTRIKE_remove( target ) {
 
-    new casterId = g_PlayerStruck[targetId];
+    new caster = g_PlayerStruck[target];
 
-    new TaskId = TASK_SHADOWSTRIKE + casterId;
-    remove_task( TaskId, 0 );
+    new task = TASK_SHADOWSTRIKE + caster;
+    remove_task( task, 0 );
 
-    g_PlayerStruck[targetId] = 0;
+    g_PlayerStruck[target] = 0;
 
-    Slow_Remove( targetId );
-    WAR3_set_speed( targetId );
+    SHARED_SLOW_remove( target );
+    WAR3_set_speed( target );
 
-    Icon_DispellMe( targetId );
+    Icon_DispellMe( target );
 
     return PLUGIN_HANDLED;
 }
@@ -962,47 +953,47 @@ public USstrike_Remove( targetId ) {
 /* - Rejuvenation ----------------------------------------------- */
 
 
-public URejuv_Cast( casterId, targetId ) {
+static NE_U_REJUVENATION( caster, target ) {
 
-    g_PlayerRejuv[targetId] = casterId;
+    g_PlayerRejuv[target] = caster;
 
     new szMessage[64], szPlayerName[32];
-    get_user_name( casterId, szPlayerName, 31 );
+    get_user_name( caster, szPlayerName, 31 );
 
-    // Status Text
+    // Status text
 
-    if ( casterId == targetId )
+    if ( caster == target )
     {
         format( szMessage, 127, REJUVINATE_SELF );
-        WAR3_status_text( casterId, szMessage, 3.0 );
+        WAR3_status_text( caster, szMessage, 3.0 );
     }
 
     else
     {
-        WAR3_status_text( casterId, HEAL_CAST, 1.0 );
+        WAR3_status_text( caster, HEAL_CAST, 1.0 );
 
         format( szMessage, 127, REJUVINATE_TARGET, szPlayerName );
-        WAR3_status_text( targetId, szMessage, 3.0 );
+        WAR3_status_text( target, szMessage, 3.0 );
     }
 
-    // Play Sound
+    // Play sound
 
-    emit_sound( targetId, CHAN_STATIC, SOUND_REJUVENATION, 1.0, ATTN_NORM, 0, PITCH_NORM );
+    emit_sound( target, CHAN_STATIC, SOUND_REJUVENATION, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
     new parmHot[3];
-    parmHot[0] = casterId;
-    parmHot[1] = targetId;
+    parmHot[0] = caster;
+    parmHot[1] = target;
     parmHot[2] = REJUVENATION_WAVES;
 
-    URejuv_Hot( parmHot );
+    NE_U_REJUVENATION_hot( parmHot );
 
     return PLUGIN_HANDLED;
 }
 
 
-public URejuv_Effects( parm_Effects[2] ) {             // Shared Effect(s)
+public NE_U_REJUVENATION_effects( parm_Effects[2] ) {
 
-    new targetId = parm_Effects[0];
+    new target = parm_Effects[0];
     new iCounter = parm_Effects[1];
 
     // Flares!
@@ -1010,7 +1001,7 @@ public URejuv_Effects( parm_Effects[2] ) {             // Shared Effect(s)
     for ( new i = 0; i < 4; i++ )
     {
         new Float:fTargetOrigin[3];
-        entity_get_vector( targetId, EV_VEC_origin, fTargetOrigin );
+        entity_get_vector( target, EV_VEC_origin, fTargetOrigin );
 
         // Randomize
 
@@ -1028,30 +1019,30 @@ public URejuv_Effects( parm_Effects[2] ) {             // Shared Effect(s)
             case 2:     copy( szSpriteName, 63, "sprites/muz7.spr" );
         }
 
-        new iFlareEnt = Create_TempEnt( "REJUV_FLARE", szSpriteName, fTargetOrigin, MOVETYPE_NOCLIP, SOLID_NOT, 0.4 );
+        new flare = Create_TempEnt( "REJUV_FLARE", szSpriteName, fTargetOrigin, MOVETYPE_NOCLIP, SOLID_NOT, 0.4 );
 
         // Project Upwards
 
         new Float:fVelocity[3];
         fVelocity[2] = random_float( 125.0, 175.0 );
 
-        entity_set_vector( iFlareEnt, EV_VEC_velocity, fVelocity );
+        entity_set_vector( flare, EV_VEC_velocity, fVelocity );
 
         // Create Trail
 
-        Create_TE_BEAMFOLLOW( SHOWTO_ALL_BROADCAST, iFlareEnt, SPR_BEAMFOLLOW, 5, random_num( 1,3 ), random_num( 127,255 ), 0, random_num( 127,255 ), 128 );
+        Create_TE_BEAMFOLLOW( SHOWTO_ALL_BROADCAST, flare, SPR_BEAMFOLLOW, 5, random_num( 1,3 ), random_num( 127,255 ), 0, random_num( 127,255 ), 128 );
 
         // Create Lighting ( on player )
 
-        Create_TE_ELIGHT( SHOWTO_ALL_BROADCAST, targetId, random_num( 25,100 ), random_num( 127,255 ), 0, random_num( 127,255 ), 5, 5 );
+        Create_TE_ELIGHT( SHOWTO_ALL_BROADCAST, target, random_num( 25,100 ), random_num( 127,255 ), 0, random_num( 127,255 ), 5, 5 );
 
         // Render
 
-        entity_set_float( iFlareEnt, EV_FL_renderamt, 128.0 );
-        entity_set_int( iFlareEnt, EV_INT_rendermode, kRenderTransAdd );
-        entity_set_int( iFlareEnt, EV_INT_renderfx, kRenderFxNone );
+        entity_set_float( flare, EV_FL_renderamt, 128.0 );
+        entity_set_int( flare, EV_INT_rendermode, kRenderTransAdd );
+        entity_set_int( flare, EV_INT_renderfx, kRenderFxNone );
 
-        entity_set_float( iFlareEnt, EV_FL_scale, random_float( 0.2, 0.6 ) );
+        entity_set_float( flare, EV_FL_scale, random_float( 0.2, 0.6 ) );
     }
 
     iCounter++;
@@ -1060,18 +1051,18 @@ public URejuv_Effects( parm_Effects[2] ) {             // Shared Effect(s)
     {
         parm_Effects[1] = iCounter;
 
-        new TaskId = 2000;
-        set_task( 0.1, "URejuv_Effects", TaskId, parm_Effects, 2 );
+        new task = 2000;
+        set_task( 0.1, "NE_U_REJUVENATION_effects", task, parm_Effects, 2 );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public URejuv_Hot( parmHot[3] ) {              // Heal-Over Time
+public NE_U_REJUVENATION_hot( parmHot[3] ) {
 
-    new casterId = parmHot[0];
-    new targetId = parmHot[1];
+    new caster = parmHot[0];
+    new target = parmHot[1];
     new iCounter = parmHot[2];
 
     // Adjust Health
@@ -1081,13 +1072,13 @@ public URejuv_Hot( parmHot[3] ) {              // Heal-Over Time
 
     new Float:fBonusHealth = float( iHealAmount ) / float( iWaves );
 
-    if ( casterId == targetId )
+    if ( caster == target )
         fBonusHealth *= SELFHEAL_MODIFIER;
 
     new iBonusHealth = floatround( fBonusHealth );
 
-    new iNewHealth = get_user_health( targetId ) + iBonusHealth;
-    new iMaxHealth = WAR3_get_maxhealth( targetId );
+    new iNewHealth = get_user_health( target ) + iBonusHealth;
+    new iMaxHealth = WAR3_get_maxhealth( target );
 
     if ( iNewHealth > iMaxHealth )
     {
@@ -1095,24 +1086,24 @@ public URejuv_Hot( parmHot[3] ) {              // Heal-Over Time
         iNewHealth = iMaxHealth;
     }
 
-    if ( casterId != targetId )
-        g_iRejuvHealth[casterId] += iBonusHealth;
+    if ( caster != target )
+        g_iRejuvHealth[caster] += iBonusHealth;
 
-    set_user_health( targetId, iNewHealth );
+    set_user_health( target, iNewHealth );
 
     // Add to player stats array
 
     if ( get_cvar_num( "mp_war3stats" ) )
     {
-        playerSkill2Info[casterId][1] += iBonusHealth;
+        playerSkill2Info[caster][1] += iBonusHealth;
     }
 
     // Generate Effect(s)
 
     new parm_Effects[2];
-    parm_Effects[0] = targetId;
+    parm_Effects[0] = target;
 
-    URejuv_Effects( parm_Effects );
+    NE_U_REJUVENATION_effects( parm_Effects );
 
 
     iCounter--;
@@ -1124,37 +1115,35 @@ public URejuv_Hot( parmHot[3] ) {              // Heal-Over Time
         new iWaves = REJUVENATION_WAVES;
         new Float:fRate = REJUVENATION_DURATION / ( float( iWaves )  - 1.0 );
 
-        new TaskId = TASK_REJUV + targetId;
-        set_task( fRate, "URejuv_Hot", TaskId, parmHot, 3 );
+        new task = TASK_REJUV + target;
+        set_task( fRate, "NE_U_REJUVENATION_hot", task, parmHot, 3 );
     }
 
     else
     {
-        URejuv_Remove( targetId );
+        NE_U_REJUVENATION_remove( target );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public URejuv_Remove( iTargetId ) {                    // Remove
+public NE_U_REJUVENATION_remove( target ) {
 
-    new iCasterId = g_PlayerRejuv[iTargetId];
+    new caster = g_PlayerRejuv[target];
 
-    // Give Support Xp
+    // Give support XP
 
-    XP_Support_Heal( iCasterId, g_iRejuvHealth[iCasterId] );
+    XP_Support_Heal( caster, g_iRejuvHealth[caster] );
 
-    g_iRejuvHealth[iCasterId] = 0;
+    g_iRejuvHealth[caster] = 0;
 
     // Unset
 
-    g_PlayerRejuv[iTargetId] = 0;
+    g_PlayerRejuv[target] = 0;
 
-    new TaskId = TASK_REJUV + iTargetId;
-    remove_task( TaskId, 0 );
+    new task = TASK_REJUV + target;
+    remove_task( task, 0 );
 
     return PLUGIN_HANDLED;
 }
-
-// End of NIGHTELF.INL

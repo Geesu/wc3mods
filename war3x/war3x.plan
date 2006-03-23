@@ -4,10 +4,6 @@
 BIG CHANGES:
 ------------
 
-* Modified Skill - Holy Light
-  (Icon will be made to show targetable players)
-* Modified Skill - Death Coil
-  (Icon will be made to show targetable players)
 * New Feature - Kill Assists
   (If you deal more than 50% of damage to a player, you will receive some xp.)
 * New Feature - Stats System
@@ -32,20 +28,62 @@ SKILL CHANGES:
 
 MISC CHANGES:
 
+* check invis cooldown? possible crashing...
+* fix ankh?
+* fix flame strike and amulet
 * berserk recode speed change to include boots
 * figure out how to set random number for root because of 2 diff functions that call
 * remove 'buyback' from item purchasing and just have modified price in list
 * implement some kind of last target variable that can be used for target skills etc.
 * remove voting????
-* sleep not stopping! (HMM WEIRD)
-* check invis cooldown? possible crashing...
+* sleep not stopping! (HMM WEIRD) (maybe some slow/immo is overriding)
 * make check for cfg and sprite file(s), if not found, don't load
-* !g_bPlayerSleeping (make some generalize invuln thing)
+* !g_bPlayerSleeping (make some generalize invuln thing) 
 * replace all distance/40 by get_distance (statsx stock)
 * add valid model check to deathcoil seek
 * add WAR3_heal command?
 * recode pulverize ring colors into consts
+* don't come out of invis on grenade damage dealt
+* change invis cooldown to 1 second after being healed.. maybe fade back in
+* recode human invisibility to take cloak into affect
 
+
+
+INVIS DEBUGGING... 
+
+- why is there an invisibility set at the bottom of on_Curweapon?
+
+invis_set called
+	on curweapon .. ? (maybe because of stack with cloak?)
+	on freezestart
+	on buying cloak
+	on WAR3_enable_skills
+		called...
+		round 0
+		after freeze time
+		after choosing race if not freezetime
+		after choosing skills if not freezetime
+		in WAR3_check_level (if not freezetime)
+			called...
+			on level-up (to boost racials)
+			after giving xp to someone (to check for level up)
+			after receiving any xp basically.
+	called in cooldown as well
+		called..
+		on damage (duh)
+		on curweapon (weapon fired)
+		casting all human ultimates (maybe remove on avatar instead)
+		being receiver of holy light (maybe make a WAR3_heal() func)
+		once avatar has worn off
+		on war3 damage
+		casting all ne ultimates
+		casting chain lightning/heal
+		being the target of healing wave
+		when wind walk is removed
+		when a glowshell is removed
+		when casting all undead ultimates
+		when being healed by death coil
+		when sleep is removed
 
 TODO
 ---

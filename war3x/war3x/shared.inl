@@ -3,13 +3,13 @@
 /* - Glow Functions --------------------------------------------- */
 
 
-public Glow_Set( id, Float:fGlowTime, iRGB[3], iAmmount ) {
+public SHARED_GLOW_set( id, Float:fGlowTime, iRGB[3], iAmmount ) {
 
     if ( g_iPlayerAvatar[id] || g_bPlayerAvatarGrow[id] || g_bPlayerSleeping[id] )
         return PLUGIN_HANDLED;
 
-    new TaskId = TASK_GLOW + id;
-    remove_task( TaskId, 0 );
+    new task = TASK_GLOW + id;
+    remove_task( task, 0 );
 
     g_bPlayerGlowing[id] = true;
 
@@ -22,14 +22,14 @@ public Glow_Set( id, Float:fGlowTime, iRGB[3], iAmmount ) {
     parm_Fade[GLOW_AMMOUNT] = iAmmount;
     parm_Fade[GLOW_FADEOUT] = 10;
 
-    set_task( fGlowTime, "Glow_Fade", TaskId, parm_Fade, 3 );
+    set_task( fGlowTime, "SHARED_GLOW_fade", task, parm_Fade, 3 );
 
     return PLUGIN_HANDLED;
 }
 
 
 
-public Glow_Fade( parm_Fade[3] ) {
+public SHARED_GLOW_fade( parm_Fade[3] ) {
 
     new id       = parm_Fade[GLOW_ID];
     new iAmmount = parm_Fade[GLOW_AMMOUNT];
@@ -46,31 +46,31 @@ public Glow_Fade( parm_Fade[3] ) {
 
     set_user_rendering( id, kRenderFxGlowShell, floatround( fR ), floatround( fG ), floatround( fB ), kRenderNormal, iAmmount );
 
-    new TaskId = TASK_GLOW + id;
+    new task = TASK_GLOW + id;
 
     iCounter--;
 
     if ( iCounter )
     {
         parm_Fade[GLOW_FADEOUT] = iCounter;
-        set_task( 0.1, "Glow_Fade", TaskId, parm_Fade, 3 );
+        set_task( 0.1, "SHARED_GLOW_fade", task, parm_Fade, 3 );
     }
 
     else
     {
-        Glow_Remove( id );
+        SHARED_GLOW_remove( id );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public Glow_Remove( id ) {
+public SHARED_GLOW_remove( id ) {
 
     g_bPlayerGlowing[id] = false;
 
-    new TaskId = TASK_GLOW + id;
-    remove_task( TaskId, 0 );
+    new task = TASK_GLOW + id;
+    remove_task( task, 0 );
 
     // Reset Rendering
 
@@ -79,7 +79,288 @@ public Glow_Remove( id ) {
 
     // Invis Cooldown
 
-    Invis_Cooldown( id );
+    SHARED_INVIS_cooldown( id );
+
+    return PLUGIN_HANDLED;
+}
+
+
+/* - Invisibility Functions ------------------------------------- */
+
+
+// Invisibility set ( shared )
+
+public SHARED_INVIS_set( id ) {
+
+    new parmInvis[1];
+    parmInvis[0] = id;
+
+    SHARED_INVIS_set_( parmInvis );
+
+    return PLUGIN_HANDLED;
+}
+
+
+public SHARED_INVIS_set_( parm_Invis[1] ) {
+
+    new id = parm_Invis[0];
+
+    if ( !is_user_connected( id ) || !is_user_alive( id ) )
+        return PLUGIN_HANDLED;
+
+    if ( g_bPlayerGlowing[id] || g_bPlayerSleeping[id] || g_iPlayerAvatar[id] || g_bPlayerAvatarGrow[id] )
+        return PLUGIN_HANDLED;
+
+    if ( ( g_PlayerInfo[id][CURRENT_RACE] != RACE_HUMAN || ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && !g_PlayerInfo[id][CURRENT_SKILL1] ) ) && g_PlayerInfo[id][CURRENT_ITEM] != ITEM_CLOAK )
+        return PLUGIN_HANDLED;
+
+    g_bInvisCooldown[id] = false;
+
+    new weapon, iClip, iAmmo;
+    weapon = get_user_weapon( id, iClip, iAmmo );
+
+    // Human Invisibility
+
+    if ( weapon == CSW_KNIFE && g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL1] && WAR3_skill_enabled( id, RACE_HUMAN, SKILL_1 ) )
+    {
+        // Make sure cloak value is not greater
+
+        if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK && VALUE_CLOAK > s_Invisibility[g_PlayerInfo[id][CURRENT_SKILL1] - 1] )
+            ITEM_CLOAK_set( id );
+
+        else
+        {
+            HU_S_INVISIBILITY_set( id );
+        }
+    }
+
+    // Cloak of Invisibility
+
+    else if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK )
+    {
+        ITEM_CLOAK_set( id );
+    }
+
+    // Remove
+
+    else if ( g_bPlayerInvis[id] )
+    {
+        SHARED_INVIS_remove( id );
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+
+public SHARED_INVIS_cooldown( id ) {
+
+    // Do not proceed if no invisibility exists
+
+    if ( ( g_PlayerInfo[id][CURRENT_RACE] != RACE_HUMAN || ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && !g_PlayerInfo[id][CURRENT_SKILL1] ) ) && g_PlayerInfo[id][CURRENT_ITEM] != ITEM_CLOAK )
+        return PLUGIN_HANDLED;
+
+    SHARED_INVIS_remove( id );
+
+    g_bInvisCooldown[id] = true;
+
+    new task = TASK_INVIS + id;
+
+    new parm_Invis[1];
+    parm_Invis[0] = id;
+
+    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL1] )
+        set_task( INVISIBILITY_COOLDOWN, "SHARED_INVIS_set_", task, parm_Invis, 1 );
+
+    else if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK )
+    {
+        set_task( CLOAK_COOLDOWN, "SHARED_INVIS_set_", task, parm_Invis, 1 );
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+
+public SHARED_INVIS_remove( id ) {
+
+    if ( !g_bPlayerGlowing[id] && !g_bPlayerSleeping[id] && !g_iPlayerAvatar[id] )
+        set_user_rendering( id );
+
+    new task = TASK_INVIS + id;
+    remove_task( task, 0 );
+
+    g_bPlayerInvis[id] = false;
+    g_bInvisCooldown[id] = false;
+
+    SHARED_INVIS_icon( id, ICON_HIDE );
+
+    return PLUGIN_HANDLED;
+}
+
+
+public SHARED_INVIS_icon( id, iStatus ) {
+
+    // Make sure server enabled
+
+    if ( !get_cvar_num( "war3x_statusicons" ) && iStatus == ICON_SHOW )
+        return PLUGIN_HANDLED;
+
+    // Make sure player is alive before showing
+
+    if ( !is_user_alive( id ) && iStatus == ICON_SHOW )
+        return PLUGIN_HANDLED;
+
+    new Float:fInvisLevel = entity_get_float( id, EV_FL_renderamt );
+    new iInvisLevel = floatround( fInvisLevel );
+
+    Create_StatusIcon( id, iStatus, "suithelmet_empty", iInvisLevel, iInvisLevel, iInvisLevel );
+
+    return PLUGIN_HANDLED;
+}
+
+
+public SHARED_IMMOBILIZE_remove( id ) {
+
+    if ( !g_bPlayerBashed[id] && !g_PlayerRooted[id] && !g_bPlayerSleeping[id] && !g_bPlayerAvatarGrow[id] )
+        g_bPlayerCantMove[id] = false;
+
+    return PLUGIN_HANDLED;
+}
+
+
+public SHARED_SLOW_remove( id ) {
+
+    if ( !g_bPlayerFrosted[id] && !g_PlayerStruck[id] && !g_bPlayerNova[id] )
+        g_bPlayerSlowed[id] = false;
+
+    return PLUGIN_HANDLED;
+}
+
+
+// Dispell Negative Effects (UNUSED ATM)
+
+public Dispell_Negative( dispellerId, targetId )
+{
+    new szMessage[128], szPlayerName[32];
+    get_user_name( dispellerId, szPlayerName, 31 );
+
+    new bool:bHasEffects;
+    g_bPlayerDispelled[targetId] = false;
+
+
+    // Bash
+
+    if ( g_bPlayerBashed[targetId] )
+    {
+        new parm_Stun[1];
+        parm_Stun[0] = targetId;
+
+        SBash_Remove( parm_Stun );
+        bHasEffects = true;
+    }
+
+    // Frost Armor ( slow )
+
+    if ( g_bPlayerFrosted[targetId] )
+    {
+        new parm_Slow[1];
+        parm_Slow[0] = targetId;
+
+        UD_S_FROSTARMOR_remove( parm_Slow );
+        bHasEffects = true;
+    }
+
+    // Frost Nova ( slow )
+
+    if ( g_bPlayerNova[targetId] )
+    {
+        new parm_Slow[1];
+        parm_Slow[0] = targetId;
+
+        UD_S_FROSTNOVA_remove( parm_Slow );
+        bHasEffects = true;
+    }
+
+    // Shadow Strike
+
+    if ( g_PlayerStruck[targetId] )
+    {
+        format( szMessage, 127, DISPELL_SHADOWSTRIKE, szPlayerName );
+
+        WAR3_status_text( g_PlayerStruck[targetId], szMessage, 3.0 );
+
+        NE_U_SHADOWSTRIKE_remove( targetId );
+        bHasEffects = true;
+    }
+
+    // Entangling Roots
+
+    if ( g_PlayerRooted[targetId] )
+    {
+        format( szMessage, 127, DISPELL_ROOTS, szPlayerName );
+
+        WAR3_status_text( g_PlayerRooted[targetId], szMessage, 3.0 );
+
+        NE_U_ROOT_remove( targetId );
+        bHasEffects = true;
+    }
+
+    // Flame Strike
+
+    if ( g_PlayerOnFire[targetId] || g_PlayerSingeing[targetId] )
+    {
+        HU_U_FLAMESTRIKE_remove( targetId );
+        bHasEffects = true;
+    }
+
+    // Display Dispell Message
+
+    if ( bHasEffects )
+    {
+        copy( szMessage, 127, DISPELL_GENERIC );
+        WAR3_status_text( targetId, szMessage, 3.0 );
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+
+// Dispell Positive Effects (UNUSED ATM)
+
+public Dispell_Positive( dispellerId, targetId )
+{
+    if ( g_PlayerRejuv[targetId] )             // Rejuvenation
+        NE_U_REJUVENATION_remove( targetId );
+
+    if ( get_user_health( targetId ) > 100 && g_PlayerInfo[targetId][CURRENT_RACE] == RACE_HUMAN )
+    {
+        g_iDispellHealth[targetId] = get_user_health( targetId ) - 100;
+        set_user_health( targetId, 100 );
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+
+// Remove Dispell (UNUSED ATM)
+
+public Dispell_Remove( id ) {
+
+    if ( !g_bPlayerRespawned[id] )
+    {
+        g_bPlayerDispelled[id] = false;
+
+        // Restore Lost Bonus HPs
+
+        if ( g_iDispellHealth[id] )
+        {
+            new iNewHealth = g_iDispellHealth[id] + get_user_health( id );
+
+            if ( iNewHealth > WAR3_get_maxhealth( id ) )
+                iNewHealth = WAR3_get_maxhealth( id );
+
+            set_user_health( id, iNewHealth );
+        }
+    }
 
     return PLUGIN_HANDLED;
 }
@@ -327,364 +608,6 @@ public WAR3_set_health( id ) {
 }
 
 
-// Invisibility set ( shared )
-
-public Invis_Set( id ) {
-
-    new parmInvis[1];
-    parmInvis[0] = id;
-
-    _Invis_Set( parmInvis );
-
-    return PLUGIN_HANDLED;
-}
-
-
-public _Invis_Set( parm_Invis[1] ) {
-
-    new id = parm_Invis[0];
-
-    if ( !is_user_connected( id ) || !is_user_alive( id ) )
-        return PLUGIN_HANDLED;
-
-    if ( g_bPlayerGlowing[id] || g_bPlayerSleeping[id] || g_iPlayerAvatar[id] || g_bPlayerAvatarGrow[id] )
-        return PLUGIN_HANDLED;
-
-    if ( ( g_PlayerInfo[id][CURRENT_RACE] != RACE_HUMAN || ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && !g_PlayerInfo[id][CURRENT_SKILL1] ) ) && g_PlayerInfo[id][CURRENT_ITEM] != ITEM_CLOAK )
-        return PLUGIN_HANDLED;
-
-    g_bInvisCooldown[id] = false;
-
-    new weapon, iClip, iAmmo;
-    weapon = get_user_weapon( id, iClip, iAmmo );
-
-    // Human Invisibility
-
-    if ( weapon == CSW_KNIFE && g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL1] && WAR3_skill_enabled( id, RACE_HUMAN, SKILL_1 ) )
-    {
-        // Make sure cloak value is not greater
-
-        if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK && VALUE_CLOAK > s_Invisibility[g_PlayerInfo[id][CURRENT_SKILL1] - 1] )
-            ICloak_Set( id );
-
-        else
-        {
-            HU_S_INVISIBILITY_set( id );
-        }
-    }
-
-    // Cloak of Invisibility
-
-    else if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK )
-    {
-        ICloak_Set( id );
-    }
-
-    // Remove
-
-    else if ( g_bPlayerInvis[id] )
-    {
-        Invis_Remove( id );
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
-public Invis_Remove( id ) {
-
-    if ( !g_bPlayerGlowing[id] && !g_bPlayerSleeping[id] && !g_iPlayerAvatar[id] )
-        set_user_rendering( id );
-
-    g_bPlayerInvis[id] = false;
-
-    Invis_Icon( id, ICON_HIDE );
-
-    return PLUGIN_HANDLED;
-}
-
-
-public Invis_Cooldown( id ) {
-
-    if ( ( g_PlayerInfo[id][CURRENT_RACE] != RACE_HUMAN || ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && !g_PlayerInfo[id][CURRENT_SKILL1] ) ) && g_PlayerInfo[id][CURRENT_ITEM] != ITEM_CLOAK )
-        return PLUGIN_HANDLED;
-
-    new TaskId = TASK_INVIS + id;
-    remove_task( TaskId, 0 );
-
-    g_bPlayerInvis[id] = false;
-    g_bInvisCooldown[id] = true;
-
-    Invis_Remove( id );
-
-    new parm_Invis[1];
-    parm_Invis[0] = id;
-
-    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL1] )
-        set_task( INVISIBILITY_COOLDOWN, "_Invis_Set", TaskId, parm_Invis, 1 );
-
-    else if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK )
-    {
-        set_task( CLOAK_COOLDOWN, "_Invis_Set", TaskId, parm_Invis, 1 );
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
-public Invis_Icon( id, iStatus ) {
-
-    // Make sure server enabled
-
-    if ( !get_cvar_num( "war3x_statusicons" ) && iStatus == ICON_SHOW )
-        return PLUGIN_HANDLED;
-
-    // Make sure player is alive before showing
-
-    if ( !is_user_alive( id ) && iStatus == ICON_SHOW )
-        return PLUGIN_HANDLED;
-
-    new Float:fInvisLevel = entity_get_float( id, EV_FL_renderamt );
-    new iInvisLevel = floatround( fInvisLevel );
-
-    Create_StatusIcon( id, iStatus, "suithelmet_empty", iInvisLevel, iInvisLevel, iInvisLevel );
-
-    return PLUGIN_HANDLED;
-}
-
-
-public Immobilize_Remove( id ) {
-
-    if ( !g_bPlayerBashed[id] && !g_PlayerRooted[id] && !g_bPlayerSleeping[id] && !g_bPlayerAvatarGrow[id] )
-        g_bPlayerCantMove[id] = false;
-
-    return PLUGIN_HANDLED;
-}
-
-
-public Slow_Remove( id ) {
-
-    if ( !g_bPlayerFrosted[id] && !g_PlayerStruck[id] && !g_bPlayerNova[id] )
-        g_bPlayerSlowed[id] = false;
-
-    return PLUGIN_HANDLED;
-}
-
-
-// Dispell Negative Effects (UNUSED ATM)
-
-public Dispell_Negative( dispellerId, targetId )
-{
-    new szMessage[128], szPlayerName[32];
-    get_user_name( dispellerId, szPlayerName, 31 );
-
-    new bool:bHasEffects;
-    g_bPlayerDispelled[targetId] = false;
-
-
-    // Bash
-
-    if ( g_bPlayerBashed[targetId] )
-    {
-        new parm_Stun[1];
-        parm_Stun[0] = targetId;
-
-        SBash_Remove( parm_Stun );
-        bHasEffects = true;
-    }
-
-    // Frost Armor ( slow )
-
-    if ( g_bPlayerFrosted[targetId] )
-    {
-        new parm_Slow[1];
-        parm_Slow[0] = targetId;
-
-        UD_S_FROSTARMOR_remove( parm_Slow );
-        bHasEffects = true;
-    }
-
-    // Frost Nova ( slow )
-
-    if ( g_bPlayerNova[targetId] )
-    {
-        new parm_Slow[1];
-        parm_Slow[0] = targetId;
-
-        UD_S_FROSTNOVA_remove( parm_Slow );
-        bHasEffects = true;
-    }
-
-    // Shadow Strike
-
-    if ( g_PlayerStruck[targetId] )
-    {
-        format( szMessage, 127, DISPELL_SHADOWSTRIKE, szPlayerName );
-
-        WAR3_status_text( g_PlayerStruck[targetId], szMessage, 3.0 );
-
-        USstrike_Remove( targetId );
-        bHasEffects = true;
-    }
-
-    // Entangling Roots
-
-    if ( g_PlayerRooted[targetId] )
-    {
-        format( szMessage, 127, DISPELL_ROOTS, szPlayerName );
-
-        WAR3_status_text( g_PlayerRooted[targetId], szMessage, 3.0 );
-
-        URoot_Remove( targetId );
-        bHasEffects = true;
-    }
-
-    // Flame Strike
-
-    if ( g_PlayerOnFire[targetId] || g_PlayerSingeing[targetId] )
-    {
-        HU_U_FLAMESTRIKE_remove( targetId );
-        bHasEffects = true;
-    }
-
-    // Display Dispell Message
-
-    if ( bHasEffects )
-    {
-        copy( szMessage, 127, DISPELL_GENERIC );
-        WAR3_status_text( targetId, szMessage, 3.0 );
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
-// Dispell Positive Effects (UNUSED ATM)
-
-public Dispell_Positive( dispellerId, targetId )
-{
-    if ( g_PlayerRejuv[targetId] )             // Rejuvenation
-        URejuv_Remove( targetId );
-
-    if ( get_user_health( targetId ) > 100 && g_PlayerInfo[targetId][CURRENT_RACE] == RACE_HUMAN )
-    {
-        g_iDispellHealth[targetId] = get_user_health( targetId ) - 100;
-        set_user_health( targetId, 100 );
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
-// Remove Dispell (UNUSED ATM)
-
-public Dispell_Remove( id ) {
-
-    if ( !g_bPlayerRespawned[id] )
-    {
-        g_bPlayerDispelled[id] = false;
-
-        // Restore Lost Bonus HPs
-
-        if ( g_iDispellHealth[id] )
-        {
-            new iNewHealth = g_iDispellHealth[id] + get_user_health( id );
-
-            if ( iNewHealth > WAR3_get_maxhealth( id ) )
-                iNewHealth = WAR3_get_maxhealth( id );
-
-            set_user_health( id, iNewHealth );
-        }
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
-public Set_PlayerBackpack( id ) {
-
-    if ( id == g_Vip || g_iCurrentRound < 1 )
-        return PLUGIN_HANDLED;
-
-
-    new Float:fAnkhChance;
-    new Float:fRandomNum = random_float( 0.0,1.0 );
-
-    if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_ANKH )
-        fAnkhChance += VALUE_ANKH;
-
-    //if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL3] && WAR3_skill_enabled( id, RACE_ORC, SKILL_3 ) )
-        //fAnkhChance += s_Reincarnate[g_PlayerInfo[id][CURRENT_SKILL3] - 1];
-
-    // Give Weapons
-
-    if ( fAnkhChance >= fRandomNum )
-    {
-        new Weapons[32], iTotalWeapons;
-        get_user_weapons( id, Weapons, iTotalWeapons );
-
-        for ( new iWeaponNum = 0; iWeaponNum < iTotalWeapons; iWeaponNum++ )
-        {
-            new weapon = Weapons[iWeaponNum];
-
-            switch ( cs_get_weapon_group( weapon ) )
-            {
-                case CS_WEAPON_GROUP_PRIMARY:
-                {
-                    if ( get_cvar_num( "war3x_ankhautosnipers" ) || ( !get_cvar_num( "war3x_ankhautosnipers" ) && cs_get_weapon_type_( weapon ) != CS_WEAPON_TYPE_AUTOSNIPER ) )
-                    {
-                        g_PlayerBackpack[id][CURRENT_PRIMARY] = weapon;
-                    }
-                }
-
-                case CS_WEAPON_GROUP_SECONDARY:
-                {
-                    if ( get_cvar_num( "war3x_ankhpistols" ) )
-                    {
-                        g_PlayerBackpack[id][CURRENT_SECONDARY] = weapon;
-                    }
-                }
-
-                case CS_WEAPON_GROUP_GRENADE:
-                {
-                    if ( get_cvar_num( "war3x_ankhgrenades" ) )
-                    {
-                        new iClip, iAmmo;
-
-                        switch ( weapon )
-                        {
-                            case CSW_HEGRENADE:
-                            {
-                                get_user_ammo( id, CSW_HEGRENADE, iClip, iAmmo );
-                                g_PlayerBackpack[id][CURRENT_HEGRENADE] = iAmmo;
-                            }
-
-                            case CSW_SMOKEGRENADE:
-                            {
-                                get_user_ammo( id, CSW_SMOKEGRENADE, iClip, iAmmo );
-                                g_PlayerBackpack[id][CURRENT_SMOKEGRENADE] = iAmmo;
-                            }
-
-                            case CSW_FLASHBANG:
-                            {
-                                get_user_ammo( id, CSW_FLASHBANG, iClip, iAmmo );
-                                g_PlayerBackpack[id][CURRENT_FLASHBANG] = iAmmo;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        g_PlayerBackpack[id][CURRENT_ARMOR] = get_user_armor( id );
-        g_PlayerBackpack[id][CURRENT_ARMORTYPE] = g_iPlayerArmor[id][ARMOR_TYPE];
-
-        if ( g_bGotDefuser[id] )
-            g_PlayerBackpack[id][CURRENT_DEFUSE] = 1;
-    }
-
-    return PLUGIN_HANDLED;
-}
 
 
 // Set player speed
@@ -813,7 +736,7 @@ public _WAR3_set_speed( parm_Speed[1] ) {
         // Nature's blessing
 
         else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] && get_user_armor( id ) )
-            SBlessing_Speed_Set( id, weapon );
+            NE_S_BLESSING_set_speed( id, weapon );
 
         else
         {
@@ -849,8 +772,8 @@ public WAR3_enable_skills( id ) {
 
     if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL1] )
     {
-        SEvasion_Check( id );
-        SEvasion_Health( id );
+        NE_S_EVASION_prep( id );
+        NE_S_EVASION_health( id );
     }
 
     // Regenerate Health / Armor
@@ -860,7 +783,7 @@ public WAR3_enable_skills( id ) {
 
     // Set Invisibility
 
-    Invis_Set( id );
+    SHARED_INVIS_set( id );
 
     // Enable Ultimate
 
@@ -901,7 +824,7 @@ public WAR3_death_victim( id ) {
     if ( !g_bPlayerRespawned[id] )
     {
         if ( !g_PlayerBackpack[id][CURRENT_PRIMARY] && !g_PlayerBackpack[id][CURRENT_SECONDARY] && !g_PlayerBackpack[id][CURRENT_HEGRENADE] && !g_PlayerBackpack[id][CURRENT_FLASHBANG] && !g_PlayerBackpack[id][CURRENT_SMOKEGRENADE] && !g_PlayerBackpack[id][CURRENT_ARMOR] && !g_PlayerBackpack[id][CURRENT_DEFUSE] )
-            Set_PlayerBackpack( id );
+            ITEM_ANKH_set( id );
     }
 
     else
@@ -915,9 +838,9 @@ public WAR3_death_victim( id ) {
 
     // Check if New Skills Available
 
-    War3x_CheckSkills( id );
+    WAR3_check_skills( id );
 
-    // Purge Tasks from Round
+    // Purge tasks from Round
 
     Purge_Death( id );
 
@@ -942,273 +865,6 @@ public WAR3_death_victim( id ) {
 
     set_hudmessage( 0, 0, 0, -1.0, -1.0, 0, 0.0, 0.1, 0.0, 0.0, HUDMESSAGE_CHAN_XP );
     show_hudmessage( id, "" );
-
-    return PLUGIN_HANDLED;
-}
-
-
-
-public Ankh_DropItems( id ) {
-
-    if ( id == g_Vip )
-    {
-        client_print( id, print_chat, VIP_ANKH_MESSAGE );
-        return PLUGIN_HANDLED;
-    }
-
-    g_bAnkhDropWeapons[id] = false;
-
-    new CurrentWeapons[2];
-
-    new Weapons[32], iTotalWeapons;
-    get_user_weapons( id, Weapons, iTotalWeapons );
-
-    // Drop Dupilcate/Extra Weapon(s)
-
-    for ( new iWeaponNum = 0; iWeaponNum < iTotalWeapons; iWeaponNum++ )
-    {
-        new weapon = Weapons[iWeaponNum];
-
-        // If Weapon(s) are saved in Ankh array, Drop all of the same
-        // type to make room. If Weapon(s) stored already exist, don't
-        // drop (or give) the item. If no Weapon is set to reincarnate,
-        // but one exists, drop all others of the same type.
-
-        switch ( cs_get_weapon_group( weapon ) )
-        {
-            // Primary Weapon(s)
-
-            case CS_WEAPON_GROUP_PRIMARY:
-            {
-                if ( g_PlayerBackpack[id][CURRENT_PRIMARY] )
-                {
-                    if ( weapon == g_PlayerBackpack[id][CURRENT_PRIMARY] )
-                        g_PlayerBackpack[id][CURRENT_PRIMARY] = 0;
-
-                    else
-                    {
-                        g_bAnkhDropWeapons[id] = true;
-                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weapon] );
-                    }
-                }
-
-                else
-                {
-                    if ( CurrentWeapons[CURRENT_PRIMARY] )
-                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weapon] );
-
-                    else
-                    {
-                        CurrentWeapons[CURRENT_PRIMARY] = weapon;
-                    }
-                }
-            }
-
-            // Sidearm(s)
-
-            case CS_WEAPON_GROUP_SECONDARY:
-            {
-                if ( g_PlayerBackpack[id][CURRENT_SECONDARY] )
-                {
-                    if ( weapon == g_PlayerBackpack[id][CURRENT_SECONDARY] )
-                        g_PlayerBackpack[id][CURRENT_SECONDARY] = 0;
-
-                    else
-                    {
-                        g_bAnkhDropWeapons[id] = true;
-                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weapon] );
-                    }
-                }
-
-                else
-                {
-                    if ( CurrentWeapons[CURRENT_SECONDARY] )
-                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weapon] );
-
-                    else
-                    {
-
-                        CurrentWeapons[CURRENT_SECONDARY] = weapon;
-                    }
-                }
-            }
-        }
-    }
-
-    if ( !g_bAnkhDropWeapons[id] )
-    {
-        new parm_Ankh[1];
-        parm_Ankh[0] = id;
-
-        Ankh_GiveItems( parm_Ankh );
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
-public Ankh_GiveItems( parm_Ankh[1] ) {
-
-    new id = parm_Ankh[0];
-
-    g_bAnkhDropWeapons[id] = false;
-    new bool:bWeaponsGiven, bool:bArmorSkill;
-
-    // Give Primary Weapon
-
-    if ( g_PlayerBackpack[id][CURRENT_PRIMARY] )
-    {
-        bWeaponsGiven = true;
-        give_item( id, CS_WEAPON_NAME[g_PlayerBackpack[id][CURRENT_PRIMARY]] );
-
-        for ( new i = 0; i < ANKH_AMMOCLIPS; i++ )
-        {
-            switch ( g_PlayerBackpack[id][CURRENT_PRIMARY] )
-            {
-                case CSW_M3:        give_item( id, "ammo_buckshot" );
-                case CSW_XM1014:    give_item( id, "ammo_buckshot" );
-                case CSW_MP5NAVY:   give_item( id, "ammo_9mm" );
-                case CSW_TMP:       give_item( id, "ammo_9mm" );
-                case CSW_P90:       give_item( id, "ammo_57mm" );
-                case CSW_MAC10:     give_item( id, "ammo_45acp" );
-                case CSW_UMP45:     give_item( id, "ammo_45acp" );
-                case CSW_AK47:      give_item( id, "ammo_762nato" );
-                case CSW_SG552:     give_item( id, "ammo_556nato" );
-                case CSW_GALI:      give_item( id, "ammo_556nato" );
-                case CSW_FAMAS:     give_item( id, "ammo_556nato" );
-                case CSW_M4A1:      give_item( id, "ammo_556nato" );
-                case CSW_AUG:       give_item( id, "ammo_556nato" );
-                case CSW_SCOUT:     give_item( id, "ammo_762nato" );
-                case CSW_AWP:       give_item( id, "ammo_338magnum" );
-                case CSW_G3SG1:     give_item( id, "ammo_762nato" );
-                case CSW_SG550:     give_item( id, "ammo_556nato" );
-                case CSW_M249:      give_item( id, "ammo_556natobox" );
-            }
-        }
-    }
-
-    // Give Sidearm
-
-    if ( g_PlayerBackpack[id][CURRENT_SECONDARY] )
-    {
-        bWeaponsGiven = true;
-        give_item( id, CS_WEAPON_NAME[g_PlayerBackpack[id][CURRENT_SECONDARY]] );
-
-        for ( new i = 0; i < ANKH_AMMOCLIPS; i++ )
-        {
-            switch ( g_PlayerBackpack[id][CURRENT_SECONDARY] )
-            {
-                case CSW_USP:       give_item( id, "ammo_45acp" );
-                case CSW_DEAGLE:    give_item( id, "ammo_50ae" );
-                case CSW_GLOCK18:   give_item( id, "ammo_9mm" );
-                case CSW_ELITE:     give_item( id, "ammo_9mm" );
-                case CSW_P228:      give_item( id, "ammo_357sig" );
-                case CSW_FIVESEVEN: give_item( id, "ammo_57mm" );
-            }
-        }
-    }
-
-    // Give Grenade(s)
-
-    if ( g_PlayerBackpack[id][CURRENT_HEGRENADE] )
-    {
-        give_item( id, CS_WEAPON_NAME[CSW_HEGRENADE] );
-        bWeaponsGiven = true;
-    }
-
-    if ( g_PlayerBackpack[id][CURRENT_SMOKEGRENADE] )
-    {
-        give_item( id, CS_WEAPON_NAME[CSW_SMOKEGRENADE] );
-        bWeaponsGiven = true;
-    }
-
-    if ( g_PlayerBackpack[id][CURRENT_FLASHBANG] )
-    {
-        give_item( id, CS_WEAPON_NAME[CSW_FLASHBANG] );
-        bWeaponsGiven = true;
-
-//        if ( g_PlayerBackpack[id][CURRENT_FLASHBANG] == 2)
-//            give_item( id, "ammo_flashbang" );
-    }
-
-    // Give Armor
-
-    if ( g_PlayerBackpack[id][CURRENT_ARMOR] )
-    {
-        if ( g_PlayerBackpack[id][CURRENT_ARMORTYPE] )
-            give_item( id, "item_assaultsuit" );
-
-        else
-        {
-            give_item( id, "item_kevlar" );
-        }
-
-        set_user_armor( id, g_PlayerBackpack[id][CURRENT_ARMOR] );
-        WAR3_check_armor( id );
-
-        g_bArmorDepleted[id] = false;
-        bWeaponsGiven = true;
-    }
-
-    // Give Defuser
-
-    if ( g_PlayerBackpack[id][CURRENT_DEFUSE] )
-    {
-        give_item( id, "item_thighpack" );
-        bWeaponsGiven = true;
-    }
-
-
-    if ( bWeaponsGiven )
-    {
-        // Play armor skill effect if armor given
-
-        if ( g_PlayerBackpack[id][CURRENT_ARMOR] && get_user_armor(id) == g_PlayerBackpack[id][CURRENT_ARMOR] )
-        {
-            if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD && g_PlayerInfo[id][CURRENT_SKILL3] )
-            {
-                bArmorSkill = true;
-                WAR3_armorskill_on( id );
-            }
-
-            else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL3] )
-            {
-                bArmorSkill = true;
-                WAR3_armorskill_on( id );
-            }
-
-            else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL3] )
-            {
-                bArmorSkill = true;
-                WAR3_armorskill_on( id );
-            }
-
-            else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF )
-            {
-                bArmorSkill = true;
-                WAR3_armorskill_on( id );
-            }
-        }
-
-        if ( !bArmorSkill )
-        {
-            // Play Client Sound
-
-            client_cmd( id, "speak warcraft3/bonus/Reincarnation.wav" );
-
-            // Screen Fade
-
-            Create_ScreenFade( id, (1<<10), (1<<10), FADE_OUT, 0, 255, 0, 96 );
-        }
-    }
-
-    else
-    {
-        client_print( id, print_center, ITEM_ANKH_NOITEMS );
-    }
-
-
-    g_PlayerBackpack[id] = {0,0,0,0,0,0,0,0};
 
     return PLUGIN_HANDLED;
 }
@@ -1266,6 +922,13 @@ public Purge_FreezeStart() {
     Remove_TempEnts( "FLAME_STRIKE", 0 );
     Remove_TempEnts( "HEAL_EFFECT", 0 );
 
+    // Reset Objective Globals
+
+    g_BombPlanter = 0;
+    g_BombDefuser = 0;
+    g_bBombPlanted = false;
+    g_bHostageRescued = false;
+
     return PLUGIN_HANDLED;
 }
 
@@ -1278,7 +941,7 @@ public Purge_NewRound( id ) {
 
     // Remove Glow
 
-    Glow_Remove( id );
+    SHARED_GLOW_remove( id );
 
     // Globals
 
@@ -1297,16 +960,16 @@ public Purge_Common( id ) {
         OR_S_REGENERATION_remove( id );
 
     if ( g_PlayerStruck[id] )
-        USstrike_Remove( id );
+        NE_U_SHADOWSTRIKE_remove( id );
 
     if ( g_PlayerRooted[id] )
-        URoot_Remove( id );
+        NE_U_ROOT_remove( id );
 
     if ( g_PlayerOnFire[id] || g_PlayerSingeing[id] )
         HU_U_FLAMESTRIKE_remove( id );
 
     if ( g_PlayerRejuv[id] )
-        URejuv_Remove( id );
+        NE_U_REJUVENATION_remove( id );
 
     if ( g_PlayerImpaled[id] )
         UD_U_IMPALE_remove( id );
@@ -1346,7 +1009,7 @@ public Purge_Common( id ) {
 
     if ( g_bPlayerInvis[id] )
     {
-        Invis_Remove( id );
+        SHARED_INVIS_remove( id );
     }
 
     // Halt Icons
@@ -1679,24 +1342,7 @@ public WAR3_vote_tally() {
 }
 
 
-public War3x_GenerateHelp( id ) {
-
-    // Generate files
-
-    SkillHelp_MakeFile();
-
-    // Echo to id
-
-    new szMessage[256];
-    copy( szMessage, 255, INFO_GENERATEHELP_CHAT );
-
-    status_print( id, szMessage );
-
-    return PLUGIN_HANDLED;
-}
-
-
-public War3x_CheckLevel( id, iOldXp, iNewXp ) {
+public WAR3_check_level( id, iOldXp, iNewXp ) {
 
     if ( WAR3_get_level( iOldXp ) < WAR3_get_level( iNewXp ) )
     {
@@ -1719,14 +1365,14 @@ public War3x_CheckLevel( id, iOldXp, iNewXp ) {
 
         // Show skill selection menu
 
-        War3x_CheckSkills( id );
+        WAR3_check_skills( id );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public War3x_CheckSkills( id ) {
+public WAR3_check_skills( id ) {
 
     new Ultimate = 0;
 
@@ -1843,7 +1489,7 @@ public WAR3_map_start() {
     }
 
     if ( bCreateFiles )
-        SkillHelp_MakeFile();
+        HELP_create_files();
 
     // Load map-specific settings
 
@@ -1921,25 +1567,9 @@ public Map_Disabled() {
 }
 
 
-public Check_BombDeath( parm_Bomb[1] ) {
-
-    new id = parm_Bomb[0];
-
-    if ( !is_user_alive( id ) )
-        WAR3_death_victim( id );
-
-    else
-    {
-        g_PlayerBackpack[id] = {0,0,0,0,0,0,0,0};
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
 // Save Me!
 
-public Icon_SaveMe( id ) {
+public WAR3_icon_lowhealth( id ) {
 
     if ( !is_user_alive( id ) )
     {
@@ -1953,7 +1583,7 @@ public Icon_SaveMe( id ) {
     {
         if ( !g_bPlayerSaveMe[id] )
         {
-            Icon_SaveMe_Draw( id );
+            WAR3_icon_lowhealth_draw( id );
             g_bPlayerSaveMe[id] = true;
         }
     }
@@ -1971,7 +1601,7 @@ public Icon_SaveMe( id ) {
 }
 
 
-public Icon_SaveMe_Draw( victim ) {
+static WAR3_icon_lowhealth_draw( victim ) {
 
     new TeamPlayers[32], iTotalPlayers;
     new szTeamName[16];
@@ -2098,577 +1728,6 @@ public Icon_DispellMe_Draw( id ) {
     return PLUGIN_HANDLED;
 }
 
-
-// Item Descriptions ( returns number of parameters )
-
-public ItemHelp_GetValues( iItemNum, szValue[32] ) {
-
-    switch ( iItemNum )
-    {
-        // Items
-
-        case ITEM_ANKH:
-        {
-            format( szValue, 31, "%0.0f%s", ( VALUE_ANKH * 100.0 ), "%" );
-            return ( 1 );
-        }
-
-        case ITEM_BOOTS:
-        {
-            format( szValue, 31, "%0.0f%s", ( ( ( VALUE_BOOTS / SPEED_KNIFE ) - 1.0 ) * 100.0 ), "%" );
-            return ( 1 );
-        }
-
-        case ITEM_CLAWS:
-        {
-            format( szValue, 31, "%i", VALUE_CLAWS );
-            return ( 1 );
-        }
-
-        case ITEM_CLOAK:
-        {
-            format( szValue, 31, "%0.0f%s", ( VALUE_CLOAK * 100.0 ), "%" );
-            return ( 1 );
-        }
-
-        case ITEM_MASK:
-        {
-            format( szValue, 31, "%0.0f", VALUE_MASK );
-            return ( 1 );
-        }
-
-        case ITEM_AMULET:
-        {
-            format( szValue, 31, "%d", VALUE_AMULET );
-            return ( 1 );
-        }
-
-        case ITEM_RING:
-        {
-            format( szValue, 31, "%i", VALUE_RING );
-            return ( 1 );
-        }
-
-        case ITEM_TOME:
-        {
-            format( szValue, 31, "%i", VALUE_TOME );
-            return ( 1 );
-        }
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
-// Skill Descriptions ( returns number of parameters )
-
-public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
-
-    switch ( iRaceId + 1 )
-    {
-        case RACE_UNDEAD:
-        {
-            switch ( iSkillNum )
-            {
-                // Skills
-
-                case SKILL_RACIAL:
-                {
-                    format( szValue, 31, "%0.0f%s %0.0f%s", ( ( ( UD_S_UNHOLY_get_speed( iSkillLevel ) - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), "%", ( 1.0 - UD_S_UNHOLY_get_gravity( iSkillLevel ) ) * 100.0, "%" );
-                    return ( 2 );
-                }
-
-                case SKILL_1:
-                {
-                    format( szValue, 31, "%0.0f%s", ( UD_fVampiricAura[iSkillLevel] * 100.0 ), "%" );
-                    return ( 1 );
-                }
-
-                case SKILL_2:
-                {
-                    format( szValue, 31, "%d %d %0.0f", UD_iFrostNova_range[iSkillLevel], UD_iFrostNova_damage[iSkillLevel], FROSTNOVA_SLOWDURATION_MAX );
-                    return ( 3 );
-                }
-
-                case SKILL_3:
-                {
-                    format( szValue, 31, "%d %0.0f%s %0.1f", ( UD_iFrostArmor_armor[iSkillLevel] - 100 ), ( UD_fFrostArmor_slow[iSkillLevel] * 100.0 ), "%", FROSTARMOR_SLOWDURATION );
-                    return ( 3 );
-                }
-
-                // Ultimates
-
-                case ULTIMATE_1:
-                {
-                    format( szValue, 31, "%d %d", DEATHCOIL_DAMAGE, DEATHCOIL_HEAL );
-                    return ( 2 );
-                }
-
-                case ULTIMATE_2:
-                {
-                    format( szValue, 31, "%d", IMPALE_DAMAGE );
-                    return ( 1 );
-                }
-
-                case ULTIMATE_3:
-                {
-                    format( szValue, 31, "%0.1f", SLEEP_DURATION_MAX );
-                    return ( 1 );
-                }
-            }
-        }
-
-        case RACE_HUMAN:
-        {
-            switch ( iSkillNum )
-            {
-                // Skills
-
-                case SKILL_RACIAL:
-                {
-                    format( szValue, 31, "%d", HU_S_FORTITUDE_get( iSkillLevel ) );
-                    return ( 1 );
-                }
-
-                case SKILL_1:
-                {
-                    format( szValue, 31, "%0.0f%s", ( s_Invisibility[iSkillLevel] * 100.0 ), "%" );
-                    return ( 2 );
-                }
-
-                case SKILL_2:
-                {
-                    format( szValue, 31, "%0.0f%s %d %0.1f", ( s_Bash[iSkillLevel] * 100.0 ), "%", s_BashDamage[iSkillLevel], BASH_DURATION_MAX );
-                    return ( 3 );
-                }
-
-                case SKILL_3:
-                {
-                    format( szValue, 31, "%d %0.0f%s", ( s_ifArmor[iSkillLevel] - 100 ), ( s_ifDamage[iSkillLevel] * 100.0 ), "%" );
-                    return ( 2 );
-                }
-
-                // Ultimates
-
-                case ULTIMATE_1:
-                {
-                    format( szValue, 31, "%d %d", HOLYLIGHT_HEAL, HOLYLIGHT_DAMAGE );
-                    return ( 2 );
-                }
-
-                case ULTIMATE_2:
-                {
-                    format( szValue, 31, "%d %d %d %d", FLAMESTRIKE_DAMAGEIN, FLAMESTRIKE_DAMAGEOUT, FLAMESTRIKE_SINGEDURATION, FLAMESTRIKE_DURATION );
-                    return ( 4 );
-                }
-
-                case ULTIMATE_3:
-                {
-                    format( szValue, 31, "%i %d %0.0f", AVATAR_HEALTH, AVATAR_DAMAGE, AVATAR_DURATION );
-                    return ( 3 );
-                }
-            }
-        }
-
-        case RACE_ORC:
-        {
-            switch ( iSkillNum )
-            {
-                // Skills
-
-                case SKILL_RACIAL:
-                {
-                    format( szValue, 31, "%d %0.1f", REGENERATION_AMMOUNT, OR_S_REGENERATION_get( iSkillLevel ) );
-                    return ( 2 );
-                }
-
-                case SKILL_1:
-                {
-                    format( szValue, 31, "%0.0f%s %d %0.0f%s", ( ( ( s_BerserkSpeed[iSkillLevel] - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), "%", BERSERK_HEALTH, ( s_BerserkDmg[iSkillLevel] * 100.0 ), "%" );
-                    return ( 3 );
-                }
-
-                case SKILL_2:
-                {
-                    format( szValue, 31, "%0.0f%s %0.0f", ( s_PulverizeBonus[iSkillLevel] * 100.0 ), "%", s_PulverizeRange[iSkillLevel] );
-                    return ( 2 );
-                }
-
-                case SKILL_3:
-                {
-                    format( szValue, 31, "%0.0f%s", ( s_Pillage[iSkillLevel] * 100.0 ), "%" );
-                    return ( 1 );
-                }
-
-                // Ultimates
-
-                case ULTIMATE_1:
-                {
-                    format( szValue, 31, "%d %d %0.0f%s", HEALINGWAVE_JUMPS, HEALINGWAVE_HEAL, ( ( 1.0 / float( HEALINGWAVE_MULTIPLIER ) ) * 100.0 ), "%" );
-                    return ( 3 );
-                }
-
-                case ULTIMATE_2:
-                {
-                    format( szValue, 31, "%d %d %0.0f%s", CHAINLIGHTNING_DAMAGE, CHAINLIGHTNING_JUMPS, ( ( 1.0 / float( CHAINLIGHTNING_MULTIPLIER ) ) * 100.0 ), "%" );
-                    return ( 3 );
-                }
-
-                case ULTIMATE_3:
-                {
-                    format( szValue, 31, "%0.0f%s %0.0f%s %0.1f %d", ( ( ( 255.0 - WINDWALK_INVISIBILITY ) / 255.0 ) * 100.0 ), "%", ( ( ( WINDWALK_SPEED - SPEED_KNIFE ) / 255.0 ) * 100.0 ), "%", float( WINDWALK_DURATION ), WINDWALK_DAMAGE );
-                    return ( 4 );
-                }
-            }
-        }
-
-        case RACE_NIGHTELF:
-        {
-            switch ( iSkillNum )
-            {
-                // Skills
-
-                case SKILL_RACIAL:
-                {
-                    format( szValue, 31, "%0.0f%s %0.0f%s", ( SElunes_Knife_Get( iSkillLevel ) * 100.0 ), "%", ( SElunes_Magic_Get( iSkillLevel ) * 100.0 ), "%" );
-                    return ( 2 );
-                }
-
-                case SKILL_1:
-                {
-                    format( szValue, 31, "%0.0f%s", ( s_Evasion[iSkillLevel] * 100.0 ), "%" );
-                    return ( 1 );
-                }
-
-                case SKILL_2:
-                {
-                    format( szValue, 31, "%d %0.0f%s", ( s_BlessingArmor[iSkillLevel] - 100 ), ( ( s_BlessingSpeed[iSkillLevel] ) * 100.0 ) , "%" );
-                    return ( 2 );
-                }
-
-                case SKILL_3:
-                {
-                    format( szValue, 31, "%0.0f%s", ( s_TrueshotAura[iSkillLevel] * 100.0 ), "%" );
-                    return ( 1 );
-                }
-
-                // Ultimates
-
-                case ULTIMATE_1:
-                {
-                    format( szValue, 31, "%d %0.1f", REJUVENATION_MAXHEALTH, REJUVENATION_DURATION );
-                    return ( 2 );
-                }
-
-                case ULTIMATE_2:
-                {
-                    format( szValue, 31, "%0.1f %d", ROOT_DURATION, ROOT_MAXDAMAGE );
-                    return ( 2 );
-                }
-
-                case ULTIMATE_3:
-                {
-                    format( szValue, 31, "%d %d %0.1f %0.0f%s", SHADOWSTRIKE_DAMAGE, SHADOWSTRIKE_DOT, float( SHADOWSTRIKE_DURATION ), ( ( ( SPEED_KNIFE - SHADOWSTRIKE_SPEED ) / 255.0 ) * 100.0 ), "%" );
-                    return ( 4 );
-                }
-            }
-        }
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
-// omg this crap is so sloppy right now. oh well.
-
-public SkillHelp_MakeFile() {
-
-    new szFileName[64], szText[256];
-
-    // Skill/Ultimate Help
-
-    for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
-    {
-        new szSkillDesc[256], szSkillName[32], szSkillHeader[192];
-
-        // Set Filename
-
-        format( szFileName, 63, "%s/help/%s.html", WAR3X_DIR, RACEKEYNAME[iRaceNum] );
-
-        // Delete old file(s)
-
-        delete_file( szFileName );
-
-        // Html Header
-
-        write_file( szFileName, HTML_HEADER, -1 );
-
-        // Skills
-
-        for ( new iSkillNum = 0; iSkillNum < TOTAL_SKILLS; iSkillNum++ )
-        {
-            // Racial Ability
-
-            if ( iSkillNum == SKILL_RACIAL )
-            {
-                format( szSkillHeader, 191, "%s", HELP_HEADER_RACIAL );
-                write_file( szFileName, szSkillHeader, -1 );
-
-                SkillHelp_Racial( iRaceNum, szSkillDesc, LEVEL_ALL );
-            }
-
-            // Trainable Skills
-
-            else
-            {
-                if ( iSkillNum == SKILL_1 )
-                {
-                    format( szSkillHeader, 191, "^n%s", HELP_HEADER_SKILLS );
-                    write_file( szFileName, szSkillHeader, -1 );
-                }
-
-                SkillHelp_Skills( iRaceNum, iSkillNum, szSkillDesc, LEVEL_ALL );
-            }
-
-            Get_SkillName( iRaceNum, iSkillNum, szSkillName );
-
-            format( szText, 255, "<li><b>%s</b>^n%s", szSkillName, szSkillDesc );
-
-            write_file( szFileName, szText, -1 );
-        }
-
-        // Ultimates
-
-        for ( new iUltimateNum = TOTAL_SKILLS; iUltimateNum < TOTAL_SKILLS + TOTAL_ULTIMATES; iUltimateNum++ )
-        {
-            if ( iUltimateNum == ULTIMATE_1 )
-            {
-                new szUltimate[192];
-                format( szUltimate, 191, HELP_HEADER_ULTIMATES, LEVEL_ULTIMATE );
-
-                format( szSkillHeader, 191, "^n%s", szUltimate );
-                write_file( szFileName, szSkillHeader, -1 );
-            }
-
-            Get_SkillName( iRaceNum, iUltimateNum, szSkillName );
-            SkillHelp_Ultimate( iRaceNum, iUltimateNum, szSkillDesc );
-
-            format( szText, 255, "<li><b>%s</b>^n%s", szSkillName, szSkillDesc );
-            write_file( szFileName, szText, -1 );
-        }
-    }
-
-    // Item Help
-
-    new szItemDesc[256], szItemName[32], szItemHeader[256];
-
-    // Set Filename
-
-    format( szFileName, 63, "%s/help/items.html", WAR3X_DIR );
-
-    // Delete old file(s)
-
-    delete_file( szFileName );
-
-    // Html Header
-
-    write_file( szFileName, HTML_HEADER, -1 );
-
-    format( szItemHeader, 255, "%s", HELP_HEADER_ITEMS );
-    write_file( szFileName, szItemHeader, -1 );
-
-    // Grab Values and Fill HTML
-
-    for ( new iItemNum = 1; iItemNum <= TOTAL_SHOPITEMS; iItemNum++ )
-    {
-        copy( szItemName, 31, ITEMNAME[iItemNum] );
-        copy( szItemDesc, 255, ITEM_DESC[iItemNum] );
-
-        // Grab values
-
-        new szValues[32], szValueArgs[5][8];
-        ItemHelp_GetValues( iItemNum, szValues );
-
-        // Currently support for only 5 args
-
-        parse( szValues, szValueArgs[0], 7, szValueArgs[1], 7, szValueArgs[2], 7, szValueArgs[3], 7, szValueArgs[4], 7 );
-
-        // Create String ( Max 5 args )
-
-        format( szItemDesc, 255, szItemDesc, szValueArgs[0], szValueArgs[1], szValueArgs[2], szValueArgs[3], szValueArgs[4] );
-
-        format( szText, 255, "<li><b><font color=rgb(%i,%i,%i)>%s</font></b>^n%s", ITEMCOLOR[iItemNum][GLOW_R], ITEMCOLOR[iItemNum][GLOW_G], ITEMCOLOR[iItemNum][GLOW_B], szItemName, szItemDesc );
-        write_file( szFileName, szText, -1 );
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
-public SkillHelp_Racial( iRaceNum, szDescription[256], iLevel ) {
-
-    // Grab skill description template
-
-    switch ( iRaceNum + 1 )
-    {
-        case RACE_UNDEAD:   copy( szDescription, 255, RACE1SKILL_DESC[SKILL_RACIAL] );
-        case RACE_HUMAN:    copy( szDescription, 255, RACE2SKILL_DESC[SKILL_RACIAL] );
-        case RACE_ORC:      copy( szDescription, 255, RACE3SKILL_DESC[SKILL_RACIAL] );
-        case RACE_NIGHTELF: copy( szDescription, 255, RACE4SKILL_DESC[SKILL_RACIAL] );
-    }
-
-    // Grab values
-
-    new szMinValues[32], szMaxValues[32];
-    new szMinValueArgs[5][8], szMaxValueArgs[5][8], szNewValues[5][16];
-
-    new iTotalArgs;
-
-    if ( iLevel == LEVEL_ALL )
-    {
-        iTotalArgs = SkillHelp_GetValues( iRaceNum, SKILL_RACIAL, 0, szMinValues );
-        iTotalArgs = SkillHelp_GetValues( iRaceNum, SKILL_RACIAL, 9, szMaxValues );
-    }
-
-    else
-    {
-        iTotalArgs = SkillHelp_GetValues( iRaceNum, SKILL_RACIAL, iLevel, szMinValues );
-        iTotalArgs = SkillHelp_GetValues( iRaceNum, SKILL_RACIAL, iLevel, szMaxValues );
-    }
-
-    // Currently support for only 5 args
-
-    parse( szMinValues, szMinValueArgs[0], 7, szMinValueArgs[1], 7, szMinValueArgs[2], 7, szMinValueArgs[3], 7, szMinValueArgs[4], 7 );
-    parse( szMaxValues, szMaxValueArgs[0], 7, szMaxValueArgs[1], 7, szMaxValueArgs[2], 7, szMaxValueArgs[3], 7, szMaxValueArgs[4], 7 );
-
-    for ( new i = 0; i < iTotalArgs; i++ )
-    {
-        new szTempMin[8], szTempMax[8];
-        copy( szTempMin, 7, szMinValueArgs[i] );
-        copy( szTempMax, 7, szMaxValueArgs[i] );
-
-        if ( equal( szTempMin, szTempMax ) )
-            copy( szNewValues[i], 15, szTempMin );
-
-        else
-        {
-            // Combine args into one
-
-            format( szNewValues[i], 15, "%s-%s", szTempMin, szTempMax );
-        }
-    }
-
-    // Create String ( Max 5 args )
-
-    format( szDescription, 255, szDescription, szNewValues[0], szNewValues[1], szNewValues[2], szNewValues[3], szNewValues[4] );
-
-    return PLUGIN_HANDLED;
-
-}
-
-
-public SkillHelp_Skills( iRaceNum, iSkillNum, szDescription[256], iLevel ) {
-
-    // Grab skill description template
-
-    switch ( iRaceNum + 1 )
-    {
-        case RACE_UNDEAD:   copy( szDescription, 255, RACE1SKILL_DESC[iSkillNum] );
-        case RACE_HUMAN:    copy( szDescription, 255, RACE2SKILL_DESC[iSkillNum] );
-        case RACE_ORC:      copy( szDescription, 255, RACE3SKILL_DESC[iSkillNum] );
-        case RACE_NIGHTELF: copy( szDescription, 255, RACE4SKILL_DESC[iSkillNum] );
-    }
-
-    // Grab values
-
-    new szValues[_TST][32];
-    new szLvl1Args[5][8], szLvl2Args[5][8], szLvl3Args[5][8];
-    new szNewValues[5][16];
-
-    new iTotalArgs;
-
-    for ( new i = 0; i < TOTAL_SKILLSTRAINED; i++ )
-    {
-        if ( iLevel == LEVEL_ALL )
-        {
-            iTotalArgs = SkillHelp_GetValues( iRaceNum, iSkillNum, i, szValues[i] );
-        }
-
-        else
-        {
-            iTotalArgs = SkillHelp_GetValues( iRaceNum, iSkillNum, iLevel - 1, szValues[i] );
-        }
-    }
-
-    // Currently support for only 5 args
-
-    parse( szValues[0], szLvl1Args[0], 7, szLvl1Args[1], 7, szLvl1Args[2], 7, szLvl1Args[3], 7, szLvl1Args[4], 7 );
-    parse( szValues[1], szLvl2Args[0], 7, szLvl2Args[1], 7, szLvl2Args[2], 7, szLvl2Args[3], 7, szLvl2Args[4], 7 );
-    parse( szValues[2], szLvl3Args[0], 7, szLvl3Args[1], 7, szLvl3Args[2], 7, szLvl3Args[3], 7, szLvl3Args[4], 7 );
-
-    for ( new i = 0; i < iTotalArgs; i++ )
-    {
-        new szTempArgs[_TST][8];
-
-        copy( szTempArgs[0], 7, szLvl1Args[i] );
-        copy( szTempArgs[1], 7, szLvl2Args[i] );
-        copy( szTempArgs[2], 7, szLvl3Args[i] );
-
-        if ( equal( szTempArgs[0], szTempArgs[1] ) && equal( szTempArgs[1], szTempArgs[2] ) )
-            copy( szNewValues[i], 15, szTempArgs[0] );
-
-        else
-        {
-            // Combine args into one
-
-            format( szNewValues[i], 15, "%s/%s/%s", szTempArgs[0], szTempArgs[1], szTempArgs[2] );
-        }
-    }
-
-    // Create String ( Max 5 args )
-
-    format( szDescription, 255, szDescription, szNewValues[0], szNewValues[1], szNewValues[2], szNewValues[3], szNewValues[4] );
-
-    return PLUGIN_HANDLED;
-
-}
-
-
-public SkillHelp_Ultimate( iRaceNum, iUltimateNum, szDescription[256] ) {
-
-    // Grab skill description template
-
-    switch ( iRaceNum + 1 )
-    {
-        case RACE_UNDEAD:   copy( szDescription, 255, RACE1SKILL_DESC[iUltimateNum] );
-        case RACE_HUMAN:    copy( szDescription, 255, RACE2SKILL_DESC[iUltimateNum] );
-        case RACE_ORC:      copy( szDescription, 255, RACE3SKILL_DESC[iUltimateNum] );
-        case RACE_NIGHTELF: copy( szDescription, 255, RACE4SKILL_DESC[iUltimateNum] );
-    }
-
-    // Grab values
-
-    new szValues[32];
-    new szValueArgs[5][8], szNewValues[5][16];
-
-    new iTotalArgs = SkillHelp_GetValues( iRaceNum, iUltimateNum, 0, szValues );
-
-    // Currently support for only 5 args
-
-    parse( szValues, szValueArgs[0], 7, szValueArgs[1], 7, szValueArgs[2], 7, szValueArgs[3], 7, szValueArgs[4], 7 );
-
-    for ( new i = 0; i < iTotalArgs; i++ )
-    {
-        copy( szNewValues[i], 15, szValueArgs[i] );
-    }
-
-    // Create String ( Max 5 args )
-
-    format( szDescription, 255, szDescription, szNewValues[0], szNewValues[1], szNewValues[2], szNewValues[3], szNewValues[4] );
-
-    return PLUGIN_HANDLED;
-
-}
 
 
 public Get_SkillName( iRaceId, iSkillNum, szSkillName[32] ) {

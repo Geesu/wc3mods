@@ -797,7 +797,7 @@ public WAR3_damage( attacker, victim, weapon, iDamage, headshot, iCheckArmor ) {
 
         // Invisibility Cooldown
 
-        Invis_Cooldown( victim );
+        SHARED_INVIS_cooldown( victim );
     }
 
     return PLUGIN_HANDLED;

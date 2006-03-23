@@ -58,7 +58,7 @@ public UD_ultimates( caster, target ) {
                 UD_U_DEATHCOIL( caster, target );
                 Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-                Invis_Cooldown( caster );
+                SHARED_INVIS_cooldown( caster );
             }
         }
 
@@ -69,7 +69,7 @@ public UD_ultimates( caster, target ) {
             UD_U_DEATHCOIL( caster, target );
             Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-            Invis_Cooldown( caster );
+            SHARED_INVIS_cooldown( caster );
         }
 
         else
@@ -102,7 +102,7 @@ public UD_ultimates( caster, target ) {
             UD_U_IMPALE( caster, target );
             Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-            Invis_Cooldown( caster );
+            SHARED_INVIS_cooldown( caster );
         }
     }
 
@@ -113,7 +113,7 @@ public UD_ultimates( caster, target ) {
         UD_U_SLEEP( caster, target );
         Ultimate_Cooldown( caster, ULTIMATE_COOLDOWNDEFAULT );
 
-        Invis_Cooldown( caster );
+        SHARED_INVIS_cooldown( caster );
     }
 
     else
@@ -269,7 +269,7 @@ static UD_S_VAMPIRIC( attacker, victim, weapon, iDamage ) {
         new iRGB[3];
         iRGB[GLOW_G] = iFadeAlpha / 4;
 
-        Glow_Set( attacker, glow_duration( iFadeAlpha ), iRGB, 2 );
+        SHARED_GLOW_set( attacker, glow_duration( iFadeAlpha ), iRGB, 2 );
 
         // Screen fade
 
@@ -381,7 +381,7 @@ public UD_S_FROSTNOVA( id ) {
                 // Glow
 
                 new Float:fDuration = random_float( FROSTNOVA_SLOWDURATION_MIN, FROSTNOVA_SLOWDURATION_MAX );
-                Glow_Set( enemy, fDuration - 0.5, FROSTNOVA_RGB, 36 );
+                SHARED_GLOW_set( enemy, fDuration - 0.5, FROSTNOVA_RGB, 36 );
 
                 // Screen fade
 
@@ -444,7 +444,7 @@ public UD_S_FROSTNOVA_remove( arg_read[1] ) {
     remove_task( task, 0 );
 
     g_bPlayerNova[id] = false;
-    Slow_Remove( id );
+    SHARED_SLOW_remove( id );
 
     WAR3_set_speed( id );
 
@@ -494,7 +494,7 @@ public UD_S_FROSTARMOR( victim, attacker ) {
 
         // Glow
 
-        Glow_Set( attacker, FROSTARMOR_SLOWDURATION - 0.5, FROSTARMOR_RGB, 36 );
+        SHARED_GLOW_set( attacker, FROSTARMOR_SLOWDURATION - 0.5, FROSTARMOR_RGB, 36 );
 
         // Screen fade
 
@@ -543,7 +543,7 @@ public UD_S_FROSTARMOR_remove( arg_read[1] ) {
     remove_task( task, 0 );
 
     g_bPlayerFrosted[id] = false;
-    Slow_Remove( id );
+    SHARED_SLOW_remove( id );
 
     WAR3_set_speed( id );
 
@@ -621,7 +621,7 @@ static UD_U_DEATHCOIL_damage( caster, target ) {
 
     if ( g_PlayerInfo[target][CURRENT_ITEM] == ITEM_AMULET )
     {
-        IAmulet_Block( target, caster );
+        ITEM_AMULET_block( target, caster );
         return PLUGIN_HANDLED;
     }
 
@@ -687,7 +687,7 @@ static UD_U_DEATHCOIL_heal( caster, target ) {
 
     // Invisibility cooldown
 
-    Invis_Cooldown( target );
+    SHARED_INVIS_cooldown( target );
 
     return PLUGIN_HANDLED;
 }
@@ -779,7 +779,7 @@ static UD_U_IMPALE( caster, target ) {
 
     if ( g_PlayerInfo[target][CURRENT_ITEM] == ITEM_AMULET )
     {
-        IAmulet_Block( target, caster );
+        ITEM_AMULET_block( target, caster );
         return PLUGIN_HANDLED;
     }
 
@@ -964,7 +964,7 @@ static UD_U_SLEEP( caster, target ) {
 
     if ( g_PlayerInfo[target][CURRENT_ITEM] == ITEM_AMULET )
     {
-        IAmulet_Block( target, caster );
+        ITEM_AMULET_block( target, caster );
         return PLUGIN_HANDLED;
     }
 
@@ -1134,7 +1134,7 @@ public UD_U_SLEEP_wake( arg_read[1] ) {
 
     // Set player speed
 
-    Immobilize_Remove( target );
+    SHARED_IMMOBILIZE_remove( target );
     WAR3_set_speed( target );
 
     return PLUGIN_HANDLED;
@@ -1168,11 +1168,11 @@ public UD_U_SLEEP_remove( id ) {
 
     // Invis cooldown
 
-    Invis_Cooldown( id );
+    SHARED_INVIS_cooldown( id );
 
     // Set player speed
 
-    Immobilize_Remove( id );
+    SHARED_IMMOBILIZE_remove( id );
     WAR3_set_speed( id );
 
     // Remove z's

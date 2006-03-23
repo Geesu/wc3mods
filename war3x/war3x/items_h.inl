@@ -4,7 +4,7 @@
 
 
 #define VALUE_ANKH                  1.0     // (  float) % chance to gain items
-//#define VALUE_BOOTS               275.0     // (  float) max speed value		 - moved to globals
+#define VALUE_BOOTS               275.0     // (  float) max speed value		 - moved to globals
 #define VALUE_CLAWS                   6     // (integer) extra damage on each attack
 #define VALUE_CLOAK                0.60     // (  float) invisibility percentage
 #define VALUE_MASK                 20.0     // (  float) seconds removed from ultimate cooldown
