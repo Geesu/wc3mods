@@ -75,11 +75,11 @@ public WAR3_set_xp() {
 }
 
 
-public WAR3_get_damage( weaponId, iBonusDamage )
+public WAR3_get_damage( weapon, iBonusDamage )
 {
     new Float:fBonusDamage = float( iBonusDamage );
 
-    switch ( cs_get_weapon_type_( weaponId ) )
+    switch ( cs_get_weapon_type_( weapon ) )
     {
         case CS_WEAPON_TYPE_KNIFE:         return floatround( fBonusDamage * SKILLDAMAGE_KNIFE );
         case CS_WEAPON_TYPE_PISTOL:        return floatround( fBonusDamage * SKILLDAMAGE_PISTOL );
@@ -237,7 +237,6 @@ public WAR3_precache() {
         copy( SOUND_FLAMESTRIKE, 63,      "warcraft3/FlameStrikeTargetWaveNonLoop1.wav" );  // Flame Strike
         copy( SOUND_FLAMESTRIKE_BURN, 63, "ambience/flameburst1.wav"                    );  // Flame Strike ( burned )
         copy( SOUND_AVATAR, 63,           "warcraft3/Avatar.wav"                        );  // Avatar
-        copy( SOUND_PULVERIZE, 63,        "warcraft3/Shockwave.wav"                     );  // Pulverize
         copy( SOUND_HEALINGWAVE, 63,      "warcraft3/HealingWave.wav"                   );  // Healing Wave
         copy( SOUND_CHAINLIGHTNING, 63,   "warcraft3/LightningBolt.wav"                 );  // Chain Lightning
         copy( SOUND_WINDWALK, 63,         "warcraft3/WindWalk.wav"                      );  // Wind Walk
@@ -265,7 +264,6 @@ public WAR3_precache() {
         copy( SOUND_FLAMESTRIKE, 63,      "garg/gar_flameoff1.wav"     );   // Flame Strike
         copy( SOUND_FLAMESTRIKE_BURN, 63, "ambience/flameburst1.wav"   );   // Flame Strike ( burned )
         copy( SOUND_AVATAR, 63,           "garg/gar_alert2.wav"        );   // Avatar
-        copy( SOUND_PULVERIZE, 63,        "debris/bustconcrete2.wav"   );   // Pulverize
         copy( SOUND_HEALINGWAVE, 63,      "boid/boid_idle1.wav"        );   // Healing Wave
         copy( SOUND_CHAINLIGHTNING, 63,   "weapons/gauss2.wav"         );   // Chain Lightning
         copy( SOUND_WINDWALK, 63,         "houndeye/he_attack1.wav"    );   // Wind Walk
@@ -293,7 +291,6 @@ public WAR3_precache() {
     precache_sound( SOUND_FLAMESTRIKE );
     precache_sound( SOUND_FLAMESTRIKE_BURN );
     precache_sound( SOUND_AVATAR );
-    precache_sound( SOUND_PULVERIZE );
     precache_sound( SOUND_HEALINGWAVE );
     precache_sound( SOUND_CHAINLIGHTNING );
     precache_sound( SOUND_WINDWALK );
@@ -756,50 +753,26 @@ public WAR3_get_last_xp( iXp ) {
 
 // Damage by Warcraft 3 Skill
 
-public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iCheckArmor ) {
+public WAR3_damage( attacker, victim, weapon, iDamage, headshot, iCheckArmor ) {
 
     // Elune's Grace ( absorb bonus knife/ultimate damage )
 
-    if ( g_PlayerInfo[iVictimId][CURRENT_RACE] == RACE_NIGHTELF && iDamage )
-    {
-        new iLevel = WAR3_get_level( g_PlayerInfo[iVictimId][CURRENT_XP] );
+    if ( g_PlayerInfo[victim][CURRENT_RACE] == RACE_NIGHTELF && iDamage )
+        iDamage -= NE_S_ELUNES_get_bonus( victim, weapon, iDamage );
 
-        // Set new damage amount
+    // Notify damage to wind walker ( if applicable )
 
-        if ( iWeaponId == CSW_KNIFE )
-        {
-            new Float:fAbsorb = float( iDamage ) * SElunes_Knife_Get( iLevel );
-            iDamage -= floatround( fAbsorb );
-
-            new iAbsorb = floatround( fAbsorb );
-            SElunes_Absorb( iVictimId, iAbsorb );
-        }
-
-        else if ( WAR3_is_ultimate( iWeaponId ) )
-        {
-            new Float:fAbsorb = float( iDamage ) * SElunes_Magic_Get( iLevel );
-            iDamage -= floatround( fAbsorb );
-
-            new iAbsorb = floatround( fAbsorb );
-            SElunes_Absorb( iVictimId, iAbsorb );
-        }
-    }
-
-    // Notify damage to wind walker (if applicable)
-
-    if ( iWeaponId == CSW_WINDWALK )
-    {
-        UWindwalk_Notify( iAttackerId, g_iWindwalkDamage[iAttackerId] + iDamage );
-    }
+    if ( weapon == CSW_WINDWALK )
+        OR_U_WINDWALK_notify( attacker, g_iWindwalkDamage[attacker] + iDamage );
 
     // Armor calculation
 
-    if ( iCheckArmor && get_user_armor( iVictimId ) )
+    if ( iCheckArmor && get_user_armor( victim ) )
     {
         new iArmorDamage = iDamage;
-        iDamage = WAR3_get_damage( iWeaponId, iDamage );
+        iDamage = WAR3_get_damage( weapon, iDamage );
 
-        new iNewArmor = get_user_armor( iVictimId ) - iArmorDamage;
+        new iNewArmor = get_user_armor( victim ) - iArmorDamage;
 
         if ( iNewArmor < 0 )
         {
@@ -807,24 +780,24 @@ public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iChec
             iNewArmor = 0;
         }
 
-        set_user_armor( iVictimId, iNewArmor );
+        set_user_armor( victim, iNewArmor );
     }
 
-    new iNewHealth = get_user_health( iVictimId ) - iDamage;
-    new iMinHealth = WAR3_get_minhealth( iVictimId );
+    new iNewHealth = get_user_health( victim ) - iDamage;
+    new iMinHealth = WAR3_get_minhealth( victim );
 
     // Apply Damage
 
     if ( iNewHealth <= iMinHealth )
-        WAR3_death( iAttackerId, iVictimId, iWeaponId, iHeadshot );
+        WAR3_death( attacker, victim, weapon, headshot );
 
     else
     {
-        set_user_health( iVictimId, iNewHealth );
+        set_user_health( victim, iNewHealth );
 
         // Invisibility Cooldown
 
-        Invis_Cooldown( iVictimId );
+        Invis_Cooldown( victim );
     }
 
     return PLUGIN_HANDLED;
@@ -833,9 +806,9 @@ public WAR3_damage( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot, iChec
 
 // Death by Warcraft 3 Skill
 
-public WAR3_death( killerId, victimId, weaponId, Headshot ) {
+public WAR3_death( killerId, victim, weapon, Headshot ) {
 
-    if ( !is_user_alive( victimId ) && !g_PlayerImpaled[victimId] )
+    if ( !is_user_alive( victim ) && !g_PlayerImpaled[victim] )
         return PLUGIN_HANDLED;
 
 
@@ -843,7 +816,7 @@ public WAR3_death( killerId, victimId, weaponId, Headshot ) {
 
     // Perform Victim Actions
 
-    WAR3_death_victim( victimId );
+    WAR3_death_victim( victim );
 
     // Make sure death was not to DoT from disconnected killer
 
@@ -851,7 +824,7 @@ public WAR3_death( killerId, victimId, weaponId, Headshot ) {
     {
         // Check if Teamkill
 
-        if ( get_user_team( killerId ) == get_user_team( victimId ) && killerId != victimId )
+        if ( get_user_team( killerId ) == get_user_team( victim ) && killerId != victim )
         {
             XP_Kill_Teammate( killerId );
 
@@ -871,7 +844,7 @@ public WAR3_death( killerId, victimId, weaponId, Headshot ) {
 
         else
         {
-            XP_Kill( killerId, victimId, weaponId, Headshot );
+            XP_Kill( killerId, victim, weapon, Headshot );
 
             cs_update_money( killerId, 300, 1 );
 
@@ -888,24 +861,24 @@ public WAR3_death( killerId, victimId, weaponId, Headshot ) {
 
     // Create Death Message
 
-    if ( is_user_alive( victimId ) )
+    if ( is_user_alive( victim ) )
     {
-        new iVictimFrags = get_user_frags( victimId );
-        new iVictimDeaths = get_user_deaths( victimId );
+        new iVictimFrags = get_user_frags( victim );
+        new iVictimDeaths = get_user_deaths( victim );
 
         // Kill Victim
 
         new gmsgDeathMsg = get_user_msgid( "DeathMsg" );
 
         set_msg_block( gmsgDeathMsg, BLOCK_SET );
-        user_kill( victimId, 1 );
+        user_kill( victim, 1 );
         set_msg_block( gmsgDeathMsg, BLOCK_NOT );
 
         // Update frags ( realtime )
 
-        Create_ScoreInfo( SHOWTO_ALL, victimId, iVictimFrags, iVictimDeaths, 0, get_user_team( victimId ) );
+        Create_ScoreInfo( SHOWTO_ALL, victim, iVictimFrags, iVictimDeaths, 0, get_user_team( victim ) );
 
-        switch ( weaponId )
+        switch ( weapon )
         {
             case CSW_KNIFE:         copy( szWeaponName, 31, "knife" );
 
@@ -955,7 +928,7 @@ public WAR3_death( killerId, victimId, weaponId, Headshot ) {
             case CSW_FROSTNOVA:     copy( szWeaponName, 31, "frost nova" );
         }
 
-        Create_DeathMsg( SHOWTO_ALL, killerId, victimId, Headshot, szWeaponName );
+        Create_DeathMsg( SHOWTO_ALL, killerId, victim, Headshot, szWeaponName );
     }
 
     // Log Death
@@ -964,12 +937,12 @@ public WAR3_death( killerId, victimId, weaponId, Headshot ) {
     new szKillerTeam[32], szVictimTeam[32];
 
     get_user_name( killerId, szKillerName, 31 );
-    get_user_name( victimId, szVictimName, 31 );
+    get_user_name( victim, szVictimName, 31 );
 
     get_user_team( killerId, szKillerTeam, 31 );
-    get_user_team( victimId, szVictimTeam, 31 );
+    get_user_team( victim, szVictimTeam, 31 );
 
-    log_message( "^"%s<%d><%s><%s>^" killed ^"%s<%d><%s><%s>^" with ^"%s^"", szKillerName, get_user_userid( killerId ), g_SaveIds[killerId], szKillerTeam, szVictimName, get_user_userid( victimId ), g_SaveIds[victimId], szVictimTeam, szWeaponName );
+    log_message( "^"%s<%d><%s><%s>^" killed ^"%s<%d><%s><%s>^" with ^"%s^"", szKillerName, get_user_userid( killerId ), g_SaveIds[killerId], szKillerTeam, szVictimName, get_user_userid( victim ), g_SaveIds[victim], szVictimTeam, szWeaponName );
 
     return PLUGIN_HANDLED;
 }

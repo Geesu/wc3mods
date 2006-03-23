@@ -4,56 +4,40 @@
 /* - Events ----------------------------------------------------- */
 
 
-public Skills_Offensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) {
+public NE_skills_offensive( attacker, victim, weapon, iDamage, headshot ) {
 
-    if ( g_PlayerInfo[attackerId][CURRENT_RACE] == RACE_NIGHTELF && get_user_team( attackerId ) != get_user_team( victimId ) )
+    if ( g_PlayerInfo[attacker][CURRENT_RACE] == RACE_NIGHTELF && get_user_team( attacker ) != get_user_team( victim ) )
     {
         // Trueshot Aura
 
-        if ( g_PlayerInfo[attackerId][CURRENT_SKILL3] && weaponId != CSW_KNIFE && weaponId != CSW_HEGRENADE && cs_get_weapon_type_( weaponId ) != CS_WEAPON_TYPE_SNIPER && get_user_health( victimId ) > 0 )
-            STrueshotAura( attackerId, victimId, weaponId, iDamage, headshot );
+        if ( g_PlayerInfo[attacker][CURRENT_SKILL3] && weapon != CSW_KNIFE && weapon != CSW_HEGRENADE && cs_get_weapon_type_( weapon ) != CS_WEAPON_TYPE_SNIPER && get_user_health( victim ) > 0 )
+            STrueshotAura( attacker, victim, weapon, iDamage, headshot );
     }
 
     return PLUGIN_HANDLED;
 }
 
 
-public Skills_Defensive_NE( attackerId, victimId, weaponId, iDamage, headshot ) {
+public NE_skills_defensive( attacker, victim, weapon, iDamage, headshot ) {
 
-    if ( g_PlayerInfo[victimId][CURRENT_RACE] == RACE_NIGHTELF )
+    if ( g_PlayerInfo[victim][CURRENT_RACE] == RACE_NIGHTELF )
     {
         // Elune's Grace ( called from WAR3_damage() as well to catch all bonus damage )
 
-        if ( iDamage && weaponId == CSW_KNIFE && get_user_team( attackerId ) != get_user_team( victimId ) )
+        if ( iDamage && weapon == CSW_KNIFE && get_user_team( attacker ) != get_user_team( victim ) )
         {
-            // Adjust for damage dealt
-
-            if ( get_user_health( victimId ) > WAR3_get_minhealth( victimId ) )
-            {
-                new iLevel = WAR3_get_level( g_PlayerInfo[victimId][CURRENT_XP] );
-
-                // Set new damage amount
-
-                new Float:fAbsorb = float( iDamage ) * SElunes_Knife_Get( iLevel );
-                new iAbsorb = floatround( fAbsorb );
-
-                set_user_health( victimId, get_user_health( victimId ) + iAbsorb );
-                WAR3_check_health( victimId );
-
-                iDamage -= iAbsorb;
-                SElunes_Absorb( victimId, iAbsorb );
-            }
+            iDamage -= NE_S_ELUNES_get_physical( victim, weapon, iDamage );
         }
 
         // Evasion
 
-        if ( g_PlayerInfo[victimId][CURRENT_SKILL1] && get_user_health( victimId ) > 0 )
+        if ( g_PlayerInfo[victim][CURRENT_SKILL1] && get_user_health( victim ) > 0 )
         {
-            if ( g_bEvadeNextShot[victimId] )
-                SEvasion( attackerId, victimId, weaponId, iDamage, headshot );
+            if ( g_bEvadeNextShot[victim] )
+                SEvasion( attacker, victim, weapon, iDamage, headshot );
 
-            SEvasion_Check( victimId );
-            SEvasion_Health( victimId );
+            SEvasion_Check( victim );
+            SEvasion_Health( victim );
         }
     }
 
@@ -144,7 +128,63 @@ public Ultimates_NE( casterId, targetId ) {
 /* - Racial Ability --------------------------------------------- */
 
 
-// Elune's Grace ( called from WAR3_damage() )
+// Elune's Grace
+
+public NE_S_ELUNES_get_physical( id, weapon, iDamage ) {
+
+    if ( get_user_health( id ) > WAR3_get_minhealth( id ) )
+    {
+        new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
+
+        // Set new damage amount
+
+        new Float:fAbsorb = float( iDamage ) * SElunes_Knife_Get( iLevel );
+        new iAbsorb = floatround( fAbsorb );
+
+        iDamage -= iAbsorb;
+        SElunes_Absorb( id, iAbsorb );
+
+        // Give health back ( physical damage has already been dealt )
+
+        set_user_health( id, get_user_health( id ) + iAbsorb );
+        WAR3_check_health( id );
+
+        return ( iAbsorb );
+    }
+
+    return ( 0 );
+}
+
+
+public NE_S_ELUNES_get_bonus( id, weapon, iDamage ) {
+
+    new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
+
+    // Set new damage amount
+
+    if ( weapon == CSW_KNIFE )
+    {
+        new Float:fAbsorb = float( iDamage ) * SElunes_Knife_Get( iLevel );
+        new iAbsorb = floatround( fAbsorb );
+
+        SElunes_Absorb( id, iAbsorb );
+
+        return ( iAbsorb );
+    }
+
+    else if ( WAR3_is_ultimate( weapon ) )
+    {
+        new Float:fAbsorb = float( iDamage ) * SElunes_Magic_Get( iLevel );
+        new iAbsorb = floatround( fAbsorb );
+
+        SElunes_Absorb( id, iAbsorb );
+
+        return ( iAbsorb );
+    }
+
+    return ( 0 );
+}
+
 
 public Float:SElunes_Knife_Get( iLevel ) {
 
@@ -236,7 +276,7 @@ public SElunes_Absorb( id, iAbsorbed ) {
 
 // Nature's Blessing ( speed )
 
-public SBlessing_Speed_Set( id, iWeaponId ) {
+public SBlessing_Speed_Set( id, weapon ) {
 
     // Check if restricted
 
@@ -247,11 +287,11 @@ public SBlessing_Speed_Set( id, iWeaponId ) {
     new Float:fBlessingSpeed;
 
     if ( g_bPlayerZoomed[id] )
-        fBlessingSpeed = CS_WEAPON_SPEED_ZOOM[iWeaponId];
+        fBlessingSpeed = CS_WEAPON_SPEED_ZOOM[weapon];
 
     else
     {
-        fBlessingSpeed = CS_WEAPON_SPEED[iWeaponId];
+        fBlessingSpeed = CS_WEAPON_SPEED[weapon];
     }
 
     fBlessingSpeed = fBlessingSpeed + ( fBlessingSpeed * s_BlessingSpeed[g_PlayerInfo[id][CURRENT_SKILL2] - 1] );
@@ -269,27 +309,27 @@ public SBlessing_Speed_Set( id, iWeaponId ) {
 
 // Trueshot Aura
 
-public STrueshotAura( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot ) {
+public STrueshotAura( attacker, victim, weapon, iDamage, headshot ) {
 
     // Check if restricted
 
-    if ( !WAR3_skill_enabled( iAttackerId, RACE_NIGHTELF, SKILL_3 ) )
+    if ( !WAR3_skill_enabled( attacker, RACE_NIGHTELF, SKILL_3 ) )
         return PLUGIN_HANDLED;
 
-    new Float:fBonusDamage = float( iDamage ) * s_TrueshotAura[g_PlayerInfo[iAttackerId][CURRENT_SKILL3] - 1];
+    new Float:fBonusDamage = float( iDamage ) * s_TrueshotAura[g_PlayerInfo[attacker][CURRENT_SKILL3] - 1];
     new iBonusDamage = floatround( fBonusDamage );
 
     // Add to player stats array
 
     if ( get_cvar_num( "mp_war3stats" ) )
     {
-        playerSkill3Info[iAttackerId][0] += iBonusDamage;
+        playerSkill3Info[attacker][0] += iBonusDamage;
     }
 
     // Apply Damage
 
     if ( iBonusDamage > 0 )
-        WAR3_damage( iAttackerId, iVictimId, iWeaponId, iBonusDamage, iHeadshot, DAMAGE_CHECKARMOR );
+        WAR3_damage( attacker, victim, weapon, iBonusDamage, headshot, DAMAGE_CHECKARMOR );
 
     return PLUGIN_HANDLED;
 }
@@ -297,60 +337,60 @@ public STrueshotAura( iAttackerId, iVictimId, iWeaponId, iDamage, iHeadshot ) {
 
 // Evasion
 
-public SEvasion( attackerId, victimId, weaponId, iDamage, headshot ) {
+public SEvasion( attacker, victim, weapon, iDamage, headshot ) {
 
     // Player dies to Teammates / fall with evade
 
-    if ( get_user_health( victimId ) <= 1024 && get_user_team( attackerId ) == get_user_team( victimId ) )
-        WAR3_death( attackerId, victimId, weaponId, headshot );
+    if ( get_user_health( victim ) <= 1024 && get_user_team( attacker ) == get_user_team( victim ) )
+        WAR3_death( attacker, victim, weapon, headshot );
 
     // Attacked by Wind Walker
 
-    else if ( get_user_health( victimId ) <= 1024 && g_bPlayerWalk[attackerId] )
-        WAR3_death( attackerId, victimId, weaponId, headshot );
+    else if ( get_user_health( victim ) <= 1024 && g_bPlayerWalk[attacker] )
+        WAR3_death( attacker, victim, weapon, headshot );
 
     // Player takes grenade / knife damage ( not evadeable )
 
-    else if ( weaponId == CSW_KNIFE || weaponId == CSW_HEGRENADE )
+    else if ( weapon == CSW_KNIFE || weapon == CSW_HEGRENADE )
     {
-        if ( get_user_health( victimId ) <= 1024 )
-            WAR3_death( attackerId, victimId, weaponId, headshot );
+        if ( get_user_health( victim ) <= 1024 )
+            WAR3_death( attacker, victim, weapon, headshot );
     }
 
     // Evadeable damage
 
-    else if ( get_user_health( victimId ) > 0 && get_user_team( victimId ) != get_user_team( attackerId ) )
+    else if ( get_user_health( victim ) > 0 && get_user_team( victim ) != get_user_team( attacker ) )
     {
-        g_bEvadeNextShot[victimId] = false;
+        g_bEvadeNextShot[victim] = false;
 
-        new iHealth = get_user_health( victimId ) + iDamage;
+        new iHealth = get_user_health( victim ) + iDamage;
         new iNewHealth = iHealth - 1024;
 
-        set_user_health( victimId, iNewHealth );
+        set_user_health( victim, iNewHealth );
 
-        g_fEvasionTime[victimId] = get_gametime();
-        g_iEvasionDamage[victimId] += iDamage;
+        g_fEvasionTime[victim] = get_gametime();
+        g_iEvasionDamage[victim] += iDamage;
 
         // Inform Player
 
         new szMessage[128];
         format( szMessage, 127, DAMAGE_EVASION, iDamage );
 
-        WAR3_status_text( victimId, szMessage, 3.0 );
+        WAR3_status_text( victim, szMessage, 3.0 );
 
         // Set task to re-check for evasion
 
         new parm_Evasion[1];
-        parm_Evasion[0] = victimId;
+        parm_Evasion[0] = victim;
 
-        new TaskId = TASK_EVASION + victimId;
+        new TaskId = TASK_EVASION + victim;
         set_task( EVASION_SHOTGAP, "SEvasion_ReCheck", TaskId, parm_Evasion, 1 );
 
         // Add to player stats array
 
         if ( get_cvar_num( "mp_war3stats" ) )
         {
-            playerSkill1Info[victimId][0] += iDamage;
+            playerSkill1Info[victim][0] += iDamage;
         }
 
         new iFadeAlpha = iDamage;
@@ -363,11 +403,11 @@ public SEvasion( attackerId, victimId, weaponId, iDamage, headshot ) {
         new iRGB[3];
         iRGB[GLOW_B] = iFadeAlpha;
 
-        Glow_Set( victimId, glow_duration( iFadeAlpha ), iRGB, 36 );
+        Glow_Set( victim, glow_duration( iFadeAlpha ), iRGB, 36 );
 
         // Screen Fade
 
-        Create_ScreenFade( victimId, (1<<10), (1<<10), FADE_OUT, 0, 0, 255, iFadeAlpha );
+        Create_ScreenFade( victim, (1<<10), (1<<10), FADE_OUT, 0, 0, 255, iFadeAlpha );
     }
 
     return PLUGIN_HANDLED;

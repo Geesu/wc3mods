@@ -590,7 +590,7 @@ public XP_Objective_Team( szTeamName[], iTeamXp ) {
 
 // XP Awarded on Kill
 
-public XP_Kill( killerId, victimId, weaponId, Headshot ) {
+public XP_Kill( killerId, victim, weapon, Headshot ) {
 
     // Update streaks
 
@@ -606,7 +606,7 @@ public XP_Kill( killerId, victimId, weaponId, Headshot ) {
     new iKillerNewXp, iKillerOldXp;
     new Float:fKillXp, iLevelBonusXp, iKillStreakXp, iObjectiveXp;
 
-    new iVictimLevel = WAR3_get_level( g_PlayerInfo[victimId][CURRENT_XP] );
+    new iVictimLevel = WAR3_get_level( g_PlayerInfo[victim][CURRENT_XP] );
 
     new Float:fKillerLevel = float( iKillerLevel );
     new Float:fVictimLevel = float( iVictimLevel );
@@ -617,7 +617,7 @@ public XP_Kill( killerId, victimId, weaponId, Headshot ) {
     // Kill XP
 
     new Float:fKill = XP_KILL;
-    fKillXp = fKill * fMultiplier * g_fWeaponXp[weaponId];
+    fKillXp = fKill * fMultiplier * g_fWeaponXp[weapon];
 
     // Check for Headshot
 
@@ -649,7 +649,7 @@ public XP_Kill( killerId, victimId, weaponId, Headshot ) {
 
     // Check if VIP Killed
 
-    if ( victimId == g_Vip )
+    if ( victim == g_Vip )
     {
         new Float:fKillVip = XP_KILLVIP;
 
@@ -659,7 +659,7 @@ public XP_Kill( killerId, victimId, weaponId, Headshot ) {
 
     // Check if Bomb Planter Killed
 
-    else if ( victimId == g_BombPlanter )
+    else if ( victim == g_BombPlanter )
     {
         new Float:fKillPlanter = XP_KILLPLANTER;
 
@@ -669,7 +669,7 @@ public XP_Kill( killerId, victimId, weaponId, Headshot ) {
 
     // Check if Bomb Defuser Killed
 
-    else if ( victimId == g_BombDefuser )
+    else if ( victim == g_BombDefuser )
     {
         new Float:fKillDefuser = XP_KILLDEFUSER;
 
@@ -679,14 +679,14 @@ public XP_Kill( killerId, victimId, weaponId, Headshot ) {
 
     // Check if Hostage Rescuer Killed
 
-    else if ( g_bTouchHostage[victimId] )
+    else if ( g_bTouchHostage[victim] )
     {
         new Float:fKillRescuer = XP_HOSTAGE_KILLRESCUER;
 
         iObjectiveXp = floatround( fKillRescuer * fMultiplier * fObjMultiplier + ( fKillerLevel * fObjLevelBonus ) );
         client_print( killerId, print_chat, XP_HOSTAGE_KILLRESCUER_MESSAGE, iObjectiveXp );
 
-        g_bTouchHostage[victimId] = false;
+        g_bTouchHostage[victim] = false;
     }
 
 

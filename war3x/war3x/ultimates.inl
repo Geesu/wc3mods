@@ -340,7 +340,7 @@ public Ultimate_Cast( Caster, Target ) {
     {
         case RACE_UNDEAD:   UD_ultimates( Caster, Target );
         case RACE_HUMAN:    HU_ultimates( Caster, Target );
-        case RACE_ORC:      Ultimates_OR( Caster, Target );
+        case RACE_ORC:      OR_ultimates( Caster, Target );
         case RACE_NIGHTELF: Ultimates_NE( Caster, Target );
     }
 

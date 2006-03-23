@@ -287,10 +287,10 @@ public Item_Change( id, iOldItem, iNewItem ) {
 
     if ( iOldItem == ITEM_CLOAK && iNewItem != ITEM_CLOAK )
     {
-        new iWeaponId, iClip, iAmmo;
-        iWeaponId = get_user_weapon( id, iClip, iAmmo );
+        new weapon, iClip, iAmmo;
+        weapon = get_user_weapon( id, iClip, iAmmo );
 
-        if ( !( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL1] && iWeaponId == CSW_KNIFE ) )
+        if ( !( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL1] && weapon == CSW_KNIFE ) )
             Invis_Remove( id );
     }
 
@@ -454,18 +454,18 @@ public Item_DropDead( id, iItemNum ) {
 
 // Claws of Attack +6
 
-public IClaws_Damage( iAttackerId, iVictimId, iWeaponId, iHeadshot ) {
+public IClaws_Damage( attacker, victim, weapon, headshot ) {
 
     // Add to bonus damage array
 
-    WAR3_damage( iAttackerId, iVictimId, iWeaponId, VALUE_CLAWS, iHeadshot, DAMAGE_CHECKARMOR );
+    WAR3_damage( attacker, victim, weapon, VALUE_CLAWS, headshot, DAMAGE_CHECKARMOR );
 
-    if ( is_user_alive( iVictimId ) )
+    if ( is_user_alive( victim ) )
     {
         // Screen Fade
 
         new iFadeAlpha = VALUE_CLAWS * 3;
-        Create_ScreenFade( iVictimId, (1<<10), (1<<10), FADE_OUT, 255, 0, 0, iFadeAlpha );
+        Create_ScreenFade( victim, (1<<10), (1<<10), FADE_OUT, 255, 0, 0, iFadeAlpha );
     }
 
     return PLUGIN_HANDLED;

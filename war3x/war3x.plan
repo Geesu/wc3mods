@@ -44,6 +44,7 @@ MISC CHANGES:
 * replace all distance/40 by get_distance (statsx stock)
 * add valid model check to deathcoil seek
 * add WAR3_heal command?
+* recode pulverize ring colors into consts
 
 
 TODO

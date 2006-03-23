@@ -417,7 +417,7 @@ public on_Target_Health( id ) {
 
 // Normal Damage
 
-public on_Damage( victimId ) {
+public on_Damage( victim ) {
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
@@ -429,62 +429,54 @@ public on_Damage( victimId ) {
     read_data( 5, fDamageOrigin[1] );   // coord (y)
     read_data( 6, fDamageOrigin[2] );   // coord (z)
 
-    new weaponId, Bodypart, Headshot;
-    new attackerId = get_user_attacker( victimId, weaponId, Bodypart );
+    new weapon, Bodypart, Headshot;
+    new attacker = get_user_attacker( victim, weapon, Bodypart );
 
     if ( Bodypart == HIT_HEAD )
         Headshot = 1;
 
     // Check for Bomb Explosion
 
-    if ( get_gametime() - g_fBombTime < 1.0 && !attackerId )
+    if ( get_gametime() - g_fBombTime < 1.0 && !attacker )
     {
-        Set_PlayerBackpack( victimId );
+        Set_PlayerBackpack( victim );
 
         new parm_Bomb[1];
-        parm_Bomb[0] = victimId;
+        parm_Bomb[0] = victim;
 
         set_task( 0.1, "Check_BombDeath", 0, parm_Bomb, 1 );
     }
 
     // Check if Impaled
 
-    if ( g_PlayerImpaled[victimId] && victimId == attackerId )
-        UD_U_IMPALE_remove( victimId );
+    if ( g_PlayerImpaled[victim] && victim == attacker )
+        UD_U_IMPALE_remove( victim );
 
-    // Check if Berserk Active ( COMING SOON )
-/*
-    if ( g_PlayerInfo[victimId][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[victimId][CURRENT_SKILL1] )
-    {
-        if ( get_user_health( victimId ) + iDamage >= BERSERK_HEALTH && get_user_health( victimId ) <= BERSERK_HEALTH )
-            SBerserk_Effect( victimId );
-    }
-*/
     // Check if Offensive Skills Should Be Ignored
 
     new bool:bAllowOffensive = true;
 
-    if ( WAR3_player_valid(attackerId) && g_bPlayerDispelled[attackerId] || attackerId == g_Vip )
+    if ( WAR3_player_valid(attacker) && g_bPlayerDispelled[attacker] || attacker == g_Vip )
         bAllowOffensive = false;
 
-    if ( g_bPlayerWalk[victimId] || (WAR3_player_valid(attackerId) && g_bPlayerWalk[attackerId]) || g_bPlayerInvis[victimId] || g_iPlayerAvatar[victimId] )
+    if ( g_bPlayerWalk[victim] || (WAR3_player_valid(attacker) && g_bPlayerWalk[attacker]) || g_bPlayerInvis[victim] || g_iPlayerAvatar[victim] )
         bAllowOffensive = false;
 
-    if ( g_bEvadeNextShot[victimId] && ( get_gametime() - g_fEvasionTime[victimId] ) >= EVASION_SHOTGAP )
+    if ( g_bEvadeNextShot[victim] && ( get_gametime() - g_fEvasionTime[victim] ) >= EVASION_SHOTGAP )
         bAllowOffensive = false;
 
-    if ( cs_get_weapon_type_( weaponId ) & CS_WEAPON_TYPE_AUTOSNIPER )
+    if ( cs_get_weapon_type_( weapon ) & CS_WEAPON_TYPE_AUTOSNIPER )
         bAllowOffensive = false;
 
     // We need to make sure that we have a valid attacker ID
-    if ( WAR3_player_valid(attackerId) && bAllowOffensive )
+    if ( WAR3_player_valid(attacker) && bAllowOffensive )
     {
-        switch ( g_PlayerInfo[attackerId][CURRENT_RACE] )
+        switch ( g_PlayerInfo[attacker][CURRENT_RACE] )
         {
-            case RACE_UNDEAD:       UD_skills_offensive( attackerId, victimId, weaponId, iDamage, Headshot );
-            case RACE_HUMAN:        HU_skills_offensive( attackerId, victimId, weaponId, iDamage, Headshot );
-            case RACE_ORC:          Skills_Offensive_OR( attackerId, victimId, weaponId, iDamage, Headshot, fDamageOrigin );
-            case RACE_NIGHTELF:     Skills_Offensive_NE( attackerId, victimId, weaponId, iDamage, Headshot );
+            case RACE_UNDEAD:       UD_skills_offensive( attacker, victim, weapon, iDamage, Headshot );
+            case RACE_HUMAN:        HU_skills_offensive( attacker, victim, weapon, iDamage, Headshot );
+            case RACE_ORC:          OR_skills_offensive( attacker, victim, weapon, iDamage, Headshot, fDamageOrigin );
+            case RACE_NIGHTELF:     NE_skills_offensive( attacker, victim, weapon, iDamage, Headshot );
         }
     }
 
@@ -492,45 +484,45 @@ public on_Damage( victimId ) {
 
     new bool:bAllowDefensive = true;
 
-    if ( g_bPlayerDispelled[victimId] || victimId == g_Vip )
+    if ( g_bPlayerDispelled[victim] || victim == g_Vip )
         bAllowDefensive = false;
 
-    if ( WAR3_player_valid(attackerId) && bAllowDefensive )
+    if ( WAR3_player_valid(attacker) && bAllowDefensive )
     {
-        switch ( g_PlayerInfo[victimId][CURRENT_RACE] )
+        switch ( g_PlayerInfo[victim][CURRENT_RACE] )
         {
-            case RACE_UNDEAD:       UD_skills_defensive( attackerId, victimId, weaponId, iDamage, Headshot );
-            case RACE_HUMAN:        HU_skills_defensive( victimId );
-            case RACE_ORC:          Skills_Defensive_OR( victimId );
-            case RACE_NIGHTELF:     Skills_Defensive_NE( attackerId, victimId, weaponId, iDamage, Headshot );
+            case RACE_UNDEAD:       UD_skills_defensive( attacker, victim, weapon, iDamage, Headshot );
+            case RACE_HUMAN:        HU_skills_defensive( victim );
+            case RACE_ORC:          OR_skills_defensive( victim, iDamage );
+            case RACE_NIGHTELF:     NE_skills_defensive( attacker, victim, weapon, iDamage, Headshot );
         }
     }
 
     // Claws of Attack +6
 
-    if ( WAR3_player_valid(attackerId) && g_PlayerInfo[attackerId][CURRENT_ITEM] == ITEM_CLAWS && get_user_health( victimId ) > 0 && get_user_team( attackerId ) != get_user_team( victimId ) && bAllowOffensive )
-        IClaws_Damage( attackerId, victimId, weaponId, Headshot );
+    if ( WAR3_player_valid(attacker) && g_PlayerInfo[attacker][CURRENT_ITEM] == ITEM_CLAWS && get_user_health( victim ) > 0 && get_user_team( attacker ) != get_user_team( victim ) && bAllowOffensive )
+        IClaws_Damage( attacker, victim, weapon, Headshot );
 
     // Check if Attacked by Avatar
 
-    if ( WAR3_player_valid(attackerId) && g_iPlayerAvatar[attackerId] && get_user_team( attackerId ) != get_user_team( victimId ) )
-        HU_U_AVATAR_damage( attackerId, victimId, weaponId, Headshot );
+    if ( WAR3_player_valid(attacker) && g_iPlayerAvatar[attacker] && get_user_team( attacker ) != get_user_team( victim ) )
+        HU_U_AVATAR_damage( attacker, victim, weapon, Headshot );
 
     // Check if Attacked by Wind Walker
 
-    if ( WAR3_player_valid(attackerId) && g_bPlayerWalk[attackerId] && get_user_team( attackerId ) != get_user_team( victimId ) )
+    if ( WAR3_player_valid(attacker) && g_bPlayerWalk[attacker] && get_user_team( attacker ) != get_user_team( victim ) )
     {
-        g_iWindwalkDamage[attackerId] = iDamage;
-        UWindwalk_Strike( attackerId, victimId, weaponId, Headshot );
+        g_iWindwalkDamage[attacker] = iDamage;
+        OR_U_WINDWALK_strike( attacker, victim, weapon, Headshot );
     }
 
     // Invisibility Cooldown
 
-    Invis_Cooldown( victimId );
+    Invis_Cooldown( victim );
 
     // Bot Ultimates ( Defensive )
 
-    if ( is_user_bot( victimId ) && g_PlayerInfo[victimId][CURRENT_ULTIMATE] && !g_fUltimateCooldown[victimId] && victimId != g_Vip )
+    if ( is_user_bot( victim ) && g_PlayerInfo[victim][CURRENT_ULTIMATE] && !g_fUltimateCooldown[victim] && victim != g_Vip )
     {
         new Float:fRandomNum = random_float( 0.0,1.0 );
 
@@ -538,15 +530,15 @@ public on_Damage( victimId ) {
         {
             // Cast Defensive Ultimate
 
-            if (  Ultimate_Target( victimId ) & ULTIMATE_TARGET_SELF && Ultimate_Type( victimId ) & ULTIMATE_TYPE_DEFENSIVE )
-                cmd_Ultimate( victimId );
+            if (  Ultimate_Target( victim ) & ULTIMATE_TARGET_SELF && Ultimate_Type( victim ) & ULTIMATE_TYPE_DEFENSIVE )
+                cmd_Ultimate( victim );
 
             // Self-Heal
 
-            else if ( fRandomNum <= BOT_ULTIMATECHANCE && Ultimate_Target( victimId ) & ULTIMATE_TARGET_SELF && Ultimate_Type( victimId ) & ULTIMATE_TYPE_HEAL )
+            else if ( fRandomNum <= BOT_ULTIMATECHANCE && Ultimate_Target( victim ) & ULTIMATE_TARGET_SELF && Ultimate_Type( victim ) & ULTIMATE_TYPE_HEAL )
             {
-                cmd_Ultimate( victimId );
-                cmd_Ultimate( victimId );   // second time to actually activate.
+                cmd_Ultimate( victim );
+                cmd_Ultimate( victim );   // second time to actually activate.
             }
         }
     }
@@ -564,12 +556,12 @@ public on_Death() {
 
 
     new killerId = read_data( 1 );
-    new victimId = read_data( 2 );
+    new victim = read_data( 2 );
     new Headshot = read_data( 3 );
 
     // Perform Victim Actions
 
-    WAR3_death_victim( victimId );
+    WAR3_death_victim( victim );
 
     // Check if Suicide ( worldspawn/triggers )
 
@@ -577,33 +569,33 @@ public on_Death() {
     {
         // Check if Player was Impaled
 
-        if ( g_PlayerImpaled[victimId] )
+        if ( g_PlayerImpaled[victim] )
         {
-            WAR3_death( g_PlayerImpaled[victimId], victimId, CSW_IMPALE, 0 );
-            g_PlayerImpaled[victimId] = 0;
+            WAR3_death( g_PlayerImpaled[victim], victim, CSW_IMPALE, 0 );
+            g_PlayerImpaled[victim] = 0;
         }
 
         return PLUGIN_CONTINUE;
     }
 
-    new weaponId, iClip, iAmmo;
-    weaponId = get_user_weapon( killerId, iClip, iAmmo );
+    new weapon, iClip, iAmmo;
+    weapon = get_user_weapon( killerId, iClip, iAmmo );
 
     // Check if Suicide ( slap/slay/grenade/etc )
 
-    if ( killerId == victimId )
+    if ( killerId == victim )
         return PLUGIN_CONTINUE;
 
     // Check if Teamkill
 
-    if ( get_user_team( killerId ) == get_user_team( victimId ) )
+    if ( get_user_team( killerId ) == get_user_team( victim ) )
         XP_Kill_Teammate( killerId );
 
     // Normal Kill
 
     else
     {
-        XP_Kill( killerId, victimId, weaponId, Headshot );
+        XP_Kill( killerId, victim, weapon, Headshot );
     }
 
     return PLUGIN_CONTINUE;
@@ -655,7 +647,7 @@ public on_CurWeapon( id ) {
         new parm_Walk[2];
         parm_Walk[0] = id;
 
-        UWindwalk_Postwalk( parm_Walk );
+        OR_U_WINDWALK_out( parm_Walk );
     }
 
     // Prevent weapon switching while sleeping
@@ -1360,7 +1352,7 @@ public on_ThrowGren( id ) {
 
             new gIndex = cs_find_grenade( id, szGrenade );
 
-            SPulverize_Trail( id, gIndex );
+            OR_S_PULVERIZE_trail( id, gIndex );
         }
     }
 
@@ -1374,14 +1366,14 @@ public on_Health( id ) {
 
     if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && !g_bPlayerRegen[id] && ( get_user_health( id ) < WAR3_get_maxhealth( id ) || get_user_armor( id ) < WAR3_get_maxarmor( id ) ) )
     {
-        SRegen_Set( id );
+        OR_S_REGENERATION_set( id );
     }
 
     // Berserk Check
 
     if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC )
     {
-        SBerserkSpeed( id );
+        OR_S_BERSERK_speed( id );
     }
 
     // Dispell Harmful Ultimate(s) ( bot )

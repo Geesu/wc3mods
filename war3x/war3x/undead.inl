@@ -478,7 +478,7 @@ public UD_S_FROSTARMOR( victim, attacker ) {
             // Regenerate Armor (if orc)
 
             if ( g_PlayerInfo[attacker][CURRENT_RACE] == RACE_ORC && !g_bPlayerRegen[attacker] )
-                SRegen_Set( attacker );
+                OR_S_REGENERATION_set( attacker );
         }
 
         // Add to player stats array

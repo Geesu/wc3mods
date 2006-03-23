@@ -355,12 +355,12 @@ public _Invis_Set( parm_Invis[1] ) {
 
     g_bInvisCooldown[id] = false;
 
-    new iWeaponId, iClip, iAmmo;
-    iWeaponId = get_user_weapon( id, iClip, iAmmo );
+    new weapon, iClip, iAmmo;
+    weapon = get_user_weapon( id, iClip, iAmmo );
 
     // Human Invisibility
 
-    if ( iWeaponId == CSW_KNIFE && g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL1] && WAR3_skill_enabled( id, RACE_HUMAN, SKILL_1 ) )
+    if ( weapon == CSW_KNIFE && g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL1] && WAR3_skill_enabled( id, RACE_HUMAN, SKILL_1 ) )
     {
         // Make sure cloak value is not greater
 
@@ -625,15 +625,15 @@ public Set_PlayerBackpack( id ) {
 
         for ( new iWeaponNum = 0; iWeaponNum < iTotalWeapons; iWeaponNum++ )
         {
-            new weaponId = Weapons[iWeaponNum];
+            new weapon = Weapons[iWeaponNum];
 
-            switch ( cs_get_weapon_group( weaponId ) )
+            switch ( cs_get_weapon_group( weapon ) )
             {
                 case CS_WEAPON_GROUP_PRIMARY:
                 {
-                    if ( get_cvar_num( "war3x_ankhautosnipers" ) || ( !get_cvar_num( "war3x_ankhautosnipers" ) && cs_get_weapon_type_( weaponId ) != CS_WEAPON_TYPE_AUTOSNIPER ) )
+                    if ( get_cvar_num( "war3x_ankhautosnipers" ) || ( !get_cvar_num( "war3x_ankhautosnipers" ) && cs_get_weapon_type_( weapon ) != CS_WEAPON_TYPE_AUTOSNIPER ) )
                     {
-                        g_PlayerBackpack[id][CURRENT_PRIMARY] = weaponId;
+                        g_PlayerBackpack[id][CURRENT_PRIMARY] = weapon;
                     }
                 }
 
@@ -641,7 +641,7 @@ public Set_PlayerBackpack( id ) {
                 {
                     if ( get_cvar_num( "war3x_ankhpistols" ) )
                     {
-                        g_PlayerBackpack[id][CURRENT_SECONDARY] = weaponId;
+                        g_PlayerBackpack[id][CURRENT_SECONDARY] = weapon;
                     }
                 }
 
@@ -651,7 +651,7 @@ public Set_PlayerBackpack( id ) {
                     {
                         new iClip, iAmmo;
 
-                        switch ( weaponId )
+                        switch ( weapon )
                         {
                             case CSW_HEGRENADE:
                             {
@@ -772,17 +772,17 @@ public _WAR3_set_speed( parm_Speed[1] ) {
             return PLUGIN_CONTINUE;
         }
 
-        new weaponId, iClip, iAmmo;
-        weaponId = get_user_weapon( id, iClip, iAmmo );
+        new weapon, iClip, iAmmo;
+        weapon = get_user_weapon( id, iClip, iAmmo );
 
         // Unholy Aura
 
         if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD )
-            UD_S_UNHOLY_set_speed( id, weaponId );
+            UD_S_UNHOLY_set_speed( id, weapon );
 
         // Bloodlust
 
-        /*else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && ( weaponId == CSW_KNIFE || cs_get_weapon_type_( weaponId ) == CS_WEAPON_TYPE_GRENADE ) )
+        /*else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && ( weapon == CSW_KNIFE || cs_get_weapon_type_( weapon ) == CS_WEAPON_TYPE_GRENADE ) )
         {
             new Float:fLustSpeed = s_BloodlustSpeed[g_PlayerInfo[id][CURRENT_SKILL1] - 1];
 
@@ -800,9 +800,9 @@ public _WAR3_set_speed( parm_Speed[1] ) {
 
 		// Berserk
 
-		else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && ( weaponId == CSW_KNIFE || cs_get_weapon_type_( weaponId ) == CS_WEAPON_TYPE_GRENADE ) )
+		else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && ( weapon == CSW_KNIFE || cs_get_weapon_type_( weapon ) == CS_WEAPON_TYPE_GRENADE ) )
 		{
-			SBerserkSpeed( id );
+			OR_S_BERSERK_speed( id );
 		}
 
         // Boots of speed
@@ -813,7 +813,7 @@ public _WAR3_set_speed( parm_Speed[1] ) {
         // Nature's blessing
 
         else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] && get_user_armor( id ) )
-            SBlessing_Speed_Set( id, weaponId );
+            SBlessing_Speed_Set( id, weapon );
 
         else
         {
@@ -821,11 +821,11 @@ public _WAR3_set_speed( parm_Speed[1] ) {
                 set_user_maxspeed( id, CS_SPEED_VIP );
 
             else if ( g_bPlayerZoomed[id] )
-                set_user_maxspeed( id, CS_WEAPON_SPEED_ZOOM[weaponId] );
+                set_user_maxspeed( id, CS_WEAPON_SPEED_ZOOM[weapon] );
 
             else
             {
-                set_user_maxspeed( id, CS_WEAPON_SPEED[weaponId] );
+                set_user_maxspeed( id, CS_WEAPON_SPEED[weapon] );
             }
         }
     }
@@ -856,7 +856,7 @@ public WAR3_enable_skills( id ) {
     // Regenerate Health / Armor
 
     if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && !g_bPlayerRegen[id] )
-        SRegen_Set( id );
+        OR_S_REGENERATION_set( id );
 
     // Set Invisibility
 
@@ -967,14 +967,14 @@ public Ankh_DropItems( id ) {
 
     for ( new iWeaponNum = 0; iWeaponNum < iTotalWeapons; iWeaponNum++ )
     {
-        new weaponId = Weapons[iWeaponNum];
+        new weapon = Weapons[iWeaponNum];
 
         // If Weapon(s) are saved in Ankh array, Drop all of the same
         // type to make room. If Weapon(s) stored already exist, don't
         // drop (or give) the item. If no Weapon is set to reincarnate,
         // but one exists, drop all others of the same type.
 
-        switch ( cs_get_weapon_group( weaponId ) )
+        switch ( cs_get_weapon_group( weapon ) )
         {
             // Primary Weapon(s)
 
@@ -982,24 +982,24 @@ public Ankh_DropItems( id ) {
             {
                 if ( g_PlayerBackpack[id][CURRENT_PRIMARY] )
                 {
-                    if ( weaponId == g_PlayerBackpack[id][CURRENT_PRIMARY] )
+                    if ( weapon == g_PlayerBackpack[id][CURRENT_PRIMARY] )
                         g_PlayerBackpack[id][CURRENT_PRIMARY] = 0;
 
                     else
                     {
                         g_bAnkhDropWeapons[id] = true;
-                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weaponId] );
+                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weapon] );
                     }
                 }
 
                 else
                 {
                     if ( CurrentWeapons[CURRENT_PRIMARY] )
-                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weaponId] );
+                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weapon] );
 
                     else
                     {
-                        CurrentWeapons[CURRENT_PRIMARY] = weaponId;
+                        CurrentWeapons[CURRENT_PRIMARY] = weapon;
                     }
                 }
             }
@@ -1010,25 +1010,25 @@ public Ankh_DropItems( id ) {
             {
                 if ( g_PlayerBackpack[id][CURRENT_SECONDARY] )
                 {
-                    if ( weaponId == g_PlayerBackpack[id][CURRENT_SECONDARY] )
+                    if ( weapon == g_PlayerBackpack[id][CURRENT_SECONDARY] )
                         g_PlayerBackpack[id][CURRENT_SECONDARY] = 0;
 
                     else
                     {
                         g_bAnkhDropWeapons[id] = true;
-                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weaponId] );
+                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weapon] );
                     }
                 }
 
                 else
                 {
                     if ( CurrentWeapons[CURRENT_SECONDARY] )
-                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weaponId] );
+                        client_cmd( id, "drop %s", CS_WEAPON_NAME[weapon] );
 
                     else
                     {
 
-                        CurrentWeapons[CURRENT_SECONDARY] = weaponId;
+                        CurrentWeapons[CURRENT_SECONDARY] = weapon;
                     }
                 }
             }
@@ -1294,7 +1294,7 @@ public Purge_Common( id ) {
     // Ultimate / Skill Effects
 
     if ( g_bPlayerRegen[id] )
-        SRegen_Remove( id );
+        OR_S_REGENERATION_remove( id );
 
     if ( g_PlayerStruck[id] )
         USstrike_Remove( id );
@@ -1323,7 +1323,7 @@ public Purge_Common( id ) {
         UD_U_SLEEP_remove( id );
 
     if ( g_PlayerInfo[id][CURRENT_ULTIMATE] == ULTIMATE_WINDWALK )
-        UWindwalk_Remove( id );
+        OR_U_WINDWALK_remove( id );
 
     if ( g_bPlayerAvatarGrow[id] || g_iPlayerAvatar[id] )
         HU_U_AVATAR_remove( id );
@@ -1971,12 +1971,12 @@ public Icon_SaveMe( id ) {
 }
 
 
-public Icon_SaveMe_Draw( iVictimId ) {
+public Icon_SaveMe_Draw( victim ) {
 
     new TeamPlayers[32], iTotalPlayers;
     new szTeamName[16];
 
-    if ( get_user_team( iVictimId ) == CS_TEAM_TERRORIST )
+    if ( get_user_team( victim ) == CS_TEAM_TERRORIST )
         copy( szTeamName, 15, "TERRORIST" );
 
     else
@@ -1992,18 +1992,18 @@ public Icon_SaveMe_Draw( iVictimId ) {
     {
         new iHealerId = TeamPlayers[iPlayerNum];
 
-        if ( iVictimId != iHealerId && Ultimate_Type( iHealerId ) & ULTIMATE_TYPE_HEAL )
+        if ( victim != iHealerId && Ultimate_Type( iHealerId ) & ULTIMATE_TYPE_HEAL )
         {
             new bool:bTargetable = true;
 
             if ( !g_PlayerOptions[iHealerId][OPTION_HEALICONS] )
                 bTargetable = false;
 
-            if ( !WAR3_can_heal( iHealerId, iVictimId ) )
+            if ( !WAR3_can_heal( iHealerId, victim ) )
                 bTargetable = false;
 
             if ( bTargetable )
-                Create_TE_PLAYERATTACHMENT( iHealerId, iVictimId, 40, ICON_SAVEME, 9999 );
+                Create_TE_PLAYERATTACHMENT( iHealerId, victim, 40, ICON_SAVEME, 9999 );
         }
     }
 
@@ -2278,7 +2278,7 @@ public SkillHelp_GetValues( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_RACIAL:
                 {
-                    format( szValue, 31, "%d %0.1f", REGENERATION_AMMOUNT, SRegen_Get( iSkillLevel ) );
+                    format( szValue, 31, "%d %0.1f", REGENERATION_AMMOUNT, OR_S_REGENERATION_get( iSkillLevel ) );
                     return ( 2 );
                 }
 
