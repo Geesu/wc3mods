@@ -287,37 +287,37 @@ stock Float:CS_WEAPON_SPEED_ZOOM[31] =
 
 stock CS_MAX_AMMO[31] =
 {
-	0,
-    90,                             // CSW_P228
-    0,
-    50,                             // CSW_SCOUT
-    1,                              // CSW_HEGRENADE
-    50,                             // CSW_XM1014
-    0,                              // CSW_C4
-    50,                             // CSW_MAC10
+	 0,
+    52,                             // CSW_P228
+     0,
+    90,                             // CSW_SCOUT
+     1,                             // CSW_HEGRENADE
+    32,                             // CSW_XM1014
+     0,                             // CSW_C4
+   100,                             // CSW_MAC10
     90,                             // CSW_AUG
-    1,                              // CSW_SMOKEGRENADE
-    50,                             // CSW_ELITE
-    50,                             // CSW_FIVESEVEN
-    50,                             // CSW_UMP45
-    50,                             // CSW_SG550
-    50,                             // CSW_GALI
-    50,                             // CSW_FAMAS
-    50,                             // CSW_USP
-    50,                             // CSW_GLOCK18
+     1,                             // CSW_SMOKEGRENADE
+   120,                             // CSW_ELITE
+   100,                             // CSW_FIVESEVEN
+   100,                             // CSW_UMP45
+    90,                             // CSW_SG550
+    90,                             // CSW_GALI
+    90,                             // CSW_FAMAS
+   100,                             // CSW_USP
+   120,                             // CSW_GLOCK18
     30,                             // CSW_AWP
-    50,                             // CSW_MP5NAVY
-    50,                             // CSW_M249
-    50,                             // CSW_M3
-    50,                             // CSW_M4A1
-    50,                             // CSW_TMP
-    50,                             // CSW_G3SG1
-    2,                              // CSW_FLASHBANG
+   120,                             // CSW_MP5NAVY
+   200,                             // CSW_M249
+    32,                             // CSW_M3
+    90,                             // CSW_M4A1
+   120,                             // CSW_TMP
+    90,                             // CSW_G3SG1
+     2,                             // CSW_FLASHBANG
     35,                             // CSW_DEAGLE
-    50,                             // CSW_SG552
-    50,                             // CSW_AK47
-    0,                              // CSW_KNIFE
-    50                              // CSW_P90
+    90,                             // CSW_SG552
+    90,                             // CSW_AK47
+     0,                             // CSW_KNIFE
+   100                              // CSW_P90
 };
 
 
