@@ -57,7 +57,7 @@ new const WAR3X_AUTHORS[]    = "Ryan, Geesu, Avanderik";
 
 #include "war3x/setup.cfg"                  // Basic Plugin Setup File
 
-new AMX_NAME[] = "AMXX";                            // Stores AMX version name
+new AMX_NAME[] = "AMXX";                    // Stores AMX version name
 new WAR3X_DIR[64];                          // Stores WAR3X working directory
 
 

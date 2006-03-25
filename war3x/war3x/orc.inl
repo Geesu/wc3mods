@@ -492,7 +492,7 @@ static OR_S_PILLAGE_money( attacker, victim, iDamage, weapon ) {
 	if ( iVictimMoney - iStolenMoney < 0 )
 		iStolenMoney = iVictimMoney;
 
-	cs_update_money( victim, iStolenMoney, 1 );
+	cs_update_money( victim, -iStolenMoney, 1 );
 	cs_update_money( attacker, iStolenMoney, 0 );
 
     return PLUGIN_HANDLED;
