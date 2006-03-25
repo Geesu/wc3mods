@@ -60,7 +60,7 @@ public HELP_motd_race( id, iRaceNum ) {
     format( szFilename, 63, "%s/help/%s.html", WAR3X_DIR, RACEKEYNAME[iRaceNum] );
 
     new szMOTDHeader[32], szRaceName[32];
-	LANG_GetRaceName( iRaceNum, id, szRaceName, 31, true );
+	LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31, true );
 
     format( szMOTDHeader, 31, "%s %s", szRaceName, LANGUAGE_COMMON_SKILLS );
 
@@ -115,7 +115,7 @@ public HELP_motd_players( id ) {
                 iLen += format( szMotd[iLen], 2047 - iLen, "^n^n^n" );
 			
 			new szRaceName[32];
-			LANG_GetRaceName( iRaceNum, id, szRaceName, 31 );
+			LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
 
             iLen += format( szMotd[iLen], 2047 - iLen, "<h3>%s</h3>(%i players)^n", szRaceName, iRaceTotal );
             bRaceFound = true;
@@ -191,7 +191,7 @@ public HELP_motd_target( id, targetId ) {
     {
         // Race
 
-        new raceId = g_PlayerInfo[targetId][CURRENT_RACE] - 1;
+        new raceId = g_PlayerInfo[targetId][CURRENT_RACE];
         new iLevel  = WAR3_get_level( g_PlayerInfo[targetId][CURRENT_XP] );
 
 		new szRaceName[32];
@@ -294,7 +294,7 @@ public HELP_motd_target( id, targetId ) {
                 iLen += format( szMotd[iLen], 2047 - iLen, ", " );
 
 			new szRaceName[32];
-			LANG_GetRaceName( iRaceNum, id, szRaceName, 31 );
+			LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
             iLen += format( szMotd[iLen], 2047 - iLen, "<b>%s</b> (%d)", szRaceName, WAR3_get_level( g_iXPtotal[targetId][iRaceNum] ) );
         }
     }
