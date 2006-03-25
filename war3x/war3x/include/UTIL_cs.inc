@@ -285,7 +285,7 @@ stock Float:CS_WEAPON_SPEED_ZOOM[31] =
     0.0
 };
 
-stock CS_MAX_AMMO[31] = 
+stock CS_MAX_AMMO[31] =
 {
 	0,
     90,                             // CSW_P228
@@ -465,7 +465,7 @@ public cs_update_ammo( id, iAmmount, iWeapon ) {
 
     if ( !is_user_connected( id ) )
         return PLUGIN_HANDLED;
-        
+
 	new iAmmo = cs_get_user_bpammo( id, iWeapon );
     new iNewAmmo = iAmmo + iAmmount;
 
@@ -498,6 +498,19 @@ public cs_status_target( id ) {
     {
         g_bNewTargetType[id] = false;
         return PLUGIN_HANDLED;
+    }
+
+    new target = g_PlayerTarget[id];
+    new iHealth = get_user_health( target );
+
+    if ( iHealth > 1024 )
+    {
+        iHealth -= 1024;
+
+        new szHealth[8];
+        format( szHealth, 7, "%d%%", iHealth );
+
+        replace( g_TargetFormat[id], 127, "%i3%%", szHealth );
     }
 
     Create_StatusText( id, 0, g_TargetFormat[id] );
