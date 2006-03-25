@@ -97,5 +97,7 @@ LANG_GetSkillDesc( race_id, skill_id, skill_type, id, skill_desc[], len )
 		formatex( szSkillHelper, 31, "RACE%d_ULTIMATE%d_DESC", race_id, skill_id );
 	}
 
+	server_print(szSkillHelper)
+
 	formatex( skill_desc, len, "%L", id, szSkillHelper );
 }

@@ -322,7 +322,7 @@ public on_Target_Id( id ) {
 			new szItemName[32], szRaceName[32];
 			
 			LANG_GetItemName( iItemNum, SHOP_COMMON, id, szItemName, 31 );
-			LANG_GetRaceName ( iRaceNum, id, szRaceName, 31, true )
+			LANG_GetRaceName ( iRaceNum + 1, id, szRaceName, 31, true )
 
             // Create Message
 
@@ -1006,7 +1006,7 @@ public on_World_Action() {
                     new iNextRaceId = g_PlayerInfo[id][CURRENT_NEXTRACE] - 1;
 
                     new szMessage[64], szRaceName[32];
-					LANG_GetRaceName( iNextRaceId, id, szRaceName, 31, true )
+					LANG_GetRaceName( iNextRaceId + 1, id, szRaceName, 31, true )
 
                     format( szMessage, 63, INFO_NEWRACENOW, szRaceName );
 

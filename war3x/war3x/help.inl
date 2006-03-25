@@ -191,11 +191,11 @@ public HELP_motd_target( id, targetId ) {
     {
         // Race
 
-        new raceId = g_PlayerInfo[targetId][CURRENT_RACE];
+        new raceId = g_PlayerInfo[targetId][CURRENT_RACE] - 1;
         new iLevel  = WAR3_get_level( g_PlayerInfo[targetId][CURRENT_XP] );
 
 		new szRaceName[32];
-		LANG_GetRaceName( raceId, id, szRaceName, 31 );
+		LANG_GetRaceName( raceId + 1, id, szRaceName, 31 );
         iLen += format( szMotd[iLen], 2047 - iLen, "<h3>%s</h3>", szRaceName );
 
         // Level

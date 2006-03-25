@@ -258,7 +258,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
             }
 
 			new szShortRaceName[32];
-			LANG_GetRaceName( iRaceId, id, szShortRaceName, 31, true );
+			LANG_GetRaceName( iRaceId + 1, id, szShortRaceName, 31, true );
 
             // Set Message(s)
 
@@ -305,7 +305,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
             // Set Message(s)
 
 			new szShortRaceName[32];
-			LANG_GetRaceName( iRaceId, id, szShortRaceName, 31, true );
+			LANG_GetRaceName( iRaceId + 1, id, szShortRaceName, 31, true );
 
             if ( bAddXp )
             {
@@ -397,7 +397,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
     // Log Usage
 	
 	new szShortRaceName[16];
-	LANG_GetRaceName( iRaceId, id, szShortRaceName, 15, true );
+	LANG_GetRaceName( iRaceId + 1, id, szShortRaceName, 15, true );
 
     if ( iSetType == WAR3X_SETLEVEL )
         XP_Log_to_file( id, "war3x_setlevel", szPlayerName, szShortRaceName, szNewValue );

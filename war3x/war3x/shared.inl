@@ -1813,7 +1813,7 @@ public WAR3_hud_level( id ) {
     new szMessage[73], szData[64], iLen, szRaceName[32];
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 	
-	LANG_GetRaceName( iRaceNum, id, szRaceName, 31 );
+	LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
     WAR3_race_info( id, iRaceNum, RACEINFO_CLASSNAME, szData );
     iLen += format( szMessage[iLen], 72 - iLen, "%s^nLevel %d ( %s )", szRaceName, iLevel, szData );
 
