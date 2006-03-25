@@ -1059,7 +1059,7 @@ public OR_U_WINDWALK_in( parmCast[3] ) {
         parmCast[1] = iCounter;
 
         new task = TASK_WINDWALK + id;
-        set_task( 0.1, "UWindwalk_Prewalk", task, parmCast, 3 );
+        set_task( 0.1, "OR_U_WINDWALK_in", task, parmCast, 3 );
     }
 
     else
