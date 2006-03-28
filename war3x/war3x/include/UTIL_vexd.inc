@@ -193,7 +193,7 @@ stock set_velocity_from_origin( ent, Float:fOrigin[3], Float:fSpeed )
 }
 
 
-// Sets velocity of an entity (ent1) away from another entity (ent2) with speed (fSpeed)
+// Sets velocity of an entity (ent1) in the opposite direction of another entity (ent2) with speed (fSpeed)
 
 stock set_velocity_from_ent( ent1, ent2, Float:fSpeed )
 {
@@ -341,7 +341,7 @@ public Remove_TempEnt( parm_iEnt[1] )
 
 		if ( is_war3_entity(iEnt, szClassName) )
 		{
-            new iTaskId = TASK_TEMPENTITY + iEntity;
+            new iTaskId = TASK_TEMPENTITY + iEnt;
             remove_task( iTaskId, 0 );
 			remove_entity( iEnt );
 		}

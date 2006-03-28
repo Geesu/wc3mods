@@ -3,7 +3,7 @@
 
 // - Fortitude ( racial ) --------------------------------- //
 
-new Float:HU_fFortitude[2]          =       {105.0,165.0};  // (  float) Fortitude (hitpoints gained)
+new Float:HU_fFortitude[2]          =       {106.0,160.0};  // (  float) Fortitude (hitpoints gained)
 
 // - Invisibility ----------------------------------------- //
 
@@ -16,7 +16,7 @@ new Float:HU_fInvisibility[3]       =    {0.60,0.70,0.80};  // (  float) Invisib
 
 // - Bash ------------------------------------------------- //
 
-new Float:HU_fBash[3]               =    {0.10,0.20,0.30};  // (  float) Bash (chance to bash)
+new Float:HU_fBash[3]               =    {0.05,0.15,0.25};  // (  float) Bash (chance to bash)
 new HU_iBashDamage[3]               =             {3,6,9};  // (integer) Bash (bonus damage)
 
 #define BASH_KNIFEBONUS                              0.5    // (  float) bonus to apply to bash chance/damage when using knife.

@@ -486,25 +486,25 @@ public HELP_get_values_skills( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_RACIAL:
                 {
-                    format( szValue, 31, "%d %0.1f", REGENERATION_AMMOUNT, OR_S_REGENERATION_get( iSkillLevel ) );
+                    format( szValue, 31, "%d %0.1f", REGENERATION_AMOUNT, OR_S_REGENERATION_get( iSkillLevel ) );
                     return ( 2 );
                 }
 
                 case SKILL_1:
                 {
-                    format( szValue, 31, "%0.0f%s %d %0.0f%s", ( ( ( s_BerserkSpeed[iSkillLevel] - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), "%", BERSERK_HEALTH, ( s_BerserkDmg[iSkillLevel] * 100.0 ), "%" );
+                    format( szValue, 31, "%0.0f%s %d %0.0f%s", ( ( ( OR_fBerserk_speed[iSkillLevel] - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), "%", BERSERK_HEALTH, ( OR_fBerserk_damage[iSkillLevel] * 100.0 ), "%" );
                     return ( 3 );
                 }
 
                 case SKILL_2:
                 {
-                    format( szValue, 31, "%0.0f%s %0.0f", ( s_PulverizeBonus[iSkillLevel] * 100.0 ), "%", s_PulverizeRange[iSkillLevel] );
+                    format( szValue, 31, "%0.0f%s %0.0f", ( OR_fPulverize_bonus[iSkillLevel] * 100.0 ), "%", OR_fPulverize_range[iSkillLevel] );
                     return ( 2 );
                 }
 
                 case SKILL_3:
                 {
-                    format( szValue, 31, "%0.0f%s", ( s_Pillage[iSkillLevel] * 100.0 ), "%" );
+                    format( szValue, 31, "%0.0f%s", ( OR_fPillage[iSkillLevel] * 100.0 ), "%" );
                     return ( 1 );
                 }
 
@@ -544,19 +544,19 @@ public HELP_get_values_skills( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_1:
                 {
-                    format( szValue, 31, "%0.0f%s", ( s_Evasion[iSkillLevel] * 100.0 ), "%" );
+                    format( szValue, 31, "%0.0f%s", ( NE_fEvasion[iSkillLevel] * 100.0 ), "%" );
                     return ( 1 );
                 }
 
                 case SKILL_2:
                 {
-                    format( szValue, 31, "%d %0.0f%s", ( s_BlessingArmor[iSkillLevel] - 100 ), ( ( s_BlessingSpeed[iSkillLevel] ) * 100.0 ) , "%" );
+                    format( szValue, 31, "%d %0.0f%s", ( NE_iBlessing_armor[iSkillLevel] - 100 ), ( ( NE_fBlessing_speed[iSkillLevel] ) * 100.0 ) , "%" );
                     return ( 2 );
                 }
 
                 case SKILL_3:
                 {
-                    format( szValue, 31, "%0.0f%s", ( s_TrueshotAura[iSkillLevel] * 100.0 ), "%" );
+                    format( szValue, 31, "%0.0f%s", ( NE_fTrueshotAura[iSkillLevel] * 100.0 ), "%" );
                     return ( 1 );
                 }
 

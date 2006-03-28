@@ -419,7 +419,7 @@ public WAR3_get_maxarmor( id ) {
 
     else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] )
     {
-        iMaxArmor += s_BlessingArmor[g_PlayerInfo[id][CURRENT_SKILL2] - 1] - 100;
+        iMaxArmor += NE_iBlessing_armor[g_PlayerInfo[id][CURRENT_SKILL2] - 1] - 100;
     }
 
     // Frost Armor

@@ -193,10 +193,10 @@ public Float:NE_S_ELUNES_get_knife( iLevel ) {
     if ( fLevel > LEVEL_RACIALCAP )
         fLevel = LEVEL_RACIALCAP;
 
-    new Float:fAbsorb = s_ElunesKnife[0] + ( ( ( s_ElunesKnife[1] - s_ElunesKnife[0] ) / LEVEL_RACIALCAP ) * fLevel );
+    new Float:fAbsorb = NE_fElunes_knife[0] + ( ( ( NE_fElunes_knife[1] - NE_fElunes_knife[0] ) / LEVEL_RACIALCAP ) * fLevel );
 
-    if ( fAbsorb < s_ElunesKnife[1] )
-        fAbsorb = s_ElunesKnife[1];
+    if ( fAbsorb < NE_fElunes_knife[1] )
+        fAbsorb = NE_fElunes_knife[1];
 
     // Check if Night bonus applies ( coming soon )
 
@@ -214,10 +214,10 @@ public Float:NE_S_ELUNES_get_magic( iLevel ) {
     if ( fLevel > LEVEL_RACIALCAP )
         fLevel = LEVEL_RACIALCAP;
 
-    new Float:fAbsorb = s_ElunesMagic[0] + ( ( ( s_ElunesMagic[1] - s_ElunesMagic[0] ) / LEVEL_RACIALCAP ) * fLevel );
+    new Float:fAbsorb = NE_fElunes_magic[0] + ( ( ( NE_fElunes_magic[1] - NE_fElunes_magic[0] ) / LEVEL_RACIALCAP ) * fLevel );
 
-    if ( fAbsorb < s_ElunesMagic[1] )
-        fAbsorb = s_ElunesMagic[1];
+    if ( fAbsorb < NE_fElunes_magic[1] )
+        fAbsorb = NE_fElunes_magic[1];
 
     // Check if Night bonus applies ( coming soon )
 
@@ -287,7 +287,7 @@ public NE_S_BLESSING_set_speed( id, weapon ) {
     if ( g_bPlayerZoomed[id] )
         fSpeed = CS_WEAPON_SPEED_ZOOM[weapon];
 
-    new Float:fBlessingSpeed = fSpeed + ( fSpeed * s_BlessingSpeed[g_PlayerInfo[id][CURRENT_SKILL2] - 1] );
+    new Float:fBlessingSpeed = fSpeed + ( fSpeed * NE_fBlessing_speed[g_PlayerInfo[id][CURRENT_SKILL2] - 1] );
 
     // Do not exceed cap
 
@@ -317,7 +317,7 @@ static NE_S_TRUESHOT( attacker, victim, weapon, iDamage, headshot ) {
     if ( !WAR3_skill_enabled( attacker, RACE_NIGHTELF, SKILL_3 ) )
         return PLUGIN_HANDLED;
 
-    new Float:fBonusDamage = float( iDamage ) * s_TrueshotAura[g_PlayerInfo[attacker][CURRENT_SKILL3] - 1];
+    new Float:fBonusDamage = float( iDamage ) * NE_fTrueshotAura[g_PlayerInfo[attacker][CURRENT_SKILL3] - 1];
     new iBonusDamage = floatround( fBonusDamage );
 
     // Add to player stats array
@@ -428,7 +428,7 @@ public NE_S_EVASION_prep( id ) {
     if ( get_gametime() - g_fEvasionTime[id] < EVASION_SHOTGAP )
         return PLUGIN_HANDLED;
 
-    new Float:fEvadeChance = s_Evasion[g_PlayerInfo[id][CURRENT_SKILL1] - 1];
+    new Float:fEvadeChance = NE_fEvasion[g_PlayerInfo[id][CURRENT_SKILL1] - 1];
     new Float:fRandomNum = random_float( 0.0, 1.0 );
 
     if ( fEvadeChance >= fRandomNum )

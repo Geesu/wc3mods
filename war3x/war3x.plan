@@ -27,6 +27,10 @@ SKILL CHANGES:
 
 * regeneration requires armor to use
 
+--Fortitude - health reduced by 5.
+--Bash - chance reduced by 5% each level
+
+
 MISC CHANGES:
 
 * check invis cooldown? possible crashing...

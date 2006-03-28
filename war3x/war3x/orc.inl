@@ -118,10 +118,10 @@ public Float:OR_S_REGENERATION_get( iLevel ) {
     if ( fLevel > LEVEL_RACIALCAP )
         fLevel = LEVEL_RACIALCAP;
 
-    new Float:fRegenRate = s_Regeneration[0] - ( ( ( s_Regeneration[0] - s_Regeneration[1] ) / LEVEL_RACIALCAP ) * fLevel );
+    new Float:fRegenRate = OR_fRegeneration[0] - ( ( ( OR_fRegeneration[0] - OR_fRegeneration[1] ) / LEVEL_RACIALCAP ) * fLevel );
 
-    if ( fRegenRate < s_Regeneration[1] )
-        fRegenRate = s_Regeneration[1];
+    if ( fRegenRate < OR_fRegeneration[1] )
+        fRegenRate = OR_fRegeneration[1];
 
     return ( fRegenRate );
 }
@@ -163,7 +163,7 @@ public OR_S_REGENERATION_heal( parm_Regen[1] ) {
         if ( get_user_health( id ) && get_user_health( id ) < WAR3_get_maxhealth( id ) )
         {
             new iHealth = get_user_health( id );
-            new iNewHealth = iHealth + REGENERATION_AMMOUNT;
+            new iNewHealth = iHealth + REGENERATION_AMOUNT;
 
             set_user_health( id, iNewHealth );
         }
@@ -173,7 +173,7 @@ public OR_S_REGENERATION_heal( parm_Regen[1] ) {
         if ( get_user_armor( id ) && get_user_armor( id ) < WAR3_get_maxarmor( id ) )
         {
             new iArmor = get_user_armor( id );
-            new iNewArmor = iArmor + REGENERATION_AMMOUNT;
+            new iNewArmor = iArmor + REGENERATION_AMOUNT;
 
             set_user_armor( id, iNewArmor );
         }
@@ -219,9 +219,9 @@ public OR_S_BERSERK_speed( id ){
 			new Float:fNewSpeed = 0.0;
 
 			if( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS )
-				fNewSpeed = VALUE_BOOTS + ( float(100 - iHealth)/100.0 * ( s_BerserkSpeed[g_PlayerInfo[id][CURRENT_SKILL1] - 1] - VALUE_BOOTS ) );
+				fNewSpeed = VALUE_BOOTS + ( float(100 - iHealth)/100.0 * ( OR_fBerserk_speed[g_PlayerInfo[id][CURRENT_SKILL1] - 1] - VALUE_BOOTS ) );
 			else
-				fNewSpeed = SPEED_KNIFE + ( float(100 - iHealth)/100.0 * ( s_BerserkSpeed[g_PlayerInfo[id][CURRENT_SKILL1] - 1] - SPEED_KNIFE ) );
+				fNewSpeed = SPEED_KNIFE + ( float(100 - iHealth)/100.0 * ( OR_fBerserk_speed[g_PlayerInfo[id][CURRENT_SKILL1] - 1] - SPEED_KNIFE ) );
 
 			set_user_maxspeed( id, fNewSpeed );
 		}
@@ -245,7 +245,7 @@ static OR_S_BERSERK_damage( attacker, victim, weapon, iDamage, headshot ) {
 
 			new Float:fHealthMultiplier = float( ( 100 - iHealth ) ) / 100.0;
 
-			new iBonusDamage = floatround( fHealthMultiplier * (s_BerserkDmg[g_PlayerInfo[attacker][CURRENT_SKILL1] - 1] * iDamage) );
+			new iBonusDamage = floatround( fHealthMultiplier * (OR_fBerserk_damage[g_PlayerInfo[attacker][CURRENT_SKILL1] - 1] * iDamage) );
 
 		    // Apply Damage
 
@@ -323,13 +323,13 @@ static OR_S_PULVERIZE( attacker, victim, Float:fGrenadeOrigin[3], damage ) {
 
 			// Determine if a nearby teammate is close enough to damage
 
-			if ( fMetricDistance <= s_PulverizeRange[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1] )
+			if ( fMetricDistance <= OR_fPulverize_range[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1] )
 			{
 				bHitPlayers = true;
 
 				// Damage calculation
 
-				new iPulverizeDamage = floatround( s_PulverizeBonus[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1] * float( damage ) );
+				new iPulverizeDamage = floatround( OR_fPulverize_bonus[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1] * float( damage ) );
 
                 // Armor calculation
 
@@ -379,7 +379,7 @@ static OR_S_PULVERIZE( attacker, victim, Float:fGrenadeOrigin[3], damage ) {
 
 	if ( bHitPlayers )
 	{
-		new iRadius = floatround( s_PulverizeRange[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1] );
+		new iRadius = floatround( OR_fPulverize_range[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1] );
 
 		new iRingRed    = ( 85 * g_PlayerInfo[attacker][CURRENT_SKILL2] );
 		new iRingGreen  = ( 85 * g_PlayerInfo[attacker][CURRENT_SKILL2] );
@@ -436,7 +436,7 @@ static OR_S_PILLAGE( attacker, victim, iDamage, weapon ) {
 	if ( !WAR3_skill_enabled( attacker, RACE_ORC, SKILL_3 ) )
 		return PLUGIN_HANDLED;
 
-	new Float:fPillageChance = s_Pillage[g_PlayerInfo[attacker][CURRENT_SKILL3] - 1];
+	new Float:fPillageChance = OR_fPillage[g_PlayerInfo[attacker][CURRENT_SKILL3] - 1];
     new Float:fRandomNum = random_float( 0.0, 1.0 );
 
     if ( weapon == CSW_KNIFE )
@@ -575,8 +575,8 @@ static OR_S_PILLAGE_grenade( attacker, victim ) {
 		give_item( attacker, CS_WEAPON_NAME[grenade] );
 
 
-		//cs_update_ammo( victim, -1, s_PillageNades[i] );
-		//cs_update_ammo( attacker, 1, s_PillageNades[i] );
+		//cs_update_ammo( victim, -1, OR_fPillageNades[i] );
+		//cs_update_ammo( attacker, 1, OR_fPillageNades[i] );
 	}
 
     return PLUGIN_HANDLED;
