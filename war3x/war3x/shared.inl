@@ -125,7 +125,7 @@ public SHARED_INVIS_set_( parm_Invis[1] ) {
     {
         // Make sure cloak value is not greater
 
-        if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK && VALUE_CLOAK > s_Invisibility[g_PlayerInfo[id][CURRENT_SKILL1] - 1] )
+        if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK && VALUE_CLOAK > HU_fInvisibility[g_PlayerInfo[id][CURRENT_SKILL1] - 1] )
             ITEM_CLOAK_set( id );
 
         else
@@ -430,7 +430,7 @@ public WAR3_get_maxarmor( id ) {
     // Inner Fire
 
     else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL3] )
-        iMaxArmor += s_ifArmor[g_PlayerInfo[id][CURRENT_SKILL3] - 1] - 100;
+        iMaxArmor += HU_iInnerFire_armor[g_PlayerInfo[id][CURRENT_SKILL3] - 1] - 100;
 
     // Ring of Protection +5
 
@@ -1812,7 +1812,7 @@ public WAR3_hud_level( id ) {
 
     new szMessage[73], szData[64], iLen, szRaceName[32];
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
-	
+
 	LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
     WAR3_race_info( id, iRaceNum, RACEINFO_CLASSNAME, szData );
     iLen += format( szMessage[iLen], 72 - iLen, "%s^nLevel %d ( %s )", szRaceName, iLevel, szData );

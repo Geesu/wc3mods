@@ -122,7 +122,7 @@ public HU_S_FORTITUDE_get( iLevel ) {
     if ( fLevel > LEVEL_RACIALCAP )
         fLevel = LEVEL_RACIALCAP;
 
-    new Float:fNewHealth = s_Fortitude[0] + ( ( ( s_Fortitude[1] - s_Fortitude[0] ) / LEVEL_RACIALCAP ) * fLevel );
+    new Float:fNewHealth = HU_fFortitude[0] + ( ( ( HU_fFortitude[1] - HU_fFortitude[0] ) / LEVEL_RACIALCAP ) * fLevel );
     new iNewHealth = floatround( fNewHealth );
 
     return ( iNewHealth );
@@ -154,7 +154,7 @@ public HU_S_INVISIBILITY_set( id ) {
 
     g_bPlayerInvis[id] = true;
 
-    new Float:fInvis = s_Invisibility[g_PlayerInfo[id][CURRENT_SKILL1] - 1];
+    new Float:fInvis = HU_fInvisibility[g_PlayerInfo[id][CURRENT_SKILL1] - 1];
     fInvis = ( 1.0 - fInvis ) * 255.0;
 
     new iInvis = floatround( fInvis );
@@ -186,10 +186,10 @@ public HU_S_INVISIBILITY_shift( arg_read[1] ) {
     new Float:fCurrentInvis = entity_get_float( id, EV_FL_renderamt );
     new Float:fInvisPercent = 1.0 - ( fCurrentInvis / 255.0 );
 
-    if ( WAR3_is_invisible( id ) && fInvisPercent > s_Invisibility[LEVEL_1] )
+    if ( WAR3_is_invisible( id ) && fInvisPercent > HU_fInvisibility[LEVEL_1] )
     {
-        new Float:fMaxLevel = ( 1.0 - s_Invisibility[g_PlayerInfo[id][CURRENT_SKILL1] - 1] ) * 255.0;
-        new Float:fMinLevel = ( 1.0 - s_Invisibility[LEVEL_1] ) * 255.0;
+        new Float:fMaxLevel = ( 1.0 - HU_fInvisibility[g_PlayerInfo[id][CURRENT_SKILL1] - 1] ) * 255.0;
+        new Float:fMinLevel = ( 1.0 - HU_fInvisibility[LEVEL_1] ) * 255.0;
 
         new Float:fInvisShift = ( fMinLevel - fMaxLevel ) / float( INVISIBILITY_SHIFTS );
         entity_set_float( id, EV_FL_renderamt, fCurrentInvis + fInvisShift );
@@ -223,10 +223,10 @@ static HU_S_BASH( attacker, victim, weapon, headshot ) {
     if ( !WAR3_skill_enabled( attacker, RACE_HUMAN, SKILL_2 ) )
         return PLUGIN_HANDLED;
 
-    new Float:fBashChance = s_Bash[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1];
+    new Float:fBashChance = HU_fBash[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1];
     new Float:fRandomNum  = random_float( 0.0,1.0 );
 
-    new iBonusDamage = s_BashDamage[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1];
+    new iBonusDamage = HU_iBashDamage[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1];
 
     // Apply bonus modifier
 
@@ -321,7 +321,7 @@ static HU_S_INNERFIRE( attacker, victim, weapon, iDamage, headshot ) {
     if ( !WAR3_skill_enabled( attacker, RACE_HUMAN, SKILL_3 ) )
         return PLUGIN_HANDLED;
 
-    new Float:fBonusDamage = float( iDamage ) * s_ifDamage[g_PlayerInfo[attacker][CURRENT_SKILL3] - 1];
+    new Float:fBonusDamage = float( iDamage ) * HU_fInnerFire_damage[g_PlayerInfo[attacker][CURRENT_SKILL3] - 1];
     new iBonusDamage = floatround( fBonusDamage );
 
     // Add to player stats array

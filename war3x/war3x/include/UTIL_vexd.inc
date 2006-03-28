@@ -341,6 +341,8 @@ public Remove_TempEnt( parm_iEnt[1] )
 
 		if ( is_war3_entity(iEnt, szClassName) )
 		{
+            new iTaskId = TASK_TEMPENTITY + iEntity;
+            remove_task( iTaskId, 0 );
 			remove_entity( iEnt );
 		}
 	}
@@ -356,7 +358,7 @@ public Remove_TempEnts( szClassname[32], iOwner )
 
     while ( iEntity > 0 )
     {
-        if ( !iOwner || entity_get_edict( iEntity, EV_ENT_owner ) == iOwner )
+        if ( ( !iOwner || entity_get_edict( iEntity, EV_ENT_owner ) == iOwner ) && is_war3_entity( iEntity, szClassname ) )
         {
             new iTaskId = TASK_TEMPENTITY + iEntity;
             remove_task( iTaskId, 0 );

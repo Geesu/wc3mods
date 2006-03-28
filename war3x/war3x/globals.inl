@@ -128,7 +128,7 @@ new const DISPELL_TARGETS[_TR][] =
 #define ULTIMATE_COOLDOWNDEFAULT   45.0     // (  float) seconds of cooldown after casting ultimate
 
 #define BOT_ULTIMATECHANCE         0.33     // (  float) chance a bot will cast ultimate (if available) when targetting
-#define BOT_BUYCHANCE              0.75     // (  float) chance a bot will buy item at round start
+#define BOT_BUYCHANCE              1.00     // (  float) chance a bot will buy item at round start
 
 #define LEVEL_ULTIMATE                6     // (integer) level required to get ultimate
 #define LEVEL_RACIALCAP             9.0     // (  float) level when racial abilities are maximum

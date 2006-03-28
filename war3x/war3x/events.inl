@@ -320,7 +320,7 @@ public on_Target_Id( id ) {
 			// Get Item and Race Name
 
 			new szItemName[32], szRaceName[32];
-			
+
 			LANG_GetItemName( iItemNum, SHOP_COMMON, id, szItemName, 31 );
 			LANG_GetRaceName ( iRaceNum + 1, id, szRaceName, 31, true )
 
@@ -937,12 +937,15 @@ public on_World_Action() {
         {
             new id = Players[iPlayerNum];
 
+            // DEBUG!!!
+            g_PlayerInfo[id][CURRENT_ITEM] = random_num( 1, TOTAL_SHOPITEMS - 1 );
+
             // Activate Player skills / Ultimate
 
             WAR3_enable_skills( id );
 
             // Attempt to Buy Item if Bot
-
+/*
             if ( is_user_bot( id ) && !g_PlayerInfo[id][CURRENT_ITEM] && get_cvar_num( "war3x_shopmenus" ) )
             {
                 new Float:fRandomNum = random_float( 0.0,1.0 );
@@ -961,6 +964,7 @@ public on_World_Action() {
                     }
                 }
             }
+*/
         }
 
         // Upkeep

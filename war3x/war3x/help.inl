@@ -113,7 +113,7 @@ public HELP_motd_players( id ) {
 
             if ( bRaceFound )
                 iLen += format( szMotd[iLen], 2047 - iLen, "^n^n^n" );
-			
+
 			new szRaceName[32];
 			LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
 
@@ -440,19 +440,19 @@ public HELP_get_values_skills( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_1:
                 {
-                    format( szValue, 31, "%0.0f%s", ( s_Invisibility[iSkillLevel] * 100.0 ), "%" );
+                    format( szValue, 31, "%0.0f%s", ( HU_fInvisibility[iSkillLevel] * 100.0 ), "%" );
                     return ( 2 );
                 }
 
                 case SKILL_2:
                 {
-                    format( szValue, 31, "%0.0f%s %d %0.1f", ( s_Bash[iSkillLevel] * 100.0 ), "%", s_BashDamage[iSkillLevel], BASH_DURATION_MAX );
+                    format( szValue, 31, "%0.0f%s %d %0.1f", ( HU_fBash[iSkillLevel] * 100.0 ), "%", HU_iBashDamage[iSkillLevel], BASH_DURATION_MAX );
                     return ( 3 );
                 }
 
                 case SKILL_3:
                 {
-                    format( szValue, 31, "%d %0.0f%s", ( s_ifArmor[iSkillLevel] - 100 ), ( s_ifDamage[iSkillLevel] * 100.0 ), "%" );
+                    format( szValue, 31, "%d %0.0f%s", ( HU_iInnerFire_armor[iSkillLevel] - 100 ), ( HU_fInnerFire_damage[iSkillLevel] * 100.0 ), "%" );
                     return ( 2 );
                 }
 
@@ -716,7 +716,7 @@ public HELP_create_files() {
 static HELP_description_racial( iRaceNum, id, szDescription[256], iLevel ) {
 
     // Grab skill description template
-	
+
 	LANG_GetSkillDesc( iRaceNum + 1, 1, SKILL_T_RACIAL, id, szDescription, 255 )
 
     // Grab values

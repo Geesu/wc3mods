@@ -10,6 +10,7 @@ BIG CHANGES:
   (This will be the implementation of our stats system. We will reward for support, aggression, and all types of gameplay. These will be used locally on the game server for patch 1.1 and will be loaded into the database for version 1.2.)
 * OPTIMIZATION
   (format/formatex/cvar pointers/function renaming/etc)
+* ADMIN MENU
 
 * use 'dynamic' hudmessage positions (UNSURE YET..)
 * keep autosnipers disabled? - or just disable them on a per-skill basis?
@@ -17,7 +18,7 @@ BIG CHANGES:
 
 SKILL CHANGES:
 --------------
-* frost nova - increase range, maybe damage. I kinda like this skill now with sounds :)
+--frost nova - increase range, maybe damage. I kinda like this skill now with sounds :)
 * impale change (stun on land 1-3 secs)
 
 * flame strike mod - more damage each second in the strike. countdown from that amount when outside.
@@ -40,7 +41,7 @@ MISC CHANGES:
 * make check for cfg and sprite file(s), if not found, don't load
 * !g_bPlayerSleeping (make some generalize invuln thing) 
 * replace all distance/40 by get_distance (statsx stock)
-* add valid model check to deathcoil seek
+* add valid model check to deathcoil seek *CONFIRMED - CAUSES CRASH!*
 * add WAR3_heal command?
 * recode pulverize ring colors into consts
 * don't come out of invis on grenade damage dealt
@@ -207,3 +208,216 @@ frost bolt
 healing stream	(or mana shield)
 parasite
 
+
+
+
+
+
+
+
+
+
+
+CRASHES:
+
+669.4914: Plugin "war3x.amxx" (20) hit line 705.
+669.4914: Plugin "war3x.amxx" (20) hit line 830.
+669.4914: Plugin "war3x.amxx" (20) hit line 833.
+669.4914: Plugin "war3x.amxx" (20) had public function "on_StatusIcon" (325) called.
+669.4914: Binary log corrupt past this point.
+
+
+DEATH COIIL- RELATED
+
+670.5151: Plugin "war3x.amxx" (23) had public function "Remove_TempEnt" (110) called.
+670.5151: Plugin "war3x.amxx" (23) hit line 335.
+670.5151: Plugin "war3x.amxx" (23) hit line 335.
+670.5151: Plugin "war3x.amxx" (23) hit line 337.
+670.5151: Plugin "war3x.amxx" (23) called native "is_valid_ent" (67) with 1 parameters.
+670.5151: Native parameters: (153)
+670.5151: Native returned: 1
+670.5151: Plugin "war3x.amxx" (23) hit line 339.
+670.5151: Plugin "war3x.amxx" (23) hit line 340.
+670.5151: Plugin "war3x.amxx" (23) called native "entity_get_string" (53) with 4 parameters.
+670.5151: Native parameters: (153, 0, 195784, 63)
+670.5151: Setting string (addr 195784) (maxlen 63) from Plugin "war3x.amxx" (23).  String:
+	 DEATH_COIL
+670.5151: Native returned: 10
+670.5151: Plugin "war3x.amxx" (23) hit line 342.
+670.5151: Plugin "war3x.amxx" (23) hit line 1899.
+670.5151: Plugin "war3x.amxx" (23) hit line 1899.
+670.5151: Plugin "war3x.amxx" (23) hit line 1902.
+670.5151: Plugin "war3x.amxx" (23) called native "is_valid_ent" (67) with 1 parameters.
+670.5151: Native parameters: (153)
+670.5151: Native returned: 1
+670.5151: Plugin "war3x.amxx" (23) hit line 1907.
+670.5151: Plugin "war3x.amxx" (23) called native "strlen" (18) with 1 parameters.
+670.5151: Native parameters: (195784)
+670.5151: Retrieving string (addr 0x2FCC8) from Plugin "war3x.amxx" (23).  String:
+	 DEATH_COIL
+670.5151: Native returned: 10
+670.5151: Plugin "war3x.amxx" (23) hit line 1913.
+670.5151: Plugin "war3x.amxx" (23) hit line 1915.
+670.5151: Plugin "war3x.amxx" (23) called native "equal" (97) with 3 parameters.
+670.5151: Native parameters: (195784, 193716, 0)
+670.5151: Native returned: 0
+670.5151: Plugin "war3x.amxx" (23) hit line 1913.
+670.5151: Plugin "war3x.amxx" (23) hit line 1915.
+670.5151: Plugin "war3x.amxx" (23) called native "equal" (97) with 3 parameters.
+670.5151: Native parameters: (195784, 193972, 0)
+670.5151: Native returned: 1
+670.5151: Plugin "war3x.amxx" (23) hit line 1917.
+670.5151: Plugin "war3x.amxx" (23) hit line 344.
+670.5151: Plugin "war3x.amxx" (23) called native "remove_entity" (68) with 1 parameters.
+670.5151: Native parameters: (153)
+670.5151: Native returned: 1
+670.5151: Plugin "war3x.amxx" (23) hit line 348.
+670.5151: Plugin "war3x.amxx" (23) had public function "UD_U_DEATHCOIL_seek" (149) called.
+670.5151: Plugin "war3x.amxx" (23) hit line 591.
+670.5151: Plugin "war3x.amxx" (23) hit line 591.
+670.5151: Plugin "war3x.amxx" (23) hit line 592.
+670.5151: Plugin "war3x.amxx" (23) called native "entity_get_edict" (52) with 2 parameters.
+670.5151: Native parameters: (153, 2)
+670.5151: Binary log corrupt past this point.
+
+
+
+671.9872: Plugin "war3x.amxx" (1) had public function "on_Health" (357) called.
+671.9872: Plugin "war3x.amxx" (1) hit line 1432.
+671.9872: Plugin "war3x.amxx" (1) hit line 1432.
+671.9872: Plugin "war3x.amxx" (1) called native "get_user_health" (77) with 1 parameters.
+671.9872: Native parameters: (3)
+671.9872: Native returned: 88
+671.9872: Plugin "war3x.amxx" (1) hit line 107.
+671.9872: Plugin "war3x.amxx" (1) hit line 107.
+671.9872: Plugin "war3x.amxx" (1) hit line 109.
+671.9872: Plugin "war3x.amxx" (1) hit line 112.
+671.9872: Plugin "war3x.amxx" (1) hit line 118.
+671.9872: Plugin "war3x.amxx" (1) hit line 121.
+671.9872: Plugin "war3x.amxx" (1) hit line 1434.
+671.9872: Plugin "war3x.amxx" (1) hit line 201.
+671.9872: Plugin "war3x.amxx" (1) hit line 201.
+671.9872: Plugin "war3x.amxx" (1) hit line 107.
+671.9872: Plugin "war3x.amxx" (1) hit line 107.
+671.9872: Plugin "war3x.amxx" (1) hit line 109.
+671.9872: Plugin "war3x.amxx" (1) hit line 112.
+671.9872: Plugin "war3x.amxx" (1) hit line 118.
+671.9872: Plugin "war3x.amxx" (1) hit line 121.
+671.9872: Plugin "war3x.amxx" (1) called native "get_user_health" (77) with 1 parameters.
+671.9872: Native parameters: (3)
+671.9872: Native returned: 88
+671.9872: Plugin "war3x.amxx" (1) hit line 204.
+671.9872: Plugin "war3x.amxx" (1) hit line 206.
+671.9872: Plugin "war3x.amxx" (1) hit line 774.
+671.9872: Plugin "war3x.amxx" (1) hit line 774.
+671.9872: Plugin "war3x.amxx" (1) hit line 777.
+671.9872: Plugin "war3x.amxx" (1) hit line 779.
+671.9872: Plugin "war3x.amxx" (1) hit line 777.
+671.9872: Plugin "war3x.amxx" (1) hit line 779.
+671.9872: Plugin "war3x.amxx" (1) hit line 777.
+671.9872: Plugin "war3x.amxx" (1) hit line 779.
+671.9872: Plugin "war3x.amxx" (1) hit line 777.
+671.9872: Plugin "war3x.amxx" (1) hit line 779.
+671.9872: Plugin "war3x.amxx" (1) hit line 777.
+671.9872: Plugin "war3x.amxx" (1) hit line 779.
+671.9872: Plugin "war3x.amxx" (1) hit line 777.
+671.9872: Plugin "war3x.amxx" (1) hit line 779.
+671.9872: Plugin "war3x.amxx" (1) hit line 777.
+671.9872: Plugin "war3x.amxx" (1) hit line 779.
+671.9872: Plugin "war3x.amxx" (1) hit line 777.
+671.9872: Plugin "war3x.amxx" (1) hit line 779.
+671.9872: Plugin "war3x.amxx" (1) hit line 777.
+671.9872: Plugin "war3x.amxx" (1) hit line 779.
+671.9872: Plugin "war3x.amxx" (1) hit line 777.
+671.9872: Plugin "war3x.amxx" (1) hit line 779.
+671.9872: Plugin "war3x.amxx" (1) hit line 777.
+671.9872: Plugin "war3x.amxx" (1) hit line 779.
+671.9872: Plugin "war3x.amxx" (1) hit line 780.
+671.9872: Plugin "war3x.amxx" (1) hit line 207.
+671.9872: Plugin "war3x.amxx" (1) hit line 182.
+671.9872: Plugin "war3x.amxx" (1) hit line 182.
+671.9872: Plugin "war3x.amxx" (1) hit line 184.
+671.9872: Plugin "war3x.amxx" (1) hit line 130.
+671.9872: Plugin "war3x.amxx" (1) hit line 130.
+671.9872: Plugin "war3x.amxx" (1) hit line 187.
+671.9872: Plugin "war3x.amxx" (1) called native "floatsub" (54) with 2 parameters.
+671.9872: Native parameters: (1077097267, 1061997773)
+671.9872: Native returned: 1073741824
+671.9872: Plugin "war3x.amxx" (1) called native "floatdiv" (56) with 2 parameters.
+671.9872: Native parameters: (1073741824, 1091567616)
+671.9872: Native returned: 1046711865
+671.9872: Plugin "war3x.amxx" (1) called native "floatmul" (40) with 2 parameters.
+671.9872: Native parameters: (1046711865, 0)
+671.9872: Native returned: 0
+671.9872: Plugin "war3x.amxx" (1) called native "floatsub" (54) with 2 parameters.
+671.9872: Native parameters: (1077097267, 0)
+671.9872: Native returned: 1077097267
+671.9872: Plugin "war3x.amxx" (1) hit line 189.
+671.9872: Plugin "war3x.amxx" (1) hit line 148.
+671.9872: Plugin "war3x.amxx" (1) hit line 148.
+671.9872: Plugin "war3x.amxx" (1) hit line 192.
+671.9872: Plugin "war3x.amxx" (1) hit line 209.
+671.9872: Plugin "war3x.amxx" (1) hit line 210.
+671.9872: Plugin "war3x.amxx" (1) hit line 212.
+671.9872: Plugin "war3x.amxx" (1) hit line 213.
+671.9872: Plugin "war3x.amxx" (1) called native "set_task" (68) with 7 parameters.
+671.9872: Native parameters: (1077097267, 155812, 3, 214836, 1, 198500, 0)
+671.9872: Retrieving string (addr 0x260A4) from Plugin "war3x.amxx" (1).  String:
+	 SRegen_Heal
+671.9872: Retrieving string (addr 0x30764) from Plugin "war3x.amxx" (1).  String:
+	 
+671.9872: Native returned: 1
+671.9872: Plugin "war3x.amxx" (1) hit line 217.
+671.9872: Plugin "war3x.amxx" (1) hit line 1439.
+671.9872: Plugin "war3x.amxx" (1) hit line 1441.
+671.9872: Plugin "war3x.amxx" (1) hit line 288.
+671.9872: Plugin "war3x.amxx" (1) hit line 288.
+671.9872: Plugin "war3x.amxx" (1) hit line 648.
+671.9872: Plugin "war3x.amxx" (1) hit line 648.
+671.9872: Plugin "war3x.amxx" (1) called native "read_flags" (38) with 1 parameters.
+671.9872: Native parameters: (40200)
+671.9872: Retrieving string (addr 0x9D08) from Plugin "war3x.amxx" (1).  String:
+	 
+671.9872: Native returned: 0
+671.9872: Plugin "war3x.amxx" (1) hit line 487.
+671.9872: Plugin "war3x.amxx" (1) hit line 487.
+671.9872: Plugin "war3x.amxx" (1) hit line 488.
+671.9872: Plugin "war3x.amxx" (1) hit line 490.
+671.9872: Plugin "war3x.amxx" (1) hit line 491.
+671.9872: Plugin "war3x.amxx" (1) hit line 1459.
+671.9872: Plugin "war3x.amxx" (1) hit line 1459.
+671.9872: Plugin "war3x.amxx" (1) hit line 1461.
+671.9872: Plugin "war3x.amxx" (1) hit line 1467.
+671.9872: Plugin "war3x.amxx" (1) hit line 1477.
+671.9872: Plugin "war3x.amxx" (1) called native "copy" (17) with 3 parameters.
+671.9872: Native parameters: (214788, 1, 129704)
+671.9872: Native returned: 1
+671.9872: Plugin "war3x.amxx" (1) hit line 1497.
+671.9872: Plugin "war3x.amxx" (1) hit line 1500.
+671.9872: Plugin "war3x.amxx" (1) hit line 493.
+671.9872: Plugin "war3x.amxx" (1) called native "read_flags" (38) with 1 parameters.
+671.9872: Native parameters: (214788)
+671.9872: Retrieving string (addr 0x34704) from Plugin "war3x.amxx" (1).  String:
+	 i
+671.9872: Native returned: 256
+671.9872: Plugin "war3x.amxx" (1) hit line 651.
+671.9872: Plugin "war3x.amxx" (1) called native "is_user_alive" (75) with 1 parameters.
+671.9872: Native parameters: (3)
+671.9872: Native returned: 1
+671.9872: Plugin "war3x.amxx" (1) hit line 290.
+671.9872: Plugin "war3x.amxx" (1) hit line 291.
+671.9872: Plugin "war3x.amxx" (1) called native "get_user_weapon" (110) with 3 parameters.
+671.9872: Native parameters: (3, 214844, 214840)
+671.9872: Native returned: 29
+671.9872: Plugin "war3x.amxx" (1) hit line 293.
+671.9872: Plugin "war3x.amxx" (1) hit line 295.
+671.9872: Plugin "war3x.amxx" (1) called native "get_user_health" (77) with 1 parameters.
+671.9872: Native parameters: (3)
+671.9872: Native returned: 88
+671.9872: Plugin "war3x.amxx" (1) hit line 296.
+671.9872: Plugin "war3x.amxx" (1) hit line 298.
+671.9872: Plugin "war3x.amxx" (1) hit line 301.
+671.9872: Plugin "war3x.amxx" (1) called native "floatdiv" (56) with 2 parameters.
+671.9872: Native parameters: (1094713344, 1120403456)
+671.9872: Native returned: 1039516303
+671.9872: Binary log corrupt past this point.

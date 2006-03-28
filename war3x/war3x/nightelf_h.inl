@@ -1,37 +1,51 @@
 
-/* - Skill Configuration ---------------------------------------- */
+//////////////////////////////////// Skill Configuration /////
+
+// - Elune's Grace ( racial ) ----------------------------- //
+
+new Float:s_ElunesMagic[2]          =         {0.05,0.25};  // (racial) Elune's Grace (ultimate damage absorbsion) {level 0,level LEVEL_RACIALCAP}
+new Float:s_ElunesKnife[2]          =         {0.10,0.35};  // (racial) Elune's Grace (knife damage absorbsion) {level 0,level LEVEL_RACIALCAP}
+
+#define ELUNES_NIGHTBONUS                            2.0    // (  float) bonus to regular skill during night time (via moonstone)
+
+new ELUNES_SHELL_RGB[3]             =          {80,32,96};  // (integer) RGB of elune's grace shell ( when damage absorbed )
+
+// - Evasion ---------------------------------------------- //
+
+new Float:s_Evasion[3]              =    {0.10,0.20,0.30};  // (skill1) Evasion (chance to evade)
+
+#define EVASION_MAXDAMAGE                            250    // (integer) maximum damage (ish) avoidable with evasion
+#define EVASION_SHOTGAP                              5.0    // (  float) min duration between evades before a consecutive shot may be evaded
+
+// - Nature's Blessing ------------------------------------ //
+
+new s_BlessingArmor[3]              =       {115,130,145};  // (skill2) Nature's Blessing (armor)
+
+#define BLESSING_MAXSPEED                          260.0    // (  float) max speed of nature's blessing
+
+// - Trueshot Aura ---------------------------------------- //
+
+new Float:s_BlessingSpeed[3]        =       {0.1,0.2,0.3};  // (racial) Nature's Blessing (min/max speed attainable) (used to calculate % speed bonus)
+new Float:s_TrueshotAura[3]         =    {0.15,0.30,0.45};  // (skill3) Trueshot Aura (bonus damage)
+
+// ------------------------------------------------- End. - //
 
 
-new Float:s_ElunesMagic[2]      = {0.05,0.25};                  // (racial) Elune's Grace (ultimate damage absorbsion) {level 0,level LEVEL_RACIALCAP}
-new Float:s_ElunesKnife[2]      = {0.10,0.35};                  // (racial) Elune's Grace (knife damage absorbsion) {level 0,level LEVEL_RACIALCAP}
-new Float:s_Evasion[3]          = {0.10,0.20,0.30};             // (skill1) Evasion (chance to evade)
-new s_BlessingArmor[3]          = {115,130,145};                // (skill2) Nature's Blessing (armor)
-new Float:s_BlessingSpeed[3]    = {0.1,0.2,0.3};                // (racial) Nature's Blessing (min/max speed attainable) (used to calculate % speed bonus)
-new Float:s_TrueshotAura[3]     = {0.15,0.30,0.45};             // (skill3) Trueshot Aura (bonus damage)
 
+///////////////////////////////// Ultimate Configuration /////
 
-/* - Skill Constants Configuration ------------------------------ */
+// - Entangling Roots ------------------------------------- //
 
+// - Rejuvenation ----------------------------------------- //
 
-#define ELUNES_NIGHTBONUS           2.0     // (  float) bonus to regular skill during night time (via moonstone)
+// - Shadow Strike ---------------------------------------- //
 
-#define EVASION_MAXDAMAGE           250     // (integer) maximum damage (ish) avoidable with evasion
-#define EVASION_SHOTGAP             5.0     // (  float) min duration between evades before a consecutive shot may be evaded
+#define ROOT_DURATION                               8.0    // (  float) seconds player will be rooted
+#define ROOT_MAXDAMAGE               40    // (integer) total damage taken over time for duration of root
 
-#define BLESSING_MAXSPEED         260.0     // (  float) max speed of nature's blessing
-
-new ELUNES_SHELL_RGB[3] =     {80,32,96};   // (integer) RGB of elune's grace shell ( when damage absorbed )
-
-
-/* - Ultimate Configuration ------------------------------------- */
-
-
-#define ROOT_DURATION               8.0     // (  float) seconds player will be rooted
-#define ROOT_MAXDAMAGE               40     // (integer) total damage taken over time for duration of root
-
-#define REJUVENATION_MAXHEALTH       75     // (integer) health gained per wave
-#define REJUVENATION_WAVES            5     // (integer) number of waves
-#define REJUVENATION_DURATION      16.0     // (  float) duration of effect
+#define REJUVENATION_MAXHEALTH       75    // (integer) health gained per wave
+#define REJUVENATION_WAVES            5    // (integer) number of waves
+#define REJUVENATION_DURATION      16.0    // (  float) duration of effect
 
 #define SHADOWSTRIKE_DURATION        10
 #define SHADOWSTRIKE_DAMAGE          35
