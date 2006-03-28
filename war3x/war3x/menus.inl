@@ -138,7 +138,7 @@ public menu_SelectRace( id ) {
 			new szRaceName[32];
 			LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
 
-			if ( get_cvar_bitsum( "war3x_restrict_races" ) & WAR3_get_race_flag( iRaceNum ) )
+			if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum ) )
             {
 				LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 )
                 iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led          ^n", iRaceNum + 1, szRaceName );
@@ -181,7 +181,7 @@ public menu_SelectRace( id ) {
 			new szRaceName[32];
 			LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
 
-            if ( get_cvar_bitsum( "war3x_restrict_races" ) & WAR3_get_race_flag( iRaceNum ) )
+            if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum ) )
             {
                 iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led          ^n", iRaceNum + 1, szRaceName );
             }
@@ -238,7 +238,7 @@ public _menu_SelectRace( id, iKey ) {
     {
         new iRaceNum = random_num( 1, TOTAL_RACES ) - 1;
 
-        if ( !( get_cvar_bitsum( "war3x_restrict_races" ) & WAR3_get_race_flag( iRaceNum ) ) )
+        if ( !( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum ) ) )
             iKey = iRaceNum;
     }
 
@@ -270,7 +270,7 @@ public _menu_SelectRace( id, iKey ) {
                 g_iXPtotal[id][iKey] = g_iLevelXp[iLevel];
 
                 new szMessage[128];
-                format( szMessage, 127, INFO_LEVEL_FIRST, iLevel );
+                formatex( szMessage, 127, INFO_LEVEL_FIRST, iLevel );
 
                 client_print( id, print_chat, szMessage );
             }
@@ -287,7 +287,7 @@ public _menu_SelectRace( id, iKey ) {
                 g_iXPtotal[id][iKey] = g_iLevelXp[iLevel];
 
                 new szMessage[128];
-                format( szMessage, 127, INFO_LEVEL_OTHER, iLevel );
+                formatex( szMessage, 127, INFO_LEVEL_OTHER, iLevel );
 
                 client_print( id, print_chat, szMessage );
             }
@@ -447,10 +447,10 @@ public menu_SelectSkills( id ) {
 
         // Disabled
 
-        if ( get_cvar_bitsum( "war3x_restrict_skills" ) & WAR3_get_skill_flag( iRaceNum, iSkillNum ) )
+        if ( get_pcvar_bitsum( CVAR_restrict_skills ) & WAR3_get_skill_flag( iRaceNum, iSkillNum ) )
             copy( szDisabled, 19, "\r(R estr icted )\d" );
 
-        else if ( get_cvar_bitsum( "war3x_restrict_skills" ) == 0 && get_cvar_bitsum( "war3x_restrict_ultimates" ) == 0 )
+        else if ( get_pcvar_bitsum( CVAR_restrict_skills ) == 0 && get_pcvar_bitsum( CVAR_restrict_ultimates ) == 0 )
             copy( szDisabled, 19, "\d          \d" );
 
         else
@@ -462,7 +462,7 @@ public menu_SelectSkills( id ) {
 
         if ( War3x_GetSkillCheck( iLevel, iNextSkillLvl ) )
         {
-            format( szMenuSkill, 63, "^n\w%d. %s \d\R%s Leve l %d ", iSkillNum, szSkillName, szDisabled, iNextSkillLvl );
+            formatex( szMenuSkill, 63, "^n\w%d. %s \d\R%s Leve l %d ", iSkillNum, szSkillName, szDisabled, iNextSkillLvl );
             iKeys |= ( 1<<iSkillNum - 1 );
         }
 
@@ -474,14 +474,14 @@ public menu_SelectSkills( id ) {
 
             if ( iNextSkillLvl > TOTAL_SKILLLEVELS )
             {
-                format( szMenuSkill, 63, "^n\d%d. %s \d\R%s Leve l MAX ", iSkillNum, szSkillName, szDisabled );
+                formatex( szMenuSkill, 63, "^n\d%d. %s \d\R%s Leve l MAX ", iSkillNum, szSkillName, szDisabled );
             }
 
             // Skill Not Available
 
             else
             {
-                format( szMenuSkill, 63, "^n\d%d. %s \d\R%s Leve l %d ", iSkillNum, szSkillName, szDisabled, iNextSkillLvl );
+                formatex( szMenuSkill, 63, "^n\d%d. %s \d\R%s Leve l %d ", iSkillNum, szSkillName, szDisabled, iNextSkillLvl );
             }
         }
 
@@ -501,10 +501,10 @@ public menu_SelectSkills( id ) {
 
         // Disabled
 
-        if ( get_cvar_bitsum( "war3x_restrict_ultimates" ) & WAR3_get_ult_flag( iRaceNum, iUltimateNum ) )
+        if ( get_pcvar_bitsum( CVAR_restrict_ultimates ) & WAR3_get_ult_flag( iRaceNum, iUltimateNum ) )
             copy( szDisabled, 19, "\r(R estr icted )\d" );
 
-        else if ( get_cvar_bitsum( "war3x_restrict_ultimates" ) == 0 && get_cvar_bitsum( "war3x_restrict_skills" ) == 0 )
+        else if ( get_pcvar_bitsum( CVAR_restrict_ultimates ) == 0 && get_pcvar_bitsum( CVAR_restrict_skills ) == 0 )
             copy( szDisabled, 19, "\d          \d" );
 
         else
@@ -515,18 +515,18 @@ public menu_SelectSkills( id ) {
         // Can't Yet Obtain an Ultimate
 
         if ( iLevel < LEVEL_ULTIMATE )
-            format( szMenuSkill, 63, "^n\d%d. Ultimate: %s \R%s ", iSkillNum, szSkillName, szDisabled );
+            formatex( szMenuSkill, 63, "^n\d%d. Ultimate: %s \R%s ", iSkillNum, szSkillName, szDisabled );
 
         // Already Have Ultimate ( show only selected )
 
         else if ( g_PlayerInfo[id][CURRENT_ULTIMATE] )
         {
             if ( iSkillNum - TOTAL_SKILLSTRAINED == g_PlayerInfo[id][CURRENT_ULTIMATE] )
-                format( szMenuSkill, 63, "^n\d%d. Ultimate: %s \R%s ", iSkillNum, szSkillName, szDisabled );
+                formatex( szMenuSkill, 63, "^n\d%d. Ultimate: %s \R%s ", iSkillNum, szSkillName, szDisabled );
 
             else
             {
-                format( szMenuSkill, 63, "^n" );
+                formatex( szMenuSkill, 63, "^n" );
             }
         }
 
@@ -534,7 +534,7 @@ public menu_SelectSkills( id ) {
 
         else
         {
-            format( szMenuSkill, 63, "^n\w%d. Ultimate: %s \R%s ", iSkillNum, szSkillName, szDisabled );
+            formatex( szMenuSkill, 63, "^n\w%d. Ultimate: %s \R%s ", iSkillNum, szSkillName, szDisabled );
             iKeys |= ( 1<<iSkillNum - 1 );
         }
 
@@ -641,7 +641,7 @@ public menu_ItemShop( id ) {
 
     // Shopmenus Disabled
 
-    if ( !get_cvar_num( "war3x_shopmenus" ) )
+    if ( !get_pcvar_num( CVAR_shopmenus ) )
     {
         client_print( id, print_center, INFO_SHOP_DISABLED );
         return PLUGIN_HANDLED;
@@ -665,7 +665,7 @@ public menu_ItemShop( id ) {
 
     // Buy Zone Restriction
 
-    if ( get_cvar_num( "war3x_shopzone" ) && !g_bInBuyZone[id] )
+    if ( get_pcvar_num( CVAR_shopzone ) && !g_bInBuyZone[id] )
     {
         client_print( id, print_center, INFO_SHOP_BUYZONE );
         return PLUGIN_HANDLED;
@@ -673,17 +673,9 @@ public menu_ItemShop( id ) {
 
     // Buy Time Expired
 
-    if ( get_cvar_num( "war3x_shoptime" ) && get_cvar_float( "mp_buytime" ) < ( get_gametime() - g_fBuyTime ) / 60.0  )
+    if ( get_pcvar_num( CVAR_shoptime ) && get_cvar_float( "mp_buytime" ) < ( get_gametime() - g_fBuyTime ) / 60.0  )
     {
-/*
-        new Float:fBuytime = get_cvar_float( "mp_buytime" ) * 60.0;
-        new iBuytime = floatround( fBuytime );
-
-        new szBuytime[4];
-        num_to_str( iBuytime, szBuytime, 3 );
-*/
         Create_TextMsg( id, print_center, "#Cant_buy" );
-
         return PLUGIN_HANDLED;
     }
 
@@ -701,12 +693,12 @@ public menu_ItemShop( id ) {
 
         // Item Restricted
 
-        if ( get_cvar_bitsum( "war3x_restrict_items" ) & WAR3_get_item_flag( iItemNum ) )
+        if ( get_pcvar_bitsum( CVAR_restrict_items ) & WAR3_get_item_flag( iItemNum ) )
             iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led ^n", iItemNum, szItemName );
 
         // Not enough players for Tome
 
-        else if ( iItemNum == ITEM_TOME && get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
+        else if ( iItemNum == ITEM_TOME && get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
         {
             iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\y%d ^n", iItemNum, szItemName, ITEM_COST[iItemNum] );
         }
@@ -1016,7 +1008,7 @@ public _menu_RaceOptions( id, iKey ) {
                     g_PlayerInfo[id][CURRENT_XP] = g_iLevelXp[iLevel];
 
                     new szMessage[128];
-                    format( szMessage, 127, INFO_LEVEL_FIRST, iLevel );
+                    formatex( szMessage, 127, INFO_LEVEL_FIRST, iLevel );
 
                     client_print( id, print_chat, szMessage );
                 }
@@ -1032,7 +1024,7 @@ public _menu_RaceOptions( id, iKey ) {
                     g_PlayerInfo[id][CURRENT_XP] = g_iLevelXp[iLevel];
 
                     new szMessage[128];
-                    format( szMessage, 127, INFO_LEVEL_OTHER, iLevel );
+                    formatex( szMessage, 127, INFO_LEVEL_OTHER, iLevel );
 
                     client_print( id, print_chat, szMessage );
                 }
@@ -1057,7 +1049,7 @@ public _menu_RaceOptions( id, iKey ) {
             new szMessage[128], szRaceName[32];
 
 			LANG_GetRaceName( iRaceId + 1, id, szRaceName, 31 );
-            format( szMessage, 127, INFO_RESETXP, szRaceName );
+            formatex( szMessage, 127, INFO_RESETXP, szRaceName );
 
             client_print( id, print_chat, szMessage );
         }

@@ -347,7 +347,7 @@ stock Create_Damage( ShowTo,DamageSave,DamageTake,DamageType )
 }
 
 
-stock Create_DeathMsg( ShowTo,KillerId,VictimId,Headshot,WeaponName[] )
+stock Create_DeathMsg( ShowTo,KillerId,VictimId,headshot,WeaponName[] )
 {
     new gmsgDeathMsg = get_user_msgid( "DeathMsg" );
 
@@ -369,7 +369,7 @@ stock Create_DeathMsg( ShowTo,KillerId,VictimId,Headshot,WeaponName[] )
 
     write_byte( KillerId );             // killer index
     write_byte( VictimId );             // victim index
-    write_byte( Headshot );             // headshot? (1|0)
+    write_byte( headshot );             // headshot? (1|0)
     write_string( WeaponName );         // weapon name
     message_end();
 
@@ -1302,10 +1302,10 @@ public status_print( id, szMessage[256] ) {
 }
 
 
-public get_cvar_bitsum( szCvar[] ) {
+public get_pcvar_bitsum( pointer ) {
 
     new szFlags[64];
-    get_cvar_string( szCvar, szFlags, 63 );
+    get_pcvar_string( pointer, szFlags, 63 );
 
     return ( read_flags( szFlags ) );
 }

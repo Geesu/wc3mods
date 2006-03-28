@@ -80,7 +80,7 @@ public Item_Buy( id, iNewItem ) {
         new szMessage[128], szItemName[32];
 
 		LANG_GetItemName ( iOldItem, SHOP_COMMON, id, szItemName, 31 )
-        format( szMessage, 127, ITEM_BUYBACK_MESSAGE, szItemName, iOldCost );
+        formatex( szMessage, 127, ITEM_BUYBACK_MESSAGE, szItemName, iOldCost );
 
         client_print( id, print_chat, szMessage );
     }
@@ -116,7 +116,7 @@ public Item_BuyTome( id ) {
         return PLUGIN_HANDLED;
     }
 
-    new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
+    new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
 
     new iTomeValue = ITEM_TOME_VALUE;
     new Float:fTomeValue = float( iTomeValue );
@@ -166,10 +166,10 @@ public Item_Equip( id, iNewItem ) {
         new szMessage[128], iLen;
         iLen += format( szMessage[iLen], 127 - iLen, ITEM_ANKH_PRIMARY );
 
-        if ( get_cvar_num( "war3x_ankhpistols" ) )
+        if ( get_pcvar_num( CVAR_ankhpistols ) )
             iLen += format( szMessage[iLen], 127 - iLen, ITEM_ANKH_SECONDARY );
 
-        if ( get_cvar_num( "war3x_ankhgrenades" ) )
+        if ( get_pcvar_num( CVAR_ankhgrenades ) )
             iLen += format( szMessage[iLen], 127 - iLen, ITEM_ANKH_GRENADES );
 
         new Float:fAnkhValue = ITEM_ANKH_VALUE;
@@ -228,7 +228,7 @@ public Item_Equip( id, iNewItem ) {
             return ( 0 );
         }
 
-        if ( g_fUltimateCooldown[id] && ( g_fBuyTime + get_cvar_float( "war3x_ultimatewarmup" ) ) < get_gametime() )
+        if ( g_fUltimateCooldown[id] && ( g_fBuyTime + get_pcvar_float( CVAR_ultimatewarmup ) ) < get_gametime() )
         {
             new task = TASK_ULTIMATECOOLDOWN + id;
             remove_task( task, 0 );
@@ -404,7 +404,7 @@ public Item_Pickup( id, iItemEnt, iNewItem ) {
 
     // Check if restricted
 
-    if ( get_cvar_bitsum( "war3x_restrict_items" ) & WAR3_get_item_flag( iNewItem ) )
+    if ( get_pcvar_bitsum( CVAR_restrict_items ) & WAR3_get_item_flag( iNewItem ) )
         return PLUGIN_HANDLED;
 
     g_PlayerInfo[id][CURRENT_ITEM] = iNewItem;
@@ -505,7 +505,7 @@ public ITEM_ANKH_set( id ) {
             {
                 case CS_WEAPON_GROUP_PRIMARY:
                 {
-                    if ( get_cvar_num( "war3x_ankhautosnipers" ) || ( !get_cvar_num( "war3x_ankhautosnipers" ) && cs_get_weapon_type_( weapon ) != CS_WEAPON_TYPE_AUTOSNIPER ) )
+                    if ( get_pcvar_num( CVAR_ankhautosnipers ) || ( !get_pcvar_num( CVAR_ankhautosnipers ) && cs_get_weapon_type_( weapon ) != CS_WEAPON_TYPE_AUTOSNIPER ) )
                     {
                         g_PlayerBackpack[id][CURRENT_PRIMARY] = weapon;
                     }
@@ -513,7 +513,7 @@ public ITEM_ANKH_set( id ) {
 
                 case CS_WEAPON_GROUP_SECONDARY:
                 {
-                    if ( get_cvar_num( "war3x_ankhpistols" ) )
+                    if ( get_pcvar_num( CVAR_ankhpistols ) )
                     {
                         g_PlayerBackpack[id][CURRENT_SECONDARY] = weapon;
                     }
@@ -521,7 +521,7 @@ public ITEM_ANKH_set( id ) {
 
                 case CS_WEAPON_GROUP_GRENADE:
                 {
-                    if ( get_cvar_num( "war3x_ankhgrenades" ) )
+                    if ( get_pcvar_num( CVAR_ankhgrenades ) )
                     {
                         new iClip, iAmmo;
 
@@ -880,10 +880,10 @@ public ITEM_AMULET_block( target, caster ) {
 
     new szMessage[128];
 
-    format( szMessage, 127, BLOCK_ULTIMATE_T );
+    formatex( szMessage, 127, BLOCK_ULTIMATE_T );
     WAR3_status_text( target, szMessage, 3.0 );
 
-    format( szMessage, 127, BLOCK_ULTIMATE_C );
+    formatex( szMessage, 127, BLOCK_ULTIMATE_C );
     WAR3_status_text( caster, szMessage, 3.0 );
 
     // Screen Fade

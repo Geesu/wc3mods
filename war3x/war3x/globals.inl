@@ -1,4 +1,5 @@
 
+new WAR3X_DIR[64];
 
 /* - Race/Skill/Item Constants ---------------------------------- */
 
@@ -215,7 +216,7 @@ new const GETCLASSCHECK[3] =    {0,2,5};    // (integer) levels players receive 
 #define GLOW_G                        1
 #define GLOW_B                        2
 #define GLOW_ID                       0
-#define GLOW_AMMOUNT                  1
+#define GLOW_AMOUNT                  1
 #define GLOW_FADEOUT                  2
 #define GLOW_MAX                    255
 
@@ -264,7 +265,7 @@ new const GETCLASSCHECK[3] =    {0,2,5};    // (integer) levels players receive 
 #define LEVEL_2                       1
 #define LEVEL_3                       2
 
-#define ARMOR_AMMOUNT                 0
+#define ARMOR_AMOUNT                 0
 #define ARMOR_TYPE                    1
 
 #define ARMORTYPE_KEVLAR              0
@@ -492,7 +493,7 @@ new g_SaveQueue_iOptions[64][_TO];  // holds options for all races.
 
 #define STATS_ACTIVE                // Stores how many times skill(s) activate
 #define STATS_TOTAL                 // Stores damage totals (to calculate % with STATS_ACTIVE)
-#define STATS_AMMOUNT               // Stores skill ammount(s)
+#define STATS_AMOUNT               // Stores skill ammount(s)
 #define STATS_KILLS                 // Stores skill kill count
 /*
 stock rStats_Skill_1[33][4];
@@ -555,10 +556,40 @@ new SOUND_FROSTNOVA[64];
 
 /* - CVAR Pointer variables ------------------------------------- */
 
+new CVAR_enabled;
+new CVAR_save_xp;
+
+new CVAR_save_xp_sql;
+new CVAR_save_by_ip;
+new CVAR_vote_allow;
+new CVAR_vote_ratio;
+new CVAR_setxp_flag;
 
 new CVAR_startlevel_first;
 new CVAR_startlevel_other;
 
+new CVAR_xp_normal;
+new CVAR_xp_objective;
+new CVAR_xp_minplayers;
+new CVAR_ultimatewarmup;
+new CVAR_shopmenus;
+new CVAR_shopzone;
+new CVAR_shoptime;
+new CVAR_ankhpistols;
+new CVAR_ankhautosnipers;
+new CVAR_ankhgrenades;
+new CVAR_statusicons;
+
+new CVAR_restrict_items;
+new CVAR_restrict_races;
+new CVAR_restrict_skills;
+new CVAR_restrict_ultimates;
+
+new CVAR_sql_host;
+new CVAR_sql_user;
+new CVAR_sql_pass;
+new CVAR_sql_db;
+new CVAR_sql_table;
 
 /* -------------------------------------------------------------- */
 

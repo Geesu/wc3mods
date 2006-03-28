@@ -8,22 +8,22 @@ public cmd_Ultimate( caster ) {
     if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
 
-    new iTargetId = g_PlayerTarget[caster];
+    new target = g_PlayerTarget[caster];
 
     // Press when dead ( target skills ) *REMOVED TEMPORARILY*
 
     if ( !is_user_alive( caster ) )
     {
-        //HELP_motd_target( caster, iTargetId );
+        //HELP_motd_target( caster, target );
         return PLUGIN_HANDLED;
     }
 
     // Press when restricted
 
-    else if ( get_cvar_bitsum( "war3x_restrict_ultimates" ) & WAR3_get_ult_flag( g_PlayerInfo[caster][CURRENT_RACE], g_PlayerInfo[caster][CURRENT_ULTIMATE] ) )
+    else if ( get_pcvar_bitsum( CVAR_restrict_ultimates ) & WAR3_get_ult_flag( g_PlayerInfo[caster][CURRENT_RACE], g_PlayerInfo[caster][CURRENT_ULTIMATE] ) )
     {
         new szMessage[128];
-        copy( szMessage, 127, ULTIMATE_RESTRICTED );
+        formatex( szMessage, 127, "%s", ULTIMATE_RESTRICTED );
 
         WAR3_status_text( caster, szMessage, 0.5 );
 
@@ -35,7 +35,7 @@ public cmd_Ultimate( caster ) {
     else if ( g_bPlayerSleeping[caster] )
     {
         new szMessage[128];
-        copy( szMessage, 127, ULTIMATE_NOCAST_SLEEP );
+        formatex( szMessage, 127, "%s", ULTIMATE_NOCAST_SLEEP );
 
         WAR3_status_text( caster, szMessage, 1.0 );
     }
@@ -47,7 +47,7 @@ public cmd_Ultimate( caster ) {
         if ( caster == g_Vip )
         {
             new szMessage[128];
-            copy( szMessage, 127, ULTIMATE_NOCAST_VIP );
+            formatex( szMessage, 127, "%s", ULTIMATE_NOCAST_VIP );
 
             WAR3_status_text( caster, szMessage, 1.0 );
         }
@@ -55,7 +55,7 @@ public cmd_Ultimate( caster ) {
         else if ( g_PlayerInfo[caster][CURRENT_ULTIMATE] && g_iCurrentRound <= 1 )
         {
             new szMessage[128];
-            copy( szMessage, 127, ULTIMATE_NOCAST_PISTOL );
+            formatex( szMessage, 127, "%s", ULTIMATE_NOCAST_PISTOL );
 
             WAR3_status_text( caster, szMessage, 1.0 );
         }
@@ -65,7 +65,7 @@ public cmd_Ultimate( caster ) {
             if ( g_bFreezeTime )
             {
                 new szMessage[128];
-                copy( szMessage, 127, ULTIMATE_NOTREADY );
+                formatex( szMessage, 127, "%s", ULTIMATE_NOTREADY );
 
                 WAR3_status_text( caster, szMessage, 0.5 );
             }
@@ -77,7 +77,7 @@ public cmd_Ultimate( caster ) {
 
                 if ( g_bUltimateWarmup )
                 {
-                    fCooldownTime = get_cvar_float( "war3x_ultimatewarmup" );
+                    fCooldownTime = get_pcvar_float( CVAR_ultimatewarmup );
                 }
 
                 else
@@ -88,7 +88,7 @@ public cmd_Ultimate( caster ) {
                 iRemainingTime = floatround( fCooldownTime - ( get_gametime() - g_fUltimateCooldown[caster] ) );
 
                 new szMessage[64];
-                format( szMessage, 63, ULTIMATE_NOTREADY_COOLDOWN, iRemainingTime );
+                formatex( szMessage, 63, ULTIMATE_NOTREADY_COOLDOWN, iRemainingTime );
 
                 WAR3_status_text( caster, szMessage, 0.5 );
             }
@@ -97,7 +97,7 @@ public cmd_Ultimate( caster ) {
         else
         {
             new szMessage[128];
-            copy( szMessage, 127, ULTIMATE_NOTFOUND );
+            formatex( szMessage, 127, "%s", ULTIMATE_NOTFOUND );
 
             WAR3_status_text( caster, szMessage, 0.5 );
         }
@@ -114,15 +114,15 @@ public cmd_Ultimate( caster ) {
 
     // Cast on Target
 
-    else if ( iTargetId && !( Ultimate_Target( caster ) & ULTIMATE_TARGET_SELFONLY ) )
-        Ultimate_Cast( caster, iTargetId );
+    else if ( target && !( Ultimate_Target( caster ) & ULTIMATE_TARGET_SELFONLY ) )
+        Ultimate_Cast( caster, target );
 
     else
     {
         if ( g_iChargeUltimate[caster] && !( Ultimate_Target( caster ) & ULTIMATE_TARGET_SELF ) )
         {
             new szMessage[128];
-            copy( szMessage, 127, CANT_TARGET_SELF );
+            formatex( szMessage, 127, "%s", CANT_TARGET_SELF );
 
             WAR3_status_text( caster, szMessage, 0.5 );
         }
@@ -158,6 +158,9 @@ public Cmd_Say( id ) {
 
     if ( equali( szText, "changerace" ) || equali( szText, "selectrace" ) || equali( szText, "chooserace" ) )
         menu_SelectRace( id );
+
+    else if ( equali( szText, "shopmenu" ) || equali( szText, "itemshop" ) || equali( szText, "buyitems" ) )
+        menu_ItemShop( id );
 
     else if ( equali( szText, "selectskill" ) || equali( szText, "selectskills" ) )
         menu_SelectSkills( id );

@@ -7,7 +7,7 @@
 
 public Get_SaveId( id ) {
 
-    if ( get_cvar_num( "war3x_save_by_ip" ) )
+    if ( get_pcvar_num( CVAR_save_by_ip ) )
         get_user_ip( id, g_SaveIds[id], 31 );
 
     else
@@ -27,7 +27,7 @@ public Get_SaveId( id ) {
 public Retrieve_Xp( id ) {
 
 
-	if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
         get_mysql_xp( id );
 	}
@@ -35,7 +35,7 @@ public Retrieve_Xp( id ) {
 	{
         new szKeyName[64], szKeyData[64];
 
-        format( szKeyName, 63, "war3x_%s_XP", g_SaveIds[id] );
+        formatex( szKeyName, 63, "war3x_%s_XP", g_SaveIds[id] );
         get_vaultdata( szKeyName, szKeyData, 63 );
 
         // Copy to Globals
@@ -69,7 +69,7 @@ public Retrieve_Skills( id, iRaceId ) {
 
     new szData[64];
 
-	if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
         get_mysql_skills( id, iRaceId + 1, szData );
 	}
@@ -77,7 +77,7 @@ public Retrieve_Skills( id, iRaceId ) {
 	{
         new szKeyName[64];
 
-        format( szKeyName, 63, "war3x_%s_%s", g_SaveIds[id], RACEKEYNAME[iRaceId] );
+        formatex( szKeyName, 63, "war3x_%s_%s", g_SaveIds[id], RACEKEYNAME[iRaceId] );
         get_vaultdata( szKeyName, szData, 63 );
 	}
 
@@ -98,7 +98,7 @@ public Retrieve_Options( id ) {
 
     new szData[64];
 
-	if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
         get_mysql_skills( id, 0, szData );
 	}
@@ -106,7 +106,7 @@ public Retrieve_Options( id ) {
 	{
         new szKeyName[64];
 
-        format( szKeyName, 63, "war3x_%s_OPTIONS", g_SaveIds[id] );
+        formatex( szKeyName, 63, "war3x_%s_OPTIONS", g_SaveIds[id] );
         get_vaultdata( szKeyName, szData, 63 );
 	}
 
@@ -213,7 +213,7 @@ public Store_Xp( id ) {
         return PLUGIN_HANDLED;
 
 
-	if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
         for ( new iRaceId = 0; iRaceId < TOTAL_RACES; iRaceId++ )
         {
@@ -247,7 +247,7 @@ public Store_Xp( id ) {
 
         // Key Name
 
-        format( szKeyName, 63, "war3x_%s_XP", g_SaveIds[id] );
+        formatex( szKeyName, 63, "war3x_%s_XP", g_SaveIds[id] );
 
         // Key Data
 
@@ -278,7 +278,7 @@ public Store_Options( id ) {
 
     new szData[32], iLen;
 
-	if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
         new totalOptionNum = 0;             // no query is necessary if no options have been changed from default
 
@@ -305,7 +305,7 @@ public Store_Options( id ) {
 
         // Key Name
 
-        format( szKeyName, 63, "war3x_%s_OPTIONS", g_SaveIds[id] );
+        formatex( szKeyName, 63, "war3x_%s_OPTIONS", g_SaveIds[id] );
 
         // Key Data
 
@@ -339,7 +339,7 @@ public Store_Skills( id ) {
 
     // Key Name
 
-    format( szKeyName, 63, "war3x_%s_%s", g_SaveIds[id], RACEKEYNAME[iRaceId] );
+    formatex( szKeyName, 63, "war3x_%s_%s", g_SaveIds[id], RACEKEYNAME[iRaceId] );
 
     // Key Data
 
@@ -363,7 +363,7 @@ public Store_Skills( id ) {
 
 public Store_Queue_Xp( iArrayIndex, szSaveId[32] ) {
 
-	if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
         for ( new iRaceId = 0; iRaceId < TOTAL_RACES; iRaceId++ )
         {
@@ -396,7 +396,7 @@ public Store_Queue_Xp( iArrayIndex, szSaveId[32] ) {
 
         // Key Name
 
-        format( szKeyName, 63, "war3x_%s_XP", szSaveId );
+        formatex( szKeyName, 63, "war3x_%s_XP", szSaveId );
 
         // Key Data
 
@@ -426,7 +426,7 @@ public Store_Queue_Skills( iArrayIndex, szSaveId[32] ) {
 
     // Key Name
 
-    format( szKeyName, 63, "war3x_%s_%s", szSaveId, RACEKEYNAME[iLastRace] );
+    formatex( szKeyName, 63, "war3x_%s_%s", szSaveId, RACEKEYNAME[iLastRace] );
 
     // Key Data
 
@@ -447,7 +447,7 @@ public Store_Queue_Skills( iArrayIndex, szSaveId[32] ) {
 
 public Store_Queue_Options( iArrayIndex, szSaveId[32] ) {
 
-	if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
         new szData[32], iLen;
         new totalOptionNum = 0;             // no query is necessary if no options have been changed from default
@@ -472,7 +472,7 @@ public Store_Queue_Options( iArrayIndex, szSaveId[32] ) {
 
         // Key Name
 
-        format( szKeyName, 63, "war3x_%s_OPTIONS", szSaveId );
+        formatex( szKeyName, 63, "war3x_%s_OPTIONS", szSaveId );
 
         // Key Data
 
@@ -501,12 +501,12 @@ public Store_Queue_CurDate( szSaveId[32] ) {
 
     // Key Name
 
-    format( szKeyName, 63, "war3x_%s_LASTPLAYED", szSaveId );
+    formatex( szKeyName, 63, "war3x_%s_LASTPLAYED", szSaveId );
 
     // Key Data
 
     get_time( "%m,%d,%Y", szLastPlayed, 15 );
-    format( szKeyData, 63, "%s", szLastPlayed );
+    formatex( szKeyData, 63, "%s", szLastPlayed );
 
     // Store Data
 
@@ -533,7 +533,7 @@ public Queue_Add( id, iArrayIndex, szSaveId[32] ) {
     {
         g_SaveQueue_iXP[iArrayIndex][iRaceId] = g_iXPtotal[id][iRaceId];
 
-		if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+		if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 		{
             g_SaveQueue_iXPfetched[iArrayIndex][iRaceId] = g_iXPfetched[id][iRaceId];
 		}
@@ -585,7 +585,7 @@ public Queue_Retrieve( id, iArrayIndex ) {
     {
         g_iXPtotal[id][iRaceId] = g_SaveQueue_iXP[iArrayIndex][iRaceId];
 
-		if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+		if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 		{
             g_iXPfetched[id][iRaceId] = g_SaveQueue_iXPfetched[iArrayIndex][iRaceId];
 		}
@@ -620,7 +620,7 @@ public Queue_Remove( iArrayIndex ) {
     {
         g_SaveQueue_iXP[iArrayIndex][iRaceId] = 0;
 
-		if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+		if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 		{
             g_SaveQueue_iXPfetched[iArrayIndex][iRaceId] = 0;
 		}
@@ -703,7 +703,7 @@ public Reset_XP( id ) {
     g_bStoreXp[id] = true;
     g_bStoreSkills[id] = true;
 
-	if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
         g_iXPfetched[id][iRaceNum] = 1;      // entry still exists, even if its 0
 	}
@@ -726,7 +726,7 @@ public Store_ActivePlayer( id ) {
 
     // Store Only Needed Values
 
-	if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
         if ( g_bStoreXp[id] || g_bStoreSkills[id])
             Store_Xp( id );
@@ -773,7 +773,7 @@ public Store_Queue_All() {
             Store_Queue_Xp( iArrayIndex, szSaveId );
             Store_Queue_Options( iArrayIndex, szSaveId );
 
-			if ( !get_cvar_num("war3x_save_xp_sql") )
+			if ( !get_pcvar_num( CVAR_save_xp_sql ) )
 			{
                 Store_Queue_Skills( iArrayIndex, szSaveId );
                 Store_Queue_CurDate( szSaveId );

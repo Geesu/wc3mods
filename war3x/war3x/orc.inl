@@ -67,12 +67,12 @@ public OR_ultimates( caster, target ) {
 
             if ( caster == target )
             {
-                format( szMessage, 63, FULLHEALTH_SELF );
+                formatex( szMessage, 63, FULLHEALTH_SELF );
             }
 
             else
             {
-                format( szMessage, 63, FULLHEALTH_TARGET );
+                formatex( szMessage, 63, FULLHEALTH_TARGET );
             }
 
             WAR3_status_text( caster, szMessage, 0.5 );
@@ -206,7 +206,30 @@ public OR_S_REGENERATION_remove( id ) {
 
 // Berserk
 
-public OR_S_BERSERK_speed( id ){
+public Float:OR_S_BERSERK_get_speed( id ) {
+
+    new iLevel = g_PlayerInfo[id][CURRENT_SKILL1] - 1;
+
+    new iMaxHealth = WAR3_get_maxhealth( id );
+    new iHealth = get_user_health( id );
+
+	new Float:fBerserkSpeed = SPEED_KNIFE + ( ( OR_fBerserk_speed[iLevel] - SPEED_KNIFE ) * ( ( float( iMaxHealth ) - float( iHealth ) ) / float( iMaxHealth ) ) );
+
+    // If boots, increase by same percentage as boots are to knife speed
+
+	if( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS )
+	    fBerserkSpeed *= ( ITEM_BOOTS_VALUE / SPEED_KNIFE );
+
+    // Don't exceed max berserk speed
+
+    if ( fBerserkSpeed > OR_fBerserk_speed[2] )
+        fBerserkSpeed = OR_fBerserk_speed[2];
+
+    return ( fBerserkSpeed );
+}
+
+
+public OR_S_BERSERK_set_speed( id ){
 
     if ( WAR3_skill_enabled( id, RACE_ORC, SKILL_1 ) && is_user_alive( id ) )
 	{
@@ -215,15 +238,8 @@ public OR_S_BERSERK_speed( id ){
 
 		if ( weapon == CSW_KNIFE )
 		{
-			new iHealth = get_user_health( id );
-			new Float:fNewSpeed = 0.0;
-
-			if( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS )
-				fNewSpeed = ITEM_BOOTS_VALUE + ( float(100 - iHealth)/100.0 * ( OR_fBerserk_speed[g_PlayerInfo[id][CURRENT_SKILL1] - 1] - ITEM_BOOTS_VALUE ) );
-			else
-				fNewSpeed = SPEED_KNIFE + ( float(100 - iHealth)/100.0 * ( OR_fBerserk_speed[g_PlayerInfo[id][CURRENT_SKILL1] - 1] - SPEED_KNIFE ) );
-
-			set_user_maxspeed( id, fNewSpeed );
+            new Float:fBerserkSpeed = OR_S_BERSERK_get_speed( id );
+			set_user_maxspeed( id, fBerserkSpeed );
 		}
 	}
 
@@ -345,7 +361,7 @@ static OR_S_PULVERIZE( attacker, victim, Float:fGrenadeOrigin[3], damage ) {
                 }
 
                 new szMessage[128];
-                format( szMessage, 127, DAMAGE_PULVERIZE, iPulverizeDamage );
+                formatex( szMessage, 127, DAMAGE_PULVERIZE, iPulverizeDamage );
 
                 WAR3_status_text2( enemy, szMessage, 3.0 );
 
@@ -614,7 +630,7 @@ static OR_U_CHAINLIGHTNING( caster, target ) {
         new szMessage[128], szPlayerName[32];
         get_user_name( caster, szPlayerName, 31 );
 
-        format( szMessage, 127, CAST_CHAINLIGHTNING, szPlayerName, CHAINLIGHTNING_DAMAGE );
+        formatex( szMessage, 127, CAST_CHAINLIGHTNING, szPlayerName, CHAINLIGHTNING_DAMAGE );
 
         WAR3_status_text2( target, szMessage, 3.0 );
 
@@ -730,7 +746,7 @@ public OR_U_CHAINLIGHTNING_jump( parmJump[2] ) {
                     new szMessage[128], szPlayerName[32];
                     get_user_name( caster, szPlayerName, 31 );
 
-                    format( szMessage, 127, CAST_CHAINLIGHTNING_JUMP, szPlayerName, iBoltDamage );
+                    formatex( szMessage, 127, CAST_CHAINLIGHTNING_JUMP, szPlayerName, iBoltDamage );
 
                     WAR3_status_text2( NextTarget, szMessage, 3.0 );
 
@@ -826,11 +842,11 @@ static OR_U_HEALINGWAVE( caster, target ) {
     get_user_name( caster, szPlayerName, 31 );
 
     if ( caster == target )
-        format( szMessage, 127, HEAL_SELF, iHealthGiven );
+        formatex( szMessage, 127, HEAL_SELF, iHealthGiven );
 
     else
     {
-        format( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
+        formatex( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
     }
 
     WAR3_status_text( target, szMessage, 3.0 );
@@ -954,11 +970,11 @@ public OR_U_HEALINGWAVE_jump( parmJump[2] ) {
                 get_user_name( caster, szPlayerName, 31 );
 
                 if ( caster == NextTarget )
-                    format( szMessage, 127, HEAL_SELF, iHealthGiven );
+                    formatex( szMessage, 127, HEAL_SELF, iHealthGiven );
 
                 else
                 {
-                    format( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
+                    formatex( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
                 }
 
                 WAR3_status_text( NextTarget, szMessage, 3.0 );
@@ -1177,7 +1193,7 @@ public OR_U_WINDWALK_strike( attacker, victim, weapon, headshot ) {
 public OR_U_WINDWALK_notify( id, iTotalDamage ) {
 
     new szMessage[128];
-    format( szMessage, 127, CAST_WINDWALK, iTotalDamage );
+    formatex( szMessage, 127, CAST_WINDWALK, iTotalDamage );
 
     WAR3_status_text( id, szMessage, 3.0 );
 

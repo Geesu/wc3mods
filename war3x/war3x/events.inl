@@ -3,7 +3,7 @@
 
 public on_StatusIcon( id ) {
 
-    if ( !get_cvar_num( "war3x_enabled" ) )
+    if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
 
     new szStatusItem[8];
@@ -20,7 +20,7 @@ public on_StatusIcon( id ) {
         }
     }
 
-    if ( equali( szStatusItem, "buyzone" ) )
+    else if ( equali( szStatusItem, "buyzone" ) )
     {
         if ( read_data( 1 ) )
             g_bInBuyZone[id] = true;
@@ -191,7 +191,6 @@ public on_Target_Team( id ) {
 	if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
 
-
     g_PlayerTarget[id] = 0;
     g_PlayerTargetTeam[id] = read_data( 2 );
 
@@ -206,58 +205,53 @@ public on_Target_Id( id ) {
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
 
-
-    new iTargetId = read_data( 2 );
+    new target = read_data( 2 );
     new bool:bNewTarget;
 
-    if ( g_PlayerTarget[id] != iTargetId )
+    if ( g_PlayerTarget[id] != target )
         bNewTarget = true;
 
-    g_PlayerTarget[id] = iTargetId;
+    g_PlayerTarget[id] = target;
 
-    // Check if Ultimate is Charging
+    // Check if ultimate is charging
 
-    if ( is_user_alive( id ) && g_iChargeUltimate[id] && iTargetId && !( Ultimate_Target( id ) & ULTIMATE_TARGET_SELFONLY ) )
+    if ( is_user_alive( id ) && g_iChargeUltimate[id] && target && !( Ultimate_Target( id ) & ULTIMATE_TARGET_SELFONLY ) )
     {
-        Ultimate_Cast( id, iTargetId );
+        Ultimate_Cast( id, target );
     }
 
     // Auto-Cast on teammate(s)
 
-    else if ( iTargetId && g_PlayerInfo[id][CURRENT_ULTIMATE] && !g_fUltimateCooldown[id] && id != g_Vip )
+    else if ( target && g_PlayerInfo[id][CURRENT_ULTIMATE] && !g_fUltimateCooldown[id] && id != g_Vip )
     {
-        // Prime/Cast Ultimate ( if bot )
+        // Prime/cast ultimate ( if bot )
 
         if ( is_user_bot( id ) )
         {
             // Heal Teammate
 
-            if ( get_user_team( id ) == get_user_team( iTargetId ) && Ultimate_Type( id ) & ULTIMATE_TYPE_HEAL )
+            if ( get_user_team( id ) == get_user_team( target ) )
             {
-                new iMaxHealth = WAR3_get_maxhealth( iTargetId );
-                new iHealth = get_user_health( iTargetId );
-
-                if ( float( iHealth ) / float( iMaxHealth ) <= HEAL_NOTIFYHEALTH )
+                if ( Ultimate_Type( id ) & ULTIMATE_TYPE_HEAL && WAR3_is_lowhealth( target ) && WAR3_can_heal( id, target ) )
                     cmd_Ultimate( id );
             }
 
-            else
+            // Damage enemy
+
+            else if ( Ultimate_Target( id ) & ULTIMATE_TARGET_ENEMY && Ultimate_Type( id ) & ULTIMATE_TYPE_OFFENSIVE )
             {
                 new Float:fRandomNum = random_float( 0.0,1.0 );
 
                 if ( fRandomNum <= BOT_ULTIMATECHANCE )
-                {
-                    // Damage Enemy
-
-                    if ( get_user_team( id ) != get_user_team( iTargetId ) && Ultimate_Target( id ) & ULTIMATE_TARGET_ENEMY && Ultimate_Type( id ) & ULTIMATE_TYPE_OFFENSIVE )
-                        cmd_Ultimate( id );
-                }
+                    cmd_Ultimate( id );
             }
         }
 
-        else if ( get_user_team( id ) == get_user_team( iTargetId ) && g_PlayerOptions[id][OPTION_AUTOCAST] )
+        // Auto-cast heal on teammate if player option allows
+
+        else if ( get_user_team( id ) == get_user_team( target ) && g_PlayerOptions[id][OPTION_AUTOCAST] )
         {
-            if ( Ultimate_Type( id ) & ULTIMATE_TYPE_HEAL && WAR3_is_lowhealth( iTargetId ) && WAR3_can_heal( id, iTargetId ) )
+            if ( Ultimate_Type( id ) & ULTIMATE_TYPE_HEAL && WAR3_is_lowhealth( target ) && WAR3_can_heal( id, target ) )
                 cmd_Ultimate( id );
 
             /* DISPELLS NOT IMPLEMENTED
@@ -268,13 +262,13 @@ public on_Target_Id( id ) {
 
     // Team race icons
 
-    if ( is_user_alive( id ) && g_PlayerOptions[id][OPTION_RACEICONS] && !g_bPlayerSaveMe[iTargetId] && !g_bPlayerDispellMe[iTargetId] )
+    if ( is_user_alive( id ) && g_PlayerOptions[id][OPTION_RACEICONS] && !g_bPlayerSaveMe[target] && !g_bPlayerDispellMe[target] )
     {
-        if ( iTargetId && g_PlayerTargetTeam[id] == CS_TEAMID_TEAMMATE )
+        if ( target && g_PlayerTargetTeam[id] == CS_TEAMID_TEAMMATE )
         {
             new IconIndex;
 
-            switch ( g_PlayerInfo[iTargetId][CURRENT_RACE] )
+            switch ( g_PlayerInfo[target][CURRENT_RACE] )
             {
                 case RACE_UNDEAD:       IconIndex = ICON_UNDEAD;
                 case RACE_HUMAN:        IconIndex = ICON_HUMAN;
@@ -283,31 +277,31 @@ public on_Target_Id( id ) {
             }
 
             if ( IconIndex )
-                Create_TE_PLAYERATTACHMENT( id, iTargetId, 44, IconIndex, 5 );
+                Create_TE_PLAYERATTACHMENT( id, target, 44, IconIndex, 5 );
         }
     }
 
-    // Show Spectator Info
+    // Show spectator info
 
-    else if ( !is_user_alive( id ) && bNewTarget && iTargetId && iTargetId != id && g_bXPfetched[id] )
+    else if ( !is_user_alive( id ) && bNewTarget && target && target != id && g_bXPfetched[id] )
     {
         new iResNum = g_PlayerOptions[id][OPTION_RESOLUTION];
         new Float:fXpos = 13.0 / STEAM_RESOLUTION[iResNum][_X];
         new Float:fYpos = float( STEAM_RESOLUTION[iResNum][_Y] - 78 + 5 ) / float( STEAM_RESOLUTION[iResNum][_Y] );
 
-        new iHealth = get_user_health( iTargetId );
+        new iHealth = get_user_health( target );
 
-        if ( g_bEvadeNextShot[iTargetId] )
+        if ( g_bEvadeNextShot[target] )
             iHealth -= 1024;
 
         new szMessage[256], szM1[256], szM2[256], szM3[256];
-        format( szM3, 255, INFO_FOLLOW_MESSAGE_3, iHealth, get_user_armor( iTargetId ), cs_get_user_money( iTargetId ) );
+        formatex( szM3, 255, INFO_FOLLOW_MESSAGE_3, iHealth, get_user_armor( target ), cs_get_user_money( target ) );
 
-        if ( g_PlayerInfo[iTargetId][CURRENT_RACE] )
+        if ( g_PlayerInfo[target][CURRENT_RACE] )
         {
-            new iRaceNum = g_PlayerInfo[iTargetId][CURRENT_RACE] - 1;
-            new iItemNum = g_PlayerInfo[iTargetId][CURRENT_ITEM];
-            new iXp      = g_PlayerInfo[iTargetId][CURRENT_XP];
+            new iRaceNum = g_PlayerInfo[target][CURRENT_RACE] - 1;
+            new iItemNum = g_PlayerInfo[target][CURRENT_ITEM];
+            new iXp      = g_PlayerInfo[target][CURRENT_XP];
             new iLevel   = WAR3_get_level( iXp );
             new iNextXp  = WAR3_get_next_xp( iXp );
 
@@ -326,23 +320,23 @@ public on_Target_Id( id ) {
 
             // Create Message
 
-            format( szM1, 255, INFO_FOLLOW_MESSAGE_1, szRaceName, iLevel, iXp, iNextXp, iPercentage, "%%" );
-            format( szM2, 255, INFO_FOLLOW_MESSAGE_2, szItemName, "None" );
+            formatex( szM1, 255, INFO_FOLLOW_MESSAGE_1, szRaceName, iLevel, iXp, iNextXp, iPercentage, "%%" );
+            formatex( szM2, 255, INFO_FOLLOW_MESSAGE_2, szItemName, "None" );
 
-            format( szMessage, 255, "%s^n%s^n%s", szM1, szM2, szM3 );
+            formatex( szMessage, 255, "%s^n%s^n%s", szM1, szM2, szM3 );
 
             // Show Message
 
             set_hudmessage( 255, 255, 255, fXpos, fYpos, 0, 6.0, 500.0, 0.1, 0.5, HUDMESSAGE_CHAN_DEAD );
-            show_hudmessage( id, szMessage );
+            show_hudmessage( id, "%s", szMessage );
         }
 
         else
         {
-            format( szMessage, 255, "%s^n%s", INFO_FOLLOW_NORACE, szM3 );
+            formatex( szMessage, 255, "%s^n%s", INFO_FOLLOW_NORACE, szM3 );
 
             set_hudmessage( 255, 255, 255, fXpos, fYpos, 0, 6.0, 500.0, 0.1, 0.5, HUDMESSAGE_CHAN_DEAD );
-            show_hudmessage( id, szMessage );
+            show_hudmessage( id, "%s", szMessage );
         }
     }
 
@@ -350,7 +344,7 @@ public on_Target_Id( id ) {
 
     if ( g_PlayerTargetTeam[id] == CS_TEAMID_ENEMY )
     {
-        if ( get_cvar_num( "mp_playerid" ) == CS_MP_PLAYERID_SHOWALL && entity_get_int( iTargetId, EV_INT_rendermode ) != kRenderTransTexture )
+        if ( get_cvar_num( "mp_playerid" ) == CS_MP_PLAYERID_SHOWALL && entity_get_int( target, EV_INT_rendermode ) != kRenderTransTexture )
             cs_status_target( id );
 
         else
@@ -436,11 +430,11 @@ public on_Damage( victim ) {
     read_data( 5, fDamageOrigin[1] );   // coord (y)
     read_data( 6, fDamageOrigin[2] );   // coord (z)
 
-    new weapon, Bodypart, Headshot;
-    new attacker = get_user_attacker( victim, weapon, Bodypart );
+    new weapon, bodypart, headshot;
+    new attacker = get_user_attacker( victim, weapon, bodypart );
 
-    if ( Bodypart == HIT_HEAD )
-        Headshot = 1;
+    if ( bodypart == HIT_HEAD )
+        headshot = 1;
 
     // Check for Bomb Explosion
 
@@ -463,10 +457,10 @@ public on_Damage( victim ) {
 
     new bool:bAllowOffensive = true;
 
-    if ( WAR3_player_valid(attacker) && g_bPlayerDispelled[attacker] || attacker == g_Vip )
+    if ( WAR3_player_valid( attacker ) && g_bPlayerDispelled[attacker] || attacker == g_Vip )
         bAllowOffensive = false;
 
-    if ( g_bPlayerWalk[victim] || (WAR3_player_valid(attacker) && g_bPlayerWalk[attacker]) || g_bPlayerInvis[victim] || g_iPlayerAvatar[victim] )
+    if ( g_bPlayerWalk[victim] || ( WAR3_player_valid( attacker ) && g_bPlayerWalk[attacker] ) || g_bPlayerInvis[victim] || g_iPlayerAvatar[victim] )
         bAllowOffensive = false;
 
     if ( g_bEvadeNextShot[victim] && ( get_gametime() - g_fEvasionTime[victim] ) >= EVASION_SHOTGAP )
@@ -476,14 +470,15 @@ public on_Damage( victim ) {
         bAllowOffensive = false;
 
     // We need to make sure that we have a valid attacker ID
-    if ( WAR3_player_valid(attacker) && bAllowOffensive )
+
+    if ( WAR3_player_valid( attacker ) && bAllowOffensive )
     {
         switch ( g_PlayerInfo[attacker][CURRENT_RACE] )
         {
-            case RACE_UNDEAD:       UD_skills_offensive( attacker, victim, weapon, iDamage, Headshot );
-            case RACE_HUMAN:        HU_skills_offensive( attacker, victim, weapon, iDamage, Headshot );
-            case RACE_ORC:          OR_skills_offensive( attacker, victim, weapon, iDamage, Headshot, fDamageOrigin );
-            case RACE_NIGHTELF:     NE_skills_offensive( attacker, victim, weapon, iDamage, Headshot );
+            case RACE_UNDEAD:       UD_skills_offensive( attacker, victim, weapon, iDamage, headshot );
+            case RACE_HUMAN:        HU_skills_offensive( attacker, victim, weapon, iDamage, headshot );
+            case RACE_ORC:          OR_skills_offensive( attacker, victim, weapon, iDamage, headshot, fDamageOrigin );
+            case RACE_NIGHTELF:     NE_skills_offensive( attacker, victim, weapon, iDamage, headshot );
         }
     }
 
@@ -494,33 +489,33 @@ public on_Damage( victim ) {
     if ( g_bPlayerDispelled[victim] || victim == g_Vip )
         bAllowDefensive = false;
 
-    if ( WAR3_player_valid(attacker) && bAllowDefensive )
+    if ( WAR3_player_valid( attacker ) && bAllowDefensive )
     {
         switch ( g_PlayerInfo[victim][CURRENT_RACE] )
         {
-            case RACE_UNDEAD:       UD_skills_defensive( attacker, victim, weapon, iDamage, Headshot );
+            case RACE_UNDEAD:       UD_skills_defensive( attacker, victim, weapon, iDamage, headshot );
             case RACE_HUMAN:        HU_skills_defensive( victim );
             case RACE_ORC:          OR_skills_defensive( victim, iDamage );
-            case RACE_NIGHTELF:     NE_skills_defensive( attacker, victim, weapon, iDamage, Headshot );
+            case RACE_NIGHTELF:     NE_skills_defensive( attacker, victim, weapon, iDamage, headshot );
         }
     }
 
     // Claws of Attack +6
 
-    if ( WAR3_player_valid(attacker) && g_PlayerInfo[attacker][CURRENT_ITEM] == ITEM_CLAWS && get_user_health( victim ) > 0 && get_user_team( attacker ) != get_user_team( victim ) && bAllowOffensive )
-        ITEM_CLAWS_damage( attacker, victim, weapon, Headshot );
+    if ( WAR3_player_valid( attacker ) && g_PlayerInfo[attacker][CURRENT_ITEM] == ITEM_CLAWS && get_user_health( victim ) > 0 && get_user_team( attacker ) != get_user_team( victim ) && bAllowOffensive )
+        ITEM_CLAWS_damage( attacker, victim, weapon, headshot );
 
     // Check if Attacked by Avatar
 
     if ( WAR3_player_valid(attacker) && g_iPlayerAvatar[attacker] && get_user_team( attacker ) != get_user_team( victim ) )
-        HU_U_AVATAR_damage( attacker, victim, weapon, Headshot );
+        HU_U_AVATAR_damage( attacker, victim, weapon, headshot );
 
     // Check if Attacked by Wind Walker
 
-    if ( WAR3_player_valid(attacker) && g_bPlayerWalk[attacker] && get_user_team( attacker ) != get_user_team( victim ) )
+    if ( WAR3_player_valid( attacker ) && g_bPlayerWalk[attacker] && get_user_team( attacker ) != get_user_team( victim ) )
     {
         g_iWindwalkDamage[attacker] = iDamage;
-        OR_U_WINDWALK_strike( attacker, victim, weapon, Headshot );
+        OR_U_WINDWALK_strike( attacker, victim, weapon, headshot );
     }
 
     // Invisibility Cooldown
@@ -562,9 +557,9 @@ public on_Death() {
         return PLUGIN_CONTINUE;
 
 
-    new killerId = read_data( 1 );
+    new killer = read_data( 1 );
     new victim = read_data( 2 );
-    new Headshot = read_data( 3 );
+    new headshot = read_data( 3 );
 
     // Perform Victim Actions
 
@@ -572,7 +567,7 @@ public on_Death() {
 
     // Check if Suicide ( worldspawn/triggers )
 
-    if ( !killerId )
+    if ( !killer )
     {
         // Check if Player was Impaled
 
@@ -586,23 +581,23 @@ public on_Death() {
     }
 
     new weapon, iClip, iAmmo;
-    weapon = get_user_weapon( killerId, iClip, iAmmo );
+    weapon = get_user_weapon( killer, iClip, iAmmo );
 
     // Check if Suicide ( slap/slay/grenade/etc )
 
-    if ( killerId == victim )
+    if ( killer == victim )
         return PLUGIN_CONTINUE;
 
     // Check if Teamkill
 
-    if ( get_user_team( killerId ) == get_user_team( victim ) )
-        XP_Kill_Teammate( killerId );
+    if ( get_user_team( killer ) == get_user_team( victim ) )
+        XP_Kill_Teammate( killer );
 
     // Normal Kill
 
     else
     {
-        XP_Kill( killerId, victim, weapon, Headshot );
+        XP_Kill( killer, victim, weapon, headshot );
     }
 
     return PLUGIN_CONTINUE;
@@ -619,7 +614,17 @@ public on_CurWeapon( id ) {
     // Player has now officially spawned at least once!
 
     if ( !g_bPlayerConnected[id] )
+    {
         g_bPlayerConnected[id] = true;
+
+        // Welcome message
+
+        new szName[32];
+        get_user_name( id, szName, 31 );
+
+        client_print( id, print_chat, "^n%L", id, "CONSOLE_WELCOME_VERSION", WAR3X_PREFIX, szName, WAR3X_PLUGINNAME, WAR3X_VERSION, WAR3X_DATE );
+        client_print( id, print_chat, "^n%L^n^n", id, "CONSOLE_WELCOME_COMMANDS", WAR3X_PREFIX );
+    }
 
     // Display Race Select Menu
 
@@ -629,7 +634,7 @@ public on_CurWeapon( id ) {
     new weapon = read_data( 2 );
     new iAmmo = read_data( 3 );
 
-    // Invisibility Cooldown
+    // Invisibility cooldown
 
     if ( is_weapon_fired( iAmmo, g_iPlayerAmmo[id][weapon] ) && weapon != CSW_KNIFE && weapon != CSW_C4 && cs_get_weapon_type_( weapon ) != CS_WEAPON_TYPE_GRENADE )
     {
@@ -643,7 +648,14 @@ public on_CurWeapon( id ) {
         WAR3_set_speed( id );
     }
 
-    // Update Ammo for Current weapon;
+    // Prevent moving when slowed/immobilized ( EXTRA VERIFICATION )
+
+    if ( g_bPlayerCantMove[id] || g_bPlayerSlowed[id] )
+    {
+        WAR3_set_speed( id );
+    }
+
+    // Update ammo for current weapon;
 
     g_iPlayerAmmo[id][weapon] = iAmmo;
 
@@ -697,7 +709,7 @@ public on_FreezeStart() {
 
     // Retrieve skill restrictions
 
-    get_cvar_string( "war3x_restrict_skills", g_RestrictedSkills, 63 );
+    get_pcvar_string( CVAR_restrict_skills, g_RestrictedSkills, 63 );
 
     new Players[32], iTotalPlayers;
     get_players( Players, iTotalPlayers );
@@ -719,30 +731,30 @@ public on_FreezeStart() {
 
             if ( g_PlayerInfo[id][CURRENT_NEXTRACE] )
             {
-                new iNextRaceId = g_PlayerInfo[id][CURRENT_NEXTRACE] - 1;
+                new next_race = g_PlayerInfo[id][CURRENT_NEXTRACE] - 1;
 
                 // Check if 0 xp
 
-                if ( !g_iXPtotal[id][iNextRaceId] )
+                if ( !g_iXPtotal[id][next_race] )
                 {
                     new iLevel = get_pcvar_num( CVAR_startlevel_other );
 
                     if ( iLevel )
                     {
-                        g_iXPtotal[id][iNextRaceId] = g_iLevelXp[iLevel];
+                        g_iXPtotal[id][next_race] = g_iLevelXp[iLevel];
 
                         new szMessage[128];
-                        format( szMessage, 127, INFO_LEVEL_OTHER, iLevel );
+                        formatex( szMessage, 127, INFO_LEVEL_OTHER, iLevel );
 
-                        client_print( id, print_chat, szMessage );
+                        client_print( id, print_chat, "%s", szMessage );
                     }
                 }
 
                 // Update Race Info
 
-                War3x_StoreSession( id, iNextRaceId );
+                War3x_StoreSession( id, next_race );
                 WAR3_hud_level( id );
-                war3_chatskills( id, iNextRaceId, 1 );
+                war3_chatskills( id, next_race, 1 );
                 WAR3_check_skills( id );
 
                 g_PlayerInfo[id][CURRENT_NEXTRACE] = 0;
@@ -838,7 +850,7 @@ public on_FreezeStart() {
 
 public on_ResetHud( id ) {
 
-    if ( !g_bWar3xEnabled || !is_user_connected( id ) )
+    if ( !g_bWar3xEnabled || !is_user_connected( id ) || !g_bPlayerConnected[id] )
         return PLUGIN_CONTINUE;
 
     if ( g_bRoundEnd )
@@ -900,7 +912,6 @@ public on_World_Action() {
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
 
-
     new szLogAction[32];
     read_logargv( 1, szLogAction, 64 );
 
@@ -913,9 +924,9 @@ public on_World_Action() {
 
         // Ultimate Warmup
 
-        if ( get_cvar_num( "war3x_ultimatewarmup" ) )
+        if ( get_pcvar_num( CVAR_ultimatewarmup ) )
         {
-            new Float:fWarmup = get_cvar_float( "war3x_ultimatewarmup" );
+            new Float:fWarmup = get_pcvar_float( CVAR_ultimatewarmup );
             set_task( fWarmup, "Ultimate_Warmup", TASK_ULTIMATEWARMUP );
 
             g_bUltimateWarmup = true;
@@ -937,16 +948,13 @@ public on_World_Action() {
         {
             new id = Players[iPlayerNum];
 
-            // DEBUG!!!
-            g_PlayerInfo[id][CURRENT_ITEM] = random_num( 1, TOTAL_SHOPITEMS - 1 );
-
             // Activate Player skills / Ultimate
 
             WAR3_enable_skills( id );
 
             // Attempt to Buy Item if Bot
-/*
-            if ( is_user_bot( id ) && !g_PlayerInfo[id][CURRENT_ITEM] && get_cvar_num( "war3x_shopmenus" ) )
+
+            if ( is_user_bot( id ) && !g_PlayerInfo[id][CURRENT_ITEM] && get_pcvar_num( CVAR_shopmenus ) )
             {
                 new Float:fRandomNum = random_float( 0.0,1.0 );
 
@@ -964,7 +972,6 @@ public on_World_Action() {
                     }
                 }
             }
-*/
         }
 
         // Upkeep
@@ -1007,15 +1014,15 @@ public on_World_Action() {
 
                 if ( g_PlayerInfo[id][CURRENT_NEXTRACE] )
                 {
-                    new iNextRaceId = g_PlayerInfo[id][CURRENT_NEXTRACE] - 1;
+                    new next_race = g_PlayerInfo[id][CURRENT_NEXTRACE] - 1;
 
                     new szMessage[64], szRaceName[32];
-					LANG_GetRaceName( iNextRaceId + 1, id, szRaceName, 31, true )
+					LANG_GetRaceName( next_race + 1, id, szRaceName, 31, true )
 
-                    format( szMessage, 63, INFO_NEWRACENOW, szRaceName );
+                    formatex( szMessage, 63, INFO_NEWRACENOW, szRaceName );
 
                     set_hudmessage( 255, 208, 0, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_INFO, 0, 6.0, 1.0, 0.1, 0.5, HUDMESSAGE_CHAN_INFO );
-                    show_hudmessage( id, szMessage );
+                    show_hudmessage( id, "%s", szMessage );
                 }
 
                 else
@@ -1232,14 +1239,12 @@ public on_Objective_Player() {
 }
 
 
-
 // Team based
 
 public on_Objective_Team() {
 
-    if ( !g_bWar3xEnabled || get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
+    if ( !g_bWar3xEnabled || get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
         return PLUGIN_CONTINUE;
-
 
     new szLogTeam[32], szLogAction[64];
 
@@ -1354,7 +1359,7 @@ public on_ThrowGren( id ) {
             // Get grenade id
 
             new szGrenade[64];
-            format( szGrenade, 63, CS_W_MODEL, CS_MODEL_NAME[CSW_HEGRENADE] );
+            formatex( szGrenade, 63, CS_W_MODEL, CS_MODEL_NAME[CSW_HEGRENADE] );
 
             new gIndex = cs_find_grenade( id, szGrenade );
 
@@ -1377,9 +1382,9 @@ public on_Health( id ) {
 
     // Berserk Check
 
-    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC )
+    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] )
     {
-        OR_S_BERSERK_speed( id );
+        OR_S_BERSERK_set_speed( id );
     }
 
     // Dispell Harmful Ultimate(s) ( bot )
@@ -1413,7 +1418,7 @@ public on_ArmorZero( id ) {
         WAR3_armorskill_off( id );
 
     g_bArmorDepleted[id] = true;
-    g_iPlayerArmor[id][ARMOR_AMMOUNT] = 0;
+    g_iPlayerArmor[id][ARMOR_AMOUNT] = 0;
     g_iPlayerArmor[id][ARMOR_TYPE] = 0;
 
     return PLUGIN_CONTINUE;
@@ -1433,7 +1438,6 @@ public on_TargetBombed() {
     if ( get_gametime() - g_fBombTime < 1.0 )
         XP_Target_Bombed_T();
 
-
     return PLUGIN_CONTINUE;
 }
 
@@ -1443,7 +1447,7 @@ public on_Zoom( id ) {
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
 
-    if ( read_data(1) < 90 )
+    if ( read_data( 1 ) < 90 )
     {
         g_bPlayerZoomed[id] = true;
     }
@@ -1464,7 +1468,6 @@ public on_WeapPickup( id ) {
 
     return PLUGIN_CONTINUE;
 }
-
 
 
 public on_UseShield( id ) {

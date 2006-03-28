@@ -373,7 +373,7 @@ static HU_U_HOLYLIGHT_heal( caster, target ) {
     new szMessage[128], szPlayerName[32];
     get_user_name( caster, szPlayerName, 31 );
 
-    format( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
+    formatex( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
 
     WAR3_status_text( target, szMessage, 3.0 );
 
@@ -422,7 +422,7 @@ static HU_U_HOLYLIGHT_damage( caster, target ) {
     new szMessage[128], szPlayerName[32];
     get_user_name( caster, szPlayerName, 31 );
 
-    format( szMessage, 127, CAST_HOLYLIGHT, szPlayerName, HOLYLIGHT_DAMAGE );
+    formatex( szMessage, 127, CAST_HOLYLIGHT, szPlayerName, HOLYLIGHT_DAMAGE );
 
     new iBlindTime = HOLYLIGHT_BLINDTIME;
     new Float:fDuration = float( iBlindTime ) + 3.0;
@@ -527,7 +527,7 @@ public HU_U_FLAMESTRIKE( arg_read[2] ) {
         new szMessage[128], szPlayerName[32];
         get_user_name( caster, szPlayerName, 31 );
 
-        format( szMessage, 127, CAST_FLAMESTRIKE, szPlayerName );
+        formatex( szMessage, 127, CAST_FLAMESTRIKE, szPlayerName );
 
         WAR3_status_text2( target, szMessage, 3.0 );
 
@@ -888,7 +888,7 @@ static HU_U_AVATAR( id ) {
     // Status text
 
     new szMessage[128];
-    format( szMessage, 127, CAST_AVATAR );
+    formatex( szMessage, 127, CAST_AVATAR );
 
     WAR3_status_text( id, szMessage, 3.0 );
 
@@ -1024,7 +1024,7 @@ static HU_U_AVATAR_finish( id ) {
     // Status text
 
     new szMessage[128];
-    format( szMessage, 127, FINISH_AVATAR );
+    formatex( szMessage, 127, FINISH_AVATAR );
 
     WAR3_status_text( id, szMessage, 3.0 );
 

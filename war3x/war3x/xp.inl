@@ -106,7 +106,7 @@ public Set_LevelXp() {
 public get_setxp_flag() {
 
     new szFlags[24];
-    get_cvar_string( "war3x_setxp_flag", szFlags, 23 );
+    get_pcvar_string( CVAR_setxp_flag, szFlags, 23 );
 
     return ( read_flags( szFlags ) );
 }
@@ -123,7 +123,7 @@ public Cmd_SetXp( id ) {
     if ( read_argc() < 4 )
     {
         new szErrorMsg[256];
-        format( szErrorMsg, 255, "* [WC3x] Invalid number of Arguments.^n* [WC3x] Format is: war3x_setxp < name/part of name > < racename/part of racename > < [+/-]new value >." );
+        formatex( szErrorMsg, 255, "* [WC3x] Invalid number of Arguments.^n* [WC3x] Format is: war3x_setxp < name/part of name > < racename/part of racename > < [+/-]new value >." );
 
         status_print( id, szErrorMsg );
     }
@@ -151,7 +151,7 @@ public Cmd_SetLevel( id ) {
     if ( read_argc() < 4 )
     {
         new szErrorMsg[256];
-        format( szErrorMsg, 255, "* [WC3x] Invalid number of Arguments.^n* [WC3x] Format is: war3x_setxp < name/part of name > < racename/part of racename > < [+/-]new value >." );
+        formatex( szErrorMsg, 255, "* [WC3x] Invalid number of Arguments.^n* [WC3x] Format is: war3x_setxp < name/part of name > < racename/part of racename > < [+/-]new value >." );
 
         status_print( id, szErrorMsg );
     }
@@ -187,7 +187,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
     if ( !playerId )
     {
         new szErrorMsg[256];
-        format( szErrorMsg, 255, "* [WC3x] WARNING: No players found matching '%s'.", szPlayerName );
+        formatex( szErrorMsg, 255, "* [WC3x] WARNING: No players found matching '%s'.", szPlayerName );
         status_print( id, szErrorMsg );
 
         return PLUGIN_HANDLED;
@@ -196,7 +196,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
     else if ( !g_PlayerInfo[playerId][CURRENT_RACE] )
     {
         new szErrorMsg[256];
-        format( szErrorMsg, 255, "* [WC3x] WARNING: XP Info for %s has not been retrieved yet.", szPlayerName );
+        formatex( szErrorMsg, 255, "* [WC3x] WARNING: XP Info for %s has not been retrieved yet.", szPlayerName );
         status_print( id, szErrorMsg );
 
         return PLUGIN_HANDLED;
@@ -264,7 +264,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
 
             if ( bAddXp )
             {
-                format( szMessage, 127, "%s has rewarded %d experience to your^n%s character", szAdminName, iNewValue, szShortRaceName );
+                formatex( szMessage, 127, "%s has rewarded %d experience to your^n%s character", szAdminName, iNewValue, szShortRaceName );
                 client_print( playerId, print_chat, "* [WC3x] %s has rewarded %d experience to your %s character", szAdminName, iNewValue, szShortRaceName );
 
                 iNewValue = iOldValue + iNewValue;
@@ -272,7 +272,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
 
             else if ( iNewValue < 0 )
             {
-                format( szMessage, 127, "%s has removed %d experience from your^n%s character", szAdminName, iNewValue * -1, szShortRaceName );
+                formatex( szMessage, 127, "%s has removed %d experience from your^n%s character", szAdminName, iNewValue * -1, szShortRaceName );
                 client_print( playerId, print_chat, "* [WC3x] %s has removed %d experience from your %s character", szAdminName, iNewValue * -1, szShortRaceName );
 
                 iNewValue = iOldValue + iNewValue;
@@ -280,7 +280,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
 
             else
             {
-                format( szMessage, 127, "%s has set your %s experience to %d", szAdminName, szShortRaceName, iNewValue );
+                formatex( szMessage, 127, "%s has set your %s experience to %d", szAdminName, szShortRaceName, iNewValue );
                 client_print( playerId, print_chat, "* [WC3x] %s has set your %s experience to %d", szAdminName, szShortRaceName, iNewValue );
             }
         }
@@ -309,7 +309,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
 
             if ( bAddXp )
             {
-                format( szMessage, 127, "%s has rewarded %d level(s) to your^n%s character", szAdminName, iNewValue, szShortRaceName );
+                formatex( szMessage, 127, "%s has rewarded %d level(s) to your^n%s character", szAdminName, iNewValue, szShortRaceName );
                 client_print( playerId, print_chat, "* [WC3x] %s has rewarded %d level(s) to your %s character", szAdminName, iNewValue, szShortRaceName );
 
                 iNewValue = iOldValue + iNewValue;
@@ -317,7 +317,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
 
             else if ( iNewValue < 0 )
             {
-                format( szMessage, 127, "%s has removed %d level(s) from your^n%s character", szAdminName, iNewValue * -1, szShortRaceName );
+                formatex( szMessage, 127, "%s has removed %d level(s) from your^n%s character", szAdminName, iNewValue * -1, szShortRaceName );
                 client_print( playerId, print_chat, "* [WC3x] %s has removed %d level(s) from your %s character", szAdminName, iNewValue * -1, szShortRaceName );
 
                 iNewValue = iOldValue + iNewValue;
@@ -325,7 +325,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
 
             else
             {
-                format( szMessage, 127, "%s has set your %s character to level %d", szAdminName, szShortRaceName, iNewValue );
+                formatex( szMessage, 127, "%s has set your %s character to level %d", szAdminName, szShortRaceName, iNewValue );
                 client_print( playerId, print_chat, "* [WC3x] %s has set your %s character to level %d", szAdminName, szShortRaceName, iNewValue );
            }
 
@@ -395,7 +395,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
 
 
     // Log Usage
-	
+
 	new szShortRaceName[16];
 	LANG_GetRaceName( iRaceId + 1, id, szShortRaceName, 15, true );
 
@@ -410,7 +410,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
     // Echo to Player that Issued Command
 
     new szConfirm[256];
-    format( szConfirm, 255, "* [WC3x] New value(s) set for %s's %s character. Old XP: %d, New XP: %d", szPlayerName, szShortRaceName, iOldValue, iNewValue );
+    formatex( szConfirm, 255, "* [WC3x] New value(s) set for %s's %s character. Old XP: %d, New XP: %d", szPlayerName, szShortRaceName, iOldValue, iNewValue );
 
     status_print( id, szConfirm );
 
@@ -421,7 +421,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
 public XP_Log_to_file( id, szCommand[16], szPlayerName[32], szRaceName[16], szNewValue[16] ) {
 
     new szLogFile[64];
-    format( szLogFile, 63, "%s/setxp_log.txt", WAR3X_DIR );
+    formatex( szLogFile, 63, "%s/setxp_log.txt", WAR3X_DIR );
 
     if ( !file_exists( szLogFile ) )
     {
@@ -437,7 +437,7 @@ public XP_Log_to_file( id, szCommand[16], szPlayerName[32], szRaceName[16], szNe
     get_time( "%m.%d.%Y %H:%M:%S", szCurrentTime, 31 );
 
     new szLogEntry[256];
-    format( szLogEntry, 255, "[%s] %s (%s) used command: '%s %s %s %s'", szCurrentTime, szAdminName, g_SaveIds[id], szCommand, szPlayerName, szRaceName, szNewValue );
+    formatex( szLogEntry, 255, "[%s] %s (%s) used command: '%s %s %s %s'", szCurrentTime, szAdminName, g_SaveIds[id], szCommand, szPlayerName, szRaceName, szNewValue );
 
     write_file( szLogFile, szLogEntry, -1 );
 
@@ -516,8 +516,8 @@ public XP_Remove( id, iOldXp, iNewXp ) {
 
 public XP_Objective_Player( id, Float:fObjectiveXp ) {
 
-    new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-    new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+    new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+    new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
     new Float:fLevel = float( iLevel );
@@ -546,8 +546,8 @@ public XP_Objective_Share( id, teamId, iRadius, Float:fShareXp ) {
 
     if ( get_distance( Origin, teamOrigin ) / 40 <= iRadius )
     {
-        new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-        new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+        new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+        new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
         new iLevel = WAR3_get_level( g_PlayerInfo[teamId][CURRENT_XP] );
         new Float:fLevel = float( iLevel );
@@ -598,44 +598,44 @@ public XP_Objective_Team( szTeamName[], iTeamXp ) {
 
 // XP Awarded on Kill
 
-public XP_Kill( killerId, victim, weapon, Headshot ) {
+public XP_Kill( killer, victim, weapon, headshot ) {
 
     // Update streaks
 
-    g_PlayerInfo[killerId][CURRENT_KILLSTREAK] += 1;
-    g_PlayerInfo[killerId][CURRENT_DEATHSTREAK] = 0;
+    g_PlayerInfo[killer][CURRENT_KILLSTREAK] += 1;
+    g_PlayerInfo[killer][CURRENT_DEATHSTREAK] = 0;
 
-    new iKillerLevel = WAR3_get_level( g_PlayerInfo[killerId][CURRENT_XP] );
+    new killerLevel = WAR3_get_level( g_PlayerInfo[killer][CURRENT_XP] );
 
-    if ( iKillerLevel == 10 )
+    if ( killerLevel == 10 )
         return PLUGIN_HANDLED;
 
 
-    new iKillerNewXp, iKillerOldXp;
+    new killerNewXp, killerOldXp;
     new Float:fKillXp, iLevelBonusXp, iKillStreakXp, iObjectiveXp;
 
     new iVictimLevel = WAR3_get_level( g_PlayerInfo[victim][CURRENT_XP] );
 
-    new Float:fKillerLevel = float( iKillerLevel );
+    new Float:fKillerLevel = float( killerLevel );
     new Float:fVictimLevel = float( iVictimLevel );
 
-    new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-    new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+    new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+    new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
     // Kill XP
 
     new Float:fKill = XP_KILL;
     fKillXp = fKill * fMultiplier * g_fWeaponXp[weapon];
 
-    // Check for Headshot
+    // Check for headshot
 
-    if ( Headshot )
+    if ( headshot )
         fKillXp *= XP_HEADSHOT_MULTIPLIER;
 
 
     // Award Level Bonus
 
-    if ( iVictimLevel > iKillerLevel )
+    if ( iVictimLevel > killerLevel )
     {
         new Float:fLevelBonus = XP_LEVELBONUS * ( fVictimLevel - fKillerLevel );
         iLevelBonusXp = floatround( fLevelBonus * fMultiplier );
@@ -643,12 +643,12 @@ public XP_Kill( killerId, victim, weapon, Headshot ) {
 
     // Check for Killstreak XP Bonus
 
-    if ( g_PlayerInfo[killerId][CURRENT_KILLSTREAK] > 0 && g_PlayerInfo[killerId][CURRENT_KILLSTREAK] % XP_KILLSTREAK_NUM == 0 )
+    if ( g_PlayerInfo[killer][CURRENT_KILLSTREAK] > 0 && g_PlayerInfo[killer][CURRENT_KILLSTREAK] % XP_KILLSTREAK_NUM == 0 )
     {
         new Float:fKillStreak = XP_KILLSTREAK;
 
-        iKillStreakXp = ( g_PlayerInfo[killerId][CURRENT_KILLSTREAK] / XP_KILLSTREAK_NUM ) * floatround( fKillStreak * fMultiplier );
-        client_print( killerId, print_chat, XP_KILLSTREAK_MESSAGE, iKillStreakXp, g_PlayerInfo[killerId][CURRENT_KILLSTREAK] );
+        iKillStreakXp = ( g_PlayerInfo[killer][CURRENT_KILLSTREAK] / XP_KILLSTREAK_NUM ) * floatround( fKillStreak * fMultiplier );
+        client_print( killer, print_chat, XP_KILLSTREAK_MESSAGE, iKillStreakXp, g_PlayerInfo[killer][CURRENT_KILLSTREAK] );
     }
 
     // Objective XP
@@ -662,7 +662,7 @@ public XP_Kill( killerId, victim, weapon, Headshot ) {
         new Float:fKillVip = XP_KILLVIP;
 
         iObjectiveXp = floatround( fKillVip * fMultiplier * fObjMultiplier + ( fKillerLevel * fObjLevelBonus ) );
-        client_print( killerId, print_chat, XP_KILLVIP_MESSAGE, iObjectiveXp );
+        client_print( killer, print_chat, XP_KILLVIP_MESSAGE, iObjectiveXp );
     }
 
     // Check if Bomb Planter Killed
@@ -672,7 +672,7 @@ public XP_Kill( killerId, victim, weapon, Headshot ) {
         new Float:fKillPlanter = XP_KILLPLANTER;
 
         iObjectiveXp = floatround( fKillPlanter * fMultiplier * fObjMultiplier + ( fKillerLevel * fObjLevelBonus ) );
-        client_print( killerId, print_chat, XP_KILLPLANTER_MESSAGE, iObjectiveXp );
+        client_print( killer, print_chat, XP_KILLPLANTER_MESSAGE, iObjectiveXp );
     }
 
     // Check if Bomb Defuser Killed
@@ -682,7 +682,7 @@ public XP_Kill( killerId, victim, weapon, Headshot ) {
         new Float:fKillDefuser = XP_KILLDEFUSER;
 
         iObjectiveXp = floatround( fKillDefuser * fMultiplier * fObjMultiplier + ( fKillerLevel * fObjLevelBonus ) );
-        client_print( killerId, print_chat, XP_KILLDEFUSER_MESSAGE, iObjectiveXp );
+        client_print( killer, print_chat, XP_KILLDEFUSER_MESSAGE, iObjectiveXp );
     }
 
     // Check if Hostage Rescuer Killed
@@ -692,7 +692,7 @@ public XP_Kill( killerId, victim, weapon, Headshot ) {
         new Float:fKillRescuer = XP_HOSTAGE_KILLRESCUER;
 
         iObjectiveXp = floatround( fKillRescuer * fMultiplier * fObjMultiplier + ( fKillerLevel * fObjLevelBonus ) );
-        client_print( killerId, print_chat, XP_HOSTAGE_KILLRESCUER_MESSAGE, iObjectiveXp );
+        client_print( killer, print_chat, XP_HOSTAGE_KILLRESCUER_MESSAGE, iObjectiveXp );
 
         g_bTouchHostage[victim] = false;
     }
@@ -700,10 +700,10 @@ public XP_Kill( killerId, victim, weapon, Headshot ) {
 
     // Give XP if race is selected
 
-    iKillerOldXp = g_PlayerInfo[killerId][CURRENT_XP];
-    iKillerNewXp = iKillerOldXp + floatround( fKillXp ) + iLevelBonusXp + iKillStreakXp + iObjectiveXp;
+    killerOldXp = g_PlayerInfo[killer][CURRENT_XP];
+    killerNewXp = killerOldXp + floatround( fKillXp ) + iLevelBonusXp + iKillStreakXp + iObjectiveXp;
 
-    XP_Give( killerId, iKillerOldXp, iKillerNewXp );
+    XP_Give( killer, killerOldXp, killerNewXp );
 
     return PLUGIN_HANDLED;
 }
@@ -719,14 +719,14 @@ public XP_Kill_Teammate( id ) {
         return PLUGIN_HANDLED;
 
 
-    new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
+    new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
     new Float:fTeamKill = XP_TEAMKILL;
 
-    new iKillerOldXp = g_PlayerInfo[id][CURRENT_XP];
-    new iKillerNewXp = g_PlayerInfo[id][CURRENT_XP] - floatround( fTeamKill * fMultiplier );
+    new killerOldXp = g_PlayerInfo[id][CURRENT_XP];
+    new killerNewXp = g_PlayerInfo[id][CURRENT_XP] - floatround( fTeamKill * fMultiplier );
 
 
-    new iXpLoss = XP_Remove( id, iKillerOldXp, iKillerNewXp );
+    new iXpLoss = XP_Remove( id, killerOldXp, killerNewXp );
 
     if ( iXpLoss )
         client_print( id, print_chat, XP_TEAMKILL_MESSAGE, iXpLoss );
@@ -763,7 +763,7 @@ public XP_Death( id ) {
 
 public XP_Hostage_Touch( id ) {
 
-    if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
+    if ( get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
         return PLUGIN_HANDLED;
 
 
@@ -793,7 +793,7 @@ public XP_Hostage_Touch( id ) {
 
 public XP_Hostage_Rescued( id ) {
 
-    if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
+    if ( get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
         return PLUGIN_HANDLED;
 
 
@@ -801,8 +801,8 @@ public XP_Hostage_Rescued( id ) {
 
         // Give XP to all alive CTs within share radius
 
-        new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-        new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+        new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+        new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
         new szTeamName[16];
         new vTeamPlayers[32], iTotalPlayers;
@@ -848,7 +848,7 @@ public XP_Hostage_Rescued( id ) {
 
 public XP_Hostage_Killed( id ) {
 
-    if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) || !g_PlayerInfo[id][CURRENT_RACE] )
+    if ( get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) || !g_PlayerInfo[id][CURRENT_RACE] )
         return PLUGIN_HANDLED;
 
 
@@ -856,8 +856,8 @@ public XP_Hostage_Killed( id ) {
 
     if ( g_iHostageKills[id] > XP_KILLHOSTAGE_NUM && iLevel < 10 )
     {
-        new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-        new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+        new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+        new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
         new Float:fKillHostage = XP_KILLHOSTAGE;
 
@@ -884,7 +884,7 @@ public XP_Hostage_Killed( id ) {
 
 public XP_Bomb_Pickup( id ) {
 
-    if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) || get_user_team( id ) != CS_TEAM_TERRORIST )
+    if ( get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) || get_user_team( id ) != CS_TEAM_TERRORIST )
         return PLUGIN_HANDLED;
 
 
@@ -899,8 +899,8 @@ public XP_Bomb_Pickup( id ) {
 
         else
         {
-            new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-            new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+            new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+            new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
             new Float:fLevel = float( iLevel );
 
@@ -921,7 +921,7 @@ public XP_Bomb_Pickup( id ) {
 
 public XP_Bomb_Drop( id ) {
 
-    if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
+    if ( get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
         return PLUGIN_HANDLED;
 
 
@@ -936,7 +936,7 @@ public XP_Bomb_Drop( id ) {
 
 public XP_Bomb_Plant( id ) {
 
-    if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
+    if ( get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
         return PLUGIN_HANDLED;
 
 
@@ -966,7 +966,7 @@ public XP_Bomb_Plant( id ) {
 
 public XP_Bomb_Share( id ) {
 
-    if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
+    if ( get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
         return PLUGIN_HANDLED;
 
 
@@ -1002,7 +1002,7 @@ public XP_Bomb_Share( id ) {
 
 public XP_Bomb_Defuse( id ) {
 
-    if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
+    if ( get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
         return PLUGIN_HANDLED;
 
 
@@ -1032,7 +1032,7 @@ public XP_Bomb_Defuse( id ) {
 
 public XP_Defuse_Share( id ) {
 
-    if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
+    if ( get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
         return PLUGIN_HANDLED;
 
 
@@ -1068,7 +1068,7 @@ public XP_Defuse_Share( id ) {
 
 public XP_Vip_Spawn( id ) {
 
-    if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
+    if ( get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
         return PLUGIN_HANDLED;
 
 
@@ -1081,8 +1081,8 @@ public XP_Vip_Spawn( id ) {
 
         else
         {
-            new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-            new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+            new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+            new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
             new Float:fLevel = float( iLevel );
 
@@ -1103,7 +1103,7 @@ public XP_Vip_Spawn( id ) {
 
 public XP_Vip_Escape( id ) {
 
-    if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
+    if ( get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
         return PLUGIN_HANDLED;
 
 
@@ -1133,7 +1133,7 @@ public XP_Vip_Escape( id ) {
 
 public XP_Vip_Share( id ) {
 
-    if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
+    if ( get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
         return PLUGIN_HANDLED;
 
 
@@ -1175,11 +1175,11 @@ public XP_Target_Bombed_T() {
 
     #if XP_TARGETBOMBED
 
-		if ( get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
+		if ( get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
 			return PLUGIN_HANDLED;
 
-        new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-        new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+        new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+        new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
         new Float:fTargetBombed = XP_TARGETBOMBED;
 
@@ -1207,8 +1207,8 @@ public XP_Target_Saved_T() {
 
     #if XP_TARGETSAVED_T
 
-        new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-        new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+        new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+        new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
         new Float:fTargetSaved = XP_TARGETSAVED_T;
 
@@ -1247,8 +1247,8 @@ public XP_Target_Saved_CT() {
 
     #if XP_TARGETSAVED_CT
 
-        new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-        new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+        new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+        new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
         new Float:fTargetSaved = XP_TARGETSAVED_CT;
 
@@ -1272,8 +1272,8 @@ public XP_Not_Escaped_T() {
 
     #if XP_VIPNOTESCAPE_T
 
-        new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-        new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+        new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+        new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
         new Float:fVipNotEscape = XP_VIPNOTESCAPE_T;
 
@@ -1301,8 +1301,8 @@ public XP_Not_Escaped_VIP() {
 
     #if XP_VIPNOTESCAPE_VIP
 
-        new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-        new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+        new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+        new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
         new Float:fVipNotEscape = XP_VIPNOTESCAPE_VIP;
 
@@ -1329,8 +1329,8 @@ public XP_Not_Rescued_T() {
 
     #if XP_HOSTAGENOTRESCUED_T
 
-        new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-        new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+        new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+        new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
         new Float:fNotRescued = XP_HOSTAGENOTRESCUED_T;
 
@@ -1358,8 +1358,8 @@ public XP_Not_Rescued_CT() {
 
     #if XP_HOSTAGENOTRESCUED_CT
 
-        new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-        new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+        new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+        new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
         new Float:fNotRescued = XP_HOSTAGENOTRESCUED_CT;
 
@@ -1398,8 +1398,8 @@ public XP_All_Hostages_CT() {
 
     #if XP_ALLHOSTAGESRESCUED
 
-        new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
-        new Float:fObjMultiplier = get_cvar_float( "war3x_xp_objective" );
+        new Float:fMultiplier = get_pcvar_float( CVAR_xp_normal );
+        new Float:fObjMultiplier = get_pcvar_float( CVAR_xp_objective );
 
         new Float:fAllHostages = XP_ALLHOSTAGESRESCUED;
 
@@ -1433,7 +1433,7 @@ public XP_Support_Heal( caster, iHealthGiven ) {
     }
 
 
-    new Float:fSupportXp = float( iHealthGiven ) * XP_SUPPORT_HEAL * get_cvar_float( "war3x_xp_normal" );
+    new Float:fSupportXp = float( iHealthGiven ) * XP_SUPPORT_HEAL * get_pcvar_float( CVAR_xp_normal );
     new iSupportXp = floatround( fSupportXp );
 
     g_iXPsupport[caster][XP_ROUND] += iSupportXp;

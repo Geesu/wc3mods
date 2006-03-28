@@ -170,7 +170,7 @@ public WAR3_race_info( id, iRaceId, iSkillNum, szData[64] ) {
 public WAR3_precache_sound( szWar3Sound[], szDefaultSound[] ) {
 
     new szWar3SoundPath[64];
-    format( szWar3SoundPath, 63, "sound/%s", szWar3Sound );
+    formatex( szWar3SoundPath, 63, "sound/%s", szWar3Sound );
 
     if ( file_exists( szWar3SoundPath ) )
         precache_sound( szWar3Sound );
@@ -492,7 +492,7 @@ public WAR3_restrict_check( id ) {
 
     // Check current item
 
-    if ( get_cvar_bitsum( "war3x_restrict_items" ) & WAR3_get_item_flag( g_PlayerInfo[id][CURRENT_ITEM] ) )
+    if ( get_pcvar_bitsum( CVAR_restrict_items ) & WAR3_get_item_flag( g_PlayerInfo[id][CURRENT_ITEM] ) )
     {
         // Give back full cash ammount
 
@@ -501,7 +501,7 @@ public WAR3_restrict_check( id ) {
 
     // Check current race
 
-    if ( get_cvar_bitsum( "war3x_restrict_races" ) & WAR3_get_race_flag( g_PlayerInfo[id][CURRENT_RACE] - 1 ) )
+    if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( g_PlayerInfo[id][CURRENT_RACE] - 1 ) )
     {
         // Reset player race
 
@@ -515,7 +515,7 @@ public WAR3_restrict_check( id ) {
 
         // check current ultimate(s). if restricted, inform player. (set bool)
 
-        if ( get_cvar_bitsum( "war3x_restrict_races" ) & WAR3_get_race_flag( g_PlayerInfo[id][CURRENT_RACE] - 1 ) )
+        if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( g_PlayerInfo[id][CURRENT_RACE] - 1 ) )
     */
 
     return PLUGIN_HANDLED;
@@ -535,7 +535,7 @@ public WAR3_hud_xp( id, iEffect, Float:fFxTime, Float:fFadeIn, Float:fFadeOut, F
     new Float:fPercentage = ( float( iCurrentXp ) - float( iLastlvlXp ) ) / ( float( iNextlvlXp ) - float( iLastlvlXp ) ) * 100.0;
 
     new szMessage[64];
-    format( szMessage, 63, "XP: %i/%i (%0.0f%s)", iCurrentXp, iNextlvlXp, fPercentage, "%%" );
+    formatex( szMessage, 63, "XP: %i/%i (%0.0f%s)", iCurrentXp, iNextlvlXp, fPercentage, "%%" );
 
     // Get Coordinates
 
@@ -560,11 +560,11 @@ public WAR3_hud_item( id, iEffect, Float:fFxTime, Float:fFadeIn, Float:fFadeOut,
     new szMessage[64], szItemName[32];
 	LANG_GetItemName ( g_PlayerInfo[id][CURRENT_ITEM], SHOP_COMMON, id, szItemName, 31 )
 
-	
+
 	new szShortRaceName[16];
 	LANG_GetRaceName( iRaceNum + 1, id, szShortRaceName, 15, true );
 
-    format( szMessage, 63, "%s Level %i   Item: %s", szShortRaceName, iLevel, szItemName );
+    formatex( szMessage, 63, "%s Level %i   Item: %s", szShortRaceName, iLevel, szItemName );
 
     // Get Coordinates
 
@@ -812,7 +812,7 @@ public WAR3_damage( attacker, victim, weapon, iDamage, headshot, iCheckArmor ) {
 
 // Death by Warcraft 3 Skill
 
-public WAR3_death( killerId, victim, weapon, Headshot ) {
+public WAR3_death( killer, victim, weapon, headshot ) {
 
     if ( !is_user_alive( victim ) && !g_PlayerImpaled[victim] )
         return PLUGIN_HANDLED;
@@ -826,42 +826,42 @@ public WAR3_death( killerId, victim, weapon, Headshot ) {
 
     // Make sure death was not to DoT from disconnected killer
 
-    if ( is_user_connected( killerId ) )
+    if ( is_user_connected( killer ) )
     {
         // Check if Teamkill
 
-        if ( get_user_team( killerId ) == get_user_team( victim ) && killerId != victim )
+        if ( get_user_team( killer ) == get_user_team( victim ) && killer != victim )
         {
-            XP_Kill_Teammate( killerId );
+            XP_Kill_Teammate( killer );
 
-            cs_update_money( killerId, -3300, 1 );
+            cs_update_money( killer, -3300, 1 );
 
-            new iKillerFrags = get_user_frags( killerId ) - 1;
-            new iKillerDeaths = get_user_deaths( killerId );
+            new killerFrags = get_user_frags( killer ) - 1;
+            new killerDeaths = get_user_deaths( killer );
 
-            set_user_frags( killerId, iKillerFrags );
+            set_user_frags( killer, killerFrags );
 
             // Update frags ( realtime )
 
-            Create_ScoreInfo( SHOWTO_ALL, killerId, iKillerFrags, iKillerDeaths, 0, get_user_team( killerId ) );
+            Create_ScoreInfo( SHOWTO_ALL, killer, killerFrags, killerDeaths, 0, get_user_team( killer ) );
         }
 
         // Normal Kill
 
         else
         {
-            XP_Kill( killerId, victim, weapon, Headshot );
+            XP_Kill( killer, victim, weapon, headshot );
 
-            cs_update_money( killerId, 300, 1 );
+            cs_update_money( killer, 300, 1 );
 
-            new iKillerFrags = get_user_frags( killerId ) + 1;
-            new iKillerDeaths = get_user_deaths( killerId );
+            new killerFrags = get_user_frags( killer ) + 1;
+            new killerDeaths = get_user_deaths( killer );
 
-            set_user_frags( killerId, iKillerFrags );
+            set_user_frags( killer, killerFrags );
 
             // Update frags ( realtime )
 
-            Create_ScoreInfo( SHOWTO_ALL, killerId, iKillerFrags, iKillerDeaths, 0, get_user_team( killerId ) );
+            Create_ScoreInfo( SHOWTO_ALL, killer, killerFrags, killerDeaths, 0, get_user_team( killer ) );
         }
     }
 
@@ -934,7 +934,7 @@ public WAR3_death( killerId, victim, weapon, Headshot ) {
             case CSW_FROSTNOVA:     copy( szWeaponName, 31, "frost nova" );
         }
 
-        Create_DeathMsg( SHOWTO_ALL, killerId, victim, Headshot, szWeaponName );
+        Create_DeathMsg( SHOWTO_ALL, killer, victim, headshot, szWeaponName );
     }
 
     // Log Death
@@ -942,13 +942,13 @@ public WAR3_death( killerId, victim, weapon, Headshot ) {
     new szKillerName[32], szVictimName[32];
     new szKillerTeam[32], szVictimTeam[32];
 
-    get_user_name( killerId, szKillerName, 31 );
+    get_user_name( killer, szKillerName, 31 );
     get_user_name( victim, szVictimName, 31 );
 
-    get_user_team( killerId, szKillerTeam, 31 );
+    get_user_team( killer, szKillerTeam, 31 );
     get_user_team( victim, szVictimTeam, 31 );
 
-    log_message( "^"%s<%d><%s><%s>^" killed ^"%s<%d><%s><%s>^" with ^"%s^"", szKillerName, get_user_userid( killerId ), g_SaveIds[killerId], szKillerTeam, szVictimName, get_user_userid( victim ), g_SaveIds[victim], szVictimTeam, szWeaponName );
+    log_message( "^"%s<%d><%s><%s>^" killed ^"%s<%d><%s><%s>^" with ^"%s^"", szKillerName, get_user_userid( killer ), g_SaveIds[killer], szKillerTeam, szVictimName, get_user_userid( victim ), g_SaveIds[victim], szVictimTeam, szWeaponName );
 
     return PLUGIN_HANDLED;
 }
@@ -976,7 +976,7 @@ public WAR3_player_init( id ) {
     {
         g_iXPtotal[id][iRaceId] = 0;
 
-		if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+		if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 		{
            	g_iXPfetched[id][iRaceId] = 0;
         }
@@ -999,29 +999,15 @@ public WAR3_player_init( id ) {
 }
 
 
-public WAR3_players_init() {
-
-    new Players[32], iTotalPlayers;
-    get_players( Players, iTotalPlayers );
-
-    for ( new iPlayerNum = 0; iPlayerNum < iTotalPlayers; iPlayerNum++ )
-    {
-        new id = Players[iPlayerNum];
-        WAR3_player_init( id );
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-// Added by Geesu
 public WAR3_player_valid( id )
 {
-	if ( id > 0 && id <= get_maxplayers() )
+	if ( id > 0 && id <= get_global_int( GL_maxClients ) )
 	{
-		return true;
+        if ( g_bPlayerConnected[id] )
+    		return ( 1 );
 	}
 
-	return false;
+	return ( 0 );
 }
 
 

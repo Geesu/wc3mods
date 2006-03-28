@@ -508,7 +508,7 @@ public cs_status_target( id ) {
         iHealth -= 1024;
 
         new szHealth[8];
-        format( szHealth, 7, "%d%%", iHealth );
+        formatex( szHealth, 7, "%d%%", iHealth );
 
         replace( g_TargetFormat[id], 127, "%i3%%", szHealth );
     }

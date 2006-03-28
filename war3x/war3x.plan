@@ -6,19 +6,30 @@ BIG CHANGES:
 
 * New Feature - Kill Assists
   (If you deal more than 50% of damage to a player, you will receive some xp.)
+
 * New Feature - Stats System
   (This will be the implementation of our stats system. We will reward for support, aggression, and all types of gameplay. These will be used locally on the game server for patch 1.1 and will be loaded into the database for version 1.2.)
+
 * OPTIMIZATION
-  (format/formatex/cvar pointers/function renaming/etc)
+	--cvar pointers added! (RYAN)
+	--format -> formatex (RYAN)
+	* function/variable renaming
+	* the "DONT'S" of formatting.. fixed (%%'s etc) (dont pass direct commands into buffers - use client_print( id, "%s", buffer )
+
 * ADMIN MENU
+
+* FULL MULTILINGUAL SUPPORT
 
 * use 'dynamic' hudmessage positions (UNSURE YET..)
 * keep autosnipers disabled? - or just disable them on a per-skill basis?
+--add shopmenu command from chat (RYAN)
 
 
 SKILL CHANGES:
 --------------
---frost nova - increase range, maybe damage. I kinda like this skill now with sounds :)
+--frost nova - increased range (RYAN)
+--frost nova - increased damage slightly (RYAN)
+* bug in unholy aura gravity (it decreases oops)
 * impale change (stun on land 1-3 secs)
 
 * flame strike mod - more damage each second in the strike. countdown from that amount when outside.
@@ -26,22 +37,27 @@ SKILL CHANGES:
 * flame strike change - make targetable on ground
 
 * regeneration requires armor to use
+--berserk speed possible crash fix (RYAN)
+--berserk speed recode to work correctly with boots (RYAN)
 
---Fortitude - health reduced by 5.
---Bash - chance reduced by 5% each level
+--Fortitude - health reduced by 5. (RYAN)
+--Bash - chance reduced by 5% each level (RYAN)
+
 
 
 MISC CHANGES:
 
+--Added a new welcome message to players that join the server (since the previous
+  was has not been viewable since WON CS 1.5 unless console was pulled down) (RYAN)
+--Players will no longer be able to move for strange reasons while under the effects
+  of a slowing or immobilizing abilities (sleep/root/etc) (RYAN)
 * check invis cooldown? possible crashing...
 * fix ankh?
 * fix flame strike and amulet
-* berserk recode speed change to include boots
 * figure out how to set random number for root because of 2 diff functions that call
 * remove 'buyback' from item purchasing and just have modified price in list
 * implement some kind of last target variable that can be used for target skills etc.
 * remove voting????
-* sleep not stopping! (HMM WEIRD) (maybe some slow/immo is overriding)
 * make check for cfg and sprite file(s), if not found, don't load
 * !g_bPlayerSleeping (make some generalize invuln thing) 
 * replace all distance/40 by get_distance (statsx stock)
@@ -51,6 +67,9 @@ MISC CHANGES:
 * don't come out of invis on grenade damage dealt
 * change invis cooldown to 1 second after being healed.. maybe fade back in
 * recode human invisibility to take cloak into affect
+* make global(s) for mp_playerid
+* move all commands to commands.inl (setxp/etc)
+* call windwalk_notify from _strike??
 
 
 
@@ -512,3 +531,14 @@ DEATH COIIL- RELATED
 671.9872: Native parameters: (1094713344, 1120403456)
 671.9872: Native returned: 1039516303
 671.9872: Binary log corrupt past this point.
+
+
+
+
+
+L 03/27/2006 - 21:43:21: [ENGINE] Invalid player 0 (not in-game) 
+ L 03/27/2006 - 21:43:21: [AMXX] Displaying debug trace (plugin "war3x.amxx") 
+ L 03/27/2006 - 21:43:21: [AMXX] Run time error 10: native error (native "dbg_trace_next") 
+ L 03/27/2006 - 21:43:21: [AMXX]    [0] UTIL_war3x.inc::WAR3_is_invisible (line 1070) 
+ L 03/27/2006 - 21:43:21: [AMXX]    [1] shared.inl::WAR3_death_victim (line 1033) 
+ L 03/27/2006 - 21:43:21: [AMXX]    [2] events.inl::on_Death (line 599)

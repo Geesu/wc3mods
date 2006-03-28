@@ -108,7 +108,7 @@ public Ultimate_Icon( id, iStatus ) {
 
     // Make sure server enabled
 
-    if ( !get_cvar_num( "war3x_statusicons" ) && iStatus == ICON_SHOW )
+    if ( !get_pcvar_num( CVAR_statusicons ) && iStatus == ICON_SHOW )
         return PLUGIN_HANDLED;
 
     // Make sure ultimate was cast
@@ -469,7 +469,7 @@ public Ultimate_Ready( id ) {
             // Play client sound
 
             new szCommand[32];
-            format( szCommand, 31, "speak %s", SOUND_ULTIMATEREADY );
+            formatex( szCommand, 31, "speak %s", SOUND_ULTIMATEREADY );
 
             client_cmd( id, szCommand );
 

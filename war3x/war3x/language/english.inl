@@ -103,6 +103,7 @@ new const RACE7CLASS[_TC][] =       // DRAENEI CLASSES:
 
 
 new const STATUS_PREFIX[]               = "* [WC3x]  S T A T U S   T E X T :  ";
+new const WAR3X_PREFIX[]                = "* [WC3x]";
 
 new const CANT_TARGET[]                 = "Unable to target player.";
 new const CANT_TARGET_SELF[]            = "Unable to target Self.";
@@ -400,6 +401,8 @@ new const LANGUAGE_COMMON_OFF[]             = "OFF";
 
 
 /* -------------------------------------------------------------- */
+
+
 
 #endif
 

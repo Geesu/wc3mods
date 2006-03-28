@@ -19,7 +19,7 @@ public SHARED_GLOW_set( id, Float:fGlowTime, iRGB[3], iAmmount ) {
 
     new parm_Fade[3];
     parm_Fade[GLOW_ID] = id;
-    parm_Fade[GLOW_AMMOUNT] = iAmmount;
+    parm_Fade[GLOW_AMOUNT] = iAmmount;
     parm_Fade[GLOW_FADEOUT] = 10;
 
     set_task( fGlowTime, "SHARED_GLOW_fade", task, parm_Fade, 3 );
@@ -32,7 +32,7 @@ public SHARED_GLOW_set( id, Float:fGlowTime, iRGB[3], iAmmount ) {
 public SHARED_GLOW_fade( parm_Fade[3] ) {
 
     new id       = parm_Fade[GLOW_ID];
-    new iAmmount = parm_Fade[GLOW_AMMOUNT];
+    new iAmmount = parm_Fade[GLOW_AMOUNT];
     new iCounter = parm_Fade[GLOW_FADEOUT];
 
     new Float:fRGB[3];
@@ -201,7 +201,7 @@ public SHARED_INVIS_icon( id, iStatus ) {
 
     // Make sure server enabled
 
-    if ( !get_cvar_num( "war3x_statusicons" ) && iStatus == ICON_SHOW )
+    if ( !get_pcvar_num( CVAR_statusicons ) && iStatus == ICON_SHOW )
         return PLUGIN_HANDLED;
 
     // Make sure player is alive before showing
@@ -284,7 +284,7 @@ public Dispell_Negative( dispellerId, targetId )
 
     if ( g_PlayerStruck[targetId] )
     {
-        format( szMessage, 127, DISPELL_SHADOWSTRIKE, szPlayerName );
+        formatex( szMessage, 127, DISPELL_SHADOWSTRIKE, szPlayerName );
 
         WAR3_status_text( g_PlayerStruck[targetId], szMessage, 3.0 );
 
@@ -296,7 +296,7 @@ public Dispell_Negative( dispellerId, targetId )
 
     if ( g_PlayerRooted[targetId] )
     {
-        format( szMessage, 127, DISPELL_ROOTS, szPlayerName );
+        formatex( szMessage, 127, DISPELL_ROOTS, szPlayerName );
 
         WAR3_status_text( g_PlayerRooted[targetId], szMessage, 3.0 );
 
@@ -725,7 +725,7 @@ public _WAR3_set_speed( parm_Speed[1] ) {
 
 		else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && ( weapon == CSW_KNIFE || cs_get_weapon_type_( weapon ) == CS_WEAPON_TYPE_GRENADE ) )
 		{
-			OR_S_BERSERK_speed( id );
+			OR_S_BERSERK_set_speed( id );
 		}
 
         // Boots of speed
@@ -1091,7 +1091,7 @@ public Purge_PlayerInfo( id ) {
 		g_iXPtotal[id][iRaceId] = 0;
 
 
-		if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+		if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 		{
          	g_iXPfetched[id][iRaceId] = 0;
 		}
@@ -1108,7 +1108,7 @@ public WAR3_toggle( id ) {
 
     if ( !( get_user_flags( id ) & ADMIN_RCON ) )
     {
-        client_print( id, print_console, "[%s] You have no access to that command.", AMX_NAME );
+        client_print( id, print_console, "[AMXX] You have no access to that command." );
         return PLUGIN_HANDLED;
     }
 
@@ -1140,7 +1140,7 @@ public WAR3_enable( id ) {
 
 
     client_print( id, print_console, WAR3_enableD );
-    set_cvar_num( "war3x_enabled", 1 );
+    set_pcvar_num( CVAR_enabled, 1 );
 
 
     // Show Hudmessage
@@ -1163,7 +1163,7 @@ public WAR3_disable( id ) {
     }
 
     client_print( id, print_console, WAR3_disableD );
-    set_cvar_num( "war3x_enabled", 0 );
+    set_pcvar_num( CVAR_enabled, 0 );
 
 
     // Kill Hudmessage(s)
@@ -1215,13 +1215,13 @@ public WAR3_disable( id ) {
 
 public WAR3_vote_start( id ) {
 
-    if ( !get_cvar_num( "war3x_vote_allow" ) && !( get_user_flags( id ) & ADMIN_VOTE ) )
+    if ( !get_pcvar_num( CVAR_vote_allow ) && !( get_user_flags( id ) & ADMIN_VOTE ) )
     {
         client_print( id, print_chat, WAR3X_VOTE_NOVOTE );
         return PLUGIN_HANDLED;
     }
 
-    if ( get_user_flags( id ) & ADMIN_VOTE || get_cvar_num( "war3x_vote_allow" ) )
+    if ( get_user_flags( id ) & ADMIN_VOTE || get_pcvar_num( CVAR_vote_allow ) )
     {
         if ( g_fVoteRunning > get_gametime() )
         {
@@ -1241,17 +1241,17 @@ public WAR3_vote_start( id ) {
         new iKeys = (1<<0)|(1<<1);
 
         if ( g_bWar3xEnabled )
-            format( szMenu, 255, MENU_VOTE_DISABLE );
+            formatex( szMenu, 255, MENU_VOTE_DISABLE );
 
         else
         {
-            format( szMenu, 255, MENU_VOTE_ENABLE );
+            formatex( szMenu, 255, MENU_VOTE_ENABLE );
         }
 
         new Float:fVoteTime = get_cvar_float( "amx_vote_time" ) + 2.0;
 
         g_fVoteRunning = get_gametime() + fVoteTime;
-        g_fVoteRatio = get_cvar_float( "war3x_vote_ratio" );
+        g_fVoteRatio = get_pcvar_float( CVAR_vote_ratio );
 
         show_menu( 0, iKeys, szMenu, floatround( fVoteTime ) );
         set_task( fVoteTime, "WAR3_vote_tally" );
@@ -1349,7 +1349,7 @@ public WAR3_check_level( id, iOldXp, iNewXp ) {
         new iLevel = WAR3_get_level( iNewXp );
 
         new szMessage[64];
-        format( szMessage, 63, INFO_GAINLEVEL, iLevel );
+        formatex( szMessage, 63, INFO_GAINLEVEL, iLevel );
 
         set_hudmessage( 255, 255, 255, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_INFO, 0, 6.0, 5.0, 0.1, 0.5, HUDMESSAGE_CHAN_INFO );
         show_hudmessage( id, szMessage );
@@ -1441,7 +1441,7 @@ public War3x_GetSkillCheck( iLevel, iSkillLevel ) {
 
 public WAR3_map_start() {
 
-    if ( !get_cvar_num( "war3x_enabled" ) )
+    if ( !get_pcvar_num( CVAR_enabled ) )
         return PLUGIN_HANDLED;
 
     g_bWar3xEnabled = true;
@@ -1453,11 +1453,11 @@ public WAR3_map_start() {
 
     // Save XP?
 
-    if ( get_cvar_num( "war3x_save_xp" ) == 1 && !g_bMapRestricted )
+    if ( get_pcvar_num( CVAR_save_xp ) == 1 && !g_bMapRestricted )
     {
         g_bSaveXp = true;
 
-		if ( get_cvar_num("war3x_save_xp_sql") == 1 )
+		if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 		{
             mysql_init();
 		}
@@ -1470,7 +1470,7 @@ public WAR3_map_start() {
     // Check race restrictions ( make sure all races not restricted )
 
     new szCvar[8];
-    get_cvar_string( "war3x_restrict_races", szCvar, 7 );
+    get_pcvar_string( CVAR_restrict_races, szCvar, 7 );
 
     if ( equal( szCvar, "abcd" ) )
         set_cvar_string( "war3x_restrict_races", "" );
@@ -1482,7 +1482,7 @@ public WAR3_map_start() {
     for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
     {
         new szFilename[64];
-        format( szFilename, 63, "%s/help/%s.html", WAR3X_DIR, RACEKEYNAME[iRaceNum] );
+        formatex( szFilename, 63, "%s/help/%s.html", WAR3X_DIR, RACEKEYNAME[iRaceNum] );
 
         if ( !file_exists( szFilename ) )
             bCreateFiles = true;
@@ -1497,12 +1497,12 @@ public WAR3_map_start() {
     get_mapname( szMapName, 63 );
 
     new szFilename[128];
-    format( szFilename, 127, "%s/map_specific/%s.cfg", WAR3X_DIR, szMapName );
+    formatex( szFilename, 127, "%s/map_specific/%s.cfg", WAR3X_DIR, szMapName );
 
     if ( file_exists( szFilename ) )
     {
         new szCmd[64];
-        format( szCmd, 63, "exec %s", szFilename );
+        formatex( szCmd, 63, "exec %s", szFilename );
 
         server_cmd( szCmd );
     }
@@ -1516,7 +1516,7 @@ public WAR3_map_start() {
 public Map_Restricted() {
 
     new szRestrictFile[64];
-    format( szRestrictFile, 63, "%s/short_term_maps.cfg", WAR3X_DIR );
+    formatex( szRestrictFile, 63, "%s/short_term_maps.cfg", WAR3X_DIR );
 
     if ( file_exists( szRestrictFile ) )
     {
@@ -1543,7 +1543,7 @@ public Map_Restricted() {
 public Map_Disabled() {
 
     new szDisabledFile[64];
-    format( szDisabledFile, 63, "%s/disabled_maps.cfg", WAR3X_DIR );
+    formatex( szDisabledFile, 63, "%s/disabled_maps.cfg", WAR3X_DIR );
 
     if ( file_exists( szDisabledFile ) )
     {
@@ -1740,14 +1740,14 @@ public Get_SkillName( iRaceId, iSkillNum, id, szSkillName[32] ) {
 
 // Generic Healing Effect
 
-public Shared_Heal_Effect( iTargetId ) {             // Shared Effect(s)
+public Shared_Heal_Effect( target ) {             // Shared Effect(s)
 
     // Flutters!
 
     for ( new i = 0; i < 4; i++ )
     {
         new Float:fTargetOrigin[3];
-        entity_get_vector( iTargetId, EV_VEC_origin, fTargetOrigin );
+        entity_get_vector( target, EV_VEC_origin, fTargetOrigin );
 
         // Randomize
 
@@ -1842,7 +1842,7 @@ public war3_chatskills( id, raceId, ShowHelp ) {
     if ( id == g_Vip )
     {
         new szVipMsg[128];
-        format( szVipMsg, 127, VIP_NOSKILLS );
+        formatex( szVipMsg, 127, VIP_NOSKILLS );
 
         client_print( id, print_chat, szVipMsg );
 
@@ -1881,7 +1881,7 @@ public war3_chatskills( id, raceId, ShowHelp ) {
     // Build message (with racial)
 
     WAR3_race_info( id, raceId, RACEINFO_RACIAL, szData );
-    format( szMessage, 127, INFO_CURRENTSKILLS, szData, fRacialPercentage, "%%", szSkills );
+    formatex( szMessage, 127, INFO_CURRENTSKILLS, szData, fRacialPercentage, "%%", szSkills );
 
     client_print( id, print_chat, szMessage );
 

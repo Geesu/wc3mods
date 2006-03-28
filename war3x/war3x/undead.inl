@@ -46,7 +46,7 @@ public UD_ultimates( caster, target ) {
             if ( get_user_health( target ) == WAR3_get_maxhealth( target ) && caster != target )
             {
                 new szMessage[128];
-                copy( szMessage, 127, FULLHEALTH_TARGET );
+                formatex( szMessage, 127, "%s", FULLHEALTH_TARGET );
 
                 WAR3_status_text( caster, szMessage, 0.5 );
 
@@ -75,7 +75,7 @@ public UD_ultimates( caster, target ) {
         else
         {
             new szMessage[128];
-            copy( szMessage, 127, CANT_TARGET_DEATHCOIL );
+            formatex( szMessage, 127, "%s", CANT_TARGET_DEATHCOIL );
 
             WAR3_status_text( caster, szMessage, 0.5 );
 
@@ -90,7 +90,7 @@ public UD_ultimates( caster, target ) {
         if ( !( get_entity_flags( target ) & FL_ONGROUND ) )
         {
             new szMessage[128];
-            copy( szMessage, 127, CANT_TARGET_AIR );
+            formatex( szMessage, 127, "%s", CANT_TARGET_AIR );
 
             WAR3_status_text( caster, szMessage, 0.5 );
 
@@ -402,7 +402,7 @@ public UD_S_FROSTNOVA( id ) {
                 new szMessage[128], szPlayer[32];
 
                 get_user_name( id, szPlayer, 31 );
-                format( szMessage, 127, DAMAGE_FROSTNOVA, szPlayer, iDamage );
+                formatex( szMessage, 127, DAMAGE_FROSTNOVA, szPlayer, iDamage );
 
                 WAR3_status_text2( enemy, szMessage, 3.0 );
 
@@ -669,7 +669,7 @@ static UD_U_DEATHCOIL_heal( caster, target ) {
     new szMessage[128], szPlayerName[32];
     get_user_name( caster, szPlayerName, 31 );
 
-    format( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
+    formatex( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
 
     WAR3_status_text( target, szMessage, 3.0 );
 
@@ -988,7 +988,7 @@ static UD_U_SLEEP( caster, target ) {
     new szMessage[128], szPlayerName[32];
     get_user_name( caster, szPlayerName, 31 );
 
-    format( szMessage, 127, CAST_SLEEP, szPlayerName );
+    formatex( szMessage, 127, CAST_SLEEP, szPlayerName );
 
     WAR3_status_text2( target, szMessage, 3.0 );
 
@@ -1119,7 +1119,7 @@ public UD_U_SLEEP_wake( arg_read[1] ) {
     // Hud message
 
     new szMessage[128];
-    format( szMessage, 127, FINISH_SLEEP );
+    formatex( szMessage, 127, "%s", FINISH_SLEEP );
 
     WAR3_status_text2( target, szMessage, 3.0 );
 
