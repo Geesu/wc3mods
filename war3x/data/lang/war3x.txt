@@ -1,0 +1,55 @@
+[en]
+;Race Names
+
+RACENAME1 = Undead Scourge
+RACENAME2 = Human Alliance
+RACENAME3 = Orcish Horde
+RACENAME4 = Night Elf Sentinels
+RACENAME1_SHORT = Undead
+RACENAME2_SHORT = Human
+RACENAME3_SHORT = Orc
+RACENAME4_SHORT = Night Elf
+
+;Skill Names
+
+RACE1_RACIAL1 = Unholy Aura
+RACE1_SKILL1 = Vampiric Aura
+RACE1_SKILL2 = Frost Nova
+RACE1_SKILL3 = Frost Armor
+RACE1_ULTIMATE1 = Death Coil
+RACE1_ULTIMATE2 = Impale
+RACE1_ULTIMATE3 = Sleep
+RACE2_RACIAL1 = Fortitude
+RACE2_SKILL1 = Invisibility
+RACE2_SKILL2 = Bash
+RACE2_SKILL3 = Inner Fire
+RACE2_ULTIMATE1 = Holy Light
+RACE2_ULTIMATE2 = Flame Strike
+RACE2_ULTIMATE3 = Avatar
+RACE3_RACIAL1 = Regeneration
+RACE3_SKILL1 = Berserk
+RACE3_SKILL2 = Pulverize
+RACE3_SKILL3 = Pillage
+RACE3_ULTIMATE1 = Healing Wave
+RACE3_ULTIMATE2 = Chain Lightning
+RACE3_ULTIMATE3 = Wind Walk
+RACE4_RACIAL1 = Elune's Grace
+RACE4_SKILL1 = Evasion
+RACE4_SKILL2 = Nature's Blessing
+RACE4_SKILL3 = Trueshot Aura
+RACE4_ULTIMATE1 = Entangling Roots
+RACE4_ULTIMATE2 = Rejuvenation
+RACE4_ULTIMATE4 = Shadow Strike
+
+;Server Console Messages
+
+CONSOLE_DISABLEDMAP     = ^n* [WC3x] Disabling Warcraft 3: Expansion for current map (%s).^n* [WC3x] NOTE: Disabled maps can be edited in %s/disabled_maps.cfg ^n^n
+CONSOLE_SHORTTERMMAP    = ^n* [WC3x] Using Short-Term experience on current map (%s).^n* [WC3x] NOTE: Short-Term-Only maps can be edited in %s/short_term_maps.cfg ^n^n
+
+CONSOLE_WELCOME_VERSION  = %s Welcome, %s, This server is running %s (%s) (%s)
+CONSOLE_WELCOME_COMMANDS = %s For a list of available commands, type '/war3help' in chat.
+
+
+
+[de]
+; Your language here!
