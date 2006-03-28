@@ -21,7 +21,7 @@ public Item_Buy( id, iNewItem ) {
 
     // Insufficient Funds
 
-    if ( cs_get_user_money( id ) + ( ITEMCOST[iOldItem] / ITEM_BUYBACK ) < ITEMCOST[iNewItem] )
+    if ( cs_get_user_money( id ) + ( ITEM_COST[iOldItem] / ITEM_BUYBACK ) < ITEM_COST[iNewItem] )
     {
         client_print( id, print_center, ITEM_INSUFFICIENT_FUNDS );
         return PLUGIN_HANDLED;
@@ -68,8 +68,8 @@ public Item_Buy( id, iNewItem ) {
     {
         // Give back some cash
 
-        new iOldCost = ITEMCOST[iOldItem] / ITEM_BUYBACK;
-        new iNewCost = ITEMCOST[iNewItem];
+        new iOldCost = ITEM_COST[iOldItem] / ITEM_BUYBACK;
+        new iNewCost = ITEM_COST[iNewItem];
 
         new iDifference = iNewCost - iOldCost;
 
@@ -89,7 +89,7 @@ public Item_Buy( id, iNewItem ) {
     {
         // Update money
 
-        cs_update_money( id, -ITEMCOST[iNewItem], 1 );
+        cs_update_money( id, -ITEM_COST[iNewItem], 1 );
     }
 
     return PLUGIN_HANDLED;
@@ -110,7 +110,7 @@ public Item_BuyTome( id ) {
 
     // Insufficient Funds
 
-    if ( cs_get_user_money( id ) < ITEMCOST[ITEM_TOME] )
+    if ( cs_get_user_money( id ) < ITEM_COST[ITEM_TOME] )
     {
         client_print( id, print_center, ITEM_INSUFFICIENT_FUNDS );
         return PLUGIN_HANDLED;
@@ -118,7 +118,7 @@ public Item_BuyTome( id ) {
 
     new Float:fMultiplier = get_cvar_float( "war3x_xp_normal" );
 
-    new iTomeValue = VALUE_TOME;
+    new iTomeValue = ITEM_TOME_VALUE;
     new Float:fTomeValue = float( iTomeValue );
 
     client_print( id, print_center, ITEM_TOME_MESSAGE, floatround( fTomeValue * fMultiplier ) );
@@ -132,7 +132,7 @@ public Item_BuyTome( id ) {
 
     emit_sound( id, CHAN_STATIC, SOUND_TOME, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-    cs_update_money( id, -ITEMCOST[ITEM_TOME], 1 );
+    cs_update_money( id, -ITEM_COST[ITEM_TOME], 1 );
 
 
     return PLUGIN_HANDLED;
@@ -157,7 +157,7 @@ public Item_Equip( id, iNewItem ) {
 
         // Don't give to Orcs if skill is >= Ankh value
 /*
-        if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL3] && s_Reincarnate[g_PlayerInfo[id][CURRENT_SKILL3] - 1] > VALUE_ANKH )
+        if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL3] && s_Reincarnate[g_PlayerInfo[id][CURRENT_SKILL3] - 1] > ITEM_ANKH_VALUE )
         {
             client_print( id, print_center, ITEM_NOBONUS );
             return ( 0 );
@@ -172,7 +172,7 @@ public Item_Equip( id, iNewItem ) {
         if ( get_cvar_num( "war3x_ankhgrenades" ) )
             iLen += format( szMessage[iLen], 127 - iLen, ITEM_ANKH_GRENADES );
 
-        new Float:fAnkhValue = VALUE_ANKH;
+        new Float:fAnkhValue = ITEM_ANKH_VALUE;
         client_print( id, print_chat, ITEM_ANKH_MESSAGE, floatround( fAnkhValue * 100.0 ), "%", szMessage );
     }
 
@@ -182,20 +182,20 @@ public Item_Equip( id, iNewItem ) {
     {
         if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD )
         {
-            new Float:fNewSpeed = VALUE_BOOTS - SPEED_KNIFE + UD_S_UNHOLY_get_speed( iLevel );
+            new Float:fNewSpeed = ITEM_BOOTS_VALUE - SPEED_KNIFE + UD_S_UNHOLY_get_speed( iLevel );
 
             if ( fNewSpeed > CAP_SPEEDBONUS )
                 fNewSpeed = CAP_SPEEDBONUS;
 
-            if ( fNewSpeed < VALUE_BOOTS )
-                fNewSpeed = VALUE_BOOTS;
+            if ( fNewSpeed < ITEM_BOOTS_VALUE )
+                fNewSpeed = ITEM_BOOTS_VALUE;
 
             client_print( id, print_chat, ITEM_BOOTS_MESSAGE, UD_S_UNHOLY_get_speed( iLevel ), fNewSpeed );
         }
 
         else
         {
-            client_print( id, print_chat, ITEM_BOOTS_MESSAGE, SPEED_KNIFE, VALUE_BOOTS );
+            client_print( id, print_chat, ITEM_BOOTS_MESSAGE, SPEED_KNIFE, ITEM_BOOTS_VALUE );
         }
 
         WAR3_set_speed( id );
@@ -205,14 +205,14 @@ public Item_Equip( id, iNewItem ) {
 
     else if ( iNewItem == ITEM_CLAWS )
     {
-        client_print( id, print_chat, ITEM_CLAWS_MESSAGE, VALUE_CLAWS );
+        client_print( id, print_chat, ITEM_CLAWS_MESSAGE, ITEM_CLAWS_VALUE );
     }
 
     // Cloak of Shadows
 
     else if ( iNewItem == ITEM_CLOAK )
     {
-        client_print( id, print_chat, ITEM_CLOAK_MESSAGE, ( VALUE_CLOAK * 100.0 ), "%" );
+        client_print( id, print_chat, ITEM_CLOAK_MESSAGE, ( ITEM_CLOAK_VALUE * 100.0 ), "%" );
         SHARED_INVIS_set( id );
     }
 
@@ -236,7 +236,7 @@ public Item_Equip( id, iNewItem ) {
             new Float:fCurrentCooldown = get_gametime() - g_fUltimateCooldown[id];
             new Float:fRemainingCooldown = ULTIMATE_COOLDOWNDEFAULT - fCurrentCooldown;
 
-            new Float:fTimeRemoved = fRemainingCooldown * ( VALUE_MASK / ULTIMATE_COOLDOWNDEFAULT );
+            new Float:fTimeRemoved = fRemainingCooldown * ( ITEM_MASK_VALUE / ULTIMATE_COOLDOWNDEFAULT );
             new Float:fNewCooldown = fRemainingCooldown - fTimeRemoved;
 
             g_fUltimateCooldown[id] -= fTimeRemoved;
@@ -247,15 +247,15 @@ public Item_Equip( id, iNewItem ) {
             set_task( fNewCooldown, "Ultimate_Restore", task, parm_Cooldown, 1 );
         }
 
-        client_print( id, print_chat, ITEM_MASK_MESSAGE, ULTIMATE_COOLDOWNDEFAULT, ULTIMATE_COOLDOWNDEFAULT - VALUE_MASK );
+        client_print( id, print_chat, ITEM_MASK_MESSAGE, ULTIMATE_COOLDOWNDEFAULT, ULTIMATE_COOLDOWNDEFAULT - ITEM_MASK_VALUE );
     }
 
     // Amulet of Shielding
 
     else if ( iNewItem == ITEM_AMULET )
     {
-        g_iAmuletCharges[id] = VALUE_AMULET;
-        client_print( id, print_chat, ITEM_AMULET_MESSAGE, VALUE_AMULET );
+        g_iAmuletCharges[id] = ITEM_AMULET_VALUE;
+        client_print( id, print_chat, ITEM_AMULET_MESSAGE, ITEM_AMULET_VALUE );
     }
 
     // Ring of Protection +5
@@ -268,7 +268,7 @@ public Item_Equip( id, iNewItem ) {
             return ( 0 );
         }
 
-        set_user_armor( id, get_user_armor( id ) + VALUE_RING );
+        set_user_armor( id, get_user_armor( id ) + ITEM_RING_VALUE );
         client_print( id, print_chat, ITEM_RING_MESSAGE, WAR3_get_maxarmor( id ) );
     }
 
@@ -305,8 +305,8 @@ public Item_Change( id, iOldItem, iNewItem ) {
             new task = TASK_ULTIMATECOOLDOWN + id;
             remove_task( task, 0 );
 
-            new Float:fCurrentCooldown = get_gametime() - ( g_fUltimateCooldown[id] + VALUE_MASK );
-            new Float:fCooldownUsed = fCurrentCooldown / ( ULTIMATE_COOLDOWNDEFAULT - VALUE_MASK );
+            new Float:fCurrentCooldown = get_gametime() - ( g_fUltimateCooldown[id] + ITEM_MASK_VALUE );
+            new Float:fCooldownUsed = fCurrentCooldown / ( ULTIMATE_COOLDOWNDEFAULT - ITEM_MASK_VALUE );
             new Float:fTimeRemoved = fCooldownUsed * ULTIMATE_COOLDOWNDEFAULT;
             new Float:fNewCooldown = ULTIMATE_COOLDOWNDEFAULT - fTimeRemoved;
 
@@ -323,7 +323,7 @@ public Item_Change( id, iOldItem, iNewItem ) {
 
     if ( iOldItem == ITEM_RING && iNewItem != ITEM_RING )
     {
-        new iNewArmor = get_user_armor( id ) - VALUE_RING;
+        new iNewArmor = get_user_armor( id ) - ITEM_RING_VALUE;
 
         if ( iNewArmor < 0 )
             iNewArmor = 0;
@@ -346,9 +346,9 @@ public Item_Create( id, iItemNum ) {
     entity_set_int( iEnt, EV_INT_renderfx, kRenderFxGlowShell );
 
     new Float:fColors[3];
-    fColors[0] = float( ITEMCOLOR[iItemNum][GLOW_R] );
-    fColors[1] = float( ITEMCOLOR[iItemNum][GLOW_G] );
-    fColors[2] = float( ITEMCOLOR[iItemNum][GLOW_B] );
+    fColors[0] = float( ITEM_COLOR[iItemNum][GLOW_R] );
+    fColors[1] = float( ITEM_COLOR[iItemNum][GLOW_G] );
+    fColors[2] = float( ITEM_COLOR[iItemNum][GLOW_B] );
 
     entity_set_vector( iEnt, EV_VEC_rendercolor, fColors );
     entity_set_float( iEnt, EV_FL_renderamt, 150.0 );
@@ -488,7 +488,7 @@ public ITEM_ANKH_set( id ) {
     new Float:fRandomNum = random_float( 0.0,1.0 );
 
     if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_ANKH )
-        fAnkhChance += VALUE_ANKH;
+        fAnkhChance += ITEM_ANKH_VALUE;
 
     // Give Weapons
 
@@ -674,7 +674,7 @@ public ITEM_ANKH_give( parm_Ankh[1] ) {
         bWeaponsGiven = true;
         give_item( id, CS_WEAPON_NAME[g_PlayerBackpack[id][CURRENT_PRIMARY]] );
 
-        for ( new i = 0; i < ANKH_AMMOCLIPS; i++ )
+        for ( new i = 0; i < ITEM_ANKH_AMMO; i++ )
         {
             give_item( id, CS_AMMO_NAME[g_PlayerBackpack[id][CURRENT_PRIMARY]] );
 
@@ -711,7 +711,7 @@ public ITEM_ANKH_give( parm_Ankh[1] ) {
         bWeaponsGiven = true;
         give_item( id, CS_WEAPON_NAME[g_PlayerBackpack[id][CURRENT_SECONDARY]] );
 
-        for ( new i = 0; i < ANKH_AMMOCLIPS; i++ )
+        for ( new i = 0; i < ITEM_ANKH_AMMO; i++ )
         {
             give_item( id, CS_AMMO_NAME[g_PlayerBackpack[id][CURRENT_SECONDARY]] );
 
@@ -841,13 +841,13 @@ public ITEM_CLAWS_damage( attacker, victim, weapon, headshot ) {
 
     // Add to bonus damage array
 
-    WAR3_damage( attacker, victim, weapon, VALUE_CLAWS, headshot, DAMAGE_CHECKARMOR );
+    WAR3_damage( attacker, victim, weapon, ITEM_CLAWS_VALUE, headshot, DAMAGE_CHECKARMOR );
 
     if ( is_user_alive( victim ) )
     {
         // Screen Fade
 
-        new iFadeAlpha = VALUE_CLAWS * 3;
+        new iFadeAlpha = ITEM_CLAWS_VALUE * 3;
         Create_ScreenFade( victim, (1<<10), (1<<10), FADE_OUT, 255, 0, 0, iFadeAlpha );
     }
 
@@ -861,7 +861,7 @@ public ITEM_CLOAK_set( id ) {
 
     g_bPlayerInvis[id] = true;
 
-    new Float:fInvis = ( 1.0 - VALUE_CLOAK ) * 255.0;
+    new Float:fInvis = ( 1.0 - ITEM_CLOAK_VALUE ) * 255.0;
     new iInvis = floatround( fInvis );
 
     set_user_rendering( id, kRenderFxNone, 0, 0, 0, kRenderTransTexture, iInvis );
@@ -890,12 +890,12 @@ public ITEM_AMULET_block( target, caster ) {
 
     if ( !g_bPlayerSleeping[target] )
     {
-        Create_ScreenFade( target, (1<<10), (1<<10), FADE_OUT, AMULET_RGB[GLOW_R], AMULET_RGB[GLOW_G], AMULET_RGB[GLOW_B], 160 );
+        Create_ScreenFade( target, (1<<10), (1<<10), FADE_OUT, ITEM_AMULET_RGB[GLOW_R], ITEM_AMULET_RGB[GLOW_G], ITEM_AMULET_RGB[GLOW_B], 160 );
     }
 
     // Glow
 
-    SHARED_GLOW_set( target, 1.0, AMULET_RGB, 48 );
+    SHARED_GLOW_set( target, 1.0, ITEM_AMULET_RGB, 48 );
 
     // Sparks
 

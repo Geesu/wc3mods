@@ -953,11 +953,11 @@ public on_World_Action() {
                 if ( fRandomNum <= BOT_BUYCHANCE )
                 {
                     new itemId = random_num( 1, TOTAL_SHOPITEMS );
-                    new iItemCost = ITEMCOST[itemId];
+                    new iITEM_COST = ITEM_COST[itemId];
 
-                    if ( cs_get_user_money( id ) > iItemCost && !g_PlayerInfo[id][CURRENT_ITEM] )
+                    if ( cs_get_user_money( id ) > iITEM_COST && !g_PlayerInfo[id][CURRENT_ITEM] )
                     {
-                        cs_set_user_money( id, cs_get_user_money( id ) - iItemCost, 0 );
+                        cs_set_user_money( id, cs_get_user_money( id ) - iITEM_COST, 0 );
 
                         if ( itemId != ITEM_TOME )
                             g_PlayerInfo[id][CURRENT_ITEM] = itemId;

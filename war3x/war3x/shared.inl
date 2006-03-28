@@ -125,7 +125,7 @@ public SHARED_INVIS_set_( parm_Invis[1] ) {
     {
         // Make sure cloak value is not greater
 
-        if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK && VALUE_CLOAK > HU_fInvisibility[g_PlayerInfo[id][CURRENT_SKILL1] - 1] )
+        if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK && ITEM_CLOAK_VALUE > HU_fInvisibility[g_PlayerInfo[id][CURRENT_SKILL1] - 1] )
             ITEM_CLOAK_set( id );
 
         else
@@ -173,7 +173,7 @@ public SHARED_INVIS_cooldown( id ) {
 
     else if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK )
     {
-        set_task( CLOAK_COOLDOWN, "SHARED_INVIS_set_", task, parm_Invis, 1 );
+        set_task( ITEM_CLOAK_COOLDOWN, "SHARED_INVIS_set_", task, parm_Invis, 1 );
     }
 
     return PLUGIN_HANDLED;
@@ -435,7 +435,7 @@ public WAR3_get_maxarmor( id ) {
     // Ring of Protection +5
 
     if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_RING )
-        iMaxArmor += VALUE_RING;
+        iMaxArmor += ITEM_RING_VALUE;
 
     return ( iMaxArmor );
 }
@@ -711,7 +711,7 @@ public _WAR3_set_speed( parm_Speed[1] ) {
 
             if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS )
             {
-                new Float:fNewSpeed = VALUE_BOOTS - SPEED_KNIFE + fLustSpeed;
+                new Float:fNewSpeed = ITEM_BOOTS_VALUE - SPEED_KNIFE + fLustSpeed;
                 set_user_maxspeed( id, fNewSpeed );
             }
 
@@ -731,7 +731,7 @@ public _WAR3_set_speed( parm_Speed[1] ) {
         // Boots of speed
 
         else if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS )
-            set_user_maxspeed( id, VALUE_BOOTS );
+            set_user_maxspeed( id, ITEM_BOOTS_VALUE );
 
         // Nature's blessing
 

@@ -317,49 +317,49 @@ public HELP_get_values_items( iItemNum, szValue[32] ) {
 
         case ITEM_ANKH:
         {
-            format( szValue, 31, "%0.0f%s", ( VALUE_ANKH * 100.0 ), "%" );
+            format( szValue, 31, "%0.0f%s", ( ITEM_ANKH_VALUE * 100.0 ), "%" );
             return ( 1 );
         }
 
         case ITEM_BOOTS:
         {
-            format( szValue, 31, "%0.0f%s", ( ( ( VALUE_BOOTS / SPEED_KNIFE ) - 1.0 ) * 100.0 ), "%" );
+            format( szValue, 31, "%0.0f%s", ( ( ( ITEM_BOOTS_VALUE / SPEED_KNIFE ) - 1.0 ) * 100.0 ), "%" );
             return ( 1 );
         }
 
         case ITEM_CLAWS:
         {
-            format( szValue, 31, "%i", VALUE_CLAWS );
+            format( szValue, 31, "%i", ITEM_CLAWS_VALUE );
             return ( 1 );
         }
 
         case ITEM_CLOAK:
         {
-            format( szValue, 31, "%0.0f%s", ( VALUE_CLOAK * 100.0 ), "%" );
+            format( szValue, 31, "%0.0f%s", ( ITEM_CLOAK_VALUE * 100.0 ), "%" );
             return ( 1 );
         }
 
         case ITEM_MASK:
         {
-            format( szValue, 31, "%0.0f", VALUE_MASK );
+            format( szValue, 31, "%0.0f", ITEM_MASK_VALUE );
             return ( 1 );
         }
 
         case ITEM_AMULET:
         {
-            format( szValue, 31, "%d", VALUE_AMULET );
+            format( szValue, 31, "%d", ITEM_AMULET_VALUE );
             return ( 1 );
         }
 
         case ITEM_RING:
         {
-            format( szValue, 31, "%i", VALUE_RING );
+            format( szValue, 31, "%i", ITEM_RING_VALUE );
             return ( 1 );
         }
 
         case ITEM_TOME:
         {
-            format( szValue, 31, "%i", VALUE_TOME );
+            format( szValue, 31, "%i", ITEM_TOME_VALUE );
             return ( 1 );
         }
     }
@@ -705,7 +705,7 @@ public HELP_create_files() {
 
         format( szItemDesc, 255, szItemDesc, szValueArgs[0], szValueArgs[1], szValueArgs[2], szValueArgs[3], szValueArgs[4] );
 
-        format( szText, 255, "<li><b><font color=rgb(%i,%i,%i)>%s</font></b>^n%s", ITEMCOLOR[iItemNum][GLOW_R], ITEMCOLOR[iItemNum][GLOW_G], ITEMCOLOR[iItemNum][GLOW_B], szItemName, szItemDesc );
+        format( szText, 255, "<li><b><font color=rgb(%i,%i,%i)>%s</font></b>^n%s", ITEM_COLOR[iItemNum][GLOW_R], ITEM_COLOR[iItemNum][GLOW_G], ITEM_COLOR[iItemNum][GLOW_B], szItemName, szItemDesc );
         write_file( szFileName, szText, -1 );
     }
 

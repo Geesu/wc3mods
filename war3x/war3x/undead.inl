@@ -181,9 +181,9 @@ public UD_S_UNHOLY_set_speed( id, weapon ) {
 
     // Check for boots and stack
 
-    if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS && VALUE_BOOTS > SPEED_KNIFE )
+    if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS && ITEM_BOOTS_VALUE > SPEED_KNIFE )
     {
-        fUnholySpeed += ( VALUE_BOOTS - SPEED_KNIFE );
+        fUnholySpeed += ( ITEM_BOOTS_VALUE - SPEED_KNIFE );
 
         if ( fUnholySpeed > CAP_SPEEDBONUS )
             fUnholySpeed = CAP_SPEEDBONUS;

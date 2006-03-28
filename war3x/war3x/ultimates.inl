@@ -386,8 +386,8 @@ public Ultimate_Cooldown( id, Float:fCooldown ) {
 
     if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_MASK )
     {
-        g_fUltimateCooldown[id] -= VALUE_MASK;
-        fCooldown -= VALUE_MASK;
+        g_fUltimateCooldown[id] -= ITEM_MASK_VALUE;
+        fCooldown -= ITEM_MASK_VALUE;
     }
 
     // Hide icon

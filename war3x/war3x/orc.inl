@@ -219,7 +219,7 @@ public OR_S_BERSERK_speed( id ){
 			new Float:fNewSpeed = 0.0;
 
 			if( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS )
-				fNewSpeed = VALUE_BOOTS + ( float(100 - iHealth)/100.0 * ( OR_fBerserk_speed[g_PlayerInfo[id][CURRENT_SKILL1] - 1] - VALUE_BOOTS ) );
+				fNewSpeed = ITEM_BOOTS_VALUE + ( float(100 - iHealth)/100.0 * ( OR_fBerserk_speed[g_PlayerInfo[id][CURRENT_SKILL1] - 1] - ITEM_BOOTS_VALUE ) );
 			else
 				fNewSpeed = SPEED_KNIFE + ( float(100 - iHealth)/100.0 * ( OR_fBerserk_speed[g_PlayerInfo[id][CURRENT_SKILL1] - 1] - SPEED_KNIFE ) );
 

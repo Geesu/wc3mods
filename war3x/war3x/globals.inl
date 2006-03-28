@@ -46,20 +46,6 @@
 #define _TSI2        TOTAL_SHOP2ITEMS
 
 
-/* - Item Configuration ----------------------------------------- */
-
-
-#define ITEM_NONE                     0     // Item reference
-#define ITEM_ANKH                     1
-#define ITEM_BOOTS                    2
-#define ITEM_CLAWS                    3
-#define ITEM_CLOAK                    4
-#define ITEM_MASK                     5
-#define ITEM_AMULET                   6
-#define ITEM_RING                     7
-#define ITEM_TOME                     8
-
-
 /* - Skill Configuration ---------------------------------------- */
 
 #define SKILL_RACIAL                  0     // Generic
@@ -116,10 +102,6 @@ new const DISPELL_TARGETS[_TR][] =
 
 #define HEAL_NOTIFYHEALTH           0.5     // (  float) percentage health to play blink heal icon above low health players (if healing ultimate available)
 #define ARMOR_MAXFADE                96     // (integer) maximum screenfade ammount when buying armor with armor skill (0-255)
-
-#define ITEM_BUYBACK                  2     // (integer) money given back when purchasing item and one present (1/X)
-
-#define ANKH_AMMOCLIPS                2     // (integer) number of clips to give each weapon on reincarnation
 
 #define CAP_SPEEDBONUS            310.0     // (  float) maximum speed attainable by means of a skill
 #define CAP_INVISIBILITY           80.0     // (  float) maximum invisibility level attainable

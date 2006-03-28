@@ -105,6 +105,93 @@ IDEAS:!
 - implement language changes
 
 
+HEROES:
+------
+* When the player receives level 10 with a given race, they will 'unlock' the
+  aura for their race, and will have the option of becoming a hero.
+* Heroes are selected on a first come-first serve basis via an in-game menu,
+  and once selected, a player will remain the hero for 3 rounds.
+* If noone wants to be a hero, one will be selected at random assuming both
+  teams have at least 1 level 10 player on them.
+* Heroes have an increased armor rating (allowing them to absorb more damage),
+  as well as a passive aura that affects (or has a chance to affect) all
+  teammates while they are alive, or when they die.
+* Auras do not affect the Hero, only the teammates they serve, regardless of
+  how many heroes are on a given team.
+* There is the possibility of each team having multiple heroes.
+* All experience a player gains as a hero goes toward increasing the power
+  of the aura they are using.
+* There is no cap for hero auras, so they can increase in power as long as
+  the player chooses to use and level it.
+* Once an aura is 'unlocked', it can be used by any level 10 character the
+  player has, meaning the player is not restricted to using the aura they
+  have unlocked with a certain race only.
+
+
+AURA LIST:
+---------
+
+Aura of Animation	(Undead)
+	* when the hero dies, there is a chance that dead teammates will
+	  respawn with a small amount of health for 30 seconds.
+
+Aura of Levitation 	(Goblin)
+	* while the hero is alive, teammates will receive a decrease
+	  in gravity, allowing them to jump higher/fall further.
+
+Aura of Brilliance 	(Human)
+	* while the hero is alive, teammates ultimate cooldown will
+	  be reduced.
+
+Aura of Reflection 	(Blood Elf)
+	* while the hero is alive, there is a chance any harmful ultimates
+	  cast on teammates will be reflected back to their caster.
+
+Aura of Voodoo		(Orc)
+	* when the hero dies, there is a chance all teammates will become
+	  invulnerable for 5 seconds.
+
+Aura of Reincarnation	(Draenei)
+	* while the hero is alive, teammates that die will have a chance
+	  to respawn the same round with all gear lost on death.
+
+Aura of Thorns 		(Night Elf)
+	* while the hero is alive, all attacks on the player will deliver
+	  mirror damage to the attacker.
+
+Aura of Tides		(Naga)
+	* while the hero is alive, teammates will receive a small
+	  amount of health regeneration.
+
+
+ARTIFACTS:
+----------
+
+Ankh of Reincarnation
+	* when the player dies they will respawn the same round at some point
+	  with armor and weapons/ammo they died with.
+
+Claws of Attack +15
+	* all attacks made by the player will be increased by 15
+
+Ring of Regeneration
+	* player will receive a strong level of health regeneration while
+	  wearing the ring
+
+Ring of Protection +15
+	* player will receive an increase in armor rating of 15, allowing them
+	  to naturally absorb more damage from weapons
+
+Gem of Health
+	* increases the player's total health by 50
+
+Tome of Power
+	* automatically increases a player's level (does not apply to auras)
+
+Mask of Death
+	* gives the player +50% life leech (stacks with undead)
+
+
 
 FUTURE:
 -------

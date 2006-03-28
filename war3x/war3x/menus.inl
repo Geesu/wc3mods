@@ -137,7 +137,7 @@ public menu_SelectRace( id ) {
         {
 			new szRaceName[32];
 			LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
-            
+
 			if ( get_cvar_bitsum( "war3x_restrict_races" ) & WAR3_get_race_flag( iRaceNum ) )
             {
 				LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 )
@@ -708,13 +708,13 @@ public menu_ItemShop( id ) {
 
         else if ( iItemNum == ITEM_TOME && get_playersnum() < get_cvar_num( "war3x_xp_minplayers" ) )
         {
-            iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\y%d ^n", iItemNum, szItemName, ITEMCOST[iItemNum] );
+            iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\y%d ^n", iItemNum, szItemName, ITEM_COST[iItemNum] );
         }
 
         else
         {
             iKeys |= ( 1<<iItemNum - 1 );
-            iLen += format( szMenu[iLen], 512 - iLen, "\w%d. %s\R\y%d ^n", iItemNum, szItemName, ITEMCOST[iItemNum] );
+            iLen += format( szMenu[iLen], 512 - iLen, "\w%d. %s\R\y%d ^n", iItemNum, szItemName, ITEM_COST[iItemNum] );
         }
     }
 
@@ -1048,7 +1048,7 @@ public _menu_RaceOptions( id, iKey ) {
                 set_user_armor( id, 100 );
 
             if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_RING )
-                set_user_armor( id, get_user_armor( id ) + VALUE_RING );
+                set_user_armor( id, get_user_armor( id ) + ITEM_RING_VALUE );
 
             // Reset XP
 
