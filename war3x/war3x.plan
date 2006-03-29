@@ -73,8 +73,8 @@ MISC CHANGES:
 * make global(s) for mp_playerid
 * move all commands to commands.inl (setxp/etc)
 * call windwalk_notify from _strike??
-* change message for purchasing boots to use a % of speed boost
-* remove status_print() command
+--change message for purchasing boots to use a % of speed boost (RYAN)
+* make a function to auto-fix right aligned words from being 'squished' -- this will be necessary for multilanguage
 
 
 INVIS DEBUGGING... 

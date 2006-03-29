@@ -1023,4 +1023,168 @@ public WAR3_is_first_race( id ) {
 }
 
 
+public WAR3_is_missing_files() {
+
+    new bool:bMissingFiles = false;
+
+    if ( !file_exists( "sprites/warcraft3/sleep.spr" ) )
+    {
+        // Log error
+        // You are missing one or more sprite file(s) that are required to run War3x.
+        // Please check your install
+
+        bMissingFiles = true;
+    }
+
+    #if PRECACHE_RACEICONS
+
+        if ( !file_exists( "sprites/warcraft3/icon_ud.spr" ) || !file_exists( "sprites/warcraft3/icon_human.spr" ) || !file_exists( "sprites/warcraft3/icon_orc.spr" ) || !file_exists( "sprites/warcraft3/icon_ne.spr" ) )
+        {
+            // Log error
+            // You are missing 1 or more race icon sprites
+
+            bMissingFiles = true;
+        }
+
+    #endif
+
+    #if PRECACHE_BLINKICONS
+
+        if ( !file_exists( "sprites/warcraft3/saveme.spr" ) || !file_exists( "sprites/warcraft3/dispellme.spr" ) )
+        {
+            // Log error
+            // You are missing one or more sprite file(s) that are required to run War3x.
+            // Please check your install
+
+            bMissingFiles = true;
+        }
+
+    #endif
+
+    #if PRECACHE_WAR3SOUNDS
+
+        new bool:bMissingWar3Sounds = false;
+
+        if ( !file_exists( "sound/warcraft3/ImpaleHit.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/DeathCoilSpecialArt1.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/SleepBirth1.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/HolyBolt.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/FlameStrikeTargetWaveNonLoop1.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/Avatar.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/HealingWave.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/LightningBolt.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/WindWalk.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/RejuvenationTarget1.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/EntanglingRootsTarget1.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/ShadowStrikeBirth1.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/FrostNova.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/Levelupcaster.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/PickUpItem.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/Tomes.wav" ) )
+            bMissingWar3Sounds = true;
+
+        else if ( !file_exists( "sound/warcraft3/ResurrectTarget.wav" ) )
+            bMissingWar3Sounds = true;
+
+        if ( bMissingWar3Sounds )
+        {
+            // Log error
+            // You are missing one or more sound file(s) required to run War3x.
+            // Please check your install
+
+            bMissingFiles = true;
+        }
+
+    #endif
+
+    #if PRECACHE_WAR3BONUSSOUNDS
+
+        new bool:bMissingWar3BonusSounds = false;
+
+        if ( !file_exists( "sound/warcraft3/bonus/BarkSkinTarget1.wav" ) )
+            bMissingWar3BonusSounds = true;
+
+        if ( !file_exists( "sound/warcraft3/bonus/BerzerkerCaster.wav" ) )
+            bMissingWar3BonusSounds = true;
+
+        if ( !file_exists( "sound/warcraft3/bonus/DeathCoilMissileLaunch1.wav" ) )
+            bMissingWar3BonusSounds = true;
+
+        if ( !file_exists( "sound/warcraft3/bonus/EntanglingRootsDecay1.wav" ) )
+            bMissingWar3BonusSounds = true;
+
+        if ( !file_exists( "sound/warcraft3/bonus/Error.wav" ) )
+            bMissingWar3BonusSounds = true;
+
+        if ( !file_exists( "sound/warcraft3/bonus/FrostArmorTarget1.wav" ) )
+            bMissingWar3BonusSounds = true;
+
+        if ( !file_exists( "sound/warcraft3/bonus/InnerFireBirth.wav" ) )
+            bMissingWar3BonusSounds = true;
+
+        if ( !file_exists( "sound/warcraft3/bonus/Reincarnation.wav" ) )
+            bMissingWar3BonusSounds = true;
+
+        if ( !file_exists( "sound/warcraft3/bonus/FrostNovaStateEnd.wav" ) )
+            bMissingWar3BonusSounds = true;
+
+        if ( !file_exists( "sound/warcraft3/bonus/OrcBurrowBattleStations.wav" ) )
+            bMissingWar3BonusSounds = true;
+
+        if ( !file_exists( "sound/warcraft3/bonus/UpkeepRing.wav" ) )
+            bMissingWar3BonusSounds = true;
+
+        if ( !file_exists( "sound/warcraft3/bonus/ShadowMeld1.wav" ) )
+            bMissingWar3BonusSounds = true;
+
+        if ( bMissingWar3BonusSounds )
+        {
+            // Log error
+            // You are missing one or more bonus sound file(s) required to run War3x.
+            // Requiring players to have these files is optional
+
+            bMissingFiles = true;
+        }
+
+    #endif
+
+    if ( !file_exists( "war3x.css" ) )
+        return ( true );
+
+    if ( bMissingFiles )
+        return ( true );
+
+    return ( false );
+}
+
 // ------------------------------------------------- End. - //

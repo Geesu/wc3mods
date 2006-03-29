@@ -130,6 +130,14 @@ public plugin_precache() {
 
 	formatex( WAR3X_DIR, 63, "%s/war3x", AMXX_DIR );
 
+    // Don't load plugin if any required files are missing
+
+    if ( WAR3_is_missing_files() )
+    {
+        g_bWar3xEnabled = true;
+        return PLUGIN_CONTINUE;
+    }
+
     // Don't precache if mapname in disabledmaps.txt
 
     if ( Map_Disabled() )
