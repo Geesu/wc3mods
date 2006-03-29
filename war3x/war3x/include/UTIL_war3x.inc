@@ -403,7 +403,7 @@ public WAR3_status_text( id, szMessage[], Float:fDuration ) {
     // Print to status area
 
     set_hudmessage( 255, 208, 0, -1.0, 0.82, 0, 6.0, fDuration, 0.1, 0.5, 4 );
-    show_hudmessage( id, szMessage );
+    show_hudmessage( id, "%s", szMessage );
 
     // Print important messages to console
 
@@ -423,7 +423,7 @@ public WAR3_status_text2( id, szMessage[], Float:fDuration ) {
     // Print to status area
 
     set_hudmessage( 224, 180, 0, -1.0, 0.88, 0, 6.0, fDuration, 0.1, 0.5, 4 );
-    show_hudmessage( id, szMessage );
+    show_hudmessage( id, "%s", szMessage );
 
     // Print important messages to console
 
@@ -535,7 +535,7 @@ public WAR3_hud_xp( id, iEffect, Float:fFxTime, Float:fFadeIn, Float:fFadeOut, F
     new Float:fPercentage = ( float( iCurrentXp ) - float( iLastlvlXp ) ) / ( float( iNextlvlXp ) - float( iLastlvlXp ) ) * 100.0;
 
     new szMessage[64];
-    formatex( szMessage, 63, "XP: %i/%i (%0.0f%s)", iCurrentXp, iNextlvlXp, fPercentage, "%%" );
+    formatex( szMessage, 63, "XP: %i/%i (%0.0f%%)", iCurrentXp, iNextlvlXp, fPercentage );
 
     // Get Coordinates
 
@@ -544,7 +544,7 @@ public WAR3_hud_xp( id, iEffect, Float:fFxTime, Float:fFadeIn, Float:fFadeOut, F
     new Float:fYpos = float( STEAM_RESOLUTION[iResNum][_Y] - 78 + 5 ) / float( STEAM_RESOLUTION[iResNum][_Y] );
 
     set_hudmessage( 160, 160, 160, fXpos, fYpos, iEffect, fFxTime, fHoldTime, fFadeIn, fFadeOut, HUDMESSAGE_CHAN_XP );
-    show_hudmessage( id, szMessage );
+    show_hudmessage( id, "%s", szMessage );
 
     return PLUGIN_HANDLED;
 }
@@ -573,7 +573,7 @@ public WAR3_hud_item( id, iEffect, Float:fFxTime, Float:fFadeIn, Float:fFadeOut,
     new Float:fYpos = float( STEAM_RESOLUTION[iResNum][_Y] - 78 + 20 ) / float( STEAM_RESOLUTION[iResNum][_Y] );
 
     set_hudmessage( 224, 160, 0, fXpos, fYpos, iEffect, fFxTime, fHoldTime, fFadeIn, fFadeOut, HUDMESSAGE_CHAN_ITEM );
-    show_hudmessage( id, szMessage );
+    show_hudmessage( id, "%s", szMessage );
 
     return PLUGIN_HANDLED;
 }
@@ -1022,4 +1022,5 @@ public WAR3_is_first_race( id ) {
     return ( 1 );
 }
 
-// End of UTIL_WAR3X.INC
+
+// ------------------------------------------------- End. - //

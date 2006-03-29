@@ -202,7 +202,7 @@ new const ITEM_ANKH_SECONDARY[]         = ", sidearm";
 new const ITEM_ANKH_GRENADES[]          = ", grenades";
 new const ITEM_ANKH_NOITEMS[]           = "No items to reincarnate!";
 
-new const ITEM_BOOTS_MESSAGE[]          = "* [WC3x] Your maximum speed has increased from %0.1f to %0.1f.";
+new const ITEM_BOOTS_MESSAGE[]          = "* [WC3x] Your maximum speed has increased by %0.1f%%.";
 new const ITEM_CLAWS_MESSAGE[]          = "* [WC3x] All of your attacks will deal an additional %d damage.";
 new const ITEM_CLOAK_MESSAGE[]          = "* [WC3x] You are now less visible by %0.0f%s, and untargetable by ultimates when invisible.";
 new const ITEM_MASK_MESSAGE[]           = "* [WC3x] Your ultimate cooldown has decreased from %0.1f seconds to %0.1f.";
@@ -246,15 +246,15 @@ new const XP_SUPPORT_HEALMSG_MAX[]      = "* [WC3x] You have restored %d health 
 // CONSOLE
 
 new const WAR3X_FORMAT[]                = "Incorrect Format - Usage: warcraft3 < on | off >";
-new const WAR3_enableD[]               = "* [WC3x] Warcraft 3: Expansion is now enabled.";
-new const WAR3_disableD[]              = "* [WC3x] Warcraft 3: Expansion is now disabled.";
-new const WAR3_enableD_ALREADY[]       = "* [WC3x] Warcraft 3: Expansion is already enabled.";
-new const WAR3_disableD_ALREADY[]      = "* [WC3x] Warcraft 3: Expansion is already disabled.";
+new const WAR3_ENABLED[]               = "* [WC3x] Warcraft 3: Expansion is now enabled.";
+new const WAR3_DISABLED[]              = "* [WC3x] Warcraft 3: Expansion is now disabled.";
+new const WAR3_ENABLED_ALREADY[]       = "* [WC3x] Warcraft 3: Expansion is already enabled.";
+new const WAR3_DISABLED_ALREADY[]      = "* [WC3x] Warcraft 3: Expansion is already disabled.";
 
 // HUD
 
-new const WAR3_enableD_HUD[]           = "Warcraft 3: Expansion has been enabled^nRound Restarting";
-new const WAR3_disableD_HUD[]          = "Warcraft 3: Expansion has been disabled^nRound Restarting";
+new const WAR3_ENABLED_HUD[]           = "Warcraft 3: Expansion has been enabled^nRound Restarting";
+new const WAR3_DISABLED_HUD[]          = "Warcraft 3: Expansion has been disabled^nRound Restarting";
 
 // CHAT
 
@@ -406,4 +406,5 @@ new const LANGUAGE_COMMON_OFF[]             = "OFF";
 
 #endif
 
-// End of ENGLISH.INL
+
+// ------------------------------------------------- End. - //

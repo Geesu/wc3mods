@@ -1,7 +1,8 @@
-/* - Client Commands -------------------------------------------- */
+
+///////////////////////////////////////// WAR3X Commands /////
 
 
-// Ultimate Command
+// Ultimate command
 
 public cmd_Ultimate( caster ) {
 
@@ -107,12 +108,12 @@ public cmd_Ultimate( caster ) {
         client_cmd( caster, "speak warcraft3/bonus/Error.wav" );
     }
 
-    // Cast on Self ( some ultimates )
+    // Cast on self ( some ultimates )
 
     else if ( ( g_iChargeUltimate[caster] && Ultimate_Target( caster ) & ULTIMATE_TARGET_SELFONLY ) || ( g_iChargeUltimate[caster] && Ultimate_Target( caster ) & ULTIMATE_TARGET_SELF ) )
         Ultimate_Cast( caster, caster );
 
-    // Cast on Target
+    // Cast on target
 
     else if ( target && !( Ultimate_Target( caster ) & ULTIMATE_TARGET_SELFONLY ) )
         Ultimate_Cast( caster, target );
@@ -133,6 +134,8 @@ public cmd_Ultimate( caster ) {
     return PLUGIN_HANDLED;
 }
 
+
+// Chat commands
 
 public Cmd_Say( id ) {
 
@@ -193,6 +196,8 @@ public Cmd_Say( id ) {
 }
 
 
+// Drop weapon ( update backpack )
+
 public Cmd_Drop( id ) {
 
     if ( !g_bWar3xEnabled )
@@ -200,16 +205,20 @@ public Cmd_Drop( id ) {
 
     if ( g_bAnkhDropWeapons[id] )
     {
-        new parm_Ankh[1];
-        parm_Ankh[0] = id;
+        new arg_write[1];
+        arg_write[0] = id;
 
-        remove_task( TASK_ANKH + id, 0 );
-        set_task( 0.1, "ITEM_ANKH_give", TASK_ANKH + id, parm_Ankh, 1 );
+        new task = TASK_ANKH + id;
+
+        remove_task( task, 0 );
+        set_task( 0.1, "ITEM_ANKH_give", task, arg_write, 1 );
     }
 
     return PLUGIN_CONTINUE;
 }
 
+
+// Drop item
 
 public cmd_DropItem( id ) {
 
@@ -218,6 +227,8 @@ public cmd_DropItem( id ) {
 }
 
 
+// War3x menu
+
 public cmd_War3menu( id ) {
 
     menu_War3menu( id );
@@ -225,8 +236,13 @@ public cmd_War3menu( id ) {
 }
 
 
+// Shop menu
+
 public cmd_Shopmenu( id ) {
 
     menu_ItemShop( id );
     return PLUGIN_HANDLED;
 }
+
+
+// ------------------------------------------------- End. - //

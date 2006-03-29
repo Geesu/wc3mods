@@ -91,7 +91,7 @@ public Upkeep_Dead() {
             formatex( szMessage, 31, "%s   ^n+$%d   ", UPKEEP_NAME[iUpkeep], iDifference );
 
             set_hudmessage( UPKEEP_RGB[iUpkeep][GLOW_R], UPKEEP_RGB[iUpkeep][GLOW_G], UPKEEP_RGB[iUpkeep][GLOW_B], 0.99, 0.40, HUDMESSAGE_FX_FADEIN, 3.0, 2.0, 0.5, 1.0, HUDMESSAGE_CHAN_UPKEEP );
-            show_hudmessage( player, szMessage );
+            show_hudmessage( player, "%s", szMessage );
         }
     }
 
@@ -129,7 +129,7 @@ public Upkeep_Newround() {
         formatex( szMessage, 31, "%s   ^n+$%d   ", UPKEEP_NAME[iUpkeep], UPKEEP_MONEY_NEWROUND[iUpkeep] );
 
         set_hudmessage( UPKEEP_RGB[iUpkeep][GLOW_R], UPKEEP_RGB[iUpkeep][GLOW_G], UPKEEP_RGB[iUpkeep][GLOW_B], 0.99, 0.40, HUDMESSAGE_FX_FADEIN, 1.0, 2.0, 0.5, 1.0, HUDMESSAGE_CHAN_UPKEEP2 );
-        show_hudmessage( player, szMessage );
+        show_hudmessage( player, "%s", szMessage );
 
     }
 
@@ -255,7 +255,7 @@ public Upkeep_RoundStart() {
         formatex( szMessage, 31, "%s   ", UPKEEP_NAME[iUpkeep] );
 
         set_hudmessage( UPKEEP_RGB[iUpkeep][GLOW_R], UPKEEP_RGB[iUpkeep][GLOW_G], UPKEEP_RGB[iUpkeep][GLOW_B], 0.99, 0.40, HUDMESSAGE_FX_FADEIN, 1.0, 5.0, 0.5, 1.0, HUDMESSAGE_CHAN_UPKEEP );
-        show_hudmessage( player, szMessage );
+        show_hudmessage( player, "%s", szMessage );
     }
 
     // Set new Upkeep timer
@@ -296,3 +296,6 @@ public Upkeep_Update( iTeamNum, iCurrentUpkeep, iNewUpkeep ) {
 
     return PLUGIN_HANDLED;
 }
+
+
+// ------------------------------------------------- End. - //

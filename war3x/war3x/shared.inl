@@ -614,16 +614,16 @@ public WAR3_set_health( id ) {
 
 public WAR3_set_speed( id ) {
 
-    new parmSpeed[1];
-    parmSpeed[0] = id;
+    new arg_write[1];
+    arg_write[0] = id;
 
-    _WAR3_set_speed( parmSpeed );
+    WAR3_set_speed_( arg_write );
 
     return PLUGIN_HANDLED;
 }
 
 
-public _WAR3_set_speed( parm_Speed[1] ) {
+public WAR3_set_speed_( parm_Speed[1] ) {
 
     new id = parm_Speed[0];
 
@@ -698,52 +698,29 @@ public _WAR3_set_speed( parm_Speed[1] ) {
         new weapon, iClip, iAmmo;
         weapon = get_user_weapon( id, iClip, iAmmo );
 
+        // Boots of speed ( now checks for all stacking, needs to be first )
+
+        if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS )
+            ITEM_BOOTS_set_speed( id );
+
         // Unholy Aura
 
-        if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD )
-            UD_S_UNHOLY_set_speed( id, weapon );
-
-        // Bloodlust
-
-        /*else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && ( weapon == CSW_KNIFE || cs_get_weapon_type_( weapon ) == CS_WEAPON_TYPE_GRENADE ) )
-        {
-            new Float:fLustSpeed = s_BloodlustSpeed[g_PlayerInfo[id][CURRENT_SKILL1] - 1];
-
-            if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS )
-            {
-                new Float:fNewSpeed = ITEM_BOOTS_VALUE - SPEED_KNIFE + fLustSpeed;
-                set_user_maxspeed( id, fNewSpeed );
-            }
-
-            else
-            {
-                set_user_maxspeed( id, fLustSpeed );
-            }
-        }*/
+        else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD )
+            UD_S_UNHOLY_set_speed( id );
 
 		// Berserk
 
-		else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && ( weapon == CSW_KNIFE || cs_get_weapon_type_( weapon ) == CS_WEAPON_TYPE_GRENADE ) )
-		{
+		else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && ( weapon == CSW_KNIFE || weapon == CSW_C4 || cs_get_weapon_type_( weapon ) == CS_WEAPON_TYPE_GRENADE ) )
 			OR_S_BERSERK_set_speed( id );
-		}
 
-        // Boots of speed
-
-        else if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS )
-            set_user_maxspeed( id, ITEM_BOOTS_VALUE );
-
-        // Nature's blessing
+        // Nature's Blessing
 
         else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] && get_user_armor( id ) )
-            NE_S_BLESSING_set_speed( id, weapon );
+            NE_S_BLESSING_set_speed( id );
 
         else
         {
-            if ( g_Vip == id )
-                set_user_maxspeed( id, CS_SPEED_VIP );
-
-            else if ( g_bPlayerZoomed[id] )
+            if ( g_bPlayerZoomed[id] )
                 set_user_maxspeed( id, CS_WEAPON_SPEED_ZOOM[weapon] );
 
             else
@@ -766,7 +743,7 @@ public WAR3_enable_skills( id ) {
 
     // Activate speed altering abilities
 
-    set_task( 0.1, "_WAR3_set_speed", 0, parm_Skills, 1 );
+    set_task( 0.1, "WAR3_set_speed_", 0, parm_Skills, 1 );
 
     // Check for Evade
 
@@ -1123,7 +1100,7 @@ public WAR3_toggle( id ) {
 
     else
     {
-        client_print( id, print_console, WAR3X_FORMAT );
+        client_print( id, print_console, "%s", WAR3X_FORMAT );
     }
 
     return PLUGIN_HANDLED;
@@ -1134,19 +1111,19 @@ public WAR3_enable( id ) {
 
     if ( g_bWar3xEnabled )
     {
-        client_print( id, print_console, WAR3_enableD_ALREADY );
+        client_print( id, print_console, "%s", WAR3_ENABLED_ALREADY );
         return PLUGIN_HANDLED;
     }
 
 
-    client_print( id, print_console, WAR3_enableD );
+    client_print( id, print_console, "%s", WAR3_ENABLED );
     set_pcvar_num( CVAR_enabled, 1 );
 
 
     // Show Hudmessage
 
     set_hudmessage( 60, 160, 220, HUDMESSAGE_POS_CENTER, 0.30, 2, 0.1, 4.0, 0.02, 0.02, HUDMESSAGE_CHAN_SERVER );
-    show_hudmessage( 0, WAR3_enableD_HUD );
+    show_hudmessage( 0, "%s", WAR3_ENABLED_HUD );
 
     server_cmd( "sv_restart 5" );
 
@@ -1158,11 +1135,11 @@ public WAR3_disable( id ) {
 
     if ( !g_bWar3xEnabled )
     {
-        client_print( id, print_console, WAR3_disableD_ALREADY );
+        client_print( id, print_console, "%s", WAR3_DISABLED_ALREADY );
         return PLUGIN_HANDLED;
     }
 
-    client_print( id, print_console, WAR3_disableD );
+    client_print( id, print_console, "%s", WAR3_DISABLED );
     set_pcvar_num( CVAR_enabled, 0 );
 
 
@@ -1181,7 +1158,7 @@ public WAR3_disable( id ) {
     // Show Hudmessage
 
     set_hudmessage( 220, 0, 36, HUDMESSAGE_POS_CENTER, 0.30, 2, 0.1, 4.0, 0.02, 0.02, HUDMESSAGE_CHAN_SERVER );
-    show_hudmessage( 0, WAR3_disableD_HUD );
+    show_hudmessage( 0, "%s", WAR3_DISABLED_HUD );
 
     server_cmd( "sv_restart 5" );
 
@@ -1217,7 +1194,7 @@ public WAR3_vote_start( id ) {
 
     if ( !get_pcvar_num( CVAR_vote_allow ) && !( get_user_flags( id ) & ADMIN_VOTE ) )
     {
-        client_print( id, print_chat, WAR3X_VOTE_NOVOTE );
+        client_print( id, print_chat, "%s", WAR3X_VOTE_NOVOTE );
         return PLUGIN_HANDLED;
     }
 
@@ -1225,13 +1202,13 @@ public WAR3_vote_start( id ) {
     {
         if ( g_fVoteRunning > get_gametime() )
         {
-            client_print( id, print_chat, WAR3X_VOTE_ALREADY );
+            client_print( id, print_chat, "%s", WAR3X_VOTE_ALREADY );
             return PLUGIN_HANDLED;
         }
 
         if ( g_fVoteRunning > 0.0 && ( g_fVoteRunning + get_cvar_float( "amx_vote_delay" ) > get_gametime() ) )
         {
-            client_print( id, print_chat, WAR3X_VOTE_NOTALLOWED );
+            client_print( id, print_chat, "%s", WAR3X_VOTE_NOTALLOWED );
             return PLUGIN_HANDLED;
         }
 
@@ -1352,7 +1329,7 @@ public WAR3_check_level( id, iOldXp, iNewXp ) {
         formatex( szMessage, 63, INFO_GAINLEVEL, iLevel );
 
         set_hudmessage( 255, 255, 255, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_INFO, 0, 6.0, 5.0, 0.1, 0.5, HUDMESSAGE_CHAN_INFO );
-        show_hudmessage( id, szMessage );
+        show_hudmessage( id, "%s", szMessage );
 
         // Activate Racial Skills
 
@@ -1826,7 +1803,7 @@ public WAR3_hud_level( id ) {
     }
 
     set_hudmessage( 255, 255, 255, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_LEVEL, 0, 6.0, 5.0, 0.5, 1.0, HUDMESSAGE_CHAN_LEVEL );
-    show_hudmessage( id, szMessage );
+    show_hudmessage( id, "%s", szMessage );
 
 
     return PLUGIN_HANDLED;
@@ -1844,7 +1821,7 @@ public war3_chatskills( id, raceId, ShowHelp ) {
         new szVipMsg[128];
         formatex( szVipMsg, 127, VIP_NOSKILLS );
 
-        client_print( id, print_chat, szVipMsg );
+        client_print( id, print_chat, "%s", szVipMsg );
 
         return PLUGIN_HANDLED;
     }
@@ -1883,26 +1860,26 @@ public war3_chatskills( id, raceId, ShowHelp ) {
     WAR3_race_info( id, raceId, RACEINFO_RACIAL, szData );
     formatex( szMessage, 127, INFO_CURRENTSKILLS, szData, fRacialPercentage, "%%", szSkills );
 
-    client_print( id, print_chat, szMessage );
+    client_print( id, print_chat, "%s", szMessage );
 
     // Show /skills Notification?
 
     if ( ShowHelp )
-        client_print( id, print_chat, INFO_SKILLDETAILS );
+        client_print( id, print_chat, "%s", INFO_SKILLDETAILS );
 
     return PLUGIN_HANDLED;
 }
 
 stock is_war3_entity( iEnt, szClassName[] = "" )
 {
-	// Entities that war3x creates
-	new szWar3Entities[][64] = {"WAR3X_ITEM", "DEATH_COIL", "ROOT_PLANT", "IMPALE_CLAW", "SLEEP_Z", "REJUV_FLARE", "FLAME_STRIKE", "HEAL_EFFECT" };
-
 	// Don't want to look up info for an invalid ent
+
 	if ( !is_valid_ent(iEnt) )
-	{
 		return false;
-	}
+
+	// Entities that war3x creates
+
+	new szWar3Entities[][64] = { "WAR3X_ITEM", "DEATH_COIL", "ROOT_PLANT", "IMPALE_CLAW", "SLEEP_Z", "REJUV_FLARE", "FLAME_STRIKE", "HEAL_EFFECT" };
 
 	if ( strlen(szClassName) == 0 )
 	{
@@ -1921,4 +1898,5 @@ stock is_war3_entity( iEnt, szClassName[] = "" )
 	return false;
 }
 
-// End of SHARED.INL
+
+// ------------------------------------------------- End. - //

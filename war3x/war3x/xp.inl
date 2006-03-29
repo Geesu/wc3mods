@@ -355,7 +355,7 @@ public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
         set_hudmessage( 196, 0, 0, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_SERVER, 0, 0.1, 6.0, 0.5, 2.0, HUDMESSAGE_CHAN_SERVER );
     }
 
-    show_hudmessage( playerId, szMessage );
+    show_hudmessage( playerId, "%s", szMessage );
 
     // Change XP
 
@@ -774,7 +774,7 @@ public XP_Hostage_Touch( id ) {
             new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
             if ( iLevel == 10 )
-                client_print( id, print_chat, XP_MAX_MESSAGE );
+                client_print( id, print_chat, "%s", XP_MAX_MESSAGE );
 
             else
             {
@@ -895,7 +895,7 @@ public XP_Bomb_Pickup( id ) {
     #if XP_BOMBPLANT
 
         if ( iLevel == 10 )
-            client_print( id, print_chat, XP_MAX_BOMBPICKUP_MESSAGE );
+            client_print( id, print_chat, "%s", XP_MAX_BOMBPICKUP_MESSAGE );
 
         else
         {
@@ -947,7 +947,7 @@ public XP_Bomb_Plant( id ) {
             new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
             if ( iLevel == 10 )
-                client_print( id, print_chat, XP_MAX_MESSAGE );
+                client_print( id, print_chat, "%s", XP_MAX_MESSAGE );
 
             else
             {
@@ -1013,7 +1013,7 @@ public XP_Bomb_Defuse( id ) {
             new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
             if ( iLevel == 10 )
-                client_print( id, print_chat, XP_MAX_MESSAGE );
+                client_print( id, print_chat, "%s", XP_MAX_MESSAGE );
 
             else
             {
@@ -1077,7 +1077,7 @@ public XP_Vip_Spawn( id ) {
         new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
         if ( iLevel == 10 )
-            client_print( id, print_chat, XP_MAX_VIPSPAWN_MESSAGE );
+            client_print( id, print_chat, "%s", XP_MAX_VIPSPAWN_MESSAGE );
 
         else
         {
@@ -1114,7 +1114,7 @@ public XP_Vip_Escape( id ) {
             new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
             if ( iLevel == 10 )
-                client_print( id, print_chat, XP_MAX_MESSAGE );
+                client_print( id, print_chat, "%s", XP_MAX_MESSAGE );
 
             else
             {
@@ -1448,4 +1448,5 @@ public XP_Support_Heal( caster, iHealthGiven ) {
     return PLUGIN_HANDLED;
 }
 
-// End of XP.INL
+
+// ------------------------------------------------- End. - //

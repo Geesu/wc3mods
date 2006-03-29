@@ -1291,11 +1291,11 @@ public iGettok( szData[64], iToken, cChar ) {
 public status_print( id, szMessage[256] ) {
 
     if ( id > 0 && id <= MAX_PLAYERS )
-        client_print( id, print_console, szMessage );
+        client_print( id, print_console, "%s", szMessage );
 
     else
     {
-        server_print( szMessage );
+        server_print( "%s", szMessage );
     }
 
     return PLUGIN_HANDLED;
@@ -1423,3 +1423,6 @@ public is_weapon_fired( iNewAmmo, iOldAmmo ) {
 stock Float:distance( iDistance ) {
   return float( iDistance ) * 0.0254
 }
+
+
+// ------------------------------------------------- End. - //

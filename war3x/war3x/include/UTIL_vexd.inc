@@ -413,4 +413,5 @@ public Timer_TempEnt( iEnt, Float:fLife ) {
     return PLUGIN_HANDLED;
 }
 
-// End of UTIL_VEXD.INC
+
+// ------------------------------------------------- End. - //

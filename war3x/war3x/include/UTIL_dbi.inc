@@ -416,4 +416,5 @@ public Check_DBI_Connection()
 	return ( 1 );
 }
 
-// End of UTIL_DBI.INC
+
+// ------------------------------------------------- End. - //

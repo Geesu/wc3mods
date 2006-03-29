@@ -275,12 +275,10 @@ static NE_S_ELUNES_absorb( id, iAbsorbed ) {
 
 // Nature's Blessing ( speed )
 
-public NE_S_BLESSING_set_speed( id, weapon ) {
+public Float:NE_S_BLESSING_get_speed( id ) {
 
-    // Check if restricted
-
-    if ( !WAR3_skill_enabled( id, RACE_NIGHTELF, SKILL_2 ) )
-        return PLUGIN_HANDLED;
+    new weapon, iClip, iAmmo;
+    weapon = get_user_weapon( id, iClip, iAmmo );
 
     new Float:fSpeed = CS_WEAPON_SPEED[weapon];
 
@@ -294,6 +292,18 @@ public NE_S_BLESSING_set_speed( id, weapon ) {
     if ( fBlessingSpeed > BLESSING_MAXSPEED )
         fBlessingSpeed = BLESSING_MAXSPEED;
 
+    return ( fBlessingSpeed );
+}
+
+
+public NE_S_BLESSING_set_speed( id ) {
+
+    // Check if restricted
+
+    if ( !WAR3_skill_enabled( id, RACE_NIGHTELF, SKILL_2 ) )
+        return PLUGIN_HANDLED;
+
+    new Float:fBlessingSpeed = NE_S_BLESSING_get_speed( id );
     set_user_maxspeed( id, fBlessingSpeed );
 
     return PLUGIN_HANDLED;
@@ -1147,3 +1157,6 @@ public NE_U_REJUVENATION_remove( target ) {
 
     return PLUGIN_HANDLED;
 }
+
+
+// ------------------------------------------------- End. - //

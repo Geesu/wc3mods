@@ -1,5 +1,8 @@
-/* - Events --------------------------------------------------- */
 
+//////////////////////////////////// Event Configuration /////
+
+
+// Status icons
 
 public on_StatusIcon( id ) {
 
@@ -135,19 +138,16 @@ public on_BuyArmor( id, iKey ) {
         }
     }
 
-    // Check for Speed Boost ( nature's blessing )
+    // Check for speed boost ( nature's blessing )
 
-    if ( bArmorGiven )
-    {
+    if ( bArmorGiven && g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] )
         WAR3_set_speed( id );
-        return PLUGIN_HANDLED;
-    }
 
     return PLUGIN_CONTINUE;
 }
 
 
-// Armor Picked Up
+// Armor picked up
 
 public on_ArmorPickup( id ) {
 
@@ -164,7 +164,7 @@ public on_ArmorPickup( id ) {
 }
 
 
-// Armor Type
+// Armor type
 
 public on_ArmorType( id ) {
 
@@ -184,7 +184,7 @@ public on_ArmorType( id ) {
 }
 
 
-// Target (team)
+// Target ( team )
 
 public on_Target_Team( id ) {
 
@@ -198,7 +198,7 @@ public on_Target_Team( id ) {
 }
 
 
-// Target (id)
+// Target ( id )
 
 public on_Target_Id( id ) {
 
@@ -220,7 +220,7 @@ public on_Target_Id( id ) {
         Ultimate_Cast( id, target );
     }
 
-    // Auto-Cast on teammate(s)
+    // Auto-cast on teammate(s)
 
     else if ( target && g_PlayerInfo[id][CURRENT_ULTIMATE] && !g_fUltimateCooldown[id] && id != g_Vip )
     {
@@ -228,7 +228,7 @@ public on_Target_Id( id ) {
 
         if ( is_user_bot( id ) )
         {
-            // Heal Teammate
+            // Heal teammate
 
             if ( get_user_team( id ) == get_user_team( target ) )
             {
@@ -311,21 +311,21 @@ public on_Target_Id( id ) {
             new Float:fPercentage = ( float( iXp ) - float( iLastlvlXp ) ) / ( float( iNextlvlXp ) - float( iLastlvlXp ) ) * 100.0;
             new iPercentage = floatround( fPercentage );
 
-			// Get Item and Race Name
+			// Get item and race name
 
 			new szItemName[32], szRaceName[32];
 
 			LANG_GetItemName( iItemNum, SHOP_COMMON, id, szItemName, 31 );
 			LANG_GetRaceName ( iRaceNum + 1, id, szRaceName, 31, true )
 
-            // Create Message
+            // Create message
 
             formatex( szM1, 255, INFO_FOLLOW_MESSAGE_1, szRaceName, iLevel, iXp, iNextXp, iPercentage, "%%" );
             formatex( szM2, 255, INFO_FOLLOW_MESSAGE_2, szItemName, "None" );
 
             formatex( szMessage, 255, "%s^n%s^n%s", szM1, szM2, szM3 );
 
-            // Show Message
+            // Show message
 
             set_hudmessage( 255, 255, 255, fXpos, fYpos, 0, 6.0, 500.0, 0.1, 0.5, HUDMESSAGE_CHAN_DEAD );
             show_hudmessage( id, "%s", szMessage );
@@ -402,7 +402,7 @@ public on_Target_Health( id ) {
         }
     }
 
-    // No Target
+    // No target
 
     else
     {
@@ -416,7 +416,7 @@ public on_Target_Health( id ) {
 }
 
 
-// Normal Damage
+// Normal damage
 
 public on_Damage( victim ) {
 
@@ -436,24 +436,24 @@ public on_Damage( victim ) {
     if ( bodypart == HIT_HEAD )
         headshot = 1;
 
-    // Check for Bomb Explosion
+    // Check for bomb explosion
 
     if ( get_gametime() - g_fBombTime < 1.0 && !attacker )
     {
         ITEM_ANKH_set( victim );
 
-        new parm_Bomb[1];
-        parm_Bomb[0] = victim;
+        new arg_write[1];
+        arg_write[0] = victim;
 
-        set_task( 0.1, "on_BombDeath", 0, parm_Bomb, 1 );
+        set_task( 0.1, "on_BombDeath", 0, arg_write, 1 );
     }
 
-    // Check if Impaled
+    // Check if impaled
 
     if ( g_PlayerImpaled[victim] && victim == attacker )
         UD_U_IMPALE_remove( victim );
 
-    // Check if Offensive Skills Should Be Ignored
+    // Check if offensive skills should be ignored
 
     new bool:bAllowOffensive = true;
 
@@ -469,7 +469,7 @@ public on_Damage( victim ) {
     if ( cs_get_weapon_type_( weapon ) & CS_WEAPON_TYPE_AUTOSNIPER )
         bAllowOffensive = false;
 
-    // We need to make sure that we have a valid attacker ID
+    // We need to make sure that we have a valid attacker
 
     if ( WAR3_player_valid( attacker ) && bAllowOffensive )
     {
@@ -482,7 +482,7 @@ public on_Damage( victim ) {
         }
     }
 
-    // Check if Defensive Skills Should Be Ignored
+    // Check if defensive skills should be ignored
 
     new bool:bAllowDefensive = true;
 
@@ -505,12 +505,12 @@ public on_Damage( victim ) {
     if ( WAR3_player_valid( attacker ) && g_PlayerInfo[attacker][CURRENT_ITEM] == ITEM_CLAWS && get_user_health( victim ) > 0 && get_user_team( attacker ) != get_user_team( victim ) && bAllowOffensive )
         ITEM_CLAWS_damage( attacker, victim, weapon, headshot );
 
-    // Check if Attacked by Avatar
+    // Check if attacked by Avatar
 
     if ( WAR3_player_valid(attacker) && g_iPlayerAvatar[attacker] && get_user_team( attacker ) != get_user_team( victim ) )
         HU_U_AVATAR_damage( attacker, victim, weapon, headshot );
 
-    // Check if Attacked by Wind Walker
+    // Check if attacked by Wind Walker
 
     if ( WAR3_player_valid( attacker ) && g_bPlayerWalk[attacker] && get_user_team( attacker ) != get_user_team( victim ) )
     {
@@ -518,11 +518,11 @@ public on_Damage( victim ) {
         OR_U_WINDWALK_strike( attacker, victim, weapon, headshot );
     }
 
-    // Invisibility Cooldown
+    // Invisibility cooldown
 
     SHARED_INVIS_cooldown( victim );
 
-    // Bot Ultimates ( Defensive )
+    // Bot ultimates ( defensive )
 
     if ( is_user_bot( victim ) && g_PlayerInfo[victim][CURRENT_ULTIMATE] && !g_fUltimateCooldown[victim] && victim != g_Vip )
     {
@@ -530,12 +530,12 @@ public on_Damage( victim ) {
 
         if ( fRandomNum <= BOT_ULTIMATECHANCE )
         {
-            // Cast Defensive Ultimate
+            // Cast defensive ultimate
 
             if (  Ultimate_Target( victim ) & ULTIMATE_TARGET_SELF && Ultimate_Type( victim ) & ULTIMATE_TYPE_DEFENSIVE )
                 cmd_Ultimate( victim );
 
-            // Self-Heal
+            // Self-heal
 
             else if ( fRandomNum <= BOT_ULTIMATECHANCE && Ultimate_Target( victim ) & ULTIMATE_TARGET_SELF && Ultimate_Type( victim ) & ULTIMATE_TYPE_HEAL )
             {
@@ -549,7 +549,7 @@ public on_Damage( victim ) {
 }
 
 
-// Normal Death
+// Normal death
 
 public on_Death() {
 
@@ -561,15 +561,15 @@ public on_Death() {
     new victim = read_data( 2 );
     new headshot = read_data( 3 );
 
-    // Perform Victim Actions
+    // Perform victim actions
 
     WAR3_death_victim( victim );
 
-    // Check if Suicide ( worldspawn/triggers )
+    // Check if suicide ( worldspawn/triggers )
 
     if ( !killer )
     {
-        // Check if Player was Impaled
+        // Check if player was Impaled
 
         if ( g_PlayerImpaled[victim] )
         {
@@ -583,17 +583,17 @@ public on_Death() {
     new weapon, iClip, iAmmo;
     weapon = get_user_weapon( killer, iClip, iAmmo );
 
-    // Check if Suicide ( slap/slay/grenade/etc )
+    // Check if suicide ( slap/slay/grenade/etc )
 
     if ( killer == victim )
         return PLUGIN_CONTINUE;
 
-    // Check if Teamkill
+    // Check if teamkill
 
     if ( get_user_team( killer ) == get_user_team( victim ) )
         XP_Kill_Teammate( killer );
 
-    // Normal Kill
+    // Normal kill
 
     else
     {
@@ -626,7 +626,7 @@ public on_CurWeapon( id ) {
         client_print( id, print_chat, "^n%L^n^n", id, "CONSOLE_WELCOME_COMMANDS", WAR3X_PREFIX );
     }
 
-    // Display Race Select Menu
+    // Display race select menu
 
     if ( !g_PlayerInfo[id][CURRENT_RACE] )
         menu_SelectRace( id );
@@ -659,14 +659,14 @@ public on_CurWeapon( id ) {
 
     g_iPlayerAmmo[id][weapon] = iAmmo;
 
-    // End Windwalk
+    // End Wind Walk
 
     if ( g_bPlayerWalk[id] && weapon != CSW_KNIFE )
     {
-        new parm_Walk[2];
-        parm_Walk[0] = id;
+        new arg_write[2];
+        arg_write[0] = id;
 
-        OR_U_WINDWALK_out( parm_Walk );
+        OR_U_WINDWALK_out( arg_write );
     }
 
     // Prevent weapon switching while sleeping
@@ -692,14 +692,14 @@ public on_CurWeapon( id ) {
 }
 
 
-// Global New Round
+// Global new round
 
 public on_FreezeStart() {
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_HANDLED;
 
-    // Freeze Start Purges
+    // Freeze start purges
 
     Purge_FreezeStart();
 
@@ -718,7 +718,7 @@ public on_FreezeStart() {
     {
         new id = Players[iPlayerNum];
 
-        // Display Race Select Menu
+        // Display race select menu
 
         if ( !g_PlayerInfo[id][CURRENT_RACE] )
             menu_SelectRace( id );
@@ -727,7 +727,7 @@ public on_FreezeStart() {
         {
             g_iPlayerRounds[id] += 1;
 
-            // Check if Race Change Attempt was Made
+            // Check if race change attempt was made
 
             if ( g_PlayerInfo[id][CURRENT_NEXTRACE] )
             {
@@ -750,7 +750,7 @@ public on_FreezeStart() {
                     }
                 }
 
-                // Update Race Info
+                // Update race info
 
                 War3x_StoreSession( id, next_race );
                 WAR3_hud_level( id );
@@ -762,14 +762,12 @@ public on_FreezeStart() {
                 g_bEvadeNextShot[id] = false;
             }
 
-            // Check for Ankh
+            // Check for ankh
 
             if ( g_PlayerBackpack[id][CURRENT_PRIMARY] || g_PlayerBackpack[id][CURRENT_SECONDARY] || g_PlayerBackpack[id][CURRENT_HEGRENADE] || g_PlayerBackpack[id][CURRENT_FLASHBANG] || g_PlayerBackpack[id][CURRENT_SMOKEGRENADE] || g_PlayerBackpack[id][CURRENT_ARMOR] || g_PlayerBackpack[id][CURRENT_DEFUSE] )
             {
                 if ( id == g_OldVip || g_PlayerInfo[id][CURRENT_ITEM] == ITEM_ANKH || g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC )
                     ITEM_ANKH_drop( id );
-
-                // Race Change from Orc
 
                 else
                 {
@@ -779,21 +777,21 @@ public on_FreezeStart() {
                 g_PlayerInfo[id][CURRENT_ITEM] = 0;
             }
 
-            // Set Invisibility
+            // Set invisibility
 
             if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN || g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK )
                 SHARED_INVIS_set( id );
 
-            // Set Bonus Health
+            // Set bonus health
 
             WAR3_set_health( id );
 
-            // Make Max Health/Armor Adjustments
+            // Make max health/armor adjustments
 
             WAR3_check_health( id );
             WAR3_check_armor( id );
 
-            // Freeze Player
+            // Freeze player
 
             set_user_maxspeed( id, SPEED_IMMOBILIZE );
 
@@ -813,7 +811,7 @@ public on_FreezeStart() {
             war3_chatskills( id, iCurrentRace, 0 );
             WAR3_check_skills( id );
 
-            // Hudmessages
+            // Hud messages
 
             new Float:fHoldTime = get_cvar_float( "mp_freezetime" );
             WAR3_hud_xp( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 0.0, fHoldTime );
@@ -825,7 +823,7 @@ public on_FreezeStart() {
                 Store_ActivePlayer( id );
         }
 
-        // Reset Round XP Globals
+        // Reset round XP globals
 
         g_iXPkill[id][XP_TOTAL] += g_iXPkill[id][XP_ROUND];
         g_iXPkill[id][XP_ROUND] = 0;
@@ -837,7 +835,7 @@ public on_FreezeStart() {
         g_iXPsupport[id][XP_ROUND] = 0;
     }
 
-    // Save Player Queue
+    // Save player queue
 
     if ( g_bSaveXp && g_SaveQueue_iTotal >= QUEUES_BEFORE_SAVE )
         Store_Queue_All();
@@ -846,7 +844,7 @@ public on_FreezeStart() {
 }
 
 
-// Player Spawn
+// Player spawn
 
 public on_ResetHud( id ) {
 
@@ -859,10 +857,7 @@ public on_ResetHud( id ) {
         g_bFreezeTime = true;
     }
 
-    new parm_Spawn[1];
-    parm_Spawn[0] = id;
-
-    // Clear Target from Follow Mode
+    // Clear target from follow mode
 
     g_PlayerTarget[id] = 0;
     g_PlayerTargetTeam[id] = 0;
@@ -871,20 +866,20 @@ public on_ResetHud( id ) {
 
     Purge_NewRound( id );
 
-    // Remove Item from Inventory on Round 1
+    // Remove item from inventory on round 1
 
     if ( g_iCurrentRound == 1 )
         g_PlayerInfo[id][CURRENT_ITEM] = ITEM_NONE;
 
 
-    // Select Race ( if bot )
+    // Select race ( if bot )
 
     if ( is_user_bot( id ) && !g_PlayerInfo[id][CURRENT_RACE] )
     {
         new iRaceId = random_num( 0, TOTAL_RACES - 1 );
         War3x_StoreSession( id, iRaceId );
 
-        // Give Random Level if LongTerm
+        // Give random level if longTerm
 
         if ( g_bSaveXp )
         {
@@ -905,7 +900,7 @@ public on_ResetHud( id ) {
 }
 
 
-// Global Events
+// Global events
 
 public on_World_Action() {
 
@@ -915,14 +910,14 @@ public on_World_Action() {
     new szLogAction[32];
     read_logargv( 1, szLogAction, 64 );
 
-    // Round Start ( after freeze time )
+    // Round start ( after freeze time )
 
     if ( equal( szLogAction, "Round_Start" ) )
     {
         g_bFreezeTime = false;
         g_fBuyTime = get_gametime();
 
-        // Ultimate Warmup
+        // Ultimate warmup
 
         if ( get_pcvar_num( CVAR_ultimatewarmup ) )
         {
@@ -937,7 +932,7 @@ public on_World_Action() {
             g_bUltimateWarmup = false;
         }
 
-        // Item Hudmessage
+        // Item hud message
 
         set_task( HUDMESSAGE_FREQ_ITEM, "_WAR3_hud_item", TASK_SHOWITEM );
 
@@ -948,11 +943,11 @@ public on_World_Action() {
         {
             new id = Players[iPlayerNum];
 
-            // Activate Player skills / Ultimate
+            // Activate player skills / ultimate
 
             WAR3_enable_skills( id );
 
-            // Attempt to Buy Item if Bot
+            // Attempt to buy item if bot
 
             if ( is_user_bot( id ) && !g_PlayerInfo[id][CURRENT_ITEM] && get_pcvar_num( CVAR_shopmenus ) )
             {
@@ -980,7 +975,7 @@ public on_World_Action() {
     }
 
 
-    // Round End
+    // Round end
 
     else if ( equal( szLogAction, "Round_End" ) )
     {
@@ -1006,11 +1001,11 @@ public on_World_Action() {
         {
             new id = Players[iPlayerNum];
 
-            // Make Sure Race Selected
+            // Make sure race selected
 
             if ( g_PlayerInfo[id][CURRENT_RACE] )
             {
-                // Check if Race Change Attempt was Made
+                // Check if race change attempt was made
 
                 if ( g_PlayerInfo[id][CURRENT_NEXTRACE] )
                 {
@@ -1040,41 +1035,41 @@ public on_World_Action() {
 
         g_iCurrentRound ++;
 
-        // Cancel Ultimate Warmup
+        // Cancel ultimate warmup
 
         remove_task( TASK_ULTIMATEWARMUP, 0 );
 
-        // Cancel Upkeep Timer
+        // Cancel upkeep timer
 
         remove_task( TASK_UPKEEP, 0 );
 
-        // Set 5.0 Second task for Freeze Start
+        // Set 5.0 second task for freeze start
 
         set_task( 5.0, "on_FreezeStart", TASK_NEWROUND );
     }
 
-    // Game Commencing
+    // Game commencing
 
     else if ( equal( szLogAction, "Game_Commencing" ) )
     {
         g_bRoundEnd = true;
         g_iCurrentRound = 0;
 
-        // Set 3.0 Second task for Freeze Start
+        // Set 3.0 second task for freeze start
 
         set_task( 3.0, "on_FreezeStart", TASK_NEWROUND );
 
-        // Cancel Upkeep Timer
+        // Cancel upkeep timer
 
         remove_task( TASK_UPKEEP, 0 );
 
-        // Reset Team Wins for Upkeep
+        // Reset team wins for upkeep
 
         g_TeamWins[0] = 0;
         g_TeamWins[1] = 0;
     }
 
-    // Round Restart
+    // Round restart
 
     else if ( containi( szLogAction, "Restart_Round_" ) != -1 )
     {
@@ -1088,7 +1083,7 @@ public on_World_Action() {
             new Players[32], iTotalPlayers;
             get_players( Players, iTotalPlayers );
 
-            // Reset PlayerInfo Array(s)
+            // Reset playerInfo array(s)
 
             for ( new iPlayerNum = 0; iPlayerNum < iTotalPlayers; iPlayerNum++ )
             {
@@ -1097,7 +1092,7 @@ public on_World_Action() {
             }
         }
 
-        // Cancel Upkeep Timer
+        // Cancel upkeep timer
 
         remove_task( TASK_UPKEEP, 0 );
     }
@@ -1106,7 +1101,7 @@ public on_World_Action() {
 }
 
 
-// Map Change
+// Map change
 
 public on_Intermission() {
 
@@ -1115,7 +1110,7 @@ public on_Intermission() {
 
     // maybe throw something in here (stats?)
 
-    // Cancel Upkeep Timer
+    // Cancel upkeep timer
 
     remove_task( TASK_UPKEEP, 0 );
 
@@ -1141,7 +1136,7 @@ public on_Objective_Player() {
     id = get_user_index( szPlayerName );
 
 
-    // Hostage Touched
+    // Hostage touched
 
     if ( equal( szLogAction, "Touched_A_Hostage" ) )
     {
@@ -1149,7 +1144,7 @@ public on_Objective_Player() {
         XP_Hostage_Touch( id );
     }
 
-    // Hostage Rescued
+    // Hostage rescued
 
     else if ( equal( szLogAction, "Rescued_A_Hostage" ) )
     {
@@ -1157,7 +1152,7 @@ public on_Objective_Player() {
         XP_Hostage_Rescued( id );
     }
 
-    // Hostage Killed
+    // Hostage killed
 
     else if ( equal( szLogAction, "Killed_A_Hostage" ) )
     {
@@ -1165,7 +1160,7 @@ public on_Objective_Player() {
         XP_Hostage_Killed( id );
     }
 
-    // Spawn with Bomb / Pickup Bomb
+    // Spawn with bomb / pickup bomb
 
     else if ( equal( szLogAction, "Spawned_With_The_Bomb" ) || equal( szLogAction, "Got_The_Bomb" ) )
     {
@@ -1173,7 +1168,7 @@ public on_Objective_Player() {
         XP_Bomb_Pickup( id );
     }
 
-    // Dropped Bomb
+    // Dropped bomb
 
     else if ( equal( szLogAction, "Dropped_The_Bomb" ) )
     {
@@ -1181,7 +1176,7 @@ public on_Objective_Player() {
         XP_Bomb_Drop( id );
     }
 
-    // Bomb Planted
+    // Bomb planted
 
     else if ( equal( szLogAction, "Planted_The_Bomb" ) )
     {
@@ -1194,7 +1189,7 @@ public on_Objective_Player() {
         g_BombPlanter = 0;
     }
 
-    // Bomb Defused
+    // Bomb defused
 
     else if ( equal( szLogAction, "Defused_The_Bomb" ) )
     {
@@ -1206,14 +1201,14 @@ public on_Objective_Player() {
         g_BombDefuser = 0;
     }
 
-    // Bomb Defusing
+    // Bomb defusing
 
     else if ( equal( szLogAction, "Begin_Bomb_Defuse_With_Kit" ) || equal( szLogAction, "Begin_Bomb_Defuse_Without_Kit" ) )
     {
         // Moved to on_BarTime()
     }
 
-    // VIP Spawn
+    // VIP spawn
 
     else if ( equal( szLogAction, "Became_VIP" ) )
     {
@@ -1227,7 +1222,7 @@ public on_Objective_Player() {
         XP_Vip_Spawn( id );
     }
 
-    // VIP Escaped
+    // VIP escaped
 
     else if ( equal( szLogAction, "Escaped_As_VIP" ) )
     {
@@ -1251,7 +1246,7 @@ public on_Objective_Team() {
     read_logargv( 1, szLogTeam, 31 );
     read_logargv( 3, szLogAction,63 );
 
-    // Team Wins
+    // Team wins
 
     if ( equal( szLogAction, "CTs_Win" ) || equal( szLogAction, "Terrorists_Win" ) )
     {
@@ -1269,14 +1264,14 @@ public on_Objective_Team() {
         g_TeamWins[1] = str_to_num( szCTwins );
     }
 
-    // Target Bombed
+    // Target bombed
 
     else if ( equal( szLogAction, "Target_Bombed" ) )
     {
         // Moved to on_TargetBombed() ( more reliable )
     }
 
-    // Target Saved
+    // Target saved
 
     else if ( equal( szLogAction, "Target_Saved" ) )
     {
@@ -1300,7 +1295,7 @@ public on_Objective_Team() {
         XP_Not_Rescued_CT();
     }
 
-    // All hostages Rescued
+    // All hostages rescued
 
     else if ( equal( szLogAction, "All_Hostages_Rescued" ) )
     {
@@ -1311,7 +1306,7 @@ public on_Objective_Team() {
 }
 
 
-// Bomb Plant / Defuse
+// Bomb plant / befuse
 
 public on_BarTime( id ) {
 
@@ -1320,17 +1315,17 @@ public on_BarTime( id ) {
 
     new BarTime = read_data( 1 );
 
-    // Bomb Plant
+    // Bomb plant
 
     if ( BarTime == 3 )
         g_BombPlanter = id;
 
-    // Bomb Defuse
+    // Bomb defuse
 
     else if ( BarTime == 5 || BarTime == 10 )
         g_BombDefuser = id;
 
-    // Finished Planting/Defusing
+    // Finished planting/defusing
 
     else if ( BarTime == 0 )
     {
@@ -1380,14 +1375,14 @@ public on_Health( id ) {
         OR_S_REGENERATION_set( id );
     }
 
-    // Berserk Check
+    // Berserk speed ( make sure to avoid breaking effects / VIP restriction )
 
     if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] )
     {
-        OR_S_BERSERK_set_speed( id );
+        WAR3_set_speed( id );
     }
 
-    // Dispell Harmful Ultimate(s) ( bot )
+    // Dispell harmful ultimate(s) ( bot )
 
     if ( is_user_bot( id ) )
     {
@@ -1401,13 +1396,15 @@ public on_Health( id ) {
         }
     }
 
-    // Save Me!
+    // Low health icon
 
     WAR3_icon_lowhealth( id );
 
     return PLUGIN_CONTINUE;
 }
 
+
+// Armor depletion
 
 public on_ArmorZero( id ) {
 
@@ -1425,6 +1422,8 @@ public on_ArmorZero( id ) {
 }
 
 
+// Target bombed ( triggers even after round end )
+
 public on_TargetBombed() {
 
     if ( !g_bWar3xEnabled )
@@ -1441,6 +1440,8 @@ public on_TargetBombed() {
     return PLUGIN_CONTINUE;
 }
 
+
+// Weapon zoom
 
 public on_Zoom( id ) {
 
@@ -1461,6 +1462,8 @@ public on_Zoom( id ) {
 }
 
 
+// Weapon pickup
+
 public on_WeapPickup( id ) {
 
     if ( !g_bWar3xEnabled )
@@ -1469,6 +1472,8 @@ public on_WeapPickup( id ) {
     return PLUGIN_CONTINUE;
 }
 
+
+// Use shield
 
 public on_UseShield( id ) {
 
@@ -1480,6 +1485,8 @@ public on_UseShield( id ) {
     return PLUGIN_CONTINUE;
 }
 
+
+// Target type ( friend / enemy / hostage )
 
 public on_Target_Type( id ) {
 
@@ -1494,11 +1501,13 @@ public on_Target_Type( id ) {
 }
 
 
+// Player spawn ( war3x disabled )
+
 public on_ResetHud_NOWAR3( id ) {
 
     if ( !g_bDisabledNotify[id] && is_user_alive( id ) )
     {
-        client_print( id, print_chat, INFO_DISABLEDMAP_CHAT );
+        client_print( id, print_chat, "%s", INFO_DISABLEDMAP_CHAT );
         g_bDisabledNotify[id] = true;
     }
 
@@ -1506,9 +1515,11 @@ public on_ResetHud_NOWAR3( id ) {
 }
 
 
-public on_BombDeath( parm_Bomb[1] ) {
+// Death to bomb explosion
 
-    new id = parm_Bomb[0];
+public on_BombDeath( arg_read[1] ) {
+
+    new id = arg_read[0];
 
     if ( !is_user_alive( id ) )
         WAR3_death_victim( id );
@@ -1521,3 +1532,5 @@ public on_BombDeath( parm_Bomb[1] ) {
     return PLUGIN_HANDLED;
 }
 
+
+// ------------------------------------------------- End. - //

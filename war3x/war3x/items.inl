@@ -23,7 +23,7 @@ public Item_Buy( id, iNewItem ) {
 
     if ( cs_get_user_money( id ) + ( ITEM_COST[iOldItem] / ITEM_BUYBACK ) < ITEM_COST[iNewItem] )
     {
-        client_print( id, print_center, ITEM_INSUFFICIENT_FUNDS );
+        client_print( id, print_center, "%s", ITEM_INSUFFICIENT_FUNDS );
         return PLUGIN_HANDLED;
     }
 
@@ -31,7 +31,7 @@ public Item_Buy( id, iNewItem ) {
 
     if ( g_PlayerInfo[id][CURRENT_ITEM] == iNewItem )
     {
-        client_print( id, print_center, ITEM_EQUIPPED );
+        client_print( id, print_center, "%s", ITEM_EQUIPPED );
         return PLUGIN_HANDLED;
     }
 
@@ -82,7 +82,7 @@ public Item_Buy( id, iNewItem ) {
 		LANG_GetItemName ( iOldItem, SHOP_COMMON, id, szItemName, 31 )
         formatex( szMessage, 127, ITEM_BUYBACK_MESSAGE, szItemName, iOldCost );
 
-        client_print( id, print_chat, szMessage );
+        client_print( id, print_chat, "%s", szMessage );
     }
 
     else
@@ -104,7 +104,7 @@ public Item_BuyTome( id ) {
 
     if ( WAR3_get_level(g_PlayerInfo[id][CURRENT_XP]) == TOTAL_LEVELS )
     {
-        client_print( id, print_center, ITEM_NOBONUS );
+        client_print( id, print_center, "%s", ITEM_NOBONUS );
         return PLUGIN_HANDLED;
     }
 
@@ -112,7 +112,7 @@ public Item_BuyTome( id ) {
 
     if ( cs_get_user_money( id ) < ITEM_COST[ITEM_TOME] )
     {
-        client_print( id, print_center, ITEM_INSUFFICIENT_FUNDS );
+        client_print( id, print_center, "%s", ITEM_INSUFFICIENT_FUNDS );
         return PLUGIN_HANDLED;
     }
 
@@ -141,8 +141,6 @@ public Item_BuyTome( id ) {
 
 public Item_Equip( id, iNewItem ) {
 
-    new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
-
     // Ankh of Reincarnation
 
     if ( iNewItem == ITEM_ANKH )
@@ -151,18 +149,10 @@ public Item_Equip( id, iNewItem ) {
 
         if ( id == g_Vip )
         {
-            client_print( id, print_center, ITEM_UNAVAILABLE );
+            client_print( id, print_center, "%s", ITEM_UNAVAILABLE );
             return ( 0 );
         }
 
-        // Don't give to Orcs if skill is >= Ankh value
-/*
-        if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL3] && s_Reincarnate[g_PlayerInfo[id][CURRENT_SKILL3] - 1] > ITEM_ANKH_VALUE )
-        {
-            client_print( id, print_center, ITEM_NOBONUS );
-            return ( 0 );
-        }
-*/
         new szMessage[128], iLen;
         iLen += format( szMessage[iLen], 127 - iLen, ITEM_ANKH_PRIMARY );
 
@@ -180,24 +170,7 @@ public Item_Equip( id, iNewItem ) {
 
     else if ( iNewItem == ITEM_BOOTS )
     {
-        if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD )
-        {
-            new Float:fNewSpeed = ITEM_BOOTS_VALUE - SPEED_KNIFE + UD_S_UNHOLY_get_speed( iLevel );
-
-            if ( fNewSpeed > CAP_SPEEDBONUS )
-                fNewSpeed = CAP_SPEEDBONUS;
-
-            if ( fNewSpeed < ITEM_BOOTS_VALUE )
-                fNewSpeed = ITEM_BOOTS_VALUE;
-
-            client_print( id, print_chat, ITEM_BOOTS_MESSAGE, UD_S_UNHOLY_get_speed( iLevel ), fNewSpeed );
-        }
-
-        else
-        {
-            client_print( id, print_chat, ITEM_BOOTS_MESSAGE, SPEED_KNIFE, ITEM_BOOTS_VALUE );
-        }
-
+        client_print( id, print_chat, ITEM_BOOTS_MESSAGE, ( ( ( ITEM_BOOTS_get_speed( id ) / SPEED_KNIFE ) - 1.0 ) * 100 ) );
         WAR3_set_speed( id );
     }
 
@@ -224,7 +197,7 @@ public Item_Equip( id, iNewItem ) {
 
         if ( !g_PlayerInfo[id][CURRENT_ULTIMATE] )
         {
-            client_print( id, print_center, ITEM_NOMASK );
+            client_print( id, print_center, "%s", ITEM_NOMASK );
             return ( 0 );
         }
 
@@ -264,7 +237,7 @@ public Item_Equip( id, iNewItem ) {
     {
         if ( !get_user_armor( id ) )
         {
-            client_print( id, print_center, ITEM_NOARMOR );
+            client_print( id, print_center, "%s", ITEM_NOARMOR );
             return ( 0 );
         }
 
@@ -363,7 +336,7 @@ public Item_Drop( id ) {
 
     if ( !g_PlayerInfo[id][CURRENT_ITEM] )
     {
-        client_print( id, print_center, ITEM_NODROP );
+        client_print( id, print_center, "%s", ITEM_NODROP );
         return PLUGIN_CONTINUE;
     }
 
@@ -375,7 +348,7 @@ public Item_Drop( id ) {
     Item_Change( id, iOldItem, ITEM_NONE );
 
     WAR3_hud_item( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 2.0, 3.0 );
-    client_print( id, print_center, ITEM_DROP );
+    client_print( id, print_center, "%s", ITEM_DROP );
 
     // Create Item
 
@@ -418,7 +391,7 @@ public Item_Pickup( id, iItemEnt, iNewItem ) {
     Item_Change( id, ITEM_NONE, iNewItem );
 
     WAR3_hud_item( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 2.0, 3.0 );
-    client_print( id, print_center, ITEM_PICKUP );
+    client_print( id, print_center, "%s", ITEM_PICKUP );
 
     // Play Sound
 
@@ -565,7 +538,7 @@ public ITEM_ANKH_drop( id ) {
 
     if ( id == g_Vip )
     {
-        client_print( id, print_chat, VIP_ANKH_MESSAGE );
+        client_print( id, print_chat, "%s", VIP_ANKH_MESSAGE );
         return PLUGIN_HANDLED;
     }
 
@@ -825,11 +798,98 @@ public ITEM_ANKH_give( parm_Ankh[1] ) {
 
     else
     {
-        client_print( id, print_center, ITEM_ANKH_NOITEMS );
+        client_print( id, print_center, "%s", ITEM_ANKH_NOITEMS );
     }
 
 
     g_PlayerBackpack[id] = {0,0,0,0,0,0,0,0};
+
+    return PLUGIN_HANDLED;
+}
+
+
+// Boots of Speed
+
+public Float:ITEM_BOOTS_get_speed( id ) {
+
+    new Float:fBootSpeed = ITEM_BOOTS_VALUE;
+
+	if ( ITEM_BOOTS_VALUE > SPEED_KNIFE || ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && ITEM_BOOTS_VALUE > BLESSING_MAXSPEED ) )
+    {
+        if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD && WAR3_skill_enabled( id, RACE_UNDEAD, SKILL_RACIAL ) )
+        {
+            new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
+
+            fBootSpeed = UD_S_UNHOLY_get_speed( iLevel );
+
+            // Make sure we're at least boot speed
+
+            if ( fBootSpeed < ITEM_BOOTS_VALUE )
+                fBootSpeed = ITEM_BOOTS_VALUE * ( fBootSpeed / SPEED_KNIFE );
+
+            // increase by same percentage as boots are to knife speed
+
+            else
+            {
+        	    fBootSpeed *= ( ITEM_BOOTS_VALUE / SPEED_KNIFE );
+            }
+
+            // Final checks
+
+            if ( fBootSpeed > UD_fUnholyAura_speed[1] )
+                fBootSpeed = UD_fUnholyAura_speed[1];
+
+            else if ( fBootSpeed < ITEM_BOOTS_VALUE )
+                fBootSpeed = ITEM_BOOTS_VALUE;
+        }
+
+        else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && g_PlayerInfo[id][CURRENT_SKILL1] && WAR3_skill_enabled( id, RACE_ORC, SKILL_1 ) )
+        {
+            new weapon, iClip, iAmmo;
+            weapon = get_user_weapon( id, iClip, iAmmo );
+
+            if ( weapon == CSW_KNIFE || weapon == CSW_C4 || cs_get_weapon_type_( weapon ) == CS_WEAPON_TYPE_GRENADE )
+            {
+                fBootSpeed = OR_S_BERSERK_get_speed( id );
+
+                // Make sure we're at least boot speed
+
+                if ( fBootSpeed < ITEM_BOOTS_VALUE )
+                    fBootSpeed = ITEM_BOOTS_VALUE * ( fBootSpeed / SPEED_KNIFE );
+
+                // increase by same percentage as boots are to knife speed
+
+                else
+                {
+            	    fBootSpeed *= ( ITEM_BOOTS_VALUE / SPEED_KNIFE );
+                }
+
+                // Final checks
+
+                if ( fBootSpeed > OR_fBerserk_speed[2] )
+                    fBootSpeed = OR_fBerserk_speed[2];
+
+                if ( fBootSpeed < ITEM_BOOTS_VALUE )
+                    fBootSpeed = ITEM_BOOTS_VALUE;
+
+                client_print( id, print_chat, "DEBUG: Speed: %0.3f", fBootSpeed );
+            }
+        }
+
+        else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] && WAR3_skill_enabled( id, RACE_NIGHTELF, SKILL_RACIAL ) )
+        {
+            fBootSpeed = ITEM_BOOTS_VALUE * ( ITEM_BOOTS_VALUE / BLESSING_MAXSPEED );
+        }
+    }
+
+    return ( fBootSpeed );
+}
+
+
+public ITEM_BOOTS_set_speed( id ) {
+
+    new Float:fSpeed = ITEM_BOOTS_get_speed( id );
+    set_user_maxspeed( id, fSpeed );
 
     return PLUGIN_HANDLED;
 }
@@ -920,8 +980,11 @@ public ITEM_AMULET_block( target, caster ) {
         g_PlayerInfo[target][CURRENT_ITEM] = ITEM_NONE;
 
         WAR3_hud_item( target, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 2.0, 3.0 );
-        client_print( target, print_chat, ITEM_AMULET_DESTROYED );
+        client_print( target, print_chat, "%s", ITEM_AMULET_DESTROYED );
     }
 
     return PLUGIN_HANDLED;
 }
+
+
+// ------------------------------------------------- End. - //

@@ -1082,3 +1082,6 @@ public HU_U_AVATAR_remove( id ) {
 
     return PLUGIN_HANDLED;
 }
+
+
+// ------------------------------------------------- End. - //

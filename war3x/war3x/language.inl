@@ -27,7 +27,7 @@ LANG_GetItemDesc( item_id, shop_id, id, item_desc[], len )
 LANG_GetRaceName( race_id, id, race_name[], len, bool:short_name = false )
 {
 	new szRaceHelper[32];
-	
+
 	if ( short_name )
 	{
 		formatex( szRaceHelper, 31, "RACENAME%d_SHORT", race_id );
@@ -97,7 +97,10 @@ LANG_GetSkillDesc( race_id, skill_id, skill_type, id, skill_desc[], len )
 		formatex( szSkillHelper, 31, "RACE%d_ULTIMATE%d_DESC", race_id, skill_id );
 	}
 
-	server_print(szSkillHelper)
+	server_print( "%s", szSkillHelper );
 
 	formatex( skill_desc, len, "%L", id, szSkillHelper );
 }
+
+
+// ------------------------------------------------- End. - //

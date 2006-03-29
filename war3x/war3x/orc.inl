@@ -188,6 +188,7 @@ public OR_S_REGENERATION_heal( parm_Regen[1] ) {
     return PLUGIN_HANDLED;
 }
 
+
 public OR_S_REGENERATION_remove( id ) {
 
     g_bPlayerRegen[id] = false;
@@ -215,11 +216,6 @@ public Float:OR_S_BERSERK_get_speed( id ) {
 
 	new Float:fBerserkSpeed = SPEED_KNIFE + ( ( OR_fBerserk_speed[iLevel] - SPEED_KNIFE ) * ( ( float( iMaxHealth ) - float( iHealth ) ) / float( iMaxHealth ) ) );
 
-    // If boots, increase by same percentage as boots are to knife speed
-
-	if( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS )
-	    fBerserkSpeed *= ( ITEM_BOOTS_VALUE / SPEED_KNIFE );
-
     // Don't exceed max berserk speed
 
     if ( fBerserkSpeed > OR_fBerserk_speed[2] )
@@ -229,19 +225,15 @@ public Float:OR_S_BERSERK_get_speed( id ) {
 }
 
 
-public OR_S_BERSERK_set_speed( id ){
+public OR_S_BERSERK_set_speed( id ) {
 
-    if ( WAR3_skill_enabled( id, RACE_ORC, SKILL_1 ) && is_user_alive( id ) )
-	{
-		new iClip, iAmmo, weapon;
-		weapon =  get_user_weapon( id, iClip, iAmmo );
+    if ( !WAR3_skill_enabled( id, RACE_ORC, SKILL_1 ) || !is_user_alive( id ) )
+        return PLUGIN_HANDLED;
 
-		if ( weapon == CSW_KNIFE )
-		{
-            new Float:fBerserkSpeed = OR_S_BERSERK_get_speed( id );
-			set_user_maxspeed( id, fBerserkSpeed );
-		}
-	}
+    new Float:fBerserkSpeed = OR_S_BERSERK_get_speed( id );
+	set_user_maxspeed( id, fBerserkSpeed );
+
+    client_print( id, print_chat, "DEBUG: Speed: %0.3f", fBerserkSpeed );
 
     return PLUGIN_HANDLED;
 }
@@ -285,15 +277,16 @@ static OR_S_BERSERK_damage( attacker, victim, weapon, iDamage, headshot ) {
 }
 
 
-// ( COMING SOON )
-
 static OR_S_BERSERK_effect( id, iDamage ) {
 
-    // Screen Fade
+    if ( ( get_user_health( id ) + iDamage ) > BERSERK_HEALTH )
+    {
+        // Screen Fade
 
-//	Create_ScreenFade( id, (1<<10), (1<<10), FADE_OUT, 255, 0, 0, 100 );
+        // Create_ScreenFade( id, (1<<10), (1<<10), FADE_OUT, 255, 0, 0, 100 );
 
-    // Play Status Text
+        // Play Status Text
+    }
 
     return PLUGIN_HANDLED;
 }
@@ -1286,3 +1279,6 @@ public OR_U_WINDWALK_remove( id ) {
 
     return PLUGIN_HANDLED;
 }
+
+
+// ------------------------------------------------- End. - //

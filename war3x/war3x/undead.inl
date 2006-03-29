@@ -140,8 +140,13 @@ public Float:UD_S_UNHOLY_get_speed( iLevel ) {
 
     new Float:fUnholySpeed = UD_fUnholyAura_speed[0] + ( ( ( UD_fUnholyAura_speed[1] - UD_fUnholyAura_speed[0] ) / LEVEL_RACIALCAP ) * fLevel );
 
+    // Final checks
+
     if ( fUnholySpeed > UD_fUnholyAura_speed[1] )
         fUnholySpeed = UD_fUnholyAura_speed[1];
+
+    else if ( fUnholySpeed < UD_fUnholyAura_speed[0] )
+        fUnholySpeed = UD_fUnholyAura_speed[0];
 
     return ( fUnholySpeed );
 }
@@ -156,10 +161,13 @@ public Float:UD_S_UNHOLY_get_gravity( iLevel ) {
     if ( fLevel > LEVEL_RACIALCAP )
         fLevel = LEVEL_RACIALCAP;
 
-    new Float:fUnholyGravity = UD_fUnholyAura_gravity[1] + ( ( ( UD_fUnholyAura_gravity[0] - UD_fUnholyAura_gravity[1] ) / LEVEL_RACIALCAP ) * fLevel );
+    new Float:fUnholyGravity = UD_fUnholyAura_gravity[0] - ( ( ( UD_fUnholyAura_gravity[0] - UD_fUnholyAura_gravity[1] ) / LEVEL_RACIALCAP ) * fLevel );
 
     if ( fUnholyGravity < UD_fUnholyAura_gravity[1] )
         fUnholyGravity = UD_fUnholyAura_gravity[1];
+
+    if ( fUnholyGravity > UD_fUnholyAura_gravity[0] )
+        fUnholyGravity = UD_fUnholyAura_gravity[0];
 
     return ( fUnholyGravity );
 }
@@ -167,7 +175,7 @@ public Float:UD_S_UNHOLY_get_gravity( iLevel ) {
 
 // Unholy Aura ( set speed/gravity )
 
-public UD_S_UNHOLY_set_speed( id, weapon ) {
+public UD_S_UNHOLY_set_speed( id ) {
 
     // Check if restricted
 
@@ -178,21 +186,6 @@ public UD_S_UNHOLY_set_speed( id, weapon ) {
 
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
     new Float:fUnholySpeed = UD_S_UNHOLY_get_speed( iLevel );
-
-    // Check for boots and stack
-
-    if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_BOOTS && ITEM_BOOTS_VALUE > SPEED_KNIFE )
-    {
-        fUnholySpeed += ( ITEM_BOOTS_VALUE - SPEED_KNIFE );
-
-        if ( fUnholySpeed > CAP_SPEEDBONUS )
-            fUnholySpeed = CAP_SPEEDBONUS;
-    }
-
-    // Final checks
-
-    if ( fUnholySpeed < SPEED_KNIFE )
-        fUnholySpeed = SPEED_KNIFE;
 
     // Set speed
 
@@ -1183,3 +1176,6 @@ public UD_U_SLEEP_remove( id ) {
 
     return PLUGIN_HANDLED;
 }
+
+
+// ------------------------------------------------- End. - //
