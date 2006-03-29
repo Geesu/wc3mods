@@ -32,18 +32,18 @@ public menu_War3menu( id ) {
 
     // Draw Menu
 
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_WAR3MENU_TITLE );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_TITLE );
 
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_WAR3MENU_1 );
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_WAR3MENU_2 );
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_WAR3MENU_3 );
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_WAR3MENU_4 );
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_WAR3MENU_5 );
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_WAR3MENU_6 );
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_WAR3MENU_7 );
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_WAR3MENU_8 );
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_WAR3MENU_9 );
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_CANCEL );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_1 );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_2 );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_3 );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_4 );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_5 );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_6 );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_7 );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_8 );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_9 );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_CANCEL );
 
     show_menu( id, iKeys, szMenu );
 
@@ -98,7 +98,7 @@ public menu_SelectRace( id ) {
     new szMenu[512], iLen;
 
     iKeys = (1<<9);
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_SELECTRACE_TITLE );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_SELECTRACE_TITLE );
 
     // Build list of races ( and levels if saving xp )
 
@@ -141,7 +141,7 @@ public menu_SelectRace( id ) {
 			if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum ) )
             {
 				LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 )
-                iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led          ^n", iRaceNum + 1, szRaceName );
+                iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led          ^n", iRaceNum + 1, szRaceName );
             }
 
             else
@@ -164,7 +164,7 @@ public menu_SelectRace( id ) {
 
                 // Draw Text
 
-                iLen += format( szMenu[iLen], 512 - iLen, "%s%d. %s\R\dLeve l %d          ^n", szLineColor, iRaceNum + 1, szRaceName, iCurrentLevel );
+                iLen += formatex( szMenu[iLen], 512 - iLen, "%s%d. %s\R\dLeve l %d          ^n", szLineColor, iRaceNum + 1, szRaceName, iCurrentLevel );
             }
         }
     }
@@ -183,7 +183,7 @@ public menu_SelectRace( id ) {
 
             if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum ) )
             {
-                iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led          ^n", iRaceNum + 1, szRaceName );
+                iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led          ^n", iRaceNum + 1, szRaceName );
             }
 
             else
@@ -203,21 +203,21 @@ public menu_SelectRace( id ) {
                     copy( szLineColor, 2, "\d" );
                 }
 
-                iLen += format( szMenu[iLen], 512 - iLen, "%s%d. %s^n", szLineColor, iRaceNum + 1, szRaceName );
+                iLen += formatex( szMenu[iLen], 512 - iLen, "%s%d. %s^n", szLineColor, iRaceNum + 1, szRaceName );
             }
         }
     }
 
     if ( g_PlayerInfo[id][CURRENT_RACE] )
-        iLen += format( szMenu[iLen], 512 - iLen, "^n\d5. Random^n^n^n\w" );
+        iLen += formatex( szMenu[iLen], 512 - iLen, "^n\d5. Random^n^n^n\w" );
 
     else
     {
-        iLen += format( szMenu[iLen], 512 - iLen, "^n\w5. Random^n^n^n" );
+        iLen += formatex( szMenu[iLen], 512 - iLen, "^n\w5. Random^n^n^n" );
         iKeys |= (1<<4);
     }
 
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_CANCEL );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_CANCEL );
 
     show_menu( id, iKeys, szMenu );
 
@@ -436,8 +436,8 @@ public menu_SelectSkills( id ) {
 	new szRaceName[32];
 	LANG_GetRaceName( iRaceNum, id, szRaceName, 31 );
 
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_SELECTSKILLS_TITLE );
-    iLen += format( szMenu[iLen], 512 - iLen, "\d%s^n", szRaceName );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_SELECTSKILLS_TITLE );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "\d%s^n", szRaceName );
 
     // Primary Skills
 
@@ -488,10 +488,10 @@ public menu_SelectSkills( id ) {
             }
         }
 
-        iLen += format( szMenu[iLen], 512 - iLen, "%s", szMenuSkill );
+        iLen += formatex( szMenu[iLen], 512 - iLen, "%s", szMenuSkill );
     }
 
-    iLen += format( szMenu[iLen], 512 - iLen, "^n" );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n" );
 
     // Ultimates
 
@@ -541,11 +541,11 @@ public menu_SelectSkills( id ) {
             iKeys |= ( 1<<iSkillNum - 1 );
         }
 
-        iLen += format( szMenu[iLen], 512 - iLen, "%s", szMenuSkill );
+        iLen += formatex( szMenu[iLen], 512 - iLen, "%s", szMenuSkill );
     }
 
-    iLen += format( szMenu[iLen], 512 - iLen, "^n^n\w%s", MENU_SELECTSKILLS_9 );
-    iLen += format( szMenu[iLen], 512 - iLen, "^n^n\w%s", MENU_CANCEL );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n\w%s", MENU_SELECTSKILLS_9 );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n\w%s", MENU_CANCEL );
 
     // Show Skills Menu
 
@@ -687,7 +687,7 @@ public menu_ItemShop( id ) {
 
     iKeys = (1<<8)|(1<<9);
 
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_BUYITEM_TITLE );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_BUYITEM_TITLE );
 
     for ( new iItemNum = 1; iItemNum <= TOTAL_SHOPITEMS; iItemNum++ )
     {
@@ -697,24 +697,24 @@ public menu_ItemShop( id ) {
         // Item Restricted
 
         if ( get_pcvar_bitsum( CVAR_restrict_items ) & WAR3_get_item_flag( iItemNum ) )
-            iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led ^n", iItemNum, szItemName );
+            iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led ^n", iItemNum, szItemName );
 
         // Not enough players for Tome
 
         else if ( iItemNum == ITEM_TOME && get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
         {
-            iLen += format( szMenu[iLen], 512 - iLen, "\d%d. %s\R\y%d ^n", iItemNum, szItemName, ITEM_COST[iItemNum] );
+            iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\y%d ^n", iItemNum, szItemName, ITEM_COST[iItemNum] );
         }
 
         else
         {
             iKeys |= ( 1<<iItemNum - 1 );
-            iLen += format( szMenu[iLen], 512 - iLen, "\w%d. %s\R\y%d ^n", iItemNum, szItemName, ITEM_COST[iItemNum] );
+            iLen += formatex( szMenu[iLen], 512 - iLen, "\w%d. %s\R\y%d ^n", iItemNum, szItemName, ITEM_COST[iItemNum] );
         }
     }
 
-    iLen += format( szMenu[iLen], 512 - iLen, "^n\w%s", MENU_BUYITEM_9 );
-    iLen += format( szMenu[iLen], 512 - iLen, "^n^n\w%s", MENU_CANCEL );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n\w%s", MENU_BUYITEM_9 );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n\w%s", MENU_CANCEL );
 
     show_menu( id, iKeys, szMenu );
 
@@ -764,18 +764,18 @@ public menu_SkillsHelp( id ) {
     new iKeys = (1<<9);
     new szMenu[512], iLen;
 
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_SKILLSINFO_TITLE );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_SKILLSINFO_TITLE );
 
     for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
     {
 		new szRaceName[32];
 		LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
 
-        iLen += format( szMenu[iLen], 512 - iLen, "%d. %s^n", iRaceNum + 1, szRaceName );
+        iLen += formatex( szMenu[iLen], 512 - iLen, "%d. %s^n", iRaceNum + 1, szRaceName );
         iKeys |= ( 1<<iRaceNum );
     }
 
-    iLen += format( szMenu[iLen], 512 - iLen, "^n^n%s", MENU_CANCEL );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n%s", MENU_CANCEL );
 
     show_menu( id, iKeys, szMenu );
 
@@ -830,23 +830,23 @@ public menu_PlayerOptions( id ) {
 
     // Draw Menu
 
-    iLen += format( szMenu[iLen], 512 - iLen, MENU_PLAYEROPTIONS_TITLE );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_PLAYEROPTIONS_TITLE );
 
     WAR3_get_onoff( g_PlayerOptions[id][OPTION_RACEICONS], szOnOff );
-    iLen += format( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n", MENU_PLAYEROPTIONS_1, szOnOff );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n", MENU_PLAYEROPTIONS_1, szOnOff );
 
     WAR3_get_onoff( g_PlayerOptions[id][OPTION_HEALICONS], szOnOff );
-    iLen += format( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n", MENU_PLAYEROPTIONS_2, szOnOff );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n", MENU_PLAYEROPTIONS_2, szOnOff );
 
     WAR3_get_onoff( g_PlayerOptions[id][OPTION_DISPELLICONS], szOnOff );
-    iLen += format( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n", MENU_PLAYEROPTIONS_3, szOnOff );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n", MENU_PLAYEROPTIONS_3, szOnOff );
 
     WAR3_get_onoff( g_PlayerOptions[id][OPTION_AUTOCAST], szOnOff );
-    iLen += format( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n^n", MENU_PLAYEROPTIONS_4, szOnOff );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n^n", MENU_PLAYEROPTIONS_4, szOnOff );
 
     new iRes = g_PlayerOptions[id][OPTION_RESOLUTION];
-    iLen += format( szMenu[iLen], 512 - iLen, "\w%s \y\R%ix%i            ^n^n", MENU_PLAYEROPTIONS_5, STEAM_RESOLUTION[iRes][_X], STEAM_RESOLUTION[iRes][_Y] );
-    iLen += format( szMenu[iLen], 512 - iLen, "\w%s", MENU_CANCEL );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%ix%i            ^n^n", MENU_PLAYEROPTIONS_5, STEAM_RESOLUTION[iRes][_X], STEAM_RESOLUTION[iRes][_Y] );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s", MENU_CANCEL );
 
     show_menu( id, iKeys, szMenu );
 
@@ -912,8 +912,8 @@ public menu_RaceOptions( id ) {
 	new szRaceName[32];
 	LANG_GetRaceName( raceId + 1, id, szRaceName, 31 );
 
-    iLen += format( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_TITLE );
-    iLen += format( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_TITLE2, szRaceName );
+    iLen += formatex( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_TITLE );
+    iLen += formatex( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_TITLE2, szRaceName );
 
     // Reset Skills
 
@@ -921,39 +921,39 @@ public menu_RaceOptions( id ) {
 
     if ( iLevel >= RACEOPTIONS_SKILLS )
     {
-        iLen += format( szMenu[iLen], 511 - iLen, "\w" );
+        iLen += formatex( szMenu[iLen], 511 - iLen, "\w" );
         iKeys |= (1<<0);
     }
 
     else
     {
-        iLen += format( szMenu[iLen], 511 - iLen, "\d" );
+        iLen += formatex( szMenu[iLen], 511 - iLen, "\d" );
     }
 
-    iLen += format( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_1, RACEOPTIONS_SKILLS );
+    iLen += formatex( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_1, RACEOPTIONS_SKILLS );
 
     // Reset Ultimate
 
     if ( iLevel >= RACEOPTIONS_ULTIMATE && g_PlayerInfo[id][CURRENT_ULTIMATE] && !g_bChangeUltimate[id] )
     {
-        iLen += format( szMenu[iLen], 511 - iLen, "\w" );
+        iLen += formatex( szMenu[iLen], 511 - iLen, "\w" );
         iKeys |= (1<<1);
     }
 
     else
     {
-        iLen += format( szMenu[iLen], 511 - iLen, "\d" );
+        iLen += formatex( szMenu[iLen], 511 - iLen, "\d" );
     }
 
-    iLen += format( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_2, RACEOPTIONS_ULTIMATE );
+    iLen += formatex( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_2, RACEOPTIONS_ULTIMATE );
 
     // Reset Experience
 
-    iLen += format( szMenu[iLen], 511 - iLen, "\w^n%s", MENU_RACEOPTIONS_5 );
+    iLen += formatex( szMenu[iLen], 511 - iLen, "\w^n%s", MENU_RACEOPTIONS_5 );
     iKeys |= (1<<4);
 
 
-    iLen += format( szMenu[iLen], 511 - iLen, "\w^n^n%s", MENU_CANCEL );
+    iLen += formatex( szMenu[iLen], 511 - iLen, "\w^n^n%s", MENU_CANCEL );
     show_menu( id, iKeys, szMenu );
 
     return PLUGIN_HANDLED;
@@ -1070,14 +1070,14 @@ public menu_HelpTopics( id ) {
     new iKeys = (1<<0)|(1<<1)|(1<<8)|(1<<9);
     new szMenu[512], iLen;
 
-    iLen += format( szMenu[iLen], 511 - iLen, MENU_HELPTOPICS_TITLE );
+    iLen += formatex( szMenu[iLen], 511 - iLen, "%s", MENU_HELPTOPICS_TITLE );
 
-    iLen += format( szMenu[iLen], 511 - iLen, MENU_HELPTOPICS_1 );
-    iLen += format( szMenu[iLen], 511 - iLen, MENU_HELPTOPICS_2 );
+    iLen += formatex( szMenu[iLen], 511 - iLen, "%s", MENU_HELPTOPICS_1 );
+    iLen += formatex( szMenu[iLen], 511 - iLen, "%s", MENU_HELPTOPICS_2 );
 
-    iLen += format( szMenu[iLen], 511 - iLen, MENU_HELPTOPICS_9 );
+    iLen += formatex( szMenu[iLen], 511 - iLen, "%s", MENU_HELPTOPICS_9 );
 
-    iLen += format( szMenu[iLen], 511 - iLen, MENU_CANCEL );
+    iLen += formatex( szMenu[iLen], 511 - iLen, "%s", MENU_CANCEL );
 
     show_menu( id, iKeys, szMenu );
 

@@ -225,10 +225,10 @@ public Store_Xp( id ) {
 
                     // Data
 
-                    iLen += format( szData[iLen], 31 - iLen,  "%d", g_PlayerInfo[id][CURRENT_SKILL1] );
-                    iLen += format( szData[iLen], 31 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL2] );
-                    iLen += format( szData[iLen], 31 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL3] );
-                    iLen += format( szData[iLen], 31 - iLen, ",%d", g_PlayerInfo[id][CURRENT_ULTIMATE] );
+                    iLen += formatex( szData[iLen], 31 - iLen,  "%d", g_PlayerInfo[id][CURRENT_SKILL1] );
+                    iLen += formatex( szData[iLen], 31 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL2] );
+                    iLen += formatex( szData[iLen], 31 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL3] );
+                    iLen += formatex( szData[iLen], 31 - iLen, ",%d", g_PlayerInfo[id][CURRENT_ULTIMATE] );
 
                     write_mysql_all( g_SaveIds[id], szData, iRaceId + 1, g_iXPtotal[id][iRaceId], g_iXPfetched[id][iRaceId] );
                 }
@@ -254,9 +254,9 @@ public Store_Xp( id ) {
         for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
         {
             if ( iRaceNum > 0 )
-                iLen += format( szKeyData[iLen], 63 - iLen, "," );
+                iLen += formatex( szKeyData[iLen], 63 - iLen, "," );
 
-            iLen += format( szKeyData[iLen], 63 - iLen, "%d", g_iXPtotal[id][iRaceNum] );
+            iLen += formatex( szKeyData[iLen], 63 - iLen, "%d", g_iXPtotal[id][iRaceNum] );
         }
 
         // Store Data
@@ -287,9 +287,9 @@ public Store_Options( id ) {
         for ( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
         {
             if ( iOptionNum > 0 )
-                iLen += format( szData[iLen], 31 - iLen, "," );
+                iLen += formatex( szData[iLen], 31 - iLen, "," );
 
-            iLen += format( szData[iLen], 31 - iLen, "%d", g_PlayerOptions[id][iOptionNum] );
+            iLen += formatex( szData[iLen], 31 - iLen, "%d", g_PlayerOptions[id][iOptionNum] );
 
             totalOptionNum += g_PlayerOptions[id][iOptionNum];
         }
@@ -312,9 +312,9 @@ public Store_Options( id ) {
         for ( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
         {
             if ( iOptionNum > 0 )
-                iLen += format( szData[iLen], 31 - iLen, "," );
+                iLen += formatex( szData[iLen], 31 - iLen, "," );
 
-            iLen += format( szData[iLen], 31 - iLen, "%d", g_PlayerOptions[id][iOptionNum] );
+            iLen += formatex( szData[iLen], 31 - iLen, "%d", g_PlayerOptions[id][iOptionNum] );
         }
 
         // Store Data
@@ -343,10 +343,10 @@ public Store_Skills( id ) {
 
     // Key Data
 
-    iLen += format( szKeyData[iLen], 63 - iLen,  "%d", g_PlayerInfo[id][CURRENT_SKILL1] );
-    iLen += format( szKeyData[iLen], 63 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL2] );
-    iLen += format( szKeyData[iLen], 63 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL3] );
-    iLen += format( szKeyData[iLen], 63 - iLen, ",%d", g_PlayerInfo[id][CURRENT_ULTIMATE] );
+    iLen += formatex( szKeyData[iLen], 63 - iLen,  "%d", g_PlayerInfo[id][CURRENT_SKILL1] );
+    iLen += formatex( szKeyData[iLen], 63 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL2] );
+    iLen += formatex( szKeyData[iLen], 63 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL3] );
+    iLen += formatex( szKeyData[iLen], 63 - iLen, ",%d", g_PlayerInfo[id][CURRENT_ULTIMATE] );
 
     // Store Data
 
@@ -374,10 +374,10 @@ public Store_Queue_Xp( iArrayIndex, szSaveId[32] ) {
                     new szData[32], iLen;
 
                     // Data
-                    iLen += format( szData[iLen], 31 - iLen,  "%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL1] );
-                    iLen += format( szData[iLen], 31 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL2] );
-                    iLen += format( szData[iLen], 31 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL3] );
-                    iLen += format( szData[iLen], 31 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_ULTIMATE] );
+                    iLen += formatex( szData[iLen], 31 - iLen,  "%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL1] );
+                    iLen += formatex( szData[iLen], 31 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL2] );
+                    iLen += formatex( szData[iLen], 31 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL3] );
+                    iLen += formatex( szData[iLen], 31 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_ULTIMATE] );
 
                     write_mysql_all( szSaveId, szData, iRaceId + 1, g_SaveQueue_iXP[iArrayIndex][iRaceId], g_SaveQueue_iXPfetched[iArrayIndex][iRaceId] );
                 }
@@ -403,9 +403,9 @@ public Store_Queue_Xp( iArrayIndex, szSaveId[32] ) {
         for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
         {
             if ( iRaceNum > 0 )
-                iLen += format( szKeyData[iLen], 63 - iLen, "," );
+                iLen += formatex( szKeyData[iLen], 63 - iLen, "," );
 
-            iLen += format( szKeyData[iLen], 63 - iLen, "%d", g_SaveQueue_iXP[iArrayIndex][iRaceNum] );
+            iLen += formatex( szKeyData[iLen], 63 - iLen, "%d", g_SaveQueue_iXP[iArrayIndex][iRaceNum] );
         }
 
         // Store Data
@@ -430,10 +430,10 @@ public Store_Queue_Skills( iArrayIndex, szSaveId[32] ) {
 
     // Key Data
 
-    iLen += format( szKeyData[iLen], 63 - iLen,  "%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL1] );
-    iLen += format( szKeyData[iLen], 63 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL2] );
-    iLen += format( szKeyData[iLen], 63 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL3] );
-    iLen += format( szKeyData[iLen], 63 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_ULTIMATE] );
+    iLen += formatex( szKeyData[iLen], 63 - iLen,  "%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL1] );
+    iLen += formatex( szKeyData[iLen], 63 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL2] );
+    iLen += formatex( szKeyData[iLen], 63 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL3] );
+    iLen += formatex( szKeyData[iLen], 63 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_ULTIMATE] );
 
     // Store Data
 
@@ -455,9 +455,9 @@ public Store_Queue_Options( iArrayIndex, szSaveId[32] ) {
         for ( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
         {
             if ( iOptionNum > 0 )
-                iLen += format( szData[iLen], 31 - iLen, "," );
+                iLen += formatex( szData[iLen], 31 - iLen, "," );
 
-            iLen += format( szData[iLen], 31 - iLen, "%d", g_SaveQueue_iOptions[iArrayIndex][iOptionNum] );
+            iLen += formatex( szData[iLen], 31 - iLen, "%d", g_SaveQueue_iOptions[iArrayIndex][iOptionNum] );
             totalOptionNum += g_SaveQueue_iOptions[iArrayIndex][iOptionNum];
         }
 
@@ -479,9 +479,9 @@ public Store_Queue_Options( iArrayIndex, szSaveId[32] ) {
         for ( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
         {
             if ( iOptionNum > 0 )
-                iLen += format( szKeyData[iLen], 63 - iLen, "," );
+                iLen += formatex( szKeyData[iLen], 63 - iLen, "," );
 
-            iLen += format( szKeyData[iLen], 63 - iLen, "%d", g_SaveQueue_iOptions[iArrayIndex][iOptionNum] );
+            iLen += formatex( szKeyData[iLen], 63 - iLen, "%d", g_SaveQueue_iOptions[iArrayIndex][iOptionNum] );
         }
 
         // Store Data

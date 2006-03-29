@@ -1792,14 +1792,14 @@ public WAR3_hud_level( id ) {
 
 	LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
     WAR3_race_info( id, iRaceNum, RACEINFO_CLASSNAME, szData );
-    iLen += format( szMessage[iLen], 72 - iLen, "%s^nLevel %d ( %s )", szRaceName, iLevel, szData );
+    iLen += formatex( szMessage[iLen], 72 - iLen, "%s^nLevel %d ( %s )", szRaceName, iLevel, szData );
 
     if ( g_PlayerInfo[id][CURRENT_ULTIMATE] )
     {
         new iUltimateNum = g_PlayerInfo[id][CURRENT_ULTIMATE] + TOTAL_SKILLSTRAINED;
 
         WAR3_race_info( id, iRaceNum, iUltimateNum, szData );
-        iLen += format( szMessage[iLen], 72 - iLen, "^nUltimate: %s", szData );
+        iLen += formatex( szMessage[iLen], 72 - iLen, "^nUltimate: %s", szData );
     }
 
     set_hudmessage( 255, 255, 255, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_LEVEL, 0, 6.0, 5.0, 0.5, 1.0, HUDMESSAGE_CHAN_LEVEL );
@@ -1840,19 +1840,19 @@ public war3_chatskills( id, raceId, ShowHelp ) {
     if ( g_PlayerInfo[id][CURRENT_SKILL1] )
     {
         WAR3_race_info( id, raceId, RACEINFO_SKILL1, szData );
-        iLen += format( szSkills[iLen], 128 - iLen, ", %s %d", szData, g_PlayerInfo[id][CURRENT_SKILL1] );
+        iLen += formatex( szSkills[iLen], 128 - iLen, ", %s %d", szData, g_PlayerInfo[id][CURRENT_SKILL1] );
     }
 
     if ( g_PlayerInfo[id][CURRENT_SKILL2] )
     {
         WAR3_race_info( id, raceId, RACEINFO_SKILL2, szData );
-        iLen += format( szSkills[iLen], 128 - iLen, ", %s %d", szData, g_PlayerInfo[id][CURRENT_SKILL2] );
+        iLen += formatex( szSkills[iLen], 128 - iLen, ", %s %d", szData, g_PlayerInfo[id][CURRENT_SKILL2] );
     }
 
     if ( g_PlayerInfo[id][CURRENT_SKILL3] )
     {
         WAR3_race_info( id, raceId, RACEINFO_SKILL3, szData );
-        iLen += format( szSkills[iLen], 128 - iLen, ", %s %d", szData, g_PlayerInfo[id][CURRENT_SKILL3] );
+        iLen += formatex( szSkills[iLen], 128 - iLen, ", %s %d", szData, g_PlayerInfo[id][CURRENT_SKILL3] );
     }
 
     // Build message (with racial)

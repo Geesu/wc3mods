@@ -154,13 +154,13 @@ public Item_Equip( id, iNewItem ) {
         }
 
         new szMessage[128], iLen;
-        iLen += format( szMessage[iLen], 127 - iLen, ITEM_ANKH_PRIMARY );
+        iLen += formatex( szMessage[iLen], 127 - iLen, "%s", ITEM_ANKH_PRIMARY );
 
         if ( get_pcvar_num( CVAR_ankhpistols ) )
-            iLen += format( szMessage[iLen], 127 - iLen, ITEM_ANKH_SECONDARY );
+            iLen += formatex( szMessage[iLen], 127 - iLen, "%s", ITEM_ANKH_SECONDARY );
 
         if ( get_pcvar_num( CVAR_ankhgrenades ) )
-            iLen += format( szMessage[iLen], 127 - iLen, ITEM_ANKH_GRENADES );
+            iLen += formatex( szMessage[iLen], 127 - iLen, "%s", ITEM_ANKH_GRENADES );
 
         new Float:fAnkhValue = ITEM_ANKH_VALUE;
         client_print( id, print_chat, ITEM_ANKH_MESSAGE, floatround( fAnkhValue * 100.0 ), "%", szMessage );

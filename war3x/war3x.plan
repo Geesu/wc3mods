@@ -14,7 +14,7 @@ BIG CHANGES:
 	--cvar pointers added! (RYAN)
 	--format -> formatex (RYAN)
 	* function/variable renaming
-	--the "DONT'S" of formatting.. fixed (%%'s etc) (dont pass direct commands into buffers - use client_print( id, "%s", buffer )
+	--the "DONT'S" of formatting.. fixed (%%'s etc) (dont pass direct commands into buffers - use client_print( id, "%s", buffer ) (RYAN)
 
 * ADMIN MENU
 
@@ -546,3 +546,99 @@ L 03/27/2006 - 21:43:21: [ENGINE] Invalid player 0 (not in-game)
  L 03/27/2006 - 21:43:21: [AMXX]    [0] UTIL_war3x.inc::WAR3_is_invisible (line 1070) 
  L 03/27/2006 - 21:43:21: [AMXX]    [1] shared.inl::WAR3_death_victim (line 1033) 
  L 03/27/2006 - 21:43:21: [AMXX]    [2] events.inl::on_Death (line 599)
+
+
+
+680.0118: Plugin "war3x.amxx" (1) had public function "on_Health" (357) called.
+680.0118: Plugin "war3x.amxx" (1) hit line 1432.
+680.0118: Plugin "war3x.amxx" (1) hit line 1432.
+680.0118: Plugin "war3x.amxx" (1) called native "get_user_health" (77) with 1 parameters.
+680.0118: Native parameters: (2)
+680.0118: Native returned: 100
+680.0118: Plugin "war3x.amxx" (1) hit line 107.
+680.0118: Plugin "war3x.amxx" (1) hit line 107.
+680.0118: Plugin "war3x.amxx" (1) hit line 109.
+680.0118: Plugin "war3x.amxx" (1) hit line 112.
+680.0118: Plugin "war3x.amxx" (1) hit line 118.
+680.0118: Plugin "war3x.amxx" (1) hit line 121.
+680.0118: Plugin "war3x.amxx" (1) called native "get_user_armor" (79) with 1 parameters.
+680.0118: Native parameters: (2)
+680.0118: Native returned: 0
+680.0118: Plugin "war3x.amxx" (1) hit line 152.
+680.0118: Plugin "war3x.amxx" (1) hit line 152.
+680.0118: Plugin "war3x.amxx" (1) hit line 156.
+680.0118: Plugin "war3x.amxx" (1) hit line 161.
+680.0118: Plugin "war3x.amxx" (1) hit line 168.
+680.0118: Plugin "war3x.amxx" (1) hit line 173.
+680.0118: Plugin "war3x.amxx" (1) hit line 178.
+680.0118: Plugin "war3x.amxx" (1) hit line 181.
+680.0118: Plugin "war3x.amxx" (1) hit line 1434.
+680.0118: Plugin "war3x.amxx" (1) hit line 201.
+680.0118: Plugin "war3x.amxx" (1) hit line 201.
+680.0118: Plugin "war3x.amxx" (1) hit line 107.
+680.0118: Plugin "war3x.amxx" (1) hit line 107.
+680.0118: Plugin "war3x.amxx" (1) hit line 109.
+680.0118: Plugin "war3x.amxx" (1) hit line 112.
+680.0118: Plugin "war3x.amxx" (1) hit line 118.
+680.0118: Plugin "war3x.amxx" (1) hit line 121.
+680.0118: Plugin "war3x.amxx" (1) called native "get_user_health" (77) with 1 parameters.
+680.0118: Native parameters: (2)
+680.0118: Native returned: 100
+680.0118: Plugin "war3x.amxx" (1) called native "get_user_armor" (79) with 1 parameters.
+680.0118: Native parameters: (2)
+680.0118: Native returned: 0
+680.0118: Plugin "war3x.amxx" (1) hit line 202.
+680.0118: Plugin "war3x.amxx" (1) hit line 1439.
+680.0118: Plugin "war3x.amxx" (1) hit line 1441.
+680.0118: Plugin "war3x.amxx" (1) hit line 288.
+680.0118: Plugin "war3x.amxx" (1) hit line 288.
+680.0118: Plugin "war3x.amxx" (1) hit line 648.
+680.0118: Plugin "war3x.amxx" (1) hit line 648.
+680.0118: Plugin "war3x.amxx" (1) called native "read_flags" (38) with 1 parameters.
+680.0118: Native parameters: (40200)
+680.0118: Retrieving string (addr 0x9D08) from Plugin "war3x.amxx" (1).  String:
+	 
+680.0118: Native returned: 0
+680.0118: Plugin "war3x.amxx" (1) hit line 487.
+680.0118: Plugin "war3x.amxx" (1) hit line 487.
+680.0118: Plugin "war3x.amxx" (1) hit line 488.
+680.0118: Plugin "war3x.amxx" (1) hit line 490.
+680.0118: Plugin "war3x.amxx" (1) hit line 491.
+680.0118: Plugin "war3x.amxx" (1) hit line 1459.
+680.0118: Plugin "war3x.amxx" (1) hit line 1459.
+680.0118: Plugin "war3x.amxx" (1) hit line 1461.
+680.0118: Plugin "war3x.amxx" (1) hit line 1467.
+680.0118: Plugin "war3x.amxx" (1) hit line 1477.
+680.0118: Plugin "war3x.amxx" (1) called native "copy" (17) with 3 parameters.
+680.0118: Native parameters: (214788, 1, 129704)
+680.0118: Native returned: 1
+680.0118: Plugin "war3x.amxx" (1) hit line 1497.
+680.0118: Plugin "war3x.amxx" (1) hit line 1500.
+680.0118: Plugin "war3x.amxx" (1) hit line 493.
+680.0118: Plugin "war3x.amxx" (1) called native "read_flags" (38) with 1 parameters.
+680.0118: Native parameters: (214788)
+680.0118: Retrieving string (addr 0x34704) from Plugin "war3x.amxx" (1).  String:
+	 i
+680.0118: Native returned: 256
+680.0118: Plugin "war3x.amxx" (1) hit line 651.
+680.0118: Plugin "war3x.amxx" (1) called native "is_user_alive" (75) with 1 parameters.
+680.0118: Native parameters: (2)
+680.0118: Native returned: 1
+680.0118: Plugin "war3x.amxx" (1) hit line 290.
+680.0118: Plugin "war3x.amxx" (1) hit line 291.
+680.0118: Plugin "war3x.amxx" (1) called native "get_user_weapon" (110) with 3 parameters.
+680.0118: Native parameters: (2, 214844, 214840)
+680.0118: Native returned: 29
+680.0118: Plugin "war3x.amxx" (1) hit line 293.
+680.0118: Plugin "war3x.amxx" (1) hit line 295.
+680.0118: Plugin "war3x.amxx" (1) called native "get_user_health" (77) with 1 parameters.
+680.0118: Native parameters: (2)
+680.0118: Native returned: 100
+680.0118: Plugin "war3x.amxx" (1) hit line 296.
+680.0118: Plugin "war3x.amxx" (1) hit line 298.
+680.0118: Plugin "war3x.amxx" (1) hit line 301.
+680.0118: Plugin "war3x.amxx" (1) called native "floatdiv" (56) with 2 parameters.
+680.0118: Native parameters: (0, 1120403456)
+680.0118: Native returned: 0
+680.0118: Binary log corrupt past this point.
+
