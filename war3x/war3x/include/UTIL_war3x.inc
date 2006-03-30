@@ -1063,64 +1063,129 @@ public WAR3_is_missing_files() {
 
     #if PRECACHE_WAR3SOUNDS
 
+        new iMissingWar3Sounds, szMissingWar3Sounds[32][64];
         new bool:bMissingWar3Sounds = false;
 
         if ( !file_exists( "sound/warcraft3/ImpaleHit.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/ImpaleHit.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/DeathCoilSpecialArt1.wav" ) )
+        if ( !file_exists( "sound/warcraft3/DeathCoilSpecialArt1.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/DeathCoilSpecialArt1.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/SleepBirth1.wav" ) )
+        if ( !file_exists( "sound/warcraft3/SleepBirth1.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/SleepBirth1.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/HolyBolt.wav" ) )
+        if ( !file_exists( "sound/warcraft3/HolyBolt.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/HolyBolt.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/FlameStrikeTargetWaveNonLoop1.wav" ) )
+        if ( !file_exists( "sound/warcraft3/FlameStrikeTargetWaveNonLoop1.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/FlameStrikeTargetWaveNonLoop1.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/Avatar.wav" ) )
+        if ( !file_exists( "sound/warcraft3/Avatar.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/Avatar.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/HealingWave.wav" ) )
+        if ( !file_exists( "sound/warcraft3/HealingWave.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/HealingWave.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/LightningBolt.wav" ) )
+        if ( !file_exists( "sound/warcraft3/LightningBolt.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/LightningBolt.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/WindWalk.wav" ) )
+        if ( !file_exists( "sound/warcraft3/WindWalk.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/WindWalk.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/RejuvenationTarget1.wav" ) )
+        if ( !file_exists( "sound/warcraft3/RejuvenationTarget1.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/RejuvenationTarget1.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/EntanglingRootsTarget1.wav" ) )
+        if ( !file_exists( "sound/warcraft3/EntanglingRootsTarget1.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/EntanglingRootsTarget1.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/ShadowStrikeBirth1.wav" ) )
+        if ( !file_exists( "sound/warcraft3/ShadowStrikeBirth1.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/ShadowStrikeBirth1.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/FrostNova.wav" ) )
+        if ( !file_exists( "sound/warcraft3/FrostNova.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/FrostNova.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/Levelupcaster.wav" ) )
+        if ( !file_exists( "sound/warcraft3/Levelupcaster.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/Levelupcaster.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/PickUpItem.wav" ) )
+        if ( !file_exists( "sound/warcraft3/PickUpItem.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/PickUpItem.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/Tomes.wav" ) )
+        if ( !file_exists( "sound/warcraft3/Tomes.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/Tomes.wav" );
             bMissingWar3Sounds = true;
+        }
 
-        else if ( !file_exists( "sound/warcraft3/ResurrectTarget.wav" ) )
+        if ( !file_exists( "sound/warcraft3/ResurrectTarget.wav" ) )
+        {
+            formatex( szMissingWar3Sounds[iMissingWar3Sounds++], 63, "sound/warcraft3/ResurrectTarget.wav" );
             bMissingWar3Sounds = true;
+        }
 
         if ( bMissingWar3Sounds )
         {
-            // Log error
-            // You are missing one or more sound file(s) required to run War3x.
-            // Please check your install
+            // Log missing file(s) notification
+            // * [Wc3x] ERROR: The following files are missing from your %s installation:
+            log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_FILES", WAR3X_PLUGINNAME );
+
+            // List missing sounds
+
+            for ( new i = 0; i < iMissingWar3Sounds; i++ )
+                log_amx( "  -- %s", szMissingWar3Sounds[i] );
+
+            // Suggest reinstall
+            // * [Wc3x] ERROR: The file(s) listed above are required to run %s in it's current configuration. Please review the installation instructions provided with the plugin, and if necessary, reinstall to correct this error.
+            log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_LISTED", WAR3X_PLUGINNAME_SHORT );
+
+            // Optional file(s)
+            // * [Wc3x] ERROR: The file(s) listed above are optional. If you have a copy of the %s source code, you may disable using the missing file(s) by opening the war3x/setup.cfg file, changing the %s define to 0, and recompiling.
+            log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_OPTIONAL", WAR3X_PLUGINNAME_SHORT, "PRECACHE_WAR3SOUNDS" );
 
             bMissingFiles = true;
         }
@@ -1129,49 +1194,99 @@ public WAR3_is_missing_files() {
 
     #if PRECACHE_WAR3BONUSSOUNDS
 
+        new iMissingWar3BonusSounds, szMissingWar3BonusSounds[32][64];
         new bool:bMissingWar3BonusSounds = false;
 
         if ( !file_exists( "sound/warcraft3/bonus/BarkSkinTarget1.wav" ) )
+        {
+            formatex( szMissingWar3BonusSounds[iMissingWar3BonusSounds++], 63, "sound/warcraft3/bonus/BarkSkinTarget1.wav" );
             bMissingWar3BonusSounds = true;
+        }
 
         if ( !file_exists( "sound/warcraft3/bonus/BerzerkerCaster.wav" ) )
+        {
+            formatex( szMissingWar3BonusSounds[iMissingWar3BonusSounds++], 63, "sound/warcraft3/bonus/BerzerkerCaster.wav" );
             bMissingWar3BonusSounds = true;
+        }
 
         if ( !file_exists( "sound/warcraft3/bonus/DeathCoilMissileLaunch1.wav" ) )
+        {
+            formatex( szMissingWar3BonusSounds[iMissingWar3BonusSounds++], 63, "sound/warcraft3/bonus/DeathCoilMissileLaunch1.wav" );
             bMissingWar3BonusSounds = true;
+        }
 
         if ( !file_exists( "sound/warcraft3/bonus/EntanglingRootsDecay1.wav" ) )
+        {
+            formatex( szMissingWar3BonusSounds[iMissingWar3BonusSounds++], 63, "sound/warcraft3/bonus/EntanglingRootsDecay1.wav" );
             bMissingWar3BonusSounds = true;
+        }
 
         if ( !file_exists( "sound/warcraft3/bonus/Error.wav" ) )
+        {
+            formatex( szMissingWar3BonusSounds[iMissingWar3BonusSounds++], 63, "sound/warcraft3/bonus/Error.wav" );
             bMissingWar3BonusSounds = true;
+        }
 
         if ( !file_exists( "sound/warcraft3/bonus/FrostArmorTarget1.wav" ) )
+        {
+            formatex( szMissingWar3BonusSounds[iMissingWar3BonusSounds++], 63, "sound/warcraft3/bonus/FrostArmorTarget1.wav" );
             bMissingWar3BonusSounds = true;
+        }
 
         if ( !file_exists( "sound/warcraft3/bonus/InnerFireBirth.wav" ) )
+        {
+            formatex( szMissingWar3BonusSounds[iMissingWar3BonusSounds++], 63, "sound/warcraft3/bonus/InnerFireBirth.wav" );
             bMissingWar3BonusSounds = true;
+        }
 
         if ( !file_exists( "sound/warcraft3/bonus/Reincarnation.wav" ) )
+        {
+            formatex( szMissingWar3BonusSounds[iMissingWar3BonusSounds++], 63, "sound/warcraft3/bonus/Reincarnation.wav" );
             bMissingWar3BonusSounds = true;
+        }
 
         if ( !file_exists( "sound/warcraft3/bonus/FrostNovaStateEnd.wav" ) )
+        {
+            formatex( szMissingWar3BonusSounds[iMissingWar3BonusSounds++], 63, "sound/warcraft3/bonus/FrostNovaStateEnd.wav" );
             bMissingWar3BonusSounds = true;
+        }
 
         if ( !file_exists( "sound/warcraft3/bonus/OrcBurrowBattleStations.wav" ) )
+        {
+            formatex( szMissingWar3BonusSounds[iMissingWar3BonusSounds++], 63, "sound/warcraft3/bonus/OrcBurrowBattleStations.wav" );
             bMissingWar3BonusSounds = true;
+        }
 
         if ( !file_exists( "sound/warcraft3/bonus/UpkeepRing.wav" ) )
+        {
+            formatex( szMissingWar3BonusSounds[iMissingWar3BonusSounds++], 63, "sound/warcraft3/bonus/UpkeepRing.wav" );
             bMissingWar3BonusSounds = true;
+        }
 
         if ( !file_exists( "sound/warcraft3/bonus/ShadowMeld1.wav" ) )
+        {
+            formatex( szMissingWar3BonusSounds[iMissingWar3BonusSounds++], 63, "sound/warcraft3/bonus/ShadowMeld1.wav" );
             bMissingWar3BonusSounds = true;
+        }
 
         if ( bMissingWar3BonusSounds )
         {
-            // Log error
-            // You are missing one or more bonus sound file(s) required to run War3x.
-            // Requiring players to have these files is optional
+            // Log missing file(s) notification
+
+            log_amx( "^n* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_FILES", WAR3X_PLUGINNAME );
+
+            // List missing sounds
+
+            for ( new i = 0; i < iMissingWar3BonusSounds; i++ )
+                log_amx( "  -- %s", szMissingWar3BonusSounds[i] );
+
+            // Suggest reinstall
+
+            log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_LISTED", WAR3X_PLUGINNAME_SHORT );
+
+            // Optional file(s)
+
+            log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_OPTIONAL", WAR3X_PLUGINNAME_SHORT, "PRECACHE_WAR3BONUSSOUNDS" );
 
             bMissingFiles = true;
         }
@@ -1179,7 +1294,50 @@ public WAR3_is_missing_files() {
     #endif
 
     if ( !file_exists( "war3x.css" ) )
-        return ( true );
+    {
+        // Log missing file(s) notification
+
+        log_amx( "^n* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_FILES", WAR3X_PLUGINNAME );
+
+        // List missing file
+
+        log_amx( "  -- war3x.css" );
+
+        // Suggest reinstall
+
+        log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_LISTED", WAR3X_PLUGINNAME_SHORT );
+
+        // Required file(s)
+        // * [Wc3x] ERROR: The file(s) listed above are not optional.
+        log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_REQUIRED" );
+
+        bMissingFiles = true;
+    }
+
+	// Get configs directory
+
+    static AMXX_DATA_DIR[64], szLangFile[64];
+	get_datadir( AMXX_DATA_DIR, 63 );
+
+    formatex( szLangFile, 63, "%s/lang/war3x.txt", AMXX_DATA_DIR );
+
+    if ( !file_exists( szLangFile ) )
+    {
+        // Log missing file(s) notification
+
+        log_amx( "^n* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_FILES", WAR3X_PLUGINNAME );
+
+        // List missing file
+
+        log_amx( "  -- %s", szLangFile );
+
+        // Suggest reinstall
+
+        log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_LISTED", WAR3X_PLUGINNAME_SHORT );
+
+        bMissingFiles = true;
+    }
+
 
     if ( bMissingFiles )
         return ( true );

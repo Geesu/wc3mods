@@ -65,6 +65,8 @@ new const WAR3X_VERSION[]    = "v1.0.1 Official";
 new const WAR3X_DATE[]       = "03/21/2006";
 new const WAR3X_AUTHORS[]    = "Ryan, Geesu, Avanderik, Willyumyum";
 
+new const WAR3X_PLUGINNAME_SHORT[] = "WAR3X";
+
 // - Basic Setup ------------------------------------------ //
 
 #pragma tabsize 0
@@ -134,7 +136,7 @@ public plugin_precache() {
 
     if ( WAR3_is_missing_files() )
     {
-        g_bWar3xEnabled = true;
+        g_bWar3xEnabled = false;
         return PLUGIN_CONTINUE;
     }
 
@@ -275,6 +277,11 @@ public client_disconnect( id ) {
 public plugin_init() {
 
     register_plugin( WAR3X_PLUGINNAME, WAR3X_VERSION, WAR3X_AUTHORS );
+
+    // The following conditional is true when files are missing from the installation
+
+    if ( !g_bWar3xEnabled )
+        return PLUGIN_CONTINUE;
 
     if ( g_bMapDisabled )
     {
