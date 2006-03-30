@@ -125,6 +125,10 @@ new const WAR3X_PLUGINNAME_SHORT[] = "WAR3X";
 
 public plugin_precache() {
 
+	// Register dictionary
+
+	register_dictionary( "war3x.txt" );
+
 	// Get configs directory
 
     static AMXX_DIR[64];
@@ -405,10 +409,6 @@ public plugin_init() {
 
 	register_touch( "DEATH_COIL",   "player", "UD_U_DEATHCOIL_touch" );
 	register_touch( "WAR3X_ITEM",	"player", "Item_Touch" );
-
-	// Register dictionary
-
-	register_dictionary( "war3x.txt" );
 
     WAR3_set_xp();
 

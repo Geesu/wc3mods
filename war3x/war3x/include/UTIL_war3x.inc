@@ -1027,21 +1027,43 @@ public WAR3_is_missing_files() {
 
     new bool:bMissingFiles = false;
 
-    if ( !file_exists( "sprites/warcraft3/sleep.spr" ) )
-    {
-        // Log error
-        // You are missing one or more sprite file(s) that are required to run War3x.
-        // Please check your install
-
-        bMissingFiles = true;
-    }
-
     #if PRECACHE_RACEICONS
 
-        if ( !file_exists( "sprites/warcraft3/icon_ud.spr" ) || !file_exists( "sprites/warcraft3/icon_human.spr" ) || !file_exists( "sprites/warcraft3/icon_orc.spr" ) || !file_exists( "sprites/warcraft3/icon_ne.spr" ) )
+        new iMissingRaceIcons, szMissingRaceIcons[5][64];
+        new bool:bMissingRaceIcons = false;
+
+        if ( !file_exists( "sprites/warcraft3/icon_ud.spr" ) )
         {
-            // Log error
-            // You are missing 1 or more race icon sprites
+            formatex( szMissingRaceIcons[iMissingRaceIcons++], 63, "sprites/warcraft3/icon_ud.spr" );
+            bMissingRaceIcons = true;
+        }
+
+        if ( !file_exists( "sprites/warcraft3/icon_human.spr" ) )
+        {
+            formatex( szMissingRaceIcons[iMissingRaceIcons++], 63, "sprites/warcraft3/icon_human.spr" );
+            bMissingRaceIcons = true;
+        }
+
+        if ( !file_exists( "sprites/warcraft3/icon_orc.spr" ) )
+        {
+            formatex( szMissingRaceIcons[iMissingRaceIcons++], 63, "sprites/warcraft3/icon_orc.spr" );
+            bMissingRaceIcons = true;
+        }
+
+        if ( !file_exists( "sprites/warcraft3/icon_ne.spr" ) )
+        {
+            formatex( szMissingRaceIcons[iMissingRaceIcons++], 63, "sprites/warcraft3/icon_ne.spr" );
+            bMissingRaceIcons = true;
+        }
+
+        if ( bMissingRaceIcons )
+        {
+            WAR3_missing_files();
+
+            for ( new i = 0; i < iMissingRaceIcons; i++ )
+                WAR3_missing_filename( "SPRITE", szMissingRaceIcons[i] );
+
+            WAR3_missing_optional( "PRECACHE_RACEICONS" );
 
             bMissingFiles = true;
         }
@@ -1050,11 +1072,11 @@ public WAR3_is_missing_files() {
 
     #if PRECACHE_BLINKICONS
 
-        if ( !file_exists( "sprites/warcraft3/saveme.spr" ) || !file_exists( "sprites/warcraft3/dispellme.spr" ) )
+        if ( !file_exists( "sprites/warcraft3/saveme.spr" ) )
         {
-            // Log error
-            // You are missing one or more sprite file(s) that are required to run War3x.
-            // Please check your install
+            WAR3_missing_files();
+            WAR3_missing_filename( "SPRITE", "sprites/warcraft3/saveme.spr" );
+            WAR3_missing_optional( "PRECACHE_BLINKICONS" );
 
             bMissingFiles = true;
         }
@@ -1063,7 +1085,7 @@ public WAR3_is_missing_files() {
 
     #if PRECACHE_WAR3SOUNDS
 
-        new iMissingWar3Sounds, szMissingWar3Sounds[32][64];
+        new iMissingWar3Sounds, szMissingWar3Sounds[17][64];
         new bool:bMissingWar3Sounds = false;
 
         if ( !file_exists( "sound/warcraft3/ImpaleHit.wav" ) )
@@ -1170,22 +1192,12 @@ public WAR3_is_missing_files() {
 
         if ( bMissingWar3Sounds )
         {
-            // Log missing file(s) notification
-            // * [Wc3x] ERROR: The following files are missing from your %s installation:
-            log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_FILES", WAR3X_PLUGINNAME );
-
-            // List missing sounds
+            WAR3_missing_files();
 
             for ( new i = 0; i < iMissingWar3Sounds; i++ )
-                log_amx( "  -- %s", szMissingWar3Sounds[i] );
+                WAR3_missing_filename( "SOUND", szMissingWar3Sounds[i] );
 
-            // Suggest reinstall
-            // * [Wc3x] ERROR: The file(s) listed above are required to run %s in it's current configuration. Please review the installation instructions provided with the plugin, and if necessary, reinstall to correct this error.
-            log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_LISTED", WAR3X_PLUGINNAME_SHORT );
-
-            // Optional file(s)
-            // * [Wc3x] ERROR: The file(s) listed above are optional. If you have a copy of the %s source code, you may disable using the missing file(s) by opening the war3x/setup.cfg file, changing the %s define to 0, and recompiling.
-            log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_OPTIONAL", WAR3X_PLUGINNAME_SHORT, "PRECACHE_WAR3SOUNDS" );
+            WAR3_missing_optional( "PRECACHE_WAR3SOUNDS" );
 
             bMissingFiles = true;
         }
@@ -1194,7 +1206,7 @@ public WAR3_is_missing_files() {
 
     #if PRECACHE_WAR3BONUSSOUNDS
 
-        new iMissingWar3BonusSounds, szMissingWar3BonusSounds[32][64];
+        new iMissingWar3BonusSounds, szMissingWar3BonusSounds[12][64];
         new bool:bMissingWar3BonusSounds = false;
 
         if ( !file_exists( "sound/warcraft3/bonus/BarkSkinTarget1.wav" ) )
@@ -1271,78 +1283,159 @@ public WAR3_is_missing_files() {
 
         if ( bMissingWar3BonusSounds )
         {
-            // Log missing file(s) notification
-
-            log_amx( "^n* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_FILES", WAR3X_PLUGINNAME );
-
-            // List missing sounds
+            WAR3_missing_files();
 
             for ( new i = 0; i < iMissingWar3BonusSounds; i++ )
-                log_amx( "  -- %s", szMissingWar3BonusSounds[i] );
+                WAR3_missing_filename( "SOUND", szMissingWar3BonusSounds[i] );
 
-            // Suggest reinstall
-
-            log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_LISTED", WAR3X_PLUGINNAME_SHORT );
-
-            // Optional file(s)
-
-            log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_OPTIONAL", WAR3X_PLUGINNAME_SHORT, "PRECACHE_WAR3BONUSSOUNDS" );
+            WAR3_missing_optional( "PRECACHE_WAR3BONUSSOUNDS" );
 
             bMissingFiles = true;
         }
 
     #endif
 
-    if ( !file_exists( "war3x.css" ) )
+    // Required warcraft sprites
+
+    if ( !file_exists( "sprites/warcraft3/sleep.spr" ) )
     {
-        // Log missing file(s) notification
-
-        log_amx( "^n* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_FILES", WAR3X_PLUGINNAME );
-
-        // List missing file
-
-        log_amx( "  -- war3x.css" );
-
-        // Suggest reinstall
-
-        log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_LISTED", WAR3X_PLUGINNAME_SHORT );
-
-        // Required file(s)
-        // * [Wc3x] ERROR: The file(s) listed above are not optional.
-        log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_REQUIRED" );
+        WAR3_missing_files();
+        WAR3_missing_filename( "SPRITE", "sprites/warcraft3/sleep.spr" );
+        WAR3_missing_required();
 
         bMissingFiles = true;
     }
 
-	// Get configs directory
+    // Cascading style sheet
 
-    static AMXX_DATA_DIR[64], szLangFile[64];
-	get_datadir( AMXX_DATA_DIR, 63 );
+    if ( !file_exists( "war3x.css" ) )
+    {
+        WAR3_missing_files();
+        WAR3_missing_filename( "GENERIC", "war3x.css" );
+        WAR3_missing_required();
 
-    formatex( szLangFile, 63, "%s/lang/war3x.txt", AMXX_DATA_DIR );
+        bMissingFiles = true;
+    }
+
+    static AMXX_DIR_DATA[64];
+	get_datadir( AMXX_DIR_DATA, 63 );
+
+    new szLangFile[64];
+    formatex( szLangFile, 63, "%s/lang/war3x.txt", AMXX_DIR_DATA );
+
+    // Language file
 
     if ( !file_exists( szLangFile ) )
     {
-        // Log missing file(s) notification
-
-        log_amx( "^n* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_FILES", WAR3X_PLUGINNAME );
-
-        // List missing file
-
-        log_amx( "  -- %s", szLangFile );
-
-        // Suggest reinstall
-
-        log_amx( "* [WC3x] %L", LANG_SERVER, "ERROR_MISSING_LISTED", WAR3X_PLUGINNAME_SHORT );
+        WAR3_missing_files();
+        WAR3_missing_filename( "LANGUAGE", szLangFile );
+        WAR3_missing_required();
 
         bMissingFiles = true;
     }
 
+    // War3x Configuration
+
+    static AMXX_DIR_CONFIGS[64];
+	get_configsdir( AMXX_DIR_CONFIGS, 63 );
+
+    new szWar3xCfgFile[64];
+    formatex( szWar3xCfgFile, 63, "%s/war3x/war3x.cfg", AMXX_DIR_CONFIGS );
+
+    if ( !file_exists( szWar3xCfgFile ) )
+    {
+        WAR3_missing_files();
+        WAR3_missing_filename( "CONFIG", szWar3xCfgFile );
+        WAR3_missing_required();
+
+        bMissingFiles = true;
+    }
+
+    // Short term XP
+
+    new szShortTermFile[64];
+    formatex( szShortTermFile, 63, "%s/war3x/short_term_maps.cfg", AMXX_DIR_CONFIGS );
+
+    if ( !file_exists( szShortTermFile ) )
+    {
+        WAR3_missing_warning();
+        WAR3_missing_filename( "CONFIG", szShortTermFile );
+        WAR3_missing_warning_note();
+    }
+
+    // Disabled maps
+
+    new szDisabledFile[64];
+    formatex( szDisabledFile, 63, "%s/war3x/disabled_maps.cfg", AMXX_DIR_CONFIGS );
+
+    if ( !file_exists( szDisabledFile ) )
+    {
+        WAR3_missing_warning();
+        WAR3_missing_filename( "CONFIG", szDisabledFile );
+        WAR3_missing_warning_note();
+    }
 
     if ( bMissingFiles )
         return ( true );
 
     return ( false );
+}
+
+
+public WAR3_missing_files() {
+
+    log_amx( " " );
+    log_amx( "* %L", LANG_SERVER, "ERROR_MISSING_FILES", WAR3X_PLUGINNAME );
+    log_amx( "========================" );
+
+    return PLUGIN_HANDLED;
+}
+
+
+public WAR3_missing_filename( szCategory[16], szFilename[64] ) {
+
+    log_amx( "  -- ( %L: %s ) %s", LANG_SERVER, "LANG_CATEGORY", szCategory, szFilename );
+    return PLUGIN_HANDLED;
+}
+
+
+public WAR3_missing_optional( szPrecacheName[32] ) {
+
+    log_amx( "========================" );
+    log_amx( "* %L", LANG_SERVER, "ERROR_MISSING_OPTIONAL", WAR3X_PLUGINNAME_SHORT, szPrecacheName );
+    log_amx( " " );
+
+    return PLUGIN_HANDLED;
+}
+
+
+public WAR3_missing_required() {
+
+    log_amx( "========================" );
+    log_amx( "* %L", LANG_SERVER, "ERROR_MISSING_REQUIRED" );
+    log_amx( " " );
+
+    return PLUGIN_HANDLED;
+}
+
+
+public WAR3_missing_warning() {
+
+    log_amx( " " );
+    log_amx( "* %L", LANG_SERVER, "WARNING_MISSING_FILES", WAR3X_PLUGINNAME );
+    log_amx( "========================" );
+
+    return PLUGIN_HANDLED;
+}
+
+
+public WAR3_missing_warning_note() {
+
+    log_amx( "========================" );
+    log_amx( "* %L", LANG_SERVER, "WARNING_MISSING_LISTED", WAR3X_PLUGINNAME_SHORT );
+    log_amx( " " );
+
+    return PLUGIN_HANDLED;
 }
 
 // ------------------------------------------------- End. - //

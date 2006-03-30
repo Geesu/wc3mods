@@ -93,3 +93,24 @@ RACE4_ULTIMATE1_DESC = Heals a target friendly player <%s> health over <%s> seco
 RACE4_ULTIMATE2_DESC = Causes roots to burst from the ground, immobilizing a target enemy unit for <%s> seconds, and dealing <%s> damage over time.
 RACE4_ULTIMATE3_DESC = Hurls a poisonous dagger at a target enemy player, dealing <%s> initial damage and <%s> damage over <%s> seconds. Movement speed of the target is also reduced by <%s>.
 
+;Server Console Messages
+
+CONSOLE_DISABLEDMAP     = ^n* [WC3x] Disabling Warcraft 3: Expansion for current map (%s).^n* [WC3x] NOTE: Disabled maps can be edited in %s/disabled_maps.cfg ^n^n
+CONSOLE_SHORTTERMMAP    = ^n* [WC3x] Using Short-Term experience on current map (%s).^n* [WC3x] NOTE: Short-Term-Only maps can be edited in %s/short_term_maps.cfg ^n^n
+
+CONSOLE_WELCOME_VERSION  = %s Welcome, %s, This server is running %s (%s) (%s)
+CONSOLE_WELCOME_COMMANDS = %s For a list of available commands, type '/war3help' in chat.
+
+ERROR_MISSING_FILES     = ERROR: The following files are missing from your %s installation:
+ERROR_MISSING_OPTIONAL  = NOTE: The file(s) listed above are optional. If you have a copy of the %s source code, you may disable using the missing file(s) by opening the war3x/setup.cfg file, changing the %s define to 0, and recompiling.
+ERROR_MISSING_REQUIRED  = NOTE: The file(s) listed above are not optional. The plugin will not run unless the file(s) are copied to their proper folder(s). Please review the installation instructions provided with the plugin, and if necessary, reinstall to correct this error.
+
+WARNING_MISSING_FILES   = WARNING: The following optional file(s) are missing from your %s installation:
+WARNING_MISSING_LISTED  = NOTE: The file(s) listed above are not required to run %s in it's current configuration, but can prove beneficial to the server if installed properly. Please consult the installation instructions provided with the plugin for more information.
+
+;Common Words
+LANG_CATEGORY           = Category
+
+
+[de]
+; Your language here!

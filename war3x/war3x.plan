@@ -20,6 +20,8 @@ BIG CHANGES:
 
 * FULL MULTILINGUAL SUPPORT
 
+--FULL CHECKING FOR REQUIRED FILES BEFORE LOADING (RYAN)
+
 * use 'dynamic' hudmessage positions (UNSURE YET..)
 * keep autosnipers disabled? - or just disable them on a per-skill basis?
 --add shopmenu command from chat (RYAN)
