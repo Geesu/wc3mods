@@ -21,6 +21,8 @@ new Float:OR_fPulverize_bonus[3]	=       {1.0,2.0,3.0};	// (  float) Pulverize (
 
 #define PULVERIZE_ARMOR                             0.25    // (  float) % armor removed on pulverize based on damage
 
+new PULVERIZE_RING_RGB[3]          =        {255,255,192};  // (integer) RGB of pulverize rings at max level
+
 // - Pillage ---------------------------------------------- //
 
 new Float:OR_fPillage[3]            =    {0.30,0.60,0.90};  // (  float) Pillage (percent chance)

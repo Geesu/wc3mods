@@ -98,7 +98,7 @@ RACE4_ULTIMATE3_DESC = Hurls a poisonous dagger at a target enemy player, dealin
 CONSOLE_DISABLEDMAP     = ^n* [WC3x] Disabling Warcraft 3: Expansion for current map (%s).^n* [WC3x] NOTE: Disabled maps can be edited in %s/disabled_maps.cfg ^n^n
 CONSOLE_SHORTTERMMAP    = ^n* [WC3x] Using Short-Term experience on current map (%s).^n* [WC3x] NOTE: Short-Term-Only maps can be edited in %s/short_term_maps.cfg ^n^n
 
-CONSOLE_WELCOME_VERSION  = %s Welcome, %s, This server is running %s (%s) (%s)
+CONSOLE_WELCOME_VERSION  = Welcome, %s, This server is running %s (%s) (%s)
 CONSOLE_WELCOME_COMMANDS = %s For a list of available commands, type '/war3help' in chat.
 
 ERROR_MISSING_FILES     = ERROR: The following files are missing from your %s installation:

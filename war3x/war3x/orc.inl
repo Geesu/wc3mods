@@ -312,10 +312,9 @@ static OR_S_PULVERIZE( attacker, victim, Float:fGrenadeOrigin[3], damage ) {
 	// Convert origin to int
 
 	new iGrenadeOrigin[3];
+
 	for ( new i = 0; i < 3; i++ )
 		iGrenadeOrigin[i] = floatround( fGrenadeOrigin[i] );
-
-    iGrenadeOrigin[2] += 40;
 
     // Check for enemies in range of victim(s)
 
@@ -388,35 +387,30 @@ static OR_S_PULVERIZE( attacker, victim, Float:fGrenadeOrigin[3], damage ) {
 
 	if ( bHitPlayers )
 	{
-		new iRadius = floatround( OR_fPulverize_range[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1] );
+	    // Raise grenade origin to waist level
 
-		new iRingRed    = ( 85 * g_PlayerInfo[attacker][CURRENT_SKILL2] );
-		new iRingGreen  = ( 85 * g_PlayerInfo[attacker][CURRENT_SKILL2] );
-		new iRingBlue   = ( 64 * g_PlayerInfo[attacker][CURRENT_SKILL2] );
+        iGrenadeOrigin[2] += 40;
 
-		new iBlueMod;
+        new iRGB[3];
 
-		switch ( iRingBlue )
-		{
-			case 64:    iBlueMod = 64;
-			case 128:   iBlueMod = 48;
-			case 192:   iBlueMod = 32;
-		}
+        for ( new i = 0; i < 3; i++ )
+            iRGB[i] = PULVERIZE_RING_RGB[i] - ( 8 * ( 3 - g_PlayerInfo[attacker][CURRENT_SKILL2] ) );
 
-		new iRingSize = iRadius * 2 * 40;
+		new iRingSize = floatround( OR_fPulverize_range[g_PlayerInfo[attacker][CURRENT_SKILL2] - 1] * 2.0 * 40.0 );
 		new OuterRadius[3], InnerRadius[3];
 
-		OuterRadius[2] = iRingSize + 40;
+		OuterRadius[2] = iRingSize;
 		InnerRadius[2] = iRingSize / 2;
-
-		// Outer Ring
-
-		Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, iGrenadeOrigin, OuterRadius, SPR_SHOCKWAVE, 0, 0, 3, 6, 0, iRingRed, iRingGreen, iRingBlue - iBlueMod, 255, 0 );
 
 		// Inner Ring
 
-		Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, iGrenadeOrigin, InnerRadius, SPR_SHOCKWAVE, 0, 0, 3, 3, 0, iRingRed, iRingGreen, iRingBlue, 255, 0 );
-	}
+		Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, iGrenadeOrigin, InnerRadius, SPR_SHOCKWAVE, 0, 0, 3, 3, 0, iRGB[GLOW_R], iRGB[GLOW_G], iRGB[GLOW_B], 255, 0 );
+
+		// Outer Ring
+
+        iRGB[GLOW_B] -= 32;
+		Create_TE_BEAMCYLINDER( SHOWTO_ALL_BROADCAST, iGrenadeOrigin, OuterRadius, SPR_SHOCKWAVE, 0, 0, 3, 6, 0, iRGB[GLOW_R], iRGB[GLOW_G], iRGB[GLOW_B], 255, 0 );
+    }
 
 	return PLUGIN_HANDLED;
 }

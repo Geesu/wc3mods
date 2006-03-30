@@ -622,8 +622,8 @@ public on_CurWeapon( id ) {
         new szName[32];
         get_user_name( id, szName, 31 );
 
-        client_print( id, print_chat, "^n%L", id, "CONSOLE_WELCOME_VERSION", WAR3X_PREFIX, szName, WAR3X_PLUGINNAME, WAR3X_VERSION, WAR3X_DATE );
-        client_print( id, print_chat, "^n%L^n^n", id, "CONSOLE_WELCOME_COMMANDS", WAR3X_PREFIX );
+        client_print( id, print_chat, "^n %s %L", id, WAR3X_PREFIX, "CONSOLE_WELCOME_VERSION", szName, WAR3X_PLUGINNAME, WAR3X_VERSION, WAR3X_DATE );
+        client_print( id, print_chat, "^n %s %L^n^n", id, WAR3X_PREFIX, "CONSOLE_WELCOME_COMMANDS" );
     }
 
     // Display race select menu

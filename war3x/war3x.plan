@@ -46,8 +46,7 @@ SKILL CHANGES:
 
 --nature's blessing - slight recode so boots now stack slightly (RYAN)
 
-
-* boots now has its own speed function that returns exactly how much speed bonus a player has
+--boots now has its own speed function that returns exactly how much speed bonus a player has (RYAN)
 
 
 MISC CHANGES:
@@ -57,12 +56,11 @@ MISC CHANGES:
 --Players will no longer be able to move for strange reasons while under the effects
   of a slowing or immobilizing abilities (sleep/root/etc) (RYAN)
 * check invis cooldown? possible crashing...
-* fix ankh?
-* fix flame strike and amulet
+* fix ankh if possible (sometimes it doesnt work on bomb explosions) (or when team change)
+* fix flame strike and amulet - This will show the EFFECTS for 1 second, but no damage will be dealt to anyone
 * figure out how to set random number for root because of 2 diff functions that call
 * remove 'buyback' from item purchasing and just have modified price in list
 * implement some kind of last target variable that can be used for target skills etc.
-* remove voting????
 * make check for cfg and sprite file(s), if not found, don't load
 * !g_bPlayerSleeping (make some generalize invuln thing) 
 * replace all distance/40 by get_distance (statsx stock)
@@ -74,9 +72,13 @@ MISC CHANGES:
 * recode human invisibility to take cloak into affect
 * make global(s) for mp_playerid
 * move all commands to commands.inl (setxp/etc)
-* call windwalk_notify from _strike??
 --change message for purchasing boots to use a % of speed boost (RYAN)
 * make a function to auto-fix right aligned words from being 'squished' -- this will be necessary for multilanguage
+
+
+NOT HAPPENING THIS TIME
+* make voting a separate plugin?
+--call windwalk_notify from _strike?? (CANT BECAUSE WE NEED TO CHECK ABSORBSION FROM ELUNES) (RYAN)
 
 
 INVIS DEBUGGING... 
@@ -644,3 +646,7 @@ L 03/27/2006 - 21:43:21: [ENGINE] Invalid player 0 (not in-game)
 680.0118: Native returned: 0
 680.0118: Binary log corrupt past this point.
 
+
+
+679.5997: Plugin "war3x.amxx" (23) had public function "on_ResetHud" (323) called.
+679.5997: Binary log corrupt past this point.
