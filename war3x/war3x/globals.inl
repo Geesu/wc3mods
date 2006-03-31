@@ -130,6 +130,8 @@ new const HEAL_TARGETS[_TR][] =             // Heal targets (NOT FULLY IMPLEMENT
 
 #define SELFHEAL_MODIFIER            0.6    // (  float) modifier to apply to all self healing when player is first target
 
+#define KILL_ASSIST_PERCENT          0.51   // (  float) percent of damage required to gain a kill assist
+
 new const GETSKILLCHECK[3] =      {1,3,5};  // (integer) levels can you get same skill upgrades
 new const GETCLASSCHECK[3] =      {0,2,5};  // (integer) levels players receive new class titles
 
@@ -411,6 +413,9 @@ new g_iAmuletCharges[33];                   // Item amount arrays
 
 new bool:g_bPlayerSaveMe[33];
 new bool:g_bPlayerDispellMe[33];
+
+new g_iPlayerDamage[33][33];                // Kill assist variables
+new g_iPlayerDamageTaken[33];
 
 // - Skill Variables -------------------------------------- //
 

@@ -755,6 +755,10 @@ public Purge_Death( id ) {
 
     g_iAmuletCharges[id] = 0;
 
+	// Clear damage taken from round
+
+	g_iPlayerDamageTaken[id] = 0;
+
     // Clear StatusIcons
 
     Ultimate_Icon( id, ICON_HIDE );

@@ -839,6 +839,11 @@ public WAR3_damage( attacker, victim, weapon, iDamage, headshot, iCheckArmor ) {
 
         SHARED_INVIS_cooldown( victim );
     }
+    
+    // Update kill assist information
+    
+    g_iPlayerDamage[victim][attacker] += iDamage;
+	g_iPlayerDamageTaken[victim] += iDamage;
 
     return PLUGIN_HANDLED;
 }
@@ -857,6 +862,10 @@ public WAR3_death( killer, victim, weapon, headshot ) {
     // Perform Victim Actions
 
     WAR3_death_victim( victim );
+    
+    // Check for kill assist
+    
+    XP_Support_Kill( victim, killer );
 
     // Make sure death was not to DoT from disconnected killer
 

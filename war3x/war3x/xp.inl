@@ -10,6 +10,7 @@
 
 
 #define XP_KILL                    18.0     // (  float) base XP for each kill (before multipliers)
+#define XP_KILL_ASSIST             10.0     // (  float) base XP for each kill assist (before multipliers)
 #define XP_TEAMKILL                25.0     // (  float) penalty for teamkill
 #define XP_HEADSHOT_MULTIPLIER     1.35     // (  float) headshot multiplier (1.0 disables headshot multiplier)
 #define XP_OBJECTIVE_LVL_BONUS      2.0     // (  float) personal objective bonus ( called on personal objective xp events )
@@ -1446,6 +1447,54 @@ public XP_Support_Heal( caster, iHealthGiven ) {
     client_print( caster, print_chat, "%s %L", WAR3X_PREFIX, caster, "XP_SUPPORT_HEALMSG", iSupportXp, iHealthGiven );
 
     return PLUGIN_HANDLED;
+}
+
+public XP_Support_Kill( victimId, attackerId ) {
+	
+	if ( g_iPlayerDamage[victimId][attackerId] / g_iPlayerDamageTaken[victimId] < KILL_ASSIST_PERCENT )
+	{
+		new iTeamPlayers[32], szTeamName[16];
+		new iTotalPlayers, iKillAssister;
+
+		get_user_team( attackerId, szTeamName, 15 );
+		get_players( iTeamPlayers, iTotalPlayers, "e", szTeamName );
+
+		if ( iTotalPlayers > 1 )
+		{
+			new iPlayerNum;
+
+			while ( iPlayerNum < iTotalPlayers )
+			{
+				new iPlayer = iTeamPlayers[iPlayerNum];
+
+				if ( g_iPlayerDamage[victimId][iPlayer] / g_iPlayerDamageTaken[victimId] >= KILL_ASSIST_PERCENT )
+					iKillAssister = iPlayer;
+
+				if ( g_iPlayerDamage[victimId][iPlayer] )
+					g_iPlayerDamage[victimId][iPlayer] = 0;
+
+				iPlayerNum++;
+			}
+		}
+		
+		if ( !iKillAssister || WAR3_get_level( g_PlayerInfo[iKillAssister][CURRENT_XP] ) == TOTAL_LEVELS )
+			return PLUGIN_HANDLED;
+
+		new Float:fSupportXp = ( g_iPlayerDamage[victimId][attackerId] / g_iPlayerDamageTaken[victimId] ) * XP_KILL_ASSIST * get_pcvar_float( CVAR_xp_normal );
+		new iSupportXp = floatround( fSupportXp );
+
+		g_iXPsupport[iKillAssister][XP_ROUND] += iSupportXp;
+
+		new iOldXp = g_PlayerInfo[iKillAssister][CURRENT_XP];
+		new iNewXp = iOldXp + iSupportXp;
+
+		XP_Give( iKillAssister, iOldXp, iNewXp );
+		
+		// add new message with language support later
+		client_print( iKillAssister, print_chat, "%s You have gained an assist", WAR3X_PREFIX );
+	}
+
+	return PLUGIN_HANDLED;
 }
 
 

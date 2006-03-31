@@ -435,6 +435,11 @@ public on_Damage( victim ) {
 
     if ( bodypart == HIT_HEAD )
         headshot = 1;
+	
+	// Update kill assist information
+
+	g_iPlayerDamage[victim][attacker] += iDamage;
+	g_iPlayerDamageTaken[victim] += iDamage;
 
     // Check for bomb explosion
 
