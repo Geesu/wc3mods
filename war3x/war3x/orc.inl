@@ -804,45 +804,41 @@ static OR_U_HEALINGWAVE( caster, target ) {
 
     Create_TE_ELIGHT( SHOWTO_ALL_BROADCAST, caster, 100, 255, 255, 128, 10, 0 );
 
+    // Calculate actual heal amount ( self healing ultimate )
 
-    new iNewHealth = get_user_health( target ) + HEALINGWAVE_HEAL;
-    new iMaxHealth = WAR3_get_maxhealth( target );
-
-    new iHealthGiven = HEALINGWAVE_HEAL;
+    new iHealAmount = HEALINGWAVE_HEAL;
 
     if ( target == caster )
     {
-        new Float:fHealthGiven = float( iHealthGiven ) * SELFHEAL_MODIFIER;
-        iHealthGiven = floatround( fHealthGiven );
+        new Float:fHealAmount = float( iHealAmount ) * SELFHEAL_MODIFIER;
+        iHealAmount = floatround( fHealAmount );
     }
 
-    if ( iNewHealth > iMaxHealth )
-    {
-        iHealthGiven -= ( iNewHealth - iMaxHealth );
-        iNewHealth = iMaxHealth;
-    }
+    // Heal player
+
+    new iHealthGiven = WAR3_heal( caster, target, iHealAmount );
 
     if ( target != caster )
         g_iHealingWaveHealth[caster] += iHealthGiven;
 
-    new szMessage[128], szPlayerName[32];
-    get_user_name( caster, szPlayerName, 31 );
+    // Hud message
+
+    new szMessage[128];
 
     if ( caster == target )
         formatex( szMessage, 127, HEAL_SELF, iHealthGiven );
 
     else
     {
+        new szPlayerName[32];
+        get_user_name( caster, szPlayerName, 31 );
+
         formatex( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
     }
 
     WAR3_status_text( target, szMessage, 3.0 );
 
-    set_user_health( target, iNewHealth );
-
-    // Invisibility Cooldown
-
-    SHARED_INVIS_cooldown( target );
+    // Jump to next target
 
     g_ChainJumps[caster][0] = target;
 
@@ -915,7 +911,6 @@ public OR_U_HEALINGWAVE_jump( parmJump[2] ) {
 
                 g_ChainJumps[caster][iCurrentJump] = NextTarget;
 
-
                 // Play Sound
 
                 emit_sound( LastTarget, CHAN_STATIC, SOUND_HEALINGWAVE, 1.0, ATTN_NORM, 0, PITCH_NORM );
@@ -926,51 +921,38 @@ public OR_U_HEALINGWAVE_jump( parmJump[2] ) {
                 Create_TE_BEAMENTS( SHOWTO_ALL_BROADCAST, LastTarget, NextTarget, SPR_SMOOTHBEAM, 0, 10, 15, 100, 4, 255, 255, 128, 255, 0 );
                 Create_TE_BEAMENTS( SHOWTO_ALL_BROADCAST, LastTarget, NextTarget, SPR_CHAINLIGHTNING, 0, 15, 15, 80, 4, 255, 255, 255, 255, 0 );
 
-                // Heal Effects
-
-                Shared_Heal_Effect( NextTarget );
-
                 // Light Effects
 
                 Create_TE_ELIGHT( SHOWTO_ALL_BROADCAST, LastTarget, 100, 255, 255, 128, 10, 0 );
                 Create_TE_ELIGHT( SHOWTO_ALL_BROADCAST, NextTarget, 100, 255, 255, 128, 10, 0 );
 
-                // Calculate Health
+                // Heal Effects
 
-                new iNewHealth = get_user_health( NextTarget ) + iWaveHealth;
-                new iMaxHealth = WAR3_get_maxhealth( NextTarget );
+                Shared_Heal_Effect( NextTarget );
 
-                new iHealthGiven = iWaveHealth;
+                // Heal player
 
-                if ( iNewHealth > iMaxHealth )
-                {
-                    iHealthGiven -= ( iNewHealth - iMaxHealth );
-                    iNewHealth = iMaxHealth;
-                }
+                new iHealthGiven = WAR3_heal( caster, NextTarget, iWaveHealth );
 
                 if ( NextTarget != caster )
                     g_iHealingWaveHealth[caster] += iHealthGiven;
 
                 // Hud Message
 
-                new szMessage[128], szPlayerName[32];
-                get_user_name( caster, szPlayerName, 31 );
+                new szMessage[128];
 
                 if ( caster == NextTarget )
                     formatex( szMessage, 127, HEAL_SELF, iHealthGiven );
 
                 else
                 {
+                    new szPlayerName[32];
+                    get_user_name( caster, szPlayerName, 31 );
+
                     formatex( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
                 }
 
                 WAR3_status_text( NextTarget, szMessage, 3.0 );
-
-                set_user_health( NextTarget, iNewHealth );
-
-                // Invisibility Cooldown
-
-                SHARED_INVIS_cooldown( NextTarget );
             }
         }
 

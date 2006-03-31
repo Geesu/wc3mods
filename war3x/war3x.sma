@@ -537,7 +537,7 @@ public DEBUG_Write_File( msg[] ) {
 	//L 02/24/2006 - 16:39:46: [ENGINE] Invalid entity 114
 	//L 02/24/2006 - 16:39:46: [AMXX] Displaying debug trace (plugin "war3x.amxx")
 	//L 02/24/2006 - 16:39:46: [AMXX] Run time error 10: native error (native "dbg_trace_next")
-	//L 02/24/2006 - 16:39:46: [AMXX]    [0] UTIL_vexd.inc::Remove_TempEnt (line 422)
+	//L 02/24/2006 - 16:39:46: [AMXX]    [0] UTIL_vexd.inc::WAR3_ENTITY_remove (line 422)
 
 	new errorMsg[256];
 	formatex( errorMsg, 255, "L [WAR3X] %s: %s", timeStr, msg );

@@ -103,6 +103,8 @@ new const HEAL_TARGETS[_TR][] =             // Heal targets (NOT FULLY IMPLEMENT
 #define CAP_SPEEDBONUS             310.0    // (  float) maximum speed attainable by means of a skill
 #define CAP_INVISIBILITY            80.0    // (  float) maximum invisibility level attainable
 
+#define COOLDOWN_INVIS_HEALED        1.0    // (  float) Cooldown time when healed if invisible
+
 #define DURATION_ULTIMATEPING          5    // (integer) seconds ultimate warmup is audible
 #define ULTIMATE_COOLDOWNDEFAULT    45.0    // (  float) seconds of cooldown after casting ultimate
 

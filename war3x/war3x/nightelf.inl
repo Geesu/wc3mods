@@ -775,7 +775,7 @@ static NE_U_ROOT_effect_plant( target, Origin[3] ) {
     fOrigin[1] = float( Origin[1] );
     fOrigin[2] = float( Origin[2] );
 
-    new plant = Create_TempEnt( "ROOT_PLANT", szModelName, fOrigin, MOVETYPE_TOSS, SOLID_NOT, 0.0 );
+    new plant = WAR3_ENTITY_create( "ROOT_PLANT", szModelName, fOrigin, MOVETYPE_TOSS, SOLID_NOT, 0.0 );
 
     entity_set_edict( plant, EV_ENT_owner, target );
 
@@ -1029,7 +1029,7 @@ public NE_U_REJUVENATION_effects( parm_Effects[2] ) {
             case 2:     copy( szSpriteName, 63, "sprites/muz7.spr" );
         }
 
-        new flare = Create_TempEnt( "REJUV_FLARE", szSpriteName, fTargetOrigin, MOVETYPE_NOCLIP, SOLID_NOT, 0.4 );
+        new flare = WAR3_ENTITY_create( "REJUV_FLARE", szSpriteName, fTargetOrigin, MOVETYPE_NOCLIP, SOLID_NOT, 0.4 );
 
         // Project Upwards
 
@@ -1087,19 +1087,14 @@ public NE_U_REJUVENATION_hot( parmHot[3] ) {
 
     new iBonusHealth = floatround( fBonusHealth );
 
-    new iNewHealth = get_user_health( target ) + iBonusHealth;
-    new iMaxHealth = WAR3_get_maxhealth( target );
+    // Heal player
 
-    if ( iNewHealth > iMaxHealth )
-    {
-        iBonusHealth -= ( iNewHealth - iMaxHealth );
-        iNewHealth = iMaxHealth;
-    }
+    WAR3_heal( caster, target, iBonusHealth );
+
+    // Add to total health array ( for hud message )
 
     if ( caster != target )
         g_iRejuvHealth[caster] += iBonusHealth;
-
-    set_user_health( target, iNewHealth );
 
     // Add to player stats array
 

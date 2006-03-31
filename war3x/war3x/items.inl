@@ -313,7 +313,7 @@ public Item_Create( id, iItemNum ) {
     new Float:fOrigin[3];
     entity_get_vector( id, EV_VEC_origin, fOrigin );
 
-    new iEnt = Create_TempEnt( "WAR3X_ITEM", "models/sphere.mdl", fOrigin, MOVETYPE_TOSS, SOLID_TRIGGER, ITEM_DROPLIFE );
+    new iEnt = WAR3_ENTITY_create( "WAR3X_ITEM", "models/sphere.mdl", fOrigin, MOVETYPE_TOSS, SOLID_TRIGGER, ITEM_DROPLIFE );
 
     entity_set_int( iEnt, EV_INT_rendermode, kRenderTransColor );
     entity_set_int( iEnt, EV_INT_renderfx, kRenderFxGlowShell );

@@ -558,7 +558,7 @@ static UD_U_DEATHCOIL( caster, target ) {
     new Float:fOrigin[3];
     entity_get_vector( caster, EV_VEC_origin, fOrigin );
 
-    new skull = Create_TempEnt( "DEATH_COIL", "models/bskull_template1.mdl", fOrigin, MOVETYPE_NOCLIP, SOLID_TRIGGER, DEATHCOIL_DURATION );
+    new skull = WAR3_ENTITY_create( "DEATH_COIL", "models/bskull_template1.mdl", fOrigin, MOVETYPE_NOCLIP, SOLID_TRIGGER, DEATHCOIL_DURATION );
 
     entity_set_edict( skull, EV_ENT_owner, caster );
     entity_set_edict( skull, EV_ENT_enemy, target );
@@ -582,6 +582,10 @@ static UD_U_DEATHCOIL( caster, target ) {
 public UD_U_DEATHCOIL_seek( arg_read[1] ) {
 
     new skull = arg_read[0];
+
+    if ( !WAR3_is_valid_ent( skull ) )
+        return PLUGIN_HANDLED;
+
     new target = entity_get_edict( skull, EV_ENT_enemy );
 
     if ( !is_user_alive( target ) )
@@ -644,18 +648,9 @@ static UD_U_DEATHCOIL_heal( caster, target ) {
 
     WAR3_status_text( caster, HEAL_CAST, 1.0);
 
-    // Calculate new health
+    // Heal player
 
-    new iNewHealth = get_user_health( target ) + DEATHCOIL_HEAL;
-    new iMaxHealth = WAR3_get_maxhealth( target );
-
-    new iHealthGiven = DEATHCOIL_HEAL;
-
-    if ( iNewHealth > iMaxHealth )
-    {
-        iHealthGiven -= ( iNewHealth - iMaxHealth );
-        iNewHealth = iMaxHealth;
-    }
+    new iHealthGiven = WAR3_heal( caster, target, DEATHCOIL_HEAL );
 
     // Hud message
 
@@ -666,21 +661,9 @@ static UD_U_DEATHCOIL_heal( caster, target ) {
 
     WAR3_status_text( target, szMessage, 3.0 );
 
-    // Apply health
-
-    set_user_health( target, iNewHealth );
-
     // Display effects
 
     UD_U_DEATHCOIL_effects( target );
-
-    // Give support XP
-
-    XP_Support_Heal( caster, iHealthGiven );
-
-    // Invisibility cooldown
-
-    SHARED_INVIS_cooldown( target );
 
     return PLUGIN_HANDLED;
 }
@@ -760,7 +743,7 @@ static UD_U_IMPALE( caster, target ) {
     entity_get_vector( target, EV_VEC_origin, fOrigin );
 
     fOrigin[2] += 180.0;
-    new claw = Create_TempEnt( "IMPALE_CLAW", "models/tentacle2.mdl", fOrigin, MOVETYPE_TOSS, SOLID_NOT, 1.5 );
+    new claw = WAR3_ENTITY_create( "IMPALE_CLAW", "models/tentacle2.mdl", fOrigin, MOVETYPE_TOSS, SOLID_NOT, 1.5 );
 
     new Float:fVelocity[3] = { 0.0, 0.0, 500.0 };
     entity_set_vector( claw, EV_VEC_velocity, fVelocity );
@@ -1044,7 +1027,7 @@ public UD_U_SLEEP_effect( arg_read[3] ) {
 
         fTargetOrigin[2] += 36.0;
 
-        sleep_z = Create_TempEnt( "SLEEP_Z", "sprites/warcraft3/sleep.spr", fTargetOrigin, MOVETYPE_NOCLIP, SOLID_NOT, 1.5 );
+        sleep_z = WAR3_ENTITY_create( "SLEEP_Z", "sprites/warcraft3/sleep.spr", fTargetOrigin, MOVETYPE_NOCLIP, SOLID_NOT, 1.5 );
 
         entity_set_float( sleep_z, EV_FL_renderamt, 128.0 );
         entity_set_int( sleep_z, EV_INT_rendermode, kRenderTransAdd );
@@ -1170,7 +1153,7 @@ public UD_U_SLEEP_remove( id ) {
 
     // Remove z's
 
-    Remove_TempEnts( "SLEEP_Z", id );
+    WAR3_ENTITY_remove_class( "SLEEP_Z", id );
 
     Icon_DispellMe( id );
 

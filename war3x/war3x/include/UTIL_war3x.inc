@@ -757,6 +757,40 @@ public WAR3_get_last_xp( iXp ) {
 }
 
 
+// Healed by WAR3 skill
+
+public WAR3_heal( caster, target, iAmount ) {
+
+    // Calculate new health
+
+    new iNewHealth = get_user_health( target ) + iAmount;
+    new iMaxHealth = WAR3_get_maxhealth( target );
+
+    new iHealthGiven = iAmount;
+
+    if ( iNewHealth > iMaxHealth )
+    {
+        iHealthGiven -= ( iNewHealth - iMaxHealth );
+        iNewHealth = iMaxHealth;
+    }
+
+    // Apply health
+
+    set_user_health( target, iNewHealth );
+
+    // Give support XP
+
+    XP_Support_Heal( caster, iHealthGiven );
+
+    // Invis cooldown on target ( if invisible )
+
+    if ( g_bPlayerInvis[target] )
+        SHARED_INVIS_cooldown_set( target, COOLDOWN_INVIS_HEALED );
+
+    return ( iHealthGiven );
+}
+
+
 // Damage by Warcraft 3 Skill
 
 public WAR3_damage( attacker, victim, weapon, iDamage, headshot, iCheckArmor ) {
@@ -1436,6 +1470,128 @@ public WAR3_missing_warning_note() {
     log_amx( " " );
 
     return PLUGIN_HANDLED;
+}
+
+
+// Creates a WAR3 entity, which can be modified with entvars
+
+public WAR3_ENTITY_create( szClassName[32], szModel[64], Float:fOrigin[3], iMoveType, iSolidType, Float:fLife ) {
+
+    new ent = create_entity( "info_target" );
+    entity_set_string( ent, EV_SZ_classname, szClassName );
+
+    entity_set_model( ent, szModel );
+    entity_set_origin( ent, fOrigin );
+
+    entity_set_int( ent, EV_INT_movetype, iMoveType );
+    entity_set_int( ent, EV_INT_solid, iSolidType );
+
+    if ( fLife )
+    {
+        new arg_write[1];
+        arg_write[0] = ent;
+
+        new task = TASK_TEMPENTITY + ent;
+
+        set_task( fLife, "WAR3_ENTITY_remove", task, arg_write, 1 );
+    }
+
+    return ( ent );
+}
+
+
+public WAR3_ENTITY_sprite( szClassName[32], szModel[64], Float:fOrigin[3], iMoveType, iSolidType, Float:fFramerate, Float:fScale, Float:fLife ) {
+
+    new sprite = create_entity( "env_sprite" );
+
+    entity_set_model( sprite, szModel );
+    entity_set_float( sprite, EV_FL_framerate, fFramerate );
+
+    DispatchSpawn( sprite );
+
+    entity_set_origin( sprite, fOrigin );
+    entity_set_string( sprite, EV_SZ_classname, szClassName );
+
+    entity_set_int( sprite, EV_INT_movetype, iMoveType );
+    entity_set_int( sprite, EV_INT_solid, iSolidType );
+    entity_set_float( sprite, EV_FL_scale, fScale );
+
+    set_entity_rendering( sprite, kRenderFxNone, 0, 0, 0, kRenderTransAdd, 255 );
+
+    if ( fLife )
+    {
+        new arg_write[1];
+        arg_write[0] = sprite;
+
+        new task = TASK_TEMPENTITY + sprite;
+
+        set_task( fLife, "WAR3_ENTITY_remove", task, arg_write, 1 );
+    }
+
+    return ( sprite );
+}
+
+
+public WAR3_ENTITY_remove( arg_read[1] ) {
+
+	new ent = arg_read[0];
+
+	if ( WAR3_is_valid_ent( ent ) )
+		remove_entity( ent );
+
+    return PLUGIN_HANDLED;
+}
+
+
+public WAR3_ENTITY_remove_class( szClassname[32], owner ) {
+
+    new ent = find_ent_by_class( -1, szClassname );
+
+    while ( ent > 0 )
+    {
+        if ( ( !owner || entity_get_edict( ent, EV_ENT_owner ) == owner ) && WAR3_is_valid_ent( ent ) )
+        {
+            new task = TASK_TEMPENTITY + ent;
+            remove_task( task, 0 );
+
+            remove_entity( ent );
+
+            ent = find_ent_by_class( -1, szClassname );
+        }
+
+        else
+        {
+            ent = find_ent_by_class( ent, szClassname );
+        }
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+
+public WAR3_is_valid_ent( ent ) {
+
+	// Don't want to look up info for an invalid ent
+
+	if ( !is_valid_ent( ent ) )
+		return ( false );
+
+	// Entities that war3x creates
+
+	new szWar3Entities[][64] = { "WAR3X_ITEM", "DEATH_COIL", "ROOT_PLANT", "IMPALE_CLAW", "SLEEP_Z", "REJUV_FLARE", "FLAME_STRIKE", "HEAL_EFFECT" };
+
+    new szClassName[64];
+	entity_get_string( ent, EV_SZ_classname, szClassName, 63 );
+
+	// See if this class is in our list
+
+	for ( new i = 0; i < sizeof( szWar3Entities ); i++ )
+	{
+		if ( equal( szClassName, szWar3Entities[i] ) )
+			return ( true );
+	}
+
+	return ( false );
 }
 
 // ------------------------------------------------- End. - //

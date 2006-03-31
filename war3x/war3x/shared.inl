@@ -154,10 +154,19 @@ public SHARED_INVIS_set_( parm_Invis[1] ) {
 
 public SHARED_INVIS_cooldown( id ) {
 
-    // Do not proceed if no invisibility exists
+    // Proceed if invisibility skill/item exists
 
-    if ( ( g_PlayerInfo[id][CURRENT_RACE] != RACE_HUMAN || ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && !g_PlayerInfo[id][CURRENT_SKILL1] ) ) && g_PlayerInfo[id][CURRENT_ITEM] != ITEM_CLOAK )
-        return PLUGIN_HANDLED;
+    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL1] )
+        SHARED_INVIS_cooldown_set( id, INVISIBILITY_COOLDOWN );
+
+    else if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK )
+        SHARED_INVIS_cooldown_set( id, ITEM_CLOAK_COOLDOWN );
+
+    return PLUGIN_HANDLED;
+}
+
+
+public SHARED_INVIS_cooldown_set( id, Float:fCooldown ) {
 
     SHARED_INVIS_remove( id );
 
@@ -165,16 +174,10 @@ public SHARED_INVIS_cooldown( id ) {
 
     new task = TASK_INVIS + id;
 
-    new parm_Invis[1];
-    parm_Invis[0] = id;
+    new arg_write[1];
+    arg_write[0] = id;
 
-    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL1] )
-        set_task( INVISIBILITY_COOLDOWN, "SHARED_INVIS_set_", task, parm_Invis, 1 );
-
-    else if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK )
-    {
-        set_task( ITEM_CLOAK_COOLDOWN, "SHARED_INVIS_set_", task, parm_Invis, 1 );
-    }
+    set_task( fCooldown, "SHARED_INVIS_set_", task, arg_write, 1 );
 
     return PLUGIN_HANDLED;
 }
@@ -890,14 +893,14 @@ public Purge_FreezeStart() {
 
     // Remove Temporary Models
 
-    Remove_TempEnts( "WAR3X_ITEM", 0 );
-    Remove_TempEnts( "DEATH_COIL", 0 );
-    Remove_TempEnts( "ROOT_PLANT", 0 );
-    Remove_TempEnts( "IMPALE_CLAW", 0 );
-    Remove_TempEnts( "SLEEP_Z", 0 );
-    Remove_TempEnts( "REJUV_FLARE", 0 );
-    Remove_TempEnts( "FLAME_STRIKE", 0 );
-    Remove_TempEnts( "HEAL_EFFECT", 0 );
+    WAR3_ENTITY_remove_class( "WAR3X_ITEM", 0 );
+    WAR3_ENTITY_remove_class( "DEATH_COIL", 0 );
+    WAR3_ENTITY_remove_class( "ROOT_PLANT", 0 );
+    WAR3_ENTITY_remove_class( "IMPALE_CLAW", 0 );
+    WAR3_ENTITY_remove_class( "SLEEP_Z", 0 );
+    WAR3_ENTITY_remove_class( "REJUV_FLARE", 0 );
+    WAR3_ENTITY_remove_class( "FLAME_STRIKE", 0 );
+    WAR3_ENTITY_remove_class( "HEAL_EFFECT", 0 );
 
     // Reset Objective Globals
 
@@ -1743,7 +1746,7 @@ public Shared_Heal_Effect( target ) {             // Shared Effect(s)
         new szSpriteName[64];
         copy( szSpriteName, 63, "sprites/muz6.spr" );
 
-        new iHealEnt = Create_TempEnt( "HEAL_EFFECT", szSpriteName, fTargetOrigin, MOVETYPE_NOCLIP, SOLID_NOT, 0.4 );
+        new iHealEnt = WAR3_ENTITY_create( "HEAL_EFFECT", szSpriteName, fTargetOrigin, MOVETYPE_NOCLIP, SOLID_NOT, 0.4 );
 
         // Project Upwards
 
@@ -1875,34 +1878,5 @@ public war3_chatskills( id, raceId, ShowHelp ) {
 
     return PLUGIN_HANDLED;
 }
-
-stock is_war3_entity( iEnt, szClassName[] = "" )
-{
-	// Don't want to look up info for an invalid ent
-
-	if ( !is_valid_ent(iEnt) )
-		return false;
-
-	// Entities that war3x creates
-
-	new szWar3Entities[][64] = { "WAR3X_ITEM", "DEATH_COIL", "ROOT_PLANT", "IMPALE_CLAW", "SLEEP_Z", "REJUV_FLARE", "FLAME_STRIKE", "HEAL_EFFECT" };
-
-	if ( strlen(szClassName) == 0 )
-	{
-		entity_get_string( iEnt, EV_SZ_classname, szClassName, 63 );
-	}
-
-	// See if this class is in our list
-	for ( new i = 0; i < sizeof(szWar3Entities); i++ )
-	{
-		if ( equal(szClassName, szWar3Entities[i]) )
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
 
 // ------------------------------------------------- End. - //

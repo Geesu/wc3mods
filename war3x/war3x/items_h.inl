@@ -71,7 +71,6 @@ new const ITEM_COLOR[_TSI + 1][3] =
 // - Cloak of Invisibility -------------------------------- //
 
 #define ITEM_CLOAK_VALUE                            0.60    // (  float) invisibility percentage
-
 #define ITEM_CLOAK_COOLDOWN                          5.0    // (  float) cooldown for cloak of invisibility
 
 // - Sobi Mask -------------------------------------------- //

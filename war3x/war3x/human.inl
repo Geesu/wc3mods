@@ -355,18 +355,9 @@ static HU_U_HOLYLIGHT_heal( caster, target ) {
 
     WAR3_status_text( caster, HEAL_CAST, 1.0 );
 
-    // Calculate new health
+    // Heal player
 
-    new iNewHealth = get_user_health( target ) + HOLYLIGHT_HEAL;
-    new iMaxHealth = WAR3_get_maxhealth( target );
-
-    new iHealthGiven = HOLYLIGHT_HEAL;
-
-    if ( iNewHealth > iMaxHealth )
-    {
-        iHealthGiven -= ( iNewHealth - iMaxHealth );
-        iNewHealth = iMaxHealth;
-    }
+    new iHealthGiven = WAR3_heal( caster, target, HOLYLIGHT_HEAL );
 
     // Hud message
 
@@ -377,21 +368,9 @@ static HU_U_HOLYLIGHT_heal( caster, target ) {
 
     WAR3_status_text( target, szMessage, 3.0 );
 
-    // Apply health
-
-    set_user_health( target, iNewHealth );
-
     // Display effects
 
     HU_U_HOLYLIGHT_effects( target );
-
-    // Give support XP
-
-    XP_Support_Heal( caster, iHealthGiven );
-
-    // Invisibility cooldown
-
-    SHARED_INVIS_cooldown( target );
 
     return PLUGIN_HANDLED;
 }
@@ -799,7 +778,7 @@ static HU_U_FLAMESTRIKE_effects( Origin[3] ) {
             case 4:         fTempOrigin[1] += ( -1.0 * fFlameBorder );
         }
 
-        Create_TempSprite( "FLAME_STRIKE", "sprites/cexplo.spr", fTempOrigin, MOVETYPE_NONE, SOLID_TRIGGER, random_float( 10.0, 20.0 ), random_float( 0.4, 0.8 ), FLAMESTRIKE_DURATION + 1.5 );
+        WAR3_ENTITY_sprite( "FLAME_STRIKE", "sprites/cexplo.spr", fTempOrigin, MOVETYPE_NONE, SOLID_TRIGGER, random_float( 10.0, 20.0 ), random_float( 0.4, 0.8 ), FLAMESTRIKE_DURATION + 1.5 );
     }
 
     // Inner diagonal
@@ -836,7 +815,7 @@ static HU_U_FLAMESTRIKE_effects( Origin[3] ) {
             }
         }
 
-        Create_TempSprite( "FLAME_STRIKE", "sprites/fexplo.spr", fTempOrigin, MOVETYPE_NONE, SOLID_TRIGGER, random_float( 10.0, 20.0 ), random_float( 0.4, 0.8 ), FLAMESTRIKE_DURATION + 1.5 );
+        WAR3_ENTITY_sprite( "FLAME_STRIKE", "sprites/fexplo.spr", fTempOrigin, MOVETYPE_NONE, SOLID_TRIGGER, random_float( 10.0, 20.0 ), random_float( 0.4, 0.8 ), FLAMESTRIKE_DURATION + 1.5 );
     }
 
 
@@ -858,7 +837,7 @@ static HU_U_FLAMESTRIKE_effects( Origin[3] ) {
             case 4:         fTempOrigin[1] += ( -1.0 * fFlameBorder );
         }
 
-        Create_TempSprite( "FLAME_STRIKE", "sprites/cexplo.spr", fTempOrigin, MOVETYPE_NONE, SOLID_TRIGGER, random_float( 10.0, 20.0 ), random_float( 0.4, 0.8 ), FLAMESTRIKE_DURATION + 1.5 );
+        WAR3_ENTITY_sprite( "FLAME_STRIKE", "sprites/cexplo.spr", fTempOrigin, MOVETYPE_NONE, SOLID_TRIGGER, random_float( 10.0, 20.0 ), random_float( 0.4, 0.8 ), FLAMESTRIKE_DURATION + 1.5 );
     }
 
     return PLUGIN_HANDLED;
