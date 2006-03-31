@@ -58,19 +58,15 @@ MISC CHANGES:
 * check invis cooldown? possible crashing...
 * fix ankh if possible (sometimes it doesnt work on bomb explosions) (or when team change)
 * fix flame strike and amulet - This will show the EFFECTS for 1 second, but no damage will be dealt to anyone
-* figure out how to set random number for root because of 2 diff functions that call
 * remove 'buyback' from item purchasing and just have modified price in list
-* implement some kind of last target variable that can be used for target skills etc.
-* make check for cfg and sprite file(s), if not found, don't load
-* !g_bPlayerSleeping (make some generalize invuln thing) 
 * replace all distance/40 by get_distance (statsx stock)
 * add valid model check to deathcoil seek *CONFIRMED - CAUSES CRASH!*
 * add WAR3_heal command?
+* change invis cooldown to 1 second after being healed.. maybe fade back in
 * recode pulverize ring colors into consts
 * don't come out of invis on grenade damage dealt
-* change invis cooldown to 1 second after being healed.. maybe fade back in
 * recode human invisibility to take cloak into affect
-* make global(s) for mp_playerid
+--make global(s) for mp_playerid (RYAN)
 * move all commands to commands.inl (setxp/etc)
 --change message for purchasing boots to use a % of speed boost (RYAN)
 * make a function to auto-fix right aligned words from being 'squished' -- this will be necessary for multilanguage
@@ -79,6 +75,13 @@ MISC CHANGES:
 NOT HAPPENING THIS TIME
 * make voting a separate plugin?
 --call windwalk_notify from _strike?? (CANT BECAUSE WE NEED TO CHECK ABSORBSION FROM ELUNES) (RYAN)
+* figure out how to set random number for root because of 2 diff functions that call
+* implement some kind of last target variable that can be used for target skills etc.
+* !g_bPlayerSleeping (make some generalize invuln thing) 
+
+FUTURE RELEASE(S)
+* put all sound files into a master array, and defines for each. This will make precaching
+  and verification MUCH easier.
 
 
 INVIS DEBUGGING... 

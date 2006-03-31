@@ -129,13 +129,6 @@ public plugin_precache() {
 
 	register_dictionary( "war3x.txt" );
 
-	// Get configs directory
-
-    static AMXX_DIR[64];
-	get_configsdir( AMXX_DIR, 63 );
-
-	formatex( WAR3X_DIR, 63, "%s/war3x", AMXX_DIR );
-
     // Don't load plugin if any required files are missing
 
     if ( WAR3_is_missing_files() )
@@ -143,6 +136,13 @@ public plugin_precache() {
         g_bWar3xEnabled = false;
         return PLUGIN_CONTINUE;
     }
+
+	// Get configs directory
+
+    static AMXX_DIR[64];
+	get_configsdir( AMXX_DIR, 63 );
+
+	formatex( WAR3X_DIR, 63, "%s/war3x", AMXX_DIR );
 
     // Don't precache if mapname in disabledmaps.txt
 
@@ -282,16 +282,16 @@ public plugin_init() {
 
     register_plugin( WAR3X_PLUGINNAME, WAR3X_VERSION, WAR3X_AUTHORS );
 
-    // The following conditional is true when files are missing from the installation
+    if ( g_bMapDisabled )
+    {
+        g_bWar3xEnabled = false;
+        register_event( "ResetHUD", "on_ResetHud_NOWAR3", "b" );
+    }
+
+    // Missing files / disabled map
 
     if ( !g_bWar3xEnabled )
         return PLUGIN_CONTINUE;
-
-    if ( g_bMapDisabled )
-    {
-        register_event( "ResetHUD", "on_ResetHud_NOWAR3", "b" );
-        return PLUGIN_CONTINUE;
-    }
 
     // Client Commands
 

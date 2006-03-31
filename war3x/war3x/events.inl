@@ -344,7 +344,7 @@ public on_Target_Id( id ) {
 
     if ( g_PlayerTargetTeam[id] == CS_TEAMID_ENEMY )
     {
-        if ( get_cvar_num( "mp_playerid" ) == CS_MP_PLAYERID_SHOWALL && entity_get_int( target, EV_INT_rendermode ) != kRenderTransTexture )
+        if ( get_pcvar_num( CVAR_mp_playerid ) == CS_MP_PLAYERID_SHOWALL && entity_get_int( target, EV_INT_rendermode ) != kRenderTransTexture )
             cs_status_target( id );
 
         else
@@ -380,7 +380,7 @@ public on_Target_Health( id ) {
 
     if ( g_PlayerTargetTeam[id] == CS_TEAMID_TEAMMATE )
     {
-        if ( get_cvar_num( "mp_playerid" ) != CS_MP_PLAYERID_SHOWNONE )
+        if ( get_pcvar_num( CVAR_mp_playerid ) != CS_MP_PLAYERID_SHOWNONE )
             cs_status_target( id );
 
         else
@@ -393,7 +393,7 @@ public on_Target_Health( id ) {
 
     else if ( g_PlayerTargetTeam[id] == CS_TEAMID_NEUTRAL )
     {
-        if ( get_cvar_num( "mp_playerid" ) != CS_MP_PLAYERID_SHOWNONE )
+        if ( get_pcvar_num( CVAR_mp_playerid ) != CS_MP_PLAYERID_SHOWNONE )
             cs_status_target( id );
 
         else
@@ -622,8 +622,8 @@ public on_CurWeapon( id ) {
         new szName[32];
         get_user_name( id, szName, 31 );
 
-        client_print( id, print_chat, "^n %s %L", id, WAR3X_PREFIX, "CONSOLE_WELCOME_VERSION", szName, WAR3X_PLUGINNAME, WAR3X_VERSION, WAR3X_DATE );
-        client_print( id, print_chat, "^n %s %L^n^n", id, WAR3X_PREFIX, "CONSOLE_WELCOME_COMMANDS" );
+        client_print( id, print_chat, "^n %s %L", WAR3X_PREFIX, id, "CONSOLE_WELCOME_VERSION", szName, WAR3X_PLUGINNAME, WAR3X_VERSION, WAR3X_DATE );
+        client_print( id, print_chat, "^n %s %L^n^n", WAR3X_PREFIX, id, "CONSOLE_WELCOME_COMMANDS" );
     }
 
     // Display race select menu
@@ -813,7 +813,7 @@ public on_FreezeStart() {
 
             // Hud messages
 
-            new Float:fHoldTime = get_cvar_float( "mp_freezetime" );
+            new Float:fHoldTime = get_pcvar_float( CVAR_mp_freezetime );
             WAR3_hud_xp( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 0.0, fHoldTime );
             WAR3_hud_item( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 0.0, fHoldTime );
 
@@ -983,15 +983,15 @@ public on_World_Action() {
 
         // Make sure freezetime cvar set > 0
 
-        if ( !get_cvar_float( "mp_freezetime" ) )
-            set_cvar_float( "mp_freezetime", 1.0 );
+        if ( !get_pcvar_float( CVAR_mp_freezetime ) )
+            set_pcvar_float( CVAR_mp_freezetime, 1.0 );
 
         if ( g_iCurrentRound == 0 )
-            g_fBuyTime = get_gametime() + 4.0 + get_cvar_float( "mp_freezetime" );
+            g_fBuyTime = get_gametime() + 4.0 + get_pcvar_float( CVAR_mp_freezetime );
 
         else
         {
-            g_fBuyTime = get_gametime() + 6.0 + get_cvar_float( "mp_freezetime" );
+            g_fBuyTime = get_gametime() + 6.0 + get_pcvar_float( CVAR_mp_freezetime );
         }
 
         new Players[32], iTotalPlayers;
@@ -1075,7 +1075,7 @@ public on_World_Action() {
     {
         g_bRoundEnd = true;
 
-        new Float:fRestartTimer = get_cvar_float( "sv_restart" );
+        new Float:fRestartTimer = get_pcvar_float( CVAR_sv_restart );
         set_task( fRestartTimer, "on_FreezeStart", TASK_NEWROUND );
 
         if ( !g_bSaveXp )
@@ -1181,7 +1181,7 @@ public on_Objective_Player() {
     else if ( equal( szLogAction, "Planted_The_Bomb" ) )
     {
         g_bBombPlanted = true;
-        g_fBombTime = get_gametime() + get_cvar_float( "mp_c4timer" );
+        g_fBombTime = get_gametime() + get_pcvar_float( CVAR_mp_c4timer );
 
         XP_Bomb_Plant( id );
         XP_Bomb_Share( id );

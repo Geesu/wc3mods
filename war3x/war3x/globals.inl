@@ -437,7 +437,7 @@ new bool:g_bInBuyZone[33];                  // determines whether player is in b
 new bool:g_bSaveXp;                         // stores value of war3x_save_xp at round beginning
 new g_SaveIds[33][32];                      // stores player save id (auth/ip)
 
-new bool:g_bWar3xEnabled;                   // stores whether war3x is enabled for current map
+new bool:g_bWar3xEnabled = true;            // stores whether war3x is enabled for current map (default=true)
 new bool:g_bMapRestricted;                  // stores whether map is restricted to Long-Term XP
 new bool:g_bMapDisabled;                    // stores whether war3x is disabled on current map
 new bool:g_bDisabledNotify[33];             // stores whether player has been notified of disabling
@@ -575,6 +575,14 @@ new CVAR_sql_user;
 new CVAR_sql_pass;
 new CVAR_sql_db;
 new CVAR_sql_table;
+
+// Pre-defined cvars
+
+new CVAR_mp_playerid;
+new CVAR_mp_freezetime;
+new CVAR_mp_c4timer;
+new CVAR_sv_restart;
+new CVAR_mp_buytime;
 
 // - Miscellaneous ---------------------------------------- //
 

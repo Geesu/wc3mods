@@ -1484,6 +1484,12 @@ public WAR3_map_start() {
         server_cmd( szCmd );
     }
 
+    CVAR_mp_playerid    = get_cvar_pointer( "mp_playerid" );
+    CVAR_mp_freezetime  = get_cvar_pointer( "mp_freezetime" );
+    CVAR_mp_c4timer     = get_cvar_pointer( "mp_c4timer" );
+    CVAR_sv_restart     = get_cvar_pointer( "sv_restart" );
+    CVAR_mp_buytime     = get_cvar_pointer( "mp_buytime" );
+
     return PLUGIN_HANDLED;
 }
 

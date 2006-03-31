@@ -676,7 +676,7 @@ public menu_ItemShop( id ) {
 
     // Buy Time Expired
 
-    if ( get_pcvar_num( CVAR_shoptime ) && get_cvar_float( "mp_buytime" ) < ( get_gametime() - g_fBuyTime ) / 60.0  )
+    if ( get_pcvar_num( CVAR_shoptime ) && get_pcvar_float( CVAR_mp_buytime ) < ( get_gametime() - g_fBuyTime ) / 60.0  )
     {
         Create_TextMsg( id, print_center, "#Cant_buy" );
         return PLUGIN_HANDLED;

@@ -51,7 +51,7 @@ public Item_Buy( id, iNewItem ) {
 
     if ( g_bFreezeTime )
     {
-        new Float:fFreezetime = get_cvar_float( "mp_freezetime" );
+        new Float:fFreezetime = get_pcvar_float( CVAR_mp_freezetime );
         WAR3_hud_item( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.0, 0.0, fFreezetime );
     }
 
