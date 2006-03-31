@@ -7,6 +7,67 @@
 #define SKILL_T_TRAINED		2
 #define SKILL_T_ULTIMATE	3
 
+#define TOTAL_MENUS			8		// Total number of menus to be registered
+
+// This is the list of menu titles that are in war3x.txt
+new const MENU_NAMES[TOTAL_MENUS][] = 
+{
+	"MENU_WAR3MENU_TITLE",
+	"MENU_SELECTRACE_TITLE",
+	"MENU_BUYITEM_TITLE",
+	"MENU_SKILLSINFO_TITLE",
+	"MENU_SELECTSKILLS_TITLE",
+	"MENU_PLAYEROPTIONS_TITLE",
+	"MENU_RACEOPTIONS_TITLE",
+	"MENU_HELPTOPICS_TITLE"
+};
+
+// Callback functions for the above menu names
+new const MENU_CALLBACK[TOTAL_MENUS][] = 
+{
+	"_menu_War3menu",
+	"_menu_SelectRace",
+	"_menu_ItemShop",
+	"_menu_SkillsHelp",
+	"_menu_SelectSkills",
+	"_menu_PlayerOptions",
+	"_menu_RaceOptions",
+	"_menu_HelpTopics"
+};
+
+LANG_RegisterMenus()
+{
+	new total_languages = get_langsnum();
+	new lang[3], menu[128];
+	new curMenuId = -1, highestMenuId = -1;
+	new iLang, iMenu;
+
+
+	// Loop through every menu
+
+	for ( iMenu = 0; iMenu < TOTAL_MENUS; iMenu++ )
+	{
+		// Register the menu names for each language
+
+		for( iLang = 0; iLang < total_languages; iLang++ )
+		{
+			get_lang ( iLang, lang );
+
+			if( lang_exists( lang ) )
+			{
+				formatex ( menu, 127, "%L", lang, MENU_NAMES[iMenu] );
+				curMenuId = register_menuid ( menu );
+
+				if( curMenuId > highestMenuId )
+				{
+					register_menucmd ( curMenuId, 1023, MENU_CALLBACK[iMenu] );
+					highestMenuId = curMenuId;
+				}
+			}
+		}// End language loop
+	}// End menu loop
+}
+
 
 LANG_GetItemName( item_id, shop_id, id, item_name[], len )
 {

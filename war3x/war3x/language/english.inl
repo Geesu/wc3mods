@@ -122,30 +122,21 @@ new const MENU_WAR3MENU_7[]             = "7. Reset Skills/Ultimate/XP...^n";
 new const MENU_WAR3MENU_8[]             = "\d8. Admin Options\w^n";
 new const MENU_WAR3MENU_9[]             = "9. Help Topics^n^n";
 
-new const MENU_SELECTRACE_TITLE[]       = "\ySelect Race ^n^n";
-
-new const MENU_SELECTSKILLS_TITLE[]     = "\ySelect Skills ^n";
 new const MENU_SELECTSKILLS_9[]         = "9. Help (skill info)";
 
-new const MENU_BUYITEM_TITLE[]          = "\yBuy Item \R$   Cost ^n^n";
 new const MENU_BUYITEM_9[]              = "9. Help (item info)";
 
-new const MENU_SKILLSINFO_TITLE[]       = "\ySkills Info ^n^n\w";
-
-new const MENU_PLAYEROPTIONS_TITLE[]    = "\yPlayer Options ^n^n\w";
 new const MENU_PLAYEROPTIONS_1[]        = "1. Show Race Icons";
 new const MENU_PLAYEROPTIONS_2[]        = "2. Show Health Icons";
 new const MENU_PLAYEROPTIONS_3[]        = "3. Show Dispell Icons";
 new const MENU_PLAYEROPTIONS_4[]        = "4. Auto-Cast on Teammates";
 new const MENU_PLAYEROPTIONS_5[]        = "5. Hudmessage Position";
 
-new const MENU_RACEOPTIONS_TITLE[]      = "\yRace Options ^n";
 new const MENU_RACEOPTIONS_TITLE2[]     = "\d%s^n^n";
 new const MENU_RACEOPTIONS_1[]          = "1. Reset Skills \R\d( Leve l %d+ )^n";
 new const MENU_RACEOPTIONS_2[]          = "2. Reset Ultimate \R\d( Leve l %d+ )^n";
 new const MENU_RACEOPTIONS_5[]          = "5. \rReset Experience^n";
 
-new const MENU_HELPTOPICS_TITLE[]       = "\yHelp Topics ^n^n\w";
 new const MENU_HELPTOPICS_1[]           = "1. Skills Help^n";
 new const MENU_HELPTOPICS_2[]           = "2. Items Help^n^n";
 new const MENU_HELPTOPICS_9[]           = "9. What is WAR3X?^n^n";

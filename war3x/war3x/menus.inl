@@ -98,7 +98,7 @@ public menu_SelectRace( id ) {
     new szMenu[512], iLen;
 
     iKeys = (1<<9);
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_SELECTRACE_TITLE );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_SELECTRACE_TITLE" );
 
     // Build list of races ( and levels if saving xp )
 
@@ -436,7 +436,7 @@ public menu_SelectSkills( id ) {
 	new szRaceName[32];
 	LANG_GetRaceName( iRaceNum, id, szRaceName, 31 );
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_SELECTSKILLS_TITLE );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_SELECTSKILLS_TITLE" );
     iLen += formatex( szMenu[iLen], 512 - iLen, "\d%s^n", szRaceName );
 
     // Primary Skills
@@ -687,7 +687,7 @@ public menu_ItemShop( id ) {
 
     iKeys = (1<<8)|(1<<9);
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_BUYITEM_TITLE );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_BUYITEM_TITLE" );
 
     for ( new iItemNum = 1; iItemNum <= TOTAL_SHOPITEMS; iItemNum++ )
     {
@@ -830,7 +830,7 @@ public menu_PlayerOptions( id ) {
 
     // Draw Menu
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_PLAYEROPTIONS_TITLE );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_PLAYEROPTIONS_TITLE" );
 
     WAR3_get_onoff( id, g_PlayerOptions[id][OPTION_RACEICONS], szOnOff );
     iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n", MENU_PLAYEROPTIONS_1, szOnOff );
@@ -912,7 +912,7 @@ public menu_RaceOptions( id ) {
 	new szRaceName[32];
 	LANG_GetRaceName( raceId + 1, id, szRaceName, 31 );
 
-    iLen += formatex( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_TITLE );
+    iLen += formatex( szMenu[iLen], 511 - iLen, "%L", id, "MENU_RACEOPTIONS_TITLE" );
     iLen += formatex( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_TITLE2, szRaceName );
 
     // Reset Skills
@@ -1070,7 +1070,7 @@ public menu_HelpTopics( id ) {
     new iKeys = (1<<0)|(1<<1)|(1<<8)|(1<<9);
     new szMenu[512], iLen;
 
-    iLen += formatex( szMenu[iLen], 511 - iLen, "%s", MENU_HELPTOPICS_TITLE );
+    iLen += formatex( szMenu[iLen], 511 - iLen, "%L", id, "MENU_HELPTOPICS_TITLE" );
 
     iLen += formatex( szMenu[iLen], 511 - iLen, "%s", MENU_HELPTOPICS_1 );
     iLen += formatex( szMenu[iLen], 511 - iLen, "%s", MENU_HELPTOPICS_2 );

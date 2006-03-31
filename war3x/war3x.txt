@@ -301,6 +301,7 @@ WARNING_MISSING_FILES           = WARNING: The following optional file(s) are mi
 WARNING_MISSING_LISTED          = NOTE: The file(s) listed above are not required to run %s in it's current configuration, but can prove beneficial to the server if installed properly. Please consult the installation instructions provided with the plugin for more information.
 
 ;Common Words
+
 LANG_CATEGORY                   = Category
 LANG_PRIMARY_WEAPON             = primary
 LANG_SECONDARY_WEAPON           = sidearm
@@ -312,6 +313,16 @@ LANG_SKILLS                     = Skills
 LANG_ON                         = ON
 LANG_OFF                        = OFF
 
+;Menus
+
+MENU_WAR3MENU_TITLE		= \yWarcraft 3 Menu ^n^n\w
+MENU_SELECTRACE_TITLE		= \ySelect Race ^n^n
+MENU_SELECTSKILLS_TITLE		= \ySelect Skills ^n
+MENU_BUYITEM_TITLE		= \yBuy Item \R$   Cost ^n^n
+MENU_SKILLSINFO_TITLE		= \ySkills Info ^n^n\w
+MENU_PLAYEROPTIONS_TITLE	= \yPlayer Options ^n^n\w
+MENU_RACEOPTIONS_TITLE		= \yRace Options ^n
+MENU_HELPTOPICS_TITLE		= \yHelp Topics ^n^n\w
 
 [de]
 ; Your language here!

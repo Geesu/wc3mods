@@ -312,14 +312,7 @@ public plugin_init() {
 
     // Menu commands
 
-    register_menucmd( register_menuid( MENU_WAR3MENU_TITLE ),      1023, "_menu_War3menu"      );   // War3 Menus items
-    register_menucmd( register_menuid( MENU_SELECTRACE_TITLE ),    1023, "_menu_SelectRace"    );
-    register_menucmd( register_menuid( MENU_BUYITEM_TITLE ),       1023, "_menu_ItemShop"      );
-    register_menucmd( register_menuid( MENU_SKILLSINFO_TITLE ),    1023, "_menu_SkillsHelp"    );
-    register_menucmd( register_menuid( MENU_SELECTSKILLS_TITLE ),  1023, "_menu_SelectSkills"  );
-    register_menucmd( register_menuid( MENU_PLAYEROPTIONS_TITLE ), 1023, "_menu_PlayerOptions" );
-    register_menucmd( register_menuid( MENU_RACEOPTIONS_TITLE ),   1023, "_menu_RaceOptions"   );
-    register_menucmd( register_menuid( MENU_HELPTOPICS_TITLE ),    1023, "_menu_HelpTopics"    );
+	LANG_RegisterMenus();
 
     // VOTING DISABLED TEMPORARILY
 
