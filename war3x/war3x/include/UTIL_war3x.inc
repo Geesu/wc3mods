@@ -635,14 +635,14 @@ public WAR3_skills_left( id ) {
 }
 
 
-public WAR3_get_onoff( iStatus, szOnOff[8] ) {
+public WAR3_get_onoff( id, iStatus, szOnOff[8] ) {
 
     if ( iStatus )
-        copy( szOnOff, 7, LANGUAGE_COMMON_ON );
+        formatex( szOnOff, 7, "%L", id, "LANG_ON" );
 
     else
     {
-        copy( szOnOff, 7, LANGUAGE_COMMON_OFF );
+        formatex( szOnOff, 7, "%L", id, "LANG_OFF" );
     }
 
     return PLUGIN_HANDLED;

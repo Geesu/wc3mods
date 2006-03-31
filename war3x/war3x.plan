@@ -31,15 +31,11 @@ SKILL CHANGES:
 --------------
 --frost nova - increased range (RYAN)
 --frost nova - increased damage slightly (RYAN)
+--frost nova - increased speed slightly (RYAN)
 --unholy aura - gravity bug fixed (RYAN)
 
 --Fortitude - health reduced by 5. (RYAN)
 --Bash - chance reduced by 5% each level (RYAN)
-* flame strike mod - more damage each second in the strike. countdown from that amount when outside.
-* flame strike change - implement with touch, rather than timers
-* flame strike change - make targetable on ground
-
-* regeneration requires armor to use
 --berserk speed possible crash fix (RYAN)
 --berserk speed recode to work correctly with boots (RYAN)
 
@@ -59,14 +55,14 @@ MISC CHANGES:
 --add valid model check to deathcoil seek *CONFIRMED - CAUSES CRASH!* (RYAN)
 --add WAR3_heal command (RYAN)
 --change invis cooldown to 1 second after being healed.. (RYAN)
+--recode pulverize ring colors into consts (RYAN)
+--fix flame strike and amulet - This will show the EFFECTS for 1 second, but no damage will be dealt to anyone (RYAN)
+--recode human invisibility to take cloak into affect
+--regeneration requires armor to use
+--temporarily disable voting -- make external plugin at some point (RYAN)
 
 * fix ankh if possible (sometimes it doesnt work on bomb explosions) (or when team change)
-* fix flame strike and amulet - This will show the EFFECTS for 1 second, but no damage will be dealt to anyone
-* remove 'buyback' from item purchasing and just have modified price in list
 * replace all distance/40 by get_distance (statsx stock)
-* recode pulverize ring colors into consts
-* don't come out of invis on grenade damage dealt
-* recode human invisibility to take cloak into affect
 * move all commands to commands.inl (setxp/etc)
 * make a function to auto-fix right aligned words from being 'squished' -- this will be necessary for multilanguage
 
@@ -77,17 +73,22 @@ NOT HAPPENING THIS TIME
 * implement some kind of last target variable that can be used for target skills etc.
 * !g_bPlayerSleeping (make some generalize invuln thing) 
 * check invis cooldown? possible crashing...
+* remove 'buyback' from item purchasing and just have modified price in list
 
 FUTURE RELEASE(S)
 * put all sound files into a master array, and defines for each. This will make precaching
   and verification MUCH easier.
 * figure out how to set random number for root because of 2 diff functions that call (probably requires root rewrite)
 * impale change (stun on land 1-3 secs)
+* flame strike change - make targetable on ground
+* flame strike mod - more damage each second in the strike. countdown from that amount when outside.
+* flame strike change - implement with touch, rather than timers
+
 
 
 NEW INVIS COOLDOWN
 
-SHARED_INVIS_cooldown( id, Float:fCooldown )
+SHARED_INVIS_cooldown( id )
 SHARED_INVIS_cooldown_set( id, Float:fCooldown )
 
 

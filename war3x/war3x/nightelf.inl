@@ -54,7 +54,7 @@ public NE_ultimates( caster, target ) {
         if ( g_PlayerRejuv[target] )
         {
             new szMessage[128];
-            copy( szMessage, 127, REJUVINATE_ALREADY );
+            formatex( szMessage, 127, "%L", caster, "REJUVINATE_ALREADY" );
 
             WAR3_status_text( caster, szMessage, 0.5 );
 
@@ -69,12 +69,12 @@ public NE_ultimates( caster, target ) {
 
                 if ( caster == target )
                 {
-                    formatex( szMessage, 63, FULLHEALTH_SELF );
+                    formatex( szMessage, 63, "%L", caster, "FULLHEALTH_SELF" );
                 }
 
                 else
                 {
-                    formatex( szMessage, 63, FULLHEALTH_TARGET );
+                    formatex( szMessage, 63, "%L", caster, "FULLHEALTH_TARGET" );
                 }
 
                 WAR3_status_text( caster, szMessage, 0.5 );
@@ -237,7 +237,7 @@ static NE_S_ELUNES_absorb( id, iAbsorbed ) {
         // Hud Message
 
         new szMessage[64];
-        formatex( szMessage, 63, DAMAGE_ELUNE, iAbsorbed );
+        formatex( szMessage, 63, "%L", id, "DAMAGE_ELUNE", iAbsorbed );
 
         WAR3_status_text( id, szMessage, 3.0 );
 
@@ -385,7 +385,7 @@ static NE_S_EVASION( attacker, victim, weapon, iDamage, headshot ) {
         // Inform player
 
         new szMessage[128];
-        formatex( szMessage, 127, DAMAGE_EVASION, iDamage );
+        formatex( szMessage, 127, "%L", victim, "DAMAGE_EVASION", iDamage );
 
         WAR3_status_text( victim, szMessage, 3.0 );
 
@@ -496,7 +496,7 @@ static NE_U_ROOT( caster, target ) {
     new szMessage[128], szPlayerName[32];
     get_user_name( caster, szPlayerName, 31 );
 
-    formatex( szMessage, 127, CAST_ROOTS, szPlayerName );
+    formatex( szMessage, 127, "%L", target, "CAST_ROOTS", szPlayerName );
 
     WAR3_status_text( target, szMessage, 3.0 );
 
@@ -840,7 +840,7 @@ static NE_U_SHADOWSTRIKE( caster, target ) {
     get_user_name( caster, szPlayerName, 31 );
 
     new szMessage[128];
-    formatex( szMessage, 127, CAST_SHADOWSTRIKE, szPlayerName );
+    formatex( szMessage, 127, "%L", target, "CAST_SHADOWSTRIKE", szPlayerName );
 
     WAR3_status_text2( target, szMessage, 3.0 );
 
@@ -967,22 +967,27 @@ static NE_U_REJUVENATION( caster, target ) {
 
     g_PlayerRejuv[target] = caster;
 
-    new szMessage[64], szPlayerName[32];
-    get_user_name( caster, szPlayerName, 31 );
+    new szMessage[64];
 
     // Status text
 
     if ( caster == target )
     {
-        formatex( szMessage, 127, REJUVINATE_SELF );
+        formatex( szMessage, 127, "%L", caster, "REJUVINATE_SELF" );
         WAR3_status_text( caster, szMessage, 3.0 );
     }
 
     else
     {
-        WAR3_status_text( caster, HEAL_CAST, 1.0 );
+        new szCastMessage[64];
+        formatex( szCastMessage, 63, "%L", caster, "HEAL_CAST" );
 
-        formatex( szMessage, 127, REJUVINATE_TARGET, szPlayerName );
+        WAR3_status_text( caster, szCastMessage, 1.0 );
+
+        new szPlayerName[32];
+        get_user_name( caster, szPlayerName, 31 );
+
+        formatex( szMessage, 127, "%L", target, "REJUVINATE_TARGET", szPlayerName );
         WAR3_status_text( target, szMessage, 3.0 );
     }
 

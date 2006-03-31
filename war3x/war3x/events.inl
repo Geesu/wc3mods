@@ -295,7 +295,7 @@ public on_Target_Id( id ) {
             iHealth -= 1024;
 
         new szMessage[256], szM1[256], szM2[256], szM3[256];
-        formatex( szM3, 255, INFO_FOLLOW_MESSAGE_3, iHealth, get_user_armor( target ), cs_get_user_money( target ) );
+        formatex( szM3, 255, "%L", id, "INFO_FOLLOW_MESSAGE_3", iHealth, get_user_armor( target ), cs_get_user_money( target ) );
 
         if ( g_PlayerInfo[target][CURRENT_RACE] )
         {
@@ -320,8 +320,8 @@ public on_Target_Id( id ) {
 
             // Create message
 
-            formatex( szM1, 255, INFO_FOLLOW_MESSAGE_1, szRaceName, iLevel, iXp, iNextXp, iPercentage, "%%" );
-            formatex( szM2, 255, INFO_FOLLOW_MESSAGE_2, szItemName, "None" );
+            formatex( szM1, 255, "%L", id, "INFO_FOLLOW_MESSAGE_1", szRaceName, iLevel, iXp, iNextXp, iPercentage, "%%" );
+            formatex( szM2, 255, "%L", id, "INFO_FOLLOW_MESSAGE_2", szItemName, "None" );
 
             formatex( szMessage, 255, "%s^n%s^n%s", szM1, szM2, szM3 );
 
@@ -333,7 +333,7 @@ public on_Target_Id( id ) {
 
         else
         {
-            formatex( szMessage, 255, "%s^n%s", INFO_FOLLOW_NORACE, szM3 );
+            formatex( szMessage, 255, "%L^n%s", id, "INFO_FOLLOW_NORACE", szM3 );
 
             set_hudmessage( 255, 255, 255, fXpos, fYpos, 0, 6.0, 500.0, 0.1, 0.5, HUDMESSAGE_CHAN_DEAD );
             show_hudmessage( id, "%s", szMessage );
@@ -744,7 +744,7 @@ public on_FreezeStart() {
                         g_iXPtotal[id][next_race] = g_iLevelXp[iLevel];
 
                         new szMessage[128];
-                        formatex( szMessage, 127, INFO_LEVEL_OTHER, iLevel );
+                        formatex( szMessage, 127, "^n%s %L^n", WAR3X_PREFIX, id, "INFO_LEVEL_OTHER", iLevel );
 
                         client_print( id, print_chat, "%s", szMessage );
                     }
@@ -1014,7 +1014,7 @@ public on_World_Action() {
                     new szMessage[64], szRaceName[32];
 					LANG_GetRaceName( next_race + 1, id, szRaceName, 31, true )
 
-                    formatex( szMessage, 63, INFO_NEWRACENOW, szRaceName );
+                    formatex( szMessage, 63, "%L", id, "INFO_NEWRACENOW", szRaceName );
 
                     set_hudmessage( 255, 208, 0, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_INFO, 0, 6.0, 1.0, 0.1, 0.5, HUDMESSAGE_CHAN_INFO );
                     show_hudmessage( id, "%s", szMessage );
@@ -1370,7 +1370,7 @@ public on_Health( id ) {
 
     // Regeneration
 
-    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && !g_bPlayerRegen[id] && ( get_user_health( id ) < WAR3_get_maxhealth( id ) || get_user_armor( id ) < WAR3_get_maxarmor( id ) ) )
+    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && !g_bPlayerRegen[id] && get_user_armor( id ) && ( get_user_health( id ) < WAR3_get_maxhealth( id ) || get_user_armor( id ) < WAR3_get_maxarmor( id ) ) )
     {
         OR_S_REGENERATION_set( id );
     }
@@ -1507,7 +1507,7 @@ public on_ResetHud_NOWAR3( id ) {
 
     if ( !g_bDisabledNotify[id] && is_user_alive( id ) )
     {
-        client_print( id, print_chat, "%s", INFO_DISABLEDMAP_CHAT );
+        client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "INFO_DISABLEDMAP_CHAT", WAR3X_PLUGINNAME );
         g_bDisabledNotify[id] = true;
     }
 

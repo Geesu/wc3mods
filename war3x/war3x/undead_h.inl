@@ -19,7 +19,7 @@ new UD_iFrostNova_range[3]          =             {6,7,8};  // (integer) Frost N
 
 new FROSTNOVA_RGB[3]                =          {35,63,93};  // (integer) RGB of frost nova shell ( when slowed )
 
-#define FROSTNOVA_SLOWSPEED                         60.0    // (  float) max speed when slowed by frost nova
+#define FROSTNOVA_SLOWSPEED                         90.0    // (  float) max speed when slowed by frost nova
 #define FROSTNOVA_SLOWDURATION_MIN                   1.0    // (  float) min duration in seconds player is slowed by frost nova ( minimum = 1 second )
 #define FROSTNOVA_SLOWDURATION_MAX                   6.0    // (  float) max duration in seconds player is slowed by frost nova ( minimum = 1 second )
 

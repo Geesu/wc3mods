@@ -648,7 +648,7 @@ public XP_Kill( killer, victim, weapon, headshot ) {
         new Float:fKillStreak = XP_KILLSTREAK;
 
         iKillStreakXp = ( g_PlayerInfo[killer][CURRENT_KILLSTREAK] / XP_KILLSTREAK_NUM ) * floatround( fKillStreak * fMultiplier );
-        client_print( killer, print_chat, XP_KILLSTREAK_MESSAGE, iKillStreakXp, g_PlayerInfo[killer][CURRENT_KILLSTREAK] );
+        client_print( killer, print_chat, "%s %L", WAR3X_PREFIX, killer, "XP_KILLSTREAK_MESSAGE", iKillStreakXp, g_PlayerInfo[killer][CURRENT_KILLSTREAK] );
     }
 
     // Objective XP
@@ -662,7 +662,7 @@ public XP_Kill( killer, victim, weapon, headshot ) {
         new Float:fKillVip = XP_KILLVIP;
 
         iObjectiveXp = floatround( fKillVip * fMultiplier * fObjMultiplier + ( fKillerLevel * fObjLevelBonus ) );
-        client_print( killer, print_chat, XP_KILLVIP_MESSAGE, iObjectiveXp );
+        client_print( killer, print_chat, "%s %L", WAR3X_PREFIX, killer, "XP_KILLVIP_MESSAGE", iObjectiveXp );
     }
 
     // Check if Bomb Planter Killed
@@ -672,7 +672,7 @@ public XP_Kill( killer, victim, weapon, headshot ) {
         new Float:fKillPlanter = XP_KILLPLANTER;
 
         iObjectiveXp = floatround( fKillPlanter * fMultiplier * fObjMultiplier + ( fKillerLevel * fObjLevelBonus ) );
-        client_print( killer, print_chat, XP_KILLPLANTER_MESSAGE, iObjectiveXp );
+        client_print( killer, print_chat, "%s %L", WAR3X_PREFIX, killer, "XP_KILLPLANTER_MESSAGE", iObjectiveXp );
     }
 
     // Check if Bomb Defuser Killed
@@ -682,7 +682,7 @@ public XP_Kill( killer, victim, weapon, headshot ) {
         new Float:fKillDefuser = XP_KILLDEFUSER;
 
         iObjectiveXp = floatround( fKillDefuser * fMultiplier * fObjMultiplier + ( fKillerLevel * fObjLevelBonus ) );
-        client_print( killer, print_chat, XP_KILLDEFUSER_MESSAGE, iObjectiveXp );
+        client_print( killer, print_chat, "%s %L", WAR3X_PREFIX, killer, "XP_KILLDEFUSER_MESSAGE", iObjectiveXp );
     }
 
     // Check if Hostage Rescuer Killed
@@ -692,7 +692,7 @@ public XP_Kill( killer, victim, weapon, headshot ) {
         new Float:fKillRescuer = XP_HOSTAGE_KILLRESCUER;
 
         iObjectiveXp = floatround( fKillRescuer * fMultiplier * fObjMultiplier + ( fKillerLevel * fObjLevelBonus ) );
-        client_print( killer, print_chat, XP_HOSTAGE_KILLRESCUER_MESSAGE, iObjectiveXp );
+        client_print( killer, print_chat, "%s %L", WAR3X_PREFIX, killer, "XP_HOSTAGE_KILLRESCUER_MESSAGE", iObjectiveXp );
 
         g_bTouchHostage[victim] = false;
     }
@@ -729,7 +729,7 @@ public XP_Kill_Teammate( id ) {
     new iXpLoss = XP_Remove( id, killerOldXp, killerNewXp );
 
     if ( iXpLoss )
-        client_print( id, print_chat, XP_TEAMKILL_MESSAGE, iXpLoss );
+        client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_TEAMKILL_MESSAGE", iXpLoss );
 
     // Reset Kill Streak(s)
 
@@ -774,12 +774,12 @@ public XP_Hostage_Touch( id ) {
             new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
             if ( iLevel == 10 )
-                client_print( id, print_chat, "%s", XP_MAX_MESSAGE );
+                client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_MAX_MESSAGE" );
 
             else
             {
                 new iBonusXp = XP_Objective_Player( id, XP_HOSTAGE_TOUCH );
-                client_print( id, print_chat, XP_HOSTAGE_TOUCH_MESSAGE, iBonusXp );
+                client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_HOSTAGE_TOUCH_MESSAGE", iBonusXp );
             }
         }
 
@@ -829,7 +829,7 @@ public XP_Hostage_Rescued( id ) {
 
                 new iShareXp = floatround( fShare * fMultiplier * fObjMultiplier + ( fLevel * fObjLevelBonus ) );
 
-                client_print( teamId, print_chat, XP_HOSTAGE_SHARE_MESSAGE, iShareXp );
+                client_print( teamId, print_chat, "%s %L", WAR3X_PREFIX, teamId, "XP_HOSTAGE_SHARE_MESSAGE", iShareXp );
 
                 new iOldXp = g_PlayerInfo[teamId][CURRENT_XP];
                 new iNewXp = g_PlayerInfo[teamId][CURRENT_XP] + iShareXp;
@@ -869,7 +869,7 @@ public XP_Hostage_Killed( id ) {
         new iXpLoss = XP_Remove( id, iOldXp, iNewXp );
 
         if ( iXpLoss )
-            client_print( id, print_chat, XP_KILLHOSTAGE_MESSAGE, iXpLoss );
+            client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_KILLHOSTAGE_MESSAGE", iXpLoss );
     }
 
     // Reset Kill Streak(s)
@@ -895,7 +895,7 @@ public XP_Bomb_Pickup( id ) {
     #if XP_BOMBPLANT
 
         if ( iLevel == 10 )
-            client_print( id, print_chat, "%s", XP_MAX_BOMBPICKUP_MESSAGE );
+            client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_MAX_BOMBPICKUP_MESSAGE" );
 
         else
         {
@@ -908,7 +908,7 @@ public XP_Bomb_Pickup( id ) {
             new Float:fObjLevelBonus = XP_OBJECTIVE_LVL_BONUS;
 
             new iBombPlantXp = floatround( fBombPlant * fMultiplier * fObjMultiplier + ( fLevel * fObjLevelBonus ) );
-            client_print( id, print_chat, XP_BOMBPICKUP_MESSAGE, iBombPlantXp );
+            client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_BOMBPICKUP_MESSAGE", iBombPlantXp );
         }
 
     #endif
@@ -947,12 +947,12 @@ public XP_Bomb_Plant( id ) {
             new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
             if ( iLevel == 10 )
-                client_print( id, print_chat, "%s", XP_MAX_MESSAGE );
+                client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_MAX_MESSAGE" );
 
             else
             {
                 new iBonusXp = XP_Objective_Player( id, XP_BOMBPLANT );
-                client_print( id, print_chat, XP_BOMBPLANT_MESSAGE, iBonusXp );
+                client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_BOMBPLANT_MESSAGE", iBonusXp );
             }
         }
 
@@ -988,7 +988,7 @@ public XP_Bomb_Share( id ) {
                 new iBonusXp = XP_Objective_Share( id, teamId, XP_BOMBPLANT_SHARE_RADIUS, XP_BOMBPLANT_SHARE );
 
                 if ( iBonusXp )
-                    client_print( teamId, print_chat, XP_BOMBPLANT_SHARE_MESSAGE, iBonusXp );
+                    client_print( teamId, print_chat, "%s %L", WAR3X_PREFIX, teamId, "XP_BOMBPLANT_SHARE_MESSAGE", iBonusXp );
             }
         }
 
@@ -1013,12 +1013,12 @@ public XP_Bomb_Defuse( id ) {
             new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
             if ( iLevel == 10 )
-                client_print( id, print_chat, "%s", XP_MAX_MESSAGE );
+                client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_MAX_MESSAGE" );
 
             else
             {
                 new iBonusXp = XP_Objective_Player( id, XP_DEFUSE );
-                client_print( id, print_chat, XP_DEFUSE_MESSAGE, iBonusXp );
+                client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_DEFUSE_MESSAGE", iBonusXp );
             }
         }
 
@@ -1054,7 +1054,7 @@ public XP_Defuse_Share( id ) {
                 new iBonusXp = XP_Objective_Share( id, teamId, XP_DEFUSE_SHARE_RADIUS, XP_DEFUSE_SHARE );
 
                 if ( iBonusXp )
-                    client_print( teamId, print_chat, XP_DEFUSE_SHARE_MESSAGE, iBonusXp );
+                    client_print( teamId, print_chat, "%s %L", WAR3X_PREFIX, teamId, "XP_DEFUSE_SHARE_MESSAGE", iBonusXp );
             }
         }
 
@@ -1077,7 +1077,7 @@ public XP_Vip_Spawn( id ) {
         new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
         if ( iLevel == 10 )
-            client_print( id, print_chat, "%s", XP_MAX_VIPSPAWN_MESSAGE );
+            client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_MAX_VIPSPAWN_MESSAGE" );
 
         else
         {
@@ -1090,7 +1090,7 @@ public XP_Vip_Spawn( id ) {
             new Float:fObjLevelBonus = XP_OBJECTIVE_LVL_BONUS;
 
             new iVipEscapeXp = floatround( fVipEscape * fMultiplier * fObjMultiplier + ( fLevel * fObjLevelBonus ) );
-            client_print( id, print_chat, XP_VIPSPAWN_MESSAGE, iVipEscapeXp );
+            client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_VIPSPAWN_MESSAGE", iVipEscapeXp );
         }
 
     #endif
@@ -1114,12 +1114,12 @@ public XP_Vip_Escape( id ) {
             new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
             if ( iLevel == 10 )
-                client_print( id, print_chat, "%s", XP_MAX_MESSAGE );
+                client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_MAX_MESSAGE" );
 
             else
             {
                 new iBonusXp = XP_Objective_Player( id, XP_VIPESCAPE );
-                client_print( id, print_chat, XP_VIPESCAPE_MESSAGE, iBonusXp );
+                client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "XP_VIPESCAPE_MESSAGE", iBonusXp );
             }
         }
 
@@ -1155,7 +1155,7 @@ public XP_Vip_Share( id ) {
                 new iBonusXp = XP_Objective_Share( id, teamId, XP_VIPESCAPE_SHARE_RADIUS, XP_VIPESCAPE_SHARE );
 
                 if ( iBonusXp )
-                    client_print( teamId, print_chat, XP_VIPESCAPE_SHARE_MESSAGE, iBonusXp );
+                    client_print( teamId, print_chat, "%s %L", WAR3X_PREFIX, teamId, "XP_VIPESCAPE_SHARE_MESSAGE", iBonusXp );
             }
         }
 
@@ -1184,7 +1184,7 @@ public XP_Target_Bombed_T() {
         new Float:fTargetBombed = XP_TARGETBOMBED;
 
         new iTargetBombedXp = floatround( fTargetBombed * fMultiplier * fObjMultiplier );
-        client_print( 0, print_chat, XP_TARGETBOMBED_MESSAGE, iTargetBombedXp );
+        client_print( 0, print_chat, "%s %L", WAR3X_PREFIX, LANG_PLAYER, "XP_TARGETBOMBED_MESSAGE", iTargetBombedXp );
 
         new szTeamName[] = "TERRORIST";
 
@@ -1230,7 +1230,7 @@ public XP_Target_Saved_T() {
                 new iXpLoss = XP_Remove( teamId, iOldXp, iNewXp );
 
                 if ( iXpLoss )
-                    client_print( teamId, print_chat, XP_TARGETSAVED_T_MESSAGE, iXpLoss );
+                    client_print( teamId, print_chat, "%s %L", WAR3X_PREFIX, teamId, "XP_TARGETSAVED_T_MESSAGE", iXpLoss );
             }
         }
 
@@ -1253,7 +1253,7 @@ public XP_Target_Saved_CT() {
         new Float:fTargetSaved = XP_TARGETSAVED_CT;
 
         new iTargetSavedXp = floatround( fTargetSaved * fMultiplier * fObjMultiplier );
-        client_print( 0, print_chat, XP_TARGETSAVED_CT_MESSAGE, iTargetSavedXp );
+        client_print( 0, print_chat, "%s %L", WAR3X_PREFIX, LANG_PLAYER, "XP_TARGETSAVED_CT_MESSAGE", iTargetSavedXp );
 
         new szTeamName[] = "CT";
 
@@ -1278,7 +1278,7 @@ public XP_Not_Escaped_T() {
         new Float:fVipNotEscape = XP_VIPNOTESCAPE_T;
 
         new iVipNotEscapeXp = floatround( fVipNotEscape * fMultiplier * fObjMultiplier );
-        client_print( 0, print_chat, XP_VIPNOTESCAPE_T_MESSAGE, iVipNotEscapeXp );
+        client_print( 0, print_chat, "%s %L", WAR3X_PREFIX, LANG_PLAYER, "XP_VIPNOTESCAPE_T_MESSAGE", iVipNotEscapeXp );
 
         new szTeamName[] = "TERRORIST";
 
@@ -1314,7 +1314,7 @@ public XP_Not_Escaped_VIP() {
         new iXpLoss = XP_Remove( g_Vip, iOldXp, iNewXp );
 
         if ( iXpLoss )
-            client_print( g_Vip, print_chat, XP_VIPNOTESCAPE_VIP_MESSAGE );
+            client_print( g_Vip, print_chat, "%s %L", WAR3X_PREFIX, g_Vip, "XP_VIPNOTESCAPE_VIP_MESSAGE" );
 
     #endif
 
@@ -1335,7 +1335,7 @@ public XP_Not_Rescued_T() {
         new Float:fNotRescued = XP_HOSTAGENOTRESCUED_T;
 
         new iNotRescuedXp = floatround( fNotRescued * fMultiplier * fObjMultiplier );
-        client_print( 0, print_chat, XP_HOSTAGENOTRESCUED_T_MESSAGE, iNotRescuedXp );
+        client_print( 0, print_chat, "%s %L", WAR3X_PREFIX, LANG_PLAYER, "XP_HOSTAGENOTRESCUED_T_MESSAGE", iNotRescuedXp );
 
         new szTeamName[] = "TERRORIST";
 
@@ -1381,7 +1381,7 @@ public XP_Not_Rescued_CT() {
                 new iXpLoss = XP_Remove( teamId, iOldXp, iNewXp );
 
                 if ( iXpLoss )
-                    client_print( teamId, print_chat, XP_HOSTAGENOTRESCUED_CT_MESSAGE, iXpLoss );
+                    client_print( teamId, print_chat, "%s %L", WAR3X_PREFIX, teamId, "XP_HOSTAGENOTRESCUED_CT_MESSAGE", iXpLoss );
             }
         }
 
@@ -1404,7 +1404,7 @@ public XP_All_Hostages_CT() {
         new Float:fAllHostages = XP_ALLHOSTAGESRESCUED;
 
         new iAllHostagesXp = floatround( fAllHostages * fMultiplier * fObjMultiplier );
-        client_print( 0, print_chat, XP_ALLHOSTAGESRESCUED_MESSAGE, iAllHostagesXp );
+        client_print( 0, print_chat, "%s %L", WAR3X_PREFIX, LANG_PLAYER, "XP_ALLHOSTAGESRESCUED_MESSAGE", iAllHostagesXp );
 
         new szTeamName[] = "CT";
 
@@ -1428,7 +1428,7 @@ public XP_Support_Heal( caster, iHealthGiven ) {
 
     if ( WAR3_get_level( g_PlayerInfo[caster][CURRENT_XP] ) == TOTAL_LEVELS )
     {
-        client_print( caster, print_chat, XP_SUPPORT_HEALMSG_MAX, iHealthGiven );
+        client_print( caster, print_chat, "%s %L", WAR3X_PREFIX, caster, "XP_SUPPORT_HEALMSG_MAX", iHealthGiven );
         return PLUGIN_HANDLED;
     }
 
@@ -1443,7 +1443,7 @@ public XP_Support_Heal( caster, iHealthGiven ) {
 
     XP_Give( caster, iOldXp, iNewXp );
 
-    client_print( caster, print_chat, XP_SUPPORT_HEALMSG, iSupportXp, iHealthGiven );
+    client_print( caster, print_chat, "%s %L", WAR3X_PREFIX, caster, "XP_SUPPORT_HEALMSG", iSupportXp, iHealthGiven );
 
     return PLUGIN_HANDLED;
 }

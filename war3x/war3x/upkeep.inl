@@ -286,7 +286,7 @@ public Upkeep_Update( iTeamNum, iCurrentUpkeep, iNewUpkeep ) {
         for ( new iPlayerNum = 0; iPlayerNum < iTotalPlayers; iPlayerNum++ )
         {
             new player = Players[iPlayerNum];
-            client_print( player, print_chat, UPKEEP_MESSAGE, szUpkeep );
+            client_print( player, print_chat, "%s %L", WAR3X_PREFIX, player, "UPKEEP_MESSAGE", szUpkeep );
 
             // Play Sound ( client side )
 

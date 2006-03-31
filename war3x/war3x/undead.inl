@@ -46,7 +46,7 @@ public UD_ultimates( caster, target ) {
             if ( get_user_health( target ) == WAR3_get_maxhealth( target ) && caster != target )
             {
                 new szMessage[128];
-                formatex( szMessage, 127, "%s", FULLHEALTH_TARGET );
+                formatex( szMessage, 127, "%L", caster, "FULLHEALTH_TARGET" );
 
                 WAR3_status_text( caster, szMessage, 0.5 );
 
@@ -75,7 +75,7 @@ public UD_ultimates( caster, target ) {
         else
         {
             new szMessage[128];
-            formatex( szMessage, 127, "%s", CANT_TARGET_DEATHCOIL );
+            formatex( szMessage, 127, "%L", caster, "CANT_TARGET_DEATHCOIL" );
 
             WAR3_status_text( caster, szMessage, 0.5 );
 
@@ -90,7 +90,7 @@ public UD_ultimates( caster, target ) {
         if ( !( get_entity_flags( target ) & FL_ONGROUND ) )
         {
             new szMessage[128];
-            formatex( szMessage, 127, "%s", CANT_TARGET_AIR );
+            formatex( szMessage, 127, "%L", caster, "CANT_TARGET_AIR" );
 
             WAR3_status_text( caster, szMessage, 0.5 );
 
@@ -395,7 +395,7 @@ public UD_S_FROSTNOVA( id ) {
                 new szMessage[128], szPlayer[32];
 
                 get_user_name( id, szPlayer, 31 );
-                formatex( szMessage, 127, DAMAGE_FROSTNOVA, szPlayer, iDamage );
+                formatex( szMessage, 127, "%L", enemy, "DAMAGE_FROSTNOVA", szPlayer, iDamage );
 
                 WAR3_status_text2( enemy, szMessage, 3.0 );
 
@@ -470,7 +470,7 @@ public UD_S_FROSTARMOR( victim, attacker ) {
 
             // Regenerate Armor (if orc)
 
-            if ( g_PlayerInfo[attacker][CURRENT_RACE] == RACE_ORC && !g_bPlayerRegen[attacker] )
+            if ( g_PlayerInfo[attacker][CURRENT_RACE] == RACE_ORC && !g_bPlayerRegen[attacker] && get_user_armor( attacker ) )
                 OR_S_REGENERATION_set( attacker );
         }
 
@@ -622,6 +622,15 @@ static UD_U_DEATHCOIL_damage( caster, target ) {
         return PLUGIN_HANDLED;
     }
 
+    // Hud Message
+
+    new szMessage[128], szPlayerName[32];
+    get_user_name( caster, szPlayerName, 31 );
+
+    formatex( szMessage, 127, "%L", target, "CAST_DEATHCOIL", szPlayerName );
+
+    WAR3_status_text2( target, szMessage, 3.0 );
+
     // Unset velocity
 
     new Float:fVelocity[3];
@@ -646,7 +655,10 @@ static UD_U_DEATHCOIL_heal( caster, target ) {
 
     // Status text
 
-    WAR3_status_text( caster, HEAL_CAST, 1.0);
+    new szCastMessage[64];
+    formatex( szCastMessage, 63, "%L", caster, "HEAL_CAST" );
+
+    WAR3_status_text( caster, szCastMessage, 1.0 );
 
     // Heal player
 
@@ -657,7 +669,7 @@ static UD_U_DEATHCOIL_heal( caster, target ) {
     new szMessage[128], szPlayerName[32];
     get_user_name( caster, szPlayerName, 31 );
 
-    formatex( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
+    formatex( szMessage, 127, "%L", target, "HEAL_TARGET", szPlayerName, iHealthGiven );
 
     WAR3_status_text( target, szMessage, 3.0 );
 
@@ -964,7 +976,7 @@ static UD_U_SLEEP( caster, target ) {
     new szMessage[128], szPlayerName[32];
     get_user_name( caster, szPlayerName, 31 );
 
-    formatex( szMessage, 127, CAST_SLEEP, szPlayerName );
+    formatex( szMessage, 127, "%L", target, "CAST_SLEEP", szPlayerName );
 
     WAR3_status_text2( target, szMessage, 3.0 );
 
@@ -1095,9 +1107,9 @@ public UD_U_SLEEP_wake( arg_read[1] ) {
     // Hud message
 
     new szMessage[128];
-    formatex( szMessage, 127, "%s", FINISH_SLEEP );
+    formatex( szMessage, 127, "%L", target, "FINISH_SLEEP" );
 
-    WAR3_status_text2( target, szMessage, 3.0 );
+    WAR3_status_text( target, szMessage, 3.0 );
 
     // Enable attack for an additional second ( to prevent sniper exploiting ).
 

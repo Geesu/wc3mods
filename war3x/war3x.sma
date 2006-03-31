@@ -153,16 +153,12 @@ public plugin_precache() {
         new szMapName[64];
         get_mapname( szMapName, 63 );
 
-        // Print to console
-
-        new szMessage[256];
-        formatex( szMessage, 255, "%L", LANG_SERVER, "CONSOLE_DISABLEDMAP", szMapName, WAR3X_DIR );
-
-        server_print( "%s", szMessage );
-
         // Log to file
 
-        log_amx( "%s", szMessage );
+        log_amx( " " );
+        log_amx( "%s %L", WAR3X_PREFIX, LANG_SERVER, "CONSOLE_DISABLEDMAP_1", WAR3X_PLUGINNAME, szMapName );
+        log_amx( "%s %L", WAR3X_PREFIX, LANG_SERVER, "CONSOLE_DISABLEDMAP_2", WAR3X_DIR );
+        log_amx( " " );
 
         return PLUGIN_CONTINUE;
     }
@@ -176,16 +172,12 @@ public plugin_precache() {
         new szMapName[64];
         get_mapname( szMapName, 63 );
 
-        // Print to console
-
-        new szMessage[256];
-        formatex( szMessage, 255, "%L", LANG_SERVER, "CONSOLE_SHORTTERMMAP", szMapName, WAR3X_DIR );
-
-        server_print( "%s", szMessage );
-
         // Log to file
 
-        log_amx( "%s", szMessage );
+        log_amx( " " );
+        log_amx( "* %s %L", WAR3X_PREFIX, LANG_SERVER, "CONSOLE_SHORTTERMMAP_1", szMapName );
+        log_amx( "* %s %L", WAR3X_PREFIX, LANG_SERVER, "CONSOLE_SHORTTERMMAP_2", WAR3X_DIR );
+        log_amx( " " );
     }
 
     WAR3_precache();
@@ -329,8 +321,10 @@ public plugin_init() {
     register_menucmd( register_menuid( MENU_RACEOPTIONS_TITLE ),   1023, "_menu_RaceOptions"   );
     register_menucmd( register_menuid( MENU_HELPTOPICS_TITLE ),    1023, "_menu_HelpTopics"    );
 
-    register_menucmd( register_menuid( MENU_VOTE_DISABLE ), (1<<0)|(1<<1), "WAR3_vote_count"       );   // War3x Voting
-    register_menucmd( register_menuid( MENU_VOTE_ENABLE ),  (1<<0)|(1<<1), "WAR3_vote_count"       );
+    // VOTING DISABLED TEMPORARILY
+
+//    register_menucmd( register_menuid( MENU_VOTE_DISABLE ), (1<<0)|(1<<1), "WAR3_vote_count"       );   // War3x Voting
+//    register_menucmd( register_menuid( MENU_VOTE_ENABLE ),  (1<<0)|(1<<1), "WAR3_vote_count"       );
 
     register_menucmd( register_menuid( "BuyItem", 1 ),          (1<<0)|(1<<1), "on_BuyArmor"    );   // Buy Armor (old style)
     register_menucmd(                             -34,          (1<<0)|(1<<1), "on_BuyArmor"    );   // Buy Armor (VGUI)
@@ -346,8 +340,8 @@ public plugin_init() {
 
     CVAR_save_xp_sql        = register_cvar( "war3x_save_xp_sql", "" );         // System CVARs
     CVAR_save_by_ip         = register_cvar( "war3x_save_by_ip",  "" );
-    CVAR_vote_allow         = register_cvar( "war3x_vote_allow",  "" );
-    CVAR_vote_ratio         = register_cvar( "war3x_vote_ratio",  "" );
+//    CVAR_vote_allow         = register_cvar( "war3x_vote_allow",  "" );
+//    CVAR_vote_ratio         = register_cvar( "war3x_vote_ratio",  "" );
     CVAR_setxp_flag         = register_cvar( "war3x_setxp_flag",  "" );
 
     CVAR_startlevel_first   = register_cvar( "war3x_startlevel_first", "" );    // Added v1.0

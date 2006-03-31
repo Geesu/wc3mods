@@ -90,7 +90,7 @@ public menu_SelectRace( id ) {
 
     if ( !g_bPlayerConnected[id] )
     {
-        client_print( id, print_center, "%s", INFO_NOTCONNECTED );
+        client_print( id, print_center, "%L", id, "INFO_NOTCONNECTED" );
         return PLUGIN_HANDLED;
     }
 
@@ -254,7 +254,7 @@ public _menu_SelectRace( id, iKey ) {
 		LANG_GetRaceName( iKey + 1, id, szRaceName, 31, true );
 
         new szMessage[256];
-        formatex( szMessage, 255, INFO_NEWRACENEXTROUND, szRaceName );
+        formatex( szMessage, 255, "%L", id, "INFO_NEWRACENEXTROUND", szRaceName );
 
         show_hudmessage( id, "%s", szMessage );
         g_PlayerInfo[id][CURRENT_NEXTRACE] = iKey + 1;
@@ -273,7 +273,7 @@ public _menu_SelectRace( id, iKey ) {
                 g_iXPtotal[id][iKey] = g_iLevelXp[iLevel];
 
                 new szMessage[128];
-                formatex( szMessage, 127, INFO_LEVEL_FIRST, iLevel );
+                formatex( szMessage, 127, "^n%s %L^n", WAR3X_PREFIX, id, "INFO_LEVEL_FIRST", iLevel );
 
                 client_print( id, print_chat, "%s", szMessage );
             }
@@ -290,7 +290,7 @@ public _menu_SelectRace( id, iKey ) {
                 g_iXPtotal[id][iKey] = g_iLevelXp[iLevel];
 
                 new szMessage[128];
-                formatex( szMessage, 127, INFO_LEVEL_OTHER, iLevel );
+                formatex( szMessage, 127, "^n%s %L^n", WAR3X_PREFIX, id, "INFO_LEVEL_OTHER", iLevel );
 
                 client_print( id, print_chat, "%s", szMessage );
             }
@@ -338,10 +338,10 @@ public _menu_SelectRace( id, iKey ) {
 
         if ( g_bMapRestricted )
         {
-            client_print( id, print_chat, "%s", INFO_RESTRICTEDMAP_CHAT );
+            client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "INFO_RESTRICTEDMAP_CHAT" );
 
             set_hudmessage( 255, 160, 0, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_SERVER, 0, 0.1, 6.0, 1.0, 2.0, HUDMESSAGE_CHAN_SERVER );
-            show_hudmessage( id, "%s", INFO_RESTRICTEDMAP_HUD );
+            show_hudmessage( id, "%L", id, "INFO_RESTRICTEDMAP_HUD" );
         }
     }
 
@@ -371,7 +371,7 @@ public menu_SelectSkills( id ) {
     if ( WAR3_skills_left( id ) <= 0 )
     {
         set_hudmessage( 255, 160, 0, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_INFO, 0, 6.0, 5.0, 0.5, 1.0, HUDMESSAGE_CHAN_INFO );
-        show_hudmessage( id, "%s", INFO_NOSKILLPOINTS );
+        show_hudmessage( id, "%L", id, "INFO_NOSKILLPOINTS" );
 
         return PLUGIN_HANDLED;
     }
@@ -646,7 +646,7 @@ public menu_ItemShop( id ) {
 
     if ( !get_pcvar_num( CVAR_shopmenus ) )
     {
-        client_print( id, print_center, "%s", INFO_SHOP_DISABLED );
+        client_print( id, print_center, "%L", id, "INFO_SHOP_DISABLED" );
         return PLUGIN_HANDLED;
     }
 
@@ -662,7 +662,7 @@ public menu_ItemShop( id ) {
 
     if ( id == g_Vip )
     {
-        client_print( id, print_center, "%s", INFO_SHOP_VIP );
+        client_print( id, print_center, "%L", id, "INFO_SHOP_VIP" );
         return PLUGIN_HANDLED;
     }
 
@@ -670,7 +670,7 @@ public menu_ItemShop( id ) {
 
     if ( get_pcvar_num( CVAR_shopzone ) && !g_bInBuyZone[id] )
     {
-        client_print( id, print_center, "%s", INFO_SHOP_BUYZONE );
+        client_print( id, print_center, "%L", id, "INFO_SHOP_BUYZONE" );
         return PLUGIN_HANDLED;
     }
 
@@ -764,7 +764,7 @@ public menu_SkillsHelp( id ) {
     new iKeys = (1<<9);
     new szMenu[512], iLen;
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_SKILLSINFO_TITLE );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_SKILLSINFO_TITLE" );
 
     for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
     {
@@ -832,16 +832,16 @@ public menu_PlayerOptions( id ) {
 
     iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_PLAYEROPTIONS_TITLE );
 
-    WAR3_get_onoff( g_PlayerOptions[id][OPTION_RACEICONS], szOnOff );
+    WAR3_get_onoff( id, g_PlayerOptions[id][OPTION_RACEICONS], szOnOff );
     iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n", MENU_PLAYEROPTIONS_1, szOnOff );
 
-    WAR3_get_onoff( g_PlayerOptions[id][OPTION_HEALICONS], szOnOff );
+    WAR3_get_onoff( id, g_PlayerOptions[id][OPTION_HEALICONS], szOnOff );
     iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n", MENU_PLAYEROPTIONS_2, szOnOff );
 
-    WAR3_get_onoff( g_PlayerOptions[id][OPTION_DISPELLICONS], szOnOff );
+    WAR3_get_onoff( id, g_PlayerOptions[id][OPTION_DISPELLICONS], szOnOff );
     iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n", MENU_PLAYEROPTIONS_3, szOnOff );
 
-    WAR3_get_onoff( g_PlayerOptions[id][OPTION_AUTOCAST], szOnOff );
+    WAR3_get_onoff( id, g_PlayerOptions[id][OPTION_AUTOCAST], szOnOff );
     iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n^n", MENU_PLAYEROPTIONS_4, szOnOff );
 
     new iRes = g_PlayerOptions[id][OPTION_RESOLUTION];
@@ -976,7 +976,7 @@ public _menu_RaceOptions( id, iKey ) {
             Reset_Skills( id );
             menu_SelectSkills( id );
 
-            client_print( id, print_chat, "%s", INFO_RESETSKILLS );
+            client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "INFO_RESETSKILLS" );
         }
 
         case 2:     // Reset Ultimate
@@ -986,7 +986,7 @@ public _menu_RaceOptions( id, iKey ) {
 
             g_bChangeUltimate[id] = true;
 
-            client_print( id, print_chat, "%s", INFO_RESETULTIMATE );
+            client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "INFO_RESETULTIMATE" );
         }
 
         case 5:     // Reset Experience
@@ -1011,7 +1011,7 @@ public _menu_RaceOptions( id, iKey ) {
                     g_PlayerInfo[id][CURRENT_XP] = g_iLevelXp[iLevel];
 
                     new szMessage[128];
-                    formatex( szMessage, 127, INFO_LEVEL_FIRST, iLevel );
+                    formatex( szMessage, 127, "^n%s %L^n", WAR3X_PREFIX, id, "INFO_LEVEL_FIRST", iLevel );
 
                     client_print( id, print_chat, "%s", szMessage );
                 }
@@ -1027,7 +1027,7 @@ public _menu_RaceOptions( id, iKey ) {
                     g_PlayerInfo[id][CURRENT_XP] = g_iLevelXp[iLevel];
 
                     new szMessage[128];
-                    formatex( szMessage, 127, INFO_LEVEL_OTHER, iLevel );
+                    formatex( szMessage, 127, "^n%s %L^n", WAR3X_PREFIX, id, "INFO_LEVEL_OTHER", iLevel );
 
                     client_print( id, print_chat, "%s", szMessage );
                 }
@@ -1052,7 +1052,7 @@ public _menu_RaceOptions( id, iKey ) {
             new szMessage[128], szRaceName[32];
 
 			LANG_GetRaceName( iRaceId + 1, id, szRaceName, 31 );
-            formatex( szMessage, 127, INFO_RESETXP, szRaceName );
+            formatex( szMessage, 127, "%s %L", WAR3X_PREFIX, id, "INFO_RESETXP", szRaceName );
 
             client_print( id, print_chat, "%s", szMessage );
         }

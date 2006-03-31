@@ -13,7 +13,7 @@ public HELP_generate( id ) {
     // Echo to id
 
     new szMessage[256];
-    copy( szMessage, 255, INFO_GENERATEHELP_CHAT );
+    formatex( szMessage, 255, "%L", id, "INFO_GENERATEHELP_CHAT" );
 
     status_print( id, szMessage );
 
@@ -29,7 +29,7 @@ public HELP_motd_war3x( id ) {
     new szFilename[64];
     formatex( szFilename, 63, "%s/help/war3help.html", WAR3X_DIR );
 
-    show_motd( id, szFilename, WAR3X_MOTD_HELP );
+    show_motd( id, szFilename, WAR3X_PLUGINNAME );
 
     return PLUGIN_HANDLED;
 }
@@ -45,7 +45,10 @@ public HELP_motd_items( id ) {
     new szFilename[64];
     formatex( szFilename, 63, "%s/help/items.html", WAR3X_DIR );
 
-    show_motd( id, szFilename, WAR3X_MOTD_ITEMS );
+    new szHeader[64];
+    formatex( szHeader, 63, "%L", id, "WAR3X_MOTD_ITEMS" );
+
+    show_motd( id, szFilename, szHeader );
 
     return PLUGIN_HANDLED;
 }
@@ -62,7 +65,7 @@ public HELP_motd_race( id, iRaceNum ) {
     new szMOTDHeader[32], szRaceName[32];
 	LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31, true );
 
-    formatex( szMOTDHeader, 31, "%s %s", szRaceName, LANGUAGE_COMMON_SKILLS );
+    formatex( szMOTDHeader, 31, "%s %L", szRaceName, id, "LANG_SKILLS" );
 
     show_motd( id, szFilename, szMOTDHeader );
 
@@ -160,7 +163,10 @@ public HELP_motd_players( id ) {
 
     iLen += formatex( szMotd[iLen], 2047 - iLen, "^n^n " );
 
-    show_motd( id, szMotd, WAR3X_MOTD_PLAYERSKILLS );
+    new szHeader[64];
+    formatex( szHeader, 63, "%L", id, "WAR3X_MOTD_PLAYERSKILLS" );
+
+    show_motd( id, szMotd, szHeader );
 
     return PLUGIN_HANDLED;
 }
@@ -170,13 +176,13 @@ public HELP_motd_players( id ) {
 
 public HELP_motd_target( id, targetId ) {
 
-    new szMotd[2048], szData[64], szTitle[64], iLen;
+    new szMotd[2048], szData[64], szHeader[64], iLen;
     new szSkillDesc[256], szSkillName[32], szSkillLevel[16];
 
     new szPlayerName[32];
     get_user_name( targetId, szPlayerName, 31 );
 
-    formatex( szTitle, 63, WAR3X_MOTD_TARGETSKILLS, szPlayerName );
+    formatex( szHeader, 63, "%L ( %s )", id, "WAR3X_MOTD_PLAYERSKILLS", szPlayerName );
 
     // HTML Header
 
@@ -185,7 +191,7 @@ public HELP_motd_target( id, targetId ) {
     // Make sure race is selected
 
     if ( !g_PlayerInfo[targetId][CURRENT_RACE] )
-        iLen += formatex( szMotd[iLen], 2047 - iLen, INFO_FOLLOW_NORACE );
+        iLen += formatex( szMotd[iLen], 2047 - iLen, "%L", id, "INFO_FOLLOW_NORACE" );
 
     else
     {
@@ -200,12 +206,12 @@ public HELP_motd_target( id, targetId ) {
 
         // Level
 
-        iLen += formatex( szMotd[iLen], 2047 - iLen, "%s %i^n^n", LANGUAGE_COMMON_LEVEL, iLevel );
+        iLen += formatex( szMotd[iLen], 2047 - iLen, "%L %i^n^n", id, "LANG_LEVEL", iLevel );
 
         // Classname
 
         WAR3_race_info( targetId, raceId, RACEINFO_CLASSNAME, szData );
-        iLen += formatex( szMotd[iLen], 2047 - iLen, "<b>%s</b>: %s", LANGUAGE_COMMON_CLASS, szData );
+        iLen += formatex( szMotd[iLen], 2047 - iLen, "<b>%L</b>: %s", id, "LANG_CLASS", szData );
 
         if ( !g_PlayerInfo[targetId][CURRENT_ULTIMATE] )
         {
@@ -224,10 +230,10 @@ public HELP_motd_target( id, targetId ) {
                 }
             }
 
-            iLen += formatex( szMotd[iLen], 2047 - iLen, " (%ss %s)", LANGUAGE_COMMON_LEVEL, szRankLevels );
+            iLen += formatex( szMotd[iLen], 2047 - iLen, " (%Ls %s)", id, "LANG_LEVEL", szRankLevels );
         }
 
-        iLen += formatex( szMotd[iLen], 2047 - iLen, "^n^n^n<i>%s</i>^n^n", MOTD_TS_CURRENTSKILLS );
+        iLen += formatex( szMotd[iLen], 2047 - iLen, "^n^n^n<i>%L</i>^n^n", id, "MOTD_PS_CURRENTSKILLS" );
 
         // Skills
 
@@ -244,7 +250,7 @@ public HELP_motd_target( id, targetId ) {
                 if ( fRacialPercentage > 100.0 )
                     fRacialPercentage = 100.0;
 
-                format( szSkillLevel, 15, "(%s %0.0f%s)", LANGUAGE_COMMON_RACIAL, fRacialPercentage, "%" );
+                format( szSkillLevel, 15, "(%L %0.0f%%)", id, "LANG_RACIAL", fRacialPercentage );
             }
 
             // Trainable Skills
@@ -254,12 +260,12 @@ public HELP_motd_target( id, targetId ) {
                 new iSkillLvl = g_PlayerInfo[targetId][iSkillNum + 1];
 
                 HELP_description_trained( raceId, iSkillNum, id, szSkillDesc, iSkillLvl );
-                formatex( szSkillLevel, 15, "(%s %i)", LANGUAGE_COMMON_LEVEL, iSkillLvl );
+                formatex( szSkillLevel, 15, "(%L %i)", id, "LANG_LEVEL", iSkillLvl );
             }
 
             else
             {
-                formatex( szSkillDesc, 255, MOTD_TS_NOSKILL );
+                formatex( szSkillDesc, 255, "%L", id, "MOTD_PS_NOSKILL" );
                 formatex( szSkillLevel, 15, "" );
             }
 
@@ -271,7 +277,7 @@ public HELP_motd_target( id, targetId ) {
 
         if ( g_PlayerInfo[targetId][CURRENT_ULTIMATE] )
         {
-            iLen += formatex( szMotd[iLen], 2047 - iLen, "^n<i>%s</i>^n^n", MOTD_TS_CURRENTULTIMATE );
+            iLen += formatex( szMotd[iLen], 2047 - iLen, "^n<i>%L</i>^n^n", id, "MOTD_PS_CURRENTULTIMATE" );
 
             new iUltimateNum = g_PlayerInfo[targetId][CURRENT_ULTIMATE] + TOTAL_SKILLS - 1;
 
@@ -286,7 +292,7 @@ public HELP_motd_target( id, targetId ) {
 
     if ( g_bXPfetched[targetId] )
     {
-        iLen += formatex( szMotd[iLen], 2047 - iLen, "<i>%s</i>^n", MOTD_TS_ALLLEVELS );
+        iLen += formatex( szMotd[iLen], 2047 - iLen, "<i>%L</i>^n", id, "MOTD_PS_ALLLEVELS" );
 
         for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
         {
@@ -301,7 +307,7 @@ public HELP_motd_target( id, targetId ) {
 
     iLen += formatex( szMotd[iLen], 2047 - iLen, "^n^n " );
 
-    show_motd( id, szMotd, szTitle );
+    show_motd( id, szMotd, szHeader );
 
     return PLUGIN_HANDLED;
 }
@@ -317,13 +323,13 @@ public HELP_get_values_items( iItemNum, szValue[32] ) {
 
         case ITEM_ANKH:
         {
-            formatex( szValue, 31, "%0.0f%s", ( ITEM_ANKH_VALUE * 100.0 ), "%" );
+            formatex( szValue, 31, "%0.0f%%", ( ITEM_ANKH_VALUE * 100.0 ) );
             return ( 1 );
         }
 
         case ITEM_BOOTS:
         {
-            formatex( szValue, 31, "%0.0f%s", ( ( ( ITEM_BOOTS_VALUE / SPEED_KNIFE ) - 1.0 ) * 100.0 ), "%" );
+            formatex( szValue, 31, "%0.0f%%", ( ( ( ITEM_BOOTS_VALUE / SPEED_KNIFE ) - 1.0 ) * 100.0 ) );
             return ( 1 );
         }
 
@@ -335,7 +341,7 @@ public HELP_get_values_items( iItemNum, szValue[32] ) {
 
         case ITEM_CLOAK:
         {
-            formatex( szValue, 31, "%0.0f%s", ( ITEM_CLOAK_VALUE * 100.0 ), "%" );
+            formatex( szValue, 31, "%0.0f%%", ( ITEM_CLOAK_VALUE * 100.0 ) );
             return ( 1 );
         }
 
@@ -382,13 +388,13 @@ public HELP_get_values_skills( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_RACIAL:
                 {
-                    formatex( szValue, 31, "%0.0f%s %0.0f%s", ( ( ( UD_S_UNHOLY_get_speed( iSkillLevel ) - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), "%", ( 1.0 - UD_S_UNHOLY_get_gravity( iSkillLevel ) ) * 100.0, "%" );
+                    formatex( szValue, 31, "%0.0f%% %0.0f%%", ( ( ( UD_S_UNHOLY_get_speed( iSkillLevel ) - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), ( 1.0 - UD_S_UNHOLY_get_gravity( iSkillLevel ) ) * 100.0 );
                     return ( 2 );
                 }
 
                 case SKILL_1:
                 {
-                    formatex( szValue, 31, "%0.0f%s", ( UD_fVampiricAura[iSkillLevel] * 100.0 ), "%" );
+                    formatex( szValue, 31, "%0.0f%%", ( UD_fVampiricAura[iSkillLevel] * 100.0 ) );
                     return ( 1 );
                 }
 
@@ -400,7 +406,7 @@ public HELP_get_values_skills( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_3:
                 {
-                    formatex( szValue, 31, "%d %0.0f%s %0.1f", ( UD_iFrostArmor_armor[iSkillLevel] - 100 ), ( UD_fFrostArmor_slow[iSkillLevel] * 100.0 ), "%", FROSTARMOR_SLOWDURATION );
+                    formatex( szValue, 31, "%d %0.0f%% %0.1f", ( UD_iFrostArmor_armor[iSkillLevel] - 100 ), ( UD_fFrostArmor_slow[iSkillLevel] * 100.0 ), FROSTARMOR_SLOWDURATION );
                     return ( 3 );
                 }
 
@@ -440,19 +446,19 @@ public HELP_get_values_skills( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_1:
                 {
-                    formatex( szValue, 31, "%0.0f%s", ( HU_fInvisibility[iSkillLevel] * 100.0 ), "%" );
+                    formatex( szValue, 31, "%0.0f%%", ( HU_fInvisibility[iSkillLevel] * 100.0 ) );
                     return ( 2 );
                 }
 
                 case SKILL_2:
                 {
-                    formatex( szValue, 31, "%0.0f%s %d %0.1f", ( HU_fBash[iSkillLevel] * 100.0 ), "%", HU_iBashDamage[iSkillLevel], BASH_DURATION_MAX );
+                    formatex( szValue, 31, "%0.0f%% %d %0.1f", ( HU_fBash[iSkillLevel] * 100.0 ), HU_iBashDamage[iSkillLevel], BASH_DURATION_MAX );
                     return ( 3 );
                 }
 
                 case SKILL_3:
                 {
-                    formatex( szValue, 31, "%d %0.0f%s", ( HU_iInnerFire_armor[iSkillLevel] - 100 ), ( HU_fInnerFire_damage[iSkillLevel] * 100.0 ), "%" );
+                    formatex( szValue, 31, "%d %0.0f%%", ( HU_iInnerFire_armor[iSkillLevel] - 100 ), ( HU_fInnerFire_damage[iSkillLevel] * 100.0 ) );
                     return ( 2 );
                 }
 
@@ -492,19 +498,19 @@ public HELP_get_values_skills( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_1:
                 {
-                    formatex( szValue, 31, "%0.0f%s %d %0.0f%s", ( ( ( OR_fBerserk_speed[iSkillLevel] - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), "%", BERSERK_HEALTH, ( OR_fBerserk_damage[iSkillLevel] * 100.0 ), "%" );
+                    formatex( szValue, 31, "%0.0f%% %d %0.0f%%", ( ( ( OR_fBerserk_speed[iSkillLevel] - SPEED_KNIFE ) / SPEED_KNIFE ) * 100.0 ), BERSERK_HEALTH, ( OR_fBerserk_damage[iSkillLevel] * 100.0 ) );
                     return ( 3 );
                 }
 
                 case SKILL_2:
                 {
-                    formatex( szValue, 31, "%0.0f%s %0.0f", ( OR_fPulverize_bonus[iSkillLevel] * 100.0 ), "%", OR_fPulverize_range[iSkillLevel] );
+                    formatex( szValue, 31, "%0.0f%% %0.0f", ( OR_fPulverize_bonus[iSkillLevel] * 100.0 ), OR_fPulverize_range[iSkillLevel] );
                     return ( 2 );
                 }
 
                 case SKILL_3:
                 {
-                    formatex( szValue, 31, "%0.0f%s", ( OR_fPillage[iSkillLevel] * 100.0 ), "%" );
+                    formatex( szValue, 31, "%0.0f%%", ( OR_fPillage[iSkillLevel] * 100.0 ) );
                     return ( 1 );
                 }
 
@@ -512,19 +518,19 @@ public HELP_get_values_skills( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case ULTIMATE_1:
                 {
-                    formatex( szValue, 31, "%d %d %0.0f%s", HEALINGWAVE_JUMPS, HEALINGWAVE_HEAL, ( ( 1.0 / float( HEALINGWAVE_MULTIPLIER ) ) * 100.0 ), "%" );
+                    formatex( szValue, 31, "%d %d %0.0f%%", HEALINGWAVE_JUMPS, HEALINGWAVE_HEAL, ( ( 1.0 / float( HEALINGWAVE_MULTIPLIER ) ) * 100.0 ) );
                     return ( 3 );
                 }
 
                 case ULTIMATE_2:
                 {
-                    formatex( szValue, 31, "%d %d %0.0f%s", CHAINLIGHTNING_DAMAGE, CHAINLIGHTNING_JUMPS, ( ( 1.0 / float( CHAINLIGHTNING_MULTIPLIER ) ) * 100.0 ), "%" );
+                    formatex( szValue, 31, "%d %d %0.0f%%", CHAINLIGHTNING_DAMAGE, CHAINLIGHTNING_JUMPS, ( ( 1.0 / float( CHAINLIGHTNING_MULTIPLIER ) ) * 100.0 ) );
                     return ( 3 );
                 }
 
                 case ULTIMATE_3:
                 {
-                    formatex( szValue, 31, "%0.0f%s %0.0f%s %0.1f %d", ( ( ( 255.0 - WINDWALK_INVISIBILITY ) / 255.0 ) * 100.0 ), "%", ( ( ( WINDWALK_SPEED - SPEED_KNIFE ) / 255.0 ) * 100.0 ), "%", float( WINDWALK_DURATION ), WINDWALK_DAMAGE );
+                    formatex( szValue, 31, "%0.0f%% %0.0f%% %0.1f %d", ( ( ( 255.0 - WINDWALK_INVISIBILITY ) / 255.0 ) * 100.0 ), ( ( ( WINDWALK_SPEED - SPEED_KNIFE ) / 255.0 ) * 100.0 ), float( WINDWALK_DURATION ), WINDWALK_DAMAGE );
                     return ( 4 );
                 }
             }
@@ -538,25 +544,25 @@ public HELP_get_values_skills( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case SKILL_RACIAL:
                 {
-                    formatex( szValue, 31, "%0.0f%s %0.0f%s", ( NE_S_ELUNES_get_knife( iSkillLevel ) * 100.0 ), "%", ( NE_S_ELUNES_get_magic( iSkillLevel ) * 100.0 ), "%" );
+                    formatex( szValue, 31, "%0.0f%% %0.0f%%", ( NE_S_ELUNES_get_knife( iSkillLevel ) * 100.0 ), ( NE_S_ELUNES_get_magic( iSkillLevel ) * 100.0 ) );
                     return ( 2 );
                 }
 
                 case SKILL_1:
                 {
-                    formatex( szValue, 31, "%0.0f%s", ( NE_fEvasion[iSkillLevel] * 100.0 ), "%" );
+                    formatex( szValue, 31, "%0.0f%%", ( NE_fEvasion[iSkillLevel] * 100.0 ) );
                     return ( 1 );
                 }
 
                 case SKILL_2:
                 {
-                    formatex( szValue, 31, "%d %0.0f%s", ( NE_iBlessing_armor[iSkillLevel] - 100 ), ( ( NE_fBlessing_speed[iSkillLevel] ) * 100.0 ) , "%" );
+                    formatex( szValue, 31, "%d %0.0f%%", ( NE_iBlessing_armor[iSkillLevel] - 100 ), ( ( NE_fBlessing_speed[iSkillLevel] ) * 100.0 ) );
                     return ( 2 );
                 }
 
                 case SKILL_3:
                 {
-                    formatex( szValue, 31, "%0.0f%s", ( NE_fTrueshotAura[iSkillLevel] * 100.0 ), "%" );
+                    formatex( szValue, 31, "%0.0f%%", ( NE_fTrueshotAura[iSkillLevel] * 100.0 ) );
                     return ( 1 );
                 }
 
@@ -576,7 +582,7 @@ public HELP_get_values_skills( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
                 case ULTIMATE_3:
                 {
-                    formatex( szValue, 31, "%d %d %0.1f %0.0f%s", SHADOWSTRIKE_DAMAGE, SHADOWSTRIKE_DOT, float( SHADOWSTRIKE_DURATION ), ( ( ( SPEED_KNIFE - SHADOWSTRIKE_SPEED ) / 255.0 ) * 100.0 ), "%" );
+                    formatex( szValue, 31, "%d %d %0.1f %0.0f%%", SHADOWSTRIKE_DAMAGE, SHADOWSTRIKE_DOT, float( SHADOWSTRIKE_DURATION ), ( ( ( SPEED_KNIFE - SHADOWSTRIKE_SPEED ) / 255.0 ) * 100.0 ) );
                     return ( 4 );
                 }
             }
@@ -619,7 +625,7 @@ public HELP_create_files() {
 
             if ( iSkillNum == SKILL_RACIAL )
             {
-                formatex( szSkillHeader, 191, "%s", HELP_HEADER_RACIAL );
+                formatex( szSkillHeader, 191, "%L", LANG_SERVER, "HELP_HEADER_RACIAL" );
                 write_file( szFileName, szSkillHeader, -1 );
 
                 HELP_description_racial( iRaceNum, LANG_SERVER, szSkillDesc, LEVEL_ALL );
@@ -631,7 +637,7 @@ public HELP_create_files() {
             {
                 if ( iSkillNum == SKILL_1 )
                 {
-                    formatex( szSkillHeader, 191, "^n%s", HELP_HEADER_SKILLS );
+                    formatex( szSkillHeader, 191, "^n%L", LANG_SERVER, "HELP_HEADER_SKILLS" );
                     write_file( szFileName, szSkillHeader, -1 );
                 }
 
@@ -652,7 +658,7 @@ public HELP_create_files() {
             if ( iUltimateNum == ULTIMATE_1 )
             {
                 new szUltimate[192];
-                formatex( szUltimate, 191, HELP_HEADER_ULTIMATES, LEVEL_ULTIMATE );
+                formatex( szUltimate, 191, "%L", LANG_SERVER, "HELP_HEADER_ULTIMATES", LEVEL_ULTIMATE );
 
                 formatex( szSkillHeader, 191, "^n%s", szUltimate );
                 write_file( szFileName, szSkillHeader, -1 );
@@ -682,7 +688,7 @@ public HELP_create_files() {
 
     write_file( szFileName, HTML_HEADER, -1 );
 
-    formatex( szItemHeader, 255, "%s", HELP_HEADER_ITEMS );
+    formatex( szItemHeader, 255, "%L", LANG_SERVER, "HELP_HEADER_ITEMS" );
     write_file( szFileName, szItemHeader, -1 );
 
     // Grab Values and Fill HTML

@@ -45,7 +45,7 @@ public HU_ultimates( caster, target ) {
             if ( get_user_health( target ) == WAR3_get_maxhealth( target ) && caster != target )
             {
                 new szMessage[128];
-                copy( szMessage, 127, FULLHEALTH_TARGET );
+                formatex( szMessage, 127, "%L", caster, "FULLHEALTH_TARGET" );
 
                 WAR3_status_text( caster, szMessage, 0.5 );
 
@@ -74,7 +74,7 @@ public HU_ultimates( caster, target ) {
         else
         {
             new szMessage[128];
-            copy( szMessage, 127, CANT_TARGET_HOLYLIGHT );
+            formatex( szMessage, 127, "%L", caster, "CANT_TARGET_HOLYLIGHT" );
 
             WAR3_status_text( caster, szMessage, 0.5 );
 
@@ -156,6 +156,14 @@ public HU_S_INVISIBILITY_set( id ) {
 
     new Float:fInvis = HU_fInvisibility[g_PlayerInfo[id][CURRENT_SKILL1] - 1];
     fInvis = ( 1.0 - fInvis ) * 255.0;
+
+    // Add 30% of Cloak value to invisibility level
+
+    if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_CLOAK )
+        fInvis -= ( ( ( 1.0 - ITEM_CLOAK_VALUE ) * 255 ) * 0.3 );
+
+    if ( fInvis < ( ( 1.0 - CAP_INVISIBILITY ) * 255.0 ) )
+        fInvis = ( ( 1.0 - CAP_INVISIBILITY ) * 255.0 );
 
     new iInvis = floatround( fInvis );
     set_user_rendering( id, kRenderFxNone, 0, 0, 0, kRenderTransTexture, iInvis );
@@ -353,7 +361,10 @@ static HU_U_HOLYLIGHT_heal( caster, target ) {
 
     // Status text
 
-    WAR3_status_text( caster, HEAL_CAST, 1.0 );
+    new szCastMessage[64];
+    formatex( szCastMessage, 63, "%L", caster, "HEAL_CAST" );
+
+    WAR3_status_text( caster, szCastMessage, 1.0 );
 
     // Heal player
 
@@ -364,7 +375,7 @@ static HU_U_HOLYLIGHT_heal( caster, target ) {
     new szMessage[128], szPlayerName[32];
     get_user_name( caster, szPlayerName, 31 );
 
-    formatex( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
+    formatex( szMessage, 127, "%L", target, "HEAL_TARGET", szPlayerName, iHealthGiven );
 
     WAR3_status_text( target, szMessage, 3.0 );
 
@@ -401,7 +412,7 @@ static HU_U_HOLYLIGHT_damage( caster, target ) {
     new szMessage[128], szPlayerName[32];
     get_user_name( caster, szPlayerName, 31 );
 
-    formatex( szMessage, 127, CAST_HOLYLIGHT, szPlayerName, HOLYLIGHT_DAMAGE );
+    formatex( szMessage, 127, "%L", target, "CAST_HOLYLIGHT", szPlayerName, HOLYLIGHT_DAMAGE );
 
     new iBlindTime = HOLYLIGHT_BLINDTIME;
     new Float:fDuration = float( iBlindTime ) + 3.0;
@@ -501,21 +512,34 @@ public HU_U_FLAMESTRIKE( arg_read[2] ) {
 
     if ( get_entity_flags( target ) & FL_ONGROUND )
     {
+        new Origin[3];
+        get_user_origin( target, Origin );
+
+        // Check for Amulet
+
+        if ( g_PlayerInfo[target][CURRENT_ITEM] == ITEM_AMULET )
+        {
+            ITEM_AMULET_block( target, caster );
+
+            // Play effects for a second
+
+            HU_U_FLAMESTRIKE_effects( Origin, 1.5 );
+
+            return PLUGIN_HANDLED;
+        }
+
         // Hud message
 
         new szMessage[128], szPlayerName[32];
         get_user_name( caster, szPlayerName, 31 );
 
-        formatex( szMessage, 127, CAST_FLAMESTRIKE, szPlayerName );
+        formatex( szMessage, 127, "%L", target, "CAST_FLAMESTRIKE", szPlayerName );
 
         WAR3_status_text2( target, szMessage, 3.0 );
 
         // Cast
 
-        new Origin[3];
-        get_user_origin( target, Origin );
-
-        HU_U_FLAMESTRIKE_effects( Origin );
+        HU_U_FLAMESTRIKE_effects( Origin, FLAMESTRIKE_DURATION );
         g_bFlameStrikeCast[caster] = true;
 
         new Float:fDuration = FLAMESTRIKE_DURATION;
@@ -755,7 +779,7 @@ public HU_U_FLAMESTRIKE_remove( victim ) {
 
 // Flame Pillar Effects
 
-static HU_U_FLAMESTRIKE_effects( Origin[3] ) {
+public HU_U_FLAMESTRIKE_effects( Origin[3], Float:fDuration ) {
 
     Origin[2] -= 5;
 
@@ -778,7 +802,7 @@ static HU_U_FLAMESTRIKE_effects( Origin[3] ) {
             case 4:         fTempOrigin[1] += ( -1.0 * fFlameBorder );
         }
 
-        WAR3_ENTITY_sprite( "FLAME_STRIKE", "sprites/cexplo.spr", fTempOrigin, MOVETYPE_NONE, SOLID_TRIGGER, random_float( 10.0, 20.0 ), random_float( 0.4, 0.8 ), FLAMESTRIKE_DURATION + 1.5 );
+        WAR3_ENTITY_sprite( "FLAME_STRIKE", "sprites/cexplo.spr", fTempOrigin, MOVETYPE_NONE, SOLID_TRIGGER, random_float( 10.0, 20.0 ), random_float( 0.4, 0.8 ), fDuration );
     }
 
     // Inner diagonal
@@ -815,7 +839,7 @@ static HU_U_FLAMESTRIKE_effects( Origin[3] ) {
             }
         }
 
-        WAR3_ENTITY_sprite( "FLAME_STRIKE", "sprites/fexplo.spr", fTempOrigin, MOVETYPE_NONE, SOLID_TRIGGER, random_float( 10.0, 20.0 ), random_float( 0.4, 0.8 ), FLAMESTRIKE_DURATION + 1.5 );
+        WAR3_ENTITY_sprite( "FLAME_STRIKE", "sprites/fexplo.spr", fTempOrigin, MOVETYPE_NONE, SOLID_TRIGGER, random_float( 10.0, 20.0 ), random_float( 0.4, 0.8 ), fDuration );
     }
 
 
@@ -837,7 +861,7 @@ static HU_U_FLAMESTRIKE_effects( Origin[3] ) {
             case 4:         fTempOrigin[1] += ( -1.0 * fFlameBorder );
         }
 
-        WAR3_ENTITY_sprite( "FLAME_STRIKE", "sprites/cexplo.spr", fTempOrigin, MOVETYPE_NONE, SOLID_TRIGGER, random_float( 10.0, 20.0 ), random_float( 0.4, 0.8 ), FLAMESTRIKE_DURATION + 1.5 );
+        WAR3_ENTITY_sprite( "FLAME_STRIKE", "sprites/cexplo.spr", fTempOrigin, MOVETYPE_NONE, SOLID_TRIGGER, random_float( 10.0, 20.0 ), random_float( 0.4, 0.8 ), fDuration );
     }
 
     return PLUGIN_HANDLED;
@@ -867,7 +891,7 @@ static HU_U_AVATAR( id ) {
     // Status text
 
     new szMessage[128];
-    formatex( szMessage, 127, CAST_AVATAR );
+    formatex( szMessage, 127, "%L", id, "CAST_AVATAR" );
 
     WAR3_status_text( id, szMessage, 3.0 );
 
@@ -1003,7 +1027,7 @@ static HU_U_AVATAR_finish( id ) {
     // Status text
 
     new szMessage[128];
-    formatex( szMessage, 127, FINISH_AVATAR );
+    formatex( szMessage, 127, "%L", id, "FINISH_AVATAR" );
 
     WAR3_status_text( id, szMessage, 3.0 );
 

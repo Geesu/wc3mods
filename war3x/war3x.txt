@@ -1,115 +1,316 @@
 [en]
-SHOP1_ITEM0_NAME = None
-SHOP1_ITEM1_NAME = Ankh of Reincarnation
-SHOP1_ITEM2_NAME = Boots of Speed
-SHOP1_ITEM3_NAME = Claws of Attack +6
-SHOP1_ITEM4_NAME = Cloak of Shadows
-SHOP1_ITEM5_NAME = Sobi Mask
-SHOP1_ITEM6_NAME = Amulet of Shielding
-SHOP1_ITEM7_NAME = Ring of Protection +5
-SHOP1_ITEM8_NAME = Tome of Experience
+SHOP1_ITEM0_NAME                = None
+SHOP1_ITEM1_NAME                = Ankh of Reincarnation
+SHOP1_ITEM2_NAME                = Boots of Speed
+SHOP1_ITEM3_NAME                = Claws of Attack +6
+SHOP1_ITEM4_NAME                = Cloak of Shadows
+SHOP1_ITEM5_NAME                = Sobi Mask
+SHOP1_ITEM6_NAME                = Amulet of Shielding
+SHOP1_ITEM7_NAME                = Ring of Protection +5
+SHOP1_ITEM8_NAME                = Tome of Experience
 
-SHOP1_ITEM0_DESC = No Description
-SHOP1_ITEM1_DESC = When killed, the player has a <%s> chance to spawn the next round with all items he died with.
-SHOP1_ITEM2_DESC = Increases the player's maximum speed by <%s>. All weapons run at the same speed.
-SHOP1_ITEM3_DESC = Adds <%s> damage to each successful attack.
-SHOP1_ITEM4_DESC = Makes the player <%s> invisible. If the player attacks, is attacked, or casts an ultimate, he will become visible.
-SHOP1_ITEM5_DESC = Decreases ultimate cooldown of the player by <%s> seconds after every cast.
-SHOP1_ITEM6_DESC = Allows the player to block <%s> harmful ultimate(s) cast on them.
-SHOP1_ITEM7_DESC = Player receives <%s> armor, and increases their max armor by the same ammount if armor is present.
-SHOP1_ITEM8_DESC = Player instantly receives <%s> experience. Item is expended upon purchase, and does not require an item slot.
+SHOP1_ITEM0_DESC                = No Description
+SHOP1_ITEM1_DESC                = When killed, the player has a <%s> chance to spawn the next round with all items he died with.
+SHOP1_ITEM2_DESC                = Increases the player's maximum speed by <%s>. All weapons run at the same speed.
+SHOP1_ITEM3_DESC                = Adds <%s> damage to each successful attack.
+SHOP1_ITEM4_DESC                = Makes the player <%s> invisible. If the player attacks, is attacked, or casts an ultimate, he will become visible.
+SHOP1_ITEM5_DESC                = Decreases ultimate cooldown of the player by <%s> seconds after every cast.
+SHOP1_ITEM6_DESC                = Allows the player to block <%s> harmful ultimate(s) cast on them.
+SHOP1_ITEM7_DESC                = Player receives <%s> armor, and increases their max armor by the same ammount if armor is present.
+SHOP1_ITEM8_DESC                = Player instantly receives <%s> experience. Item is expended upon purchase, and does not require an item slot.
 
-RACENAME1 = Undead Scourge
-RACENAME2 = Human Alliance
-RACENAME3 = Orcish Horde
-RACENAME4 = Night Elf Sentinels
+RACENAME1                       = Undead Scourge
+RACENAME2                       = Human Alliance
+RACENAME3                       = Orcish Horde
+RACENAME4                       = Night Elf Sentinels
 
-RACENAME1_SHORT = Undead
-RACENAME2_SHORT = Human
-RACENAME3_SHORT = Orc
-RACENAME4_SHORT = Night Elf
+RACENAME1_SHORT                 = Undead
+RACENAME2_SHORT                 = Human
+RACENAME3_SHORT                 = Orc
+RACENAME4_SHORT                 = Night Elf
 
-RACE1_RACIAL1 = Unholy Aura
-RACE1_SKILL1 = Vampiric Aura
-RACE1_SKILL2 = Frost Nova
-RACE1_SKILL3 = Frost Armor
-RACE1_ULTIMATE1 = Death Coil
-RACE1_ULTIMATE2 = Impale
-RACE1_ULTIMATE3 = Sleep
+RACE1_RACIAL1                   = Unholy Aura
+RACE1_SKILL1                    = Vampiric Aura
+RACE1_SKILL2                    = Frost Nova
+RACE1_SKILL3                    = Frost Armor
+RACE1_ULTIMATE1                 = Death Coil
+RACE1_ULTIMATE2                 = Impale
+RACE1_ULTIMATE3                 = Sleep
 
-RACE2_RACIAL1 = Fortitude
-RACE2_SKILL1 = Invisibility
-RACE2_SKILL2 = Bash
-RACE2_SKILL3 = Inner Fire
-RACE2_ULTIMATE1 = Holy Light
-RACE2_ULTIMATE2 = Flame Strike
-RACE2_ULTIMATE3 = Avatar
+RACE2_RACIAL1                   = Fortitude
+RACE2_SKILL1                    = Invisibility
+RACE2_SKILL2                    = Bash
+RACE2_SKILL3                    = Inner Fire
+RACE2_ULTIMATE1                 = Holy Light
+RACE2_ULTIMATE2                 = Flame Strike
+RACE2_ULTIMATE3                 = Avatar
 
-RACE3_RACIAL1 = Regeneration
-RACE3_SKILL1 = Berserk
-RACE3_SKILL2 = Pulverize
-RACE3_SKILL3 = Pillage
-RACE3_ULTIMATE1 = Healing Wave
-RACE3_ULTIMATE2 = Chain Lightning
-RACE3_ULTIMATE3 = Wind Walk
+RACE3_RACIAL1                   = Regeneration
+RACE3_SKILL1                    = Berserk
+RACE3_SKILL2                    = Pulverize
+RACE3_SKILL3                    = Pillage
+RACE3_ULTIMATE1                 = Healing Wave
+RACE3_ULTIMATE2                 = Chain Lightning
+RACE3_ULTIMATE3                 = Wind Walk
 
-RACE4_RACIAL1 = Elune's Grace
-RACE4_SKILL1 = Evasion
-RACE4_SKILL2 = Nature's Blessing
-RACE4_SKILL3 = Trueshot Aura
-RACE4_ULTIMATE1 = Rejuvination
-RACE4_ULTIMATE2 = Entangling Roots
-RACE4_ULTIMATE3 = Shadow Strike
+RACE4_RACIAL1                   = Elune's Grace
+RACE4_SKILL1                    = Evasion
+RACE4_SKILL2                    = Nature's Blessing
+RACE4_SKILL3                    = Trueshot Aura
+RACE4_ULTIMATE1                 = Rejuvination
+RACE4_ULTIMATE2                 = Entangling Roots
+RACE4_ULTIMATE3                 = Shadow Strike
 
-RACE1_RACIAL1_DESC = Increases player's maximum speed by <%s>. All weapons move at same speed. Player's gravity is also decreased by <%s>.
-RACE1_SKILL1_DESC = Player gains <%s> of his attack damage back as health when a successful attack is made.
-RACE1_SKILL2_DESC = Upon death, nearby enemies within <%s> meters of the player are blasted for <%s> damage and slowed for up to <%s> seconds.
-RACE1_SKILL3_DESC = Creates a shield of frost around the player when armor is bought. The shield adds <%s> maximum armor and has a <%s> chance to slow attacking players for <%s> seconds.
-RACE1_ULTIMATE1_DESC = A coil of death that can deal <%s> damage to an enemy living player or heal a friendly undead unit <%s> health.
-RACE1_ULTIMATE2_DESC = Impales a target enemy player with a massive claw, which deals <%s> damage and hurls them high into the air, giving them potential to take massive fall damage.
-RACE1_ULTIMATE3_DESC = Puts a target enemy player to sleep for <%s> seconds. A sleeping player can not attack or be attacked.
+RACE1_RACIAL1_DESC              = Increases player's maximum speed by <%s>. All weapons move at same speed. Player's gravity is also decreased by <%s>.
+RACE1_SKILL1_DESC               = Player gains <%s> of his attack damage back as health when a successful attack is made.
+RACE1_SKILL2_DESC               = Upon death, nearby enemies within <%s> meters of the player are blasted for <%s> damage and slowed for up to <%s> seconds.
+RACE1_SKILL3_DESC               = Creates a shield of frost around the player when armor is bought. The shield adds <%s> maximum armor and has a <%s> chance to slow attacking players for <%s> seconds.
+RACE1_ULTIMATE1_DESC            = A coil of death that can deal <%s> damage to an enemy living player or heal a friendly undead unit <%s> health.
+RACE1_ULTIMATE2_DESC            = Impales a target enemy player with a massive claw, which deals <%s> damage and hurls them high into the air, giving them potential to take massive fall damage.
+RACE1_ULTIMATE3_DESC            = Puts a target enemy player to sleep for <%s> seconds. A sleeping player can not attack or be attacked.
 
-RACE2_RACIAL1_DESC = Increases the maximum hit points of the player to <%s>.
-RACE2_SKILL1_DESC = Player is made <%s> less visible when wielding a knife. If the player attacks, is attacked, or casts an ultimate, he will become visible. Player is also untargetable when invisible.
-RACE2_SKILL2_DESC = Gives a <%s> chance that an attack will do <%s> bonus damage and stun an opponent for <%s> second(s).
-RACE2_SKILL3_DESC = Gives the player <%s> additional armor and increases damage by <%s> when armor is present.
-RACE2_ULTIMATE1_DESC = A holy light that can heal a friendly living player for <%s> or deal <%s> damage to an enemy Undead player.
-RACE2_ULTIMATE2_DESC = Conjurs a pillar of flame that burns players for <%s> damage per second. Once stepping out of it, players will take <%s> damage per second for <%s> seconds. The pillar lasts <%s> seconds.
-RACE2_ULTIMATE3_DESC = Temporarily increases the player's health by <%s>, and gives them spell immunity and <%s> bonus damage on all attacks for <%s> seconds.
+RACE2_RACIAL1_DESC              = Increases the maximum hit points of the player to <%s>.
+RACE2_SKILL1_DESC               = Player is made <%s> less visible when wielding a knife. If the player attacks, is attacked, or casts an ultimate, he will become visible. Player is also untargetable when invisible.
+RACE2_SKILL2_DESC               = Gives a <%s> chance that an attack will do <%s> bonus damage and stun an opponent for <%s> second(s).
+RACE2_SKILL3_DESC               = Gives the player <%s> additional armor and increases damage by <%s> when armor is present.
+RACE2_ULTIMATE1_DESC            = A holy light that can heal a friendly living player for <%s> or deal <%s> damage to an enemy Undead player.
+RACE2_ULTIMATE2_DESC            = Conjurs a pillar of flame that burns players for <%s> damage per second. Once stepping out of it, players will take <%s> damage per second for <%s> seconds. The pillar lasts <%s> seconds.
+RACE2_ULTIMATE3_DESC            = Temporarily increases the player's health by <%s>, and gives them spell immunity and <%s> bonus damage on all attacks for <%s> seconds.
 
-RACE3_RACIAL1_DESC = Player regenerates <%s> health/armor every <%s> second(s).
-RACE3_SKILL1_DESC = As the player loses health, their speed with knives and grenades increases by up to <%s>. When health drops below <%s>, damage will increase by up to <%s>. Effects increase the closer to 0 the player's health is.
-RACE3_SKILL2_DESC = All grenade attacks deal <%s> area effect damage to enemies within <%s> meters.
-RACE3_SKILL3_DESC = Player has a <%s> chance to steal ammo, grenades, or money from the target with each successful attack.
-RACE3_ULTIMATE1_DESC = Calls forth a wave of healing energy that bounces up to <%s> times, restoring <%s> health to the initial target. Each bounce restores <%s> less health.
-RACE3_ULTIMATE2_DESC = Hurls a bolt of lightning that deals <%s> damage to a target enemy and jumps to up to <%s> nearby enemies. Each jump deals <%s> less damage.
-RACE3_ULTIMATE3_DESC = Player becomes <%s> invisible and moves <%s> faster for <%s> seconds. A knife attack while Wind Walking will yield an additional <%s> damage. Switching weapons will end the Wind Walk.
+RACE3_RACIAL1_DESC              = Player regenerates <%s> health/armor every <%s> second(s).
+RACE3_SKILL1_DESC               = As the player loses health, their speed with knives and grenades increases by up to <%s>. When health drops below <%s>, damage will increase by up to <%s>. Effects increase the closer to 0 the player's health is.
+RACE3_SKILL2_DESC               = All grenade attacks deal <%s> area effect damage to enemies within <%s> meters.
+RACE3_SKILL3_DESC               = Player has a <%s> chance to steal ammo, grenades, or money from the target with each successful attack.
+RACE3_ULTIMATE1_DESC            = Calls forth a wave of healing energy that bounces up to <%s> times, restoring <%s> health to the initial target. Each bounce restores <%s> less health.
+RACE3_ULTIMATE2_DESC            = Hurls a bolt of lightning that deals <%s> damage to a target enemy and jumps to up to <%s> nearby enemies. Each jump deals <%s> less damage.
+RACE3_ULTIMATE3_DESC            = Player becomes <%s> invisible and moves <%s> faster for <%s> seconds. A knife attack while Wind Walking will yield an additional <%s> damage. Switching weapons will end the Wind Walk.
 
-RACE4_RACIAL1_DESC = All knife damage on the player is reduced by <%s>, and all ultimate damage is reduced by <%s>.
-RACE4_SKILL1_DESC = Gives a <%s> chance the player will avoid an attack completely.
-RACE4_SKILL2_DESC = Increases the player's maximum armor by <%s> and movement speed with various weapons by up to <%s> when armor is present. Movement speed of all weapons will not exceed knife speed.
-RACE4_SKILL3_DESC = Gives the player a <%s> damage bonus to his fired-weapon attacks.
-RACE4_ULTIMATE1_DESC = Heals a target friendly player <%s> health over <%s> seconds.
-RACE4_ULTIMATE2_DESC = Causes roots to burst from the ground, immobilizing a target enemy unit for <%s> seconds, and dealing <%s> damage over time.
-RACE4_ULTIMATE3_DESC = Hurls a poisonous dagger at a target enemy player, dealing <%s> initial damage and <%s> damage over <%s> seconds. Movement speed of the target is also reduced by <%s>.
+RACE4_RACIAL1_DESC              = All knife damage on the player is reduced by <%s>, and all ultimate damage is reduced by <%s>.
+RACE4_SKILL1_DESC               = Gives a <%s> chance the player will avoid an attack completely.
+RACE4_SKILL2_DESC               = Increases the player's maximum armor by <%s> and movement speed with various weapons by up to <%s> when armor is present. Movement speed of all weapons will not exceed knife speed.
+RACE4_SKILL3_DESC               = Gives the player a <%s> damage bonus to his fired-weapon attacks.
+RACE4_ULTIMATE1_DESC            = Heals a target friendly player <%s> health over <%s> seconds.
+RACE4_ULTIMATE2_DESC            = Causes roots to burst from the ground, immobilizing a target enemy unit for <%s> seconds, and dealing <%s> damage over time.
+RACE4_ULTIMATE3_DESC            = Hurls a poisonous dagger at a target enemy player, dealing <%s> initial damage and <%s> damage over <%s> seconds. Movement speed of the target is also reduced by <%s>.
+
+; Status Messages
+
+CANT_TARGET                     = Unable to target player.
+CANT_TARGET_SELF                = Unable to target Self.
+CANT_TARGET_HOLYLIGHT           = Must target friendly living players or enemy Undead players.
+CANT_TARGET_DEATHCOIL           = Must target friendly Undead players or enemy living players.
+CANT_TARGET_AIR                 = Your target must be on the ground.
+CANT_TARGET_SLEEP               = Unable to target sleeping players.
+CANT_TARGET_INVIS               = Unable to target invisible players.
+
+FULLHEALTH_TARGET               = Target is at full health.
+FULLHEALTH_SELF                 = You are at full health.
+
+HEAL_TARGET                     = %s has restored %d of your hitpoints.
+HEAL_SELF                       = You have restored %d of your own hitpoints.
+HEAL_CAST                       = You have cast a heal on your teammate(s).
+
+AMULET_BLOCK_CASTER             = Your ultimate has been blocked.
+AMULET_BLOCK_TARGET             = You have blocked a harmful ultimate.
+
+CAST_DEATHCOIL                  = %s has cast Death Coil on you. You take %d damage.
+CAST_SLEEP                      = %s has put you to sleep.
+CAST_HOLYLIGHT                  = %s has cast Holy Light on you. You take %d damage.
+CAST_FLAMESTRIKE                = %s conjures a pillar of fire around you.
+CAST_AVATAR                     = Your body surges with strength!
+CAST_CHAINLIGHTNING             = %s has cast Chain lightning on you. You take %d damage.
+CAST_CHAINLIGHTNING_JUMP        = %s's Chain Lightning has jumped to you. You take %d damage
+CAST_ROOTS                      = You have been rooted by %s.
+CAST_SHADOWSTRIKE               = %s has cast Shadowstrike on you.
+CAST_WINDWALK                   = Your surprise attack dealt %d damage.
+
+FINISH_SLEEP                    = You no longer feel sleepy.
+FINISH_WINDWALK                 = Your walk has ended.
+FINISH_AVATAR                   = Your strength diminishes.
+
+DAMAGE_FROSTNOVA                = %s's Frost Nova hits you for %d damage.
+DAMAGE_PULVERIZE                = You have been Pulverized for %d damage.
+DAMAGE_ELUNE                    = Elune's Grace has absorbed %d damage.
+DAMAGE_EVASION                  = You successfully avoided %d damage.
+
+REJUVINATE_SELF                 = You cast Rejuvinate on yourself.
+REJUVINATE_TARGET               = %s has cast Rejuvinate on you.
+REJUVINATE_ALREADY              = Target is already Rejuvinating.
+
+ARMOR_MESSAGE_UD                = A shield of frost surrounds you.
+ARMOR_MESSAGE_HU                = An inner fire burns within you.
+ARMOR_MESSAGE_OR                = You and your armor are one.
+ARMOR_MESSAGE_NE                = You are blessed by the touch of nature.
+
+ARMOR_MESSAGE_FADE_UD           = Your frost armor fades.
+ARMOR_MESSAGE_FADE_HU           = Your inner fire fades.
+ARMOR_MESSAGE_FADE_OR           = Your armor fades.
+ARMOR_MESSAGE_FADE_NE           = You no longer feel blessed.
+
+ULTIMATE_READY                  = Ultimate is ready.
+ULTIMATE_NOTREADY               = Ultimate not ready.
+ULTIMATE_NOTREADY_COOLDOWN      = Ultimate not ready.^n(%d seconds remaining)
+ULTIMATE_NOTFOUND               = Ultimate not found.
+ULTIMATE_RESTRICTED             = Ultimate is restricted on this map.
+ULTIMATE_NOCAST_VIP             = VIP can not cast ultimates!
+ULTIMATE_NOCAST_PISTOL          = Can not cast ultimates in pistol round.
+ULTIMATE_NOCAST_AIR             = You must be on the ground to cast ultimates.
+ULTIMATE_NOCAST_SLEEP           = Can not cast ultimates when sleeping.
+
+INFO_GAINLEVEL                  = You gained a level! You are now level %d!
+INFO_NEWRACENEXTROUND           = You will spawn next round as %s.
+INFO_NEWRACENOW                 = Switching your race to %s...
+INFO_NOSKILLPOINTS              = You have already spent all your skill points!
+
+INFO_RESTRICTEDMAP_HUD          = Current Map is restricted to Short-Term XP.
+
+INFO_FOLLOW_NORACE              = Race not yet Selected
+INFO_FOLLOW_MESSAGE_1           = %s Level %i   XP:%i/%i (%i%%)
+INFO_FOLLOW_MESSAGE_2           = Item: %s   Backpack: %s
+INFO_FOLLOW_MESSAGE_3           = Health: %i   Armor: %i   Money: %i
+
+; Center Screen Messages
+
+ITEM_INSUFFICIENT_FUNDS         = You have Insufficient Funds!
+ITEM_EQUIPPED                   = Item already Equipped!
+ITEM_UNAVAILABLE                = Item Unavailable
+ITEM_NOBONUS                    = Item no longer gives bonus!
+ITEM_NOARMOR                    = You must buy armor first!
+ITEM_NOMASK                     = You don't have an ultimate!
+ITEM_DROP                       = Item has been dropped!
+ITEM_PICKUP                     = Item has been equipped!
+ITEM_NODROP                     = No item(s) equipped!
+ITEM_ANKH_NOITEMS               = No items to reincarnate!
+ITEM_TOME_MESSAGE               = * You gain %d experience from the tome. *
+
+INFO_SHOP_DISABLED              = Server has disabled Shop menus!
+INFO_SHOP_VIP                   = VIP can not buy items!
+INFO_SHOP_BUYZONE               = You must be in a buy zone!
+
+INFO_NOTCONNECTED               = You must wait until next round.
+
+; Chat Messages
+
+ITEM_ANKH_MESSAGE               = You have a %d%% chance of reincarnating your weapons next round.
+ITEM_BOOTS_MESSAGE              = Your maximum speed has increased by %0.1f%%.
+ITEM_CLAWS_MESSAGE              = All of your attacks will deal an additional %d damage.
+ITEM_CLOAK_MESSAGE              = You are now less visible by %0.0f%%, and untargetable by ultimates when invisible.
+ITEM_MASK_MESSAGE               = Your ultimate cooldown has decreased from %0.1f seconds to %0.1f.
+ITEM_AMULET_MESSAGE             = You are now able to block %d harmful ultimate(s) cast on you.
+ITEM_RING_MESSAGE               = Your maximum armor has increased to %d.
+ITEM_BUYBACK_MESSAGE            = You sold your %s for $%d!
+ITEM_AMULET_DESTROYED           = Your Amulet has been destroyed.
+
+VIP_ANKH_MESSAGE                = Your weapons will be restored when you are no longer the VIP.
+VIP_NOSKILLS                    = The VIP does not have access to skills or ultimates.
+
+INFO_LEVEL_FIRST                = Your first selected race has automatically been given level %d!
+INFO_LEVEL_OTHER                = Your selected race has been given level %d.
+
+INFO_CURRENTSKILLS              = Current Skills:
+INFO_SKILLDETAILS               = Type '/skills' in chat for detailed skill information.
+
+INFO_RESETSKILLS                = Your skills have been successfully reset.
+INFO_RESETULTIMATE              = Your ultimate has been successfully reset.
+INFO_RESETXP                    = Your %s experience has been successfully reset.
+
+INFO_RESTRICTEDMAP_CHAT         = Current map is restricted to Short-Term XP. Don't Worry, your Long-Term XP has not been deleted.
+INFO_DISABLEDMAP_CHAT           = %s has been disabled for the current map.
+INFO_GENERATEHELP_CHAT          = * [WC3x] Help files have been generated.
+
+UPKEEP_MESSAGE                  = Your team is now at %s.
+
+;Enabled/Disable
+
+WAR3X_FORMAT                    = Incorrect Format - Usage: war3x < on | off >
+WAR3_ENABLED                    = %s is now enabled.
+WAR3_DISABLED                   = %s is now disabled.
+WAR3_ENABLED_ALREADY            = %s is already enabled.
+WAR3_DISABLED_ALREADY           = %s is already disabled.
+
+WAR3_ENABLED_HUD                = %s has been enabled^nRound Restarting
+WAR3_DISABLED_HUD               = %s has been disabled^nRound Restarting
+
+;Help Messages
+
+WAR3X_MOTD_ITEMS                = Item Information
+WAR3X_MOTD_PLAYERSKILLS         = Player Skills
+
+MOTD_PS_CURRENTSKILLS           = Current Skills
+MOTD_PS_CURRENTULTIMATE         = Current Ultimate
+MOTD_PS_NOSKILL                 = (No points have been allocated to this skill.)
+MOTD_PS_ALLLEVELS               = All Race Levels
+
+HELP_HEADER_RACIAL              = <h3>Racial Ability</h3>This skill automatically increases with each level.
+HELP_HEADER_SKILLS              = <h3>Trainable Skills</h3>These skills can be upgraded when you gain levels.
+HELP_HEADER_ULTIMATES           = <h3>Ultimates</h3>One of these skills can be chosen at level %d+. To use an ultimate, bind a key by typing '<i>bind _KEY_ ultimate</i>' in console.
+HELP_HEADER_ITEMS               = <h3>Overview</h3>Items below can be purchased via the Shop Menu, which is accessable from the main menu. You may also choose to bind a key by typing '<i>bind _KEY_ shopmenu</i>' in console.^n
+
+;XP Messages
+
+XP_KILLSTREAK_MESSAGE           = You have gained %d bonus XP for killing %d players in a row!
+XP_KILLVIP_MESSAGE              = You have gained %d bonus XP for killing the VIP!
+XP_KILLPLANTER_MESSAGE          = You have gained %d bonus XP for killing a player planting the bomb!
+XP_KILLDEFUSER_MESSAGE          = You have gained %d bonus XP for killing a player defusing the bomb!
+XP_HOSTAGE_KILLRESCUER_MESSAGE  = You have gained %d bonus XP for killing a player attempting to rescue hostages!
+XP_TEAMKILL_MESSAGE             = You have lost %d XP for killing a teammate!
+
+XP_HOSTAGE_TOUCH_MESSAGE        = You received %d XP for beginning to escort a hostage to safety!
+XP_HOSTAGE_SHARE_MESSAGE        = You receive %d XP for escorting hostages to the rescue zone!
+XP_KILLHOSTAGE_MESSAGE          = You have lost %d XP for killing too many hostages.
+XP_BOMBPICKUP_MESSAGE           = You have the bomb! You will receive %d bonus XP for planting it!
+XP_BOMBPLANT_MESSAGE            = You receive %d XP for planting the bomb!
+XP_BOMBPLANT_SHARE_MESSAGE      = You receive %d XP for supporting the bomb planting effort!
+XP_DEFUSE_MESSAGE               = You receive %d XP for defusing the bomb!
+XP_DEFUSE_SHARE_MESSAGE         = You receive %d XP for supporting the bomb defusing effort!
+XP_VIPSPAWN_MESSAGE             = You are the VIP! You will receive %d bonus XP for escaping!
+XP_VIPESCAPE_MESSAGE            = You receive %d XP for escaping to safety!
+XP_VIPESCAPE_SHARE_MESSAGE      = You receive %d XP for escorting the VIP to safety!
+
+XP_TARGETBOMBED_MESSAGE         = All Terrorists receive %d XP for successfully bombing the target!
+XP_TARGETSAVED_CT_MESSAGE       = All CTs receive %d XP for saving the target!
+XP_TARGETSAVED_T_MESSAGE        = You have lost %d XP for not attempting to complete your objective.
+XP_VIPNOTESCAPE_T_MESSAGE       = All Terrorists receive %d XP for preventing the VIP from escaping!
+XP_VIPNOTESCAPE_VIP_MESSAGE     = You have lost %d XP for not completing your objective.
+XP_HOSTAGENOTRESCUED_T_MESSAGE  = All Terrorists receive %d XP for preventing the hostages from being rescued!
+XP_HOSTAGENOTRESCUED_CT_MESSAGE = You have lost %d XP for not attempting to complete your objective.
+XP_ALLHOSTAGESRESCUED_MESSAGE   = All CTs receive %d XP for rescuing all hostages!
+
+XP_MAX_MESSAGE                  = Your XP is already at maximum!
+XP_MAX_BOMBPICKUP_MESSAGE       = You have the bomb! Help your teammates gain XP by planting it!
+XP_MAX_VIPSPAWN_MESSAGE         = You are the VIP! Help your teammates gain XP by escaping!
+
+XP_SUPPORT_HEALMSG              = You have received %d XP for restoring %d health on your teammate(s).
+XP_SUPPORT_HEALMSG_MAX          = You have restored %d health on your teammate(s).
 
 ;Server Console Messages
 
-CONSOLE_DISABLEDMAP     = ^n* [WC3x] Disabling Warcraft 3: Expansion for current map (%s).^n* [WC3x] NOTE: Disabled maps can be edited in %s/disabled_maps.cfg ^n^n
-CONSOLE_SHORTTERMMAP    = ^n* [WC3x] Using Short-Term experience on current map (%s).^n* [WC3x] NOTE: Short-Term-Only maps can be edited in %s/short_term_maps.cfg ^n^n
+CONSOLE_DISABLEDMAP_1           = Disabling %s for current map (%s).
+CONSOLE_DISABLEDMAP_2           = NOTE: Disabled maps can be edited in %s/disabled_maps.cfg.
+CONSOLE_SHORTTERMMAP_1          = Using Short-Term experience on current map (%s).
+CONSOLE_SHORTTERMMAP_2          = NOTE: Short-Term-Only maps can be edited in %s/short_term_maps.cfg.
 
-CONSOLE_WELCOME_VERSION  = Welcome, %s, This server is running %s (%s) (%s)
-CONSOLE_WELCOME_COMMANDS = For a list of available commands, type '/war3help' in chat.
+CONSOLE_WELCOME_VERSION         = Welcome, %s, This server is running %s (%s) (%s)
+CONSOLE_WELCOME_COMMANDS        = For a list of available commands, type '/war3help' in chat.
 
-ERROR_MISSING_FILES     = ERROR: The following files are missing from your %s installation:
-ERROR_MISSING_OPTIONAL  = NOTE: The file(s) listed above are optional. If you have a copy of the %s source code, you may disable using the missing file(s) by opening the war3x/setup.cfg file, changing the %s define to 0, and recompiling.
-ERROR_MISSING_REQUIRED  = NOTE: The file(s) listed above are not optional. The plugin will not run unless the file(s) are copied to their proper folder(s). Please review the installation instructions provided with the plugin, and if necessary, reinstall to correct this error.
+ERROR_MISSING_FILES             = ERROR: The following files are missing from your %s installation:
+ERROR_MISSING_OPTIONAL          = NOTE: The file(s) listed above are optional. If you have a copy of the %s source code, you may disable using the missing file(s) by opening the war3x/setup.cfg file, changing the %s define to 0, and recompiling.
+ERROR_MISSING_REQUIRED          = NOTE: The file(s) listed above are not optional. The plugin will not run unless the file(s) are copied to their proper folder(s). Please review the installation instructions provided with the plugin, and if necessary, reinstall to correct this error.
 
-WARNING_MISSING_FILES   = WARNING: The following optional file(s) are missing from your %s installation:
-WARNING_MISSING_LISTED  = NOTE: The file(s) listed above are not required to run %s in it's current configuration, but can prove beneficial to the server if installed properly. Please consult the installation instructions provided with the plugin for more information.
+WARNING_MISSING_FILES           = WARNING: The following optional file(s) are missing from your %s installation:
+WARNING_MISSING_LISTED          = NOTE: The file(s) listed above are not required to run %s in it's current configuration, but can prove beneficial to the server if installed properly. Please consult the installation instructions provided with the plugin for more information.
 
 ;Common Words
-LANG_CATEGORY           = Category
+LANG_CATEGORY                   = Category
+LANG_PRIMARY_WEAPON             = primary
+LANG_SECONDARY_WEAPON           = sidearm
+LANG_GRENADES                   = grenades
+LANG_LEVEL                      = Level
+LANG_RACIAL                     = Racial
+LANG_CLASS                      = Class
+LANG_SKILLS                     = Skills
+LANG_ON                         = ON
+LANG_OFF                        = OFF
 
 
 [de]

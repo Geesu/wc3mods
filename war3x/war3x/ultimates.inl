@@ -256,7 +256,7 @@ public Ultimate_Cast( Caster, Target ) {
     if ( g_iPlayerAvatar[Target] || Target == g_Vip )
     {
         new szMessage[128];
-        copy( szMessage, 127, CANT_TARGET );
+        formatex( szMessage, 127, "%L", Caster, "CANT_TARGET" );
 
         WAR3_status_text( Caster, szMessage, 0.5 );
 
@@ -282,7 +282,7 @@ public Ultimate_Cast( Caster, Target ) {
     if ( !( get_entity_flags( Caster ) & FL_ONGROUND ) )
     {
         new szMessage[128];
-        copy( szMessage, 127, ULTIMATE_NOCAST_AIR );
+        formatex( szMessage, 127, "%L", Caster, "ULTIMATE_NOCAST_AIR" );
 
         WAR3_status_text( Caster, szMessage, 0.5 );
 
@@ -302,7 +302,7 @@ public Ultimate_Cast( Caster, Target ) {
         if ( g_PlayerInfo[Caster][CURRENT_RACE] != RACE_UNDEAD || g_PlayerInfo[Caster][CURRENT_RACE] == RACE_UNDEAD && g_PlayerInfo[Caster][CURRENT_ULTIMATE] != ULTIMATE_SLEEP )
         {
             new szMessage[128];
-            copy( szMessage, 127, CANT_TARGET_SLEEP );
+            formatex( szMessage, 127, "%L", Caster, "CANT_TARGET_SLEEP" );
 
             WAR3_status_text( Caster, szMessage, 0.5 );
 
@@ -321,7 +321,7 @@ public Ultimate_Cast( Caster, Target ) {
     else if ( g_bPlayerWalk[Target] && get_user_team( Caster ) != get_user_team( Target ) )
     {
         new szMessage[128];
-        copy( szMessage, 127, CANT_TARGET_INVIS );
+        formatex( szMessage, 127, "%L", Caster, "CANT_TARGET_INVIS" );
 
         WAR3_status_text( Caster, szMessage, 0.5 );
 
@@ -462,7 +462,7 @@ public Ultimate_Ready( id ) {
             g_fUltimateCooldown[id] = 0.0;
 
             new szMessage[128];
-            copy( szMessage, 127, ULTIMATE_READY );
+            formatex( szMessage, 127, "%L", id, "ULTIMATE_READY" );
 
             WAR3_status_text( id, szMessage, 2.0 );
 

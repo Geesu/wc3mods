@@ -239,136 +239,6 @@ public SHARED_SLOW_remove( id ) {
 }
 
 
-// Dispell Negative Effects (UNUSED ATM)
-
-public Dispell_Negative( dispellerId, targetId )
-{
-    new szMessage[128], szPlayerName[32];
-    get_user_name( dispellerId, szPlayerName, 31 );
-
-    new bool:bHasEffects;
-    g_bPlayerDispelled[targetId] = false;
-
-
-    // Bash
-
-    if ( g_bPlayerBashed[targetId] )
-    {
-        new parm_Stun[1];
-        parm_Stun[0] = targetId;
-
-        SBash_Remove( parm_Stun );
-        bHasEffects = true;
-    }
-
-    // Frost Armor ( slow )
-
-    if ( g_bPlayerFrosted[targetId] )
-    {
-        new parm_Slow[1];
-        parm_Slow[0] = targetId;
-
-        UD_S_FROSTARMOR_remove( parm_Slow );
-        bHasEffects = true;
-    }
-
-    // Frost Nova ( slow )
-
-    if ( g_bPlayerNova[targetId] )
-    {
-        new parm_Slow[1];
-        parm_Slow[0] = targetId;
-
-        UD_S_FROSTNOVA_remove( parm_Slow );
-        bHasEffects = true;
-    }
-
-    // Shadow Strike
-
-    if ( g_PlayerStruck[targetId] )
-    {
-        formatex( szMessage, 127, DISPELL_SHADOWSTRIKE, szPlayerName );
-
-        WAR3_status_text( g_PlayerStruck[targetId], szMessage, 3.0 );
-
-        NE_U_SHADOWSTRIKE_remove( targetId );
-        bHasEffects = true;
-    }
-
-    // Entangling Roots
-
-    if ( g_PlayerRooted[targetId] )
-    {
-        formatex( szMessage, 127, DISPELL_ROOTS, szPlayerName );
-
-        WAR3_status_text( g_PlayerRooted[targetId], szMessage, 3.0 );
-
-        NE_U_ROOT_remove( targetId );
-        bHasEffects = true;
-    }
-
-    // Flame Strike
-
-    if ( g_PlayerOnFire[targetId] || g_PlayerSingeing[targetId] )
-    {
-        HU_U_FLAMESTRIKE_remove( targetId );
-        bHasEffects = true;
-    }
-
-    // Display Dispell Message
-
-    if ( bHasEffects )
-    {
-        copy( szMessage, 127, DISPELL_GENERIC );
-        WAR3_status_text( targetId, szMessage, 3.0 );
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
-// Dispell Positive Effects (UNUSED ATM)
-
-public Dispell_Positive( dispellerId, targetId )
-{
-    if ( g_PlayerRejuv[targetId] )             // Rejuvenation
-        NE_U_REJUVENATION_remove( targetId );
-
-    if ( get_user_health( targetId ) > 100 && g_PlayerInfo[targetId][CURRENT_RACE] == RACE_HUMAN )
-    {
-        g_iDispellHealth[targetId] = get_user_health( targetId ) - 100;
-        set_user_health( targetId, 100 );
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
-// Remove Dispell (UNUSED ATM)
-
-public Dispell_Remove( id ) {
-
-    if ( !g_bPlayerRespawned[id] )
-    {
-        g_bPlayerDispelled[id] = false;
-
-        // Restore Lost Bonus HPs
-
-        if ( g_iDispellHealth[id] )
-        {
-            new iNewHealth = g_iDispellHealth[id] + get_user_health( id );
-
-            if ( iNewHealth > WAR3_get_maxhealth( id ) )
-                iNewHealth = WAR3_get_maxhealth( id );
-
-            set_user_health( id, iNewHealth );
-        }
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
 /* - Miscellaneous Skill Functions ------------------------------ */
 
 
@@ -484,7 +354,7 @@ public WAR3_armorskill_on( id ) {
         // Hud Message
 
         new szMessage[128];
-        copy( szMessage, 127, ARMOR_MESSAGE_UD );
+        formatex( szMessage, 127, "%L", id, "ARMOR_MESSAGE_UD" );
 
         WAR3_status_text( id, szMessage, 1.0 );
 
@@ -506,7 +376,7 @@ public WAR3_armorskill_on( id ) {
         // Hud Message
 
         new szMessage[128];
-        copy( szMessage, 127, ARMOR_MESSAGE_HU );
+        formatex( szMessage, 127, "%L", id, "ARMOR_MESSAGE_HU" );
 
         WAR3_status_text( id, szMessage, 1.0 );
 
@@ -528,7 +398,7 @@ public WAR3_armorskill_on( id ) {
         // Hud Message
 
         new szMessage[128];
-        copy( szMessage, 127, ARMOR_MESSAGE_OR );
+        formatex( szMessage, 127, "%L", id, "ARMOR_MESSAGE_OR" );
 
         WAR3_status_text( id, szMessage, 1.0 );
 
@@ -557,7 +427,7 @@ public WAR3_armorskill_on( id ) {
         // Hud Message
 
         new szMessage[128];
-        copy( szMessage, 127, ARMOR_MESSAGE_NE );
+        formatex( szMessage, 127, "%L", id, "ARMOR_MESSAGE_NE" );
 
         WAR3_status_text( id, szMessage, 1.0 );
 
@@ -577,16 +447,32 @@ public WAR3_armorskill_off( id ) {
     new szMessage[128];
 
     if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_UNDEAD && g_PlayerInfo[id][CURRENT_SKILL3] )
-        copy( szMessage, 127, ARMOR_MESSAGE_FADE_UD );
+    {
+        formatex( szMessage, 127, "%L", id, "ARMOR_MESSAGE_FADE_UD" );
+    }
 
     else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_HUMAN && g_PlayerInfo[id][CURRENT_SKILL3] )
-        copy( szMessage, 127, ARMOR_MESSAGE_FADE_HU );
+    {
+        formatex( szMessage, 127, "%L", id, "ARMOR_MESSAGE_FADE_HU" );
+    }
 
     else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC )
-        copy( szMessage, 127, ARMOR_MESSAGE_FADE_OR );
+    {
+        formatex( szMessage, 127, "%L", id, "ARMOR_MESSAGE_FADE_OR" );
+
+        // Remove regeneration
+
+        OR_S_REGENERATION_remove( id );
+    }
 
     else if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_NIGHTELF && g_PlayerInfo[id][CURRENT_SKILL2] )
-        copy( szMessage, 127, ARMOR_MESSAGE_FADE_NE );
+    {
+        formatex( szMessage, 127, "%L", id, "ARMOR_MESSAGE_FADE_NE" );
+
+        // Remove speed bonus
+
+        WAR3_set_speed( id );
+    }
 
     else
     {
@@ -758,7 +644,7 @@ public WAR3_enable_skills( id ) {
 
     // Regenerate Health / Armor
 
-    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && !g_bPlayerRegen[id] )
+    if ( g_PlayerInfo[id][CURRENT_RACE] == RACE_ORC && !g_bPlayerRegen[id] && get_user_armor( id ) )
         OR_S_REGENERATION_set( id );
 
     // Set Invisibility
@@ -1103,7 +989,7 @@ public WAR3_toggle( id ) {
 
     else
     {
-        client_print( id, print_console, "%s", WAR3X_FORMAT );
+        client_print( id, print_console, "%s %L", WAR3X_PREFIX, id, "WAR3X_FORMAT" );
     }
 
     return PLUGIN_HANDLED;
@@ -1114,19 +1000,19 @@ public WAR3_enable( id ) {
 
     if ( g_bWar3xEnabled )
     {
-        client_print( id, print_console, "%s", WAR3_ENABLED_ALREADY );
+        client_print( id, print_console, " %s %L", WAR3X_PREFIX, id, "WAR3_ENABLED_ALREADY", WAR3X_PLUGINNAME );
         return PLUGIN_HANDLED;
     }
 
 
-    client_print( id, print_console, "%s", WAR3_ENABLED );
+    client_print( id, print_console, "%s %L", WAR3X_PREFIX, id, "WAR3_ENABLED", WAR3X_PLUGINNAME );
     set_pcvar_num( CVAR_enabled, 1 );
 
 
     // Show Hudmessage
 
     set_hudmessage( 60, 160, 220, HUDMESSAGE_POS_CENTER, 0.30, 2, 0.1, 4.0, 0.02, 0.02, HUDMESSAGE_CHAN_SERVER );
-    show_hudmessage( 0, "%s", WAR3_ENABLED_HUD );
+    show_hudmessage( 0, "%L", LANG_PLAYER, "WAR3_ENABLED_HUD", WAR3X_PLUGINNAME );
 
     server_cmd( "sv_restart 5" );
 
@@ -1138,11 +1024,11 @@ public WAR3_disable( id ) {
 
     if ( !g_bWar3xEnabled )
     {
-        client_print( id, print_console, "%s", WAR3_DISABLED_ALREADY );
+        client_print( id, print_console, "%s %L", WAR3X_PREFIX, id, "WAR3_DISABLED_ALREADY", WAR3X_PLUGINNAME );
         return PLUGIN_HANDLED;
     }
 
-    client_print( id, print_console, "%s", WAR3_DISABLED );
+    client_print( id, print_console, "%s %L", WAR3X_PREFIX, id, "WAR3_DISABLED", WAR3X_PLUGINNAME );
     set_pcvar_num( CVAR_enabled, 0 );
 
 
@@ -1161,7 +1047,7 @@ public WAR3_disable( id ) {
     // Show Hudmessage
 
     set_hudmessage( 220, 0, 36, HUDMESSAGE_POS_CENTER, 0.30, 2, 0.1, 4.0, 0.02, 0.02, HUDMESSAGE_CHAN_SERVER );
-    show_hudmessage( 0, "%s", WAR3_DISABLED_HUD );
+    show_hudmessage( 0, "%L", LANG_PLAYER, "WAR3_DISABLED_HUD", WAR3X_PLUGINNAME );
 
     server_cmd( "sv_restart 5" );
 
@@ -1192,12 +1078,12 @@ public WAR3_disable( id ) {
 
 
 // War3 Vote
-
+/*
 public WAR3_vote_start( id ) {
 
     if ( !get_pcvar_num( CVAR_vote_allow ) && !( get_user_flags( id ) & ADMIN_VOTE ) )
     {
-        client_print( id, print_chat, "%s", WAR3X_VOTE_NOVOTE );
+        client_print( id, print_chat, "%L", id, "WAR3X_VOTE_NOVOTE" );
         return PLUGIN_HANDLED;
     }
 
@@ -1205,13 +1091,13 @@ public WAR3_vote_start( id ) {
     {
         if ( g_fVoteRunning > get_gametime() )
         {
-            client_print( id, print_chat, "%s", WAR3X_VOTE_ALREADY );
+            client_print( id, print_chat, "%L", id, "WAR3X_VOTE_ALREADY" );
             return PLUGIN_HANDLED;
         }
 
         if ( g_fVoteRunning > 0.0 && ( g_fVoteRunning + get_cvar_float( "amx_vote_delay" ) > get_gametime() ) )
         {
-            client_print( id, print_chat, "%s", WAR3X_VOTE_NOTALLOWED );
+            client_print( id, print_chat, "%L", id, "WAR3X_VOTE_NOTALLOWED" );
             return PLUGIN_HANDLED;
         }
 
@@ -1253,7 +1139,7 @@ public WAR3_vote_count( id, iKey ) {
         new szPlayerName[32];
         get_user_name( id, szPlayerName, 31 );
 
-        client_print( 0, print_chat, "%s voted %s", szPlayerName, iKey ? WAR3X_VOTE_AGAINST : WAR3X_VOTE_FOR );
+        //client_print( 0, print_chat, "%s voted %s", szPlayerName, iKey ? WAR3X_VOTE_AGAINST : WAR3X_VOTE_FOR );
     }
 
     g_iVoteCounts[iKey]++;
@@ -1274,7 +1160,7 @@ public WAR3_vote_tally() {
 
     if ( fVoteResult < g_fVoteRatio )
     {
-        client_print( 0, print_chat, WAR3X_VOTE_FAILED, g_iVoteCounts[0], g_iVoteCounts[1], g_fVoteRatio );
+        client_print( 0, print_chat, "%L", LANG_PLAYER, "WAR3X_VOTE_FAILED", g_iVoteCounts[0], g_iVoteCounts[1], g_fVoteRatio );
         return PLUGIN_HANDLED;
     }
 
@@ -1283,7 +1169,7 @@ public WAR3_vote_tally() {
         if ( g_iVoteCounts[0] > g_iVoteCounts[1] )
         {
             WAR3_enable( 0 );
-            copy( szWar3Status, 32, WAR3X_VOTE_ENABLED );
+            formatex( szWar3Status, 32, "%L", LANG_PLAYER, "WAR3X_VOTE_ENABLED" );
         }
 
         else
@@ -1320,6 +1206,7 @@ public WAR3_vote_tally() {
 
     return PLUGIN_HANDLED;
 }
+*/
 
 
 public WAR3_check_level( id, iOldXp, iNewXp ) {
@@ -1329,7 +1216,7 @@ public WAR3_check_level( id, iOldXp, iNewXp ) {
         new iLevel = WAR3_get_level( iNewXp );
 
         new szMessage[64];
-        formatex( szMessage, 63, INFO_GAINLEVEL, iLevel );
+        formatex( szMessage, 63, "%L", id, "INFO_GAINLEVEL", iLevel );
 
         set_hudmessage( 255, 255, 255, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_INFO, 0, 6.0, 5.0, 0.1, 0.5, HUDMESSAGE_CHAN_INFO );
         show_hudmessage( id, "%s", szMessage );
@@ -1828,7 +1715,7 @@ public war3_chatskills( id, raceId, ShowHelp ) {
     if ( id == g_Vip )
     {
         new szVipMsg[128];
-        formatex( szVipMsg, 127, VIP_NOSKILLS );
+        formatex( szVipMsg, 127, "%s %L", WAR3X_PREFIX, id, "VIP_NOSKILLS" );
 
         client_print( id, print_chat, "%s", szVipMsg );
 
@@ -1867,14 +1754,14 @@ public war3_chatskills( id, raceId, ShowHelp ) {
     // Build message (with racial)
 
     WAR3_race_info( id, raceId, RACEINFO_RACIAL, szData );
-    formatex( szMessage, 127, INFO_CURRENTSKILLS, szData, fRacialPercentage, "%%", szSkills );
+    formatex( szMessage, 127, "%s %L %s (%0.0f%%)%s", WAR3X_PREFIX, id, "INFO_CURRENTSKILLS", szData, fRacialPercentage, szSkills );
 
     client_print( id, print_chat, "%s", szMessage );
 
     // Show /skills Notification?
 
     if ( ShowHelp )
-        client_print( id, print_chat, "%s", INFO_SKILLDETAILS );
+        client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "INFO_SKILLDETAILS" );
 
     return PLUGIN_HANDLED;
 }

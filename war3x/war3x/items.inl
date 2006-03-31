@@ -23,7 +23,7 @@ public Item_Buy( id, iNewItem ) {
 
     if ( cs_get_user_money( id ) + ( ITEM_COST[iOldItem] / ITEM_BUYBACK ) < ITEM_COST[iNewItem] )
     {
-        client_print( id, print_center, "%s", ITEM_INSUFFICIENT_FUNDS );
+        client_print( id, print_center, "%L", id, "ITEM_INSUFFICIENT_FUNDS" );
         return PLUGIN_HANDLED;
     }
 
@@ -31,7 +31,7 @@ public Item_Buy( id, iNewItem ) {
 
     if ( g_PlayerInfo[id][CURRENT_ITEM] == iNewItem )
     {
-        client_print( id, print_center, "%s", ITEM_EQUIPPED );
+        client_print( id, print_center, "%L", id, "ITEM_EQUIPPED" );
         return PLUGIN_HANDLED;
     }
 
@@ -80,7 +80,7 @@ public Item_Buy( id, iNewItem ) {
         new szMessage[128], szItemName[32];
 
 		LANG_GetItemName ( iOldItem, SHOP_COMMON, id, szItemName, 31 )
-        formatex( szMessage, 127, ITEM_BUYBACK_MESSAGE, szItemName, iOldCost );
+        formatex( szMessage, 127, "%s %L", WAR3X_PREFIX, id, "ITEM_BUYBACK_MESSAGE", szItemName, iOldCost );
 
         client_print( id, print_chat, "%s", szMessage );
     }
@@ -104,7 +104,7 @@ public Item_BuyTome( id ) {
 
     if ( WAR3_get_level(g_PlayerInfo[id][CURRENT_XP]) == TOTAL_LEVELS )
     {
-        client_print( id, print_center, "%s", ITEM_NOBONUS );
+        client_print( id, print_center, "%L", id, "ITEM_NOBONUS" );
         return PLUGIN_HANDLED;
     }
 
@@ -112,7 +112,7 @@ public Item_BuyTome( id ) {
 
     if ( cs_get_user_money( id ) < ITEM_COST[ITEM_TOME] )
     {
-        client_print( id, print_center, "%s", ITEM_INSUFFICIENT_FUNDS );
+        client_print( id, print_center, "%L", id, "ITEM_INSUFFICIENT_FUNDS" );
         return PLUGIN_HANDLED;
     }
 
@@ -121,7 +121,7 @@ public Item_BuyTome( id ) {
     new iTomeValue = ITEM_TOME_VALUE;
     new Float:fTomeValue = float( iTomeValue );
 
-    client_print( id, print_center, ITEM_TOME_MESSAGE, floatround( fTomeValue * fMultiplier ) );
+    client_print( id, print_center, "%L", id, "ITEM_TOME_MESSAGE", floatround( fTomeValue * fMultiplier ) );
 
     new iOldXp = g_PlayerInfo[id][CURRENT_XP];
     new iNewXp = g_PlayerInfo[id][CURRENT_XP] + floatround( fTomeValue * fMultiplier );
@@ -149,28 +149,28 @@ public Item_Equip( id, iNewItem ) {
 
         if ( id == g_Vip )
         {
-            client_print( id, print_center, "%s", ITEM_UNAVAILABLE );
+            client_print( id, print_center, "%L", id, "ITEM_UNAVAILABLE" );
             return ( 0 );
         }
 
         new szMessage[128], iLen;
-        iLen += formatex( szMessage[iLen], 127 - iLen, "%s", ITEM_ANKH_PRIMARY );
+        iLen += formatex( szMessage[iLen], 127 - iLen, "%L", id, "LANG_PRIMARY_WEAPON" );
 
         if ( get_pcvar_num( CVAR_ankhpistols ) )
-            iLen += formatex( szMessage[iLen], 127 - iLen, "%s", ITEM_ANKH_SECONDARY );
+            iLen += formatex( szMessage[iLen], 127 - iLen, ", %L", id, "LANG_SECONDARY_WEAPON" );
 
         if ( get_pcvar_num( CVAR_ankhgrenades ) )
-            iLen += formatex( szMessage[iLen], 127 - iLen, "%s", ITEM_ANKH_GRENADES );
+            iLen += formatex( szMessage[iLen], 127 - iLen, ", %L", id, "LANG_GRENADES" );
 
         new Float:fAnkhValue = ITEM_ANKH_VALUE;
-        client_print( id, print_chat, ITEM_ANKH_MESSAGE, floatround( fAnkhValue * 100.0 ), "%", szMessage );
+        client_print( id, print_chat, "%s %L (%s)", WAR3X_PREFIX, id, "ITEM_ANKH_MESSAGE", floatround( fAnkhValue * 100.0 ), szMessage );
     }
 
     // Boots of Speed
 
     else if ( iNewItem == ITEM_BOOTS )
     {
-        client_print( id, print_chat, ITEM_BOOTS_MESSAGE, ( ( ( ITEM_BOOTS_get_speed( id ) / SPEED_KNIFE ) - 1.0 ) * 100 ) );
+        client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "ITEM_BOOTS_MESSAGE", ( ( ( ITEM_BOOTS_get_speed( id ) / SPEED_KNIFE ) - 1.0 ) * 100 ) );
         WAR3_set_speed( id );
     }
 
@@ -178,14 +178,14 @@ public Item_Equip( id, iNewItem ) {
 
     else if ( iNewItem == ITEM_CLAWS )
     {
-        client_print( id, print_chat, ITEM_CLAWS_MESSAGE, ITEM_CLAWS_VALUE );
+        client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "ITEM_CLAWS_MESSAGE", ITEM_CLAWS_VALUE );
     }
 
     // Cloak of Shadows
 
     else if ( iNewItem == ITEM_CLOAK )
     {
-        client_print( id, print_chat, ITEM_CLOAK_MESSAGE, ( ITEM_CLOAK_VALUE * 100.0 ), "%" );
+        client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "ITEM_CLOAK_MESSAGE", ( ITEM_CLOAK_VALUE * 100.0 ) );
         SHARED_INVIS_set( id );
     }
 
@@ -197,7 +197,7 @@ public Item_Equip( id, iNewItem ) {
 
         if ( !g_PlayerInfo[id][CURRENT_ULTIMATE] )
         {
-            client_print( id, print_center, "%s", ITEM_NOMASK );
+            client_print( id, print_center, "%L", id, "ITEM_NOMASK" );
             return ( 0 );
         }
 
@@ -220,7 +220,7 @@ public Item_Equip( id, iNewItem ) {
             set_task( fNewCooldown, "Ultimate_Restore", task, parm_Cooldown, 1 );
         }
 
-        client_print( id, print_chat, ITEM_MASK_MESSAGE, ULTIMATE_COOLDOWNDEFAULT, ULTIMATE_COOLDOWNDEFAULT - ITEM_MASK_VALUE );
+        client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "ITEM_MASK_MESSAGE", ULTIMATE_COOLDOWNDEFAULT, ULTIMATE_COOLDOWNDEFAULT - ITEM_MASK_VALUE );
     }
 
     // Amulet of Shielding
@@ -228,7 +228,7 @@ public Item_Equip( id, iNewItem ) {
     else if ( iNewItem == ITEM_AMULET )
     {
         g_iAmuletCharges[id] = ITEM_AMULET_VALUE;
-        client_print( id, print_chat, ITEM_AMULET_MESSAGE, ITEM_AMULET_VALUE );
+        client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "ITEM_AMULET_MESSAGE", ITEM_AMULET_VALUE );
     }
 
     // Ring of Protection +5
@@ -237,12 +237,12 @@ public Item_Equip( id, iNewItem ) {
     {
         if ( !get_user_armor( id ) )
         {
-            client_print( id, print_center, "%s", ITEM_NOARMOR );
+            client_print( id, print_center, "%L", id, "ITEM_NOARMOR" );
             return ( 0 );
         }
 
         set_user_armor( id, get_user_armor( id ) + ITEM_RING_VALUE );
-        client_print( id, print_chat, ITEM_RING_MESSAGE, WAR3_get_maxarmor( id ) );
+        client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "ITEM_RING_MESSAGE", WAR3_get_maxarmor( id ) );
     }
 
     return ( 1 );
@@ -336,7 +336,7 @@ public Item_Drop( id ) {
 
     if ( !g_PlayerInfo[id][CURRENT_ITEM] )
     {
-        client_print( id, print_center, "%s", ITEM_NODROP );
+        client_print( id, print_center, "%L", id, "ITEM_NODROP" );
         return PLUGIN_CONTINUE;
     }
 
@@ -348,7 +348,7 @@ public Item_Drop( id ) {
     Item_Change( id, iOldItem, ITEM_NONE );
 
     WAR3_hud_item( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 2.0, 3.0 );
-    client_print( id, print_center, "%s", ITEM_DROP );
+    client_print( id, print_center, "%L", id, "ITEM_DROP" );
 
     // Create Item
 
@@ -391,7 +391,7 @@ public Item_Pickup( id, iItemEnt, iNewItem ) {
     Item_Change( id, ITEM_NONE, iNewItem );
 
     WAR3_hud_item( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 2.0, 3.0 );
-    client_print( id, print_center, "%s", ITEM_PICKUP );
+    client_print( id, print_center, "%L", id, "ITEM_PICKUP" );
 
     // Play Sound
 
@@ -538,7 +538,7 @@ public ITEM_ANKH_drop( id ) {
 
     if ( id == g_Vip )
     {
-        client_print( id, print_chat, "%s", VIP_ANKH_MESSAGE );
+        client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "VIP_ANKH_MESSAGE" );
         return PLUGIN_HANDLED;
     }
 
@@ -798,7 +798,7 @@ public ITEM_ANKH_give( parm_Ankh[1] ) {
 
     else
     {
-        client_print( id, print_center, "%s", ITEM_ANKH_NOITEMS );
+        client_print( id, print_center, "%L", id, "ITEM_ANKH_NOITEMS" );
     }
 
 
@@ -940,10 +940,10 @@ public ITEM_AMULET_block( target, caster ) {
 
     new szMessage[128];
 
-    formatex( szMessage, 127, BLOCK_ULTIMATE_T );
+    formatex( szMessage, 127, "%L", target, "AMULET_BLOCK_TARGET" );
     WAR3_status_text( target, szMessage, 3.0 );
 
-    formatex( szMessage, 127, BLOCK_ULTIMATE_C );
+    formatex( szMessage, 127, "%L", caster, "AMULET_BLOCK_CASTER" );
     WAR3_status_text( caster, szMessage, 3.0 );
 
     // Screen Fade
@@ -980,7 +980,7 @@ public ITEM_AMULET_block( target, caster ) {
         g_PlayerInfo[target][CURRENT_ITEM] = ITEM_NONE;
 
         WAR3_hud_item( target, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 2.0, 3.0 );
-        client_print( target, print_chat, "%s", ITEM_AMULET_DESTROYED );
+        client_print( target, print_chat, "%s %L", WAR3X_PREFIX, target, "ITEM_AMULET_DESTROYED" );
     }
 
     return PLUGIN_HANDLED;

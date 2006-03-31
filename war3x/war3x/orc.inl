@@ -67,12 +67,12 @@ public OR_ultimates( caster, target ) {
 
             if ( caster == target )
             {
-                formatex( szMessage, 63, FULLHEALTH_SELF );
+                formatex( szMessage, 63, "%L", caster, "FULLHEALTH_SELF" );
             }
 
             else
             {
-                formatex( szMessage, 63, FULLHEALTH_TARGET );
+                formatex( szMessage, 63, "%L", caster, "FULLHEALTH_TARGET" );
             }
 
             WAR3_status_text( caster, szMessage, 0.5 );
@@ -233,8 +233,6 @@ public OR_S_BERSERK_set_speed( id ) {
     new Float:fBerserkSpeed = OR_S_BERSERK_get_speed( id );
 	set_user_maxspeed( id, fBerserkSpeed );
 
-    client_print( id, print_chat, "DEBUG: Speed: %0.3f", fBerserkSpeed );
-
     return PLUGIN_HANDLED;
 }
 
@@ -353,7 +351,7 @@ static OR_S_PULVERIZE( attacker, victim, Float:fGrenadeOrigin[3], damage ) {
                 }
 
                 new szMessage[128];
-                formatex( szMessage, 127, DAMAGE_PULVERIZE, iPulverizeDamage );
+                formatex( szMessage, 127, "%L", enemy, "DAMAGE_PULVERIZE", iPulverizeDamage );
 
                 WAR3_status_text2( enemy, szMessage, 3.0 );
 
@@ -617,7 +615,7 @@ static OR_U_CHAINLIGHTNING( caster, target ) {
         new szMessage[128], szPlayerName[32];
         get_user_name( caster, szPlayerName, 31 );
 
-        formatex( szMessage, 127, CAST_CHAINLIGHTNING, szPlayerName, CHAINLIGHTNING_DAMAGE );
+        formatex( szMessage, 127, "%L", target, "CAST_CHAINLIGHTNING", szPlayerName, CHAINLIGHTNING_DAMAGE );
 
         WAR3_status_text2( target, szMessage, 3.0 );
 
@@ -733,7 +731,7 @@ public OR_U_CHAINLIGHTNING_jump( parmJump[2] ) {
                     new szMessage[128], szPlayerName[32];
                     get_user_name( caster, szPlayerName, 31 );
 
-                    formatex( szMessage, 127, CAST_CHAINLIGHTNING_JUMP, szPlayerName, iBoltDamage );
+                    formatex( szMessage, 127, "%L", NextTarget, "CAST_CHAINLIGHTNING_JUMP", szPlayerName, iBoltDamage );
 
                     WAR3_status_text2( NextTarget, szMessage, 3.0 );
 
@@ -778,7 +776,10 @@ static OR_U_HEALINGWAVE( caster, target ) {
 
     // Status Text
 
-    WAR3_status_text( caster, HEAL_CAST, 1.0 );
+    new szCastMessage[64];
+    formatex( szCastMessage, 63, "%L", caster, "HEAL_CAST" );
+
+    WAR3_status_text( caster, szCastMessage, 1.0 );
 
     // Play Sound
 
@@ -826,14 +827,14 @@ static OR_U_HEALINGWAVE( caster, target ) {
     new szMessage[128];
 
     if ( caster == target )
-        formatex( szMessage, 127, HEAL_SELF, iHealthGiven );
+        formatex( szMessage, 127, "%L", caster, "HEAL_SELF", iHealthGiven );
 
     else
     {
         new szPlayerName[32];
         get_user_name( caster, szPlayerName, 31 );
 
-        formatex( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
+        formatex( szMessage, 127, "%L", target, "HEAL_TARGET", szPlayerName, iHealthGiven );
     }
 
     WAR3_status_text( target, szMessage, 3.0 );
@@ -942,14 +943,14 @@ public OR_U_HEALINGWAVE_jump( parmJump[2] ) {
                 new szMessage[128];
 
                 if ( caster == NextTarget )
-                    formatex( szMessage, 127, HEAL_SELF, iHealthGiven );
+                    formatex( szMessage, 127, "%L", caster, "HEAL_SELF", iHealthGiven );
 
                 else
                 {
                     new szPlayerName[32];
                     get_user_name( caster, szPlayerName, 31 );
 
-                    formatex( szMessage, 127, HEAL_TARGET, szPlayerName, iHealthGiven );
+                    formatex( szMessage, 127, "%L", NextTarget, "HEAL_TARGET", szPlayerName, iHealthGiven );
                 }
 
                 WAR3_status_text( NextTarget, szMessage, 3.0 );
@@ -1162,7 +1163,7 @@ public OR_U_WINDWALK_strike( attacker, victim, weapon, headshot ) {
 public OR_U_WINDWALK_notify( id, iTotalDamage ) {
 
     new szMessage[128];
-    formatex( szMessage, 127, CAST_WINDWALK, iTotalDamage );
+    formatex( szMessage, 127, "%L", id, "CAST_WINDWALK", iTotalDamage );
 
     WAR3_status_text( id, szMessage, 3.0 );
 
@@ -1193,7 +1194,7 @@ public OR_U_WINDWALK_out( parmPost[2] ) {
         // Hud Message
 
         new szMessage[128];
-        copy( szMessage, 127, FINISH_WINDWALK );
+        formatex( szMessage, 127, "%L", id, "FINISH_WINDWALK" );
 
         WAR3_status_text( id, szMessage, 0.5 );
     }

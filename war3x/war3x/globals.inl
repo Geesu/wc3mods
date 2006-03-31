@@ -449,9 +449,9 @@ new g_RestrictedSkills[64];                 // stores restricted skills for curr
 //new g_bRestrictedSkills;                  // stores whether or not player is informed their current race is restricted on map
 //new g_bRestrictedUltimate;                // stores whether or not player is informed their current race is restricted on map
 
-new g_iVoteCounts[2];                       // stores votes for/against
-new Float:g_fVoteRunning;                   // stores vote end time
-new Float:g_fVoteRatio;                     // stores current ratio
+//new g_iVoteCounts[2];                       // stores votes for/against
+//new Float:g_fVoteRunning;                   // stores vote end time
+//new Float:g_fVoteRatio;                     // stores current ratio
 
 new g_iLevelXp[11];                         // (integer) stores xp required for levelups
 new Float:g_fWeaponXp[42];
@@ -548,8 +548,8 @@ new CVAR_save_xp;
 
 new CVAR_save_xp_sql;
 new CVAR_save_by_ip;
-new CVAR_vote_allow;
-new CVAR_vote_ratio;
+//new CVAR_vote_allow;
+//new CVAR_vote_ratio;
 new CVAR_setxp_flag;
 
 new CVAR_startlevel_first;
