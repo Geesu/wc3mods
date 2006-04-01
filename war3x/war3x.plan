@@ -20,6 +20,16 @@ BIG CHANGES:
 
 * FULL MULTILINGUAL SUPPORT
 
+	(left to be ML'd)
+	* No DBI module found.. etc
+	* Error code: etc (debug)
+	* UTIL_dbi*
+	* "\r(*R estr icted )\d" and others in menus.inl
+	* [AMXX] You have no access to that command
+	* UPKEEP_NAME[] in upkeep.inl
+	* commands.inl -> setxp etc, arguments etc
+
+
 --FULL CHECKING FOR REQUIRED FILES BEFORE LOADING (RYAN)
 
 * use 'dynamic' hudmessage positions (UNSURE YET..)
