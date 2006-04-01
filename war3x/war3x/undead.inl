@@ -627,7 +627,7 @@ static UD_U_DEATHCOIL_damage( caster, target ) {
     new szMessage[128], szPlayerName[32];
     get_user_name( caster, szPlayerName, 31 );
 
-    formatex( szMessage, 127, "%L", target, "CAST_DEATHCOIL", szPlayerName );
+    formatex( szMessage, 127, "%L", target, "CAST_DEATHCOIL", szPlayerName, DEATHCOIL_DAMAGE );
 
     WAR3_status_text2( target, szMessage, 3.0 );
 
