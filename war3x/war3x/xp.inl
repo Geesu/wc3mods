@@ -1461,19 +1461,15 @@ public XP_Support_Kill( victimId, attackerId ) {
 
 		if ( iTotalPlayers > 1 )
 		{
-			new iPlayerNum;
-
-			while ( iPlayerNum < iTotalPlayers )
+			for ( new iPlayerNum; iPlayerNum < iTotalPlayers; iPlayerNum++ )
 			{
 				new iPlayer = iTeamPlayers[iPlayerNum];
 
 				if ( g_iPlayerDamage[victimId][iPlayer] / g_iPlayerDamageTaken[victimId] >= KILL_ASSIST_PERCENT )
+				{
 					iKillAssister = iPlayer;
-
-				if ( g_iPlayerDamage[victimId][iPlayer] )
-					g_iPlayerDamage[victimId][iPlayer] = 0;
-
-				iPlayerNum++;
+					break;
+				}
 			}
 		}
 		

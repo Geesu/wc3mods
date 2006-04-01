@@ -755,10 +755,6 @@ public Purge_Death( id ) {
 
     g_iAmuletCharges[id] = 0;
 
-	// Clear damage taken from round
-
-	g_iPlayerDamageTaken[id] = 0;
-
     // Clear StatusIcons
 
     Ultimate_Icon( id, ICON_HIDE );
@@ -923,6 +919,15 @@ public Purge_Common( id ) {
     g_fUltimateCooldown[id] = get_gametime();
 
     Remove_BarTime( id );
+
+	// clear kill assist vaariables
+
+	for ( new i; i < MAX_PLAYERS; i++ )
+	{
+		g_iPlayerDamage[id][i] = 0;
+	}
+
+	g_iPlayerDamageTaken[id] = 0;
 
     return PLUGIN_HANDLED;
 }
