@@ -438,8 +438,7 @@ public on_Damage( victim ) {
 	
 	// Update kill assist information
 
-	g_iPlayerDamage[victim][attacker] += iDamage;
-	g_iPlayerDamageTaken[victim] += iDamage;
+	WAR3_damage_assist( attacker, victim, iDamage );
 
     // Check for bomb explosion
 

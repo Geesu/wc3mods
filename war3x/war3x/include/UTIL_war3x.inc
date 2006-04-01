@@ -841,10 +841,9 @@ public WAR3_damage( attacker, victim, weapon, iDamage, headshot, iCheckArmor ) {
     }
     
     // Update kill assist information
-    
-    g_iPlayerDamage[victim][attacker] += iDamage;
-	g_iPlayerDamageTaken[victim] += iDamage;
 
+	WAR3_damage_assist( attacker, victim, iDamage );
+	
     return PLUGIN_HANDLED;
 }
 
@@ -865,7 +864,7 @@ public WAR3_death( killer, victim, weapon, headshot ) {
     
     // Check for kill assist
     
-    XP_Support_Kill( victim, killer );
+    XP_Support_Kill( killer, victim );
 
     // Make sure death was not to DoT from disconnected killer
 
@@ -996,6 +995,18 @@ public WAR3_death( killer, victim, weapon, headshot ) {
     return PLUGIN_HANDLED;
 }
 
+public WAR3_damage_assist( attacker, victim, iDamage ) {
+	
+	if ( !( WAR3_player_valid( attacker ) || WAR3_player_valid( victim ) ) )
+		return PLUGIN_HANDLED;
+	
+	g_iPlayerDamage[victim][attacker] += iDamage;
+	g_iPlayerDamageTaken[victim] += iDamage;
+	g_iPlayersThatDamage[victim][g_iTotalPlayersThatDamage[victim]] = attacker;
+	g_iTotalPlayersThatDamage[victim]++;
+	
+	return PLUGIN_HANDLED;
+}
 
 public WAR3_is_invisible( id ) {
 

@@ -814,6 +814,17 @@ public Purge_NewRound( id ) {
     g_bPlayerRespawned[id]  = false;
     g_bFlameStrikeCast[id]  = false;
 
+	// clear kill assist variables
+
+	for ( new i; i < g_iTotalPlayersThatDamage[id]; i++ )
+	{
+		new iSlot = g_iPlayersThatDamage[id][i];
+		g_iPlayerDamage[id][iSlot] = 0;
+	}
+
+	g_iPlayerDamageTaken[id] = 0;
+
+
     return PLUGIN_HANDLED;
 }
 
@@ -919,15 +930,6 @@ public Purge_Common( id ) {
     g_fUltimateCooldown[id] = get_gametime();
 
     Remove_BarTime( id );
-
-	// clear kill assist vaariables
-
-	for ( new i; i < MAX_PLAYERS; i++ )
-	{
-		g_iPlayerDamage[id][i] = 0;
-	}
-
-	g_iPlayerDamageTaken[id] = 0;
 
     return PLUGIN_HANDLED;
 }

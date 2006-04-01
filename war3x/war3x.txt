@@ -283,6 +283,8 @@ XP_MAX_VIPSPAWN_MESSAGE         = You are the VIP! Help your teammates gain XP b
 XP_SUPPORT_HEALMSG              = You have received %d XP for restoring %d health on your teammate(s).
 XP_SUPPORT_HEALMSG_MAX          = You have restored %d health on your teammate(s).
 
+XP_KILL_ASSIST                  = You recieve %d XP for assisting with a kill.
+
 ;Server Console Messages
 
 CONSOLE_DISABLEDMAP_1           = Disabling %s for current map (%s).
