@@ -10,7 +10,7 @@
     4. Show Level
     5. Player Skills
     6. Player Options
-    7. Race Options
+    7. Reset Skills/Ultimate/XP
     8. Admin Options        (coming soon)
     9. Help Topics
 
@@ -28,22 +28,40 @@ public menu_War3menu( id ) {
         return PLUGIN_CONTINUE;
 
     new szMenu[512], iLen;
-    new iKeys = (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4)|(1<<5)|(1<<6)|(1<<8)|(1<<9);
+    new iKeys = (1<<0);
 
-    // Draw Menu
+    // Title
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_TITLE );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_WAR3MENU_TITLE" );
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_1 );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_2 );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_3 );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_4 );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_5 );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_6 );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_7 );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_8 );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_WAR3MENU_9 );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_CANCEL );
+    // Draw menu
+
+    new szMenuId[16];
+
+    for ( new i = 1; i <= 9; i++ )
+    {
+        formatex( szMenuId, 15, "MENU_WAR3MENU_%d", i );
+
+        if ( i == 8 )           // Check access to admin menu
+        {
+            if ( !( get_user_flags( id ) & WAR3_get_setxp_flag() ) )
+                iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %L^n\w", i, id, szMenuId );
+
+            else
+            {
+                iLen += formatex( szMenu[iLen], 512 - iLen, "%d. %L^n", i, id, szMenuId );
+                iKeys |= (1<<i);
+            }
+        }
+
+        else
+        {
+            iLen += formatex( szMenu[iLen], 512 - iLen, "%d. %L^n", i, id, szMenuId );
+            iKeys |= (1<<i);
+        }
+    }
+
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n0. %L", id, "LANG_CANCEL" );
 
     show_menu( id, iKeys, szMenu );
 
@@ -69,9 +87,9 @@ public _menu_War3menu( id, iKey ) {
 
         case 6:     menu_PlayerOptions( id );
         case 7:     menu_RaceOptions( id );
-//        case 8:     admin menu;
+//        case 8:     menu_AdminOptions( id );
 
-        case 9:     menu_HelpTopics( id );
+        case 9:     HELP_topics( id );
     }
 
     return PLUGIN_HANDLED;
@@ -141,7 +159,7 @@ public menu_SelectRace( id ) {
 			if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum ) )
             {
 				LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 )
-                iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led          ^n", iRaceNum + 1, szRaceName );
+                iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\r%L          ^n", iRaceNum + 1, szRaceName, id, "LANG_DISABLED" );
             }
 
             else
@@ -164,7 +182,7 @@ public menu_SelectRace( id ) {
 
                 // Draw Text
 
-                iLen += formatex( szMenu[iLen], 512 - iLen, "%s%d. %s\R\dLeve l %d          ^n", szLineColor, iRaceNum + 1, szRaceName, iCurrentLevel );
+                iLen += formatex( szMenu[iLen], 512 - iLen, "%s%d. %s\R\d%L %d          ^n", szLineColor, iRaceNum + 1, szRaceName, id, "LANG_LEVEL", iCurrentLevel );
             }
         }
     }
@@ -183,7 +201,7 @@ public menu_SelectRace( id ) {
 
             if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum ) )
             {
-                iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led          ^n", iRaceNum + 1, szRaceName );
+                iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\r%L          ^n", iRaceNum + 1, szRaceName, id, "LANG_DISABLED" );
             }
 
             else
@@ -209,15 +227,15 @@ public menu_SelectRace( id ) {
     }
 
     if ( g_PlayerInfo[id][CURRENT_RACE] )
-        iLen += formatex( szMenu[iLen], 512 - iLen, "^n\d5. Random^n^n^n\w" );
+        iLen += formatex( szMenu[iLen], 512 - iLen, "^n\d5. %L^n^n^n\w", id, "LANG_RANDOM" );
 
     else
     {
-        iLen += formatex( szMenu[iLen], 512 - iLen, "^n\w5. Random^n^n^n" );
+        iLen += formatex( szMenu[iLen], 512 - iLen, "^n\w5. %L^n^n^n", id, "LANG_RANDOM" );
         iKeys |= (1<<4);
     }
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%s", MENU_CANCEL );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "0. %L", id, "LANG_CANCEL" );
 
     show_menu( id, iKeys, szMenu );
 
@@ -443,7 +461,7 @@ public menu_SelectSkills( id ) {
 
     for ( new iSkillNum = 1; iSkillNum <= TOTAL_SKILLSTRAINED; iSkillNum++ )
     {
-        WAR3_race_info( id, iRaceNum - 1, iSkillNum, szSkillName );
+        LANG_GetSkillNameHelper( iRaceNum - 1, iSkillNum, id, szSkillName, 63 );
 
         iCurrentSkill = iSkillNum + 1;
         iNextSkillLvl = g_PlayerInfo[id][iCurrentSkill] + 1;
@@ -451,21 +469,21 @@ public menu_SelectSkills( id ) {
         // Disabled
 
         if ( get_pcvar_bitsum( CVAR_restrict_skills ) & WAR3_get_skill_flag( iRaceNum, iSkillNum ) )
-            copy( szDisabled, 19, "\r(R estr icted )\d" );
+            formatex( szDisabled, 19, "\r(%L)\d", id, "LANG_RESTRICTED" );
 
         else if ( get_pcvar_bitsum( CVAR_restrict_skills ) == 0 && get_pcvar_bitsum( CVAR_restrict_ultimates ) == 0 )
-            copy( szDisabled, 19, "\d          \d" );
+            formatex( szDisabled, 19, "\d          \d" );
 
         else
         {
-            copy( szDisabled, 19, "\y   (A llow ed )\d" );
+            format( szDisabled, 19, "\y   (%L)\d", id, "LANG_ALLOWED" );
         }
 
         // Allowed to Select Skill
 
         if ( War3x_GetSkillCheck( iLevel, iNextSkillLvl ) )
         {
-            formatex( szMenuSkill, 63, "^n\w%d. %s \d\R%s Leve l %d ", iSkillNum, szSkillName, szDisabled, iNextSkillLvl );
+            formatex( szMenuSkill, 63, "^n\w%d. %s \d\R%s %L %d ", iSkillNum, szSkillName, szDisabled, id, "LANG_LEVEL", iNextSkillLvl );
             iKeys |= ( 1<<iSkillNum - 1 );
         }
 
@@ -477,14 +495,14 @@ public menu_SelectSkills( id ) {
 
             if ( iNextSkillLvl > TOTAL_SKILLLEVELS )
             {
-                formatex( szMenuSkill, 63, "^n\d%d. %s \d\R%s Leve l MAX ", iSkillNum, szSkillName, szDisabled );
+                formatex( szMenuSkill, 63, "^n\d%d. %s \d\R%s %L MAX ", iSkillNum, szSkillName, szDisabled, id, "LANG_LEVEL" );
             }
 
             // Skill Not Available
 
             else
             {
-                formatex( szMenuSkill, 63, "^n\d%d. %s \d\R%s Leve l %d ", iSkillNum, szSkillName, szDisabled, iNextSkillLvl );
+                formatex( szMenuSkill, 63, "^n\d%d. %s \d\R%s %L %d ", iSkillNum, szSkillName, szDisabled, id, "LANG_LEVEL", iNextSkillLvl );
             }
         }
 
@@ -497,7 +515,7 @@ public menu_SelectSkills( id ) {
 
     for ( new iSkillNum = TOTAL_SKILLSTRAINED + 1; iSkillNum < TOTAL_ULTIMATES + ( TOTAL_SKILLSTRAINED + 1 ); iSkillNum++ )
     {
-        WAR3_race_info( id, iRaceNum - 1, iSkillNum, szSkillName );
+        LANG_GetSkillNameHelper( iRaceNum - 1, iSkillNum, id, szSkillName, 63 );
         iCurrentSkill = iSkillNum + 1;
 
         new iUltimateNum = iSkillNum - TOTAL_SKILLSTRAINED;
@@ -505,27 +523,27 @@ public menu_SelectSkills( id ) {
         // Disabled
 
         if ( get_pcvar_bitsum( CVAR_restrict_ultimates ) & WAR3_get_ult_flag( iRaceNum, iUltimateNum ) )
-            copy( szDisabled, 19, "\r(R estr icted )\d" );
+            formatex( szDisabled, 19, "\r(%L)\d", id, "LANG_RESTRICTED" );
 
         else if ( get_pcvar_bitsum( CVAR_restrict_ultimates ) == 0 && get_pcvar_bitsum( CVAR_restrict_skills ) == 0 )
-            copy( szDisabled, 19, "\d          \d" );
+            formatex( szDisabled, 19, "\d          \d" );
 
         else
         {
-            copy( szDisabled, 19, "\y   (A llow ed )\d" );
+            formatex( szDisabled, 19, "\y   (%L)\d", id, "LANG_ALLOWED" );
         }
 
         // Can't Yet Obtain an Ultimate
 
         if ( iLevel < LEVEL_ULTIMATE )
-            formatex( szMenuSkill, 63, "^n\d%d. Ultimate: %s \R%s ", iSkillNum, szSkillName, szDisabled );
+            formatex( szMenuSkill, 63, "^n\d%d. %L: %s \R%s ", iSkillNum, id, "LANG_ULTIMATE", szSkillName, szDisabled );
 
         // Already Have Ultimate ( show only selected )
 
         else if ( g_PlayerInfo[id][CURRENT_ULTIMATE] )
         {
             if ( iSkillNum - TOTAL_SKILLSTRAINED == g_PlayerInfo[id][CURRENT_ULTIMATE] )
-                formatex( szMenuSkill, 63, "^n\d%d. Ultimate: %s \R%s ", iSkillNum, szSkillName, szDisabled );
+                formatex( szMenuSkill, 63, "^n\d%d. %L: %s \R%s ", iSkillNum, id, "LANG_ULTIMATE", szSkillName, szDisabled );
 
             else
             {
@@ -537,15 +555,15 @@ public menu_SelectSkills( id ) {
 
         else
         {
-            formatex( szMenuSkill, 63, "^n\w%d. Ultimate: %s \R%s ", iSkillNum, szSkillName, szDisabled );
+            formatex( szMenuSkill, 63, "^n\w%d. %L: %s \R%s ", iSkillNum, id, "LANG_ULTIMATE", szSkillName, szDisabled );
             iKeys |= ( 1<<iSkillNum - 1 );
         }
 
         iLen += formatex( szMenu[iLen], 512 - iLen, "%s", szMenuSkill );
     }
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n\w%s", MENU_SELECTSKILLS_9 );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n\w%s", MENU_CANCEL );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n\w9. %L", id, "LANG_HELP" );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n\w0. %L", id, "LANG_CANCEL" );
 
     // Show Skills Menu
 
@@ -697,7 +715,7 @@ public menu_ItemShop( id ) {
         // Item Restricted
 
         if ( get_pcvar_bitsum( CVAR_restrict_items ) & WAR3_get_item_flag( iItemNum ) )
-            iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\rD isab led ^n", iItemNum, szItemName );
+            iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\r%L ^n", iItemNum, szItemName, id, "LANG_RESTRICTED" );
 
         // Not enough players for Tome
 
@@ -713,8 +731,8 @@ public menu_ItemShop( id ) {
         }
     }
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n\w%s", MENU_BUYITEM_9 );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n\w%s", MENU_CANCEL );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n\w9. %L", id, "LANG_HELP" );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n\w0. %L", id, "LANG_CANCEL" );
 
     show_menu( id, iKeys, szMenu );
 
@@ -775,7 +793,7 @@ public menu_SkillsHelp( id ) {
         iKeys |= ( 1<<iRaceNum );
     }
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n%s", MENU_CANCEL );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n0. %L", id, "LANG_CANCEL" );
 
     show_menu( id, iKeys, szMenu );
 
@@ -832,21 +850,20 @@ public menu_PlayerOptions( id ) {
 
     iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_PLAYEROPTIONS_TITLE" );
 
-    WAR3_get_onoff( id, g_PlayerOptions[id][OPTION_RACEICONS], szOnOff );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n", MENU_PLAYEROPTIONS_1, szOnOff );
+    new szMenuId[16];
 
-    WAR3_get_onoff( id, g_PlayerOptions[id][OPTION_HEALICONS], szOnOff );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n", MENU_PLAYEROPTIONS_2, szOnOff );
+    for ( new i = 1; i <= TOTAL_OPTIONS - 1; i++ )
+    {
+        WAR3_get_onoff( id, g_PlayerOptions[id][i - 1], szOnOff );
 
-    WAR3_get_onoff( id, g_PlayerOptions[id][OPTION_DISPELLICONS], szOnOff );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n", MENU_PLAYEROPTIONS_3, szOnOff );
-
-    WAR3_get_onoff( id, g_PlayerOptions[id][OPTION_AUTOCAST], szOnOff );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%s            ^n^n", MENU_PLAYEROPTIONS_4, szOnOff );
+        formatex( szMenuId, 15, "MENU_PLAYEROPTIONS_%d", i );
+        iLen += formatex( szMenu[iLen], 512 - iLen, "\w%d. %L \y\R%s            ^n", i, id, szMenuId, szOnOff );
+    }
 
     new iRes = g_PlayerOptions[id][OPTION_RESOLUTION];
-    iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s \y\R%ix%i            ^n^n", MENU_PLAYEROPTIONS_5, STEAM_RESOLUTION[iRes][_X], STEAM_RESOLUTION[iRes][_Y] );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "\w%s", MENU_CANCEL );
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n\w%d. %L \y\R%ix%i            ^n", OPTION_RESOLUTION + 1, id, "MENU_PLAYEROPTIONS_5", STEAM_RESOLUTION[iRes][_X], STEAM_RESOLUTION[iRes][_Y] );
+
+    iLen += formatex( szMenu[iLen], 512 - iLen, "^n\w0. %L", id, "LANG_CANCEL" );
 
     show_menu( id, iKeys, szMenu );
 
@@ -913,7 +930,7 @@ public menu_RaceOptions( id ) {
 	LANG_GetRaceName( raceId + 1, id, szRaceName, 31 );
 
     iLen += formatex( szMenu[iLen], 511 - iLen, "%L", id, "MENU_RACEOPTIONS_TITLE" );
-    iLen += formatex( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_TITLE2, szRaceName );
+    iLen += formatex( szMenu[iLen], 511 - iLen, "\d%s^n^n", szRaceName );
 
     // Reset Skills
 
@@ -930,7 +947,7 @@ public menu_RaceOptions( id ) {
         iLen += formatex( szMenu[iLen], 511 - iLen, "\d" );
     }
 
-    iLen += formatex( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_1, RACEOPTIONS_SKILLS );
+    iLen += formatex( szMenu[iLen], 511 - iLen, "1. %L \R\d( %L %d+ )^n", id, "MENU_RACEOPTIONS_1", id, "LANG_LEVEL", RACEOPTIONS_SKILLS );
 
     // Reset Ultimate
 
@@ -945,15 +962,15 @@ public menu_RaceOptions( id ) {
         iLen += formatex( szMenu[iLen], 511 - iLen, "\d" );
     }
 
-    iLen += formatex( szMenu[iLen], 511 - iLen, MENU_RACEOPTIONS_2, RACEOPTIONS_ULTIMATE );
+    iLen += formatex( szMenu[iLen], 511 - iLen, "1. %L \R\d( %L %d+ )^n", id, "MENU_RACEOPTIONS_2", id, "LANG_LEVEL", RACEOPTIONS_ULTIMATE );
 
     // Reset Experience
 
-    iLen += formatex( szMenu[iLen], 511 - iLen, "\w^n%s", MENU_RACEOPTIONS_5 );
+    iLen += formatex( szMenu[iLen], 511 - iLen, "\w5. \r%L^n", id, "MENU_RACEOPTIONS_5" );
     iKeys |= (1<<4);
 
+    iLen += formatex( szMenu[iLen], 511 - iLen, "\w^n^n0. %L", id, "LANG_CANCEL" );
 
-    iLen += formatex( szMenu[iLen], 511 - iLen, "\w^n^n%s", MENU_CANCEL );
     show_menu( id, iKeys, szMenu );
 
     return PLUGIN_HANDLED;
@@ -1060,46 +1077,5 @@ public _menu_RaceOptions( id, iKey ) {
 
     return PLUGIN_HANDLED;
 }
-
-
-/* - 9. Help Topics --------------------------------------------- */
-
-
-public menu_HelpTopics( id ) {
-
-    new iKeys = (1<<0)|(1<<1)|(1<<8)|(1<<9);
-    new szMenu[512], iLen;
-
-    iLen += formatex( szMenu[iLen], 511 - iLen, "%L", id, "MENU_HELPTOPICS_TITLE" );
-
-    iLen += formatex( szMenu[iLen], 511 - iLen, "%s", MENU_HELPTOPICS_1 );
-    iLen += formatex( szMenu[iLen], 511 - iLen, "%s", MENU_HELPTOPICS_2 );
-
-    iLen += formatex( szMenu[iLen], 511 - iLen, "%s", MENU_HELPTOPICS_9 );
-
-    iLen += formatex( szMenu[iLen], 511 - iLen, "%s", MENU_CANCEL );
-
-    show_menu( id, iKeys, szMenu );
-
-    return PLUGIN_HANDLED;
-}
-
-
-public _menu_HelpTopics( id, iKey ) {
-
-    if ( iKey == KEY_CANCEL )
-        return PLUGIN_HANDLED;
-
-    switch ( iKey + 1 )
-    {
-        case 1:     menu_SkillsHelp( id );
-        case 2:     HELP_motd_items( id );
-
-        case 9:     HELP_motd_war3x( id );
-    }
-
-    return PLUGIN_HANDLED;
-}
-
 
 // ------------------------------------------------- End. - //

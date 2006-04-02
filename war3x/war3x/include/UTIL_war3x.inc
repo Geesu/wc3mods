@@ -96,75 +96,6 @@ public WAR3_get_damage( weapon, iBonusDamage )
 }
 
 
-// Get race skill/ultimate string
-
-public WAR3_race_info( id, iRaceId, iSkillNum, szData[64] ) {
-
-    new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
-    new iUltimateNum = g_PlayerInfo[id][CURRENT_ULTIMATE];
-
-    // Create 'Class' ID Num
-
-    if ( iSkillNum == RACEINFO_CLASSNAME )
-    {
-        if ( iUltimateNum )
-            iUltimateNum += 2;
-
-        else
-        {
-            for ( new i = 2; i >= 0; i-- )
-            {
-                if ( iLevel >= GETCLASSCHECK[i] && !iUltimateNum )
-                    iUltimateNum = i;
-            }
-        }
-    }
-
-    // Pass Data Back to Function Call
-
-    switch ( iRaceId + 1 )
-    {
-        case RACE_UNDEAD:
-        {
-            switch ( iSkillNum )
-            {
-                case RACEINFO_CLASSNAME:    copy( szData, 63, RACE1CLASS[iUltimateNum] );
-                default:                    LANG_GetSkillNameHelper( RACE_UNDEAD, iSkillNum, id, szData, 63 );
-            }
-        }
-
-        case RACE_HUMAN:
-        {
-            switch ( iSkillNum )
-            {
-                case RACEINFO_CLASSNAME:    copy( szData, 63, RACE2CLASS[iUltimateNum] );
-                default:                    LANG_GetSkillNameHelper( RACE_HUMAN, iSkillNum, id, szData, 63 );
-            }
-        }
-
-        case RACE_ORC:
-        {
-            switch ( iSkillNum )
-            {
-                case RACEINFO_CLASSNAME:    copy( szData, 63, RACE3CLASS[iUltimateNum] );
-                default:                    LANG_GetSkillNameHelper( RACE_ORC, iSkillNum, id, szData, 63 );
-            }
-        }
-
-        case RACE_NIGHTELF:
-        {
-            switch ( iSkillNum )
-            {
-                case RACEINFO_CLASSNAME:    copy( szData, 63, RACE4CLASS[iUltimateNum] );
-                default:                    LANG_GetSkillNameHelper( RACE_NIGHTELF, iSkillNum, id, szData, 63 );
-            }
-        }
-    }
-
-    return PLUGIN_HANDLED;
-}
-
-
 // Warcraft 3: Expansion Precaching
 
 public WAR3_precache_sound( szWar3Sound[], szDefaultSound[] ) {
@@ -839,11 +770,11 @@ public WAR3_damage( attacker, victim, weapon, iDamage, headshot, iCheckArmor ) {
 
         SHARED_INVIS_cooldown( victim );
     }
-    
+
     // Update kill assist information
 
 	WAR3_damage_assist( attacker, victim, iDamage );
-	
+
     return PLUGIN_HANDLED;
 }
 
@@ -861,9 +792,9 @@ public WAR3_death( killer, victim, weapon, headshot ) {
     // Perform Victim Actions
 
     WAR3_death_victim( victim );
-    
+
     // Check for kill assist
-    
+
     XP_Support_Kill( killer, victim );
 
     // Make sure death was not to DoT from disconnected killer
@@ -996,15 +927,15 @@ public WAR3_death( killer, victim, weapon, headshot ) {
 }
 
 public WAR3_damage_assist( attacker, victim, iDamage ) {
-	
+
 	if ( !( WAR3_player_valid( attacker ) || WAR3_player_valid( victim ) ) )
 		return PLUGIN_HANDLED;
-	
+
 	g_iPlayerDamage[victim][attacker] += iDamage;
 	g_iPlayerDamageTaken[victim] += iDamage;
 	g_iPlayersThatDamage[victim][g_iTotalPlayersThatDamage[victim]] = attacker;
 	g_iTotalPlayersThatDamage[victim]++;
-	
+
 	return PLUGIN_HANDLED;
 }
 
@@ -1612,6 +1543,42 @@ public WAR3_is_valid_ent( ent ) {
 	}
 
 	return ( false );
+}
+
+
+public WAR3_get_setxp_flag() {
+
+    new szFlags[24];
+    get_pcvar_string( CVAR_setxp_flag, szFlags, 23 );
+
+    return ( read_flags( szFlags ) );
+}
+
+
+public WAR3_log_setxp( id, szCommand[16], szPlayerName[32], szRaceName[16], szNewValue[16] ) {
+
+    new szLogFile[64];
+    formatex( szLogFile, 63, "%s/setxp_log.txt", WAR3X_DIR );
+
+    if ( !file_exists( szLogFile ) )
+    {
+        write_file( szLogFile, "W A R C R A F T 3 : Expansion", -1 );
+        write_file( szLogFile, "Logging of war3x_setxp and war3x_setlevel.", -1 );
+        write_file( szLogFile, " ", -1 );
+    }
+
+    new szAdminName[32];
+    get_user_name( id, szAdminName, 31 );
+
+    new szCurrentTime[32];
+    get_time( "%m.%d.%Y %H:%M:%S", szCurrentTime, 31 );
+
+    new szLogEntry[256];
+    formatex( szLogEntry, 255, "[%s] %s (%s) used command: '%s %s %s %s'", szCurrentTime, szAdminName, g_SaveIds[id], szCommand, szPlayerName, szRaceName, szNewValue );
+
+    write_file( szLogFile, szLogEntry, -1 );
+
+    return PLUGIN_HANDLED;
 }
 
 // ------------------------------------------------- End. - //

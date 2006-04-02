@@ -93,6 +93,38 @@ RACE4_ULTIMATE1_DESC            = Heals a target friendly player <%s> health ove
 RACE4_ULTIMATE2_DESC            = Causes roots to burst from the ground, immobilizing a target enemy unit for <%s> seconds, and dealing <%s> damage over time.
 RACE4_ULTIMATE3_DESC            = Hurls a poisonous dagger at a target enemy player, dealing <%s> initial damage and <%s> damage over <%s> seconds. Movement speed of the target is also reduced by <%s>.
 
+RACE1_CLASS0                    = Acolyte
+RACE1_CLASS1                    = Ghoul
+RACE1_CLASS2                    = Abomination
+RACE1_CLASS3                    = Death Knight
+RACE1_CLASS4                    = Crypt Lord
+RACE1_CLASS5                    = Dread Lord
+
+RACE2_CLASS0                    = Peasant
+RACE2_CLASS1                    = Footman
+RACE2_CLASS2                    = Knight
+RACE2_CLASS3                    = Paladin
+RACE2_CLASS4                    = Blood Mage
+RACE2_CLASS5                    = Mountain King
+
+RACE3_CLASS0                    = Peon
+RACE3_CLASS1                    = Grunt
+RACE3_CLASS2                    = Tauren
+RACE3_CLASS3                    = Shadow Hunter
+RACE3_CLASS4                    = Far Seer
+RACE3_CLASS5                    = Blademaster
+
+RACE4_CLASS0                    = Wisp
+RACE4_CLASS1                    = Archer
+RACE4_CLASS2                    = Hunter
+RACE4_CLASS3                    = Druid
+RACE4_CLASS4                    = Keeper
+RACE4_CLASS5                    = Warden
+
+UPKEEP_NAME1                    = No Upkeep
+UPKEEP_NAME2                    = Low Upkeep
+UPKEEP_NAME3                    = High Upkeep
+
 ; Status Messages
 
 CANT_TARGET                     = Unable to target player.
@@ -299,8 +331,60 @@ ERROR_MISSING_FILES             = ERROR: The following files are missing from yo
 ERROR_MISSING_OPTIONAL          = NOTE: The file(s) listed above are optional. If you have a copy of the %s source code, you may disable using the missing file(s) by opening the war3x/setup.cfg file, changing the %s define to 0, and recompiling.
 ERROR_MISSING_REQUIRED          = NOTE: The file(s) listed above are not optional. The plugin will not run unless the file(s) are copied to their proper folder(s). Please review the installation instructions provided with the plugin, and if necessary, reinstall to correct this error.
 
+ERROR_NO_ACCESS                 = You have no access to that command.
+ERROR_ARGUMENTS                 = Invalid number of Arguments.
+
 WARNING_MISSING_FILES           = WARNING: The following optional file(s) are missing from your %s installation:
 WARNING_MISSING_LISTED          = NOTE: The file(s) listed above are not required to run %s in it's current configuration, but can prove beneficial to the server if installed properly. Please consult the installation instructions provided with the plugin for more information.
+
+WAR3X_SETXP_FORMAT              = Format is: %s < name/part of name > < racename/part of racename > < [+/-]new value >
+WAR3X_SETXP_CONFIRM             = New value(s) set for %s's %s character. Old XP: %d, New XP: %d
+
+WAR3X_SETXP_ERROR_RACENAME      = ERROR: Invalid Racename.
+WAR3X_SETXP_WARNING_NOPLAYER    = WARNING: No players found matching '%s'.
+WAR3X_SETXP_WARNING_NORACE      = WARNING: XP Info for %s has not been retrieved yet.
+WAR3X_SETXP_WARNING_VALUES      = WARNING: Old and new values are the same.
+
+WAR3X_SETXP_XP_ADD              = %s has rewarded %d experience to your %s character.
+WAR3X_SETXP_XP_REMOVE           = %s has removed %d experience from your %s character.
+WAR3X_SETXP_XP_CHANGE           = %s has set your %s experience to %d.
+WAR3X_SETXP_LEVEL_ADD           = %s has rewarded %d level(s) to your %s character.
+WAR3X_SETXP_LEVEL_REMOVE        = %s has removed %d level(s) from your %s character.
+WAR3X_SETXP_LEVEL_CHANGE        = %s has set your %s character to level %d.
+
+;Menu Titles ( please do not remove formatting ^n\w\y\r\R
+
+MENU_WAR3MENU_TITLE             = \yWarcraft 3 Menu ^n^n\w
+MENU_SELECTRACE_TITLE           = \ySelect Race ^n^n
+MENU_SELECTSKILLS_TITLE         = \ySelect Skills ^n
+MENU_BUYITEM_TITLE              = \yBuy Item \R$   Cost ^n^n
+MENU_SKILLSINFO_TITLE           = \ySkills Info ^n^n\w
+MENU_PLAYEROPTIONS_TITLE        = \yPlayer Options ^n^n\w
+MENU_RACEOPTIONS_TITLE          = \yReset Options ^n
+MENU_ADMINOPTIONS_TITLE         = \yAdmin Options ^n^n\w
+MENU_HELPTOPICS_TITLE           = \yHelp Topics ^n^n\w
+
+;Menu Options
+
+MENU_WAR3MENU_1                 = Select Race
+MENU_WAR3MENU_2                 = Select Skills
+MENU_WAR3MENU_3                 = Buy Items
+MENU_WAR3MENU_4                 = Show Level/Skills
+MENU_WAR3MENU_5                 = Player Skills
+MENU_WAR3MENU_6                 = Player Options
+MENU_WAR3MENU_7                 = Reset Skills/Ultimate/XP
+MENU_WAR3MENU_8                 = Admin Options
+MENU_WAR3MENU_9                 = Help Topics
+
+MENU_PLAYEROPTIONS_1            = Show Race Icons
+MENU_PLAYEROPTIONS_2            = Show Health Icons
+MENU_PLAYEROPTIONS_3            = Show Dispell Icons
+MENU_PLAYEROPTIONS_4            = Auto-Cast on Teammates
+MENU_PLAYEROPTIONS_5            = Hudmessage Position
+
+MENU_RACEOPTIONS_1              = Reset Skills
+MENU_RACEOPTIONS_2              = Reset Ultimate
+MENU_RACEOPTIONS_5              = Reset Experience
 
 ;Common Words
 
@@ -312,19 +396,16 @@ LANG_LEVEL                      = Level
 LANG_RACIAL                     = Racial
 LANG_CLASS                      = Class
 LANG_SKILLS                     = Skills
+LANG_ULTIMATE                   = Ultimate
 LANG_ON                         = ON
 LANG_OFF                        = OFF
+LANG_RESTRICTED                 = Restricted
+LANG_ALLOWED                    = Allowed
+LANG_DISABLED                   = Disabled
+LANG_RANDOM                     = Random
+LANG_HELP                       = Help
+LANG_CANCEL                     = Cancel
 
-;Menus
-
-MENU_WAR3MENU_TITLE		= \yWarcraft 3 Menu ^n^n\w
-MENU_SELECTRACE_TITLE		= \ySelect Race ^n^n
-MENU_SELECTSKILLS_TITLE		= \ySelect Skills ^n
-MENU_BUYITEM_TITLE		= \yBuy Item \R$   Cost ^n^n
-MENU_SKILLSINFO_TITLE		= \ySkills Info ^n^n\w
-MENU_PLAYEROPTIONS_TITLE	= \yPlayer Options ^n^n\w
-MENU_RACEOPTIONS_TITLE		= \yRace Options ^n
-MENU_HELPTOPICS_TITLE		= \yHelp Topics ^n^n\w
 
 [de]
 ; Your language here!

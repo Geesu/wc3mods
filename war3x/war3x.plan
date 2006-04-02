@@ -25,9 +25,6 @@ BIG CHANGES:
 	* Error code: etc (debug)
 	* UTIL_dbi*
 	* "\r(*R estr icted )\d" and others in menus.inl
-	* [AMXX] You have no access to that command
-	* UPKEEP_NAME[] in upkeep.inl
-	* commands.inl -> setxp etc, arguments etc
 
 
 --FULL CHECKING FOR REQUIRED FILES BEFORE LOADING (RYAN)
@@ -75,6 +72,7 @@ MISC CHANGES:
 * replace all distance/40 by get_distance (statsx stock)
 * move all commands to commands.inl (setxp/etc)
 * make a function to auto-fix right aligned words from being 'squished' -- this will be necessary for multilanguage
+* add string length field to any function that takes string pointer and modifies.. this might be causing current problems.
 
 
 NOT HAPPENING THIS TIME
@@ -93,6 +91,10 @@ FUTURE RELEASE(S)
 * flame strike change - make targetable on ground
 * flame strike mod - more damage each second in the strike. countdown from that amount when outside.
 * flame strike change - implement with touch, rather than timers
+* add /war3x_setitem command
+* add /war3x_setrace command
+* allow /war3x_set* commands to target @teams
+* make these above commands outer-plugin capable (to create voting plugins/etc)
 
 
 
@@ -260,7 +262,7 @@ frost nova
 -
 death coil
 impale
-sleep		(cripple)
+sleep		(cripple)				Necromancer
 
 
 HU
@@ -271,7 +273,7 @@ bash
 inner fire
 -
 holy light
-flame strike	(barrage) (or polymorph)
+flame strike	(barrage) (or polymorph)		Sorceress
 avatar
 
 
@@ -283,7 +285,7 @@ pillage
 pulverize
 -
 chain lightning
-chain healing	(healing totem)
+chain healing	(healing totem)				Witch Doctor
 wind walk
 
 
@@ -296,56 +298,56 @@ trueshot aura
 -
 entangling roots
 rejuvenation
-shadow strike	(?)(maybe faerie fire)(able to be teleported to!)
+shadow strike	(faerie fire)(teleport target!)		Druid of the Talon
 
 -----------------
 
 GOB
 kaboom!
 -
-acid bomb
-transmute
+acid bomb						runt
+transmute						
 engineering upgrades
 -
-healing spray
-cluster rockets
-robo-goblin
+healing spray						Alchemist
+Sapper Charge						Sapper
+robo-goblin						Tinkerer
 
 
 BE
-magic immunity
+magic immunity						worker/swordsman/breaker
 -
 defend
 spell steal	(% chance on attack to gain random ability from target for round)
 inner fire
 -
-banish
-flame strike
-flash heal	(heal amt, hot rest)
+banish							Blood Mage
+flame strike						Blood Mage
+flash heal	(heal amt, hot rest)			Priest
 
 
 DR
-Avoidance?
+Avoidance?						laborer/stalker/assassin
 -
 Critical Strike
 liquid fire
 immolation
 -
-howl of terror
-healing wave
-shadow strike
+howl of terror						elite
+healing wave						seer
+shadow strike						elder sage
 
 
 NA
-spiked shell
+spiked shell						slave/reaver/myrmidon
 -
 frost arrows
 abolish magic
 hardened skin
 -
-frost bolt
-healing stream	(or mana shield)
-parasite
+frost bolt						Royal guard
+healing stream	(or mana shield)			sea witch
+parasite						siren
 
 
 

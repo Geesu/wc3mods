@@ -32,13 +32,6 @@ new UPKEEP_MONEY_NEWROUND[3] =          // Money to award players on new round
     150                                 // High Upkeep
 };
 
-new UPKEEP_NAME[3][] =
-{
-    "No Upkeep",
-    "Low Upkeep",
-    "High Upkeep"
-};
-
 new UPKEEP_RGB[3][3] =
 {
     {0,255,0},
@@ -87,8 +80,10 @@ public Upkeep_Dead() {
 
             // Display message
 
-            new szMessage[32];
-            formatex( szMessage, 31, "%s   ^n+$%d   ", UPKEEP_NAME[iUpkeep], iDifference );
+            new szMessage[32], szUpkeep[16];
+
+        	formatex( szUpkeep, 15, "UPKEEP_NAME%d", iUpkeep + 1 );
+            formatex( szMessage, 31, "%L   ^n+$%d   ", player, szUpkeep, iDifference );
 
             set_hudmessage( UPKEEP_RGB[iUpkeep][GLOW_R], UPKEEP_RGB[iUpkeep][GLOW_G], UPKEEP_RGB[iUpkeep][GLOW_B], 0.99, 0.40, HUDMESSAGE_FX_FADEIN, 3.0, 2.0, 0.5, 1.0, HUDMESSAGE_CHAN_UPKEEP );
             show_hudmessage( player, "%s", szMessage );
@@ -125,8 +120,9 @@ public Upkeep_Newround() {
 
         // Display message
 
-        new szMessage[32];
-        formatex( szMessage, 31, "%s   ^n+$%d   ", UPKEEP_NAME[iUpkeep], UPKEEP_MONEY_NEWROUND[iUpkeep] );
+        new szMessage[32], szUpkeep[16];
+    	formatex( szUpkeep, 15, "UPKEEP_NAME%d", iUpkeep + 1 );
+        formatex( szMessage, 31, "%L   ^n+$%d   ", player, szUpkeep, UPKEEP_MONEY_NEWROUND[iUpkeep] );
 
         set_hudmessage( UPKEEP_RGB[iUpkeep][GLOW_R], UPKEEP_RGB[iUpkeep][GLOW_G], UPKEEP_RGB[iUpkeep][GLOW_B], 0.99, 0.40, HUDMESSAGE_FX_FADEIN, 1.0, 2.0, 0.5, 1.0, HUDMESSAGE_CHAN_UPKEEP2 );
         show_hudmessage( player, "%s", szMessage );
@@ -251,8 +247,9 @@ public Upkeep_RoundStart() {
 
         new iUpkeep = g_TeamUpkeep[iTeamNum - 1];
 
-        new szMessage[32];
-        formatex( szMessage, 31, "%s   ", UPKEEP_NAME[iUpkeep] );
+        new szMessage[32], szUpkeep[16];
+    	formatex( szUpkeep, 15, "UPKEEP_NAME%d", iUpkeep + 1 );
+        formatex( szMessage, 31, "%L   ", player, szUpkeep );
 
         set_hudmessage( UPKEEP_RGB[iUpkeep][GLOW_R], UPKEEP_RGB[iUpkeep][GLOW_G], UPKEEP_RGB[iUpkeep][GLOW_B], 0.99, 0.40, HUDMESSAGE_FX_FADEIN, 1.0, 5.0, 0.5, 1.0, HUDMESSAGE_CHAN_UPKEEP );
         show_hudmessage( player, "%s", szMessage );
@@ -276,7 +273,7 @@ public Upkeep_Update( iTeamNum, iCurrentUpkeep, iNewUpkeep ) {
         g_TeamUpkeep[iTeamNum] = iNewUpkeep;
 
         new szUpkeep[16];
-        copy( szUpkeep, 15, UPKEEP_NAME[iNewUpkeep] );
+    	formatex( szUpkeep, 15, "UPKEEP_NAME%d", iNewUpkeep + 1 );
 
         // Send message to all teammates
 

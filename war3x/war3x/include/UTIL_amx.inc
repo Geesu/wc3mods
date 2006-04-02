@@ -1288,7 +1288,7 @@ public iGettok( szData[64], iToken, cChar ) {
 
 // Prints szMessage to server (id=0), or client num.
 
-public status_print( id, szMessage[256] ) {
+public status_print( id, szMessage[] ) {
 
     if ( id > 0 && id <= MAX_PLAYERS )
         client_print( id, print_console, "%s", szMessage );

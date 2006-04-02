@@ -5,6 +5,9 @@
 
 new WAR3X_DIR[64];
 
+new const STATUS_PREFIX[] =  "/ / / / / ";
+new const WAR3X_PREFIX[]  =    "* [WC3x]";
+
 // - Race/Skill/Item Constants ---------------------------- //
 
 #define RACE_UNDEAD                    1    // Player race references
@@ -486,12 +489,20 @@ new g_SaveQueue_iXP[64][_TR];               // holds xp for all races.
 new g_SaveQueue_iInfo[64][_TS + 3];         // holds skills for race to be saved.
 new g_SaveQueue_iOptions[64][_TO];          // holds options for all races.
 
+new const RACEKEYNAME[_TR][] =              // RACE NAMES (save key names):
+{
+    "UD",                                   // Undead
+    "HU",                                   // Human
+    "OR",                                   // Orc
+    "NE"                                    // Night Elf
+};
+
 // - Stats Variables -------------------------------------- //
 
-#define STATS_ACTIVE                        // Stores how many times skill(s) activate
-#define STATS_TOTAL                         // Stores damage totals (to calculate % with STATS_ACTIVE)
-#define STATS_AMOUNT                        // Stores skill amount(s)
-#define STATS_KILLS                         // Stores skill kill count
+//#define STATS_ACTIVE                        // Stores how many times skill(s) activate
+//#define STATS_TOTAL                         // Stores damage totals (to calculate % with STATS_ACTIVE)
+//#define STATS_AMOUNT                        // Stores skill amount(s)
+//#define STATS_KILLS                         // Stores skill kill count
 /*
 stock rStats_Skill_1[33][4];
 stock rStats_Skill_2[33][4];

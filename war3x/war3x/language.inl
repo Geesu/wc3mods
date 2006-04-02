@@ -7,10 +7,10 @@
 #define SKILL_T_TRAINED		2
 #define SKILL_T_ULTIMATE	3
 
-#define TOTAL_MENUS			8		// Total number of menus to be registered
+#define TOTAL_MENUS			9		// Total number of menus to be registered
 
 // This is the list of menu titles that are in war3x.txt
-new const MENU_NAMES[TOTAL_MENUS][] = 
+new const MENU_NAMES[TOTAL_MENUS][] =
 {
 	"MENU_WAR3MENU_TITLE",
 	"MENU_SELECTRACE_TITLE",
@@ -19,11 +19,12 @@ new const MENU_NAMES[TOTAL_MENUS][] =
 	"MENU_SELECTSKILLS_TITLE",
 	"MENU_PLAYEROPTIONS_TITLE",
 	"MENU_RACEOPTIONS_TITLE",
+	"MENU_ADMINOPTIONS_TITLE",
 	"MENU_HELPTOPICS_TITLE"
 };
 
 // Callback functions for the above menu names
-new const MENU_CALLBACK[TOTAL_MENUS][] = 
+new const MENU_CALLBACK[TOTAL_MENUS][] =
 {
 	"_menu_War3menu",
 	"_menu_SelectRace",
@@ -32,6 +33,7 @@ new const MENU_CALLBACK[TOTAL_MENUS][] =
 	"_menu_SelectSkills",
 	"_menu_PlayerOptions",
 	"_menu_RaceOptions",
+	"_menu_AdminOptions",
 	"_menu_HelpTopics"
 };
 
@@ -64,8 +66,8 @@ LANG_RegisterMenus()
 					highestMenuId = curMenuId;
 				}
 			}
-		}// End language loop
-	}// End menu loop
+		} // End language loop
+	} // End menu loop
 }
 
 
@@ -163,5 +165,40 @@ LANG_GetSkillDesc( race_id, skill_id, skill_type, id, skill_desc[], len )
 	formatex( skill_desc, len, "%L", id, szSkillHelper );
 }
 
+
+public LANG_GetClassName( race, id, szClassName[], iLen ) {
+
+    new class_id;
+
+    // Check for ultimate ( gives unique class )
+
+    if ( g_PlayerInfo[id][CURRENT_ULTIMATE] )
+        class_id = g_PlayerInfo[id][CURRENT_ULTIMATE] + 2;  // Offset for ultimate-designated classname
+
+    // Otherwise, retrive class by level
+
+    else
+    {
+        new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
+
+        for ( new i = 2; i >= 0; i-- )
+        {
+            if ( iLevel >= GETCLASSCHECK[i] )
+            {
+                class_id = i;
+                break;
+            }
+        }
+    }
+
+    // Format string
+
+    new szHelper[31];
+
+    formatex( szHelper, 31, "RACE%d_CLASS%d", race, class_id );
+    formatex( szClassName, iLen, "%L", id, szHelper );
+
+    return PLUGIN_HANDLED;
+}
 
 // ------------------------------------------------- End. - //

@@ -152,7 +152,7 @@ public HELP_motd_players( id ) {
                         new iLevel = WAR3_get_level( g_PlayerInfo[pIndex][CURRENT_XP] );
 
                         new szClassName[64];
-                        WAR3_race_info( pIndex, iRaceNum, RACEINFO_CLASSNAME, szClassName );
+                        LANG_GetClassName( iRaceNum + 1, pIndex, szClassName, 63 );
 
                         iLen += formatex( szMotd[iLen], 2047 - iLen, " (%i) %s", iLevel, szClassName );
                     }
@@ -210,7 +210,7 @@ public HELP_motd_target( id, targetId ) {
 
         // Classname
 
-        WAR3_race_info( targetId, raceId, RACEINFO_CLASSNAME, szData );
+        LANG_GetClassName( raceId, targetId, szData, 63 );
         iLen += formatex( szMotd[iLen], 2047 - iLen, "<b>%L</b>: %s", id, "LANG_CLASS", szData );
 
         if ( !g_PlayerInfo[targetId][CURRENT_ULTIMATE] )
@@ -865,5 +865,11 @@ static HELP_description_ultimate( iRaceNum, iUltimateNum, id, szDescription[256]
     return PLUGIN_HANDLED;
 }
 
+
+public HELP_topics( id ) {
+
+    // Auto-generate some html file here
+
+}
 
 // ------------------------------------------------- End. - //

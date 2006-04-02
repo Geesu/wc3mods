@@ -85,8 +85,6 @@ new const WAR3X_PLUGINNAME_SHORT[] = "WAR3X";
 // - Inline Inclusions ------------------------------------ //
 
 #include "war3x/globals.inl"
-
-#include "war3x/language/english.inl"
 #include "war3x/language.inl"
 
 #include "war3x/include/UTIL_amx.inc"
@@ -98,7 +96,6 @@ new const WAR3X_PLUGINNAME_SHORT[] = "WAR3X";
 // Main Plugin Information
 
 #include "war3x/xp.inl"
-
 #include "war3x/shared.inl"
 
 #include "war3x/undead.inl"

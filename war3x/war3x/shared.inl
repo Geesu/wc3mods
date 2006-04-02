@@ -985,7 +985,7 @@ public WAR3_toggle( id ) {
 
     if ( !( get_user_flags( id ) & ADMIN_RCON ) )
     {
-        client_print( id, print_console, "[AMXX] You have no access to that command." );
+        client_print( id, print_console, "[AMXX] %L", id, "ERROR_NO_ACESS" );
         return PLUGIN_HANDLED;
     }
 
@@ -1698,15 +1698,16 @@ public WAR3_hud_level( id ) {
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
 	LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
-    WAR3_race_info( id, iRaceNum, RACEINFO_CLASSNAME, szData );
-    iLen += formatex( szMessage[iLen], 72 - iLen, "%s^nLevel %d ( %s )", szRaceName, iLevel, szData );
+    LANG_GetClassName( iRaceNum + 1, id, szData, 63 );
+
+    iLen += formatex( szMessage[iLen], 72 - iLen, "%s^n%L %d ( %s )", szRaceName, id, "LANG_LEVEL", iLevel, szData );
 
     if ( g_PlayerInfo[id][CURRENT_ULTIMATE] )
     {
         new iUltimateNum = g_PlayerInfo[id][CURRENT_ULTIMATE] + TOTAL_SKILLSTRAINED;
 
-        WAR3_race_info( id, iRaceNum, iUltimateNum, szData );
-        iLen += formatex( szMessage[iLen], 72 - iLen, "^nUltimate: %s", szData );
+        LANG_GetSkillNameHelper( iRaceNum + 1, iUltimateNum, id, szData, 63 );
+        iLen += formatex( szMessage[iLen], 72 - iLen, "^n%L: %s", id, "LANG_ULTIMATE", szData );
     }
 
     set_hudmessage( 255, 255, 255, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_LEVEL, 0, 6.0, 5.0, 0.5, 1.0, HUDMESSAGE_CHAN_LEVEL );
@@ -1746,25 +1747,25 @@ public war3_chatskills( id, raceId, ShowHelp ) {
 
     if ( g_PlayerInfo[id][CURRENT_SKILL1] )
     {
-        WAR3_race_info( id, raceId, RACEINFO_SKILL1, szData );
+        LANG_GetSkillNameHelper( raceId, SKILL_1, id, szData, 63 );
         iLen += formatex( szSkills[iLen], 128 - iLen, ", %s %d", szData, g_PlayerInfo[id][CURRENT_SKILL1] );
     }
 
     if ( g_PlayerInfo[id][CURRENT_SKILL2] )
     {
-        WAR3_race_info( id, raceId, RACEINFO_SKILL2, szData );
+        LANG_GetSkillNameHelper( raceId, SKILL_2, id, szData, 63 );
         iLen += formatex( szSkills[iLen], 128 - iLen, ", %s %d", szData, g_PlayerInfo[id][CURRENT_SKILL2] );
     }
 
     if ( g_PlayerInfo[id][CURRENT_SKILL3] )
     {
-        WAR3_race_info( id, raceId, RACEINFO_SKILL3, szData );
+        LANG_GetSkillNameHelper( raceId, SKILL_3, id, szData, 63 );
         iLen += formatex( szSkills[iLen], 128 - iLen, ", %s %d", szData, g_PlayerInfo[id][CURRENT_SKILL3] );
     }
 
     // Build message (with racial)
 
-    WAR3_race_info( id, raceId, RACEINFO_RACIAL, szData );
+    LANG_GetSkillNameHelper( raceId, SKILL_RACIAL, id, szData, 63 );
     formatex( szMessage, 127, "%s %L %s (%0.0f%%)%s", WAR3X_PREFIX, id, "INFO_CURRENTSKILLS", szData, fRacialPercentage, szSkills );
 
     client_print( id, print_chat, "%s", szMessage );

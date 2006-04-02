@@ -175,7 +175,7 @@ public Cmd_Say( id ) {
         menu_SkillsHelp( id );
 
     else if ( equali( szText, "war3help" ) || equali( szText, "wc3help" ) || equali( szText, "war3xhelp" ) || equali( szText, "wc3xhelp" ) )
-        menu_HelpTopics( id );
+        HELP_topics( id );
 
     else if ( equali( szText, "level" ) || equali( szText, "showlevel" ) )
         WAR3_hud_level( id );
@@ -244,5 +244,279 @@ public cmd_Shopmenu( id ) {
     return PLUGIN_HANDLED;
 }
 
+
+public Cmd_SetXp( id ) {
+
+    if ( id && !( get_user_flags( id ) & WAR3_get_setxp_flag() ) )
+    {
+        client_print( id, print_console, "* [WC3x] %L", id, "ERROR_NO_ACCESS" );
+        return PLUGIN_HANDLED;
+    }
+
+    if ( read_argc() < 4 )
+    {
+        new szErrorMsg[256];
+        formatex( szErrorMsg, 255, "%s %L.^n%s %L.", WAR3X_PREFIX, id, "ERROR_ARGUMENTS", WAR3X_PREFIX, id, "WAR3X_SETXP_FORMAT", "war3x_setxp" );
+
+        status_print( id, szErrorMsg );
+    }
+
+    else
+    {
+        new szArgs[128];
+        read_args( szArgs, 127 );
+
+        Cmd_SetXpLevel( id, "war3x_setxp", szArgs );
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+
+public Cmd_SetLevel( id ) {
+
+    if ( id && !( get_user_flags( id ) & WAR3_get_setxp_flag() ) )
+    {
+        client_print( id, print_console, "* [WC3x] %L", id, "ERROR_NO_ACCESS" );
+        return PLUGIN_HANDLED;
+    }
+
+    if ( read_argc() < 4 )
+    {
+        new szErrorMsg[256];
+        formatex( szErrorMsg, 255, "%s %L.^n%s %L.", WAR3X_PREFIX, id, "ERROR_ARGUMENTS", WAR3X_PREFIX, id, "WAR3X_SETXP_FORMAT", "war3x_setlevel" );
+
+        status_print( id, szErrorMsg );
+    }
+
+    else
+    {
+        new szArgs[128];
+        read_args( szArgs, 127 );
+
+        Cmd_SetXpLevel( id, "war3x_setlevel", szArgs );
+    }
+
+    return PLUGIN_HANDLED;
+}
+
+
+public Cmd_SetXpLevel( id, szCommand[16], szArgs[128] ) {
+
+    // Grab arguments
+
+    new szPlayerName[32], szRaceName[16], szNewValue[16];
+    parse( szArgs, szPlayerName, 31, szRaceName, 15, szNewValue, 15 );
+
+    // Get target player id
+
+    new target = find_player( "b", szPlayerName );
+
+    if ( !target )
+    {
+        new szErrorMsg[128];
+        formatex( szErrorMsg, 127, "%s %L", WAR3X_PREFIX, id, "WAR3X_SETXP_WARNING_NOPLAYER", szPlayerName );
+
+        status_print( id, szErrorMsg );
+
+        return PLUGIN_HANDLED;
+    }
+
+    else if ( !g_PlayerInfo[target][CURRENT_RACE] )
+    {
+        new szErrorMsg[128];
+        formatex( szErrorMsg, 127, "%s %L", WAR3X_PREFIX, id, "WAR3X_SETXP_WARNING_NORACE", szPlayerName );
+
+        status_print( id, szErrorMsg );
+
+        return PLUGIN_HANDLED;
+    }
+
+    get_user_name( target, szPlayerName, 31 );
+
+    // Check for valid race
+
+    new race;
+    new szRaceNameShort[16];
+
+    for ( new i = 0; i < TOTAL_RACES; i++ )
+    {
+        LANG_GetRaceName( i, id, szRaceNameShort, 15, true );
+
+        if ( equali( szRaceName, szRaceNameShort, 1 ) )
+        {
+            race = i;
+            break;
+        }
+    }
+
+    if ( !race )
+    {
+        new szError[64];
+        formatex( szError, 63, "%s %L", WAR3X_PREFIX, id, "WAR3X_SETXP_ERROR_RACENAME" );
+
+        status_print( id, szError );
+
+        return PLUGIN_HANDLED;
+    }
+
+    // Get new values
+
+    new bool:bAdd;
+    new iNewValue, iOldValue;
+
+    new szAdminName[32];
+    get_user_name( id, szAdminName, 31 );
+
+    if ( equali( szNewValue, "+", 1 ) )
+        bAdd = true;
+
+    iNewValue = str_to_num( szNewValue );
+
+    // war3x_setxp
+
+    if ( equal( szCommand, "war3x_setxp" ) )
+    {
+        // Get old value
+
+        iOldValue = g_iXPtotal[target][race];
+
+        if ( iNewValue == iOldValue && !bAdd )
+        {
+            new szErrorMsg[128];
+            formatex( szErrorMsg, 127, "%s %L", WAR3X_PREFIX, id, "WAR3X_SETXP_WARNING_VALUES" );
+
+            status_print( id, szErrorMsg );
+
+            return PLUGIN_HANDLED;
+        }
+
+        // Set message(s)
+
+        if ( bAdd )
+        {
+            client_print( target, print_chat, "%s %L", WAR3X_PREFIX, id, "WAR3X_SETXP_XP_ADD", szAdminName, iNewValue, szRaceNameShort );
+            iNewValue = iOldValue + iNewValue;
+        }
+
+        else if ( iNewValue < 0 )
+        {
+            client_print( target, print_chat, "%s %L", WAR3X_PREFIX, id, "WAR3X_SETXP_XP_REMOVE", szAdminName, iNewValue * -1, szRaceNameShort );
+            iNewValue = iOldValue + iNewValue;
+        }
+
+        else
+        {
+            client_print( target, print_chat, "%s %L", WAR3X_PREFIX, id, "WAR3X_SETXP_XP_CHANGE", szAdminName, szRaceNameShort, iNewValue );
+        }
+    }
+
+    // war3x_setlevel
+
+    else if ( equal( szCommand, "war3x_setlevel" ) )
+    {
+        // Get old value
+
+        iOldValue = WAR3_get_level( g_iXPtotal[target][race] );
+
+        if ( iNewValue == iOldValue && !bAdd )
+        {
+            new szErrorMsg[128];
+            formatex( szErrorMsg, 127, "%s %L", WAR3X_PREFIX, id, "WAR3X_SETXP_WARNING_VALUES" );
+
+            status_print( id, szErrorMsg );
+
+            return PLUGIN_HANDLED;
+        }
+
+        // Set message(s)
+
+        if ( bAdd )
+        {
+            client_print( target, print_chat, "%s %L", WAR3X_PREFIX, id, "WAR3X_SETXP_LEVEL_ADD", szAdminName, iNewValue, szRaceNameShort );
+            iNewValue = iOldValue + iNewValue;
+        }
+
+        else if ( iNewValue < 0 )
+        {
+            client_print( target, print_chat, "%s %L", WAR3X_PREFIX, id, "WAR3X_SETXP_LEVEL_REMOVE", szAdminName, iNewValue * -1, szRaceNameShort );
+            iNewValue = iOldValue + iNewValue;
+        }
+
+        else
+        {
+            client_print( target, print_chat, "%s %L", WAR3X_PREFIX, id, "WAR3X_SETXP_LEVEL_CHANGE", szAdminName, szRaceNameShort, iNewValue );
+        }
+
+        // Convert to XP values
+
+        iOldValue = g_iLevelXp[iOldValue];
+        iNewValue = g_iLevelXp[iNewValue];
+
+    }
+
+    // Error checking
+
+    if ( iNewValue > g_iLevelXp[TOTAL_LEVELS] )
+        iNewValue = g_iLevelXp[TOTAL_LEVELS];
+
+    if ( iNewValue < 0 )
+        iNewValue = 0;
+
+    // Change XP
+
+    g_iXPtotal[target][race] = iNewValue;
+
+    // Reset skills/ultimates if current race
+
+    if ( g_PlayerInfo[target][CURRENT_RACE] == race + 1 )
+    {
+        g_PlayerInfo[target][CURRENT_XP] = iNewValue;
+        WAR3_hud_item( target, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 2.0, 3.0 );
+
+        // Check if current level less than old level
+
+        if ( WAR3_get_level( iNewValue ) < WAR3_get_level( iOldValue ) )
+        {
+            // Reset all skills and ultimate
+
+            Reset_Skills( target );
+            Reset_Ultimate( target );
+
+            // Show skill selection menu
+
+            if ( WAR3_get_level( iNewValue ) )
+                menu_SelectSkills( target );
+        }
+
+        else if ( WAR3_get_level( iNewValue ) )
+        {
+            WAR3_check_level( target, iOldValue, iNewValue );
+            WAR3_check_skills( target );
+        }
+    }
+
+    if ( g_bSaveXp )
+        g_bStoreXp[target] = true;
+
+    // Log usage
+
+    if ( equal( szCommand, "war3x_setxp" ) )
+        WAR3_log_setxp( id, "war3x_setxp", szPlayerName, szRaceNameShort, szNewValue );
+
+    else if ( equal( szCommand, "war3x_setlevel" ) )
+    {
+        WAR3_log_setxp( id, "war3x_setlevel", szPlayerName, szRaceNameShort, szNewValue );
+    }
+
+    // Echo to player that issued command
+
+    new szConfirm[256];
+    formatex( szConfirm, 255, "%s %L", WAR3X_PREFIX, id, "WAR3X_SETXP_CONFIRM", szPlayerName, szRaceNameShort, iOldValue, iNewValue );
+
+    status_print( id, szConfirm );
+
+    return PLUGIN_HANDLED;
+}
 
 // ------------------------------------------------- End. - //
