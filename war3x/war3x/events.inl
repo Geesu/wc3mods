@@ -987,7 +987,7 @@ public on_World_Action() {
 
         // Make sure freezetime cvar set > 0
 
-        if ( !get_pcvar_float( CVAR_mp_freezetime ) )
+        if ( CVAR_mp_freezetime && !get_pcvar_float( CVAR_mp_freezetime ) )
             set_pcvar_float( CVAR_mp_freezetime, 1.0 );
 
         if ( g_iCurrentRound == 0 )
