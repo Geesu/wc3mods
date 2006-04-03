@@ -362,7 +362,6 @@ MENU_SKILLSINFO_TITLE           = \ySkills Info ^n^n\w
 MENU_PLAYEROPTIONS_TITLE        = \yPlayer Options ^n^n\w
 MENU_RACEOPTIONS_TITLE          = \yReset Options ^n
 MENU_ADMINOPTIONS_TITLE         = \yAdmin Options ^n^n\w
-MENU_HELPTOPICS_TITLE           = \yHelp Topics ^n^n\w
 
 ;Menu Options
 

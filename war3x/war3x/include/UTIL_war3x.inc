@@ -773,7 +773,7 @@ public WAR3_damage( attacker, victim, weapon, iDamage, headshot, iCheckArmor ) {
 
     // Update kill assist information
 
-	WAR3_damage_assist( attacker, victim, iDamage );
+	//WAR3_damage_assist( attacker, victim, iDamage );
 
     return PLUGIN_HANDLED;
 }
@@ -795,7 +795,7 @@ public WAR3_death( killer, victim, weapon, headshot ) {
 
     // Check for kill assist
 
-    XP_Support_Kill( killer, victim );
+    //XP_Support_Kill( killer, victim );
 
     // Make sure death was not to DoT from disconnected killer
 

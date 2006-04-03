@@ -435,10 +435,10 @@ public on_Damage( victim ) {
 
     if ( bodypart == HIT_HEAD )
         headshot = 1;
-	
+
 	// Update kill assist information
 
-	WAR3_damage_assist( attacker, victim, iDamage );
+	//WAR3_damage_assist( attacker, victim, iDamage );
 
     // Check for bomb explosion
 

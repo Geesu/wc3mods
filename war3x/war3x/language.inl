@@ -7,7 +7,7 @@
 #define SKILL_T_TRAINED		2
 #define SKILL_T_ULTIMATE	3
 
-#define TOTAL_MENUS			9		// Total number of menus to be registered
+#define TOTAL_MENUS			7		// Total number of menus to be registered
 
 // This is the list of menu titles that are in war3x.txt
 new const MENU_NAMES[TOTAL_MENUS][] =
@@ -18,9 +18,8 @@ new const MENU_NAMES[TOTAL_MENUS][] =
 	"MENU_SKILLSINFO_TITLE",
 	"MENU_SELECTSKILLS_TITLE",
 	"MENU_PLAYEROPTIONS_TITLE",
-	"MENU_RACEOPTIONS_TITLE",
-	"MENU_ADMINOPTIONS_TITLE",
-	"MENU_HELPTOPICS_TITLE"
+	"MENU_RACEOPTIONS_TITLE"
+//	"MENU_ADMINOPTIONS_TITLE"
 };
 
 // Callback functions for the above menu names
@@ -32,9 +31,8 @@ new const MENU_CALLBACK[TOTAL_MENUS][] =
 	"_menu_SkillsHelp",
 	"_menu_SelectSkills",
 	"_menu_PlayerOptions",
-	"_menu_RaceOptions",
-	"_menu_AdminOptions",
-	"_menu_HelpTopics"
+	"_menu_RaceOptions"
+//	"_menu_AdminOptions"
 };
 
 LANG_RegisterMenus()
