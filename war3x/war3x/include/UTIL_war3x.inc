@@ -773,7 +773,7 @@ public WAR3_damage( attacker, victim, weapon, iDamage, headshot, iCheckArmor ) {
 
     // Update kill assist information
 
-	//WAR3_damage_assist( attacker, victim, iDamage );
+	WAR3_damage_assist( attacker, victim, iDamage );
 
     return PLUGIN_HANDLED;
 }
@@ -792,10 +792,6 @@ public WAR3_death( killer, victim, weapon, headshot ) {
     // Perform Victim Actions
 
     WAR3_death_victim( victim );
-
-    // Check for kill assist
-
-    //XP_Support_Kill( killer, victim );
 
     // Make sure death was not to DoT from disconnected killer
 
@@ -930,11 +926,19 @@ public WAR3_damage_assist( attacker, victim, iDamage ) {
 
 	if ( !( WAR3_player_valid( attacker ) || WAR3_player_valid( victim ) ) )
 		return PLUGIN_HANDLED;
+		
+	if ( g_bEvadeNextShot[victim] && ( get_gametime() - g_fEvasionTime[victim] ) >= EVASION_SHOTGAP )
+		return PLUGIN_HANDLED;
 
 	g_iPlayerDamage[victim][attacker] += iDamage;
 	g_iPlayerDamageTaken[victim] += iDamage;
-	g_iPlayersThatDamage[victim][g_iTotalPlayersThatDamage[victim]] = attacker;
-	g_iTotalPlayersThatDamage[victim]++;
+	
+	if ( !g_bPlayersThatDamage[victim][attacker] )
+	{
+		g_iPlayersThatDamage[victim][g_iTotalPlayersThatDamage[victim]] = attacker;
+		g_iTotalPlayersThatDamage[victim]++;
+		g_bPlayersThatDamage[victim][attacker] = true
+	}
 
 	return PLUGIN_HANDLED;
 }

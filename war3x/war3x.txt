@@ -285,6 +285,7 @@ XP_KILLVIP_MESSAGE              = You have gained %d bonus XP for killing the VI
 XP_KILLPLANTER_MESSAGE          = You have gained %d bonus XP for killing a player planting the bomb!
 XP_KILLDEFUSER_MESSAGE          = You have gained %d bonus XP for killing a player defusing the bomb!
 XP_HOSTAGE_KILLRESCUER_MESSAGE  = You have gained %d bonus XP for killing a player attempting to rescue hostages!
+XP_KILLASSIST_MESSAGE           = You recieve %d XP for assisting with a kill!
 XP_TEAMKILL_MESSAGE             = You have lost %d XP for killing a teammate!
 
 XP_HOSTAGE_TOUCH_MESSAGE        = You received %d XP for beginning to escort a hostage to safety!
@@ -314,8 +315,6 @@ XP_MAX_VIPSPAWN_MESSAGE         = You are the VIP! Help your teammates gain XP b
 
 XP_SUPPORT_HEALMSG              = You have received %d XP for restoring %d health on your teammate(s).
 XP_SUPPORT_HEALMSG_MAX          = You have restored %d health on your teammate(s).
-
-XP_KILL_ASSIST                  = You recieve %d XP for assisting with a kill.
 
 ;Server Console Messages
 

@@ -437,8 +437,8 @@ public on_Damage( victim ) {
         headshot = 1;
 
 	// Update kill assist information
-
-	//WAR3_damage_assist( attacker, victim, iDamage );
+	
+	WAR3_damage_assist( attacker, victim, iDamage );
 
     // Check for bomb explosion
 
@@ -602,6 +602,7 @@ public on_Death() {
     else
     {
         XP_Kill( killer, victim, weapon, headshot );
+		XP_Kill_Assist( killer, victim );
     }
 
     return PLUGIN_CONTINUE;

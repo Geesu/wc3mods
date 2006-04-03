@@ -1107,24 +1107,21 @@ public XP_Support_Heal( caster, iHealthGiven ) {
     return PLUGIN_HANDLED;
 }
 
-public XP_Support_Kill( killer, victim ) {
+public XP_Kill_Assist( killer, victim ) {
 
 	if ( g_iPlayerDamage[victim][killer] / g_iPlayerDamageTaken[victim] < KILL_ASSIST_PERCENT )
 	{
 		new iKillAssister;
 		new iTotalPlayers = g_iTotalPlayersThatDamage[victim];
 
-		if ( iTotalPlayers > 1 )
+		for ( new i = 0; i < iTotalPlayers; i++ )
 		{
-			for ( new iPlayerNum; iPlayerNum < iTotalPlayers; iPlayerNum++ )
-			{
-				new iPlayer = g_iPlayersThatDamage[victim][iPlayerNum];
+			new iPlayer = g_iPlayersThatDamage[victim][i];
 
-				if ( g_iPlayerDamage[victim][iPlayer] / g_iPlayerDamageTaken[victim] > KILL_ASSIST_PERCENT )
-				{
-					iKillAssister = iPlayer;
-					break;
-				}
+			if ( g_iPlayerDamage[victim][iPlayer] / g_iPlayerDamageTaken[victim] >= KILL_ASSIST_PERCENT )
+			{
+				iKillAssister = iPlayer;
+				break;
 			}
 		}
 
@@ -1141,7 +1138,7 @@ public XP_Support_Kill( killer, victim ) {
 
 		XP_Give( iKillAssister, iOldXp, iNewXp );
 
-		client_print( iKillAssister, print_chat, "%s %L", WAR3X_PREFIX, "XP_KILL_ASSIST", iSupportXp );
+		client_print( iKillAssister, print_chat, "%s %L", WAR3X_PREFIX, "XP_KILLASSIST_MESSAGE", iSupportXp );
 	}
 
 	return PLUGIN_HANDLED;

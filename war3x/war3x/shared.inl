@@ -815,14 +815,17 @@ public Purge_NewRound( id ) {
     g_bFlameStrikeCast[id]  = false;
 
 	// clear kill assist variables
-
-	for ( new i; i < g_iTotalPlayersThatDamage[id]; i++ )
+	
+	for ( new i = 0; i < g_iTotalPlayersThatDamage[id]; i++ )
 	{
 		new iSlot = g_iPlayersThatDamage[id][i];
+		g_iPlayersThatDamage[id][i] = 0;
 		g_iPlayerDamage[id][iSlot] = 0;
+		g_bPlayersThatDamage[id][iSlot] = false;
 	}
 
 	g_iPlayerDamageTaken[id] = 0;
+	g_iTotalPlayersThatDamage[id] = 0;
 
 
     return PLUGIN_HANDLED;
