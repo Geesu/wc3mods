@@ -24,7 +24,6 @@ BIG CHANGES:
 	* No DBI module found.. etc
 	* Error code: etc (debug)
 	* UTIL_dbi*
-	* "\r(*R estr icted )\d" and others in menus.inl
 
 
 --FULL CHECKING FOR REQUIRED FILES BEFORE LOADING (RYAN)

@@ -390,6 +390,7 @@ LANG_CATEGORY                   = Category
 LANG_PRIMARY_WEAPON             = primary
 LANG_SECONDARY_WEAPON           = sidearm
 LANG_GRENADES                   = grenades
+LANG_PLAYERS                    = players
 LANG_LEVEL                      = Level
 LANG_RACIAL                     = Racial
 LANG_CLASS                      = Class
@@ -403,7 +404,6 @@ LANG_DISABLED                   = Disabled
 LANG_RANDOM                     = Random
 LANG_HELP                       = Help
 LANG_CANCEL                     = Cancel
-
 
 [de]
 ; Your language here!

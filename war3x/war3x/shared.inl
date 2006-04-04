@@ -1616,15 +1616,6 @@ public Icon_DispellMe_Draw( id ) {
 }
 
 
-
-public Get_SkillName( iRaceId, iSkillNum, id, szSkillName[32] ) {
-
-	LANG_GetSkillNameHelper( iRaceId + 1, iSkillNum, id, szSkillName, 31 )
-
-    return PLUGIN_HANDLED;
-}
-
-
 // Generic Healing Effect
 
 public Shared_Heal_Effect( target ) {             // Shared Effect(s)
@@ -1709,7 +1700,7 @@ public WAR3_hud_level( id ) {
     {
         new iUltimateNum = g_PlayerInfo[id][CURRENT_ULTIMATE] + TOTAL_SKILLSTRAINED;
 
-        LANG_GetSkillNameHelper( iRaceNum + 1, iUltimateNum, id, szData, 63 );
+        LANG_GetSkillName( iRaceNum + 1, iUltimateNum, id, szData, 63 );
         iLen += formatex( szMessage[iLen], 72 - iLen, "^n%L: %s", id, "LANG_ULTIMATE", szData );
     }
 
@@ -1750,25 +1741,25 @@ public war3_chatskills( id, raceId, ShowHelp ) {
 
     if ( g_PlayerInfo[id][CURRENT_SKILL1] )
     {
-        LANG_GetSkillNameHelper( raceId, SKILL_1, id, szData, 63 );
+        LANG_GetSkillName( raceId + 1, SKILL_1, id, szData, 63 );
         iLen += formatex( szSkills[iLen], 128 - iLen, ", %s %d", szData, g_PlayerInfo[id][CURRENT_SKILL1] );
     }
 
     if ( g_PlayerInfo[id][CURRENT_SKILL2] )
     {
-        LANG_GetSkillNameHelper( raceId, SKILL_2, id, szData, 63 );
+        LANG_GetSkillName( raceId + 1, SKILL_2, id, szData, 63 );
         iLen += formatex( szSkills[iLen], 128 - iLen, ", %s %d", szData, g_PlayerInfo[id][CURRENT_SKILL2] );
     }
 
     if ( g_PlayerInfo[id][CURRENT_SKILL3] )
     {
-        LANG_GetSkillNameHelper( raceId, SKILL_3, id, szData, 63 );
+        LANG_GetSkillName( raceId + 1, SKILL_3, id, szData, 63 );
         iLen += formatex( szSkills[iLen], 128 - iLen, ", %s %d", szData, g_PlayerInfo[id][CURRENT_SKILL3] );
     }
 
     // Build message (with racial)
 
-    LANG_GetSkillNameHelper( raceId, SKILL_RACIAL, id, szData, 63 );
+    LANG_GetSkillName( raceId + 1, SKILL_RACIAL, id, szData, 63 );
     formatex( szMessage, 127, "%s %L %s (%0.0f%%)%s", WAR3X_PREFIX, id, "INFO_CURRENTSKILLS", szData, fRacialPercentage, szSkills );
 
     client_print( id, print_chat, "%s", szMessage );

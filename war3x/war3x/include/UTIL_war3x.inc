@@ -495,7 +495,7 @@ public WAR3_hud_item( id, iEffect, Float:fFxTime, Float:fFadeIn, Float:fFadeOut,
 	new szShortRaceName[16];
 	LANG_GetRaceName( iRaceNum + 1, id, szShortRaceName, 15, true );
 
-    formatex( szMessage, 63, "%s Level %i   Item: %s", szShortRaceName, iLevel, szItemName );
+    formatex( szMessage, 63, "%s %L %i   Item: %s", szShortRaceName, id, "LANG_LEVEL", iLevel, szItemName );
 
     // Get Coordinates
 

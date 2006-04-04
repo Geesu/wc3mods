@@ -120,7 +120,7 @@ public HELP_motd_players( id ) {
 			new szRaceName[32];
 			LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
 
-            iLen += formatex( szMotd[iLen], 2047 - iLen, "<h3>%s</h3>(%i players)^n", szRaceName, iRaceTotal );
+            iLen += formatex( szMotd[iLen], 2047 - iLen, "<h3>%s</h3>(%i %L)^n", szRaceName, iRaceTotal, id, "LANG_PLAYERS" );
             bRaceFound = true;
 
             // Sort by Team
@@ -269,7 +269,7 @@ public HELP_motd_target( id, targetId ) {
                 formatex( szSkillLevel, 15, "" );
             }
 
-            Get_SkillName( raceId, iSkillNum, id, szSkillName );
+            LANG_GetSkillName( raceId + 1, iSkillNum, id, szSkillName, 31 );
             iLen += formatex( szMotd[iLen], 2047 - iLen, "<b>%s</b> %s^n%s^n^n", szSkillName, szSkillLevel, szSkillDesc );
         }
 
@@ -279,9 +279,9 @@ public HELP_motd_target( id, targetId ) {
         {
             iLen += formatex( szMotd[iLen], 2047 - iLen, "^n<i>%L</i>^n^n", id, "MOTD_PS_CURRENTULTIMATE" );
 
-            new iUltimateNum = g_PlayerInfo[targetId][CURRENT_ULTIMATE] + TOTAL_SKILLS - 1;
+            new iUltimateNum = g_PlayerInfo[targetId][CURRENT_ULTIMATE] + TOTAL_SKILLSTRAINED;
 
-            Get_SkillName( raceId, iUltimateNum, id, szSkillName );
+            LANG_GetSkillName( raceId + 1, iUltimateNum, id, szSkillName, 31 );
             HELP_description_ultimate( raceId, iUltimateNum, id, szSkillDesc );
 
             iLen += formatex( szMotd[iLen], 2047 - iLen, "<b>%s</b>^n%s", szSkillName, szSkillDesc );
@@ -644,7 +644,7 @@ public HELP_create_files() {
                 HELP_description_trained( iRaceNum, iSkillNum, LANG_SERVER, szSkillDesc, LEVEL_ALL );
             }
 
-            Get_SkillName( iRaceNum, iSkillNum, LANG_SERVER, szSkillName );
+            LANG_GetSkillName( iRaceNum + 1, iSkillNum, LANG_SERVER, szSkillName, 31 );
 
             formatex( szText, 255, "<li><b>%s</b>^n%s", szSkillName, szSkillDesc );
 
@@ -664,7 +664,7 @@ public HELP_create_files() {
                 write_file( szFileName, szSkillHeader, -1 );
             }
 
-            Get_SkillName( iRaceNum, iUltimateNum, LANG_SERVER, szSkillName );
+            //LANG_GetSkillName( iRaceNum, iUltimateNum, LANG_SERVER, szSkillName );
             HELP_description_ultimate( iRaceNum, iUltimateNum, LANG_SERVER, szSkillDesc );
 
             formatex( szText, 255, "<li><b>%s</b>^n%s", szSkillName, szSkillDesc );
@@ -723,7 +723,7 @@ static HELP_description_racial( iRaceNum, id, szDescription[256], iLevel ) {
 
     // Grab skill description template
 
-	LANG_GetSkillDesc( iRaceNum + 1, 1, SKILL_T_RACIAL, id, szDescription, 255 )
+	LANG_GetSkillDesc( iRaceNum + 1, SKILL_RACIAL, id, szDescription, 255 )
 
     // Grab values
 
@@ -779,7 +779,7 @@ static HELP_description_trained( iRaceNum, iSkillNum, id, szDescription[256], iL
 
     // Grab skill description template
 
-	LANG_GetSkillDesc( iRaceNum + 1, iSkillNum + 1, SKILL_T_TRAINED, id, szDescription, 255 )
+	LANG_GetSkillDesc( iRaceNum + 1, iSkillNum, id, szDescription, 255 )
 
     // Grab values
 
@@ -840,7 +840,7 @@ static HELP_description_ultimate( iRaceNum, iUltimateNum, id, szDescription[256]
 
     // Grab skill description template
 
-	LANG_GetSkillDesc( iRaceNum + 1, iUltimateNum + 1, SKILL_T_ULTIMATE, id, szDescription, 255 )
+	LANG_GetSkillDesc( iRaceNum + 1, iUltimateNum + TOTAL_SKILLS, id, szDescription, 255 )
 
     // Grab values
 

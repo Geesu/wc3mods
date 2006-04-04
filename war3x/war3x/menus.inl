@@ -398,11 +398,11 @@ public menu_SelectSkills( id ) {
 
     if ( WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] ) > ( TOTAL_SKILLLEVELS * ( TOTAL_SKILLSTRAINED - 1 ) + 1 ) )
     {
+		new iSkillNum = 0;
 
-				new iSkillNum = 0;
         // Auto-select all skills except ultimate if level 10
 
-				if ( WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] ) == TOTAL_LEVELS )
+		if ( WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] ) == TOTAL_LEVELS )
         {
             for ( iSkillNum = 0 + OFFSET_CURRENT_SKILLS; iSkillNum < TOTAL_SKILLSTRAINED + OFFSET_CURRENT_SKILLS; iSkillNum++ )
             {
@@ -417,26 +417,26 @@ public menu_SelectSkills( id ) {
 
         // Find total trainable skills and see if all but one are trained fully
 
-				else if ( g_PlayerInfo[id][CURRENT_ULTIMATE] )
+		else if ( g_PlayerInfo[id][CURRENT_ULTIMATE] )
+		{
+			new iSkillsFull = 0;
+
+			for ( iSkillNum = 0 + OFFSET_CURRENT_SKILLS; iSkillNum < TOTAL_SKILLSTRAINED + OFFSET_CURRENT_SKILLS; iSkillNum++ )
+			{
+					if ( g_PlayerInfo[id][iSkillNum] == TOTAL_SKILLLEVELS )
+					iSkillsFull++;
+			}
+
+			if ( iSkillsFull == TOTAL_SKILLSTRAINED - 1 )
+			{
+				for ( iSkillNum = 0 + OFFSET_CURRENT_SKILLS; iSkillNum < TOTAL_SKILLSTRAINED + OFFSET_CURRENT_SKILLS; iSkillNum++ )
 				{
-						new iSkillsFull = 0;
-
-						for ( iSkillNum = 0 + OFFSET_CURRENT_SKILLS; iSkillNum < TOTAL_SKILLSTRAINED + OFFSET_CURRENT_SKILLS; iSkillNum++ )
-						{
-								if ( g_PlayerInfo[id][iSkillNum] == TOTAL_SKILLLEVELS )
-								iSkillsFull++;
-						}
-
-						if ( iSkillsFull == TOTAL_SKILLSTRAINED - 1 )
-						{
-								for ( iSkillNum = 0 + OFFSET_CURRENT_SKILLS; iSkillNum < TOTAL_SKILLSTRAINED + OFFSET_CURRENT_SKILLS; iSkillNum++ )
-								{
-										if ( g_PlayerInfo[id][iSkillNum] != TOTAL_SKILLLEVELS )
-												g_PlayerInfo[id][iSkillNum] = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] ) - ( TOTAL_SKILLLEVELS * ( TOTAL_SKILLSTRAINED - 1 ) + 1 );
-								}
-						}
+					if ( g_PlayerInfo[id][iSkillNum] != TOTAL_SKILLLEVELS )
+						g_PlayerInfo[id][iSkillNum] = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] ) - ( TOTAL_SKILLLEVELS * ( TOTAL_SKILLSTRAINED - 1 ) + 1 );
 				}
+			}
 		}
+	}
 
     // Display Menu
 
@@ -461,7 +461,7 @@ public menu_SelectSkills( id ) {
 
     for ( new iSkillNum = 1; iSkillNum <= TOTAL_SKILLSTRAINED; iSkillNum++ )
     {
-        LANG_GetSkillNameHelper( iRaceNum - 1, iSkillNum, id, szSkillName, 63 );
+        LANG_GetSkillName( iRaceNum, iSkillNum, id, szSkillName, 63 );
 
         iCurrentSkill = iSkillNum + 1;
         iNextSkillLvl = g_PlayerInfo[id][iCurrentSkill] + 1;
@@ -515,7 +515,7 @@ public menu_SelectSkills( id ) {
 
     for ( new iSkillNum = TOTAL_SKILLSTRAINED + 1; iSkillNum < TOTAL_ULTIMATES + ( TOTAL_SKILLSTRAINED + 1 ); iSkillNum++ )
     {
-        LANG_GetSkillNameHelper( iRaceNum - 1, iSkillNum, id, szSkillName, 63 );
+        LANG_GetSkillName( iRaceNum, iSkillNum, id, szSkillName, 63 );
         iCurrentSkill = iSkillNum + 1;
 
         new iUltimateNum = iSkillNum - TOTAL_SKILLSTRAINED;

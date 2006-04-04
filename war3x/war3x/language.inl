@@ -1,15 +1,12 @@
 // Begin LANGUAGE.INL
 
 #define SHOP_COMMON			1
-
-// Defines used for getting skills names
-#define SKILL_T_RACIAL		1
-#define SKILL_T_TRAINED		2
-#define SKILL_T_ULTIMATE	3
+#define TOTAL_MENUS			9		// Total number of menus to be registered
 
 #define TOTAL_MENUS			7		// Total number of menus to be registered
 
 // This is the list of menu titles that are in war3x.txt
+
 new const MENU_NAMES[TOTAL_MENUS][] =
 {
 	"MENU_WAR3MENU_TITLE",
@@ -23,6 +20,7 @@ new const MENU_NAMES[TOTAL_MENUS][] =
 };
 
 // Callback functions for the above menu names
+
 new const MENU_CALLBACK[TOTAL_MENUS][] =
 {
 	"_menu_War3menu",
@@ -35,13 +33,12 @@ new const MENU_CALLBACK[TOTAL_MENUS][] =
 //	"_menu_AdminOptions"
 };
 
-LANG_RegisterMenus()
-{
+public LANG_RegisterMenus() {
+
 	new total_languages = get_langsnum();
 	new lang[3], menu[128];
 	new curMenuId = -1, highestMenuId = -1;
 	new iLang, iMenu;
-
 
 	// Loop through every menu
 
@@ -66,27 +63,35 @@ LANG_RegisterMenus()
 			}
 		} // End language loop
 	} // End menu loop
+
+    return PLUGIN_HANDLED;
 }
 
 
-LANG_GetItemName( item_id, shop_id, id, item_name[], len )
-{
+public LANG_GetItemName( item_id, shop_id, id, item_name[], len ) {
+
 	new szItemHelper[32];
 
 	formatex( szItemHelper, 31, "SHOP%d_ITEM%d_NAME", shop_id, item_id );
 	formatex( item_name, len, "%L", id, szItemHelper );
+
+	return PLUGIN_HANDLED;
 }
 
-LANG_GetItemDesc( item_id, shop_id, id, item_desc[], len )
-{
+
+public LANG_GetItemDesc( item_id, shop_id, id, item_desc[], len ) {
+
 	new szItemHelper[32];
 
 	formatex( szItemHelper, 31, "SHOP%d_ITEM%d_DESC", shop_id, item_id );
 	formatex( item_desc, len, "%L", id, szItemHelper );
+
+    return PLUGIN_HANDLED;
 }
 
-LANG_GetRaceName( race_id, id, race_name[], len, bool:short_name = false )
-{
+
+public LANG_GetRaceName( race_id, id, race_name[], len, bool:short_name = false ) {
+
 	new szRaceHelper[32];
 
 	if ( short_name )
@@ -99,68 +104,61 @@ LANG_GetRaceName( race_id, id, race_name[], len, bool:short_name = false )
 	}
 
 	formatex( race_name, len, "%L", id, szRaceHelper );
+
+    return PLUGIN_HANDLED;
 }
 
-LANG_GetSkillNameHelper( race_id, skill_id, id, skill_name[], len )
-{
-	new newSkillId = 0;
-	new skill_type = 0;
 
-	switch ( skill_id )
-	{
-		case 0: {newSkillId = 1; skill_type = SKILL_T_RACIAL;}
-		case 1: {newSkillId = 1; skill_type = SKILL_T_TRAINED;}
-		case 2: {newSkillId = 2; skill_type = SKILL_T_TRAINED;}
-		case 3: {newSkillId = 3; skill_type = SKILL_T_TRAINED;}
-		case 4: {newSkillId = 1; skill_type = SKILL_T_ULTIMATE;}
-		case 5: {newSkillId = 2; skill_type = SKILL_T_ULTIMATE;}
-		case 6: {newSkillId = 3; skill_type = SKILL_T_ULTIMATE;}
-	}
+public LANG_GetSkillName( race_id, skill_id, id, skill_name[], len ) {
 
-
-	LANG_GetSkillName( race_id, newSkillId, skill_type, id, skill_name, len )
-}
-
-LANG_GetSkillName( race_id, skill_id, skill_type, id, skill_name[], len )
-{
 	new szSkillHelper[32];
 
-	if ( skill_type == SKILL_T_RACIAL )
-	{
-		formatex( szSkillHelper, 31, "RACE%d_RACIAL%d", race_id, skill_id );
-	}
-	else if ( skill_type == SKILL_T_TRAINED )
+    // Racial / trained skill
+
+	if ( skill_id < TOTAL_SKILLS )
 	{
 		formatex( szSkillHelper, 31, "RACE%d_SKILL%d", race_id, skill_id );
 	}
-	else if ( skill_type == SKILL_T_ULTIMATE )
+
+    // Ultimate
+
+	else
 	{
+	    skill_id -= ( TOTAL_SKILLS - 1 );
 		formatex( szSkillHelper, 31, "RACE%d_ULTIMATE%d", race_id, skill_id );
 	}
 
+	server_print( "%s", szSkillHelper );
 	formatex( skill_name, len, "%L", id, szSkillHelper );
+
+    return PLUGIN_HANDLED;
 }
 
-LANG_GetSkillDesc( race_id, skill_id, skill_type, id, skill_desc[], len )
-{
+
+public LANG_GetSkillDesc( race_id, skill_id, id, skill_desc[], len ) {
+
 	new szSkillHelper[32];
 
-	if ( skill_type == SKILL_T_RACIAL )
-	{
-		formatex( szSkillHelper, 31, "RACE%d_RACIAL%d_DESC", race_id, skill_id );
-	}
-	else if ( skill_type == SKILL_T_TRAINED )
+    // Racial / trained skill
+
+	if ( skill_id < TOTAL_SKILLS )
 	{
 		formatex( szSkillHelper, 31, "RACE%d_SKILL%d_DESC", race_id, skill_id );
 	}
-	else if ( skill_type == SKILL_T_ULTIMATE )
+
+    // Ultimate
+
+	else
 	{
+	    skill_id -= ( TOTAL_SKILLS - 1 );
 		formatex( szSkillHelper, 31, "RACE%d_ULTIMATE%d_DESC", race_id, skill_id );
 	}
 
 	server_print( "%s", szSkillHelper );
 
 	formatex( skill_desc, len, "%L", id, szSkillHelper );
+
+    return PLUGIN_HANDLED;
 }
 
 
