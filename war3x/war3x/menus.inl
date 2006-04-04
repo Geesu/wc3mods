@@ -154,11 +154,11 @@ public menu_SelectRace( id ) {
         for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
         {
 			new szRaceName[32];
-			LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
+			LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31, false );
 
 			if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum ) )
             {
-				LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 )
+				LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31, false )
                 iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\r%L          ^n", iRaceNum + 1, szRaceName, id, "LANG_DISABLED" );
             }
 
@@ -197,7 +197,7 @@ public menu_SelectRace( id ) {
         for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
         {
 			new szRaceName[32];
-			LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
+			LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31, false );
 
             if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum ) )
             {
@@ -452,7 +452,7 @@ public menu_SelectSkills( id ) {
     iKeys = (1<<9)|(1<<8);
 
 	new szRaceName[32];
-	LANG_GetRaceName( iRaceNum, id, szRaceName, 31 );
+	LANG_GetRaceName( iRaceNum, id, szRaceName, 31, false );
 
     iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_SELECTSKILLS_TITLE" );
     iLen += formatex( szMenu[iLen], 512 - iLen, "\d%s^n", szRaceName );
@@ -787,7 +787,7 @@ public menu_SkillsHelp( id ) {
     for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
     {
 		new szRaceName[32];
-		LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
+		LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31, false );
 
         iLen += formatex( szMenu[iLen], 512 - iLen, "%d. %s^n", iRaceNum + 1, szRaceName );
         iKeys |= ( 1<<iRaceNum );
@@ -927,7 +927,7 @@ public menu_RaceOptions( id ) {
     new raceId = g_PlayerInfo[id][CURRENT_RACE] - 1;
 
 	new szRaceName[32];
-	LANG_GetRaceName( raceId + 1, id, szRaceName, 31 );
+	LANG_GetRaceName( raceId + 1, id, szRaceName, 31, false );
 
     iLen += formatex( szMenu[iLen], 511 - iLen, "%L", id, "MENU_RACEOPTIONS_TITLE" );
     iLen += formatex( szMenu[iLen], 511 - iLen, "\d%s^n^n", szRaceName );
@@ -1068,7 +1068,7 @@ public _menu_RaceOptions( id, iKey ) {
 
             new szMessage[128], szRaceName[32];
 
-			LANG_GetRaceName( iRaceId + 1, id, szRaceName, 31 );
+			LANG_GetRaceName( iRaceId + 1, id, szRaceName, 31, false );
             formatex( szMessage, 127, "%s %L", WAR3X_PREFIX, id, "INFO_RESETXP", szRaceName );
 
             client_print( id, print_chat, "%s", szMessage );

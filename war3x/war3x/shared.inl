@@ -701,6 +701,9 @@ public WAR3_death_victim( id ) {
     if ( g_PlayerInfo[id][CURRENT_ITEM] != ITEM_ANKH )
         g_PlayerInfo[id][CURRENT_ITEM] = 0;
 
+    // Reward kill assist(s)
+
+    WAR3_killassist_death( id );
 
     // Check if New Skills Available
 
@@ -814,19 +817,13 @@ public Purge_NewRound( id ) {
     g_bPlayerRespawned[id]  = false;
     g_bFlameStrikeCast[id]  = false;
 
-	// clear kill assist variables
-	
-	for ( new i = 0; i < g_iTotalPlayersThatDamage[id]; i++ )
+	// Clear kill assist variable(s)
+
+	for ( new i = 1; i <= get_global_int( GL_maxClients ); i++ )
 	{
-		new iSlot = g_iPlayersThatDamage[id][i];
-		g_iPlayersThatDamage[id][i] = 0;
-		g_iPlayerDamage[id][iSlot] = 0;
-		g_bPlayersThatDamage[id][iSlot] = false;
+    	g_KillAssist_Attackers[id][i] = 0;
+    	g_KillAssist_iTotalDamage[id][i] = 0;
 	}
-
-	g_iPlayerDamageTaken[id] = 0;
-	g_iTotalPlayersThatDamage[id] = 0;
-
 
     return PLUGIN_HANDLED;
 }
@@ -929,6 +926,11 @@ public Purge_Common( id ) {
     g_bTouchHostage[id]     = false;
     g_bChangeUltimate[id]   = false;
     g_bAnkhDropWeapons[id]  = false;
+
+    // Clear kill assist globals for victim
+
+	g_KillAssist_iTotalAttackers[id] = 0;
+	g_KillAssist_iTotalHealth[id]    = 0;
 
     g_fUltimateCooldown[id] = get_gametime();
 
@@ -1691,7 +1693,7 @@ public WAR3_hud_level( id ) {
     new szMessage[73], szData[64], iLen, szRaceName[32];
     new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
-	LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31 );
+	LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31, false );
     LANG_GetClassName( iRaceNum + 1, id, szData, 63 );
 
     iLen += formatex( szMessage[iLen], 72 - iLen, "%s^n%L %d ( %s )", szRaceName, id, "LANG_LEVEL", iLevel, szData );
@@ -1768,6 +1770,50 @@ public war3_chatskills( id, raceId, ShowHelp ) {
 
     if ( ShowHelp )
         client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "INFO_SKILLDETAILS" );
+
+    return PLUGIN_HANDLED;
+}
+
+
+public WAR3_killassist_damage( attacker, victim, iDamage ) {
+
+    if ( !WAR3_player_valid( attacker ) )
+        return PLUGIN_HANDLED;
+
+	g_KillAssist_iTotalDamage[attacker][victim] += iDamage;
+
+    // Add to Attackers array if new attacker
+
+	new i = 0, bool:bNewAttacker = true;
+
+	while ( i < g_KillAssist_iTotalAttackers[victim] && bNewAttacker )
+	{
+		if ( g_KillAssist_Attackers[victim][i] == attacker )
+			bNewAttacker = false;
+
+        i++;
+	}
+
+	if ( bNewAttacker )
+	{
+		g_KillAssist_iTotalAttackers[victim]++;
+		g_KillAssist_Attackers[victim][i] = attacker;
+	}
+
+    return PLUGIN_HANDLED;
+}
+
+
+public WAR3_killassist_death( victim ) {
+
+	for ( new i = 0; i < g_KillAssist_iTotalAttackers[victim]; i++ )
+	{
+		new attacker = g_KillAssist_Attackers[victim][i];
+        new Float:fDamagePercent = float( g_KillAssist_iTotalDamage[attacker][victim] ) / float( g_KillAssist_iTotalHealth[victim] );
+
+		if ( fDamagePercent > KILLASSIST_DAMAGE )
+			XP_kill_assist( attacker, fDamagePercent );
+	}
 
     return PLUGIN_HANDLED;
 }

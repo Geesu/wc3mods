@@ -219,23 +219,24 @@ static UD_S_VAMPIRIC( attacker, victim, weapon, iDamage ) {
     if ( iDamage > iVictimHealth )
         iDamage = iVictimHealth;
 
-    new Float:fBonusHealth = float( iDamage ) * UD_fVampiricAura[g_PlayerInfo[attacker][CURRENT_SKILL1] - 1];
+    new Float:fHealthGiven = float( iDamage ) * UD_fVampiricAura[g_PlayerInfo[attacker][CURRENT_SKILL1] - 1];
 
     if ( weapon == CSW_KNIFE )
-        fBonusHealth += fBonusHealth * VAMPIRIC_KNIFEBONUS;
+        fHealthGiven += ( fHealthGiven * VAMPIRIC_KNIFEBONUS );
 
     // Make sure health is gained
 
-    if ( fBonusHealth < 1.0 )
+    if ( fHealthGiven < 1.0 )
         return PLUGIN_HANDLED;
 
     // Make sure health does not exceed max
 
-    new iNewHealth = get_user_health( attacker ) + floatround( fBonusHealth );
+    new iHealthGiven = floatround( fHealthGiven );
+    new iNewHealth = get_user_health( attacker ) + iHealthGiven;
 
     if ( iNewHealth > 100 )
     {
-        fBonusHealth -= ( float( iNewHealth ) - 100.0 );
+        iHealthGiven -= ( iNewHealth - 100 );
         iNewHealth = 100;
     }
 
@@ -243,16 +244,20 @@ static UD_S_VAMPIRIC( attacker, victim, weapon, iDamage ) {
 
     if ( get_cvar_num( "mp_war3stats" ) )
     {
-        playerSkill1Info[attacker][0] += floatround( fBonusHealth );
+        //playerSkill1Info[attacker][0] += floatround( fBonusHealth );
     }
 
-    // Set health
-
-    if ( fBonusHealth >= 1.0 )
+    if ( iHealthGiven > 0 )
     {
+        // Increase total health of player for Kill Assist
+
+        g_KillAssist_iTotalHealth[attacker] += iHealthGiven;
+
+        // Set health
+
         set_user_health( attacker, iNewHealth );
 
-        new iFadeAlpha = floatround( fBonusHealth * 2.5 );
+        new iFadeAlpha = floatround( fHealthGiven * 2.5 );
 
         if ( iFadeAlpha > GLOW_MAX )
             iFadeAlpha = GLOW_MAX;

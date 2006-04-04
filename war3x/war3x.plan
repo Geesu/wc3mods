@@ -4,8 +4,8 @@
 BIG CHANGES:
 ------------
 
-* New Feature - Kill Assists
-  (If you deal more than 50% of damage to a player, you will receive some xp.)
+--New Feature - Kill Assists (AVANDERIK/RYAN)
+  (If you deal more than *35% of damage to a player, you will receive some xp.)
 
 * New Feature - Stats System
   (This will be the implementation of our stats system. We will reward for support, aggression, and all types of gameplay. These will be used locally on the game server for patch 1.1 and will be loaded into the database for version 1.2.)
@@ -18,7 +18,7 @@ BIG CHANGES:
 
 * ADMIN MENU
 
-* FULL MULTILINGUAL SUPPORT
+--FULL MULTILINGUAL SUPPORT (GEESU/RYAN)
 
 	(left to be ML'd)
 	* No DBI module found.. etc
@@ -66,12 +66,98 @@ MISC CHANGES:
 --recode human invisibility to take cloak into affect
 --regeneration requires armor to use
 --temporarily disable voting -- make external plugin at some point (RYAN)
+--move all commands to commands.inl (setxp/etc) (RYAN)
 
 * fix ankh if possible (sometimes it doesnt work on bomb explosions) (or when team change)
 * replace all distance/40 by get_distance (statsx stock)
-* move all commands to commands.inl (setxp/etc)
 * make a function to auto-fix right aligned words from being 'squished' -- this will be necessary for multilanguage
 * add string length field to any function that takes string pointer and modifies.. this might be causing current problems.
+* fix ML_NOTFOUND issues (race+1)
+* i'd like to fix all raceid's so that the = 1-4, so we're all on the same page here.
+* windwalk bot changes -> force knife when knife is being used(?), activate if distance < certain point (10 meters)
+
+
+
+KILL ASSIST(S)
+
+//on damage ( real / bonus )
+	attacker's total damage to [victim] array += damage
+	check victim's attackers array up to totalattackers to see if player has already damaged
+		if not, totalattackers++, attackers array [totalattackers] = attacker
+
+	*NOTE* NOT counting avatar at the moment because it will soon be redesigned to
+	give a boost to armor rating and damage ONLY, not health...
+
+
+	g_KillAssist_iTotalDamage[attacker][victim] += damage
+
+	new i = 0;
+	new bool:bNewAttacker = true;	
+
+	while ( i < g_KillAssist_iTotalAttackers[victim] && bNewAttacker )
+	{
+		if ( g_KillAssist_Attackers[victim][i] == attacker )
+			bNewAttacker = false;
+	}
+
+	if ( bNewAttacker )
+	{
+		g_KillAssist_iTotalAttackers[victim]++;
+		g_KillAssist_Attackers[victim][i] = attacker;
+	}
+
+	
+
+//on evasion
+	remove damage dealt before evading
+
+	g_KillAssist_iTotalDamage[attacker][victim] -= Damage;
+
+
+//on death
+	loop through victims attackers array, check each attackers[victim] damage, if > SOME_CONST_%, award support xp
+
+	for ( new i = 0; i < g_KillAssist_iTotalAttackers[victim]; i++ )
+	{
+		new attacker = g_KillAssist_Attackers[victim][i];
+
+		if ( float( g_KillAssist_iTotalDamage[attacker][victim] ) / float( g_KillAssist_iTotalHealth[victim] ) > KILLASSIST_DAMAGE )
+			XP_kill_assist( attacker );
+	}
+
+
+	PURGE:
+//	g_KillAssist_Attackers[victim] (clear this array)
+//	g_KillAssist_iTotalAttackers[victim] = 0;
+//	g_KillAssist_iTotalHealth[victim] = 0;
+
+//on heal (orc regen/vamp aura/ultimate WAR3_heal)
+	increase player's totalhealth array by +health gained
+
+	g_KillAssist_iTotalHealth[player] += healthgained
+
+
+on roundstart
+
+	set player's max health to array so we know how much to compare dmg to	
+
+//	g_KillAssist_iTotalHealth = WAR3_get_maxhealth( id );
+
+
+	PURGE:
+//	g_KillAssist_iTotalDamage[33][33]; (clear this array)
+
+
+
+//globals:
+g_KillAssist_Attackers[33][33];
+g_KillAssist_iTotalAttackers[33];
+g_KillAssist_iTotalDamage[33][33];
+g_KillAssist_iTotalHealth[33];
+
+KILLASSIST_DAMAGE
+
+
 
 
 NOT HAPPENING THIS TIME
@@ -240,6 +326,21 @@ Tome of Power
 Mask of Death
 	* gives the player +50% life leech (stacks with undead)
 
+
+
+REWARD ITEMS: *REQUIRES WINNING RACIAL ITENTITY ROLE FOR X ROUNDS IN A ROW*
+=============
+
+
+
+Boots of Agility	(Human)
+	* Gives player no footsteps
+
+Moonstone		(Night Elf)
+	* Elune's Grace skill increased by 200%
+
+Necklace of Immunity	(Blood Elf)
+	* Player is untargetable by ultimates
 
 
 FUTURE:

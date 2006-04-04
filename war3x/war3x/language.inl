@@ -1,8 +1,6 @@
 // Begin LANGUAGE.INL
 
 #define SHOP_COMMON			1
-#define TOTAL_MENUS			9		// Total number of menus to be registered
-
 #define TOTAL_MENUS			7		// Total number of menus to be registered
 
 // This is the list of menu titles that are in war3x.txt
@@ -90,7 +88,7 @@ public LANG_GetItemDesc( item_id, shop_id, id, item_desc[], len ) {
 }
 
 
-public LANG_GetRaceName( race_id, id, race_name[], len, bool:short_name = false ) {
+public LANG_GetRaceName( race_id, id, race_name[], len, bool:short_name ) {
 
 	new szRaceHelper[32];
 
@@ -128,7 +126,6 @@ public LANG_GetSkillName( race_id, skill_id, id, skill_name[], len ) {
 		formatex( szSkillHelper, 31, "RACE%d_ULTIMATE%d", race_id, skill_id );
 	}
 
-	server_print( "%s", szSkillHelper );
 	formatex( skill_name, len, "%L", id, szSkillHelper );
 
     return PLUGIN_HANDLED;
@@ -153,8 +150,6 @@ public LANG_GetSkillDesc( race_id, skill_id, id, skill_desc[], len ) {
 	    skill_id -= ( TOTAL_SKILLS - 1 );
 		formatex( szSkillHelper, 31, "RACE%d_ULTIMATE%d_DESC", race_id, skill_id );
 	}
-
-	server_print( "%s", szSkillHelper );
 
 	formatex( skill_desc, len, "%L", id, szSkillHelper );
 

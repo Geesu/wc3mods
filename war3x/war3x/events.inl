@@ -437,8 +437,9 @@ public on_Damage( victim ) {
         headshot = 1;
 
 	// Update kill assist information
-	
-	WAR3_damage_assist( attacker, victim, iDamage );
+
+    if ( attacker && attacker != victim )
+        WAR3_killassist_damage( attacker, victim, iDamage );
 
     // Check for bomb explosion
 
@@ -565,6 +566,10 @@ public on_Death() {
     new victim = read_data( 2 );
     new headshot = read_data( 3 );
 
+    // Prevent killer from receiving kill assist
+
+	g_KillAssist_iTotalDamage[killer][victim] = 0;
+
     // Perform victim actions
 
     WAR3_death_victim( victim );
@@ -602,7 +607,6 @@ public on_Death() {
     else
     {
         XP_Kill( killer, victim, weapon, headshot );
-		XP_Kill_Assist( killer, victim );
     }
 
     return PLUGIN_CONTINUE;
@@ -900,6 +904,10 @@ public on_ResetHud( id ) {
         if ( g_iCurrentRound == 0 )
             WAR3_enable_skills( id );
     }
+
+    // Set max health as total kill assist health
+
+	g_KillAssist_iTotalHealth[id] = WAR3_get_maxhealth( id );
 
     return PLUGIN_CONTINUE;
 }

@@ -133,7 +133,7 @@ new const HEAL_TARGETS[_TR][] =             // Heal targets (NOT FULLY IMPLEMENT
 
 #define SELFHEAL_MODIFIER            0.6    // (  float) modifier to apply to all self healing when player is first target
 
-#define KILL_ASSIST_PERCENT         0.50    // (  float) percent of damage required to gain a kill assist
+#define KILLASSIST_DAMAGE           0.35    // (  float) percent of damage required to receive kill assist
 
 new const GETSKILLCHECK[3] =      {1,3,5};  // (integer) levels can you get same skill upgrades
 new const GETCLASSCHECK[3] =      {0,2,5};  // (integer) levels players receive new class titles
@@ -417,11 +417,10 @@ new g_iAmuletCharges[33];                   // Item amount arrays
 new bool:g_bPlayerSaveMe[33];
 new bool:g_bPlayerDispellMe[33];
 
-new g_iPlayerDamage[33][33];                // Kill assist variables
-new g_iPlayerDamageTaken[33];
-new g_iPlayersThatDamage[33][33];
-new g_iTotalPlayersThatDamage[33];
-new bool:g_bPlayersThatDamage[33][33];
+new g_KillAssist_Attackers[33][33];         // Stores list of [victim]'s [attackers] by id, used in conjunctin with _iTotalAttackers[victim]
+new g_KillAssist_iTotalAttackers[33];       // Stores total number of attackers of [victim]
+new g_KillAssist_iTotalDamage[33][33];      // Stores total damage [attacker] deals to [victim]
+new g_KillAssist_iTotalHealth[33];          // Stores [player]'s total health, used to calculate % damage dealt by attacker(s)
 
 // - Skill Variables -------------------------------------- //
 
@@ -500,42 +499,89 @@ new const RACEKEYNAME[_TR][] =              // RACE NAMES (save key names):
 
 // - Stats Variables -------------------------------------- //
 
-//#define STATS_ACTIVE                        // Stores how many times skill(s) activate
-//#define STATS_TOTAL                         // Stores damage totals (to calculate % with STATS_ACTIVE)
-//#define STATS_AMOUNT                        // Stores skill amount(s)
-//#define STATS_KILLS                         // Stores skill kill count
 /*
-stock rStats_Skill_1[33][4];
-stock rStats_Skill_2[33][4];
-#if ADVANCED_DEBUG
-    log_function("stock rStats_Skill_1[33][4];");
-#endif
-stock rStats_Skill_3[33][4];
-stock rStats_Ultimate[33][4];
-#if ADVANCED_DEBUG
-    log_function("stock rStats_Skill_3[33][4];");
-#endif
-stock rStats_Experience[33][4];
-//stock rStats_Item[33][TOTAL_ITEMS];
-#if ADVANCED_DEBUG
-    log_function("stock rStats_Experience[33][4];");
-#endif
+#define TOTAL_STATS                    5    //
 
-stock tStats_Skill_1[33][4];
-stock tStats_Skill_2[33][4];
-#if ADVANCED_DEBUG
-    log_function("stock tStats_Skill_1[33][4];");
-#endif
-stock tStats_Skill_3[33][4];
-stock tStats_Ultimate[33][4];
-#if ADVANCED_DEBUG
-    log_function("stock tStats_Skill_3[33][4];");
-#endif
-stock tStats_Experience[33][4];
-//stock tStats_Item[33][TOTAL_ITEMS];
-#if ADVANCED_DEBUG
-    log_function("stock tStats_Experience[33][4];");
-#endif
+enum {
+
+    STATS_BASE = 0,                         // Stores how many times
+    STATS_ACTIVE,                           // Stores number of times skill procs
+    STATS_AMOUNT1                           // Stores misc proc information
+    STATS_AMOUNT2                           // Stores misc proc information
+    STATS_AMOUNT3                           // Stores misc proc information
+};
+
+// Round stats
+
+new g_STATS_rSkill_0[33][TOTAL_STATS];
+new g_STATS_rSkill_1[33][TOTAL_STATS];
+new g_STATS_rSkill_2[33][TOTAL_STATS];
+new g_STATS_rSkill_3[33][TOTAL_STATS];
+
+new g_STATS_rUltimate[33][TOTAL_STATS];
+
+// Total stats
+
+new g_STATS_tSkill_0[33][TOTAL_STATS];
+new g_STATS_tSkill_1[33][TOTAL_STATS];
+new g_STATS_tSkill_2[33][TOTAL_STATS];
+new g_STATS_tSkill_3[33][TOTAL_STATS];
+
+new g_STATS_tUltimate[33][TOTAL_STATS];
+*/
+
+// Racial roles
+// undead - quickest kills (ie - average kill time after round start)
+// human - closest 2:3 damage given/damage taken ratio. lowest avg weapon dmg. least invis breaks (cooldowns)
+// orcs - most damage, knife attempts/attacks, grenade tosses (with pulv)
+// nightelf - accuracy, closest to 1:1 kill/death ratio
+
+
+
+/*
+
+UD
+unholy aura     (n/a)
+-
+vamp aura       total health stolen, avg health / shot
+frost armor     total procs, avg % proc
+frost nova      total damage, players hit, players killed while slowed
+-
+death coil      total health, total damage, total kills, avg heal/cast, avg dmg/cast
+impale          total damage, total kills
+sleep           ?
+
+
+HU
+fortitude       (n/a)
+invisibility    total missed targets (on hover)
+bash            total damage, avg % proc,
+inner fire      total damage
+-
+holy light      total health, total damage, total kills, avg heal/cast, avg dmg/cast
+flame strike    total damage, total players hit, avg dmg/person
+avatar          total ultimates blocked, total damage absorbed,
+
+OR
+regeneration    health gained
+berserk         %procs, total damage, avg dmg/shot
+pillage         money stolen, ammo stolen, grenades stolen
+pulverize       %procs, total damage
+-
+chain lightning total damage, avg dmg/cast, kills
+chain healing   total health, avg heal/cast, kills
+wind walk       avg dmg/hit, kills
+
+NE
+elune's grace       total damage absorbed
+evasion             %procs, total dmg absorbed, dmg/shot
+nature's blessing   (n/a) total dmg absorbed
+trueshot aura       total damage, dmg/shot
+-
+entangling roots    damage, kills, avg dmg/cast
+rejuvenation        total health, avg heal/cast
+shadow strike       total dmg, avg dmg/cast, kills
+
 */
 
 // - Sound Precaching Variables --------------------------- //

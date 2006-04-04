@@ -718,6 +718,10 @@ public WAR3_heal( caster, target, iAmount ) {
     if ( g_bPlayerInvis[target] )
         SHARED_INVIS_cooldown_set( target, COOLDOWN_INVIS_HEALED );
 
+    // Increase total health of victim for kill assist
+
+    g_KillAssist_iTotalHealth[target] += iHealthGiven;
+
     return ( iHealthGiven );
 }
 
@@ -773,7 +777,7 @@ public WAR3_damage( attacker, victim, weapon, iDamage, headshot, iCheckArmor ) {
 
     // Update kill assist information
 
-	WAR3_damage_assist( attacker, victim, iDamage );
+	WAR3_killassist_damage( attacker, victim, iDamage );
 
     return PLUGIN_HANDLED;
 }
@@ -786,8 +790,11 @@ public WAR3_death( killer, victim, weapon, headshot ) {
     if ( !is_user_alive( victim ) && !g_PlayerImpaled[victim] )
         return PLUGIN_HANDLED;
 
-
     new szWeaponName[32];
+
+    // Prevent killer from receiving kill assist
+
+	g_KillAssist_iTotalDamage[killer][victim] = 0;
 
     // Perform Victim Actions
 
@@ -920,27 +927,6 @@ public WAR3_death( killer, victim, weapon, headshot ) {
     log_message( "^"%s<%d><%s><%s>^" killed ^"%s<%d><%s><%s>^" with ^"%s^"", szKillerName, get_user_userid( killer ), g_SaveIds[killer], szKillerTeam, szVictimName, get_user_userid( victim ), g_SaveIds[victim], szVictimTeam, szWeaponName );
 
     return PLUGIN_HANDLED;
-}
-
-public WAR3_damage_assist( attacker, victim, iDamage ) {
-
-	if ( !WAR3_player_valid( attacker ) || !WAR3_player_valid( victim ) )
-		return PLUGIN_HANDLED;
-		
-	if ( g_bEvadeNextShot[victim] && ( get_gametime() - g_fEvasionTime[victim] ) >= EVASION_SHOTGAP )
-		return PLUGIN_HANDLED;
-
-	g_iPlayerDamage[victim][attacker] += iDamage;
-	g_iPlayerDamageTaken[victim] += iDamage;
-	
-	if ( !g_bPlayersThatDamage[victim][attacker] )
-	{
-		g_iPlayersThatDamage[victim][g_iTotalPlayersThatDamage[victim]] = attacker;
-		g_iTotalPlayersThatDamage[victim]++;
-		g_bPlayersThatDamage[victim][attacker] = true
-	}
-
-	return PLUGIN_HANDLED;
 }
 
 public WAR3_is_invisible( id ) {

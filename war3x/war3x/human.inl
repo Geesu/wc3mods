@@ -919,12 +919,14 @@ public HU_U_AVATAR_grow( arg_read[2] ) {
 
     iCounter += 1;
 
-    // Increase health
+    // Calculate new health
 
     new iNewHealth = get_user_health( id ) + AVATAR_STEPSIZE;
 
     if ( iNewHealth > WAR3_get_maxhealth( id ) )
         iNewHealth = WAR3_get_maxhealth( id );
+
+    // Increase health
 
     set_user_health( id, iNewHealth );
 

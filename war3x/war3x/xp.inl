@@ -9,8 +9,8 @@
  * -------------------------------------------------------------- */
 
 
-#define XP_KILL                    18.0     // (  float) base XP for each kill (before multipliers)
-#define XP_KILL_ASSIST              9.0     // (  float) base XP for each kill assist (before multipliers)
+#define XP_KILL                    20.0     // (  float) base XP for each kill (before multipliers)
+#define XP_KILL_ASSIST             15.0     // (  float) base XP for each kill assist (before multipliers)
 #define XP_TEAMKILL                25.0     // (  float) penalty for teamkill
 #define XP_HEADSHOT_MULTIPLIER     1.35     // (  float) headshot multiplier (1.0 disables headshot multiplier)
 #define XP_OBJECTIVE_LVL_BONUS      2.0     // (  float) personal objective bonus ( called on personal objective xp events )
@@ -1107,42 +1107,25 @@ public XP_Support_Heal( caster, iHealthGiven ) {
     return PLUGIN_HANDLED;
 }
 
-public XP_Kill_Assist( killer, victim ) {
 
-	new Float:fDamagePercent = float( g_iPlayerDamage[victim][killer] / g_iPlayerDamageTaken[victim] );
+// Kill assist xp
 
-	if ( fDamagePercent < KILL_ASSIST_PERCENT )
-	{
-		new iKillAssister;
-		new iTotalPlayers = g_iTotalPlayersThatDamage[victim];
+public XP_kill_assist( assister, Float:fPercentDamage ) {
 
-		for ( new i = 0; i < iTotalPlayers; i++ )
-		{
-			new iPlayer = g_iPlayersThatDamage[victim][i];
-			fDamagePercent = float( g_iPlayerDamage[victim][iPlayer] / g_iPlayerDamageTaken[victim] );
+	if ( WAR3_get_level( g_PlayerInfo[assister][CURRENT_XP] ) == TOTAL_LEVELS )
+		return PLUGIN_HANDLED;
 
-			if ( fDamagePercent >= KILL_ASSIST_PERCENT )
-			{
-				iKillAssister = iPlayer;
-				break;
-			}
-		}
+	new Float:fAssistXp = XP_KILL_ASSIST * get_pcvar_float( CVAR_xp_normal ) * fPercentDamage;
+	new iAssistXp = floatround( fAssistXp );
 
-		if ( !iKillAssister || WAR3_get_level( g_PlayerInfo[iKillAssister][CURRENT_XP] ) == TOTAL_LEVELS )
-			return PLUGIN_HANDLED;
+//	g_iXPsupport[assister][XP_ROUND] += iAssistXp;
 
-		new Float:fSupportXp = XP_KILL_ASSIST * get_pcvar_float( CVAR_xp_normal );
-		new iSupportXp = floatround( fSupportXp );
+	new iOldXp = g_PlayerInfo[assister][CURRENT_XP];
+	new iNewXp = iOldXp + iAssistXp;
 
-		g_iXPsupport[iKillAssister][XP_ROUND] += iSupportXp;
+	XP_Give( assister, iOldXp, iNewXp );
 
-		new iOldXp = g_PlayerInfo[iKillAssister][CURRENT_XP];
-		new iNewXp = iOldXp + iSupportXp;
-
-		XP_Give( iKillAssister, iOldXp, iNewXp );
-
-		client_print( iKillAssister, print_chat, "%s %L", WAR3X_PREFIX, "XP_KILLASSIST_MESSAGE", iSupportXp );
-	}
+	client_print( assister, print_chat, "%s %L", WAR3X_PREFIX, assister, "XP_KILLASSIST_MESSAGE", iAssistXp );
 
 	return PLUGIN_HANDLED;
 }

@@ -166,6 +166,10 @@ public OR_S_REGENERATION_heal( parm_Regen[1] ) {
             new iNewHealth = iHealth + REGENERATION_AMOUNT;
 
             set_user_health( id, iNewHealth );
+
+            // Increase total health of victim for kill assist
+
+            g_KillAssist_iTotalHealth[id] += REGENERATION_AMOUNT;
         }
 
         // Armor

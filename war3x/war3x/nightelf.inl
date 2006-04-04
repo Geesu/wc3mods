@@ -382,6 +382,10 @@ static NE_S_EVASION( attacker, victim, weapon, iDamage, headshot ) {
         g_fEvasionTime[victim] = get_gametime();
         g_iEvasionDamage[victim] += iDamage;
 
+        // Decrease damage from attacker for kill assist
+
+        g_KillAssist_iTotalDamage[attacker][victim] -= iDamage;
+
         // Inform player
 
         new szMessage[128];
