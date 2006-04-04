@@ -38,6 +38,9 @@ new const MENU_CALLBACK[TOTAL_MENUS][] =
 	"_menu_ResetXP"
 };
 
+/*
+	Description: Function will register all menus for all languages
+*/
 public lang_SetMenus(){
 	#if ADVANCED_DEBUG
 		writeDebugInfo( "lang_SetMenus", 0 );
@@ -70,8 +73,8 @@ public lang_SetMenus(){
 					highestMenuId = curMenuId;
 				}
 			}
-		}
-	}
+		}// End language loop
+	}// End menu loop
 }
 
 /*
