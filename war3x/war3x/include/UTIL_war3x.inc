@@ -924,7 +924,7 @@ public WAR3_death( killer, victim, weapon, headshot ) {
 
 public WAR3_damage_assist( attacker, victim, iDamage ) {
 
-	if ( !( WAR3_player_valid( attacker ) || WAR3_player_valid( victim ) ) )
+	if ( !WAR3_player_valid( attacker ) || !WAR3_player_valid( victim ) )
 		return PLUGIN_HANDLED;
 		
 	if ( g_bEvadeNextShot[victim] && ( get_gametime() - g_fEvasionTime[victim] ) >= EVASION_SHOTGAP )

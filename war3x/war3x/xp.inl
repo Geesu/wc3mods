@@ -1109,7 +1109,9 @@ public XP_Support_Heal( caster, iHealthGiven ) {
 
 public XP_Kill_Assist( killer, victim ) {
 
-	if ( g_iPlayerDamage[victim][killer] / g_iPlayerDamageTaken[victim] < KILL_ASSIST_PERCENT )
+	new Float:fDamagePercent = float( g_iPlayerDamage[victim][killer] / g_iPlayerDamageTaken[victim] );
+
+	if ( fDamagePercent < KILL_ASSIST_PERCENT )
 	{
 		new iKillAssister;
 		new iTotalPlayers = g_iTotalPlayersThatDamage[victim];
@@ -1117,8 +1119,9 @@ public XP_Kill_Assist( killer, victim ) {
 		for ( new i = 0; i < iTotalPlayers; i++ )
 		{
 			new iPlayer = g_iPlayersThatDamage[victim][i];
+			fDamagePercent = float( g_iPlayerDamage[victim][iPlayer] / g_iPlayerDamageTaken[victim] );
 
-			if ( g_iPlayerDamage[victim][iPlayer] / g_iPlayerDamageTaken[victim] >= KILL_ASSIST_PERCENT )
+			if ( fDamagePercent >= KILL_ASSIST_PERCENT )
 			{
 				iKillAssister = iPlayer;
 				break;
