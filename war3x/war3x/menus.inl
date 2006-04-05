@@ -1,1081 +1,1081 @@
 // Begin MENUS.INL
 
 /*
-    Warcarft 3: Expansion
-    Main Menu
+	Warcarft 3:	Expansion
+	Main Menu
 
-    1. Select Race
-    2. Select Skills
-    3. Buy Items
-    4. Show Level
-    5. Player Skills
-    6. Player Options
-    7. Reset Skills/Ultimate/XP
-    8. Admin Options        (coming soon)
-    9. Help Topics
+	1. Select Race
+	2. Select Skills
+	3. Buy Items
+	4. Show	Level
+	5. Player Skills
+	6. Player Options
+	7. Reset Skills/Ultimate/XP
+	8. Admin Options		(coming	soon)
+	9. Help	Topics
 
-    0. Exit
+	0. Exit
 */
 
-/* - Warcraft 3 Menu ( /war3menu ) ------------------------------ */
+/* - Warcraft 3	Menu ( /war3menu ) ------------------------------ */
 
 
 // Display
 
 public menu_War3menu( id ) {
 
-    if ( !g_bWar3xEnabled )
-        return PLUGIN_CONTINUE;
+	if ( !g_bWar3xEnabled )
+		return PLUGIN_CONTINUE;
 
-    new szMenu[512], iLen;
-    new iKeys = (1<<0);
+	new	szMenu[512], iLen;
+	new	iKeys =	(1<<0);
 
-    // Title
+	// Title
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_WAR3MENU_TITLE" );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"%L", id, "MENU_WAR3MENU_TITLE"	);
 
-    // Draw menu
+	// Draw	menu
 
-    new szMenuId[16];
+	new	szMenuId[16];
 
-    for ( new i = 1; i <= 9; i++ )
-    {
-        formatex( szMenuId, 15, "MENU_WAR3MENU_%d", i );
+	for	( new i	= 1; i <= 9; i++ )
+	{
+		formatex( szMenuId,	15,	"MENU_WAR3MENU_%d",	i );
 
-        if ( i == 8 )           // Check access to admin menu
-        {
-            if ( !( get_user_flags( id ) & WAR3_get_setxp_flag() ) )
-                iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %L^n\w", i, id, szMenuId );
+		if ( i == 8	)			// Check access	to admin menu
+		{
+			if ( !(	get_user_flags(	id ) & WAR3_get_setxp_flag() ) )
+				iLen +=	formatex( szMenu[iLen],	512	- iLen,	"\d%d. %L^n\w",	i, id, szMenuId	);
 
-            else
-            {
-                iLen += formatex( szMenu[iLen], 512 - iLen, "%d. %L^n", i, id, szMenuId );
-                iKeys |= (1<<i);
-            }
-        }
+			else
+			{
+				iLen +=	formatex( szMenu[iLen],	512	- iLen,	"%d. %L^n",	i, id, szMenuId	);
+				iKeys |= (1<<i);
+			}
+		}
 
-        else
-        {
-            iLen += formatex( szMenu[iLen], 512 - iLen, "%d. %L^n", i, id, szMenuId );
-            iKeys |= (1<<i);
-        }
-    }
+		else
+		{
+			iLen +=	formatex( szMenu[iLen],	512	- iLen,	"%d. %L^n",	i, id, szMenuId	);
+			iKeys |= (1<<i);
+		}
+	}
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n0. %L", id, "LANG_CANCEL" );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"^n0. %L", id, "LANG_CANCEL" );
 
-    show_menu( id, iKeys, szMenu );
+	show_menu( id, iKeys, szMenu );
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
 
 // Commands
 
-public _menu_War3menu( id, iKey ) {
+public _menu_War3menu( id, iKey	) {
 
-    if ( iKey == KEY_CANCEL )
-        return PLUGIN_HANDLED;
+	if ( iKey == KEY_CANCEL	)
+		return PLUGIN_HANDLED;
 
-    switch ( iKey + 1 )
-    {
-        case 1:     menu_SelectRace( id );
-        case 2:     menu_SelectSkills( id );
-        case 3:     menu_ItemShop( id );
+	switch ( iKey +	1 )
+	{
+		case 1:		menu_SelectRace( id	);
+		case 2:		menu_SelectSkills( id );
+		case 3:		menu_ItemShop( id );
 
-        case 4:     WAR3_hud_level( id );
-        case 5:     HELP_motd_players( id );
+		case 4:		WAR3_hud_level(	id );
+		case 5:		HELP_motd_players( id );
 
-        case 6:     menu_PlayerOptions( id );
-        case 7:     menu_RaceOptions( id );
-//        case 8:     menu_AdminOptions( id );
+		case 6:		menu_PlayerOptions(	id );
+		case 7:		menu_RaceOptions( id );
+//		  case 8:	  menu_AdminOptions( id	);
 
-        case 9:     HELP_topics( id );
-    }
+		case 9:		HELP_topics( id	);
+	}
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
 
-/* - 1. Select Race Menu ( /changerace ) ------------------------ */
+/* - 1.	Select Race	Menu ( /changerace ) ------------------------ */
 
 
 // Display
 
-public menu_SelectRace( id ) {
+public menu_SelectRace(	id ) {
 
-    if ( !g_bWar3xEnabled )
-        return PLUGIN_HANDLED;
+	if ( !g_bWar3xEnabled )
+		return PLUGIN_HANDLED;
 
-    if ( !g_bPlayerConnected[id] )
-    {
-        client_print( id, print_center, "%L", id, "INFO_NOTCONNECTED" );
-        return PLUGIN_HANDLED;
-    }
+	if ( !g_bPlayerConnected[id] )
+	{
+		client_print( id, print_center,	"%L", id, "INFO_NOTCONNECTED" );
+		return PLUGIN_HANDLED;
+	}
 
-    new iKeys;
-    new szMenu[512], iLen;
+	new	iKeys;
+	new	szMenu[512], iLen;
 
-    iKeys = (1<<9);
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_SELECTRACE_TITLE" );
+	iKeys =	(1<<9);
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"%L", id, "MENU_SELECTRACE_TITLE" );
 
-    // Build list of races ( and levels if saving xp )
+	// Build list of races ( and levels	if saving xp )
 
-    if ( g_bSaveXp )
-    {
-        if ( !g_SaveIds[id][0] )
-            Get_SaveId( id );
+	if ( g_bSaveXp )
+	{
+		if ( !g_SaveIds[id][0] )
+			Get_SaveId(	id );
 
-        if ( !g_bXPfetched[id] )
-        {
-            // Check if Player in Save Queue ( quit/rejoin same round )
+		if ( !g_bXPfetched[id] )
+		{
+			// Check if	Player in Save Queue ( quit/rejoin same	round )
 
-            new iArrayIndex = Queue_Check( g_SaveIds[id] );
+			new	iArrayIndex	= Queue_Check( g_SaveIds[id] );
 
-            if ( iArrayIndex >= 0 )
-            {
-                // Fetch from Queue
+			if ( iArrayIndex >=	0 )
+			{
+				// Fetch from Queue
 
-                Queue_Retrieve( id, iArrayIndex );
-            }
+				Queue_Retrieve(	id,	iArrayIndex	);
+			}
 
-            else
-            {
-                // Fetch from Database
+			else
+			{
+				// Fetch from Database
 
-                Retrieve_Xp( id );
-                Retrieve_Options( id );
-            }
+				Retrieve_Xp( id	);
+				Retrieve_Options( id );
+			}
 
-            g_bXPfetched[id] = true;
-        }
+			g_bXPfetched[id] = true;
+		}
 
-        // Build Menu
+		// Build Menu
 
-        for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
-        {
-			new szRaceName[32];
-			LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31, false );
+		for	( new iRaceNum = 0;	iRaceNum < TOTAL_RACES;	iRaceNum++ )
+		{
+			new	szRaceName[32];
+			LANG_GetRaceName( iRaceNum + 1,	id,	szRaceName,	31,	false );
 
-			if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum ) )
-            {
-				LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31, false )
-                iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\r%L          ^n", iRaceNum + 1, szRaceName, id, "LANG_DISABLED" );
-            }
+			if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum	) )
+			{
+				LANG_GetRaceName( iRaceNum + 1,	id,	szRaceName,	31,	false )
+				iLen +=	formatex( szMenu[iLen],	512	- iLen,	"\d%d. %s\R\r%L			 ^n", iRaceNum + 1,	szRaceName,	id,	"LANG_DISABLED"	);
+			}
 
-            else
-            {
-                new iCurrentLevel = WAR3_get_level( g_iXPtotal[id][iRaceNum] );
-                new szLineColor[3];
+			else
+			{
+				new	iCurrentLevel =	WAR3_get_level(	g_iXPtotal[id][iRaceNum] );
+				new	szLineColor[3];
 
-                // Dont highlight / key current race
+				// Dont	highlight /	key	current	race
 
-                if ( !g_PlayerInfo[id][CURRENT_RACE] || g_PlayerInfo[id][CURRENT_RACE] - 1 != iRaceNum )
-                {
-                    copy( szLineColor, 2, "\w" );
-                    iKeys |= ( 1<<iRaceNum );
-                }
+				if ( !g_PlayerInfo[id][CURRENT_RACE] ||	g_PlayerInfo[id][CURRENT_RACE] - 1 != iRaceNum )
+				{
+					copy( szLineColor, 2, "\w" );
+					iKeys |= ( 1<<iRaceNum );
+				}
 
-                else
-                {
-                    copy( szLineColor, 2, "\d" );
-                }
+				else
+				{
+					copy( szLineColor, 2, "\d" );
+				}
 
-                // Draw Text
+				// Draw	Text
 
-                iLen += formatex( szMenu[iLen], 512 - iLen, "%s%d. %s\R\d%L %d          ^n", szLineColor, iRaceNum + 1, szRaceName, id, "LANG_LEVEL", iCurrentLevel );
-            }
-        }
-    }
+				iLen +=	formatex( szMenu[iLen],	512	- iLen,	"%s%d. %s\R\d%L	%d			^n", szLineColor, iRaceNum + 1,	szRaceName,	id,	"LANG_LEVEL", iCurrentLevel	);
+			}
+		}
+	}
 
-    else
-    {
-        // Retrieve Default Options
+	else
+	{
+		// Retrieve	Default	Options
 
-        if ( !g_PlayerInfo[id][CURRENT_RACE] )
-            Retrieve_Defaults( id );
+		if ( !g_PlayerInfo[id][CURRENT_RACE] )
+			Retrieve_Defaults( id );
 
-        for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
-        {
-			new szRaceName[32];
-			LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31, false );
+		for	( new iRaceNum = 0;	iRaceNum < TOTAL_RACES;	iRaceNum++ )
+		{
+			new	szRaceName[32];
+			LANG_GetRaceName( iRaceNum + 1,	id,	szRaceName,	31,	false );
 
-            if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum ) )
-            {
-                iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\r%L          ^n", iRaceNum + 1, szRaceName, id, "LANG_DISABLED" );
-            }
+			if ( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum	) )
+			{
+				iLen +=	formatex( szMenu[iLen],	512	- iLen,	"\d%d. %s\R\r%L			 ^n", iRaceNum + 1,	szRaceName,	id,	"LANG_DISABLED"	);
+			}
 
-            else
-            {
-                new szLineColor[3];
+			else
+			{
+				new	szLineColor[3];
 
-                // Dont highlight / key current race
+				// Dont	highlight /	key	current	race
 
-                if ( !g_PlayerInfo[id][CURRENT_RACE] || g_PlayerInfo[id][CURRENT_RACE] - 1 != iRaceNum )
-                {
-                    copy( szLineColor, 2, "\w" );
-                    iKeys |= ( 1<<iRaceNum );
-                }
+				if ( !g_PlayerInfo[id][CURRENT_RACE] ||	g_PlayerInfo[id][CURRENT_RACE] - 1 != iRaceNum )
+				{
+					copy( szLineColor, 2, "\w" );
+					iKeys |= ( 1<<iRaceNum );
+				}
 
-                else
-                {
-                    copy( szLineColor, 2, "\d" );
-                }
+				else
+				{
+					copy( szLineColor, 2, "\d" );
+				}
 
-                iLen += formatex( szMenu[iLen], 512 - iLen, "%s%d. %s^n", szLineColor, iRaceNum + 1, szRaceName );
-            }
-        }
-    }
+				iLen +=	formatex( szMenu[iLen],	512	- iLen,	"%s%d. %s^n", szLineColor, iRaceNum	+ 1, szRaceName	);
+			}
+		}
+	}
 
-    if ( g_PlayerInfo[id][CURRENT_RACE] )
-        iLen += formatex( szMenu[iLen], 512 - iLen, "^n\d5. %L^n^n^n\w", id, "LANG_RANDOM" );
+	if ( g_PlayerInfo[id][CURRENT_RACE]	)
+		iLen +=	formatex( szMenu[iLen],	512	- iLen,	"^n\d5.	%L^n^n^n\w", id, "LANG_RANDOM" );
 
-    else
-    {
-        iLen += formatex( szMenu[iLen], 512 - iLen, "^n\w5. %L^n^n^n", id, "LANG_RANDOM" );
-        iKeys |= (1<<4);
-    }
+	else
+	{
+		iLen +=	formatex( szMenu[iLen],	512	- iLen,	"^n\w5.	%L^n^n^n", id, "LANG_RANDOM" );
+		iKeys |= (1<<4);
+	}
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "0. %L", id, "LANG_CANCEL" );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"0.	%L", id, "LANG_CANCEL" );
 
-    show_menu( id, iKeys, szMenu );
+	show_menu( id, iKeys, szMenu );
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
 
 // Commands
 
-public _menu_SelectRace( id, iKey ) {
+public _menu_SelectRace( id, iKey )	{
 
-    if ( iKey == KEY_CANCEL )
-        return PLUGIN_HANDLED;
+	if ( iKey == KEY_CANCEL	)
+		return PLUGIN_HANDLED;
 
-    // Random ( make sure restricted race not selected )
+	// Random (	make sure restricted race not selected )
 
-    while ( iKey == KEY_RANDOM )
-    {
-        new iRaceNum = random_num( 1, TOTAL_RACES ) - 1;
+	while (	iKey ==	KEY_RANDOM )
+	{
+		new	iRaceNum = random_num( 1, TOTAL_RACES )	- 1;
 
-        if ( !( get_pcvar_bitsum( CVAR_restrict_races ) & WAR3_get_race_flag( iRaceNum ) ) )
-            iKey = iRaceNum;
-    }
+		if ( !(	get_pcvar_bitsum( CVAR_restrict_races )	& WAR3_get_race_flag( iRaceNum ) ) )
+			iKey = iRaceNum;
+	}
 
-    // Make sure change can be made
+	// Make	sure change	can	be made
 
-    if ( g_PlayerInfo[id][CURRENT_RACE] && !g_bFreezeTime )
-    {
-        // Wait till next round to switch
+	if ( g_PlayerInfo[id][CURRENT_RACE]	&& !g_bFreezeTime )
+	{
+		// Wait	till next round	to switch
 
-        set_hudmessage( 255, 160, 0, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_INFO, 0, 6.0, 5.0, 0.5, 1.0, HUDMESSAGE_CHAN_INFO );
+		set_hudmessage(	255, 160, 0, HUDMESSAGE_POS_CENTER,	HUDMESSAGE_POS_INFO, 0,	6.0, 5.0, 0.5, 1.0,	HUDMESSAGE_CHAN_INFO );
 
-		new szRaceName[32];
-		LANG_GetRaceName( iKey + 1, id, szRaceName, 31, true );
+		new	szRaceName[32];
+		LANG_GetRaceName( iKey + 1,	id,	szRaceName,	31,	true );
 
-        new szMessage[256];
-        formatex( szMessage, 255, "%L", id, "INFO_NEWRACENEXTROUND", szRaceName );
+		new	szMessage[256];
+		formatex( szMessage, 255, "%L",	id,	"INFO_NEWRACENEXTROUND", szRaceName	);
 
-        show_hudmessage( id, "%s", szMessage );
-        g_PlayerInfo[id][CURRENT_NEXTRACE] = iKey + 1;
-    }
+		show_hudmessage( id, "%s", szMessage );
+		g_PlayerInfo[id][CURRENT_NEXTRACE] = iKey +	1;
+	}
 
-    else
-    {
-        // Check if first race chosen on server
+	else
+	{
+		// Check if	first race chosen on server
 
-        if ( WAR3_is_first_race( id ) )
-        {
-            new iLevel = get_pcvar_num( CVAR_startlevel_first );
+		if ( WAR3_is_first_race( id	) )
+		{
+			new	iLevel = get_pcvar_num(	CVAR_startlevel_first );
 
-            if ( iLevel )
-            {
-                g_iXPtotal[id][iKey] = g_iLevelXp[iLevel];
+			if ( iLevel	)
+			{
+				g_iXPtotal[id][iKey] = g_iLevelXp[iLevel];
 
-                new szMessage[128];
-                formatex( szMessage, 127, "^n%s %L^n", WAR3X_PREFIX, id, "INFO_LEVEL_FIRST", iLevel );
+				new	szMessage[128];
+				formatex( szMessage, 127, "^n%s	%L^n", WAR3X_PREFIX, id, "INFO_LEVEL_FIRST", iLevel	);
 
-                client_print( id, print_chat, "%s", szMessage );
-            }
-        }
+				client_print( id, print_chat, "%s",	szMessage );
+			}
+		}
 
-        // Check if 0 xp
+		// Check if	0 xp
 
-        else if ( !g_iXPtotal[id][iKey] )
-        {
-            new iLevel = get_pcvar_num( CVAR_startlevel_other );
+		else if	( !g_iXPtotal[id][iKey]	)
+		{
+			new	iLevel = get_pcvar_num(	CVAR_startlevel_other );
 
-            if ( iLevel )
-            {
-                g_iXPtotal[id][iKey] = g_iLevelXp[iLevel];
+			if ( iLevel	)
+			{
+				g_iXPtotal[id][iKey] = g_iLevelXp[iLevel];
 
-                new szMessage[128];
-                formatex( szMessage, 127, "^n%s %L^n", WAR3X_PREFIX, id, "INFO_LEVEL_OTHER", iLevel );
+				new	szMessage[128];
+				formatex( szMessage, 127, "^n%s	%L^n", WAR3X_PREFIX, id, "INFO_LEVEL_OTHER", iLevel	);
 
-                client_print( id, print_chat, "%s", szMessage );
-            }
-        }
+				client_print( id, print_chat, "%s",	szMessage );
+			}
+		}
 
-        // Update Race Info
+		// Update Race Info
 
-        War3x_StoreSession( id, iKey );
+		War3x_StoreSession(	id,	iKey );
 
-        // Check if number of skills > allowed
+		// Check if	number of skills > allowed
 
-        if ( WAR3_skills_left( id ) < 0 )
-        {
-            Reset_Skills( id );
-            Reset_Ultimate( id );
+		if ( WAR3_skills_left( id )	< 0	)
+		{
+			Reset_Skills( id );
+			Reset_Ultimate(	id );
 
-            if ( WAR3_get_level( g_iXPtotal[id][iKey] ) )
-                menu_SelectSkills( id );
-        }
+			if ( WAR3_get_level( g_iXPtotal[id][iKey] )	)
+				menu_SelectSkills( id );
+		}
 
-        WAR3_hud_level( id );
-        war3_chatskills( id, iKey, 1 );
-        WAR3_check_skills( id );
+		WAR3_hud_level(	id );
+		war3_chatskills( id, iKey, 1 );
+		WAR3_check_skills( id );
 
-        // Hudmessage
+		// Hudmessage
 
-        WAR3_hud_item( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 2.0, 3.0 );
+		WAR3_hud_item( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1,	2.0, 3.0 );
 
-        // Activate Abilities ( if not freezetime )
+		// Activate	Abilities (	if not freezetime )
 
-        if ( !g_bFreezeTime && is_user_alive( id ) )
-            WAR3_enable_skills( id );
+		if ( !g_bFreezeTime	&& is_user_alive( id ) )
+			WAR3_enable_skills(	id );
 
-        // Make sure health/armor is not greater than new maximum
+		// Make	sure health/armor is not greater than new maximum
 
-        WAR3_check_health( id );
-        WAR3_check_armor( id );
+		WAR3_check_health( id );
+		WAR3_check_armor( id );
 
-        // Apply Bonus Health
+		// Apply Bonus Health
 
-        WAR3_set_health( id );
+		WAR3_set_health( id	);
 
 
-        // Restricted Map Notification ( short term only )
+		// Restricted Map Notification ( short term	only )
 
-        if ( g_bMapRestricted )
-        {
-            client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "INFO_RESTRICTEDMAP_CHAT" );
+		if ( g_bMapRestricted )
+		{
+			client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "INFO_RESTRICTEDMAP_CHAT" );
 
-            set_hudmessage( 255, 160, 0, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_SERVER, 0, 0.1, 6.0, 1.0, 2.0, HUDMESSAGE_CHAN_SERVER );
-            show_hudmessage( id, "%L", id, "INFO_RESTRICTEDMAP_HUD" );
-        }
-    }
+			set_hudmessage(	255, 160, 0, HUDMESSAGE_POS_CENTER,	HUDMESSAGE_POS_SERVER, 0, 0.1, 6.0,	1.0, 2.0, HUDMESSAGE_CHAN_SERVER );
+			show_hudmessage( id, "%L", id, "INFO_RESTRICTEDMAP_HUD"	);
+		}
+	}
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
 
-/* - 2. Select Skills Menu ( /selectskils ) --------------------- */
+/* - 2.	Select Skills Menu ( /selectskils )	--------------------- */
 
 
 // Display
 
 public menu_SelectSkills( id ) {
 
-    if ( !g_bWar3xEnabled )	return PLUGIN_HANDLED;
+	if ( !g_bWar3xEnabled )	return PLUGIN_HANDLED;
 
-    // Make sure race is selected
+	// Make	sure race is selected
 
-    if ( !g_PlayerInfo[id][CURRENT_RACE] )
-    {
-        menu_SelectRace( id );
-        return PLUGIN_HANDLED;
-    }
+	if ( !g_PlayerInfo[id][CURRENT_RACE] )
+	{
+		menu_SelectRace( id	);
+		return PLUGIN_HANDLED;
+	}
 
-    // Make sure skills can be selected
+	// Make	sure skills	can	be selected
 
-    if ( WAR3_skills_left( id ) <= 0 )
-    {
-        set_hudmessage( 255, 160, 0, HUDMESSAGE_POS_CENTER, HUDMESSAGE_POS_INFO, 0, 6.0, 5.0, 0.5, 1.0, HUDMESSAGE_CHAN_INFO );
-        show_hudmessage( id, "%L", id, "INFO_NOSKILLPOINTS" );
+	if ( WAR3_skills_left( id )	<= 0 )
+	{
+		set_hudmessage(	255, 160, 0, HUDMESSAGE_POS_CENTER,	HUDMESSAGE_POS_INFO, 0,	6.0, 5.0, 0.5, 1.0,	HUDMESSAGE_CHAN_INFO );
+		show_hudmessage( id, "%L", id, "INFO_NOSKILLPOINTS"	);
 
-        return PLUGIN_HANDLED;
-    }
+		return PLUGIN_HANDLED;
+	}
 
-    // Before displaying, auto-select skill(s) if possible
+	// Before displaying, auto-select skill(s) if possible
 
-    if ( WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] ) > ( TOTAL_SKILLLEVELS * ( TOTAL_SKILLSTRAINED - 1 ) + 1 ) )
-    {
-		new iSkillNum = 0;
+	if ( WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] )	> (	TOTAL_SKILLLEVELS *	( TOTAL_SKILLSTRAINED -	1 )	+ 1	) )
+	{
+		new	iSkillNum =	0;
 
-        // Auto-select all skills except ultimate if level 10
+		// Auto-select all skills except ultimate if level 10
 
-		if ( WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] ) == TOTAL_LEVELS )
-        {
-            for ( iSkillNum = 0 + OFFSET_CURRENT_SKILLS; iSkillNum < TOTAL_SKILLSTRAINED + OFFSET_CURRENT_SKILLS; iSkillNum++ )
-            {
-                g_PlayerInfo[id][iSkillNum] = TOTAL_SKILLLEVELS;
-            }
-
-            // Don't show menu if ultimate already selected
-
-            if ( g_PlayerInfo[id][CURRENT_ULTIMATE] )
-                return PLUGIN_HANDLED;
-        }
-
-        // Find total trainable skills and see if all but one are trained fully
-
-		else if ( g_PlayerInfo[id][CURRENT_ULTIMATE] )
+		if ( WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] )	== TOTAL_LEVELS	)
 		{
-			new iSkillsFull = 0;
-
-			for ( iSkillNum = 0 + OFFSET_CURRENT_SKILLS; iSkillNum < TOTAL_SKILLSTRAINED + OFFSET_CURRENT_SKILLS; iSkillNum++ )
+			for	( iSkillNum	= 0	+ OFFSET_CURRENT_SKILLS; iSkillNum < TOTAL_SKILLSTRAINED + OFFSET_CURRENT_SKILLS; iSkillNum++ )
 			{
-					if ( g_PlayerInfo[id][iSkillNum] == TOTAL_SKILLLEVELS )
+				g_PlayerInfo[id][iSkillNum]	= TOTAL_SKILLLEVELS;
+			}
+
+			// Don't show menu if ultimate already selected
+
+			if ( g_PlayerInfo[id][CURRENT_ULTIMATE]	)
+				return PLUGIN_HANDLED;
+		}
+
+		// Find	total trainable	skills and see if all but one are trained fully
+
+		else if	( g_PlayerInfo[id][CURRENT_ULTIMATE] )
+		{
+			new	iSkillsFull	= 0;
+
+			for	( iSkillNum	= 0	+ OFFSET_CURRENT_SKILLS; iSkillNum < TOTAL_SKILLSTRAINED + OFFSET_CURRENT_SKILLS; iSkillNum++ )
+			{
+					if ( g_PlayerInfo[id][iSkillNum] ==	TOTAL_SKILLLEVELS )
 					iSkillsFull++;
 			}
 
-			if ( iSkillsFull == TOTAL_SKILLSTRAINED - 1 )
+			if ( iSkillsFull ==	TOTAL_SKILLSTRAINED	- 1	)
 			{
-				for ( iSkillNum = 0 + OFFSET_CURRENT_SKILLS; iSkillNum < TOTAL_SKILLSTRAINED + OFFSET_CURRENT_SKILLS; iSkillNum++ )
+				for	( iSkillNum	= 0	+ OFFSET_CURRENT_SKILLS; iSkillNum < TOTAL_SKILLSTRAINED + OFFSET_CURRENT_SKILLS; iSkillNum++ )
 				{
-					if ( g_PlayerInfo[id][iSkillNum] != TOTAL_SKILLLEVELS )
-						g_PlayerInfo[id][iSkillNum] = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] ) - ( TOTAL_SKILLLEVELS * ( TOTAL_SKILLSTRAINED - 1 ) + 1 );
+					if ( g_PlayerInfo[id][iSkillNum] !=	TOTAL_SKILLLEVELS )
+						g_PlayerInfo[id][iSkillNum]	= WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] ) - ( TOTAL_SKILLLEVELS * ( TOTAL_SKILLSTRAINED - 1 ) + 1 );
 				}
 			}
 		}
 	}
 
-    // Display Menu
+	// Display Menu
 
-    new iKeys;
-    new szMenu[512], iLen;
+	new	iKeys;
+	new	szMenu[512], iLen;
 
-    new szSkillName[64], szMenuSkill[64], szDisabled[20];
-    new iCurrentSkill, iNextSkillLvl;
+	new	szSkillName[64], szMenuSkill[64], szDisabled[20];
+	new	iCurrentSkill, iNextSkillLvl;
 
-    new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
-    new iRaceNum = g_PlayerInfo[id][CURRENT_RACE];
+	new	iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
+	new	iRaceNum = g_PlayerInfo[id][CURRENT_RACE];
 
-    iKeys = (1<<9)|(1<<8);
+	iKeys =	(1<<9)|(1<<8);
 
-	new szRaceName[32];
-	LANG_GetRaceName( iRaceNum, id, szRaceName, 31, false );
+	new	szRaceName[32];
+	LANG_GetRaceName( iRaceNum,	id,	szRaceName,	31,	false );
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_SELECTSKILLS_TITLE" );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "\d%s^n", szRaceName );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"%L", id, "MENU_SELECTSKILLS_TITLE"	);
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"\d%s^n", szRaceName );
 
-    // Primary Skills
+	// Primary Skills
 
-    for ( new iSkillNum = 1; iSkillNum <= TOTAL_SKILLSTRAINED; iSkillNum++ )
-    {
-        LANG_GetSkillName( iRaceNum, iSkillNum, id, szSkillName, 63 );
+	for	( new iSkillNum	= 1; iSkillNum <= TOTAL_SKILLSTRAINED; iSkillNum++ )
+	{
+		LANG_GetSkillName( iRaceNum, iSkillNum,	id,	szSkillName, 63	);
 
-        iCurrentSkill = iSkillNum + 1;
-        iNextSkillLvl = g_PlayerInfo[id][iCurrentSkill] + 1;
+		iCurrentSkill =	iSkillNum +	1;
+		iNextSkillLvl =	g_PlayerInfo[id][iCurrentSkill]	+ 1;
 
-        // Disabled
+		// Disabled
 
-        if ( get_pcvar_bitsum( CVAR_restrict_skills ) & WAR3_get_skill_flag( iRaceNum, iSkillNum ) )
-            formatex( szDisabled, 19, "\r(%L)\d", id, "LANG_RESTRICTED" );
+		if ( get_pcvar_bitsum( CVAR_restrict_skills	) &	WAR3_get_skill_flag( iRaceNum, iSkillNum ) )
+			formatex( szDisabled, 19, "\r(%L)\d", id, "LANG_RESTRICTED"	);
 
-        else if ( get_pcvar_bitsum( CVAR_restrict_skills ) == 0 && get_pcvar_bitsum( CVAR_restrict_ultimates ) == 0 )
-            formatex( szDisabled, 19, "\d          \d" );
+		else if	( get_pcvar_bitsum(	CVAR_restrict_skills ) == 0	&& get_pcvar_bitsum( CVAR_restrict_ultimates ) == 0	)
+			formatex( szDisabled, 19, "\d		   \d" );
 
-        else
-        {
-            format( szDisabled, 19, "\y   (%L)\d", id, "LANG_ALLOWED" );
-        }
+		else
+		{
+			format(	szDisabled,	19,	"\y	  (%L)\d", id, "LANG_ALLOWED" );
+		}
 
-        // Allowed to Select Skill
+		// Allowed to Select Skill
 
-        if ( War3x_GetSkillCheck( iLevel, iNextSkillLvl ) )
-        {
-            formatex( szMenuSkill, 63, "^n\w%d. %s \d\R%s %L %d ", iSkillNum, szSkillName, szDisabled, id, "LANG_LEVEL", iNextSkillLvl );
-            iKeys |= ( 1<<iSkillNum - 1 );
-        }
+		if ( War3x_GetSkillCheck( iLevel, iNextSkillLvl	) )
+		{
+			formatex( szMenuSkill, 63, "^n\w%d.	%s \d\R%s %L %d	", iSkillNum, szSkillName, szDisabled, id, "LANG_LEVEL", iNextSkillLvl );
+			iKeys |= ( 1<<iSkillNum	- 1	);
+		}
 
-        // Not Allowed
+		// Not Allowed
 
-        else
-        {
-            // Skill Already at MAX
+		else
+		{
+			// Skill Already at	MAX
 
-            if ( iNextSkillLvl > TOTAL_SKILLLEVELS )
-            {
-                formatex( szMenuSkill, 63, "^n\d%d. %s \d\R%s %L MAX ", iSkillNum, szSkillName, szDisabled, id, "LANG_LEVEL" );
-            }
+			if ( iNextSkillLvl > TOTAL_SKILLLEVELS )
+			{
+				formatex( szMenuSkill, 63, "^n\d%d.	%s \d\R%s %L MAX ",	iSkillNum, szSkillName,	szDisabled,	id,	"LANG_LEVEL" );
+			}
 
-            // Skill Not Available
+			// Skill Not Available
 
-            else
-            {
-                formatex( szMenuSkill, 63, "^n\d%d. %s \d\R%s %L %d ", iSkillNum, szSkillName, szDisabled, id, "LANG_LEVEL", iNextSkillLvl );
-            }
-        }
+			else
+			{
+				formatex( szMenuSkill, 63, "^n\d%d.	%s \d\R%s %L %d	", iSkillNum, szSkillName, szDisabled, id, "LANG_LEVEL", iNextSkillLvl );
+			}
+		}
 
-        iLen += formatex( szMenu[iLen], 512 - iLen, "%s", szMenuSkill );
-    }
+		iLen +=	formatex( szMenu[iLen],	512	- iLen,	"%s", szMenuSkill );
+	}
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n" );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"^n" );
 
-    // Ultimates
+	// Ultimates
 
-    for ( new iSkillNum = TOTAL_SKILLSTRAINED + 1; iSkillNum < TOTAL_ULTIMATES + ( TOTAL_SKILLSTRAINED + 1 ); iSkillNum++ )
-    {
-        LANG_GetSkillName( iRaceNum, iSkillNum, id, szSkillName, 63 );
-        iCurrentSkill = iSkillNum + 1;
+	for	( new iSkillNum	= TOTAL_SKILLSTRAINED +	1; iSkillNum < TOTAL_ULTIMATES + ( TOTAL_SKILLSTRAINED + 1 ); iSkillNum++ )
+	{
+		LANG_GetSkillName( iRaceNum, iSkillNum,	id,	szSkillName, 63	);
+		iCurrentSkill =	iSkillNum +	1;
 
-        new iUltimateNum = iSkillNum - TOTAL_SKILLSTRAINED;
+		new	iUltimateNum = iSkillNum - TOTAL_SKILLSTRAINED;
 
-        // Disabled
+		// Disabled
 
-        if ( get_pcvar_bitsum( CVAR_restrict_ultimates ) & WAR3_get_ult_flag( iRaceNum, iUltimateNum ) )
-            formatex( szDisabled, 19, "\r(%L)\d", id, "LANG_RESTRICTED" );
+		if ( get_pcvar_bitsum( CVAR_restrict_ultimates ) & WAR3_get_ult_flag( iRaceNum,	iUltimateNum ) )
+			formatex( szDisabled, 19, "\r(%L)\d", id, "LANG_RESTRICTED"	);
 
-        else if ( get_pcvar_bitsum( CVAR_restrict_ultimates ) == 0 && get_pcvar_bitsum( CVAR_restrict_skills ) == 0 )
-            formatex( szDisabled, 19, "\d          \d" );
+		else if	( get_pcvar_bitsum(	CVAR_restrict_ultimates	) == 0 && get_pcvar_bitsum(	CVAR_restrict_skills ) == 0	)
+			formatex( szDisabled, 19, "\d		   \d" );
 
-        else
-        {
-            formatex( szDisabled, 19, "\y   (%L)\d", id, "LANG_ALLOWED" );
-        }
+		else
+		{
+			formatex( szDisabled, 19, "\y	(%L)\d", id, "LANG_ALLOWED"	);
+		}
 
-        // Can't Yet Obtain an Ultimate
+		// Can't Yet Obtain	an Ultimate
 
-        if ( iLevel < LEVEL_ULTIMATE )
-            formatex( szMenuSkill, 63, "^n\d%d. %L: %s \R%s ", iSkillNum, id, "LANG_ULTIMATE", szSkillName, szDisabled );
+		if ( iLevel	< LEVEL_ULTIMATE )
+			formatex( szMenuSkill, 63, "^n\d%d.	%L:	%s \R%s	", iSkillNum, id, "LANG_ULTIMATE", szSkillName,	szDisabled );
 
-        // Already Have Ultimate ( show only selected )
+		// Already Have	Ultimate ( show	only selected )
 
-        else if ( g_PlayerInfo[id][CURRENT_ULTIMATE] )
-        {
-            if ( iSkillNum - TOTAL_SKILLSTRAINED == g_PlayerInfo[id][CURRENT_ULTIMATE] )
-                formatex( szMenuSkill, 63, "^n\d%d. %L: %s \R%s ", iSkillNum, id, "LANG_ULTIMATE", szSkillName, szDisabled );
+		else if	( g_PlayerInfo[id][CURRENT_ULTIMATE] )
+		{
+			if ( iSkillNum - TOTAL_SKILLSTRAINED ==	g_PlayerInfo[id][CURRENT_ULTIMATE] )
+				formatex( szMenuSkill, 63, "^n\d%d.	%L:	%s \R%s	", iSkillNum, id, "LANG_ULTIMATE", szSkillName,	szDisabled );
 
-            else
-            {
-                formatex( szMenuSkill, 63, "^n" );
-            }
-        }
+			else
+			{
+				formatex( szMenuSkill, 63, "^n"	);
+			}
+		}
 
-        // Can Select an Ultimate
+		// Can Select an Ultimate
 
-        else
-        {
-            formatex( szMenuSkill, 63, "^n\w%d. %L: %s \R%s ", iSkillNum, id, "LANG_ULTIMATE", szSkillName, szDisabled );
-            iKeys |= ( 1<<iSkillNum - 1 );
-        }
+		else
+		{
+			formatex( szMenuSkill, 63, "^n\w%d.	%L:	%s \R%s	", iSkillNum, id, "LANG_ULTIMATE", szSkillName,	szDisabled );
+			iKeys |= ( 1<<iSkillNum	- 1	);
+		}
 
-        iLen += formatex( szMenu[iLen], 512 - iLen, "%s", szMenuSkill );
-    }
+		iLen +=	formatex( szMenu[iLen],	512	- iLen,	"%s", szMenuSkill );
+	}
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n\w9. %L", id, "LANG_HELP" );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n\w0. %L", id, "LANG_CANCEL" );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"^n^n\w9. %L", id, "LANG_HELP" );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"^n^n\w0. %L", id, "LANG_CANCEL" );
 
-    // Show Skills Menu
+	// Show	Skills Menu
 
-    if ( !is_user_bot( id ) )
-        show_menu( id, iKeys, szMenu );
+	if ( !is_user_bot( id )	)
+		show_menu( id, iKeys, szMenu );
 
-    // Pick Random Skill(s) for Bots
+	// Pick	Random Skill(s)	for	Bots
 
-    else
-    {
-        new iUltimate;
+	else
+	{
+		new	iUltimate;
 
-        if ( g_PlayerInfo[id][CURRENT_ULTIMATE] )
-            iUltimate = 1;
+		if ( g_PlayerInfo[id][CURRENT_ULTIMATE]	)
+			iUltimate =	1;
 
-        new iPoints = g_PlayerInfo[id][CURRENT_SKILL1] + g_PlayerInfo[id][CURRENT_SKILL2] + g_PlayerInfo[id][CURRENT_SKILL3] + iUltimate;
+		new	iPoints	= g_PlayerInfo[id][CURRENT_SKILL1] + g_PlayerInfo[id][CURRENT_SKILL2] +	g_PlayerInfo[id][CURRENT_SKILL3] + iUltimate;
 
-        // Ultimate
+		// Ultimate
 
-        if ( iLevel >= LEVEL_ULTIMATE && !iUltimate )
-        {
-            new iRandomNum = random_num( 1,TOTAL_ULTIMATES );
-            g_PlayerInfo[id][CURRENT_ULTIMATE] = iRandomNum;
-            iPoints++;
-        }
+		if ( iLevel	>= LEVEL_ULTIMATE && !iUltimate	)
+		{
+			new	iRandomNum = random_num( 1,TOTAL_ULTIMATES );
+			g_PlayerInfo[id][CURRENT_ULTIMATE] = iRandomNum;
+			iPoints++;
+		}
 
-        // Skills
+		// Skills
 
-        while ( iLevel != iPoints )
-        {
-            new iRandomNum = random_num( 1, TOTAL_SKILLSTRAINED );
-            new iSkillNum = iRandomNum + 1;
+		while (	iLevel != iPoints )
+		{
+			new	iRandomNum = random_num( 1,	TOTAL_SKILLSTRAINED	);
+			new	iSkillNum =	iRandomNum + 1;
 
-            if ( g_PlayerInfo[id][iSkillNum] + 1 <= TOTAL_SKILLLEVELS && GETSKILLCHECK[g_PlayerInfo[id][iSkillNum]] <= iLevel )
-            {
-                g_PlayerInfo[id][iSkillNum]++;
-                iPoints++;
-            }
-        }
-    }
+			if ( g_PlayerInfo[id][iSkillNum] + 1 <=	TOTAL_SKILLLEVELS && GETSKILLCHECK[g_PlayerInfo[id][iSkillNum]]	<= iLevel )
+			{
+				g_PlayerInfo[id][iSkillNum]++;
+				iPoints++;
+			}
+		}
+	}
 
-    if ( g_bSaveXp )
-        g_bStoreSkills[id] = true;
+	if ( g_bSaveXp )
+		g_bStoreSkills[id] = true;
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
 
 // Commands
 
-public _menu_SelectSkills( id, iKey ) {
+public _menu_SelectSkills( id, iKey	) {
 
-    if ( iKey == KEY_CANCEL )
-        return PLUGIN_HANDLED;
+	if ( iKey == KEY_CANCEL	)
+		return PLUGIN_HANDLED;
 
-    switch ( iKey + 1 )
-    {
-        case 1:         g_PlayerInfo[id][CURRENT_SKILL1] += 1;
-        case 2:         g_PlayerInfo[id][CURRENT_SKILL2] += 1;
-        case 3:         g_PlayerInfo[id][CURRENT_SKILL3] += 1;
-        case 4,5,6:     g_PlayerInfo[id][CURRENT_ULTIMATE] = iKey - ( TOTAL_SKILLSTRAINED - 1 );
+	switch ( iKey +	1 )
+	{
+		case 1:			g_PlayerInfo[id][CURRENT_SKILL1] +=	1;
+		case 2:			g_PlayerInfo[id][CURRENT_SKILL2] +=	1;
+		case 3:			g_PlayerInfo[id][CURRENT_SKILL3] +=	1;
+		case 4,5,6:		g_PlayerInfo[id][CURRENT_ULTIMATE] = iKey -	( TOTAL_SKILLSTRAINED -	1 );
 
-        case 9:         HELP_motd_race( id, g_PlayerInfo[id][CURRENT_RACE] - 1 );
-    }
+		case 9:			HELP_motd_race(	id,	g_PlayerInfo[id][CURRENT_RACE] - 1 );
+	}
 
-    // Check to See if More Skills can be Selected
+	// Check to	See	if More	Skills can be Selected
 
-    if ( WAR3_skills_left( id ) > 0 && iKey != KEY_CANCEL )
-        menu_SelectSkills( id );
+	if ( WAR3_skills_left( id )	> 0	&& iKey	!= KEY_CANCEL )
+		menu_SelectSkills( id );
 
-    else
-    {
-        WAR3_hud_level( id );
-    }
+	else
+	{
+		WAR3_hud_level(	id );
+	}
 
-    // Activate New Skills
+	// Activate	New	Skills
 
-    if ( !g_bFreezeTime && is_user_alive( id ) )
-        WAR3_enable_skills( id );
+	if ( !g_bFreezeTime	&& is_user_alive( id ) )
+		WAR3_enable_skills(	id );
 
-    g_bStoreSkills[id] = true;
+	g_bStoreSkills[id] = true;
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
 
-/* - 3. Shop Menu ( /shopmenu ) --------------------------------- */
+/* - 3.	Shop Menu (	/shopmenu )	--------------------------------- */
 
 
 // Display
 
 public menu_ItemShop( id ) {
 
-    if ( !g_bWar3xEnabled || !is_user_alive( id ) )
-        return PLUGIN_HANDLED;
+	if ( !g_bWar3xEnabled || !is_user_alive( id	) )
+		return PLUGIN_HANDLED;
 
-    // Shopmenus Disabled
+	// Shopmenus Disabled
 
-    if ( !get_pcvar_num( CVAR_shopmenus ) )
-    {
-        client_print( id, print_center, "%L", id, "INFO_SHOP_DISABLED" );
-        return PLUGIN_HANDLED;
-    }
+	if ( !get_pcvar_num( CVAR_shopmenus	) )
+	{
+		client_print( id, print_center,	"%L", id, "INFO_SHOP_DISABLED" );
+		return PLUGIN_HANDLED;
+	}
 
-    // Make sure race is selected
+	// Make	sure race is selected
 
-    if ( !g_PlayerInfo[id][CURRENT_RACE] )
-    {
-        menu_SelectRace( id );
-        return PLUGIN_HANDLED;
-    }
+	if ( !g_PlayerInfo[id][CURRENT_RACE] )
+	{
+		menu_SelectRace( id	);
+		return PLUGIN_HANDLED;
+	}
 
-    // VIP Restriction
+	// VIP Restriction
 
-    if ( id == g_Vip )
-    {
-        client_print( id, print_center, "%L", id, "INFO_SHOP_VIP" );
-        return PLUGIN_HANDLED;
-    }
+	if ( id	== g_Vip )
+	{
+		client_print( id, print_center,	"%L", id, "INFO_SHOP_VIP" );
+		return PLUGIN_HANDLED;
+	}
 
-    // Buy Zone Restriction
+	// Buy Zone	Restriction
 
-    if ( get_pcvar_num( CVAR_shopzone ) && !g_bInBuyZone[id] )
-    {
-        client_print( id, print_center, "%L", id, "INFO_SHOP_BUYZONE" );
-        return PLUGIN_HANDLED;
-    }
+	if ( get_pcvar_num(	CVAR_shopzone )	&& !g_bInBuyZone[id] )
+	{
+		client_print( id, print_center,	"%L", id, "INFO_SHOP_BUYZONE" );
+		return PLUGIN_HANDLED;
+	}
 
-    // Buy Time Expired
+	// Buy Time	Expired
 
-    if ( get_pcvar_num( CVAR_shoptime ) && get_pcvar_float( CVAR_mp_buytime ) < ( get_gametime() - g_fBuyTime ) / 60.0  )
-    {
-        Create_TextMsg( id, print_center, "#Cant_buy" );
-        return PLUGIN_HANDLED;
-    }
+	if ( get_pcvar_num(	CVAR_shoptime )	&& get_pcvar_float(	CVAR_mp_buytime	) <	( get_gametime() - g_fBuyTime )	/ 60.0	)
+	{
+		Create_TextMsg(	id,	print_center, "#Cant_buy" );
+		return PLUGIN_HANDLED;
+	}
 
-    new iKeys;
-    new szMenu[512], iLen;
+	new	iKeys;
+	new	szMenu[512], iLen;
 
-    iKeys = (1<<8)|(1<<9);
+	iKeys =	(1<<8)|(1<<9);
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_BUYITEM_TITLE" );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"%L", id, "MENU_BUYITEM_TITLE" );
 
-    for ( new iItemNum = 1; iItemNum <= TOTAL_SHOPITEMS; iItemNum++ )
-    {
-		new szItemName[32];
+	for	( new iItemNum = 1;	iItemNum <=	TOTAL_SHOPITEMS; iItemNum++	)
+	{
+		new	szItemName[32];
 		LANG_GetItemName ( iItemNum, SHOP_COMMON, id, szItemName, 31 )
 
-        // Item Restricted
+		// Item	Restricted
 
-        if ( get_pcvar_bitsum( CVAR_restrict_items ) & WAR3_get_item_flag( iItemNum ) )
-            iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\r%L ^n", iItemNum, szItemName, id, "LANG_RESTRICTED" );
+		if ( get_pcvar_bitsum( CVAR_restrict_items ) & WAR3_get_item_flag( iItemNum	) )
+			iLen +=	formatex( szMenu[iLen],	512	- iLen,	"\d%d. %s\R\r%L	^n", iItemNum, szItemName, id, "LANG_RESTRICTED" );
 
-        // Not enough players for Tome
+		// Not enough players for Tome
 
-        else if ( iItemNum == ITEM_TOME && get_playersnum() < get_pcvar_num( CVAR_xp_minplayers ) )
-        {
-            iLen += formatex( szMenu[iLen], 512 - iLen, "\d%d. %s\R\y%d ^n", iItemNum, szItemName, ITEM_COST[iItemNum] );
-        }
+		else if	( iItemNum == ITEM_TOME	&& get_playersnum()	< get_pcvar_num( CVAR_xp_minplayers	) )
+		{
+			iLen +=	formatex( szMenu[iLen],	512	- iLen,	"\d%d. %s\R\y%d	^n", iItemNum, szItemName, ITEM_COST[iItemNum] );
+		}
 
-        else
-        {
-            iKeys |= ( 1<<iItemNum - 1 );
-            iLen += formatex( szMenu[iLen], 512 - iLen, "\w%d. %s\R\y%d ^n", iItemNum, szItemName, ITEM_COST[iItemNum] );
-        }
-    }
+		else
+		{
+			iKeys |= ( 1<<iItemNum - 1 );
+			iLen +=	formatex( szMenu[iLen],	512	- iLen,	"\w%d. %s\R\y%d	^n", iItemNum, szItemName, ITEM_COST[iItemNum] );
+		}
+	}
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n\w9. %L", id, "LANG_HELP" );
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n\w0. %L", id, "LANG_CANCEL" );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"^n\w9.	%L", id, "LANG_HELP" );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"^n^n\w0. %L", id, "LANG_CANCEL" );
 
-    show_menu( id, iKeys, szMenu );
+	show_menu( id, iKeys, szMenu );
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
 
 // Commands
 
-public _menu_ItemShop( id, iKey ) {
+public _menu_ItemShop( id, iKey	) {
 
-    if ( iKey == KEY_CANCEL )
-        return PLUGIN_HANDLED;
+	if ( iKey == KEY_CANCEL	)
+		return PLUGIN_HANDLED;
 
-    if ( iKey == KEY_HELP )
-    {
-        HELP_motd_items( id );
-        return PLUGIN_HANDLED;
-    }
+	if ( iKey == KEY_HELP )
+	{
+		HELP_motd_items( id	);
+		return PLUGIN_HANDLED;
+	}
 
-    // Buy item
+	// Buy item
 
-    new iItemNum = iKey + 1;
+	new	iItemNum = iKey	+ 1;
 
-    if ( iItemNum == ITEM_TOME )
-        Item_BuyTome( id );
+	if ( iItemNum == ITEM_TOME )
+		Item_BuyTome( id );
 
-    else
-    {
-        Item_Buy( id, iItemNum );
-    }
+	else
+	{
+		Item_Buy( id, iItemNum );
+	}
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
 
-/* - 6. Skills Info Menu (/skillsinfo) -------------------------- */
+/* - 6.	Skills Info	Menu (/skillsinfo) -------------------------- */
 
 
 // Display
 
-public menu_SkillsHelp( id ) {
+public menu_SkillsHelp(	id ) {
 
-    if ( !g_bWar3xEnabled )
-        return PLUGIN_HANDLED;
+	if ( !g_bWar3xEnabled )
+		return PLUGIN_HANDLED;
 
-    new iKeys = (1<<9);
-    new szMenu[512], iLen;
+	new	iKeys =	(1<<9);
+	new	szMenu[512], iLen;
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_SKILLSINFO_TITLE" );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"%L", id, "MENU_SKILLSINFO_TITLE" );
 
-    for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
-    {
-		new szRaceName[32];
-		LANG_GetRaceName( iRaceNum + 1, id, szRaceName, 31, false );
+	for	( new iRaceNum = 0;	iRaceNum < TOTAL_RACES;	iRaceNum++ )
+	{
+		new	szRaceName[32];
+		LANG_GetRaceName( iRaceNum + 1,	id,	szRaceName,	31,	false );
 
-        iLen += formatex( szMenu[iLen], 512 - iLen, "%d. %s^n", iRaceNum + 1, szRaceName );
-        iKeys |= ( 1<<iRaceNum );
-    }
+		iLen +=	formatex( szMenu[iLen],	512	- iLen,	"%d. %s^n",	iRaceNum + 1, szRaceName );
+		iKeys |= ( 1<<iRaceNum );
+	}
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n^n0. %L", id, "LANG_CANCEL" );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"^n^n0.	%L", id, "LANG_CANCEL" );
 
-    show_menu( id, iKeys, szMenu );
+	show_menu( id, iKeys, szMenu );
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
 
 // Commands
 
-public _menu_SkillsHelp( id, iKey ) {
+public _menu_SkillsHelp( id, iKey )	{
 
-    if ( iKey == KEY_CANCEL )
-        return PLUGIN_HANDLED;
+	if ( iKey == KEY_CANCEL	)
+		return PLUGIN_HANDLED;
 
-    HELP_motd_race( id, iKey );
+	HELP_motd_race(	id,	iKey );
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
 
-/* - 6. Race Options -------------------------------------------- */
+/* - 6.	Race Options -------------------------------------------- */
 
 /*
-    Player Options
+	Player Options
 
-    1. Show Race Icons              ON/OFF
-    2. Show Health Icons            ON/OFF
-    3. Show Dispell Icons           ON/OFF
-    4. Auto-Cast Heals/Dispells     ON/OFF
+	1. Show	Race Icons				ON/OFF
+	2. Show	Health Icons			ON/OFF
+	3. Show	Dispell	Icons			ON/OFF
+	4. Auto-Cast Heals/Dispells		ON/OFF
 
-    5. Resolution                  XXXxXXX
+	5. Resolution				   XXXxXXX
 
 
-    0. Exit
+	0. Exit
 */
 
-public menu_PlayerOptions( id ) {
+public menu_PlayerOptions( id )	{
 
-    if ( !g_bWar3xEnabled )
-        return PLUGIN_HANDLED;
+	if ( !g_bWar3xEnabled )
+		return PLUGIN_HANDLED;
 
-    // Make sure race is selected
+	// Make	sure race is selected
 
-    if ( !g_PlayerInfo[id][CURRENT_RACE] )
-    {
-        menu_SelectRace( id );
-        return PLUGIN_HANDLED;
-    }
+	if ( !g_PlayerInfo[id][CURRENT_RACE] )
+	{
+		menu_SelectRace( id	);
+		return PLUGIN_HANDLED;
+	}
 
-    new szMenu[512], szOnOff[8], iLen;
-    new iKeys = (1<<9)|(1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4);
+	new	szMenu[512], szOnOff[8], iLen;
+	new	iKeys =	(1<<9)|(1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4);
 
-    // Draw Menu
+	// Draw	Menu
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "%L", id, "MENU_PLAYEROPTIONS_TITLE" );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"%L", id, "MENU_PLAYEROPTIONS_TITLE" );
 
-    new szMenuId[16];
+	new	szMenuId[16];
 
-    for ( new i = 1; i <= TOTAL_OPTIONS - 1; i++ )
-    {
-        WAR3_get_onoff( id, g_PlayerOptions[id][i - 1], szOnOff );
+	for	( new i	= 1; i <= TOTAL_OPTIONS	- 1; i++ )
+	{
+		WAR3_get_onoff(	id,	g_PlayerOptions[id][i -	1],	szOnOff	);
 
-        formatex( szMenuId, 15, "MENU_PLAYEROPTIONS_%d", i );
-        iLen += formatex( szMenu[iLen], 512 - iLen, "\w%d. %L \y\R%s            ^n", i, id, szMenuId, szOnOff );
-    }
+		formatex( szMenuId,	15,	"MENU_PLAYEROPTIONS_%d", i );
+		iLen +=	formatex( szMenu[iLen],	512	- iLen,	"\w%d. %L \y\R%s			^n", i,	id,	szMenuId, szOnOff );
+	}
 
-    new iRes = g_PlayerOptions[id][OPTION_RESOLUTION];
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n\w%d. %L \y\R%ix%i            ^n", OPTION_RESOLUTION + 1, id, "MENU_PLAYEROPTIONS_5", STEAM_RESOLUTION[iRes][_X], STEAM_RESOLUTION[iRes][_Y] );
+	new	iRes = g_PlayerOptions[id][OPTION_RESOLUTION];
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"^n\w%d. %L	\y\R%ix%i			 ^n", OPTION_RESOLUTION	+ 1, id, "MENU_PLAYEROPTIONS_5", STEAM_RESOLUTION[iRes][_X], STEAM_RESOLUTION[iRes][_Y]	);
 
-    iLen += formatex( szMenu[iLen], 512 - iLen, "^n\w0. %L", id, "LANG_CANCEL" );
+	iLen +=	formatex( szMenu[iLen],	512	- iLen,	"^n\w0.	%L", id, "LANG_CANCEL" );
 
-    show_menu( id, iKeys, szMenu );
+	show_menu( id, iKeys, szMenu );
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
 
-public _menu_PlayerOptions( id, iKey ) {
+public _menu_PlayerOptions(	id,	iKey ) {
 
-    if ( iKey == KEY_CANCEL )
-        return PLUGIN_HANDLED;
+	if ( iKey == KEY_CANCEL	)
+		return PLUGIN_HANDLED;
 
-    if ( iKey == OPTION_RESOLUTION )
-    {
-        g_PlayerOptions[id][iKey] += 1;
+	if ( iKey == OPTION_RESOLUTION )
+	{
+		g_PlayerOptions[id][iKey] += 1;
 
-        if ( g_PlayerOptions[id][iKey] >= TOTAL_RESOLUTIONS )
-            g_PlayerOptions[id][iKey] = 0;
+		if ( g_PlayerOptions[id][iKey] >= TOTAL_RESOLUTIONS	)
+			g_PlayerOptions[id][iKey] =	0;
 
-        // Draw Hud messages for player
+		// Draw	Hud	messages for player
 
-        WAR3_hud_xp( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 0.2, 3.0 );
-        WAR3_hud_item( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 0.2, 3.0 );
-    }
+		WAR3_hud_xp( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 0.2, 3.0 );
+		WAR3_hud_item( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1,	0.2, 3.0 );
+	}
 
-    else
-    {
-        g_PlayerOptions[id][iKey] = AMX_get_opposite( g_PlayerOptions[id][iKey] );
-    }
+	else
+	{
+		g_PlayerOptions[id][iKey] =	AMX_get_opposite( g_PlayerOptions[id][iKey]	);
+	}
 
-    // Re-Draw menu
+	// Re-Draw menu
 
-    menu_PlayerOptions( id );
+	menu_PlayerOptions(	id );
 
-    g_bStoreOptions[id] = true;
+	g_bStoreOptions[id]	= true;
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
-/* - 7. Race Options -------------------------------------------- */
+/* - 7.	Race Options -------------------------------------------- */
 
 
 // Display
 
-public menu_RaceOptions( id ) {
+public menu_RaceOptions( id	) {
 
-    if ( !g_bWar3xEnabled )
-        return PLUGIN_HANDLED;
+	if ( !g_bWar3xEnabled )
+		return PLUGIN_HANDLED;
 
-    // Make sure race is selected
+	// Make	sure race is selected
 
-    if ( !g_PlayerInfo[id][CURRENT_RACE] )
-    {
-        menu_SelectRace( id );
-        return PLUGIN_HANDLED;
-    }
+	if ( !g_PlayerInfo[id][CURRENT_RACE] )
+	{
+		menu_SelectRace( id	);
+		return PLUGIN_HANDLED;
+	}
 
-    new iKeys = (1<<9);
-    new szMenu[512], iLen;
+	new	iKeys =	(1<<9);
+	new	szMenu[512], iLen;
 
-    new raceId = g_PlayerInfo[id][CURRENT_RACE] - 1;
+	new	raceId = g_PlayerInfo[id][CURRENT_RACE]	- 1;
 
-	new szRaceName[32];
-	LANG_GetRaceName( raceId + 1, id, szRaceName, 31, false );
+	new	szRaceName[32];
+	LANG_GetRaceName( raceId + 1, id, szRaceName, 31, false	);
 
-    iLen += formatex( szMenu[iLen], 511 - iLen, "%L", id, "MENU_RACEOPTIONS_TITLE" );
-    iLen += formatex( szMenu[iLen], 511 - iLen, "\d%s^n^n", szRaceName );
+	iLen +=	formatex( szMenu[iLen],	511	- iLen,	"%L", id, "MENU_RACEOPTIONS_TITLE" );
+	iLen +=	formatex( szMenu[iLen],	511	- iLen,	"\d%s^n^n",	szRaceName );
 
-    // Reset Skills
+	// Reset Skills
 
-    new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
+	new	iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
-    if ( iLevel >= RACEOPTIONS_SKILLS )
-    {
-        iLen += formatex( szMenu[iLen], 511 - iLen, "\w" );
-        iKeys |= (1<<0);
-    }
+	if ( iLevel	>= RACEOPTIONS_SKILLS )
+	{
+		iLen +=	formatex( szMenu[iLen],	511	- iLen,	"\w" );
+		iKeys |= (1<<0);
+	}
 
-    else
-    {
-        iLen += formatex( szMenu[iLen], 511 - iLen, "\d" );
-    }
+	else
+	{
+		iLen +=	formatex( szMenu[iLen],	511	- iLen,	"\d" );
+	}
 
-    iLen += formatex( szMenu[iLen], 511 - iLen, "1. %L \R\d( %L %d+ )^n", id, "MENU_RACEOPTIONS_1", id, "LANG_LEVEL", RACEOPTIONS_SKILLS );
+	iLen +=	formatex( szMenu[iLen],	511	- iLen,	"1.	%L \R\d( %L	%d+	)^n", id, "MENU_RACEOPTIONS_1",	id,	"LANG_LEVEL", RACEOPTIONS_SKILLS );
 
-    // Reset Ultimate
+	// Reset Ultimate
 
-    if ( iLevel >= RACEOPTIONS_ULTIMATE && g_PlayerInfo[id][CURRENT_ULTIMATE] && !g_bChangeUltimate[id] )
-    {
-        iLen += formatex( szMenu[iLen], 511 - iLen, "\w" );
-        iKeys |= (1<<1);
-    }
+	if ( iLevel	>= RACEOPTIONS_ULTIMATE	&& g_PlayerInfo[id][CURRENT_ULTIMATE] && !g_bChangeUltimate[id]	)
+	{
+		iLen +=	formatex( szMenu[iLen],	511	- iLen,	"\w" );
+		iKeys |= (1<<1);
+	}
 
-    else
-    {
-        iLen += formatex( szMenu[iLen], 511 - iLen, "\d" );
-    }
+	else
+	{
+		iLen +=	formatex( szMenu[iLen],	511	- iLen,	"\d" );
+	}
 
-    iLen += formatex( szMenu[iLen], 511 - iLen, "1. %L \R\d( %L %d+ )^n", id, "MENU_RACEOPTIONS_2", id, "LANG_LEVEL", RACEOPTIONS_ULTIMATE );
+	iLen +=	formatex( szMenu[iLen],	511	- iLen,	"1.	%L \R\d( %L	%d+	)^n", id, "MENU_RACEOPTIONS_2",	id,	"LANG_LEVEL", RACEOPTIONS_ULTIMATE );
 
-    // Reset Experience
+	// Reset Experience
 
-    iLen += formatex( szMenu[iLen], 511 - iLen, "\w5. \r%L^n", id, "MENU_RACEOPTIONS_5" );
-    iKeys |= (1<<4);
+	iLen +=	formatex( szMenu[iLen],	511	- iLen,	"\w5. \r%L^n", id, "MENU_RACEOPTIONS_5"	);
+	iKeys |= (1<<4);
 
-    iLen += formatex( szMenu[iLen], 511 - iLen, "\w^n^n0. %L", id, "LANG_CANCEL" );
+	iLen +=	formatex( szMenu[iLen],	511	- iLen,	"\w^n^n0. %L", id, "LANG_CANCEL" );
 
-    show_menu( id, iKeys, szMenu );
+	show_menu( id, iKeys, szMenu );
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
 
-// Race Options
+// Race	Options
 
 public _menu_RaceOptions( id, iKey ) {
 
-    if ( iKey == KEY_CANCEL )
-        return PLUGIN_HANDLED;
+	if ( iKey == KEY_CANCEL	)
+		return PLUGIN_HANDLED;
 
-    new iRaceId = g_PlayerInfo[id][CURRENT_RACE] - 1;
+	new	iRaceId	= g_PlayerInfo[id][CURRENT_RACE] - 1;
 
-    switch ( iKey + 1 )
-    {
-        case 1:     // Reset Skills
-        {
-            Reset_Skills( id );
-            menu_SelectSkills( id );
+	switch ( iKey +	1 )
+	{
+		case 1:		// Reset Skills
+		{
+			Reset_Skills( id );
+			menu_SelectSkills( id );
 
-            client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "INFO_RESETSKILLS" );
-        }
+			client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "INFO_RESETSKILLS"	);
+		}
 
-        case 2:     // Reset Ultimate
-        {
-            Reset_Ultimate( id );
-            menu_SelectSkills( id );
+		case 2:		// Reset Ultimate
+		{
+			Reset_Ultimate(	id );
+			menu_SelectSkills( id );
 
-            g_bChangeUltimate[id] = true;
+			g_bChangeUltimate[id] =	true;
 
-            client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "INFO_RESETULTIMATE" );
-        }
+			client_print( id, print_chat, "%s %L", WAR3X_PREFIX, id, "INFO_RESETULTIMATE" );
+		}
 
-        case 5:     // Reset Experience
-        {
-            new iCurrentItem = g_PlayerInfo[id][CURRENT_ITEM];
-            new iCurrentRace = g_PlayerInfo[id][CURRENT_RACE];
+		case 5:		// Reset Experience
+		{
+			new	iCurrentItem = g_PlayerInfo[id][CURRENT_ITEM];
+			new	iCurrentRace = g_PlayerInfo[id][CURRENT_RACE];
 
-            g_PlayerInfo[id] = {0,0,0,0,0,0,0,0,0,0,0,0};
+			g_PlayerInfo[id] = {0,0,0,0,0,0,0,0,0,0,0,0};
 
-            g_PlayerInfo[id][CURRENT_RACE] = iCurrentRace;
-            g_PlayerInfo[id][CURRENT_ITEM] = iCurrentItem;
+			g_PlayerInfo[id][CURRENT_RACE] = iCurrentRace;
+			g_PlayerInfo[id][CURRENT_ITEM] = iCurrentItem;
 
-            // Check if first race chosen on server
+			// Check if	first race chosen on server
 
-            if ( WAR3_is_first_race( id ) )
-            {
-                new iLevel = get_pcvar_num( CVAR_startlevel_first );
+			if ( WAR3_is_first_race( id	) )
+			{
+				new	iLevel = get_pcvar_num(	CVAR_startlevel_first );
 
-                if ( iLevel )
-                {
-                    g_iXPtotal[id][g_PlayerInfo[id][CURRENT_RACE] - 1] = g_iLevelXp[iLevel];
-                    g_PlayerInfo[id][CURRENT_XP] = g_iLevelXp[iLevel];
+				if ( iLevel	)
+				{
+					g_iXPtotal[id][g_PlayerInfo[id][CURRENT_RACE] -	1] = g_iLevelXp[iLevel];
+					g_PlayerInfo[id][CURRENT_XP] = g_iLevelXp[iLevel];
 
-                    new szMessage[128];
-                    formatex( szMessage, 127, "^n%s %L^n", WAR3X_PREFIX, id, "INFO_LEVEL_FIRST", iLevel );
+					new	szMessage[128];
+					formatex( szMessage, 127, "^n%s	%L^n", WAR3X_PREFIX, id, "INFO_LEVEL_FIRST", iLevel	);
 
-                    client_print( id, print_chat, "%s", szMessage );
-                }
-            }
+					client_print( id, print_chat, "%s",	szMessage );
+				}
+			}
 
-            else
-            {
-                new iLevel = get_pcvar_num( CVAR_startlevel_other );
+			else
+			{
+				new	iLevel = get_pcvar_num(	CVAR_startlevel_other );
 
-                if ( iLevel )
-                {
-                    g_iXPtotal[id][g_PlayerInfo[id][CURRENT_RACE] - 1] = g_iLevelXp[iLevel];
-                    g_PlayerInfo[id][CURRENT_XP] = g_iLevelXp[iLevel];
+				if ( iLevel	)
+				{
+					g_iXPtotal[id][g_PlayerInfo[id][CURRENT_RACE] -	1] = g_iLevelXp[iLevel];
+					g_PlayerInfo[id][CURRENT_XP] = g_iLevelXp[iLevel];
 
-                    new szMessage[128];
-                    formatex( szMessage, 127, "^n%s %L^n", WAR3X_PREFIX, id, "INFO_LEVEL_OTHER", iLevel );
+					new	szMessage[128];
+					formatex( szMessage, 127, "^n%s	%L^n", WAR3X_PREFIX, id, "INFO_LEVEL_OTHER", iLevel	);
 
-                    client_print( id, print_chat, "%s", szMessage );
-                }
-            }
+					client_print( id, print_chat, "%s",	szMessage );
+				}
+			}
 
-            WAR3_hud_item( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1, 2.0, 3.0 );
-            WAR3_hud_level( id );
+			WAR3_hud_item( id, HUDMESSAGE_FX_FADEIN, 10.0, 0.1,	2.0, 3.0 );
+			WAR3_hud_level(	id );
 
-            if ( get_user_health( id ) > 100 )
-                set_user_health( id, 100 );
+			if ( get_user_health( id ) > 100 )
+				set_user_health( id, 100 );
 
-            if ( get_user_armor( id ) > 100 )
-                set_user_armor( id, 100 );
+			if ( get_user_armor( id	) >	100	)
+				set_user_armor(	id,	100	);
 
-            if ( g_PlayerInfo[id][CURRENT_ITEM] == ITEM_RING )
-                set_user_armor( id, get_user_armor( id ) + ITEM_RING_VALUE );
+			if ( g_PlayerInfo[id][CURRENT_ITEM]	== ITEM_RING )
+				set_user_armor(	id,	get_user_armor(	id ) + ITEM_RING_VALUE );
 
-            // Reset XP
+			// Reset XP
 
-            Reset_XP( id );
+			Reset_XP( id );
 
-            new szMessage[128], szRaceName[32];
+			new	szMessage[128],	szRaceName[32];
 
-			LANG_GetRaceName( iRaceId + 1, id, szRaceName, 31, false );
-            formatex( szMessage, 127, "%s %L", WAR3X_PREFIX, id, "INFO_RESETXP", szRaceName );
+			LANG_GetRaceName( iRaceId +	1, id, szRaceName, 31, false );
+			formatex( szMessage, 127, "%s %L", WAR3X_PREFIX, id, "INFO_RESETXP", szRaceName	);
 
-            client_print( id, print_chat, "%s", szMessage );
-        }
-    }
+			client_print( id, print_chat, "%s",	szMessage );
+		}
+	}
 
-    return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED;
 }
 
-// ------------------------------------------------- End. - //
+// ------------------------------------------------- End. -	//
