@@ -1,4 +1,5 @@
 v2.3.2
+ - Addition: Admin flag added to war3FT.cfg file as a cvar
  - Bug Fix: Index out of bounds in events.inl on an attacker check - thanks Striker
  - Bug Fix: Changed where the STEAM_ID_PENDING code exists
  - Update: Database fallback code (if no DBI module is found)

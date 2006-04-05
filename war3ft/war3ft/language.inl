@@ -202,7 +202,8 @@ lang_GetSkillInfo( race_id, skill_id, id, skill_description[], len )
 				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE1_SKILL1_INFO",floatround(p_vampiric[0]*100), floatround(p_vampiric[1]*100), floatround(p_vampiric[2]*100) );
 			#if MOD == 1
 				case SKILL2: formatex ( skill_description, len-1, "%L", id, "DOD_RACE1_SKILL2_INFO" );
-			#elseif MOD == 0
+			#endif
+			#if MOD == 0
 				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE1_SKILL2_INFO" );
 			#endif
 				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE1_SKILL3_INFO" );
@@ -233,7 +234,8 @@ lang_GetSkillInfo( race_id, skill_id, id, skill_description[], len )
 			#if MOD == 1
 				case SKILL2: formatex ( skill_description, len-1, "%L", id, "DOD_RACE3_SKILL2_INFO", floatround(p_grenade[0]), floatround(p_grenade[1]), floatround(p_grenade[2]) );
 				case SKILL3: formatex ( skill_description, len-1, "%L", id, "DOD_RACE3_SKILL3_INFO", floatround(p_ankh[0]*100), floatround(p_ankh[1]*100), floatround(p_ankh[2]*100) );
-			#elseif MOD == 0
+			#endif
+			#if MOD == 0
 				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE3_SKILL2_INFO", floatround(p_grenade[0]), floatround(p_grenade[1]), floatround(p_grenade[2]) );
 				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE3_SKILL3_INFO", floatround(p_ankh[0]*100), floatround(p_ankh[1]*100), floatround(p_ankh[2]*100) );
 			#endif
@@ -262,7 +264,8 @@ lang_GetSkillInfo( race_id, skill_id, id, skill_description[], len )
 			{
 			#if MOD == 1
 				case SKILL1: formatex ( skill_description, len-1, "%L", id, "DOD_RACE5_SKILL1_INFO", p_pheonix[0], p_pheonix[1], p_pheonix[2] );
-			#elseif MOD == 0
+			#endif
+			#if MOD == 0
 				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE5_SKILL1_INFO", floatround(p_pheonix[0]*100), floatround(p_pheonix[1]*100), floatround(p_pheonix[2]*100) );
 			#endif
 				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE5_SKILL2_INFO", floatround(p_banish[0]*100), floatround(p_banish[1]*100), floatround(p_banish[2]*100) );
