@@ -3,16 +3,16 @@
 /* - General Functions ------------------------------------------ */
 
 
-// Get Save	ID
+// Get Save ID
 
-public Get_SaveId( id )	{
+public Get_SaveId( id ) {
 
-	if ( get_pcvar_num(	CVAR_save_by_ip	) )
-		get_user_ip( id, g_SaveIds[id],	31 );
+	if ( get_pcvar_num( CVAR_save_by_ip ) )
+		get_user_ip( id, g_SaveIds[id], 31 );
 
 	else
 	{
-		get_user_authid( id, g_SaveIds[id],	31 );
+		get_user_authid( id, g_SaveIds[id], 31 );
 	}
 
 	return PLUGIN_HANDLED;
@@ -22,37 +22,37 @@ public Get_SaveId( id )	{
 /* - Retrieve Stored Data --------------------------------------- */
 
 
-// Retrieve	Player XP from Database
+// Retrieve Player XP from Database
 
-public Retrieve_Xp(	id ) {
+public Retrieve_Xp( id ) {
 
 
-	if ( get_pcvar_num(	CVAR_save_xp_sql ) == 1	)
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
 		get_mysql_xp( id );
 	}
 	else
 	{
-		new	szKeyName[64], szKeyData[64];
+		new szKeyName[64], szKeyData[64];
 
-		formatex( szKeyName, 63, "war3x_%s_XP",	g_SaveIds[id] );
-		get_vaultdata( szKeyName, szKeyData, 63	);
+		formatex( szKeyName, 63, "war3x_%s_XP", g_SaveIds[id] );
+		get_vaultdata( szKeyName, szKeyData, 63 );
 
-		// Copy	to Globals
+		// Copy to Globals
 
-		new	iLen = copy( szKeyData,	63,	szKeyData );
+		new iLen = copy( szKeyData, 63, szKeyData );
 
-		if ( iLen >	0 )
+		if ( iLen > 0 )
 		{
-			for	( new iRaceNum = 0;	iRaceNum < TOTAL_RACES;	iRaceNum++ )
+			for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
 			{
-				g_iXPtotal[id][iRaceNum] = iGettok(	szKeyData, iRaceNum	+ 1, ',' );
+				g_iXPtotal[id][iRaceNum] = iGettok( szKeyData, iRaceNum + 1, ',' );
 			}
 		}
 
 		else
 		{
-			for	( new iRaceNum = 0;	iRaceNum < TOTAL_RACES;	iRaceNum++ )
+			for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
 			{
 				g_iXPtotal[id][iRaceNum] = 0;
 			}
@@ -63,78 +63,78 @@ public Retrieve_Xp(	id ) {
 }
 
 
-// Retrieve	Player Skills from Database
+// Retrieve Player Skills from Database
 
-public Retrieve_Skills(	id,	iRaceId	) {
+public Retrieve_Skills( id, iRaceId ) {
 
-	new	szData[64];
+	new szData[64];
 
-	if ( get_pcvar_num(	CVAR_save_xp_sql ) == 1	)
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
-		get_mysql_skills( id, iRaceId +	1, szData );
+		get_mysql_skills( id, iRaceId + 1, szData );
 	}
 	else
 	{
-		new	szKeyName[64];
+		new szKeyName[64];
 
-		formatex( szKeyName, 63, "war3x_%s_%s",	g_SaveIds[id], RACEKEYNAME[iRaceId]	);
+		formatex( szKeyName, 63, "war3x_%s_%s", g_SaveIds[id], RACEKEYNAME[iRaceId] );
 		get_vaultdata( szKeyName, szData, 63 );
 	}
 
-	// Copy	to Globals
+	// Copy to Globals
 
-	g_PlayerInfo[id][CURRENT_SKILL1]	= iGettok( szData, 1, ',' );
-	g_PlayerInfo[id][CURRENT_SKILL2]	= iGettok( szData, 2, ',' );
-	g_PlayerInfo[id][CURRENT_SKILL3]	= iGettok( szData, 3, ',' );
-	g_PlayerInfo[id][CURRENT_ULTIMATE]	= iGettok( szData, 4, ',' );
+	g_PlayerInfo[id][CURRENT_SKILL1]    = iGettok( szData, 1, ',' );
+	g_PlayerInfo[id][CURRENT_SKILL2]    = iGettok( szData, 2, ',' );
+	g_PlayerInfo[id][CURRENT_SKILL3]    = iGettok( szData, 3, ',' );
+	g_PlayerInfo[id][CURRENT_ULTIMATE]  = iGettok( szData, 4, ',' );
 
 	return PLUGIN_HANDLED;
 }
 
 
-// Retrieve	Player Options from	Database
+// Retrieve Player Options from Database
 
-public Retrieve_Options( id	) {
+public Retrieve_Options( id ) {
 
-	new	szData[64];
+	new szData[64];
 
-	if ( get_pcvar_num(	CVAR_save_xp_sql ) == 1	)
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
-		get_mysql_skills( id, 0, szData	);
+		get_mysql_skills( id, 0, szData );
 	}
 	else
 	{
-		new	szKeyName[64];
+		new szKeyName[64];
 
 		formatex( szKeyName, 63, "war3x_%s_OPTIONS", g_SaveIds[id] );
 		get_vaultdata( szKeyName, szData, 63 );
 	}
 
-	// Copy	to Globals
+	// Copy to Globals
 
-	new	iLen = copy( szData, 63, szData	);
+	new iLen = copy( szData, 63, szData );
 
 	// Check for older version(s)
 
-	new	bool:bNewVersion;
+	new bool:bNewVersion;
 
 	if ( iLen == 3 )
-		bNewVersion	= true;
+		bNewVersion = true;
 
-	// Store current player	options
+	// Store current player options
 
-	if ( iLen >	0 )
+	if ( iLen > 0 )
 	{
-		// Retrieve	Current	Options/Default	New	Options
+		// Retrieve Current Options/Default New Options
 
 		if ( bNewVersion )
 			Retrieve_Defaults( id );
 
 		else
 		{
-			for	( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
+			for ( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
 			{
-				g_PlayerOptions[id][iOptionNum]	= iGettok( szData, iOptionNum +	1, ',' );
+				g_PlayerOptions[id][iOptionNum] = iGettok( szData, iOptionNum + 1, ',' );
 			}
 		}
 	}
@@ -143,21 +143,21 @@ public Retrieve_Options( id	) {
 
 	else
 	{
-		for	( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
+		for ( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
 		{
-			// Show	all	icons
+			// Show all icons
 
-			if ( iOptionNum	== OPTION_RACEICONS	|| iOptionNum == OPTION_HEALICONS || iOptionNum	== OPTION_DISPELLICONS )
-				g_PlayerOptions[id][iOptionNum]	= 1;
+			if ( iOptionNum == OPTION_RACEICONS || iOptionNum == OPTION_HEALICONS || iOptionNum == OPTION_DISPELLICONS )
+				g_PlayerOptions[id][iOptionNum] = 1;
 
 			// Default screen resolution (1024x768)
 
-			else if	( iOptionNum ==	OPTION_RESOLUTION )
-				g_PlayerOptions[id][iOptionNum]	= 4;
+			else if ( iOptionNum == OPTION_RESOLUTION )
+				g_PlayerOptions[id][iOptionNum] = 4;
 
 			else
 			{
-				g_PlayerOptions[id][iOptionNum]	= 0;
+				g_PlayerOptions[id][iOptionNum] = 0;
 			}
 		}
 	}
@@ -168,33 +168,33 @@ public Retrieve_Options( id	) {
 
 public Retrieve_Defaults( id ) {
 
-	for	( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
+	for ( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
 	{
-		// Race	Icons
+		// Race Icons
 
-		if ( iOptionNum	== OPTION_RACEICONS	)
-			g_PlayerOptions[id][iOptionNum]	= PLAYEROPTION_RACEICONS;
+		if ( iOptionNum == OPTION_RACEICONS )
+			g_PlayerOptions[id][iOptionNum] = PLAYEROPTION_RACEICONS;
 
-		// Heal	Icons
+		// Heal Icons
 
-		else if	( iOptionNum ==	OPTION_HEALICONS )
-			g_PlayerOptions[id][iOptionNum]	= PLAYEROPTION_HEALICONS;
+		else if ( iOptionNum == OPTION_HEALICONS )
+			g_PlayerOptions[id][iOptionNum] = PLAYEROPTION_HEALICONS;
 
 		// Dispell Icons
 
-		else if	( iOptionNum ==	OPTION_DISPELLICONS	)
-			g_PlayerOptions[id][iOptionNum]	= PLAYEROPTION_DISPELLICONS;
+		else if ( iOptionNum == OPTION_DISPELLICONS )
+			g_PlayerOptions[id][iOptionNum] = PLAYEROPTION_DISPELLICONS;
 
 		// Default screen resolution
 
-		else if	( iOptionNum ==	OPTION_RESOLUTION )
-			g_PlayerOptions[id][iOptionNum]	= PLAYEROPTION_RESOLUTION;
+		else if ( iOptionNum == OPTION_RESOLUTION )
+			g_PlayerOptions[id][iOptionNum] = PLAYEROPTION_RESOLUTION;
 
 		// Auto-Cast support ultimates
 
 		else
 		{
-			g_PlayerOptions[id][iOptionNum]	= PLAYEROPTION_AUTOCAST;
+			g_PlayerOptions[id][iOptionNum] = PLAYEROPTION_AUTOCAST;
 		}
 	}
 
@@ -205,70 +205,70 @@ public Retrieve_Defaults( id ) {
 /* - Store Current Player --------------------------------------- */
 
 
-// Stores all Player XP	to Database
+// Stores all Player XP to Database
 
-public Store_Xp( id	) {
+public Store_Xp( id ) {
 
 	if ( !g_PlayerInfo[id][CURRENT_RACE] )
 		return PLUGIN_HANDLED;
 
 
-	if ( get_pcvar_num(	CVAR_save_xp_sql ) == 1	)
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
-		for	( new iRaceId =	0; iRaceId < TOTAL_RACES; iRaceId++	)
+		for ( new iRaceId = 0; iRaceId < TOTAL_RACES; iRaceId++ )
 		{
-			if ( g_iXPtotal[id][iRaceId] !=	g_iXPfetched[id][iRaceId] && g_iXPtotal[id][iRaceId] )
+			if ( g_iXPtotal[id][iRaceId] != g_iXPfetched[id][iRaceId] && g_iXPtotal[id][iRaceId] )
 			{
-				if ( iRaceId ==	g_PlayerInfo[id][CURRENT_RACE] - 1 )
+				if ( iRaceId == g_PlayerInfo[id][CURRENT_RACE] - 1 )
 				{
-					new	szData[32],	iLen;
+					new szData[32], iLen;
 
 					// Data
 
-					iLen +=	formatex( szData[iLen],	31 - iLen,	"%d", g_PlayerInfo[id][CURRENT_SKILL1] );
-					iLen +=	formatex( szData[iLen],	31 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL2] );
-					iLen +=	formatex( szData[iLen],	31 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL3] );
-					iLen +=	formatex( szData[iLen],	31 - iLen, ",%d", g_PlayerInfo[id][CURRENT_ULTIMATE] );
+					iLen += formatex( szData[iLen], 31 - iLen,  "%d", g_PlayerInfo[id][CURRENT_SKILL1] );
+					iLen += formatex( szData[iLen], 31 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL2] );
+					iLen += formatex( szData[iLen], 31 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL3] );
+					iLen += formatex( szData[iLen], 31 - iLen, ",%d", g_PlayerInfo[id][CURRENT_ULTIMATE] );
 
-					write_mysql_all( g_SaveIds[id],	szData,	iRaceId	+ 1, g_iXPtotal[id][iRaceId], g_iXPfetched[id][iRaceId]	);
+					write_mysql_all( g_SaveIds[id], szData, iRaceId + 1, g_iXPtotal[id][iRaceId], g_iXPfetched[id][iRaceId] );
 				}
 				else
 				{
-					write_mysql_xp(	g_SaveIds[id], iRaceId + 1,	g_iXPtotal[id][iRaceId], g_iXPfetched[id][iRaceId] );
+					write_mysql_xp( g_SaveIds[id], iRaceId + 1, g_iXPtotal[id][iRaceId], g_iXPfetched[id][iRaceId] );
 				}
 
-				g_iXPfetched[id][iRaceId] =	g_iXPtotal[id][iRaceId];
+				g_iXPfetched[id][iRaceId] = g_iXPtotal[id][iRaceId];
 			}
 		}
 	}
 	else
 	{
-		new	szKeyName[64], szKeyData[64], iLen;
+		new szKeyName[64], szKeyData[64], iLen;
 
 		// Key Name
 
-		formatex( szKeyName, 63, "war3x_%s_XP",	g_SaveIds[id] );
+		formatex( szKeyName, 63, "war3x_%s_XP", g_SaveIds[id] );
 
 		// Key Data
 
-		for	( new iRaceNum = 0;	iRaceNum < TOTAL_RACES;	iRaceNum++ )
+		for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
 		{
-			if ( iRaceNum >	0 )
-				iLen +=	formatex( szKeyData[iLen], 63 -	iLen, "," );
+			if ( iRaceNum > 0 )
+				iLen += formatex( szKeyData[iLen], 63 - iLen, "," );
 
-			iLen +=	formatex( szKeyData[iLen], 63 -	iLen, "%d",	g_iXPtotal[id][iRaceNum] );
+			iLen += formatex( szKeyData[iLen], 63 - iLen, "%d", g_iXPtotal[id][iRaceNum] );
 		}
 
 		// Store Data
 
-		set_vaultdata( szKeyName, szKeyData	);
+		set_vaultdata( szKeyName, szKeyData );
 	}
 
 	return PLUGIN_HANDLED;
 }
 
 
-// Store Player	Options	to Database
+// Store Player Options to Database
 
 public Store_Options( id ) {
 
@@ -276,32 +276,32 @@ public Store_Options( id ) {
 		return PLUGIN_HANDLED;
 
 
-	new	szData[32],	iLen;
+	new szData[32], iLen;
 
-	if ( get_pcvar_num(	CVAR_save_xp_sql ) == 1	)
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
-		new	totalOptionNum = 0;				// no query	is necessary if	no options have	been changed from default
+		new totalOptionNum = 0;             // no query is necessary if no options have been changed from default
 
 		// Data
 
-		for	( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
+		for ( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
 		{
-			if ( iOptionNum	> 0	)
-				iLen +=	formatex( szData[iLen],	31 - iLen, "," );
+			if ( iOptionNum > 0 )
+				iLen += formatex( szData[iLen], 31 - iLen, "," );
 
-			iLen +=	formatex( szData[iLen],	31 - iLen, "%d", g_PlayerOptions[id][iOptionNum] );
+			iLen += formatex( szData[iLen], 31 - iLen, "%d", g_PlayerOptions[id][iOptionNum] );
 
 			totalOptionNum += g_PlayerOptions[id][iOptionNum];
 		}
 
-		if ( totalOptionNum	)
+		if ( totalOptionNum )
 		{
-			write_mysql_options( g_SaveIds[id],	szData );
+			write_mysql_options( g_SaveIds[id], szData );
 		}
 	}
 	else
 	{
-		new	szKeyName[64];
+		new szKeyName[64];
 
 		// Key Name
 
@@ -309,12 +309,12 @@ public Store_Options( id ) {
 
 		// Key Data
 
-		for	( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
+		for ( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
 		{
-			if ( iOptionNum	> 0	)
-				iLen +=	formatex( szData[iLen],	31 - iLen, "," );
+			if ( iOptionNum > 0 )
+				iLen += formatex( szData[iLen], 31 - iLen, "," );
 
-			iLen +=	formatex( szData[iLen],	31 - iLen, "%d", g_PlayerOptions[id][iOptionNum] );
+			iLen += formatex( szData[iLen], 31 - iLen, "%d", g_PlayerOptions[id][iOptionNum] );
 		}
 
 		// Store Data
@@ -326,31 +326,31 @@ public Store_Options( id ) {
 }
 
 
-// Store Player	Skills to Database ( vault only	)
+// Store Player Skills to Database ( vault only )
 
-public Store_Skills( id	) {
+public Store_Skills( id ) {
 
 	if ( !g_PlayerInfo[id][CURRENT_RACE] )
 		return PLUGIN_HANDLED;
 
 
-	new	szKeyName[64], szKeyData[64], iLen;
-	new	iRaceId	= g_PlayerInfo[id][CURRENT_RACE] - 1;
+	new szKeyName[64], szKeyData[64], iLen;
+	new iRaceId = g_PlayerInfo[id][CURRENT_RACE] - 1;
 
 	// Key Name
 
-	formatex( szKeyName, 63, "war3x_%s_%s",	g_SaveIds[id], RACEKEYNAME[iRaceId]	);
+	formatex( szKeyName, 63, "war3x_%s_%s", g_SaveIds[id], RACEKEYNAME[iRaceId] );
 
 	// Key Data
 
-	iLen +=	formatex( szKeyData[iLen], 63 -	iLen,  "%d", g_PlayerInfo[id][CURRENT_SKILL1] );
-	iLen +=	formatex( szKeyData[iLen], 63 -	iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL2] );
-	iLen +=	formatex( szKeyData[iLen], 63 -	iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL3] );
-	iLen +=	formatex( szKeyData[iLen], 63 -	iLen, ",%d", g_PlayerInfo[id][CURRENT_ULTIMATE]	);
+	iLen += formatex( szKeyData[iLen], 63 - iLen,  "%d", g_PlayerInfo[id][CURRENT_SKILL1] );
+	iLen += formatex( szKeyData[iLen], 63 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL2] );
+	iLen += formatex( szKeyData[iLen], 63 - iLen, ",%d", g_PlayerInfo[id][CURRENT_SKILL3] );
+	iLen += formatex( szKeyData[iLen], 63 - iLen, ",%d", g_PlayerInfo[id][CURRENT_ULTIMATE] );
 
 	// Store Data
 
-	set_vaultdata( szKeyName, szKeyData	);
+	set_vaultdata( szKeyName, szKeyData );
 
 	return PLUGIN_HANDLED;
 }
@@ -359,31 +359,31 @@ public Store_Skills( id	) {
 /* - Store Queued Player Data ----------------------------------- */
 
 
-// Stores XP of	Queued Player to Database
+// Stores XP of Queued Player to Database
 
-public Store_Queue_Xp( iArrayIndex,	szSaveId[32] ) {
+public Store_Queue_Xp( iArrayIndex, szSaveId[32] ) {
 
-	if ( get_pcvar_num(	CVAR_save_xp_sql ) == 1	)
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
-		for	( new iRaceId =	0; iRaceId < TOTAL_RACES; iRaceId++	)
+		for ( new iRaceId = 0; iRaceId < TOTAL_RACES; iRaceId++ )
 		{
-			if ( g_SaveQueue_iXP[iArrayIndex][iRaceId] != g_SaveQueue_iXPfetched[iArrayIndex][iRaceId] && g_SaveQueue_iXP[iArrayIndex][iRaceId]	)
+			if ( g_SaveQueue_iXP[iArrayIndex][iRaceId] != g_SaveQueue_iXPfetched[iArrayIndex][iRaceId] && g_SaveQueue_iXP[iArrayIndex][iRaceId] )
 			{
-				if ( iRaceId ==	g_SaveQueue_iInfo[iArrayIndex][CURRENT_RACE] - 1 )
+				if ( iRaceId == g_SaveQueue_iInfo[iArrayIndex][CURRENT_RACE] - 1 )
 				{
-					new	szData[32],	iLen;
+					new szData[32], iLen;
 
 					// Data
-					iLen +=	formatex( szData[iLen],	31 - iLen,	"%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL1] );
-					iLen +=	formatex( szData[iLen],	31 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL2] );
-					iLen +=	formatex( szData[iLen],	31 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL3] );
-					iLen +=	formatex( szData[iLen],	31 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_ULTIMATE] );
+					iLen += formatex( szData[iLen], 31 - iLen,  "%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL1] );
+					iLen += formatex( szData[iLen], 31 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL2] );
+					iLen += formatex( szData[iLen], 31 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL3] );
+					iLen += formatex( szData[iLen], 31 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_ULTIMATE] );
 
-					write_mysql_all( szSaveId, szData, iRaceId + 1,	g_SaveQueue_iXP[iArrayIndex][iRaceId], g_SaveQueue_iXPfetched[iArrayIndex][iRaceId]	);
+					write_mysql_all( szSaveId, szData, iRaceId + 1, g_SaveQueue_iXP[iArrayIndex][iRaceId], g_SaveQueue_iXPfetched[iArrayIndex][iRaceId] );
 				}
 				else
 				{
-					write_mysql_xp(	szSaveId, iRaceId +	1, g_SaveQueue_iXP[iArrayIndex][iRaceId], g_SaveQueue_iXPfetched[iArrayIndex][iRaceId] );
+					write_mysql_xp( szSaveId, iRaceId + 1, g_SaveQueue_iXP[iArrayIndex][iRaceId], g_SaveQueue_iXPfetched[iArrayIndex][iRaceId] );
 				}
 
 				g_SaveQueue_iXPfetched[iArrayIndex][iRaceId] = g_SaveQueue_iXP[iArrayIndex][iRaceId];
@@ -392,72 +392,72 @@ public Store_Queue_Xp( iArrayIndex,	szSaveId[32] ) {
 	}
 	else
 	{
-		new	szKeyName[64], szKeyData[64], iLen;
+		new szKeyName[64], szKeyData[64], iLen;
 
 		// Key Name
 
-		formatex( szKeyName, 63, "war3x_%s_XP",	szSaveId );
+		formatex( szKeyName, 63, "war3x_%s_XP", szSaveId );
 
 		// Key Data
 
-		for	( new iRaceNum = 0;	iRaceNum < TOTAL_RACES;	iRaceNum++ )
+		for ( new iRaceNum = 0; iRaceNum < TOTAL_RACES; iRaceNum++ )
 		{
-			if ( iRaceNum >	0 )
-				iLen +=	formatex( szKeyData[iLen], 63 -	iLen, "," );
+			if ( iRaceNum > 0 )
+				iLen += formatex( szKeyData[iLen], 63 - iLen, "," );
 
-			iLen +=	formatex( szKeyData[iLen], 63 -	iLen, "%d",	g_SaveQueue_iXP[iArrayIndex][iRaceNum] );
+			iLen += formatex( szKeyData[iLen], 63 - iLen, "%d", g_SaveQueue_iXP[iArrayIndex][iRaceNum] );
 		}
 
 		// Store Data
 
-		set_vaultdata( szKeyName, szKeyData	);
+		set_vaultdata( szKeyName, szKeyData );
 	}
 
 	return PLUGIN_HANDLED;
 }
 
 
-// Stores Queued Player	Skills to Database ( vault only	)
+// Stores Queued Player Skills to Database ( vault only )
 
-public Store_Queue_Skills( iArrayIndex,	szSaveId[32] ) {
+public Store_Queue_Skills( iArrayIndex, szSaveId[32] ) {
 
-	new	szKeyName[64], szKeyData[64], iLen;
-	new	iLastRace =	g_SaveQueue_iInfo[iArrayIndex][CURRENT_RACE] - 1;
+	new szKeyName[64], szKeyData[64], iLen;
+	new iLastRace = g_SaveQueue_iInfo[iArrayIndex][CURRENT_RACE] - 1;
 
 	// Key Name
 
-	formatex( szKeyName, 63, "war3x_%s_%s",	szSaveId, RACEKEYNAME[iLastRace] );
+	formatex( szKeyName, 63, "war3x_%s_%s", szSaveId, RACEKEYNAME[iLastRace] );
 
 	// Key Data
 
-	iLen +=	formatex( szKeyData[iLen], 63 -	iLen,  "%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL1]	);
-	iLen +=	formatex( szKeyData[iLen], 63 -	iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL2]	);
-	iLen +=	formatex( szKeyData[iLen], 63 -	iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL3]	);
-	iLen +=	formatex( szKeyData[iLen], 63 -	iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_ULTIMATE] );
+	iLen += formatex( szKeyData[iLen], 63 - iLen,  "%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL1] );
+	iLen += formatex( szKeyData[iLen], 63 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL2] );
+	iLen += formatex( szKeyData[iLen], 63 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_SKILL3] );
+	iLen += formatex( szKeyData[iLen], 63 - iLen, ",%d", g_SaveQueue_iInfo[iArrayIndex][CURRENT_ULTIMATE] );
 
 	// Store Data
 
-	set_vaultdata( szKeyName, szKeyData	);
+	set_vaultdata( szKeyName, szKeyData );
 
 	return PLUGIN_HANDLED;
 }
 
 
-// Stores Queued Player	Options	to Database
+// Stores Queued Player Options to Database
 
-public Store_Queue_Options(	iArrayIndex, szSaveId[32] )	{
+public Store_Queue_Options( iArrayIndex, szSaveId[32] ) {
 
-	if ( get_pcvar_num(	CVAR_save_xp_sql ) == 1	)
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
-		new	szData[32],	iLen;
-		new	totalOptionNum = 0;				// no query	is necessary if	no options have	been changed from default
+		new szData[32], iLen;
+		new totalOptionNum = 0;             // no query is necessary if no options have been changed from default
 
-		for	( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
+		for ( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
 		{
-			if ( iOptionNum	> 0	)
-				iLen +=	formatex( szData[iLen],	31 - iLen, "," );
+			if ( iOptionNum > 0 )
+				iLen += formatex( szData[iLen], 31 - iLen, "," );
 
-			iLen +=	formatex( szData[iLen],	31 - iLen, "%d", g_SaveQueue_iOptions[iArrayIndex][iOptionNum] );
+			iLen += formatex( szData[iLen], 31 - iLen, "%d", g_SaveQueue_iOptions[iArrayIndex][iOptionNum] );
 			totalOptionNum += g_SaveQueue_iOptions[iArrayIndex][iOptionNum];
 		}
 
@@ -468,7 +468,7 @@ public Store_Queue_Options(	iArrayIndex, szSaveId[32] )	{
 	}
 	else
 	{
-		new	szKeyName[64], szKeyData[64], iLen;
+		new szKeyName[64], szKeyData[64], iLen;
 
 		// Key Name
 
@@ -476,79 +476,79 @@ public Store_Queue_Options(	iArrayIndex, szSaveId[32] )	{
 
 		// Key Data
 
-		for	( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
+		for ( new iOptionNum = 0; iOptionNum < TOTAL_OPTIONS; iOptionNum++ )
 		{
-			if ( iOptionNum	> 0	)
-				iLen +=	formatex( szKeyData[iLen], 63 -	iLen, "," );
+			if ( iOptionNum > 0 )
+				iLen += formatex( szKeyData[iLen], 63 - iLen, "," );
 
-			iLen +=	formatex( szKeyData[iLen], 63 -	iLen, "%d",	g_SaveQueue_iOptions[iArrayIndex][iOptionNum] );
+			iLen += formatex( szKeyData[iLen], 63 - iLen, "%d", g_SaveQueue_iOptions[iArrayIndex][iOptionNum] );
 		}
 
 		// Store Data
 
-		set_vaultdata( szKeyName, szKeyData	);
+		set_vaultdata( szKeyName, szKeyData );
 	}
 
 	return PLUGIN_HANDLED;
 }
 
 
-// Stores Queued Player	Options	to Database	( vault	only )
+// Stores Queued Player Options to Database ( vault only )
 
-public Store_Queue_CurDate(	szSaveId[32] ) {
+public Store_Queue_CurDate( szSaveId[32] ) {
 
-	new	szKeyName[64], szKeyData[64], szLastPlayed[16];
+	new szKeyName[64], szKeyData[64], szLastPlayed[16];
 
 	// Key Name
 
-	formatex( szKeyName, 63, "war3x_%s_LASTPLAYED",	szSaveId );
+	formatex( szKeyName, 63, "war3x_%s_LASTPLAYED", szSaveId );
 
 	// Key Data
 
-	get_time( "%m,%d,%Y", szLastPlayed,	15 );
-	formatex( szKeyData, 63, "%s", szLastPlayed	);
+	get_time( "%m,%d,%Y", szLastPlayed, 15 );
+	formatex( szKeyData, 63, "%s", szLastPlayed );
 
 	// Store Data
 
-	set_vaultdata( szKeyName, szKeyData	);
+	set_vaultdata( szKeyName, szKeyData );
 
 	return PLUGIN_HANDLED;
 }
 
 
-/* - Player	Queue Functions	------------------------------------- */
+/* - Player Queue Functions ------------------------------------- */
 
 
 // Add Player to Save Queue
 
-public Queue_Add( id, iArrayIndex, szSaveId[32]	) {
+public Queue_Add( id, iArrayIndex, szSaveId[32] ) {
 
-	// Copy	Authid to the SaveQueue	Authid Array
+	// Copy Authid to the SaveQueue Authid Array
 
-	copy( g_SaveQueue_ids[iArrayIndex],	31,	szSaveId );
+	copy( g_SaveQueue_ids[iArrayIndex], 31, szSaveId );
 
-	// Copy	All	Player XP to the SaveQueue XP Array
+	// Copy All Player XP to the SaveQueue XP Array
 
-	for	( new iRaceId =	0; iRaceId < TOTAL_RACES; iRaceId++	)
+	for ( new iRaceId = 0; iRaceId < TOTAL_RACES; iRaceId++ )
 	{
-		g_SaveQueue_iXP[iArrayIndex][iRaceId] =	g_iXPtotal[id][iRaceId];
+		g_SaveQueue_iXP[iArrayIndex][iRaceId] = g_iXPtotal[id][iRaceId];
 
-		if ( get_pcvar_num(	CVAR_save_xp_sql ) == 1	)
+		if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 		{
 			g_SaveQueue_iXPfetched[iArrayIndex][iRaceId] = g_iXPfetched[id][iRaceId];
 		}
 	}
 
-	// Copy	PlayerInfo Array to	SaveQueue Info Array
+	// Copy PlayerInfo Array to SaveQueue Info Array
 
-	for	( new i	= 0; i < ( TOTAL_SKILLSTRAINED + 3 ); i++ )
+	for ( new i = 0; i < ( TOTAL_SKILLSTRAINED + 3 ); i++ )
 	{
-		g_SaveQueue_iInfo[iArrayIndex][i] =	g_PlayerInfo[id][i];
+		g_SaveQueue_iInfo[iArrayIndex][i] = g_PlayerInfo[id][i];
 	}
 
-	// Copy	PlayerOptions Array	to SaveQueue Options Array
+	// Copy PlayerOptions Array to SaveQueue Options Array
 
-	for	( new i	= 0; i < TOTAL_OPTIONS;	i++	)
+	for ( new i = 0; i < TOTAL_OPTIONS; i++ )
 	{
 		g_SaveQueue_iOptions[iArrayIndex][i] = g_PlayerOptions[id][i];
 	}
@@ -559,41 +559,41 @@ public Queue_Add( id, iArrayIndex, szSaveId[32]	) {
 }
 
 
-// Returns Array Index if szSaveId found in	Queue Array
+// Returns Array Index if szSaveId found in Queue Array
 
-public Queue_Check(	szSaveId[32] ) {
+public Queue_Check( szSaveId[32] ) {
 
-	for	( new iArrayIndex =	0; iArrayIndex < TOTAL_QUEUES; iArrayIndex++ )
+	for ( new iArrayIndex = 0; iArrayIndex < TOTAL_QUEUES; iArrayIndex++ )
 	{
-		if ( g_SaveQueue_ids[iArrayIndex][0] &&	equal( g_SaveQueue_ids[iArrayIndex], szSaveId )	)
+		if ( g_SaveQueue_ids[iArrayIndex][0] && equal( g_SaveQueue_ids[iArrayIndex], szSaveId ) )
 		{
 			return ( iArrayIndex );
 		}
 	}
 
-	return ( -1	);
+	return ( -1 );
 }
 
 
-// Copies Information from Queue to	Globals
+// Copies Information from Queue to Globals
 
 public Queue_Retrieve( id, iArrayIndex ) {
 
-	// Retrieve	XP from	Queue
+	// Retrieve XP from Queue
 
-	for	( new iRaceId =	0; iRaceId < TOTAL_RACES; iRaceId++	)
+	for ( new iRaceId = 0; iRaceId < TOTAL_RACES; iRaceId++ )
 	{
-		g_iXPtotal[id][iRaceId]	= g_SaveQueue_iXP[iArrayIndex][iRaceId];
+		g_iXPtotal[id][iRaceId] = g_SaveQueue_iXP[iArrayIndex][iRaceId];
 
-		if ( get_pcvar_num(	CVAR_save_xp_sql ) == 1	)
+		if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 		{
-			g_iXPfetched[id][iRaceId] =	g_SaveQueue_iXPfetched[iArrayIndex][iRaceId];
+			g_iXPfetched[id][iRaceId] = g_SaveQueue_iXPfetched[iArrayIndex][iRaceId];
 		}
 	}
 
-	// Retrieve	Options	from Queue
+	// Retrieve Options from Queue
 
-	for	( new i	= 0; i < TOTAL_OPTIONS;	i++	)
+	for ( new i = 0; i < TOTAL_OPTIONS; i++ )
 	{
 		g_PlayerOptions[id][i] = g_SaveQueue_iOptions[iArrayIndex][i];
 	}
@@ -606,36 +606,36 @@ public Queue_Retrieve( id, iArrayIndex ) {
 }
 
 
-// Clears Data from	Given Queue	Array Index
+// Clears Data from Given Queue Array Index
 
 public Queue_Remove( iArrayIndex ) {
 
-	// Clar	Authid
+	// Clar Authid
 
-	g_SaveQueue_ids[iArrayIndex][0]	= 0;
+	g_SaveQueue_ids[iArrayIndex][0] = 0;
 
-	// Clear Player	XP
+	// Clear Player XP
 
-	for	( new iRaceId =	0; iRaceId < TOTAL_RACES; iRaceId++	)
+	for ( new iRaceId = 0; iRaceId < TOTAL_RACES; iRaceId++ )
 	{
-		g_SaveQueue_iXP[iArrayIndex][iRaceId] =	0;
+		g_SaveQueue_iXP[iArrayIndex][iRaceId] = 0;
 
-		if ( get_pcvar_num(	CVAR_save_xp_sql ) == 1	)
+		if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 		{
 			g_SaveQueue_iXPfetched[iArrayIndex][iRaceId] = 0;
 		}
 	}
 
-	// Clear PlayerInfo	Array
+	// Clear PlayerInfo Array
 
-	for	( new i	= 0; i < ( TOTAL_SKILLSTRAINED + 3 ); i++ )
+	for ( new i = 0; i < ( TOTAL_SKILLSTRAINED + 3 ); i++ )
 	{
-		g_SaveQueue_iInfo[iArrayIndex][i] =	0;
+		g_SaveQueue_iInfo[iArrayIndex][i] = 0;
 	}
 
 	// Clear PlayerOptions Array
 
-	for	( new i	= 0; i < TOTAL_OPTIONS;	i++	)
+	for ( new i = 0; i < TOTAL_OPTIONS; i++ )
 	{
 		g_SaveQueue_iOptions[iArrayIndex][i] = 0;
 	}
@@ -646,12 +646,12 @@ public Queue_Remove( iArrayIndex ) {
 }
 
 
-/* - Reset Database	Information	--------------------------------- */
+/* - Reset Database Information --------------------------------- */
 
 
-// Reset Skills	for	Current	Race
+// Reset Skills for Current Race
 
-public Reset_Skills( id	) {
+public Reset_Skills( id ) {
 
 	// Reset Skills
 
@@ -659,7 +659,7 @@ public Reset_Skills( id	) {
 	g_PlayerInfo[id][CURRENT_SKILL2] = 0;
 	g_PlayerInfo[id][CURRENT_SKILL3] = 0;
 
-	// Prep	for	write
+	// Prep for write
 
 	g_bStoreSkills[id] = true;
 
@@ -669,13 +669,13 @@ public Reset_Skills( id	) {
 
 // Reset Ultimate for Current Race
 
-public Reset_Ultimate( id )	{
+public Reset_Ultimate( id ) {
 
 	// Reset Skills
 
 	g_PlayerInfo[id][CURRENT_ULTIMATE] = 0;
 
-	// Prep	for	write
+	// Prep for write
 
 	g_bStoreSkills[id] = true;
 
@@ -683,11 +683,11 @@ public Reset_Ultimate( id )	{
 }
 
 
-// Reset XP	for	Current	Race
+// Reset XP for Current Race
 
-public Reset_XP( id	) {
+public Reset_XP( id ) {
 
-	new	iRaceNum = g_PlayerInfo[id][CURRENT_RACE] -	1;
+	new iRaceNum = g_PlayerInfo[id][CURRENT_RACE] - 1;
 
 	// Reset XP
 
@@ -696,16 +696,16 @@ public Reset_XP( id	) {
 	// Reset Skills
 
 	Reset_Skills( id );
-	Reset_Ultimate(	id );
+	Reset_Ultimate( id );
 
-	// Prep	for	write
+	// Prep for write
 
 	g_bStoreXp[id] = true;
 	g_bStoreSkills[id] = true;
 
-	if ( get_pcvar_num(	CVAR_save_xp_sql ) == 1	)
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
-		g_iXPfetched[id][iRaceNum] = 1;		 //	entry still	exists,	even if	its	0
+		g_iXPfetched[id][iRaceNum] = 1;      // entry still exists, even if its 0
 	}
 
 	return PLUGIN_HANDLED;
@@ -717,18 +717,18 @@ public Reset_XP( id	) {
 
 // Stores all Current Player data to Database
 
-public Store_ActivePlayer( id )	{
+public Store_ActivePlayer( id ) {
 
 	if ( is_user_bot( id ) || !g_PlayerInfo[id][CURRENT_RACE] )
 		return PLUGIN_HANDLED;
 
-	// .. add a	|| g_UnsavedRounds[id] < ROUNDS_UNSAVED
+	// .. add a || g_UnsavedRounds[id] < ROUNDS_UNSAVED
 
 	// Store Only Needed Values
 
-	if ( get_pcvar_num(	CVAR_save_xp_sql ) == 1	)
+	if ( get_pcvar_num( CVAR_save_xp_sql ) == 1 )
 	{
-		if ( g_bStoreXp[id]	|| g_bStoreSkills[id])
+		if ( g_bStoreXp[id] || g_bStoreSkills[id])
 			Store_Xp( id );
 
 		if ( g_bStoreOptions[id] )
@@ -736,46 +736,46 @@ public Store_ActivePlayer( id )	{
 	}
 	else
 	{
-		if ( g_bStoreXp[id]	)
+		if ( g_bStoreXp[id] )
 			Store_Xp( id );
 
-		if ( g_bStoreSkills[id]	)
+		if ( g_bStoreSkills[id] )
 			Store_Skills( id );
 
 		if ( g_bStoreOptions[id] )
 			Store_Options( id );
 	}
 
-	g_bStoreXp[id]		= false;
-	g_bStoreSkills[id]	= false;
-	g_bStoreOptions[id]	= false;
+	g_bStoreXp[id]      = false;
+	g_bStoreSkills[id]  = false;
+	g_bStoreOptions[id] = false;
 
 	return PLUGIN_HANDLED;
 }
 
 
-// Stores all Queued Player	data to	Database
+// Stores all Queued Player data to Database
 
 public Store_Queue_All() {
 
 	if ( !g_SaveQueue_iTotal )
 		return PLUGIN_HANDLED;
 
-	new	iArrayIndex;
+	new iArrayIndex;
 
-	while (	g_SaveQueue_iTotal > 0 && iArrayIndex <	TOTAL_QUEUES )
+	while ( g_SaveQueue_iTotal > 0 && iArrayIndex < TOTAL_QUEUES )
 	{
 		if ( g_SaveQueue_ids[iArrayIndex][0] )
 		{
-			new	szSaveId[32];
-			copy( szSaveId,	31,	g_SaveQueue_ids[iArrayIndex] );
+			new szSaveId[32];
+			copy( szSaveId, 31, g_SaveQueue_ids[iArrayIndex] );
 
-			Store_Queue_Xp(	iArrayIndex, szSaveId );
+			Store_Queue_Xp( iArrayIndex, szSaveId );
 			Store_Queue_Options( iArrayIndex, szSaveId );
 
-			if ( !get_pcvar_num( CVAR_save_xp_sql )	)
+			if ( !get_pcvar_num( CVAR_save_xp_sql ) )
 			{
-				Store_Queue_Skills(	iArrayIndex, szSaveId );
+				Store_Queue_Skills( iArrayIndex, szSaveId );
 				Store_Queue_CurDate( szSaveId );
 			}
 
@@ -791,4 +791,4 @@ public Store_Queue_All() {
 }
 
 
-// ------------------------------------------------- End. -	//
+// ------------------------------------------------- End. - //

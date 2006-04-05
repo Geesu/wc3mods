@@ -1,29 +1,29 @@
 
 /*
 
-STATISTICS TO SHOW AT ROUND	END:
+STATISTICS TO SHOW AT ROUND END:
 -------------------------------
 
-	Unholy Aura					Fortitude
-	  Average speed: %i%		  Bonus	Health:	%i
-	Vampiric Aura				Invisibility
-	  Health stolen: %d			  Invis	level: %i%
-	Frost Nova					Bash
-	  Damage: %i, Kills: %i		  Procs: %i, Damage: %i
-	  Assists: %i				Inner Fire
-	Frost Armor					  Damage: %i
-	  Procs: %i	(%i%)
+	Unholy Aura                 Fortitude
+	  Average speed: %i%          Bonus Health: %i
+	Vampiric Aura               Invisibility
+	  Health stolen: %d           Invis level: %i%
+	Frost Nova                  Bash
+	  Damage: %i, Kills: %i       Procs: %i, Damage: %i
+	  Assists: %i               Inner Fire
+	Frost Armor                   Damage: %i
+	  Procs: %i (%i%)
 
 
-	Regeneration				Elune's	Grace
-	  Health gained: %i			  Damage absorbed: %i
-	Berserk						Evasion
-	  Damage: %i				  Procs: %i, Damage: %i
-	Pulverize					Nature's Blessing
-	  Damage: %i, Kills: %i		  Average speed: %i%
-	Pillage						Trueshot Aura
-	  Money: %i, Ammo: %i		  Damage: %i
-	  Grenades:	%i
+	Regeneration                Elune's Grace
+	  Health gained: %i           Damage absorbed: %i
+	Berserk                     Evasion
+	  Damage: %i                  Procs: %i, Damage: %i
+	Pulverize                   Nature's Blessing
+	  Damage: %i, Kills: %i       Average speed: %i%
+	Pillage                     Trueshot Aura
+	  Money: %i, Ammo: %i         Damage: %i
+	  Grenades: %i
 
 
 	Experience:
@@ -32,32 +32,39 @@ STATISTICS TO SHOW AT ROUND	END:
 	Type '/war3stats' for more
 	information...
 
-	Other things to	track:
+	Other things to track:
 	Kill streaks,
 
 */
 
 
 
-public STATS_get_values( id, szStats[],	iMaxLen	) {
+public STATS_get_values( id, szStats[], iMaxLen ) {
 
 	if ( !g_PlayerInfo[id][CURRENT_RACE] )
 		return PLUGIN_HANDLED;
 
-	switch ( g_PlayerInfo[id][CURRENT_RACE]	)
+	new szSkillname[32];
+	new race = g_PlayerInfo[id][CURRENT_RACE];
+
+	switch ( race )
 	{
 		case RACE_UNDEAD:
 		{
 			// Unholy Aura
 
+			LANG_GetSkillName( race, SKILL_RACIAL, id, szSkillname, 31 );
+
 			// Speed % increase
 
 
 
-			// Vampiric	Aura
+			// Vampiric Aura
 
 			if ( g_PlayerInfo[id][CURRENT_SKILL1] )
 			{
+				LANG_GetSkillName( race, SKILL_1, id, szSkillname, 31 );
+
 				// Health stolen
 			}
 
@@ -65,6 +72,8 @@ public STATS_get_values( id, szStats[],	iMaxLen	) {
 
 			if ( g_PlayerInfo[id][CURRENT_SKILL2] )
 			{
+				LANG_GetSkillName( race, SKILL_2, id, szSkillname, 31 );
+
 				// Damage
 
 				// Kills
@@ -76,6 +85,8 @@ public STATS_get_values( id, szStats[],	iMaxLen	) {
 
 			if ( g_PlayerInfo[id][CURRENT_SKILL3] )
 			{
+				LANG_GetSkillName( race, SKILL_3, id, szSkillname, 31 );
+
 				// Procs
 
 				// Percentage
@@ -86,10 +97,14 @@ public STATS_get_values( id, szStats[],	iMaxLen	) {
 		{
 			// Fortitude
 
+			LANG_GetSkillName( race, SKILL_RACIAL, id, szSkillname, 31 );
+
 			// Invisibility
 
 			if ( g_PlayerInfo[id][CURRENT_SKILL1] )
 			{
+				LANG_GetSkillName( race, SKILL_1, id, szSkillname, 31 );
+
 				// Ultimates avoided
 			}
 
@@ -97,6 +112,8 @@ public STATS_get_values( id, szStats[],	iMaxLen	) {
 
 			if ( g_PlayerInfo[id][CURRENT_SKILL2] )
 			{
+				LANG_GetSkillName( race, SKILL_2, id, szSkillname, 31 );
+
 				// Procs
 
 				// Damage
@@ -106,6 +123,8 @@ public STATS_get_values( id, szStats[],	iMaxLen	) {
 
 			if ( g_PlayerInfo[id][CURRENT_SKILL3] )
 			{
+				LANG_GetSkillName( race, SKILL_3, id, szSkillname, 31 );
+
 				// Damage
 			}
 		}
@@ -114,10 +133,14 @@ public STATS_get_values( id, szStats[],	iMaxLen	) {
 		{
 			// Regeneration
 
+			LANG_GetSkillName( race, SKILL_RACIAL, id, szSkillname, 31 );
+
 			// Berserk
 
 			if ( g_PlayerInfo[id][CURRENT_SKILL1] )
 			{
+				LANG_GetSkillName( race, SKILL_1, id, szSkillname, 31 );
+
 				// Damage
 			}
 
@@ -125,6 +148,8 @@ public STATS_get_values( id, szStats[],	iMaxLen	) {
 
 			if ( g_PlayerInfo[id][CURRENT_SKILL2] )
 			{
+				LANG_GetSkillName( race, SKILL_2, id, szSkillname, 31 );
+
 				// Damage
 
 				// Kills
@@ -134,6 +159,8 @@ public STATS_get_values( id, szStats[],	iMaxLen	) {
 
 			if ( g_PlayerInfo[id][CURRENT_SKILL3] )
 			{
+				LANG_GetSkillName( race, SKILL_3, id, szSkillname, 31 );
+
 				// Money
 
 				// Ammo
@@ -146,6 +173,8 @@ public STATS_get_values( id, szStats[],	iMaxLen	) {
 		{
 			// Elune's Grace
 
+			LANG_GetSkillName( race, SKILL_RACIAL, id, szSkillname, 31 );
+
 			// Damage avoided
 
 
@@ -153,22 +182,28 @@ public STATS_get_values( id, szStats[],	iMaxLen	) {
 
 			if ( g_PlayerInfo[id][CURRENT_SKILL1] )
 			{
+				LANG_GetSkillName( race, SKILL_1, id, szSkillname, 31 );
+
 				// Procs
 
 				// Damage avoided
 			}
 
-			// Nature's	Blessing
+			// Nature's Blessing
 
 			if ( g_PlayerInfo[id][CURRENT_SKILL2] )
 			{
+				LANG_GetSkillName( race, SKILL_2, id, szSkillname, 31 );
+
 				// Speed % increase
 			}
 
-			// Trueshot	Aura
+			// Trueshot Aura
 
 			if ( g_PlayerInfo[id][CURRENT_SKILL3] )
 			{
+				LANG_GetSkillName( race, SKILL_3, id, szSkillname, 31 );
+
 				// Damage
 			}
 		}
