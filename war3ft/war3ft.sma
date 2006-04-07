@@ -25,12 +25,11 @@
 *  Lazarus Long for adding ALL of the sql-lite code and fine-tuning the existing MySQL code... It's so much pertier
 */
 
-// Sick of gay tab errors, DAMN YOU EDITPLUS!!!!
 #pragma tabsize 0
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
-new const WC3AUTHOR[] =		"Geesu==(Pimp Daddy==OoTOAoO)"
-new const WC3VERSION[] =	"2.3.2"
+new const WC3AUTHOR[] =		"Geesu"
+new const WC3VERSION[] =	"2.3.3 RC1"
 new const WC3DATE[] =		__DATE__
 
 
@@ -45,11 +44,6 @@ new const WC3DATE[] =		__DATE__
 #define MOD 0							// 0 = cstrike or czero, 1 = dod
 #define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define PRECACHE_WAR3FTSOUNDS 1
-
-// Debugging Options
-#define DEBUG 0 						// Only use this when coding.. you normally don't want it
-#define ADVANCED_DEBUG 0				// Prints debug information to a log file when every function is called, VERY LAGGY
-#define ADVANCED_DEBUG_BOTS 1			// Print info for bots too?
 
 #if MOD == 0
 	#include <cstrike>
@@ -74,6 +68,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/language.inl"
 #include "war3ft/other.inl"
 #include "war3ft/admin.inl"
+#include "war3ft/cvar.inl"
 
 #if MOD == 0
 	#include "war3ft/cstrike.inl"
@@ -82,33 +77,12 @@ new const WC3DATE[] =		__DATE__
 	#include "war3ft/dod.inl"
 #endif
 
-#if DEBUG || ADVANCED_DEBUG
-	#include "war3ft/debug.inl"
-#endif
-
 public plugin_init()
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("plugin_init",0)
-	#endif
-
-	if ( is_running("cstrike") )
-	{
-		g_MOD = GAME_CSTRIKE;
-	}
-	else if ( is_running("czero") )
-	{
-		g_MOD = GAME_CZERO;
-	}
-	else if ( is_running("dod") )
-	{
-		g_MOD = GAME_DOD;
-	}
-
-	gmsgDeathMsg = get_user_msgid("DeathMsg")
-	gmsgScreenFade = get_user_msgid("ScreenFade")
-	gmsgScreenShake = get_user_msgid("ScreenShake")
-	gmsgScoreInfo = get_user_msgid("ScoreInfo")
+	gmsgDeathMsg		= get_user_msgid("DeathMsg")
+	gmsgScreenFade		= get_user_msgid("ScreenFade")
+	gmsgScreenShake		= get_user_msgid("ScreenShake")
+	gmsgScoreInfo		= get_user_msgid("ScoreInfo")
 
 	#if MOD == 0
 		gmsgBarTime = get_user_msgid("BarTime")
@@ -207,16 +181,15 @@ public plugin_init()
 
 		register_menucmd(register_menuid("Team_Select",1),(1<<0)|(1<<1)|(1<<4),"cmd_Teamselect")
 
-		set_task(1.0, "WAR3_Mole_Fix", TASK_MOLEFIX)
+		set_task(0.7, "WAR3_Mole_Fix", TASK_MOLEFIX, "", 0, "b");
 	#endif
 
 	register_event("DeathMsg","on_DeathMsg","a")
 	register_event("CurWeapon","on_CurWeapon","be","1=1")
 	register_event("HideWeapon", "on_CurWeapon", "b")
 	register_event("ResetHUD", "on_ResetHud", "b")
-
-
 	register_event("TextMsg","on_GameRestart","a","2&#Game_will_restart_in")
+
 
 	if(is_running("czero"))
 	{
@@ -226,141 +199,32 @@ public plugin_init()
 	{
 		register_event("TextMsg", "on_GameRestart", "a", "2&#Game_C")
 	}
-
-	// For an explanation of these variables, please see war3ft.cfg
-	register_cvar("FT_admin_flag",				"m")
-	register_cvar("FT_query_client",			"1")
-	register_cvar("FT_impale_intensity",		"10")
-	register_cvar("FT_autoxp",					"0")
-	register_cvar("FT_show_player",				"1")
-	register_cvar("FT_Race9_Random",			"1")
-	register_cvar("FT_Race9_Skill1",			"1")
-	register_cvar("FT_Race9_Skill2",			"1")
-	register_cvar("FT_Race9_Skill3",			"1")
-	register_cvar("FT_Race9_Ultimate",			"1")
-	register_cvar("FT_entangle_drop",			"0")
-	register_cvar("FT_sock",					"0.5")
-	register_cvar("FT_buydead",					"1")
-	register_cvar("FT_buytime",					"0")
-	register_cvar("FT_buyzone",					"0")
-	register_cvar("FT_races",					"8")
-	register_cvar("FT_bot_buy_item",			"0.33")
-	register_cvar("FT_race_icons",				"1")
-	register_cvar("FT_level_icons",				"1")
-	register_cvar("FT_claw",					"6")
-#if MOD == 0
-	register_cvar("FT_items_in_hud",			"0")
-	register_cvar("FT_bootspeed",				"275")
-#endif
-#if MOD == 1
-	register_cvar("DOD_bootspeed",				"45.0")
-	register_cvar("DOD_startmoney",				"800")
-#endif
-	register_cvar("FT_health_bonus",			"15")
-	register_cvar("FT_frost_speed",				"125")
-	register_cvar("FT_mask_of_death",			"0.3")
-	register_cvar("FT_cloak",					"150")
-	register_cvar("FT_CD",						"0")
-	register_cvar("FT_ultimatedelay",			"15.0")
-	register_cvar("FT_min_b4_XP",				"2")
-	register_cvar("FT_no_orcnades",				"0")
-	register_cvar("FT_centerhud",				"1")
-	register_cvar("FT_saveby",					"0")
-	register_cvar("FT_position",				"0")
-	register_cvar("FT_glove_timer",				"10")
-	register_cvar("FT_glove_orc_damage",		"0")
-	register_cvar("FT_round_win_XP",			"35")
-	register_cvar("FT_healing_range",			"750")
-	register_cvar("FT_xp_radius",				"750")
-	register_cvar("FT_ultimate_cooldown",		"35.0")
-	register_cvar("FT_kill_objectives",			"0")
-	register_cvar("FT_show_icons",				"1")
-	register_cvar("FT_headshot_bonus",			"9")
-	register_cvar("FT_defuser_kill_bonus",		"25")
-	register_cvar("FT_VIP_escape_bonus",		"30")
-	register_cvar("FT_kill_bomb_carrier_bonus",	"25")
-	register_cvar("FT_bombplanterxp",			"15")
-	register_cvar("FT_defusexp",				"30")
-	register_cvar("FT_hostagexp",				"25")
-	register_cvar("FT_killrescuemanxp",			"25")
-	register_cvar("FT_xpbonus",					"50")
-	register_cvar("FT_VIP_kill_bonus",			"25")
-	register_cvar("FT_warn_suicide",			"1")
-	register_cvar("FT_no_gloves_on_ka",			"1")
-	register_cvar("FT_blink_radius",			"500")
-	register_cvar("FT_blink_protection",		"1")
-	register_cvar("FT_blink_dizziness",			"1")
-	register_cvar("FT_blinkenabled",			"1")
-	register_cvar("FT_spec_info",				"1")
-	register_cvar("FT_objectives",				"1")
-	register_cvar("FT_auto_pruning",			"0", FCVAR_SERVER)
-	register_cvar("mp_savexp",					"0", FCVAR_SERVER)
-	register_cvar("mp_xpmultiplier",			"1.0")
-	register_cvar("mp_weaponxpmodifier",		"1")
-	register_cvar("sv_warcraft3",				"1")
-	register_cvar("mp_grenadeprotection",		"0")
-	register_cvar("sv_save_end_round",			"1")
-	register_cvar("sv_daysbeforedelete",		"31")
-	register_cvar("sv_sql",						"0")
-	register_cvar("sv_sqltablename",			"war3users")
-	register_cvar("FT_sql_host",				"127.0.0.1")
-	register_cvar("FT_sql_user",				"root")
-	register_cvar("FT_sql_pass",				"")
-	register_cvar("FT_sql_db",					"amx")
-
-	WAR3_exec_config()
-
-	set_task(2.0, "WAR3_Set_Variables", TASK_SETVARIABLES)
-	set_task(7.5, "WAR3_Check",TASK_WAR3CHECK,"",0,"b")
-
+	
 	register_dictionary("war3FT.txt")
-
-	#if DEBUG
-		register_concmd("test","test")
-		register_concmd("test2","test2")
-		register_concmd("test3","test3")
-
-		register_concmd("check_evasion", "Skill_Evasion_Check_C");
-		register_concmd("evasion", "Skill_Evasion_Set");
-		register_concmd("prune", "XP_Prune");
-		register_concmd("died", "died");
-
-	#endif
-
+	
+	// Plugin initialization procedures
+	WAR3_Init();
 }
 
 public plugin_end()
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("plugin_end",0)
-	#endif
-
-	if (!warcraft3 || !iCvar[MP_SAVEXP])
-		return PLUGIN_CONTINUE
+	if ( !get_pcvar_num( CVAR_sv_warcraft3 ) || !get_pcvar_num( CVAR_mp_savexp ) )
+	{
+		return PLUGIN_CONTINUE;
+	}
 	
 	XP_Save_All();
 	XP_Prune();
 	XP_CloseDB();
-
-	return PLUGIN_CONTINUE
 }
 
 public plugin_precache()
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("plugin_precache",0)
-	#endif
-
 	WAR3_precache()
-
-	return PLUGIN_CONTINUE
 }
 
-public client_putinserver(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("client_putinserver",id)
-	#endif
-
+public client_putinserver(id)
+{
 	// Check for steam ID pending
 	new szPlayerID[32];
 	get_user_authid( id, szPlayerID, 31 );
@@ -376,55 +240,62 @@ public client_putinserver(id){
 		XP_Prune_Player(id);
 	}
 
-	p_data_b[id][PB_ISCONNECTED] = true
+	p_data_b[id][PB_ISCONNECTED] = true;
 
 	#if MOD == 1
-		p_data[id][P_MONEY] = iCvar[DOD_STARTMONEY]
-		new parm[3]
-		parm[0] = id
-		parm[1] = 0
-		_DOD_showMoney(parm)
+		p_data[id][P_MONEY] = iCvar[DOD_STARTMONEY];
+		new parm[3];
+		parm[0] = id;
+		parm[1] = 0;
+		_DOD_showMoney( parm );
 	#endif
 	#if MOD == 0
 		if ( !is_user_bot(id) )
 		{
-			query_client_cvar(id, "cl_minmodels", "check_cvars");
+			query_client_cvar( id, "cl_minmodels", "check_cvars" );
 		}
 	#endif
 }
 
-public client_connect(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("client_connect",id)
-	#endif
+public client_connect(id)
+{
+	
+	client_cmd( id, "hud_centerid 0" );
 
-	client_cmd(id, "hud_centerid 0")
+	p_data[id][P_RACE]			= 0;
+	p_data[id][P_SKILL1]		= 0;
+	p_data[id][P_SKILL2]		= 0;
+	p_data[id][P_SKILL3]		= 0;
+	p_data[id][P_ULTIMATE]		= 0;
+	p_data[id][P_LEVEL]			= 0;
+	p_data[id][P_XP]			= 0;
+	p_data[id][P_ITEM]			= 0;
+	p_data[id][P_ITEM2]			= 0;
+	p_data_b[id][PB_ISBURNING]	= false;
+	p_data[id][P_SPECMODE]		= 0;
+	p_data_b[id][PB_JUSTJOINED] = true;
+	p_data_b[id][PB_RENDER]		= true;
+	
+	// These were on disconnect, might as well do them on connect
+	p_data[id][P_HECOUNT]		= 0;
+	p_data[id][P_FLASHCOUNT]	= 0;
 
-	p_data[id][P_RACE] = 0
-	p_data[id][P_SKILL1] = 0
-	p_data[id][P_SKILL2] = 0
-	p_data[id][P_SKILL3] = 0
-	p_data[id][P_ULTIMATE] = 0
-	p_data[id][P_LEVEL] = 0
-	p_data[id][P_XP] = 0
-	p_data[id][P_ITEM] = 0
-	p_data[id][P_ITEM2] = 0
-	p_data_b[id][PB_ISBURNING] = false
-	p_data[id][P_SPECMODE] = 0 
-	p_data_b[id][PB_JUSTJOINED] = true
-	p_data_b[id][PB_RENDER] = true
-
-	if ( iCvar[FT_AUTOXP] && !iCvar[MP_SAVEXP] ){
-		new iTotalXP
-		new iNum
-		for(new i = 1; i <= MAXPLAYERS; i++){
-			if ( p_data[i][P_XP] > 0 ){
-				iNum++
-				iTotalXP += p_data[i][P_XP]
+	// Automatically set their XP if it's enabled
+	if ( get_pcvar_num( CVAR_ft_autoxp ) && !get_pcvar_num( CVAR_mp_savexp ) )
+	{
+		new iTotalXP;
+		new iNum, i;
+		for( i = 1; i <= MAXPLAYERS; i++ )
+		{
+			if ( p_data[i][P_XP] > 0 )
+			{
+				iNum++;
+				iTotalXP += p_data[i][P_XP];
 			}
 		}
-		if ( iNum > 0 && iTotalXP > 0 ){
-			p_data[id][P_XP] = iTotalXP/iNum
+		if ( iNum > 0 && iTotalXP > 0 )
+		{
+			p_data[id][P_XP] = iTotalXP/iNum;
 		}
 	}
 
@@ -433,8 +304,8 @@ public client_connect(id){
 		p_data_b[id][PB_REINCARNATION_SKIP] = true;
 	#endif
 	#if MOD == 0
-		p_data[id][P_HECOUNT] = 0
-		p_data[id][P_FLASHCOUNT]=0
+		p_data[id][P_HECOUNT]		= 0;
+		p_data[id][P_FLASHCOUNT]	= 0;
 	#endif
 	
 	// Give the bot a random amount of XP
@@ -447,99 +318,104 @@ public client_connect(id){
 	return PLUGIN_CONTINUE;
 }
 
-public client_disconnect(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("client_disconnect",id)
-	#endif
-
-	#if MOD == 0
-		p_data[id][P_HECOUNT]=0
-		p_data[id][P_FLASHCOUNT]=0
-	#endif
+public client_disconnect(id)
+{
 	#if MOD == 1
-		if(task_exists(TASK_MONEYLOOP+id))		// Remove the money task when a user disconnects
-			remove_task(TASK_MONEYLOOP+id)
-		p_data[id][P_MONEY] = 0
-	#endif
-	p_data[id][P_SPECMODE] = 0
-	p_data_b[id][PB_ISBURNING] = false
-	p_data_b[id][PB_DIEDLASTROUND]=false
-	p_data_b[id][PB_JUSTJOINED] = false
-	p_data_b[id][PB_ISCONNECTED] = false
+		// Remove the money task when a user disconnects
 
-	new i=0
-	for (i=0; i<32; ++i){		// Equipment Reincarnation
-		savedweapons[id][i]=0
+		if( task_exists( TASK_MONEYLOOP+id ) )
+		{
+			remove_task( TASK_MONEYLOOP+id );
+		}
+		p_data[id][P_MONEY] = 0;
+	#endif
+
+	p_data[id][P_SPECMODE]			= 0;
+	p_data_b[id][PB_ISBURNING]		= false;
+	p_data_b[id][PB_DIEDLASTROUND]	= false;
+	p_data_b[id][PB_JUSTJOINED]		= false;
+	p_data_b[id][PB_ISCONNECTED]	= false;
+	
+	// Reset Equipment Reincarnation
+	new i=0;
+	for (i=0; i<32; ++i)
+	{
+		savedweapons[id][i] = 0;
 	}
+	
+	// Save the user's XP if we have XP to save
 
 	if (iCvar[MP_SAVEXP] && !is_user_bot(id) && p_data[id][P_RACE] && p_data[id][P_XP])
-		XP_Save(id)
+	{
+		XP_Save( id );
+	}
 
 #if ADVANCED_STATS
 	new szWeapon[64]
 
-	new szTeam[16], szName[32], szAuthid[32]
-	new iUserid = get_user_userid( id )
+	new szTeam[16], szName[32], szAuthid[32], weap;
+	new iUserid = get_user_userid( id );
+
 	if ( is_user_connected(id) )
 	{
-		get_user_team(id, szTeam, 15 )
+		get_user_team( id, szTeam, 15 );
 	}
-	get_user_name(id, szName ,31 )
-	get_user_authid(id, szAuthid , 31 )
+	get_user_name( id, szName, 31 );
+	get_user_authid( id, szAuthid, 31 );
 
-	for(new weap = CSW_WAR3_MIN; weap <=CSW_WAR3_MAX; weap++){
+	for ( weap = CSW_WAR3_MIN; weap <=CSW_WAR3_MAX; weap++ )
+	{
 		format(szWeapon, 63, "")
 
-		switch( weap ){
-			case CSW_LIGHTNING:     lang_GetSkillName(3,4,LANG_SERVER,szWeapon,63)
-			case CSW_SUICIDE:		lang_GetSkillName(1,4,LANG_SERVER,szWeapon,63)
-			case CSW_FLAME:			lang_GetSkillName(5,4,LANG_SERVER,szWeapon,63)
-			case CSW_LOCUSTS:		lang_GetSkillName(8,4,LANG_SERVER,szWeapon,63)
-			case CSW_SERPENTWARD:   lang_GetSkillName(6,3,LANG_SERVER,szWeapon,63)
-			case CSW_SHADOW:		lang_GetSkillName(7,3,LANG_SERVER,szWeapon,63)
-			case CSW_THORNS:		lang_GetSkillName(4,2,LANG_SERVER,szWeapon,63)
-			case CSW_CARAPACE:		lang_GetSkillName(8,2,LANG_SERVER,szWeapon,63)
-			case CSW_CARRION:		lang_GetSkillName(8,3,LANG_SERVER,szWeapon,63)
-			case CSW_ORB:			lang_GetSkillName(RACE_CRYPT,	SKILL_HERO,	LANG_SERVER,	szWeapon,63)
-			case CSW_CONCOCTION:	lang_GetSkillName(RACE_SHADOW,	SKILL_HERO,	LANG_SERVER,	szWeapon,63)
+		switch( weap )
+		{
+			case CSW_LIGHTNING:     lang_GetSkillName( 3				, 4				, LANG_SERVER,	szWeapon,	63 );
+			case CSW_SUICIDE:		lang_GetSkillName( 1				, 4				, LANG_SERVER,	szWeapon,	63 );
+			case CSW_FLAME:			lang_GetSkillName( 5				, 4				, LANG_SERVER,	szWeapon,	63 );
+			case CSW_LOCUSTS:		lang_GetSkillName( 8				, 4				, LANG_SERVER,	szWeapon,	63 );
+			case CSW_SERPENTWARD:   lang_GetSkillName( 6				, 3				, LANG_SERVER,	szWeapon,	63 );
+			case CSW_SHADOW:		lang_GetSkillName( 7				, 3				, LANG_SERVER,	szWeapon,	63 );
+			case CSW_THORNS:		lang_GetSkillName( 4				, 2				, LANG_SERVER,	szWeapon,	63 );
+			case CSW_CARAPACE:		lang_GetSkillName( 8				, 2				, LANG_SERVER,	szWeapon,	63 );
+			case CSW_CARRION:		lang_GetSkillName( 8				, 3				, LANG_SERVER,	szWeapon,	63 );
+			case CSW_ORB:			lang_GetSkillName( RACE_CRYPT		, SKILL_HERO	, LANG_SERVER,	szWeapon,	63 );
+			case CSW_CONCOCTION:	lang_GetSkillName( RACE_SHADOW		, SKILL_HERO	, LANG_SERVER,	szWeapon,	63 );
 		}
 		
-		replace(szWeapon, 63, " ", "_")
+		replace( szWeapon, 63, " ", "_" );
 
-		new WEAPON = weap - CSW_WAR3_MIN
+		new WEAPON = weap - CSW_WAR3_MIN;
 		
-		if ( iStatsShots[id][WEAPON] || iStatsHits[id][WEAPON] || iStatsKills[id][WEAPON] ||  iStatsHS[id][WEAPON] || iStatsTKS[id][WEAPON] || iStatsDamage[id][WEAPON] || iStatsDeaths[id][WEAPON] || iStatsHead[id][WEAPON] || iStatsChest[id][WEAPON] || iStatsStomach[id][WEAPON] || iStatsLeftArm[id][WEAPON] || iStatsRightArm[id][WEAPON] || iStatsLeftLeg[id][WEAPON] || iStatsRightLeg[id][WEAPON] ){
+		if ( iStatsShots[id][WEAPON] || iStatsHits[id][WEAPON] || iStatsKills[id][WEAPON] ||  iStatsHS[id][WEAPON] || iStatsTKS[id][WEAPON] || iStatsDamage[id][WEAPON] || iStatsDeaths[id][WEAPON] || iStatsHead[id][WEAPON] || iStatsChest[id][WEAPON] || iStatsStomach[id][WEAPON] || iStatsLeftArm[id][WEAPON] || iStatsRightArm[id][WEAPON] || iStatsLeftLeg[id][WEAPON] || iStatsRightLeg[id][WEAPON] )
+		{
+
 			// Save Statistics For War3 Abilities (allows for detailed reports with psychostats)
+
 			#if MOD == 0
-				log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^")",
-					szName,iUserid,szAuthid,szTeam,szWeapon,iStatsShots[id][WEAPON],iStatsHits[id][WEAPON],iStatsKills[id][WEAPON], iStatsHS[id][WEAPON],iStatsTKS[id][WEAPON],iStatsDamage[id][WEAPON],iStatsDeaths[id][WEAPON])
+				log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^")", szName,iUserid,szAuthid,szTeam,szWeapon,iStatsShots[id][WEAPON],iStatsHits[id][WEAPON],iStatsKills[id][WEAPON], iStatsHS[id][WEAPON],iStatsTKS[id][WEAPON],iStatsDamage[id][WEAPON],iStatsDeaths[id][WEAPON])
 			#endif
 			#if MOD == 1
-				log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^") (score ^"%d^")",
-					szName,iUserid,szAuthid,szTeam,szWeapon,iStatsShots[id][WEAPON],iStatsHits[id][WEAPON],iStatsKills[id][WEAPON], iStatsHS[id][WEAPON],iStatsTKS[id][WEAPON],iStatsDamage[id][WEAPON],iStatsDeaths[id][WEAPON],0)
+				log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^") (score ^"%d^")", szName,iUserid,szAuthid,szTeam,szWeapon,iStatsShots[id][WEAPON],iStatsHits[id][WEAPON],iStatsKills[id][WEAPON], iStatsHS[id][WEAPON],iStatsTKS[id][WEAPON],iStatsDamage[id][WEAPON],iStatsDeaths[id][WEAPON],0)
 			#endif
-			log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats2^" (weapon ^"%s^") (head ^"%d^") (chest ^"%d^") (stomach ^"%d^") (leftarm ^"%d^") (rightarm ^"%d^") (leftleg ^"%d^") (rightleg ^"%d^")",
-				szName,iUserid,szAuthid,szTeam,szWeapon,iStatsHead[id][WEAPON],iStatsChest[id][WEAPON],iStatsStomach[id][WEAPON],  iStatsLeftArm[id][WEAPON],iStatsRightArm[id][WEAPON],iStatsLeftLeg[id][WEAPON],iStatsRightLeg[id][WEAPON])
+			log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats2^" (weapon ^"%s^") (head ^"%d^") (chest ^"%d^") (stomach ^"%d^") (leftarm ^"%d^") (rightarm ^"%d^") (leftleg ^"%d^") (rightleg ^"%d^")", szName,iUserid,szAuthid,szTeam,szWeapon,iStatsHead[id][WEAPON],iStatsChest[id][WEAPON],iStatsStomach[id][WEAPON],  iStatsLeftArm[id][WEAPON],iStatsRightArm[id][WEAPON],iStatsLeftLeg[id][WEAPON],iStatsRightLeg[id][WEAPON])
 		
-			iStatsShots[id][WEAPON] = 0
-			iStatsHits[id][WEAPON] = 0
-			iStatsKills[id][WEAPON] = 0
-			iStatsHS[id][WEAPON] = 0
-			iStatsTKS[id][WEAPON] = 0
-			iStatsDamage[id][WEAPON] = 0
-			iStatsDeaths[id][WEAPON] = 0
-			iStatsHead[id][WEAPON] = 0
-			iStatsChest[id][WEAPON] = 0
-			iStatsStomach[id][WEAPON] = 0
-			iStatsLeftArm[id][WEAPON] = 0
-			iStatsRightArm[id][WEAPON] = 0
-			iStatsLeftLeg[id][WEAPON] = 0
-			iStatsRightLeg[id][WEAPON] = 0
+			iStatsShots[id][WEAPON]		= 0;
+			iStatsHits[id][WEAPON]		= 0;
+			iStatsKills[id][WEAPON]		= 0;
+			iStatsHS[id][WEAPON]		= 0;
+			iStatsTKS[id][WEAPON]		= 0;
+			iStatsDamage[id][WEAPON]	= 0;
+			iStatsDeaths[id][WEAPON]	= 0;
+			iStatsHead[id][WEAPON]		= 0;
+			iStatsChest[id][WEAPON]		= 0;
+			iStatsStomach[id][WEAPON]	= 0;
+			iStatsLeftArm[id][WEAPON]	= 0;
+			iStatsRightArm[id][WEAPON]	= 0;
+			iStatsLeftLeg[id][WEAPON]	= 0;
+			iStatsRightLeg[id][WEAPON]	= 0;
 		}
 	}
 #endif
-
-	return PLUGIN_CONTINUE
 }
 
 
@@ -549,42 +425,52 @@ public client_PreThink(id){
 	if( p_data_b[id][PB_ISCONNECTED] )
 	{
 
-		if(is_user_alive(id)){
-#if MOD == 0
-			if ( Verify_Skill(id, RACE_UNDEAD, SKILL3) && !p_data_b[id][PB_STUNNED] && !p_data_b[id][PB_SLOWED]){
-				new Float:vel[3]
-				entity_get_vector(id, EV_VEC_velocity, vel)
-				new Float:length = vector_length(vel)
-				if (length < 180.0){
-					entity_set_int(id, EV_INT_flTimeStepSound, 999)
+		if( is_user_alive(id) )
+		{
+	#if MOD == 0
+			if ( Verify_Skill(id, RACE_UNDEAD, SKILL3) && !p_data_b[id][PB_STUNNED] && !p_data_b[id][PB_SLOWED])
+			{
+				new Float:vel[3];
+				entity_get_vector( id, EV_VEC_velocity, vel );
+				new Float:length = vector_length( vel );
+				if (length < 180.0)
+				{
+					entity_set_int( id, EV_INT_flTimeStepSound, 999 );
 				}
-				else if (entity_get_int(id, EV_INT_flTimeStepSound) > 500){
-					entity_set_int(id, EV_INT_flTimeStepSound, 200)
+				else if (entity_get_int(id, EV_INT_flTimeStepSound) > 500)
+				{
+					entity_set_int( id, EV_INT_flTimeStepSound, 200 );
 				}
 			}
-#endif
-			if(p_data_b[id][PB_SILENT]){
-				entity_set_int(id, EV_INT_flTimeStepSound, 999)
+	#endif
+			if(p_data_b[id][PB_SILENT])
+			{
+				entity_set_int( id, EV_INT_flTimeStepSound, 999 );
 			}
 		}
 	#if MOD == 1
-		if( Verify_Skill(id, RACE_UNDEAD, SKILL2) || p_data[id][P_ITEM] == ITEM_BOOTS){
+		if( Verify_Skill(id, RACE_UNDEAD, SKILL2) || p_data[id][P_ITEM] == ITEM_BOOTS)
+		{
 			// They have a rocket launcher "deployed" or are using their stamina
-			new prone = entity_get_int(id,EV_INT_iuser3)
-			new Float:maxspeed = entity_get_float(id,EV_FL_maxspeed)
-			if((maxspeed==50.0 && !prone) || entity_get_float(id,EV_FL_fuser4)<100.0 || (maxspeed>500.0 && prone)){		
-				new parm[1]
-				parm[0] = id
-				unholyspeed(parm)
+			new prone = entity_get_int( id, EV_INT_iuser3 );
+			new Float:maxspeed = entity_get_float( id, EV_FL_maxspeed );
+			if( ( maxspeed == 50.0 && !prone ) || entity_get_float( id, EV_FL_fuser4 ) < 100.0 || ( maxspeed > 500.0 && prone ) )
+			{		
+				new parm[1];
+				parm[0] = id;
+				unholyspeed( parm );
 			}
-			if ( Verify_Skill(id, RACE_UNDEAD, SKILL2) ){
-				if(entity_get_float(id,EV_FL_fuser4) < p_unholy[p_data[id][P_SKILL2]-1]){
-					entity_set_float(id,EV_FL_fuser4, p_unholy[p_data[id][P_SKILL2]-1])
+			if ( Verify_Skill(id, RACE_UNDEAD, SKILL2) )
+			{
+				if( entity_get_float( id, EV_FL_fuser4 ) < p_unholy[p_data[id][P_SKILL2]-1] )
+				{
+					entity_set_float( id, EV_FL_fuser4, p_unholy[p_data[id][P_SKILL2]-1] );
 				}
 			}
 		}
-		if(p_data[id][P_ITEM] == ITEM_BOOTS && entity_get_float(id,EV_FL_fuser4) < fCvar[DOD_BOOTSPEED]){
-			entity_set_float(id,EV_FL_fuser4, fCvar[DOD_BOOTSPEED])
+		if( p_data[id][P_ITEM] == ITEM_BOOTS && entity_get_float(id,EV_FL_fuser4) < fCvar[DOD_BOOTSPEED] )
+		{
+			entity_set_float( id, EV_FL_fuser4, fCvar[DOD_BOOTSPEED] );
 		}
 	#endif
 	}
@@ -593,20 +479,12 @@ public client_PreThink(id){
 // This functionality allows us to no longer requires a DBI module to be loaded
 public plugin_natives()
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("plugin_natives",0)
-	#endif
-
 	set_module_filter("module_filter");
 	set_native_filter("native_filter");
 }
 
 public module_filter(const module[])
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("module_filter", 0)
-	#endif
-
 	// Then we obviously don't want to save XP via mysql or SQLite now do we?  Lets default to vault and print an error message
 	if ( equali( module, "dbi" ) )
 	{

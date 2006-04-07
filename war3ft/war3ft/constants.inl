@@ -70,7 +70,7 @@
 #define TASK_BOIDTHINK		2012
 #define TASK_TARGETBOMBED	2013
 #define TASK_BOMBTIMER		2014
-#define TASK_WAR3CHECK		2015	// Checks the value of sv_warcraft3 every 5 seconds (better than checking it on every function call)
+//#define TASK_WAR3CHECK		2015	// Checks the value of sv_warcraft3 every 5 seconds (better than checking it on every function call)
 #define TASK_SIPHON			2016
 #define TASK_ENDULTIMATE	2017
 #define TASK_MOLEFIX		3000
@@ -250,7 +250,6 @@
 
 #define SKIN_RESET					0
 #define SKIN_SWITCH					1
-//#define SKIN_HEX					2
 
 #define KEY_1						0
 #define KEY_2						1
@@ -426,96 +425,9 @@
 //	End player array information
 // ***************************************************************************
 
-// ***************************************************************************
-//	Start CVAR Array Defines
-// ***************************************************************************
 
-// Integer Array Defines
-#define FT_RACE_ICONS						0
-#define FT_LEVEL_ICONS						1
-#define FT_SPEC_INFO						2
-#define FT_MIN_B4_XP						3
-#define	FT_BLINK_RADIUS						4
-//#define	FT_DISABLE_SAVEXP					5
-#define	MP_SAVEXP							6
-#define	FT_SHOW_ICONS						7
-#define	FT_HEALTH_BONUS						8
-#define	FT_NO_GLOVES_ON_KA					9
-#define	FT_GLOVE_ORC_DAMAGE					10
-#define	FT_CLAW								11
-#define	FT_CLOAK							12
-#define	FT_OBJECTIVES						13
-#define	FT_KILL_OBJECTIVES					14
-#define	FT_ULTIMATE_DELAY					15
-#define	FT_ULTIMATE_COOLDOWN				16
-#define FT_RACES							17
-#define FT_GLOVE_TIMER						18
-#define FT_XPBONUS							19
-#define FT_POSITION							20
-#define FT_RACE9_RANDOM						21
-#define FT_CD								22
-#define FT_WARN_SUICIDE						23
-#define FT_BLINKENABLED						24
-//#define SV_ALLOWWAR3VOTE					25
-#define SV_SQL								26
-#define SV_SAVE_END_ROUND					27
-#define FT_SAVEBY							28
-#define FT_AUTO_PRUNING						29
-#define SV_DAYSBEFOREDELETE					30
-//	#define FT_COMPETITIVE						31
-#define FT_HEALING_RANGE					32
-#define FT_XP_RADIUS						33
-#define MP_WEAPONXPMODIFIER					34
-#define FT_BLINK_PROTECTION					35
-#define FT_BUYZONE							36
-#define FT_BUYTIME							37
-#define FT_BUYDEAD							38
-#define	FT_HEADSHOT_BONUS					39
-#define	FT_ROUND_WIN_XP						40
-#define FT_BLINK_DIZZINESS					41
-#define FT_ENTANGLE_DROP					42
-#define FT_SHOW_PLAYER						43
-#define FT_AUTOXP							44
-//#define FT_CSHACK							45
-#define FT_IMPALE_INTENSITY					46
-#define FT_QUERY_CLIENT						47
-
-#if MOD == 0
-	#define	FT_ITEMS_IN_HUD						50
-	#define	FT_NO_ORCNADES						51
-	#define	FT_BOMBPLANTERXP					52
-	#define	FT_DEFUSEXP							53
-	#define	FT_HOSTAGEXP						54
-	#define	FT_KILLRESCUEMANXP					55
-	#define	FT_KILL_BOMB_CARRIER_BONUS			56
-	#define	FT_DEFUSER_KILL_BONUS				57
-	#define	FT_VIP_ESCAPE_BONUS					58
-	#define	FT_VIP_KILL_BONUS					59
-	#define	MP_GRENADEPROTECTION				60
-#endif
-#if MOD == 1
-	#define DOD_STARTMONEY						45
-
-#endif
-
-// Float Array Defines
-#define FT_BOT_BUY_ITEM						0
-#define FT_FROST_SPEED						1
-#define FT_MASK_OF_DEATH					2
-#define MP_XPMULTIPLIER						3
-#define AMX_VOTE_ANSWERS					4
-#define	AMX_VOTEWAR3_RATIO					5
-#define FT_SOCK								6
-#if MOD == 0
-	#define	FT_BOOTSPEED						7
-#endif
-#if MOD == 1
-	#define DOD_BOOTSPEED						7
-#endif
-
-// ***************************************************************************
-//	End CVAR Array Defines
-// ***************************************************************************
+// Enemies who have immunity w/in this radius will cause blink to fail 
+#define NECKLACE_RADIUS		500
 
 // ***************************************************************************
 //  Start of variables
@@ -554,9 +466,6 @@ new race9Options[5] = {0,1,1,1,1}		// the value is what race that skill should b
 
 new p_data[33][P_LAST]					// Contains player data
 new bool:p_data_b[33][PB_LAST]			// Contains player data of type boolean
-
-new iCvar[61]							// Contains integer CVAR data (loaded at plugin start)
-new Float:fCvar[9]						// Contains float CVAR data (loaded at plugin start)
 
 #if ADVANCED_STATS
 	new iStatsHead[33][MAX_CSW_S]
@@ -740,7 +649,5 @@ new const itemcost[9] =					{1500,2500,1000,800,2000,800,2000,1000,4000}
 #if MOD == 1
 	new const itemcost2[9] =				{800,1500,550,1500,1500,1750,1000,9000,16000}
 #endif
-
-//new MOTD_header[] = "<html><head><style type=^"text/css^">#title{font-family:^"Verdana, Arial, Helvetica, sans-serif^";color:#00FF00;text-align:center;font-weight:bold;}#s{text-indent:35px;width:650px;}ul{margin-top:0px;margin-bottom:10px;}</style></head><body bgcolor=#000000 text=#FFB000>"
 
 new MOTD_header[] = "<html><head><LINK REL=^"StyleSheet^" HREF=^"wc3.css^" TYPE=^"text/css^"></head><body>";

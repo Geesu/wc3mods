@@ -140,19 +140,19 @@ public on_PlayerAction(){
 		
 		iXP = XP_give(id, iXP)
 					
-		if (iCvar[FT_OBJECTIVES]){				
+		if (get_pcvar_num( XP_Show_Objectives )){				
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_PLANTING_BOMB",sName,iXP)
 		}
 
 		for (new i=0; i<numplayers; ++i){		// Includes self
 			targetid=player[i]
 			get_user_origin(targetid, targetorigin)
-			if (get_distance(origin, targetorigin)<=iCvar[FT_XP_RADIUS]){
-				iXP = iCvar[FT_BOMBPLANTERXP] + xpgiven[p_data[targetid][P_LEVEL]]	
+			if (get_distance(origin, targetorigin)<=get_pcvar_num(XP_Radius)){
+				iXP = get_pcvar_num( XP_Kill_Bomb_Planter ) + xpgiven[p_data[targetid][P_LEVEL]]	
 
 				iXP = XP_give(targetid, iXP)
 
-				if (iCvar[FT_OBJECTIVES]){
+				if (get_pcvar_num( XP_Show_Objectives )){
 					get_user_name(targetid,sName,31)					
 					client_print(targetid,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_SUPPORTING_BOMB",sName,iXP)
 				}				
@@ -177,19 +177,19 @@ public on_PlayerAction(){
 		
 		iXP = XP_give(id, iXP)
 				
-		if (iCvar[FT_OBJECTIVES]){
+		if (get_pcvar_num( XP_Show_Objectives )){
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_DEFUSING_BOMB",sName,iXP)
 		}
 
 		for (new i=0; i<numplayers; ++i){		// Includes self
 			targetid=player[i]
 			get_user_origin(targetid, targetorigin)
-			if (get_distance(origin, targetorigin)<=iCvar[FT_XP_RADIUS]){
+			if (get_distance(origin, targetorigin) <= get_pcvar_num(XP_Radius)){
 				
-				iXP = iCvar[FT_DEFUSEXP] +  xpgiven[p_data[targetid][P_LEVEL]]										
+				iXP = get_pcvar_num( XP_Defuse_Bomb ) +  xpgiven[p_data[targetid][P_LEVEL]]										
 				iXP = XP_give(targetid, iXP)
 							
-				if (iCvar[FT_OBJECTIVES]){
+				if (get_pcvar_num( XP_Show_Objectives )){
 					get_user_name(targetid,sName,31)						
 					client_print(targetid,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_SUPPORT_BOMB_D",sName,iXP)
 				}					
@@ -200,11 +200,11 @@ public on_PlayerAction(){
 	else if (equal(sAction,"Begin_Bomb_Defuse_With_Kit")) { 
 
 		if((++p_data[id][P_DEFUSERINDEX] == 1) && (get_user_team(id) == 2) ){  // Team 1 = Terror, Team 2 = CT
-			new iXP = iCvar[FT_DEFUSEXP] + xpgiven[p_data[id][P_LEVEL]]
+			new iXP = get_pcvar_num( XP_Defuse_Bomb ) + xpgiven[p_data[id][P_LEVEL]]
 
 			iXP = XP_give(id, iXP)
 				
-			if (iCvar[FT_OBJECTIVES]){	
+			if (get_pcvar_num( XP_Show_Objectives )){	
 				client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_ATTEMPT_BOMB_D",sName,iXP)
 			}
 		}               
@@ -217,7 +217,7 @@ public on_PlayerAction(){
 
 			iXP = XP_give(id, iXP)
 
-			if (iCvar[FT_OBJECTIVES]){
+			if (get_pcvar_num( XP_Show_Objectives )){
 				client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_ATTEMPT_BOMB_D_BARE",id,iXP)
 			}
 		}
@@ -230,7 +230,7 @@ public on_PlayerAction(){
 
 		iXP = XP_give(id, iXP)
 
-		if (iCvar[FT_OBJECTIVES]){
+		if (get_pcvar_num( XP_Show_Objectives )){
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_SPAWNING_WITH_BOMB",sName,iXP)
 		}
 	} 
@@ -243,7 +243,7 @@ public on_PlayerAction(){
 
 		iXP = XP_give(id, iXP)
 
-		if (iCvar[FT_OBJECTIVES])
+		if (get_pcvar_num( XP_Show_Objectives ))
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_LOST_BOMB",sName,(-1*iXP))
 
    } 
@@ -255,7 +255,7 @@ public on_PlayerAction(){
 
 		iXP = XP_give(id, iXP)
 
-		if (iCvar[FT_OBJECTIVES])
+		if (get_pcvar_num( XP_Show_Objectives ))
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_PICKING_UP_BOMB",sName,iXP)
 
 	} 
@@ -265,7 +265,7 @@ public on_PlayerAction(){
 
 		iXP = XP_give(id, iXP)
 				
-		if (iCvar[FT_OBJECTIVES])
+		if (get_pcvar_num( XP_Show_Objectives ))
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_BEGINNING_HOSTAGE_RESCUE",sName,iXP)
 
 		g_hostageSaver = id
@@ -287,19 +287,19 @@ public on_PlayerAction(){
 			
 		iXP = XP_give(id, iXP)
 				
-		if (iCvar[FT_OBJECTIVES])
+		if (get_pcvar_num( XP_Show_Objectives ))
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_RESCUING_HOSTAGE",sName,iXP)
 
 		// Supporters and self	
 		for (new i=0; i<numplayers; ++i){
 			targetid=player[i]
 			get_user_origin(targetid, targetorigin)
-			if (get_distance(origin, targetorigin)<=iCvar[FT_XP_RADIUS]){
-				iXP = iCvar[FT_HOSTAGEXP] +  xpgiven[p_data[targetid][P_LEVEL]]	
+			if (get_distance(origin, targetorigin)<=get_pcvar_num(XP_Radius)){
+				iXP = get_pcvar_num( XP_Rescue_Hostage ) +  xpgiven[p_data[targetid][P_LEVEL]]	
 
 				iXP = XP_give(targetid, iXP)
 
-				if (iCvar[FT_OBJECTIVES]){
+				if (get_pcvar_num( XP_Show_Objectives )){
 					get_user_name(targetid,sName,31)
 					client_print(targetid,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_SUPPORTING_HOSTAGE_RUN",sName,iXP)
 				}					
@@ -313,7 +313,7 @@ public on_PlayerAction(){
 
 		iXP = XP_give(id, iXP)
 
-		if (iCvar[FT_OBJECTIVES])
+		if (get_pcvar_num( XP_Show_Objectives ))
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_KILLING_HOSTAGE",sName,(-1*iXP))		
 
 	} 
@@ -324,7 +324,7 @@ public on_PlayerAction(){
 		new iXP = xpgiven[p_data[id][P_LEVEL]]										
 		iXP = XP_give(id, iXP)
 
-		if (iCvar[FT_OBJECTIVES]){
+		if (get_pcvar_num( XP_Show_Objectives )){
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_SPAWN_AS_VIP",sName,iXP)
 		}
 		
@@ -335,11 +335,11 @@ public on_PlayerAction(){
 		new sNameVIP[MAX_NAME_LENGTH] 
 		get_user_name( g_vipID,sNameVIP,MAX_NAME_LENGTH) 		
 
-		new iXP = iCvar[FT_VIP_KILL_BONUS] + xpgiven[p_data[id][P_LEVEL]]	
+		new iXP = get_pcvar_num( XP_Kill_VIP ) + xpgiven[p_data[id][P_LEVEL]]	
 
 		iXP = XP_give(id, iXP)
 
-		if (iCvar[FT_OBJECTIVES])
+		if (get_pcvar_num( XP_Show_Objectives ))
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_KILLING_VIP",sName,iXP,sNameVIP) 	
 	} 
 	// VIP escaped 
@@ -360,19 +360,19 @@ public on_PlayerAction(){
 		iXP = XP_give(id, iXP)
 
 		new nName[31]			
-		if (iCvar[FT_OBJECTIVES]){	
+		if (get_pcvar_num( XP_Show_Objectives )){	
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_ESCAPED_VIP",sName,iXP)
 		}
 
 		for (new i=0; i<numplayers; ++i){		// Includes self
 			targetid=player[i]
 			get_user_origin(targetid, targetorigin)
-			if (get_distance(origin, targetorigin)<=iCvar[FT_XP_RADIUS] && targetid!=id){
-				iXP = iCvar[FT_VIP_ESCAPE_BONUS] + xpgiven[p_data[targetid][P_LEVEL]]
+			if (get_distance(origin, targetorigin)<=get_pcvar_num(XP_Radius) && targetid!=id){
+				iXP = get_pcvar_num( XP_VIP_Escape ) + xpgiven[p_data[targetid][P_LEVEL]]
 					
 				iXP = XP_give(targetid, iXP)
 
-				if (iCvar[FT_OBJECTIVES]){
+				if (get_pcvar_num( XP_Show_Objectives )){
 					get_user_name(targetid,nName,31)					
 					client_print(targetid,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_SUPPORTING_VIP",nName,iXP,sName)
 				}				
@@ -477,19 +477,14 @@ public on_TerroristWin(){
 	get_players(players,numberofplayers,"e","TERRORIST") 
 	for (a = 0; a < numberofplayers; ++a){
 		give = true
-		if (iCvar[FT_CD]) {
-			if (!!WAR3_CD_installed(players[a])){
-				give = false
-			}
-		}
 
 		if(p_data_b[players[a]][PB_JUSTJOINED] || p_data_b[players[a]][PB_CHANGINGTEAM])
 			give = false
 
 		if(give){
-			new iXP = (iCvar[FT_ROUND_WIN_XP] + xpgiven[p_data[players[a]][P_LEVEL]])
+			new iXP = (get_pcvar_num(XP_Win_Round) + xpgiven[p_data[players[a]][P_LEVEL]])
 			iXP = XP_give(players[a], iXP)
-			if (iCvar[FT_OBJECTIVES]){				
+			if (get_pcvar_num( XP_Show_Objectives )){				
 				client_print(players[a],print_chat, "%s %L", g_MODclient, players[a],"AWARD_FOR_WINNING_ROUND",iXP)
 			}				
 		}
@@ -509,20 +504,15 @@ public on_CTWin(){
 	get_players(players,numberofplayers,"e","CT") 
 	for (a = 0; a < numberofplayers; ++a){
 		give = true
-		if (iCvar[FT_CD]) {
-			if (!!WAR3_CD_installed(players[a])){
-				give = false
-			}
-		}
 
 		if(p_data_b[players[a]][PB_JUSTJOINED] || p_data_b[players[a]][PB_CHANGINGTEAM])
 			give = false
 
 		if(give){
-			new iXP = (iCvar[FT_ROUND_WIN_XP] + xpgiven[p_data[players[a]][P_LEVEL]])
+			new iXP = (get_pcvar_num(XP_Win_Round) + xpgiven[p_data[players[a]][P_LEVEL]])
 			iXP = XP_give(players[a], iXP)
 
-			if (iCvar[FT_OBJECTIVES]){			
+			if (get_pcvar_num( XP_Show_Objectives )){			
 				client_print(players[a],print_chat, "%s %L", g_MODclient, players[a],"AWARD_FOR_WINNING_ROUND",iXP)
 			}				
 		}
@@ -662,8 +652,6 @@ public WAR3_Mole_Fix(){
 				query_client_cvar(players[i], "cl_minmodels", "check_cvars");
 			}
 		}
-
-		set_task(1.0, "WAR3_Mole_Fix", TASK_MOLEFIX)
 	}
 }
 

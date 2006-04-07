@@ -204,7 +204,7 @@ public unholyspeed(parm[1]){
 		return PLUGIN_HANDLED
 	}
 	else if (p_data_b[id][PB_SLOWED]){
-		set_user_maxspeed(id,fCvar[FT_FROST_SPEED])
+		set_user_maxspeed(id, get_pcvar_float( CVAR_ITEM_Frost ))
 		return PLUGIN_HANDLED
 	}
 #if MOD == 1

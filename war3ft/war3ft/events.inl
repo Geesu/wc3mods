@@ -578,7 +578,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	else if ( p_data[attacker][P_ITEM] == ITEM_FROST && !p_data_b[attacker][PB_HEXED] ){
 		if (get_user_maxspeed(victim) > 10 && !p_data_b[victim][PB_SLOWED]){
 			new normalspeed = floatround(get_user_maxspeed(victim))
-			set_user_maxspeed(victim,fCvar[FT_FROST_SPEED])
+			set_user_maxspeed(victim, get_cvar_float( CVAR_ITEM_Frost ))
 			p_data_b[victim][PB_SLOWED]=true
 			new parm[2]
 			parm[0]=victim
@@ -810,12 +810,6 @@ public on_CurWeapon(id) {
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			return PLUGIN_CONTINUE
-		}
-	}
-
 	// Record the last time a shot was fired
 	fLastShotFired[id] = halflife_time();
 
@@ -885,12 +879,6 @@ public on_ResetHud(id){
 		new parm[1];
 		parm[0] = 0;
 		_Ultimate_Delay(parm);
-	}
-
-
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id))
-			return PLUGIN_CONTINUE
 	}
 
 	if(is_user_bot(id)){
@@ -1025,10 +1013,11 @@ public on_ResetHud(id){
 	
 	Ultimate_Icon(id,ICON_HIDE)
 	// Start a new cooldown
-
-	if (iCvar[FT_ULTIMATE_DELAY] > 0){
+	
+	new iUltDelay = get_pcvar_num( CVAR_ULT_Delay );
+	if ( iUltDelay > 0){
 		p_data_b[id][PB_ULTIMATEUSED] = true
-		p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_DELAY]
+		p_data[id][P_ULTIMATEDELAY] = iUltDelay
 	}
 	else if(p_data[id][P_ULTIMATE]){
 		p_data[id][P_ULTIMATEDELAY] = 0
@@ -1059,8 +1048,7 @@ public on_ResetHud(id){
 
 	#endif
 
-	if (iCvar[FT_WARN_SUICIDE])
-		p_data_b[id][PB_SUICIDEATTEMPT] = false
+	p_data_b[id][PB_SUICIDEATTEMPT] = false
 
 	#if MOD == 0
 		// Weapon Reincarnation

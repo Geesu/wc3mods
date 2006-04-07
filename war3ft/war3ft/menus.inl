@@ -10,13 +10,6 @@ public menu_Shopmenu_One(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
-			return PLUGIN_HANDLED
-		}
-	}
-
 	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
 		return PLUGIN_HANDLED
@@ -103,10 +96,10 @@ public _menu_Shopmenu_One(id, key){
 		set_user_money(id,get_user_money(id)-itemcost[key],1)
 
 	#if MOD == 0
-		XP_give(id, iCvar[FT_XPBONUS] + xpgiven[p_data[id][P_LEVEL]])
+		XP_give(id, get_pcvar_num( ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]])
 	#endif
 	#if MOD == 1
-		XP_give(id, 2 * (iCvar[FT_XPBONUS] + xpgiven[p_data[id][P_LEVEL]]))
+		XP_give(id, 2 * (get_pcvar_num( ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]]))
 	#endif
 		emit_sound(id,CHAN_STATIC, "warcraft3/Tomes.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)
 
@@ -124,7 +117,7 @@ public _menu_Shopmenu_One(id, key){
 		// Remove health bonus after buying new item
 
 		if (p_data[id][P_ITEM]==ITEM_HEALTH)
-			set_user_health(id,get_user_health(id)-iCvar[FT_HEALTH_BONUS])
+			set_user_health(id,get_user_health(id)-get_pcvar_num( CVAR_ITEM_Health ))
 
 		p_data[id][P_ITEM]=iShopmenuItem
 
@@ -132,7 +125,7 @@ public _menu_Shopmenu_One(id, key){
 		// Give health bonus for buying periapt of health
 
 		if (p_data[id][P_ITEM]==ITEM_HEALTH)		
-			set_user_health(id,get_user_health(id)+iCvar[FT_HEALTH_BONUS])
+			set_user_health(id,get_user_health(id)+get_pcvar_num( CVAR_ITEM_Health ))
 
 
 		// Display a message regarding what the item does
@@ -162,13 +155,6 @@ public menu_Shopmenu_Two(id){
 
 	if(iCvar[FT_RACES] < 5)
 		return PLUGIN_HANDLED
-
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
-			return PLUGIN_HANDLED
-		}
-	}
 
 	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
@@ -353,13 +339,6 @@ public menu_Select_Skill(id,saychat){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
-			return PLUGIN_CONTINUE
-		}
-	}
-
 	if (p_data[id][P_RACE] == 0){
 		if (saychat==1){
 			set_hudmessage(200, 100, 0, -1.0, 0.3, 0, 1.0, 5.0, 0.1, 0.2, 2)
@@ -497,7 +476,7 @@ public _menu_Select_Skill(id,key){
 		new parm[1]
 		parm[0] = id
 
-		p_data[id][P_ULTIMATEDELAY] = iCvar[FT_ULTIMATE_COOLDOWN]
+		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_ULT_Cooldown )
 		_Ultimate_Delay(parm)
 	}
 	else if ( key == KEY_4 && !p_data[id][P_ULTIMATEDELAY] && !p_data_b[id][PB_ULTIMATEUSED]){
@@ -663,13 +642,6 @@ public menu_War3menu(id){
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
-
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
-			return PLUGIN_CONTINUE
-		}
-	}
 
 	new pos = 0, i, menu_body[512], menuitems[5][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4)|(1<<9)

@@ -14,11 +14,11 @@ stock XP_give(id, iXP)
 	}
 
 	// Make sure we have the minimum amount of players
-	if( get_playersnum() < iCvar[FT_MIN_B4_XP] )
+	if( get_playersnum() < get_pcvar_num( CVAR_XP_Min_Players ) )
 	{
 		return 0;
 	}
-
+	
 	p_data[id][P_XP] += iXP;
 
 	WAR3_Display_Level(id, DISPLAYLEVEL_SHOWGAINED);
@@ -47,7 +47,7 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 		{
 			iXP = -1 * xpgiven[p_data[killer_id][P_LEVEL]];
 			iXPAwarded = XP_give(killer_id, iXP);
-			if (iCvar[FT_KILL_OBJECTIVES])
+			if (get_pcvar_num( XP_Show_Kill_Objectives ))
 			{
 				client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_TEAMMATE", iXPAwarded);
 			}
@@ -57,7 +57,7 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			{
 				iXP = xpgiven[p_data[victim_id][P_LEVEL]];
 				iXPAwarded = XP_give(killer_id, iXP);
-				if (iCvar[FT_KILL_OBJECTIVES])
+				if (get_pcvar_num( XP_Show_Kill_Objectives ))
 				{			
 					new szVictimName[32];
 					get_user_name(victim_id, szVictimName, 31);
@@ -69,7 +69,7 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			{
 				iXP = floatround(xpgiven[p_data[victim_id][P_LEVEL]] * weaponxpmultiplier[weapon]);
 				iXPAwarded = XP_give(killer_id, iXP);
-				if (iCvar[FT_KILL_OBJECTIVES])
+				if (get_pcvar_num( XP_Show_Kill_Objectives ))
 				{
 					new szVictimName[32];
 					get_user_name(victim_id, szVictimName, 31);
@@ -80,9 +80,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for getting a headshot
 			if( headshot )
 			{
-				iXP = iCvar[FT_HEADSHOT_BONUS];
+				iXP = get_pcvar_num(XP_Headshot);
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( iCvar[FT_KILL_OBJECTIVES] )
+				if ( get_pcvar_num( XP_Show_Kill_Objectives ) )
 				{
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_HEADSHOT", iXPAwarded);		
 				}
@@ -91,9 +91,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for killing the hostage saver
 			if ( victim_id == g_hostageSaver )
 			{
-				iXP = iCvar[FT_KILLRESCUEMANXP];
+				iXP = get_pcvar_num( XP_Kill_Rescuer );
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( iCvar[FT_OBJECTIVES] )
+				if ( get_pcvar_num( XP_Show_Objectives ) )
 				{	
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_HOSTAGE_R", iXPAwarded);
 				}
@@ -101,9 +101,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for killing the bomb defuser
 			else if ( victim_id == g_bombDefuser )
 			{						
-				iXP = iCvar[FT_DEFUSER_KILL_BONUS];
+				iXP = get_pcvar_num( XP_Kill_Defuser );
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( iCvar[FT_OBJECTIVES] )
+				if ( get_pcvar_num( XP_Show_Objectives ) )
 				{				
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_BOMB_D", iXPAwarded);
 				}	
@@ -111,9 +111,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for killing the bomb carrier
 			else if ( victim_id == g_bombCarrier )
 			{						
-				iXP = iCvar[FT_KILL_BOMB_CARRIER_BONUS];
+				iXP = get_pcvar_num( XP_Kill_Bomb_Carrier );
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( iCvar[FT_OBJECTIVES] )
+				if ( get_pcvar_num( XP_Show_Objectives ) )
 				{
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_BOMB_C", iXPAwarded);
 				}
@@ -121,9 +121,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for killing the VIP
 			else if ( victim_id==g_vipID )
 			{
-				iXP = iCvar[FT_VIP_KILL_BONUS];
+				iXP = get_pcvar_num( XP_Kill_VIP );
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( iCvar[FT_OBJECTIVES] )
+				if ( get_pcvar_num( XP_Show_Objectives ) )
 				{
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARD_FOR_KILLING_VIP", iXPAwarded);
 				}
@@ -610,15 +610,15 @@ public XP_Set_DBI(){
 
 		// Determine the database information
 		new szHost[64], szUser[32], szPass[32], szDB[128], szError[256];
-		get_cvar_string("FT_sql_host", szHost, 63);
-		get_cvar_string("FT_sql_user", szUser, 31);
-		get_cvar_string("FT_sql_pass", szPass, 31);
-		get_cvar_string("FT_sql_db", szDB, 127);
+		get_cvar_string("SQL_dbhost", szHost, 63);
+		get_cvar_string("SQL_dbuser", szUser, 31);
+		get_cvar_string("SQL_dbpass", szPass, 31);
+		get_cvar_string("SQL_dbname", szDB, 127);
 		
 		// Set a default DB if it's SQLite and the user didn't supply one
 		if ( iSQLtype == SQL_SQLITE && strlen(szDB) < 1 )
 		{
-			copy( szDB, 127, "addons/amxmodx/data/amxx.db" );
+			copy( szDB, 127, "addons/amxmodx/data/war3ft.db" );
 		}
 
 		// Attempt the Connection
@@ -634,7 +634,7 @@ public XP_Set_DBI(){
 
 
 		// Get the table name
-		get_cvar_string("sv_sqltablename", g_DBTableName, 63);
+		get_cvar_string("SQL_tbname", g_DBTableName, 63);
 
 		// Format the create table statement
 		new szQuery[512];

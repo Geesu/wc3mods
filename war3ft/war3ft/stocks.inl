@@ -132,7 +132,7 @@ stock get_user_maxhealth(id){
 	// Player has a health bonus from the Periapt of Health
 
 	if ( p_data[id][P_ITEM]==ITEM_HEALTH ){
-		maxHealth += iCvar[FT_HEALTH_BONUS]
+		maxHealth += get_pcvar_num( CVAR_ITEM_Health );
 	}
 
 	return maxHealth

@@ -13,7 +13,7 @@ public client_score(index,score,total){
 	new iXP, iXPAwarded;
 	iXP = score * xpgiven[p_data[index][P_LEVEL]];
 	iXPAwarded = XP_give( index, iXP );
-	if (iCvar[FT_OBJECTIVES])
+	if (get_pcvar_num( XP_Show_Objectives ))
 	{
 		client_print(index, print_chat, "%s %L", g_MODclient, index, "DOD_AWARDED_XP_OBJECTIVE", iXPAwarded);
 	}
@@ -96,9 +96,9 @@ public on_EndRound(){
 		new iTeam = get_user_team( id );
 		if ( (iTeam == ALLIES && winner == 3) || (iTeam == AXIS && winner == 4) )
 		{
-			iXP = iCvar[FT_ROUND_WIN_XP] + xpgiven[p_data[id][P_LEVEL]];
+			iXP = get_pcvar_num(XP_Win_Round) + xpgiven[p_data[id][P_LEVEL]];
 			iXPAwarded = XP_give(id, iXP);
-			if (iCvar[FT_OBJECTIVES])
+			if (get_pcvar_num( XP_Show_Objectives ))
 			{
 				client_print(id,print_chat, "%s %L", g_MODclient, id, "AWARD_FOR_WINNING_ROUND", iXPAwarded);
 			}

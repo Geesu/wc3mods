@@ -1,4 +1,14 @@
 v2.3.2
+ - Bug Fix: cl_minmodels task was not repeating
+ - Removed: FT_impale_intensity cvar (edit this constant at the top of skills.inl)
+ - Removed: FT_blink_radius cvar (replaced with NECKLACE_RADIUS define)
+ - Removed: FT_healing_range cvar (defined at top of skills.inl)
+ - Removed: Human's teleport (Blink is the ultimate)
+ - Removed: Cheating Death check
+
+ //CHEATING_DEATH_NOT_INSTALLED
+
+v2.3.2
  - Addition: Admin flag added to war3FT.cfg file as a cvar
  - Bug Fix: Index out of bounds in events.inl on an attacker check - thanks Striker
  - Bug Fix: Changed where the STEAM_ID_PENDING code exists

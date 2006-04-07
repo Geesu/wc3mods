@@ -1,3 +1,5 @@
+#define IMPALE_INTENSITY		10.0		// Intensity of impale
+#define HEALING_WAVE_RANGE		750			// Range to heal teammates
 
 
 // Gives skill abilities at beginning of round and when skills are selected
@@ -313,7 +315,7 @@ public Skill_Invisibility(id)
 				get_user_origin(targetid, targetorigin)
 				distancebetween = get_distance(origin, targetorigin)
 
-				if (distancebetween < iCvar[FT_HEALING_RANGE]){
+				if (distancebetween < HEALING_WAVE_RANGE){
 					set_user_money(targetid, get_user_money(targetid) + money)
 					client_print(targetid, print_chat, "%s %L", g_MODclient, targetid, "DOD_PHOENIX", money, name)
 				}
@@ -845,7 +847,7 @@ public _Skill_Healing_Wave(parm[2]){
 			get_user_origin(targetid, targetorigin)
 			distancebetween = get_distance(origin, targetorigin)
 
-			if (distancebetween < iCvar[FT_HEALING_RANGE]){
+			if (distancebetween < HEALING_WAVE_RANGE){
 
 				get_user_origin(targetid,origin)
 				
@@ -1024,8 +1026,8 @@ public _Skill_Impale(parm[2]){
 		return PLUGIN_CONTINUE
 
 	if(parm[1]<4){
-		new Float:iMin = -1.0 * float(iCvar[FT_IMPALE_INTENSITY])
-		new Float:iMax = float(iCvar[FT_IMPALE_INTENSITY])
+		new Float:iMin = -1.0 * IMPALE_INTENSITY
+		new Float:iMax = IMPALE_INTENSITY
 
 		new Float:vec_angle[3], Float:vec_v_angle[3]
 		new i

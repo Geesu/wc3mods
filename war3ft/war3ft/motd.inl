@@ -6,13 +6,6 @@ public MOTD_Itemsinfo(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
-			return PLUGIN_CONTINUE
-		}
-	}
-
 	new message[2048], title[128], pos = 0
 	new item_name[9][ITEM_NAME_LENGTH]
 
@@ -59,13 +52,6 @@ public MOTD_Itemsinfo2(id){
 	if(iCvar[FT_RACES] < 5)
 		return PLUGIN_CONTINUE
 
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
-			return PLUGIN_CONTINUE
-		}
-	}
-
 	new message[2048], title[128], pos = 0
 	new item_name2[9][64]
 
@@ -103,13 +89,6 @@ public MOTD_War3help(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
-			return PLUGIN_CONTINUE
-		}
-	}
-
 	new message[2048]
 
 	new title[128], szGame[8]
@@ -146,13 +125,6 @@ public MOTD_Playerskills(id, saychat){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 		
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
-			return PLUGIN_CONTINUE
-		}
-	}
-
 	new name[32], message[2048]
 	
 	new race_name[MAX_RACES+1][64]
@@ -236,13 +208,6 @@ public MOTD_Skillsinfo(id){
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
-
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
-			return PLUGIN_CONTINUE
-		}
-	}
 
 	if (0 < p_data[id][P_RACE] <= iCvar[FT_RACES]){
 		new message[2048], szGame[8]

@@ -84,13 +84,13 @@ public Item_Message(id, item, shopmenu){
 			case ITEM_CLOAK:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_4", (100.0 * (float(iCvar[FT_CLOAK])/255.0)))
 			case ITEM_MASK:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_5", (100.0 * fCvar[FT_MASK_OF_DEATH]))
 			case ITEM_NECKLACE:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_6")
-			case ITEM_FROST:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_7", (100.0 * (fCvar[FT_FROST_SPEED]/260.0)))
-			case ITEM_HEALTH:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_8", iCvar[FT_HEALTH_BONUS])
+			case ITEM_FROST:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_7", (100.0 * (get_pcvar_float( CVAR_ITEM_Frost )/260.0)))
+			case ITEM_HEALTH:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_8", get_pcvar_num( CVAR_ITEM_Health ))
 		#if MOD == 0
-			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (iCvar[FT_XPBONUS] + xpgiven[p_data[id][P_LEVEL]]))
+			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (get_pcvar_num( ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]]))
 		#endif
 		#if MOD == 1
-			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (2 * (iCvar[FT_XPBONUS] + xpgiven[p_data[id][P_LEVEL]])))
+			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (2 * (get_pcvar_num( ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]])))
 		#endif
 		}
 	}
@@ -184,7 +184,7 @@ public Item_Check(parm[]){
 		remove_task(TASK_ITEM_RINGERATE+id)
 
 	if (p_data[id][P_ITEM]==ITEM_HEALTH)
-		set_user_health(id,get_user_health(id)+iCvar[FT_HEALTH_BONUS])
+		set_user_health(id,get_user_health(id)+get_pcvar_num( CVAR_ITEM_Health ))
 	
 	if(p_data[id][P_ITEM2]==ITEM_RING && !task_exists(TASK_ITEM_RINGERATE+id))
 		_Item_Ring(parm)

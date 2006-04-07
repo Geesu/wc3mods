@@ -3,15 +3,8 @@ public change_race(id,saychat){
 		writeDebugInfo("change_race",id)
 	#endif
 
-	if (!warcraft3)
+	if (!warcraft3z)
 		return PLUGIN_CONTINUE
-
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
-			return PLUGIN_CONTINUE
-		}
-	}
 
 	WAR3_chooserace(id)
 
@@ -156,13 +149,6 @@ public cmd_Rings(id){
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
-
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
-			return PLUGIN_HANDLED
-		}
-	}
 
 	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
@@ -315,13 +301,6 @@ public cmd_ResetSkill(id,saychat){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%s %L",g_MODclient, id,"CHEATING_DEATH_NOT_INSTALLED")
-			return PLUGIN_CONTINUE
-		}
-	}
-
 	if(saychat==1){
 		client_print(id,print_center,"%s %L",g_MODclient, id,"SKILLS_RESET_NEXT_ROUND")
 	}
@@ -341,13 +320,6 @@ public cmd_Ultimate(id){
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
-
-	if (iCvar[FT_CD]) {
-		if (!WAR3_CD_installed(id)){
-			client_print(id,print_chat,"%L",id,"CHEATING_DEATH_NOT_INSTALLED",g_MODclient)
-			return PLUGIN_HANDLED
-		}
-	}
 
 	if (!is_user_alive(id))
 		return PLUGIN_HANDLED
@@ -388,39 +360,32 @@ public cmd_Ultimate(id){
 
 	// Suicide Bomber
 	if ( Verify_Skill(id, RACE_UNDEAD, SKILL4) ){
-		if (iCvar[FT_WARN_SUICIDE]){
-			if( p_data_b[id][PB_SUICIDEATTEMPT] ){
+		if( p_data_b[id][PB_SUICIDEATTEMPT] ){
 
-				WAR3_Kill(id, 0)
-			
-				p_data_b[id][PB_SUICIDEATTEMPT] = false
-			}
-			else{
-				new parm[1]
-				parm[0]=id
-				Ultimate_Icon(id,ICON_FLASH)
-				p_data_b[id][PB_SUICIDEATTEMPT] = true
-			#if MOD == 0
-				set_hudmessage(178, 14, 41, -1.0, -0.4, 1, 0.5, 1.7, 0.2, 0.2,5)
-				show_hudmessage(id,"%L",id,"SUICIDE_BOMB_ARMED")
-			#endif
-			#if MOD == 1
-				new szMessage[128]
-				format(szMessage, 127, "%L", id, "SUICIDE_BOMB_ARMED")
-				Create_HudText(id, szMessage, 1)
-			#endif
-			}
+			WAR3_Kill(id, 0)
+		
+			p_data_b[id][PB_SUICIDEATTEMPT] = false
 		}
-		else
-		{
-			// Kill the user
-			WAR3_Kill( id, 0 );
+		else{
+			new parm[1]
+			parm[0]=id
+			Ultimate_Icon(id,ICON_FLASH)
+			p_data_b[id][PB_SUICIDEATTEMPT] = true
+		#if MOD == 0
+			set_hudmessage(178, 14, 41, -1.0, -0.4, 1, 0.5, 1.7, 0.2, 0.2,5)
+			show_hudmessage(id,"%L",id,"SUICIDE_BOMB_ARMED")
+		#endif
+		#if MOD == 1
+			new szMessage[128]
+			format(szMessage, 127, "%L", id, "SUICIDE_BOMB_ARMED")
+			Create_HudText(id, szMessage, 1)
+		#endif
 		}
 	}
 
-	// Teleport
+	// Blink
 	else if ( Verify_Skill(id, RACE_HUMAN, SKILL4) ){
-		Ultimate_Teleport(id)
+		Ultimate_Blink(id)
 	}
 
 	// Chain Lightning
