@@ -135,7 +135,7 @@ stock Create_DeathMsg_DOD(killer_id,victim_id,weapon)
 
 public on_StatusValue(id)
 {	
-	if(!warcraft3 || !iCvar[FT_SPEC_INFO] || !p_data_b[id][PB_ISCONNECTED])
+	if(!warcraft3 || !SHOW_SPECTATE_INFO || !p_data_b[id][PB_ISCONNECTED])
 	{
 		return PLUGIN_CONTINUE;
 	}

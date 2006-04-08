@@ -508,7 +508,6 @@ new g_menuSettings[33]
 	new bool:g_buyCalled = false
 	new bool:g_givePistol
 	new bool:g_giveHE
-	new bool:g_notAllowHE = false
 	
 	new PhoenixFound[2]
 	new CTSkins[5][]={"sas","gsg9","urban","gign","spetsnaz"}

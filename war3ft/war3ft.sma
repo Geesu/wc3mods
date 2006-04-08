@@ -41,9 +41,10 @@ new const WC3DATE[] =		__DATE__
 #include <dbi>
 
 // Compiling Options
-#define MOD 0							// 0 = cstrike or czero, 1 = dod
-#define ADVANCED_STATS 1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
-#define PRECACHE_WAR3FTSOUNDS 1
+#define MOD						0				// 0 = cstrike or czero, 1 = dod
+#define ADVANCED_STATS			1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
+#define PRECACHE_WAR3FTSOUNDS	1
+#define SHOW_SPECTATE_INFO		1				// Show spectating information on users
 
 #if MOD == 0
 	#include <cstrike>
@@ -468,7 +469,7 @@ public client_PreThink(id){
 				}
 			}
 		}
-		if( p_data[id][P_ITEM] == ITEM_BOOTS && entity_get_float(id,EV_FL_fuser4) < fCvar[DOD_BOOTSPEED] )
+		if( p_data[id][P_ITEM] == ITEM_BOOTS && entity_get_float(id,EV_FL_fuser4) < DOD_BOOT_SPEED )
 		{
 			entity_set_float( id, EV_FL_fuser4, fCvar[DOD_BOOTSPEED] );
 		}

@@ -1365,8 +1365,6 @@ public Ultimate_Icon(id, value){
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
-	if (!iCvar[FT_SHOW_ICONS])
-		return PLUGIN_HANDLED
 	if(!p_data[id][P_ULTIMATE])
 		return PLUGIN_HANDLED
 	if (g_ultimateDelay > 0.0)

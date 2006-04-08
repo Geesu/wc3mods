@@ -102,7 +102,7 @@ public Skill_UnholyAura( id )
 		}
 		else if ( p_data[id][P_ITEM2] == ITEM_SOCK )
 		{
-			set_user_gravity(id, fCvar[FT_SOCK]);
+			set_user_gravity(id, get_pcvar_float( CVAR_ITEM_Sock ));
 		}
 		else if ( get_user_gravity(id) != 1.0 )
 		{
@@ -147,10 +147,10 @@ public Skill_Invisibility(id)
 		#if MOD == 1
 			if (weaponnum==DODW_AMERKNIFE || weaponnum==DODW_GERKNIFE || weaponnum==DODW_SPADE){
 		#endif
-				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,iCvar[FT_CLOAK]/2)
+				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture, get_pcvar_num( ITEM_Cloak )/2)
 			}
 			else{
-				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,iCvar[FT_CLOAK])
+				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,get_pcvar_num( ITEM_Cloak ))
 			}
 		}
 		else

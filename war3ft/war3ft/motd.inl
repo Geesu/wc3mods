@@ -70,7 +70,7 @@ public MOTD_Itemsinfo2(id){
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[2],id,"SHOPMENU2_3")
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[3],id,"SHOPMENU2_4")
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[4],id,"SHOPMENU2_5")
-	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[5],id,"SHOPMENU2_6",iCvar[FT_GLOVE_TIMER])
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[5],id,"SHOPMENU2_6",get_pcvar_num( CVAR_ITEM_Glove_Timer ))
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[6],id,"SHOPMENU2_7")
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[7],id,"SHOPMENU2_8")
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[8],id,"SHOPMENU2_9")

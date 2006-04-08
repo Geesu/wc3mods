@@ -1,66 +1,4 @@
-public _Item_ShowHUD(parm2[2]){					// Displays the player's items in the bottom center of the screen
-	#if ADVANCED_DEBUG
-		writeDebugInfo("items",parm2[0])
-	#endif
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-#if MOD == 0
-	if(!iCvar[FT_ITEMS_IN_HUD])
-		return PLUGIN_CONTINUE
-#endif
-
-	new temp[128]
-	new message[256]
-	new id = parm2[0]
-
-	new item_name[ITEM_NAME_LENGTH], item_name2[ITEM_NAME_LENGTH]
-
-	lang_GetItemName ( p_data[id][P_ITEM],	id, item_name,	ITEM_NAME_LENGTH_F, 1 );
-	lang_GetItemName ( p_data[id][P_ITEM2],	id, item_name2,	ITEM_NAME_LENGTH_F, 2 );
-
-	if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]!=0){			// User has 2 items
-		if (p_data[id][P_ITEM2]==ITEM_RING)
-			format(temp,127,"%L",id,"CURRENT_ITEMS_RING",item_name,item_name2,p_data[id][P_RINGS])
-		else
-			format(temp,127,"%L",id,"CURRENT_ITEMS",item_name,item_name2)
-	}
-	else if (p_data[id][P_ITEM]==0 && p_data[id][P_ITEM2]!=0){		// User only has an item from shopmenu2
-		if (p_data[id][P_ITEM2]==ITEM_RING)
-			format(temp,127,"%L",id,"CURRENT_ITEM_RING",item_name2,p_data[id][P_RINGS])
-		else
-			format(temp,127,"%L",id,"CURRENT_ITEM",item_name2)
-	}
-	else if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]==0)		// User only has an item from shopmenu2
-		format(temp,127,"%L",id,"CURRENT_ITEM",item_name)
-
-	add(message,255,temp)
-
-	set_hudmessage(255,255,255,-1.0,0.945,2, 1.5, 40.0, 0.02, 5.0, 1) 
-	if (is_user_alive(id))
-		show_hudmessage(id,message)
-
-// 640x480:		.017 .850
-// 800x600:		.013 .881
-// 1024x768:	.010 .908
-// 1280x1024:	.008 .935
-//set_hudmessage(224, 160, 0, 0.010, 0.908, HUDMESSAGE_FX_FADEIN, 10.0, 1.0, 2.0, 3.0, HUDMESSAGE_CHAN_ITEM)
-//show_hudmessage(id, "Undead Level: 10")
-
-// 640x480:		.017 .880
-// 800x600:		.013 .908
-// 1024x768:	.010 .928
-// 1280x1024:	.008 .948
-//set_hudmessage(224, 160, 0, 0.010, 0.928, HUDMESSAGE_FX_FADEIN, 10.0, 1.0, 2.0, 3.0, 1)
-//show_hudmessage(id, "Current Item: Blah Item here")
-
-	//set_hudmessage(224, 160, 0, 0.011, 0.91, HUDMESSAGE_FX_FADEIN, 10.0, 1.0, 2.0, 3.0, HUDMESSAGE_CHAN_ITEM)
-	//show_hudmessage(id, message)
-
-	set_task(1.0,"_Item_ShowHUD",TASK_ITEMS+id,parm2,2)
-	return PLUGIN_CONTINUE
-}
+#define DOD_BOOT_SPEED 45.0			// Stamina for users with boots of speed
 
 public Item_Message(id, item, shopmenu){
 
@@ -74,15 +12,15 @@ public Item_Message(id, item, shopmenu){
 		switch(item){
 		#if MOD == 0
 			case ITEM_ANKH:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_1")
-			case ITEM_BOOTS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_2", (100.0 * (1.0-(260.0/fCvar[FT_BOOTSPEED]))))
+			case ITEM_BOOTS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_2", (100.0 * (1.0-(260.0/get_pcvar_float( CVAR_ITEM_Boots )))))
 		#endif
 		#if MOD == 1
 			case ITEM_ANKH:			client_print(id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_1")
 			case ITEM_BOOTS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_2")
 		#endif
 			case ITEM_CLAWS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_3", iCvar[FT_CLAW])
-			case ITEM_CLOAK:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_4", (100.0 * (float(iCvar[FT_CLOAK])/255.0)))
-			case ITEM_MASK:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_5", (100.0 * fCvar[FT_MASK_OF_DEATH]))
+			case ITEM_CLOAK:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_4", (100.0 * (float(get_pcvar_num( ITEM_Cloak ))/255.0)))
+			case ITEM_MASK:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_5", (100.0 * get_pcvar_num( CVAR_ITEM_Mask_Of_Death )))
 			case ITEM_NECKLACE:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_6")
 			case ITEM_FROST:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_7", (100.0 * (get_pcvar_float( CVAR_ITEM_Frost )/260.0)))
 			case ITEM_HEALTH:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_8", get_pcvar_num( CVAR_ITEM_Health ))
@@ -111,7 +49,7 @@ public Item_Message(id, item, shopmenu){
 			case ITEM_HELM:				client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_3")
 			case ITEM_AMULET:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_4")
 			case ITEM_SOCK:				client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_5")
-			case ITEM_GLOVES:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_6", iCvar[FT_GLOVE_TIMER])
+			case ITEM_GLOVES:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_6", get_pcvar_num( CVAR_ITEM_Glove_Timer ))
 			case ITEM_RING:				client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_7")
 		#if MOD == 0
 			case ITEM_CHAMELEON:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_8")
@@ -123,9 +61,6 @@ public Item_Message(id, item, shopmenu){
 }
 
 public Item_Clear(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Item_Clear",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -151,9 +86,6 @@ public Item_Clear(id){
 
 
 public Item_Check(parm[]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Item_Check",parm[0])
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -206,9 +138,6 @@ public Item_Check(parm[]){
 // ****************************************
 
 public _Item_Glove(parm[2]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_Item_Glove",parm[0])
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -270,9 +199,6 @@ public _Item_Glove(parm[2]){
 }
 
 public Item_Glove_Give(id) { 
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Item_Glove_Give",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -324,9 +250,6 @@ public Item_Glove_Give(id) {
 // ****************************************
 
 public _Item_Mole(parm[]){ // For ITEM_MOLE, checks to see if there is an open spot on the other team's spawn 
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Item_Mole",parm[0])
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -377,9 +300,6 @@ public _Item_Mole(parm[]){ // For ITEM_MOLE, checks to see if there is an open s
 } 
 
 public _Item_Ring(parm[]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_Item_Ring",parm[0])
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE

@@ -187,7 +187,7 @@ public WAR3_chooserace(id){
 	if( iTeam == ALLIES || iTeam == AXIS )
 #endif
 	{
-		if( iCvar[MP_SAVEXP] )
+		if( get_pcvar_num( CVAR_SAVE_Enabled ) )
 		{
 			XP_Get( id );
 		}
@@ -684,7 +684,7 @@ public WAR3_set_race(id,race){
 	new parm[1]
 	parm[0]=id
 
-	if (iCvar[MP_SAVEXP]){
+	if (get_pcvar_num( CVAR_SAVE_Enabled )){
 		p_data[id][P_XP] = 0
 		p_data[id][P_LEVEL] = 0
 		XP_Set_Race_Data( id );
@@ -755,16 +755,6 @@ public WAR3_Display_Level(id, flag){
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
-#if MOD == 0
-	if(iCvar[FT_ITEMS_IN_HUD]){
-		new parm2[2]
-		parm2[0] = id
-		if(!task_exists(TASK_ITEMS+id)){
-			_Item_ShowHUD(parm2)
-		}
-	}
-#endif
-
 	new oldlevel = p_data[id][P_LEVEL]
 
 	if (p_data[id][P_XP]<0)
@@ -784,108 +774,87 @@ public WAR3_Display_Level(id, flag){
 	new short_race_name[SHORT_RACE_NAME_LENGTH]
 	lang_GetRaceName(p_data[id][P_RACE],id,short_race_name,SHORT_RACE_NAME_LENGTH_F, true)
 
-#if MOD == 0
-	if(iCvar[FT_ITEMS_IN_HUD]){
-		if(p_data[id][P_ITEM2]==0){
-			if (p_data[id][P_LEVEL]==0)
-				format(xpstring,511,"%s   XP: %d/%d ",race_name,p_data[id][P_XP],xplevel[p_data[id][P_LEVEL]+1])
-			else if (p_data[id][P_LEVEL]<10)
-				format(xpstring,511,"%s %L: %d   XP: %d/%d ",race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP],xplevel[p_data[id][P_LEVEL]+1])
-			else
-				format(xpstring,511,"%s %L: %d   XP: %d ",race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],xplevel[10],xplevel[10])
-		}
-		else{
-			if (p_data[id][P_LEVEL]==0)
-				format(xpstring,511,"%s   XP: %d/%d ",race_name,p_data[id][P_XP],xplevel[p_data[id][P_LEVEL]+1])
-			else if (p_data[id][P_LEVEL]<10)
-				format(xpstring,511,"%s %L: %d   XP: %d/%d ",race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP],xplevel[p_data[id][P_LEVEL]+1])
-			else
-				format(xpstring,511,"%s %L: %d   XP: %d ",race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP])
-		}
-	}else{
-#endif
-		new temp2[128]
+	new temp2[128]
 
-		if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]!=0){
-			new short_item_name[SHORT_ITEM_NAME_LENGTH], short_item_name2[SHORT_ITEM_NAME_LENGTH]
-			lang_GetItemName(p_data[id][P_ITEM],id,short_item_name,SHORT_ITEM_NAME_LENGTH_F, 1, true)
-			lang_GetItemName(p_data[id][P_ITEM2],id,short_item_name2,SHORT_ITEM_NAME_LENGTH_F, 2, true)
+	if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]!=0){
+		new short_item_name[SHORT_ITEM_NAME_LENGTH], short_item_name2[SHORT_ITEM_NAME_LENGTH]
+		lang_GetItemName(p_data[id][P_ITEM],id,short_item_name,SHORT_ITEM_NAME_LENGTH_F, 1, true)
+		lang_GetItemName(p_data[id][P_ITEM2],id,short_item_name2,SHORT_ITEM_NAME_LENGTH_F, 2, true)
 
-			if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
-				format(temp2,127,"%L",id,"PLAYERITEM_AND_REGEN",short_item_name,short_item_name2,p_data[id][P_RINGS])
-			else
-				format(temp2,127,"%L",id,"PLAYERITEM_AND",short_item_name,short_item_name2)
-		}
-		else if (p_data[id][P_ITEM]==0 && p_data[id][P_ITEM2]!=0){
-			new short_item_name2[SHORT_ITEM_NAME_LENGTH]
-			lang_GetItemName(p_data[id][P_ITEM2],id,short_item_name2,SHORT_ITEM_NAME_LENGTH_F, 2, true)
-
-			if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
-				format(temp2,127,"%s x%d ",short_item_name2,p_data[id][P_RINGS])
-			else
-				format(temp2,127,"%s",short_item_name2)
-		}
-		else if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]==0){
-			new short_item_name[SHORT_ITEM_NAME_LENGTH]
-			lang_GetItemName(p_data[id][P_ITEM],id,short_item_name,SHORT_ITEM_NAME_LENGTH_F, 1, true)
-
-			format(temp2,127,"%s",short_item_name)
-		}
-
-		if (p_data[id][P_LEVEL]==0)
-			format(xpstring,511,"%s  XP: %d/%d %s",race_name,p_data[id][P_XP],xplevel[p_data[id][P_LEVEL]+1],temp2)
-		else if(p_data[id][P_LEVEL]<10)
-			format(xpstring,511,"%s %L: %d   XP: %d/%d %s ",short_race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1],temp2)
+		if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
+			format(temp2,127,"%L",id,"PLAYERITEM_AND_REGEN",short_item_name,short_item_name2,p_data[id][P_RINGS])
 		else
-			format(xpstring,511,"%s %L: %d   XP: %d %s",short_race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP],temp2)		
-		
-		#if MOD == 1
-			if(flag==DISPLAYLEVEL_SHOWRACECHAT && (get_user_team(id) == ALLIES || get_user_team(id) == AXIS)){
-				new szHUD[256], itemString[256]
-				if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]!=0){
-					new item_name[ITEM_NAME_LENGTH], item_name2[ITEM_NAME_LENGTH]
-					lang_GetItemName(p_data[id][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F, 1)
-					lang_GetItemName(p_data[id][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F, 2)
+			format(temp2,127,"%L",id,"PLAYERITEM_AND",short_item_name,short_item_name2)
+	}
+	else if (p_data[id][P_ITEM]==0 && p_data[id][P_ITEM2]!=0){
+		new short_item_name2[SHORT_ITEM_NAME_LENGTH]
+		lang_GetItemName(p_data[id][P_ITEM2],id,short_item_name2,SHORT_ITEM_NAME_LENGTH_F, 2, true)
 
-					if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
-						format(itemString,127,"%L",id,"PLAYERITEM_AND_REGEN",item_name,item_name2,p_data[id][P_RINGS])
-					else
-						format(itemString,127,"%L",id,"PLAYERITEM_AND",item_name,item_name2)
-				}
-				else if (p_data[id][P_ITEM]==0 && p_data[id][P_ITEM2]!=0){
-					new item_name2[ITEM_NAME_LENGTH]
-					lang_GetItemName(p_data[id][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F, 2)
+		if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
+			format(temp2,127,"%s x%d ",short_item_name2,p_data[id][P_RINGS])
+		else
+			format(temp2,127,"%s",short_item_name2)
+	}
+	else if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]==0){
+		new short_item_name[SHORT_ITEM_NAME_LENGTH]
+		lang_GetItemName(p_data[id][P_ITEM],id,short_item_name,SHORT_ITEM_NAME_LENGTH_F, 1, true)
 
-					if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
-						format(itemString,127,"%s x%d ",item_name2,p_data[id][P_RINGS])
-					else
-						format(itemString,127,"%s",item_name2)
-				}
-				else if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]==0){
-					new item_name[ITEM_NAME_LENGTH]
-					lang_GetItemName(p_data[id][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F, 1)
+		format(temp2,127,"%s",short_item_name)
+	}
 
-					format(itemString,127,"%s",item_name)
-				}
+	if (p_data[id][P_LEVEL]==0)
+		format(xpstring,511,"%s  XP: %d/%d %s",race_name,p_data[id][P_XP],xplevel[p_data[id][P_LEVEL]+1],temp2)
+	else if(p_data[id][P_LEVEL]<10)
+		format(xpstring,511,"%s %L: %d   XP: %d/%d %s ",short_race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1],temp2)
+	else
+		format(xpstring,511,"%s %L: %d   XP: %d %s",short_race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP],temp2)		
+	
+	#if MOD == 1
+		if(flag==DISPLAYLEVEL_SHOWRACECHAT && (get_user_team(id) == ALLIES || get_user_team(id) == AXIS)){
+			new szHUD[256], itemString[256]
+			if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]!=0){
+				new item_name[ITEM_NAME_LENGTH], item_name2[ITEM_NAME_LENGTH]
+				lang_GetItemName(p_data[id][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F, 1)
+				lang_GetItemName(p_data[id][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F, 2)
 
-				if (p_data[id][P_LEVEL]==0)
-					format(szHUD,255,"%s  XP: %d/%d %s",race_name,p_data[id][P_XP],xplevel[p_data[id][P_LEVEL]+1],itemString)
-				else if(p_data[id][P_LEVEL]<10)
-					format(szHUD,255,"%s %L %d^nXP: %d/%d^n%s ",short_race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1],itemString)
+				if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
+					format(itemString,127,"%L",id,"PLAYERITEM_AND_REGEN",item_name,item_name2,p_data[id][P_RINGS])
 				else
-					format(szHUD,255,"%s %L %d^nXP: %d^n%s",short_race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP],itemString)
+					format(itemString,127,"%L",id,"PLAYERITEM_AND",item_name,item_name2)
+			}
+			else if (p_data[id][P_ITEM]==0 && p_data[id][P_ITEM2]!=0){
+				new item_name2[ITEM_NAME_LENGTH]
+				lang_GetItemName(p_data[id][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F, 2)
 
-				Create_HudText(id, szHUD, 1)
+				if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
+					format(itemString,127,"%s x%d ",item_name2,p_data[id][P_RINGS])
+				else
+					format(itemString,127,"%s",item_name2)
+			}
+			else if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]==0){
+				new item_name[ITEM_NAME_LENGTH]
+				lang_GetItemName(p_data[id][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F, 1)
+
+				format(itemString,127,"%s",item_name)
 			}
 
-			if(get_user_team(id) == ALLIES || get_user_team(id) == AXIS){
-				set_hudmessage(224, 160, 0, HUDMESSAGE_POS_CENTER, 1.0, HUDMESSAGE_FX_FADEIN, 10.0, 20.0, 0.1, 0.2, HUDMESSAGE_CHAN_ITEM)
-				show_hudmessage(id, xpstring)
-			}
-		#endif
+			if (p_data[id][P_LEVEL]==0)
+				format(szHUD,255,"%s  XP: %d/%d %s",race_name,p_data[id][P_XP],xplevel[p_data[id][P_LEVEL]+1],itemString)
+			else if(p_data[id][P_LEVEL]<10)
+				format(szHUD,255,"%s %L %d^nXP: %d/%d^n%s ",short_race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1],itemString)
+			else
+				format(szHUD,255,"%s %L %d^nXP: %d^n%s",short_race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP],itemString)
+
+			Create_HudText(id, szHUD, 1)
+		}
+
+		if(get_user_team(id) == ALLIES || get_user_team(id) == AXIS){
+			set_hudmessage(224, 160, 0, HUDMESSAGE_POS_CENTER, 1.0, HUDMESSAGE_FX_FADEIN, 10.0, 20.0, 0.1, 0.2, HUDMESSAGE_CHAN_ITEM)
+			show_hudmessage(id, xpstring)
+		}
+	#endif
 
 #if MOD == 0
-	}
 		if(get_user_team(id) == CTS || get_user_team(id) == TS)
 			Create_StatusText(id, 0,xpstring)
 #endif

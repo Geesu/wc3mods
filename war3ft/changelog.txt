@@ -1,12 +1,22 @@
-v2.3.2
+v2.3.3
  - Bug Fix: cl_minmodels task was not repeating
  - Removed: FT_impale_intensity cvar (edit this constant at the top of skills.inl)
  - Removed: FT_blink_radius cvar (replaced with NECKLACE_RADIUS define)
  - Removed: FT_healing_range cvar (defined at top of skills.inl)
+ - Removed: FT_no_orcnades cvar
  - Removed: Human's teleport (Blink is the ultimate)
  - Removed: Cheating Death check
+ - Removed: FT_spec_info (default is on, compile time option at top of warcraft3ft.sma)
+ - Removed: FT_items_in_hud (option no longer available)
+ - Removed: FT_show_icons (always on)
+ - Removed: FT_centerhud (this actually hasn't done anything for quite a few versions)
+ - Removed: DOD_bootspeed (you can change it at the top of items.inl)
+ - Removed: sv_warcraft3 (added a start/stop option)
+ - Change: Config file location moved
 
  //CHEATING_DEATH_NOT_INSTALLED
+Add a disable orc nade map config file...
+Add a start/stop option
 
 v2.3.2
  - Addition: Admin flag added to war3FT.cfg file as a cvar

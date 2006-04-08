@@ -195,11 +195,14 @@ stock race9_randomize(){
 		writeDebugInfo("race9_randomize",0)
 	#endif
 
-	if (iCvar[FT_RACES] == 9){
-		if (iCvar[FT_RACE9_RANDOM]){
+	if (iCvar[FT_RACES] == 9)
+	{
+		if (get_pcvar_num( CVAR_CHAM_Random ))
+		{
 			new myintvallocal = 0
 			// loop through all four skill options (3 + ultimate) pick a new race at random and update the skill
-			while (myintvallocal < 4){
+			while (myintvallocal < 4)
+			{
 				race9Options[myintvallocal + 1] = random_num(1,8) 
 				++myintvallocal
 			}

@@ -10,11 +10,6 @@ public grenade_throw(index,greindex,wId){
 	if(g_mapDisabled)
 		return PLUGIN_CONTINUE
 
-#if MOD == 0
-	if(g_notAllowHE)
-		return PLUGIN_CONTINUE
-#endif
-
 	new szModel[64]
 	entity_get_string(greindex, EV_SZ_model, szModel, 63)
 #if MOD == 0
@@ -24,7 +19,7 @@ public grenade_throw(index,greindex,wId){
 	if(greindex && (equal(szModel, "models/w_grenade.mdl") || equal(szModel, "models/w_stick.mdl"))){
 #endif
 		if( Verify_Skill(index, RACE_ORC, SKILL2) ){
-			if( ( (p_data[index][P_ITEM2]==ITEM_GLOVES && iCvar[FT_GLOVE_ORC_DAMAGE]) || (p_data[index][P_ITEM2]!=ITEM_GLOVES) ) && is_user_alive(index) ) { 
+			if( ( (p_data[index][P_ITEM2]==ITEM_GLOVES && get_pcvar_num( CVAR_ITEM_Glove_Orc_Damage )) || (p_data[index][P_ITEM2]!=ITEM_GLOVES) ) && is_user_alive(index) ) { 
 					Create_TE_BEAMFOLLOW(greindex, g_siTrail, 20, 10, 255, 32, 32, 196)
 			} 
 		} 
@@ -257,15 +252,13 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 			new bool:allow=true
 
 			if(p_data[attacker][P_ITEM2]==ITEM_GLOVES){
-				if(iCvar[FT_GLOVE_ORC_DAMAGE])
+				if(get_pcvar_num( CVAR_ITEM_Glove_Orc_Damage ))
 					allow=true
 				else
 					allow=false
 			}
 
 		#if MOD == 0
-			if(g_notAllowHE)
-				allow=false
 			if (wpnindex == CSW_HEGRENADE && allow){
 		#endif
 		#if MOD == 1
@@ -544,7 +537,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	else if ( p_data[attacker][P_ITEM] == ITEM_MASK && !Verify_Skill(attacker, RACE_UNDEAD, SKILL1) && !p_data_b[attacker][PB_HEXED] ){
 		new iHealth = get_user_actualhealth(attacker)
 
-		tempdamage = floatround(float(damage) * fCvar[FT_MASK_OF_DEATH])
+		tempdamage = floatround(float(damage) * get_pcvar_num( CVAR_ITEM_Mask_Of_Death ))
 
 		if ( iHealth + tempdamage > get_user_maxhealth(attacker) ){
 			new iTotalHealth = get_user_health(attacker)
@@ -832,7 +825,7 @@ public on_CurWeapon(id) {
 		if(!p_data_b[id][PB_NADEJUSTRECEIVED] && !foundNade){
 			new parm[2]
 			parm[0] = id
-			parm[1] = iCvar[FT_GLOVE_TIMER]
+			parm[1] = get_pcvar_num( CVAR_ITEM_Glove_Timer )
 
 			p_data_b[id][PB_NADEJUSTRECEIVED]=true
 			_Item_Glove(parm)
@@ -1026,7 +1019,7 @@ public on_ResetHud(id){
 
 	_Ultimate_Delay(parm)
 
-	if (p_data[id][P_RACE] == 9 && iCvar[FT_RACE9_RANDOM]){
+	if (p_data[id][P_RACE] == 9 && get_pcvar_num( CVAR_CHAM_Random )){
 		WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
 	}
 
@@ -1117,7 +1110,7 @@ public on_GameRestart(){
 		p_data[id][P_ITEM2] = 0
 		p_data_b[id][PB_DIEDLASTROUND] = false
 		p_data[id][P_RINGS]=0
-		if(iCvar[MP_SAVEXP]==0){
+		if(get_pcvar_num( CVAR_SAVE_Enabled )==0){
 			p_data[id][P_LEVEL]=0
 			p_data[id][P_RACE]=0
 			p_data[id][P_SKILL1]=0

@@ -8,7 +8,7 @@ public checkmap(){
 		get_mapname(mapname,31) 
 		if (containi(mapname,"ka_")!=-1 || containi(mapname,"scoutzknivez")!=-1){
 			g_givePistol=false
-			if (iCvar[FT_NO_GLOVES_ON_KA])
+			if (get_pcvar_num( CVAR_ITEM_Glove_Disable_KA ))
 				g_giveHE=false
 			else
 				g_giveHE=true
@@ -16,12 +16,6 @@ public checkmap(){
 		else{
 			g_giveHE=true
 			g_givePistol=true
-		}
-		if(iCvar[FT_NO_ORCNADES]){
-			if (containi(mapname,"ka_")!=-1 || containi(mapname,"jail_riot")!=-1 || containi(mapname,"fy_")!=-1) 
-				g_notAllowHE=true
-			else
-				g_notAllowHE=false
 		}
 	#endif
 	
@@ -224,8 +218,8 @@ public unholyspeed(parm[1]){
 			set_user_maxspeed(id,(p_unholy[p_data[id][P_SKILL2]-1]))
 	}
 	else if ( p_data[id][P_ITEM]==ITEM_BOOTS && !g_freezetime && !p_data_b[id][PB_HEXED] ){			// Boots of Speed
-		if (get_user_maxspeed(id)!=fCvar[FT_BOOTSPEED])
-			set_user_maxspeed(id,fCvar[FT_BOOTSPEED])
+		if (get_user_maxspeed(id)!=get_pcvar_float( CVAR_ITEM_Boots ))
+			set_user_maxspeed(id,get_pcvar_float( CVAR_ITEM_Boots ))
 	}
 #endif
 
@@ -278,8 +272,8 @@ public func_spawn(parm[2]){
 			set_user_money(id,get_cvar_num("mp_startmoney"),0)
 	#endif
 	#if MOD == 1
-		if (money < iCvar[DOD_STARTMONEY])
-			set_user_money(id,iCvar[DOD_STARTMONEY],0)
+		if (money < get_pcvar_num( CVAR_DOD_Start_Money ))
+			set_user_money(id,get_pcvar_num( CVAR_DOD_Start_Money ),0)
 
 	#endif
 	return PLUGIN_CONTINUE

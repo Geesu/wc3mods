@@ -241,7 +241,7 @@ public _menu_Shopmenu_Two(id, key){
 		client_print(id,print_center,"%L",id,"NOT_PURCHASE_AFTER_ENDROUND")
 		return PLUGIN_CONTINUE
 	}
-	else if(!g_giveHE && iCvar[FT_NO_GLOVES_ON_KA] && iShopmenuItem==ITEM_GLOVES){
+	else if(!g_giveHE && get_pcvar_num( CVAR_ITEM_Glove_Disable_KA ) && iShopmenuItem==ITEM_GLOVES){
 		client_print(id,print_center,"%L",id,"FLAMING_GLOVES_RESTRICTED_ON_THIS_MAP")
 		return PLUGIN_CONTINUE
 	}
@@ -290,7 +290,7 @@ public _menu_Shopmenu_Two(id, key){
 			p_data_b[id][PB_SILENT] = true
 		}
 		else if (p_data[id][P_ITEM2] == ITEM_SOCK)
-			set_user_gravity(id, fCvar[FT_SOCK])
+			set_user_gravity(id, get_pcvar_float( CVAR_ITEM_Sock ))
 #if MOD == 0
 		else if (p_data[id][P_ITEM2]==ITEM_SCROLL && !is_user_alive(id) && !endround){	
 			if(get_user_team(id)==TS || get_user_team(id)==CTS){
@@ -307,7 +307,7 @@ public _menu_Shopmenu_Two(id, key){
 		else if (p_data[id][P_ITEM2]==ITEM_GLOVES){
 			//new parm[2]
 			//parm[0]=id
-			//parm[1] = iCvar[FT_GLOVE_TIMER]
+			//parm[1] = get_pcvar_num( CVAR_ITEM_Glove_Timer )
 			Item_Glove_Give(id)
 		}
 		else if (p_data[id][P_ITEM2]==ITEM_RING){
@@ -533,7 +533,7 @@ public menu_Select_Race(id, racexp[9]){
 		lang_GetRaceName(i,id,race_name[i],RACE_NAME_LENGTH_F)
 	}
 
-	if(iCvar[MP_SAVEXP]){
+	if(get_pcvar_num( CVAR_SAVE_Enabled )){
 		pos += format(menu_msg[pos], 512-pos, "%L",id,"SELECT_RACE_TITLE", selectrace)
 
 		for(i=1; i<(iCvar[FT_RACES]+1);i++){

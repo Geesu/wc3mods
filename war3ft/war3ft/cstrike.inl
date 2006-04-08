@@ -25,7 +25,7 @@ public on_Spectate(id){
 	#endif
 
 
-	if(!p_data[id][P_SPECMODE] || !warcraft3 || !iCvar[FT_SPEC_INFO])
+	if(!p_data[id][P_SPECMODE] || !warcraft3 || !SHOW_SPECTATE_INFO)
 		return PLUGIN_CONTINUE
 
 	new a = read_data(2)
@@ -84,7 +84,7 @@ public on_EndRound(){
 		remove_task(TASK_BOMBTIMER)
 	
 	// Save XP at the end of the round?
-	if ( iCvar[MP_SAVEXP] && iCvar[SV_SAVE_END_ROUND] )
+	if ( get_pcvar_num( CVAR_SAVE_Enabled ) && iCvar[SV_SAVE_END_ROUND] )
 	{
 		XP_Save_All();
 	}
