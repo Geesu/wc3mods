@@ -128,7 +128,7 @@ public plugin_init()
 	register_concmd("amx_givexp","Admin_GiveXP",-1,"amx_givexp")
 	register_concmd("amx_savexp","Admin_SaveXP",-1,"amx_savexp")
 	register_concmd("amx_givemole","Admin_GiveMole",-1,"amx_givemole")
-	
+	register_concmd("amx_wc3"		, "ADMIN_wc3", -1, "amx_wc3");
 	
 	// Server Admin Commands (used by external plugins)
 	register_srvcmd("amx_takexp","Admin_TakeXP")

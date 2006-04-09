@@ -207,3 +207,64 @@ public _Admin_GiveXP(id, target[], iXP){
 	}
 	return PLUGIN_CONTINUE 
 } 
+
+public ADMIN_wc3(id, level, cid)
+{
+
+    if ( id && !( get_user_flags( id ) & XP_get_admin_flag() ) )
+	{
+			client_print( id, print_console, "%L", id, "YOU_HAVE_NO_ACCESS", g_MODclient );
+			return PLUGIN_HANDLED;
+	}
+	
+	new szArgCmd[16];
+	read_argv( 0, szArgCmd, 15 );
+
+	if ( read_argc() < 2 )
+	{
+		ADMIN_Print( id, "Format: %s <on|off>", szArgCmd );
+		return PLUGIN_HANDLED;
+	}
+
+	new szArg[32];
+	read_argv( 1, szArg, 31 );
+
+	if ( equal( szArg, "on" ) || equal( szArg, "1" ) )
+	{
+		warcraft3 = true;
+		ADMIN_Print( id, "War3ft plugin enabled" );
+	}
+	else if ( equal( szArg, "off" ) || equal( szArg, "0" ) )
+	{
+		warcraft3 = false;
+		ADMIN_Print( id, "War3ft plugin disabled" );
+	}
+	else
+	{
+		ADMIN_Print( id, "Format: %s <on|off>", szArgCmd );
+		return PLUGIN_HANDLED;
+	}
+
+	return PLUGIN_HANDLED;
+}
+
+// Function will print to server console or client console based on the ID number
+stock ADMIN_Print( id, const text[] = "", {Float,_}:...)
+{    
+	// format the text as needed
+
+	new szFormattedText[128];
+	format_args( szFormattedText, 127, 1 );
+
+	if ( id == 0 )
+	{
+		server_print( szFormattedText );
+	}
+	else
+	{
+		client_print( id, print_console, szFormattedText );
+
+	}
+
+	return;
+}  
