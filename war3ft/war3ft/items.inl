@@ -18,17 +18,17 @@ public Item_Message(id, item, shopmenu){
 			case ITEM_ANKH:			client_print(id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_1")
 			case ITEM_BOOTS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_2")
 		#endif
-			case ITEM_CLAWS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_3", iCvar[FT_CLAW])
-			case ITEM_CLOAK:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_4", (100.0 * (float(get_pcvar_num( ITEM_Cloak ))/255.0)))
+			case ITEM_CLAWS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_3", get_pcvar_num( CVAR_ITEM_Claw ))
+			case ITEM_CLOAK:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_4", (100.0 * (float(get_pcvar_num( CVAR_ITEM_Cloak ))/255.0)))
 			case ITEM_MASK:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_5", (100.0 * get_pcvar_num( CVAR_ITEM_Mask_Of_Death )))
 			case ITEM_NECKLACE:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_6")
 			case ITEM_FROST:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_7", (100.0 * (get_pcvar_float( CVAR_ITEM_Frost )/260.0)))
 			case ITEM_HEALTH:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_8", get_pcvar_num( CVAR_ITEM_Health ))
 		#if MOD == 0
-			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (get_pcvar_num( ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]]))
+			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (get_pcvar_num( CVAR_ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]]))
 		#endif
 		#if MOD == 1
-			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (2 * (get_pcvar_num( ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]])))
+			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (2 * (get_pcvar_num( CVAR_ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]])))
 		#endif
 		}
 	}

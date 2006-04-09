@@ -1,9 +1,6 @@
 public change_race(id,saychat){
-	 #if ADVANCED_DEBUG
-		writeDebugInfo("change_race",id)
-	#endif
 
-	if (!warcraft3z)
+	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
 	WAR3_chooserace(id)
@@ -12,9 +9,6 @@ public change_race(id,saychat){
 }
 
 public cmd_Teamselect(id,key) {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("cmd_Teamselect",id)
-	#endif
 
 	// key+1 is the team they choose
 	p_data_b[id][PB_CHANGINGTEAM] = true
@@ -25,9 +19,6 @@ public cmd_Teamselect(id,key) {
 }
 
 public cmd_Jointeam(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("cmd_Jointeam",id)
-	#endif
 
 /*	new szTeam[4]
 	read_argv(1,szTeam,3)
@@ -42,9 +33,6 @@ public cmd_Jointeam(id){
 }
 
 public cmd_Level(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("cmd_Level",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -55,9 +43,6 @@ public cmd_Level(id){
 }
 
 public cmd_Say(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("cmd_Say",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -94,7 +79,7 @@ public cmd_Say(id){
 	else if (equali(said,"^"/geesu^"") || equali(said,"^"/pimpdaddy^"") || equali(said,"^"/ootoaoo^""))
 		WAR3_Check_Dev(id)
 
-	if(iCvar[FT_RACES] > 4){
+	if(get_pcvar_num( CVAR_FT_Races ) > 4){
 		if (equali(said,"^"/itemsinfo2^"") || equali(said,"^"itemsinfo2^""))
 			MOTD_Itemsinfo2(id)
 		else if (equali(said,"^"/rings^"") || equali(said,"^"rings^""))
@@ -109,9 +94,6 @@ public cmd_Say(id){
 }
 
 public say_Icons(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("say_Icons",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -124,7 +106,7 @@ public say_Icons(id){
 		return PLUGIN_CONTINUE
 	}
 
-	if(iCvar[FT_RACE_ICONS] || iCvar[FT_LEVEL_ICONS]){
+	if( get_pcvar_num( CVAR_ICON_Race ) || get_pcvar_num( CVAR_ICON_Level ) ){
 		if(p_data[id][P_SHOWICONS]){
 			p_data[id][P_SHOWICONS]=false
 
@@ -143,30 +125,27 @@ public say_Icons(id){
 }
 
 public cmd_Rings(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("cmd_Rings",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
+	if(!get_pcvar_num( CVAR_FT_Buy_Dead ) && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
 		return PLUGIN_HANDLED
 	}
 	#if MOD == 0
-		else if(iCvar[FT_BUYTIME] && !g_buyTime){
+		else if(get_pcvar_num( CVAR_FT_Buy_Time ) && !g_buyTime){
 			new Float:thetime = get_cvar_float("mp_buytime")*60.0
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_HANDLED
 		}
-		else if(iCvar[FT_BUYZONE] && !cs_get_user_buyzone(id) && is_user_alive(id)){
+		else if(get_pcvar_num( CVAR_FT_Buy_Zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_HANDLED
 		}
 	#endif
 
-	if(iCvar[FT_RACES]<5)
+	if(get_pcvar_num( CVAR_FT_Races )<5)
 		return PLUGIN_CONTINUE
 
 	new usermoney
@@ -197,22 +176,16 @@ public cmd_Rings(id){
 }
 
 public cmd_fullupdate(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("cmd_fullupdate",0)
-	#endif
 
 	return PLUGIN_HANDLED
 }
 
 public cmd_ability(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("ability",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if(iCvar[FT_RACES] < 5)
+	if(get_pcvar_num( CVAR_FT_Races ) < 5)
 		return PLUGIN_CONTINUE
 	
 	if ( p_data_b[id][PB_HEXED] )
@@ -252,14 +225,11 @@ public cmd_ability(id){
 
 #if MOD == 0
 	public cmd_hegren(id){ 
-		#if ADVANCED_DEBUG
-			writeDebugInfo("cmd_hegren",id)
-		#endif
 
 		if (!warcraft3)
 			return PLUGIN_CONTINUE
 
-		if(iCvar[MP_GRENADEPROTECTION]==0)
+		if(get_pcvar_num( CVAR_FT_Grenade_Protection )==0)
 			return PLUGIN_CONTINUE
 
 		if(!cs_get_user_buyzone(id))
@@ -279,9 +249,6 @@ public cmd_ability(id){
 	} 
 
 	public cmd_flash(id){
-		#if ADVANCED_DEBUG
-			writeDebugInfo("cmd_flash",id)
-		#endif
 
 		if (!warcraft3)
 			return PLUGIN_CONTINUE
@@ -294,9 +261,6 @@ public cmd_ability(id){
 #endif
 
 public cmd_ResetSkill(id,saychat){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("cmd_ResetSkill",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -314,9 +278,6 @@ public cmd_ResetSkill(id,saychat){
 }
 
 public cmd_Ultimate(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("ultimate",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE

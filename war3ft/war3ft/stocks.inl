@@ -85,9 +85,6 @@ stock find_free_spawn(id, iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]
 				foundFreeSpawn = false
 			}
 		}
-		#if DEBUG
-			console_print(id, "[WAR3FT][%d] Searching %d, used: %d, found:%d", i, spawnPoints[i], spawnPointsused[i], foundFreeSpawn)
-		#endif
 		id--
 
 	}
@@ -172,9 +169,6 @@ stock Verify_Skill(id, race, skill){
 }
 
 stock Status_Text(id, szMessage[], Float:fDuration, Float:iYPos){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("WAR3_status_text",0)
-	#endif
 
 	#if MOD == 1
 		Create_HudText(id, szMessage, 1)
@@ -191,11 +185,8 @@ stock Status_Text(id, szMessage[], Float:fDuration, Float:iYPos){
 }
 
 stock race9_randomize(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("race9_randomize",0)
-	#endif
 
-	if (iCvar[FT_RACES] == 9)
+	if (get_pcvar_num( CVAR_FT_Races ) == 9)
 	{
 		if (get_pcvar_num( CVAR_CHAM_Random ))
 		{
@@ -211,9 +202,6 @@ stock race9_randomize(){
 }
 
 stock set_user_money(id, money, show = 1){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("set_user_money",id)
-	#endif
 
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
@@ -235,9 +223,6 @@ stock set_user_money(id, money, show = 1){
 }
 
 stock get_user_money(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("get_user_money",id)
-	#endif
 
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE

@@ -15,6 +15,7 @@ v2.3.3
  - Change: Config file location moved
 
  //CHEATING_DEATH_NOT_INSTALLED
+ //RACE2_SKILL4_INFO_T
 Add a disable orc nade map config file...
 Add a start/stop option
 

@@ -1,8 +1,5 @@
 // Forwards from the CSX module and DODX module
 public grenade_throw(index,greindex,wId){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("grenade_throw",index)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -29,9 +26,6 @@ public grenade_throw(index,greindex,wId){
 
 #if MOD == 1
 public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("client_damage",victim)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -45,9 +39,6 @@ public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
 
 #if MOD == 0
 public on_Damage(victim){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_Damage",victim)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -65,9 +56,6 @@ public on_Damage(victim){
 #endif
 
 public call_damage(victim, attacker, damage, wpnindex, hitplace){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("call_damage",victim)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -99,9 +87,9 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 					on_Death(victim, attacker, wpnindex, 0)
 				}
 
-				#if DEBUG
+				/*#if DEBUG
 					client_print(victim, print_chat, "### You were just attacked by the bomb for %d damage (%s)", damage, szClassName)
-				#endif
+				#endif*/
 			}
 		}
 	}
@@ -515,7 +503,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 
 	// Claws of Attack
 	if ( p_data[attacker][P_ITEM] == ITEM_CLAWS && !p_data_b[attacker][PB_HEXED] ){	
-		WAR3_damage(victim, attacker, iCvar[FT_CLAW], wpnindex, hitplace)
+		WAR3_damage(victim, attacker, get_pcvar_num( CVAR_ITEM_Claw ), wpnindex, hitplace)
 
 		if (iglow[victim][0] < 1){
 			new parm[2]
@@ -571,7 +559,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	else if ( p_data[attacker][P_ITEM] == ITEM_FROST && !p_data_b[attacker][PB_HEXED] ){
 		if (get_user_maxspeed(victim) > 10 && !p_data_b[victim][PB_SLOWED]){
 			new normalspeed = floatround(get_user_maxspeed(victim))
-			set_user_maxspeed(victim, get_cvar_float( CVAR_ITEM_Frost ))
+			set_user_maxspeed(victim, get_pcvar_float( CVAR_ITEM_Frost ))
 			p_data_b[victim][PB_SLOWED]=true
 			new parm[2]
 			parm[0]=victim
@@ -722,9 +710,6 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 }
 
 public on_Death(victim, killer, wpnindex, headshot){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_Death",victim)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -771,9 +756,6 @@ public on_Death(victim, killer, wpnindex, headshot){
 }
 
 public on_DeathMsg(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_DeathMsg",read_data(2))
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -790,9 +772,6 @@ public on_DeathMsg(){
 }
 
 public on_CurWeapon(id) {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_CurWeapon",id)
-	#endif
 
 	// read_data(1) = isActive?
 	// read_data(2) = weapon index
@@ -856,9 +835,6 @@ public on_CurWeapon(id) {
 }
 
 public on_ResetHud(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_ResetHud",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -867,7 +843,7 @@ public on_ResetHud(id){
 	if ( endround )
 	{
 		// have "fake" ultimate delay
-		iUltimateDelay = iCvar[FT_ULTIMATE_DELAY];
+		iUltimateDelay = get_pcvar_num( CVAR_ULT_Delay );
 		
 		new parm[1];
 		parm[0] = 0;
@@ -876,7 +852,7 @@ public on_ResetHud(id){
 
 	if(is_user_bot(id)){
 		new Float:randomnumber = random_float(0.0,1.0)
-		if (randomnumber <= iCvar[FT_BOT_BUY_ITEM]){
+		if (randomnumber <= get_pcvar_num( CVAR_BOT_Buy_Item )){
 			new num = random_num(1,2)
 			if (num == 1)
 				_menu_Shopmenu_One(id, random_num(0,8))
@@ -885,7 +861,7 @@ public on_ResetHud(id){
 		}
 		if (randomnumber <= 0.06){
 			p_data[id][P_XP]=xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))]
-			p_data[id][P_RACE] = random_num(1,iCvar[FT_RACES])
+			p_data[id][P_RACE] = random_num(1,get_pcvar_num( CVAR_FT_Races ))
 		}
 	}
 
@@ -940,7 +916,7 @@ public on_ResetHud(id){
 		#endif
 	}
 	#if MOD == 0
-		if(iCvar[FT_BUYTIME] && !g_buyCalled){
+		if(get_pcvar_num( CVAR_FT_Buy_Time ) && !g_buyCalled){
 			set_task(get_cvar_float("mp_buytime")*60.0,"_WAR3_set_buytime",TASK_BUYTIME)
 			g_buyCalled = true
 		}
@@ -1085,9 +1061,6 @@ public on_ResetHud(id){
 }
 
 public on_GameRestart(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_GameRestart",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE

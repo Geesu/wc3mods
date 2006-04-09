@@ -579,8 +579,6 @@ new const g_SQLite[] = "SQLite"
 
 new g_MODclient[15] = "* [WAR3FT]"
 
-new teleportid[33][32]
-
 new iglow[33][4]
 new savedweapons[33][32]
 new bool:warcraft3

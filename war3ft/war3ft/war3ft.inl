@@ -3,9 +3,6 @@
 ***********************************************************************/
 
 public WAR3_precache() {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("WAR3_precache",0)
-	#endif
 	
 	precache_generic( "wc3.css" );
 
@@ -164,20 +161,7 @@ public WAR3_precache() {
 
 }
 
-public WAR3_exec_config(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("WAR3_exec_config",0)
-	#endif
-
-	new configsDir[64]
-	get_configsdir(configsDir, 63)
-	server_cmd("exec %s/war3FT.cfg", configsDir)
-}
-
 public WAR3_chooserace(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("WAR3_chooserace",id)
-	#endif
 
 	new iTeam = get_user_team( id );
 #if MOD == 0
@@ -200,9 +184,6 @@ public WAR3_chooserace(id){
 }
 
 public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is attacked, attacker ,damage
-	#if ADVANCED_DEBUG
-		writeDebugInfo("WAR3_damage",victim)
-	#endif
 	
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -305,9 +286,6 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 }
 
 public WAR3_death_victim(victim_id, killer_id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("WAR3_death_victim",victim_id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -453,9 +431,6 @@ public WAR3_death_victim(victim_id, killer_id){
 }
 
 public WAR3_death(victim_id, killer_id, weapon, headshot) {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("WAR3_death",victim_id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -653,9 +628,6 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 }
 
 public WAR3_set_race(id,race){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("WAR3_set_race",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -712,9 +684,6 @@ public WAR3_set_race(id,race){
 
 #if MOD == 0
 	public _WAR3_set_buytime(){
-		#if ADVANCED_DEBUG
-			writeDebugInfo("_WAR3_set_buytime",0)
-		#endif
 
 		g_buyTime=false
 	}
@@ -745,9 +714,6 @@ public WAR3_Check_Dev( id )
 }
 
 public WAR3_Display_Level(id, flag){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("WAR3_Display_Level",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -943,9 +909,6 @@ public WAR3_Display_Level(id, flag){
 }
 
 WAR3_Show_Spectator_Info(id, targetid){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("WAR3_Show_Spectator_Info",id)
-	#endif
 
 	new name[32]
 	get_user_name(targetid ,name,31) 
@@ -976,6 +939,7 @@ WAR3_Show_Spectator_Info(id, targetid){
 	}
 	else if (p_data[targetid][P_ITEM]==0 && (p_data[targetid][P_ITEM2]!=0 && p_data[targetid][P_ITEM2]!=ITEM_MOLE)){
 		new item_name2[ITEM_NAME_LENGTH]
+		
 		lang_GetItemName(p_data[targetid][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F, 2)
 
 		if (p_data[targetid][P_ITEM2]==ITEM_RING)
@@ -1001,7 +965,7 @@ WAR3_Show_Spectator_Info(id, targetid){
 		format(temp,511,"%L",id,"CURRENT_HEALTH",thehealth,0)
 	#endif
 	add(message,1047,temp)
-	if(iCvar[FT_POSITION]==0)
+	if(get_pcvar_num( CVAR_FT_Spec_Position )==0)
 		set_hudmessage(255,255,255,0.018,0.9,2, 1.5, 12.0, 0.02, 5.0, 1) 
 	else
 		set_hudmessage(255,255,255,0.65,0.9,2, 1.5, 12.0, 0.02, 5.0, 1) 
@@ -1010,9 +974,6 @@ WAR3_Show_Spectator_Info(id, targetid){
 }
 
 WAR3_Immunity_Found_Near(id, origin[3]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("WAR3_Immunity_Found_Near",id)
-	#endif
 
 	new players[32], numplayers, targetid, targetorigin[3]
 	
@@ -1036,9 +997,6 @@ WAR3_Immunity_Found_Near(id, origin[3]){
 
 public WAR3_Kill( id, weapon )
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("WAR3_Kill",id)
-	#endif
 	
 	set_msg_block( gmsgDeathMsg, BLOCK_ONCE );
 
@@ -1062,7 +1020,9 @@ public WAR3_Init()
 	CVAR_Init();
 	
 	// Execute the config file to get the CVAR values
-	WAR3_exec_config();
+	new configsDir[64];
+	get_configsdir( configsDir, 63 );
+	server_cmd( "exec %s/war3ft/war3FT.cfg", configsDir );
 	
 	// Register the player menus
 	lang_SetMenus()
@@ -1077,7 +1037,7 @@ public WAR3_Init()
 	checkmap()
 
 	// Set which string should be displayed with messages (war3ft or war3)
-	if ( get_pcvar_num( CVAR_ft_races ) < 5 )
+	if ( get_pcvar_num( CVAR_FT_Races ) < 5 )
 	{
 		g_MODclient = "* [WAR3]"
 	}

@@ -3,24 +3,21 @@
 // **************************************************
 
 public menu_Shopmenu_One(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("menu_Shopmenu_One",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
+	if(!get_pcvar_num( CVAR_FT_Buy_Dead ) && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
 		return PLUGIN_HANDLED
 	}
 	#if MOD == 0
-		else if(iCvar[FT_BUYTIME] && !g_buyTime){
+		else if(get_pcvar_num( CVAR_FT_Buy_Time ) && !g_buyTime){
 			new Float:thetime = get_cvar_float("mp_buytime")*60.0
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_HANDLED
 		}
-		else if(iCvar[FT_BUYZONE] && !cs_get_user_buyzone(id) && is_user_alive(id)){
+		else if(get_pcvar_num( CVAR_FT_Buy_Zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_HANDLED
 		}
@@ -49,9 +46,6 @@ public menu_Shopmenu_One(id){
 }
 
 public _menu_Shopmenu_One(id, key){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_menu_Shopmenu_One",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -59,17 +53,17 @@ public _menu_Shopmenu_One(id, key){
 	if (key==9)
 		return PLUGIN_CONTINUE
 
-	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
+	if(!get_pcvar_num( CVAR_FT_Buy_Dead ) && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
 		return PLUGIN_CONTINUE
 	}
 	#if MOD == 0
-		else if(iCvar[FT_BUYTIME] && !g_buyTime){
+		else if(get_pcvar_num( CVAR_FT_Buy_Time ) && !g_buyTime){
 			new Float:thetime = get_cvar_float("mp_buytime")*60.0
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_CONTINUE
 		}
-		else if(iCvar[FT_BUYZONE] && !cs_get_user_buyzone(id) && is_user_alive(id)){
+		else if(get_pcvar_num( CVAR_FT_Buy_Zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_CONTINUE
 		}
@@ -96,10 +90,10 @@ public _menu_Shopmenu_One(id, key){
 		set_user_money(id,get_user_money(id)-itemcost[key],1)
 
 	#if MOD == 0
-		XP_give(id, get_pcvar_num( ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]])
+		XP_give(id, get_pcvar_num( CVAR_ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]])
 	#endif
 	#if MOD == 1
-		XP_give(id, 2 * (get_pcvar_num( ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]]))
+		XP_give(id, 2 * (get_pcvar_num( CVAR_ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]]))
 	#endif
 		emit_sound(id,CHAN_STATIC, "warcraft3/Tomes.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)
 
@@ -146,27 +140,24 @@ public _menu_Shopmenu_One(id, key){
 // **************************************************
 
 public menu_Shopmenu_Two(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("menu_Shopmenu_Two",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if(iCvar[FT_RACES] < 5)
+	if(get_pcvar_num( CVAR_FT_Races ) < 5)
 		return PLUGIN_HANDLED
 
-	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
+	if(!get_pcvar_num( CVAR_FT_Buy_Dead ) && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
 		return PLUGIN_HANDLED
 	}
 	#if MOD == 0
-		else if(iCvar[FT_BUYTIME] && !g_buyTime){
+		else if(get_pcvar_num( CVAR_FT_Buy_Time ) && !g_buyTime){
 			new Float:thetime = get_cvar_float("mp_buytime")*60.0
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_HANDLED
 		}
-		else if(iCvar[FT_BUYZONE] && !cs_get_user_buyzone(id) && is_user_alive(id)){
+		else if(get_pcvar_num( CVAR_FT_Buy_Zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_HANDLED
 		}
@@ -200,9 +191,6 @@ public menu_Shopmenu_Two(id){
 }
 
 public _menu_Shopmenu_Two(id, key){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_menu_Shopmenu_Two",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -210,17 +198,17 @@ public _menu_Shopmenu_Two(id, key){
 	if (key==9)
 		return PLUGIN_CONTINUE
 
-	if(!iCvar[FT_BUYDEAD] && !is_user_alive(id)){
+	if(!get_pcvar_num( CVAR_FT_Buy_Dead ) && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
 		return PLUGIN_CONTINUE
 	}
 	#if MOD == 0
-		else if(iCvar[FT_BUYTIME] && !g_buyTime){
+		else if(get_pcvar_num( CVAR_FT_Buy_Time ) && !g_buyTime){
 			new Float:thetime = get_cvar_float("mp_buytime")*60.0
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_CONTINUE
 		}
-		else if(iCvar[FT_BUYZONE] && !cs_get_user_buyzone(id) && is_user_alive(id)){
+		else if(get_pcvar_num( CVAR_FT_Buy_Zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_CONTINUE
 		}
@@ -332,9 +320,6 @@ public _menu_Shopmenu_Two(id, key){
 }
 
 public menu_Select_Skill(id,saychat){
-	 #if ADVANCED_DEBUG
-		writeDebugInfo("select_skill",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -441,9 +426,6 @@ public menu_Select_Skill(id,saychat){
 }
 
 public _menu_Select_Skill(id,key){
-	 #if ADVANCED_DEBUG
-		writeDebugInfo("set_skill",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -513,9 +495,6 @@ public _menu_Select_Skill(id,key){
 }
 
 public menu_Select_Race(id, racexp[9]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("menu_Select_Race",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -529,14 +508,14 @@ public menu_Select_Race(id, racexp[9]){
 	new keys
 	format(selectrace, 127, "%L",id ,"MENU_SELECT_RACE")
 
-	for(i=1;i<(iCvar[FT_RACES]+1);i++){
+	for(i=1;i<(get_pcvar_num( CVAR_FT_Races )+1);i++){
 		lang_GetRaceName(i,id,race_name[i],RACE_NAME_LENGTH_F)
 	}
 
 	if(get_pcvar_num( CVAR_SAVE_Enabled )){
 		pos += format(menu_msg[pos], 512-pos, "%L",id,"SELECT_RACE_TITLE", selectrace)
 
-		for(i=1; i<(iCvar[FT_RACES]+1);i++){
+		for(i=1; i<(get_pcvar_num( CVAR_FT_Races )+1);i++){
 			if(i==5){
 				new selecthero[128]
 				format(selecthero, 127, "%L",id ,"SELECT_HERO")
@@ -556,7 +535,7 @@ public menu_Select_Race(id, racexp[9]){
 	else{
 		pos += format(menu_msg[pos], 512-pos, "%s^n^n", selectrace)
 
-		for(i=1; i<(iCvar[FT_RACES]+1);i++){
+		for(i=1; i<(get_pcvar_num( CVAR_FT_Races )+1);i++){
 			if(i==5){
 				new selecthero[128]
 				format(selecthero, 127, "%L",id ,"SELECT_HERO")
@@ -577,12 +556,12 @@ public menu_Select_Race(id, racexp[9]){
 
 	keys |= (1<<(i-1))
 
-	if(iCvar[FT_RACES] == 9)
+	if(get_pcvar_num( CVAR_FT_Races ) == 9)
 		i = 0
 
 	pos += format(menu_msg[pos], 512-pos, "%L",id,"SELECT_RACE_FOOTER", i)
 
-	if(iCvar[FT_RACES] != 9){	// Add a cancel button
+	if(get_pcvar_num( CVAR_FT_Races ) != 9){	// Add a cancel button
 		keys |= (1<<9)
 		pos += format(menu_msg[pos], 512-pos, "^n\w0. %L", id, "WORD_CANCEL")
 	}
@@ -593,15 +572,12 @@ public menu_Select_Race(id, racexp[9]){
 }
 
 public _menu_Select_Race(id,key){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_menu_Select_Race",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 	
 	// User pressed 0 (cancel)
-	if( iCvar[FT_RACES] < 9 && key-1 == iCvar[FT_RACES] )
+	if( get_pcvar_num( CVAR_FT_Races ) < 9 && key-1 == get_pcvar_num( CVAR_FT_Races ) )
 	{
 		return PLUGIN_HANDLED;
 	}
@@ -611,13 +587,13 @@ public _menu_Select_Race(id,key){
 
 	new race, autoselectkey
 
-	if(iCvar[FT_RACES] == 9)
+	if(get_pcvar_num( CVAR_FT_Races ) == 9)
 		autoselectkey = KEY_0
 	else
-		autoselectkey = iCvar[FT_RACES]
+		autoselectkey = get_pcvar_num( CVAR_FT_Races )
 
 	if (key == autoselectkey)
-		race = random_num(1,iCvar[FT_RACES])
+		race = random_num(1,get_pcvar_num( CVAR_FT_Races ))
 	else
 		race = (key+1)
 
@@ -636,9 +612,6 @@ public _menu_Select_Race(id,key){
 }
 
 public menu_War3menu(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("menu_War3menu",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -663,9 +636,6 @@ public menu_War3menu(id){
 }
 
 public _menu_War3menu(id,key){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_menu_War3menu",id)
-	#endif
 
 	switch (key){
 		case 0:	menu_Skill_Options(id)
@@ -680,9 +650,6 @@ public _menu_War3menu(id,key){
 }
 
 public menu_Skill_Options(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("menu_Skill_Options",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -707,9 +674,6 @@ public menu_Skill_Options(id){
 }
 
 public _menu_Skill_Options(id,key){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_menu_Skill_Options",id)
-	#endif
 
 	switch (key){
 		case 0:	menu_Select_Skill(id,1)
@@ -722,9 +686,6 @@ public _menu_Skill_Options(id,key){
 }
 
 public menu_Race_Options(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("menu_Race_Options",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -749,9 +710,6 @@ public menu_Race_Options(id){
 }
 
 public _menu_Race_Options(id,key){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_menu_Race_Options",id)
-	#endif
 
 	switch (key){
 		case 0:	change_race(id,1)
@@ -765,9 +723,6 @@ public _menu_Race_Options(id,key){
 }
 
 public menu_Item_Options(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("menu_Item_Options",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -792,9 +747,6 @@ public menu_Item_Options(id){
 }
 
 public _menu_Item_Options(id,key){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_menu_Item_Options",id)
-	#endif
 
 	switch (key){
 		case 0:	menu_Shopmenu_One(id)
@@ -808,9 +760,6 @@ public _menu_Item_Options(id,key){
 }
 
 public menu_Admin_Options(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("menu_Admin_Options",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -840,9 +789,6 @@ public menu_Admin_Options(id){
 }
 
 public _menu_Admin_Options(id,key){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_menu_Admin_Options",id)
-	#endif
 
 	switch (key){
 		case 0:{
@@ -863,9 +809,6 @@ public _menu_Admin_Options(id,key){
 }
 
 public menu_PlayerXP_Options(id,pos){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("menu_PlayerXP_Options",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -920,9 +863,6 @@ public menu_PlayerXP_Options(id,pos){
 }
 
 public _menu_PlayerXP_Options(id,key){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_menu_PlayerXP_Options",id)
-	#endif
 
 	switch(key){
 		case 7:{
@@ -956,9 +896,6 @@ public _menu_PlayerXP_Options(id,key){
 }
 
 public menu_TeamXP_Options(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("menu_TeamXP_Options",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -984,9 +921,6 @@ public menu_TeamXP_Options(id){
 }
 
 public _menu_TeamXP_Options(id,key){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_menu_TeamXP_Options",id)
-	#endif
 
 	switch(key){
 		case 0:{
@@ -1025,9 +959,6 @@ public _menu_TeamXP_Options(id,key){
 
 public menu_ResetXP(id)
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("menu_ResetXP",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE;
@@ -1044,9 +975,6 @@ public menu_ResetXP(id)
 
 public _menu_ResetXP( id, key )
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_menu_ResetXP",id)
-	#endif
 	
 	// User selected yes
 	if ( key == 0 )

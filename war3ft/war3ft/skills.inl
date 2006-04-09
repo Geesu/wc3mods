@@ -4,9 +4,6 @@
 
 // Gives skill abilities at beginning of round and when skills are selected
 public Skill_Check(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Skill_Check",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -147,10 +144,10 @@ public Skill_Invisibility(id)
 		#if MOD == 1
 			if (weaponnum==DODW_AMERKNIFE || weaponnum==DODW_GERKNIFE || weaponnum==DODW_SPADE){
 		#endif
-				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture, get_pcvar_num( ITEM_Cloak )/2)
+				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture, get_pcvar_num( CVAR_ITEM_Cloak )/2)
 			}
 			else{
-				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,get_pcvar_num( ITEM_Cloak ))
+				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,get_pcvar_num( CVAR_ITEM_Cloak ))
 			}
 		}
 		else
@@ -164,9 +161,6 @@ public Skill_Invisibility(id)
 // ****************************************
 
 	public SKILL_Reincarnation(id){
-		#if ADVANCED_DEBUG
-			writeDebugInfo("SKILL_Reincarnation",id)
-		#endif
 
 		if (!warcraft3)
 			return PLUGIN_CONTINUE
@@ -217,9 +211,6 @@ public Skill_Invisibility(id)
 	}
 
 	public _SKILL_Reincarnation(parm[]){
-		#if ADVANCED_DEBUG
-			writeDebugInfo("_SKILL_Reincarnation",parm[0])
-		#endif
 		
 		if (!warcraft3)
 			return PLUGIN_CONTINUE
@@ -273,9 +264,6 @@ public Skill_Invisibility(id)
 	}
 
 	public _SKILL_Reincarnation_Status(parm[]){
-		#if ADVANCED_DEBUG
-			writeDebugInfo("_SKILL_Reincarnation_Status",parm[0])
-		#endif
 
 		if (!warcraft3)
 			return PLUGIN_CONTINUE
@@ -331,9 +319,6 @@ public Skill_Invisibility(id)
 
 public Skill_Reincarnation( parm[2] )
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Skill_Reincarnation",parm[0])
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -397,9 +382,6 @@ public Skill_Reincarnation( parm[2] )
 }	
 
 public _Skill_Reincarnation_Drop(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_Skill_Reincarnation_Drop",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -424,9 +406,6 @@ public _Skill_Reincarnation_Drop(id){
 }
 
 public _Skill_Reincarnation_Give(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_Skill_Reincarnation_Give",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -647,10 +626,6 @@ public Skill_Evasion_Set( id )
 		if ( randomnumber <= p_evasion[p_data[id][P_SKILL1]-1] && !p_data_b[id][PB_EVADENEXTSHOT] )
 		{
 			p_data_b[id][PB_EVADENEXTSHOT] = true;
-
-		#if DEBUG
-			client_print(id, print_chat, "%s You will evade the next shot", g_MODclient);
-		#endif
 		}
 	}
 	
@@ -670,10 +645,6 @@ public Skill_Evasion_Check( id )
 		if ( p_data_b[id][PB_EVADENEXTSHOT] && iHealth < 500 && is_user_alive(id) )
 		{
 			set_user_health( id, iHealth + SKILL_EVASION_ADJ );
-
-		#if DEBUG
-			client_print(id, print_chat, "%s 1Health adjusted for evasion from %d to %d", g_MODclient, iHealth, (SKILL_EVASION_ADJ + iHealth));
-		#endif
 		}
 	}
 	// User doesn't have the skill
@@ -683,20 +654,12 @@ public Skill_Evasion_Check( id )
 		if ( p_data_b[id][PB_EVADENEXTSHOT] )
 		{
 			p_data_b[id][PB_EVADENEXTSHOT] = false;
-
-		#if DEBUG
-			client_print(id, print_chat, "%s Evade next shot disabled", g_MODclient);
-		#endif
 		}
 	}
 
 	// Check if the user has too much health when they shouldn't evade the next shot
 	if ( !p_data_b[id][PB_EVADENEXTSHOT] && iHealth > 500 && !p_data_b[id][PB_GODMODE] )
 	{
-	#if DEBUG
-		client_print(id, print_chat, "%s Health adjusted for evasion from %d to %d", g_MODclient, iHealth, (SKILL_EVASION_ADJ - iHealth));
-	#endif
-
 		// Hopefully this will never kill them
 		set_user_health(id, iHealth - SKILL_EVASION_ADJ);
 	}
@@ -707,9 +670,6 @@ public Skill_Evasion_Check( id )
 		// Just set back to default
 		set_user_health( id, 100 + SKILL_EVASION_ADJ );
 
-	#if DEBUG
-		client_print(id, print_chat, "%s Health of %d adjusted from godmode, this should not occur", g_MODclient, iHealth);
-	#endif
 	}
 }
 
@@ -745,9 +705,6 @@ stock Skill_Evasion_Reset( id, damage )
 
 		p_data_b[id][PB_EVADENEXTSHOT] = false;
 
-	#if DEBUG
-		client_print(id, print_chat, "%s shot evaded, health set to %d", g_MODclient, get_user_health(id));
-	#endif
 	}
 
 	return;
@@ -811,9 +768,6 @@ stock Skill_Evasion_Reset( id, damage )
 // ****************************************
 
 public _Skill_Healing_Wave(parm[2]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_Skill_Healing_Wave",parm[0])
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -870,9 +824,6 @@ public _Skill_Healing_Wave(parm[2]){
 // ****************************************
 
 public _Skill_Hex(parm[2]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_Skill_Hex",parm[0])
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -901,9 +852,6 @@ public _Skill_Hex(parm[2]){
 // ****************************************
 
 public _Skill_SerpentWard(parm[5]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_Skill_SerpentWard",parm[3])
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -987,9 +935,6 @@ public _Skill_SerpentWard(parm[5]){
 // ****************************************
 
 public Skills_Blink(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Skills_Blink",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -1013,9 +958,6 @@ public Skills_Blink(id){
 // ****************************************
 
 public _Skill_Impale(parm[2]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_Skill_Impale",parm[0])
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE

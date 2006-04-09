@@ -1,7 +1,4 @@
 public _Ultimate_End(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_Ultimate_End",0)
-	#endif
 
 	new players[32], num
 	get_players(players, num, "c")
@@ -228,10 +225,6 @@ Ultimate_Blink(id){
 }
 
 public _Ultimate_Blink_Controller(parm[]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_Ultimate_Blink_Controller",parm[0])
-	#endif
-
 
 	new id = parm[0]	 
 
@@ -278,8 +271,8 @@ public _Ultimate_Blink_Controller(parm[]){
 			Create_TE_SPRITETRAIL(origin2, origin, g_sFlare, 30, 10, 1, 50, 10)
 
 		// Flash the player
-		if( get_pcvar_num( CVAR_ULT_Blink_Dizziness == 1 )
-			Create_ScreenFade(id, (1<<15), (1<<10), (1<<12), 0, 0, 255, 180)			
+		if( get_pcvar_num( CVAR_ULT_Blink_Dizziness ) == 1 )
+			Create_ScreenFade(id, (1<<15), (1<<10), (1<<12), 0, 0, 255, 180)
 		else
 			Create_ScreenFade(id, (1<<15), (1<<10), (1<<12), 255, 255, 255, 255)			
 	}	
@@ -291,9 +284,6 @@ public _Ultimate_Blink_Controller(parm[]){
 
 
 public ceiling_check(parm[2]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("ceiling_check",parm[0])
-	#endif
 
 	new id = parm[0]
 
@@ -431,9 +421,6 @@ public ceiling_check(parm[2]){
 // ****************************************
 
 public lightsearchtarget(parm[2]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("lightsearchtarget",parm[0])
-	#endif
 	
 	// This is the caster
 	new id = parm[0]
@@ -507,9 +494,6 @@ public lightsearchtarget(parm[2]){
 
 
 public lightningnext(parm[5]){		// Chain Lightning
-	#if ADVANCED_DEBUG
-		writeDebugInfo("lightningnext",parm[0])
-	#endif
 
 	// parm[0] = enemy
 	// parm[1] = damage
@@ -575,9 +559,6 @@ public lightningnext(parm[5]){		// Chain Lightning
 }
 
 public lightningeffect(caster,targetid,linewidth,damage,bodypart){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("lightningeffect",caster)
-	#endif
 
 	p_data_b[targetid][PB_LIGHTNINGHIT]=true
 
@@ -606,9 +587,6 @@ public lightningeffect(caster,targetid,linewidth,damage,bodypart){
 // ****************************************
 
 public searchtarget(parm[2]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("searchtarget",parm[0])
-	#endif
 
 	new id = parm[0]
 
@@ -683,9 +661,6 @@ public searchtarget(parm[2]){
 }
 
 public waitstop(parm[6]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("waitstop",parm[0])
-	#endif
 
 	new id=parm[0]
 
@@ -715,9 +690,6 @@ public waitstop(parm[6]){
 }
 
 public entangle(parm[2]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("entangle",parm[0])
-	#endif
 
 	new id=parm[0]
 
@@ -793,9 +765,6 @@ public entangle(parm[2]){
 // ****************************************
 
 Ultimate_FlameStrike(id){ 
-	#if ADVANCED_DEBUG
-		writeDebugInfo("fire_flamethrower",id)
-	#endif
 
    emit_sound(id, CHAN_STATIC, SOUND_FLAMESTRIKE, 1.0, ATTN_NORM, 0, PITCH_NORM) 
 
@@ -884,9 +853,6 @@ Ultimate_FlameStrike(id){
 } 
 
 public te_spray(args[]){ 
-	#if ADVANCED_DEBUG
-		writeDebugInfo("te_spray",0)
-	#endif
 
 	new position[3], direction[3]
 	position[0] = args[0]
@@ -903,9 +869,6 @@ public te_spray(args[]){
 } 
 
 check_burnzone(id,vec[],aimvec[],speed1,speed2,radius){ 
-	#if ADVANCED_DEBUG
-		writeDebugInfo("check_burnzone",id)
-	#endif
 
 	new maxplayers = get_maxplayers()
 	new bodypart, victim 
@@ -954,9 +917,6 @@ check_burnzone(id,vec[],aimvec[],speed1,speed2,radius){
 } 
 
 burn_victim(victim,attacker,bodypart){ 
-	#if ADVANCED_DEBUG
-		writeDebugInfo("burn_victim",victim)
-	#endif
 
 	if(p_data_b[victim][PB_ISBURNING]) 
 		return PLUGIN_CONTINUE 
@@ -978,9 +938,6 @@ burn_victim(victim,attacker,bodypart){
 } 
 
 public on_fire(args[]){ 
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_fire",args[0])
-	#endif
 
 	new victim = args[0]
 	new attacker = args[1] 
@@ -1034,10 +991,6 @@ public on_fire(args[]){
 // ****************************************
 
 public _Ultimate_BigBadVoodoo(parm[2]){
-
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_Ultimate_BigBadVoodoo",parm[0])
-	#endif
 
 	new id = parm[0]
 
@@ -1103,9 +1056,6 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 // ****************************************
 
 Ultimate_Vengeance(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Ultimate_Warden",id)
-	#endif
 
 	new spawnID, playersInVicinity, entList[1], origin[3], i
 	new ent = -1
@@ -1178,10 +1128,6 @@ Ultimate_Vengeance(id){
 // ****************************************
 
 Ultimate_LocustSwarm(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("calllocustfunction",id)
-	#endif
-
 
 	new parm[11]
 	parm[7]=id
@@ -1331,9 +1277,6 @@ public _Ultimate_Delay(parm[]){
 }
 
 public Ultimate_Ready(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Ultimate_Ready",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -1359,9 +1302,6 @@ public Ultimate_Ready(id){
 }
 
 public Ultimate_Icon(id, value){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Ultimate_Icon",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -1405,9 +1345,6 @@ public Ultimate_Icon(id, value){
 }
 
 public Ultimate_Clear_Icons(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Ultimate_Clear_Icons",id)
-	#endif
 	#if MOD == 0
 		if(id==0)
 			return PLUGIN_CONTINUE

@@ -55,6 +55,7 @@ new const WC3DATE[] =		__DATE__
 #endif
 
 #include "war3ft/constants.inl"
+#include "war3ft/cvar.inl"
 #include "war3ft/effects.inl"
 #include "war3ft/XP.inl"
 #include "war3ft/war3ft.inl"
@@ -69,7 +70,6 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/language.inl"
 #include "war3ft/other.inl"
 #include "war3ft/admin.inl"
-#include "war3ft/cvar.inl"
 
 #if MOD == 0
 	#include "war3ft/cstrike.inl"
@@ -209,14 +209,16 @@ public plugin_init()
 
 public plugin_end()
 {
-	if ( !get_pcvar_num( CVAR_sv_warcraft3 ) || !get_pcvar_num( CVAR_mp_savexp ) )
+	if ( !get_pcvar_num( CVAR_SAVE_Enabled ) )
 	{
-		return PLUGIN_CONTINUE;
+		return;
 	}
 	
 	XP_Save_All();
 	XP_Prune();
 	XP_CloseDB();
+
+	return;
 }
 
 public plugin_precache()
@@ -244,7 +246,7 @@ public client_putinserver(id)
 	p_data_b[id][PB_ISCONNECTED] = true;
 
 	#if MOD == 1
-		p_data[id][P_MONEY] = iCvar[DOD_STARTMONEY];
+		p_data[id][P_MONEY] = get_pcvar_num( CVAR_DOD_Start_Money );
 		new parm[3];
 		parm[0] = id;
 		parm[1] = 0;
@@ -282,7 +284,7 @@ public client_connect(id)
 	p_data[id][P_FLASHCOUNT]	= 0;
 
 	// Automatically set their XP if it's enabled
-	if ( get_pcvar_num( CVAR_ft_autoxp ) && !get_pcvar_num( CVAR_mp_savexp ) )
+	if ( get_pcvar_num( CVAR_XP_Auto_Average ) && !get_pcvar_num( CVAR_SAVE_Enabled ) )
 	{
 		new iTotalXP;
 		new iNum, i;
@@ -310,10 +312,10 @@ public client_connect(id)
 	#endif
 	
 	// Give the bot a random amount of XP
-	if ( is_user_bot(id) && iCvar[MP_SAVEXP] )
+	if ( is_user_bot(id) && get_pcvar_num( CVAR_SAVE_Enabled ) )
 	{
 		p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
-		p_data[id][P_RACE] = random_num(1, iCvar[FT_RACES]);
+		p_data[id][P_RACE] = random_num(1, get_pcvar_num( CVAR_FT_Races ));
 	}
 
 	return PLUGIN_CONTINUE;
@@ -346,7 +348,7 @@ public client_disconnect(id)
 	
 	// Save the user's XP if we have XP to save
 
-	if (iCvar[MP_SAVEXP] && !is_user_bot(id) && p_data[id][P_RACE] && p_data[id][P_XP])
+	if (get_pcvar_num( CVAR_SAVE_Enabled ) && !is_user_bot(id) && p_data[id][P_RACE] && p_data[id][P_XP])
 	{
 		XP_Save( id );
 	}

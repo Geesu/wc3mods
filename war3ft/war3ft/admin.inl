@@ -1,10 +1,6 @@
 
 // Advanced Swear Filter and Punishment plugin uses this function
 public Admin_TakeXP(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Admin_TakeXP",0)
-	#endif
-
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
@@ -22,9 +18,6 @@ public Admin_TakeXP(){
 }
 
 public Admin_GiveMole(id, level, cid){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Admin_GiveMole",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -69,9 +62,6 @@ public Admin_GiveMole(id, level, cid){
 }
 
 public changeXP(){ 
-	#if ADVANCED_DEBUG
-		writeDebugInfo("changeXP",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -95,9 +85,6 @@ public changeXP(){
 }
 
 public Admin_SaveXP(id, level, cid){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Admin_SaveXP",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -117,10 +104,6 @@ public Admin_SaveXP(id, level, cid){
 }
 
 _Admin_SaveXP(id, target[]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_Admin_SaveXP",id)
-	#endif
-
 
 	if(equali(target,"@ALL")){
 		new players[32], inum
@@ -157,9 +140,6 @@ _Admin_SaveXP(id, target[]){
 } 
 
 public Admin_GiveXP(id, level, cid){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Admin_GiveXP",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -180,10 +160,6 @@ public Admin_GiveXP(id, level, cid){
 }
 
 public _Admin_GiveXP(id, target[], iXP){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_Admin_GiveXP",id)
-	#endif
-
 
 	if(equali(target,"@ALL")){
 		new players[32], inum

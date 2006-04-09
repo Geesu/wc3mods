@@ -42,9 +42,6 @@ new const MENU_CALLBACK[TOTAL_MENUS][] =
 	Description: Function will register all menus for all languages
 */
 public lang_SetMenus(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo( "lang_SetMenus", 0 );
-	#endif
 
 	new total_languages = get_langsnum();
 	new lang[3], menu[128];
@@ -82,9 +79,6 @@ public lang_SetMenus(){
 */
 lang_GetRaceName ( race_id, id, race_name[], len, bool:shortLookup = false )
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo( "lang_GetRaceName", id );
-	#endif
 
 	new szRaceHelper[64];
 	
@@ -107,9 +101,6 @@ lang_GetRaceName ( race_id, id, race_name[], len, bool:shortLookup = false )
 */
 lang_GetItemName ( item_id, id, item_name[], len, shop_id, bool:shortLookup = false )
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo( "lang_GetItemName", id );
-	#endif
 
 	new szItemHelper[64];
 
@@ -145,11 +136,7 @@ lang_GetItemName ( item_id, id, item_name[], len, shop_id, bool:shortLookup = fa
 	Description: Function will return the skill name based on the race id, skill id and the language of the user
 */
 lang_GetSkillName( race_id, skill_id, id, skill_name[], len )
-{
-	#if ADVANCED_DEBUG
-		writeDebugInfo( "lang_GetSkillName", id );
-	#endif
-	
+{	
 
 	// Handle any game-specific instructions first
 
@@ -186,9 +173,6 @@ lang_GetSkillName( race_id, skill_id, id, skill_name[], len )
 
 lang_GetSkillInfo( race_id, skill_id, id, skill_description[], len )
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo( "lang_GetSkillInfo", id );
-	#endif
 
 	switch( race_id )
 	{
@@ -220,7 +204,7 @@ lang_GetSkillInfo( race_id, skill_id, id, skill_description[], len )
 				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL1_INFO" );
 				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL2_INFO", p_devotion[0], p_devotion[1], p_devotion[2] );
 				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL3_INFO", floatround(p_bash[0]*100), floatround(p_bash[1]*100), floatround(p_bash[2]*100) );
-				case SKILL4: formatex ( skill_description, len-1, "%L", id, (iCvar[FT_BLINKENABLED]) ? "RACE2_SKILL4_INFO_B" : "RACE2_SKILL4_INFO_T" );
+				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL4_INFO_B");
 			}
 		}
 

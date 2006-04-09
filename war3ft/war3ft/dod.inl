@@ -1,8 +1,6 @@
 
 public client_score(index,score,total){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("client_score", index)
-	#endif
+
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
@@ -13,7 +11,7 @@ public client_score(index,score,total){
 	new iXP, iXPAwarded;
 	iXP = score * xpgiven[p_data[index][P_LEVEL]];
 	iXPAwarded = XP_give( index, iXP );
-	if (get_pcvar_num( XP_Show_Objectives ))
+	if (get_pcvar_num( CVAR_XP_Show_Objectives ))
 	{
 		client_print(index, print_chat, "%s %L", g_MODclient, index, "DOD_AWARDED_XP_OBJECTIVE", iXPAwarded);
 	}
@@ -22,9 +20,6 @@ public client_score(index,score,total){
 }
 
 public _DOD_showMoney(parm[3]){
-/*	#if ADVANCED_DEBUG
-		writeDebugInfo("_DOD_showMoney",parm[0])
-	#endif*/
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -66,9 +61,6 @@ public _DOD_showMoney(parm[3]){
 }
 
 public on_EndRound(){
-	 #if ADVANCED_DEBUG
-		writeDebugInfo("on_EndRound",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE;
@@ -110,9 +102,6 @@ public on_EndRound(){
 // DOD Specific stocks
 stock Create_HudText(id,message[], flag)
 {
-#if ADVANCED_DEBUG
-	writeDebugInfo("Create_HudText",id)
-#endif
 
 	message_begin( MSG_ONE, gmsgHudText, {0,0,0}, id)
 	write_string(message)
@@ -122,9 +111,6 @@ stock Create_HudText(id,message[], flag)
 
 stock Create_DeathMsg_DOD(killer_id,victim_id,weapon)
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("Create_DeathMsg_DOD",weapon)
-	#endif
 
 	message_begin(MSG_ALL,gmsgDeathMsg)
 	write_byte(killer_id)

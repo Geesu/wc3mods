@@ -4,9 +4,6 @@
 
 stock XP_give(id, iXP)
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_give", id);
-	#endif
 
 	if ( !warcraft3 || id == 0 )
 	{
@@ -28,9 +25,6 @@ stock XP_give(id, iXP)
 
 stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_onDeath", victim_id);
-	#endif
 
 	if ( !warcraft3 )
 	{
@@ -47,17 +41,17 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 		{
 			iXP = -1 * xpgiven[p_data[killer_id][P_LEVEL]];
 			iXPAwarded = XP_give(killer_id, iXP);
-			if (get_pcvar_num( XP_Show_Kill_Objectives ))
+			if (get_pcvar_num( CVAR_XP_Show_Kill_Objectives ))
 			{
 				client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_TEAMMATE", iXPAwarded);
 			}
 		}
 		else{
-			if (!iCvar[MP_WEAPONXPMODIFIER])
+			if ( !get_pcvar_num( CVAR_XP_Weapon_Multiplier ))
 			{
 				iXP = xpgiven[p_data[victim_id][P_LEVEL]];
 				iXPAwarded = XP_give(killer_id, iXP);
-				if (get_pcvar_num( XP_Show_Kill_Objectives ))
+				if (get_pcvar_num( CVAR_XP_Show_Kill_Objectives ))
 				{			
 					new szVictimName[32];
 					get_user_name(victim_id, szVictimName, 31);
@@ -69,7 +63,7 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			{
 				iXP = floatround(xpgiven[p_data[victim_id][P_LEVEL]] * weaponxpmultiplier[weapon]);
 				iXPAwarded = XP_give(killer_id, iXP);
-				if (get_pcvar_num( XP_Show_Kill_Objectives ))
+				if (get_pcvar_num( CVAR_XP_Show_Kill_Objectives ))
 				{
 					new szVictimName[32];
 					get_user_name(victim_id, szVictimName, 31);
@@ -80,9 +74,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for getting a headshot
 			if( headshot )
 			{
-				iXP = get_pcvar_num(XP_Headshot);
+				iXP = get_pcvar_num(CVAR_XP_Headshot);
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( XP_Show_Kill_Objectives ) )
+				if ( get_pcvar_num( CVAR_XP_Show_Kill_Objectives ) )
 				{
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_HEADSHOT", iXPAwarded);		
 				}
@@ -91,9 +85,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for killing the hostage saver
 			if ( victim_id == g_hostageSaver )
 			{
-				iXP = get_pcvar_num( XP_Kill_Rescuer );
+				iXP = get_pcvar_num( CVAR_XP_Kill_Rescuer );
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( XP_Show_Objectives ) )
+				if ( get_pcvar_num( CVAR_XP_Show_Objectives ) )
 				{	
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_HOSTAGE_R", iXPAwarded);
 				}
@@ -101,9 +95,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for killing the bomb defuser
 			else if ( victim_id == g_bombDefuser )
 			{						
-				iXP = get_pcvar_num( XP_Kill_Defuser );
+				iXP = get_pcvar_num( CVAR_XP_Kill_Defuser );
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( XP_Show_Objectives ) )
+				if ( get_pcvar_num( CVAR_XP_Show_Objectives ) )
 				{				
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_BOMB_D", iXPAwarded);
 				}	
@@ -111,9 +105,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for killing the bomb carrier
 			else if ( victim_id == g_bombCarrier )
 			{						
-				iXP = get_pcvar_num( XP_Kill_Bomb_Carrier );
+				iXP = get_pcvar_num( CVAR_XP_Kill_Bomb_Carrier );
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( XP_Show_Objectives ) )
+				if ( get_pcvar_num( CVAR_XP_Show_Objectives ) )
 				{
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_BOMB_C", iXPAwarded);
 				}
@@ -121,9 +115,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for killing the VIP
 			else if ( victim_id==g_vipID )
 			{
-				iXP = get_pcvar_num( XP_Kill_VIP );
+				iXP = get_pcvar_num( CVAR_XP_Kill_VIP );
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( XP_Show_Objectives ) )
+				if ( get_pcvar_num( CVAR_XP_Show_Objectives ) )
 				{
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARD_FOR_KILLING_VIP", iXPAwarded);
 				}
@@ -137,9 +131,6 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 
 stock XP_Set()
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Set", 0);
-	#endif
 
 	// If we're saving XP, we want to set the max. amount of XP higher and the amount gained per kill/objective lower
 	if ( get_pcvar_num( CVAR_SAVE_Enabled ) )
@@ -151,7 +142,7 @@ stock XP_Set()
 	// Set the XP multiplier
 	for( new i=0; i<11; i++ )
 	{
-		xplevel[i] = floatround(xplevel[i] * fCvar[MP_XPMULTIPLIER]);
+		xplevel[i] = floatround(xplevel[i] * get_pcvar_float( CVAR_XP_Multiplier ));
 	}
 
 	XP_Set_Multiplier();
@@ -159,11 +150,8 @@ stock XP_Set()
 
 stock XP_Set_Multiplier()
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Set_Multiplier", 0);
-	#endif
 
-	if ( !iCvar[MP_WEAPONXPMODIFIER] )
+	if ( get_pcvar_num( CVAR_XP_Weapon_Multiplier ) )
 	{
 		return PLUGIN_CONTINUE;
 	}
@@ -269,9 +257,6 @@ stock XP_Set_Multiplier()
 }
 
 public XP_Save(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Save",id)
-	#endif
 	
 	if ( !warcraft3 )
 	{
@@ -342,9 +327,6 @@ public XP_Save(id){
 // Function will get data about a player's current race, and set it to whats in the DB/vault
 public XP_Set_Race_Data( id )
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Set_Race_Data",id)
-	#endif
 
 	if ( !warcraft3 )
 		return PLUGIN_CONTINUE;
@@ -461,9 +443,6 @@ public XP_Set_Race_Data( id )
 // Function will retreive the XP for a user's race and call the changerace menu function
 public XP_Get( id )
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Get",id)
-	#endif
 
 	if ( !warcraft3 )
 		return PLUGIN_CONTINUE;
@@ -572,15 +551,12 @@ public XP_Get( id )
 }
 
 public XP_Set_DBI(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Set_DBI",0)
-	#endif
 	
 	// Check the DBI loaded variable
 	if ( !g_DBILoaded )
 	{
 		// Fall back to vault
-		get_pcvar_num( CVAR_SQL_Enabled ) = 0;
+		set_pcvar_num( CVAR_SQL_Enabled, 0 );
 	}
 
 	// Try to open a database connection
@@ -610,10 +586,10 @@ public XP_Set_DBI(){
 
 		// Determine the database information
 		new szHost[64], szUser[32], szPass[32], szDB[128], szError[256];
-		get_cvar_string("SQL_dbhost", szHost, 63);
-		get_cvar_string("SQL_dbuser", szUser, 31);
-		get_cvar_string("SQL_dbpass", szPass, 31);
-		get_cvar_string("SQL_dbname", szDB, 127);
+		get_pcvar_string( CVAR_SQL_dbhost, szHost, 63);
+		get_pcvar_string( CVAR_SQL_dbuser, szUser, 31);
+		get_pcvar_string( CVAR_SQL_dbpass, szPass, 31);
+		get_pcvar_string( CVAR_SQL_dbname, szDB, 127);
 		
 		// Set a default DB if it's SQLite and the user didn't supply one
 		if ( iSQLtype == SQL_SQLITE && strlen(szDB) < 1 )
@@ -634,7 +610,7 @@ public XP_Set_DBI(){
 
 
 		// Get the table name
-		get_cvar_string("SQL_tbname", g_DBTableName, 63);
+		get_pcvar_string( CVAR_SQL_tbname, g_DBTableName, 63);
 
 		// Format the create table statement
 		new szQuery[512];
@@ -717,9 +693,6 @@ public XP_Set_DBI(){
 // Reset the user's XP to 0
 public XP_Reset(id)
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Reset", id);
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE;
@@ -803,9 +776,6 @@ public XP_Prune_Player(id)
 // Prune the database of old records
 public XP_Prune()
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Prune", 0);
-	#endif
 
 	if ( get_pcvar_num( CVAR_SAVE_Pruning ) )
 	{
@@ -820,7 +790,7 @@ public XP_Prune()
 				new len, line, szText[256];
 				new iCurrentTime = get_systime();
 				// 86400 = 24 hours * 60 minutes * 60 seconds
-				new iExpiredTime = iCurrentTime - (get_pcvar_num( CVAR_SAVE_Expire_Time ) * 86400);
+				new iExpiredTime = iCurrentTime - (get_pcvar_num( CVAR_SAVE_Days_Before_Delete ) * 86400);
 
 				// Check every line in the vault
 				while ( (line = read_file(szVault, line, szText, 255, len)) != 0 )
@@ -855,13 +825,13 @@ public XP_Prune()
 			{
 				// Timestamp format: 20030912122142
 				// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42	
-				format( query, 255, "DELETE FROM `%s` WHERE DATE_SUB(CURDATE(),INTERVAL %d DAY) > time;", g_DBTableName, get_pcvar_num( CVAR_SAVE_Expire_Time ) );
+				format( query, 255, "DELETE FROM `%s` WHERE DATE_SUB(CURDATE(),INTERVAL %d DAY) > time;", g_DBTableName, get_pcvar_num( CVAR_SAVE_Days_Before_Delete ) );
 			}
 			else if ( iSQLtype == SQL_SQLITE )
 			{
 				// Timestamp format: 2003-09-12 12:21:42
 				// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42
-				format( query, 255, "DELETE FROM `%s` WHERE ((julianday(`time`) + %d) < julianday('now'))", g_DBTableName, get_pcvar_num( CVAR_SAVE_Expire_Time ) );
+				format( query, 255, "DELETE FROM `%s` WHERE ((julianday(`time`) + %d) < julianday('now'))", g_DBTableName, get_pcvar_num( CVAR_SAVE_Days_Before_Delete ) );
 			}
 
 			dbi_query(sql, query);
@@ -875,16 +845,13 @@ public XP_Prune()
 			}
 		}
 
-		log_amx("Database pruning successful, data older than %d days was removed", get_pcvar_num( CVAR_SAVE_Expire_Time ));
+		log_amx("Database pruning successful, data older than %d days was removed", get_pcvar_num( CVAR_SAVE_Days_Before_Delete ));
 	}
 }
 
 // Close the database connection
 public XP_CloseDB()
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_CloseDB", 0);
-	#endif
 
 	if ( get_pcvar_num( CVAR_SQL_Enabled ) )
 	{
@@ -899,9 +866,6 @@ public XP_CloseDB()
 // This function will save the XP for all players, but it will save the data every 0.1 seconds (reduce lag?)
 public XP_Save_All()
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Save_All", 0);
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE;
@@ -928,9 +892,6 @@ public XP_Save_All()
 // Helper function to call save for XP_Save_All
 public XP_Save_Helper( parm[1] )
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Save_Helper", parm[0]);
-	#endif
 
 	XP_Save( parm[0] );
 }
@@ -938,9 +899,6 @@ public XP_Save_Helper( parm[1] )
 // The id should be a unique number, so we know what function called it (useful for debugging)
 public XP_DBI_Error( Result:res, query[], id )
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_DBI_Error", id);
-	#endif
 
 	// Get the error message and log it
 	new szError[255];
@@ -959,9 +917,6 @@ public XP_DBI_Error( Result:res, query[], id )
 // Prepares text for database insertion
 public XP_AddSlashes( text[], len )
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_AddSlashes", 0);
-	#endif
 
 	replace_all( text, len, "'", "\'" );
 }
@@ -969,9 +924,6 @@ public XP_AddSlashes( text[], len )
 // Verifies that the database connection is ok
 public XP_Check_Connection()
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("XP_Check_Connection", 0);
-	#endif
 
 	if( sql < SQL_OK )
 	{
@@ -982,8 +934,8 @@ public XP_Check_Connection()
 		}
 		else if( iSQLAttempts >= SQL_ATTEMPTS )
 		{
-			get_pcvar_num( CVAR_SAVE_Enabled ) = 0
-			get_pcvar_num( CVAR_SQL_Enabled ) = 0
+			set_pcvar_num( CVAR_SAVE_Enabled, 0 )
+			set_pcvar_num( CVAR_SQL_Enabled, 0 )
 
 			log_amx("Unable to connect to the %s database after %d attempts, switching to short-term mode", SQLtype, iSQLAttempts)
 		}
@@ -997,9 +949,6 @@ public XP_Check_Connection()
 // Function from war3x thanks ryan!!!
 public XP_get_admin_flag()
 {
-#if ADVANCED_DEBUG
-	writeDebugInfo("XP_get_admin_flag", 0);
-#endif
 
     new szFlags[24];
     get_pcvar_string( CVAR_ADMIN_Flag, szFlags, 23 );

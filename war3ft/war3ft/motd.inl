@@ -1,7 +1,4 @@
 public MOTD_Itemsinfo(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("MOTD_Itemsinfo",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -27,7 +24,7 @@ public MOTD_Itemsinfo(id){
 		pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[0],id,"DOD_SHOPMENU_1")
 		pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[1],id,"DOD_SHOPMENU_2")
 	#endif
-	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[2],id,"SHOPMENU_3",iCvar[FT_CLAW],iCvar[FT_CLAW])
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[2],id,"SHOPMENU_3", get_pcvar_num( CVAR_ITEM_Claw ), get_pcvar_num( CVAR_ITEM_Claw ))
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[3],id,"SHOPMENU_4")
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[4],id,"SHOPMENU_5")
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[5],id,"SHOPMENU_6")
@@ -42,14 +39,11 @@ public MOTD_Itemsinfo(id){
 }
 
 public MOTD_Itemsinfo2(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("MOTD_Itemsinfo2",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if(iCvar[FT_RACES] < 5)
+	if(get_pcvar_num( CVAR_FT_Races ) < 5)
 		return PLUGIN_CONTINUE
 
 	new message[2048], title[128], pos = 0
@@ -82,9 +76,6 @@ public MOTD_Itemsinfo2(id){
 }
 
 public MOTD_War3help(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("war3_info",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -118,9 +109,6 @@ public MOTD_War3help(id){
 }
 
 public MOTD_Playerskills(id, saychat){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("MOTD_Playerskills",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -136,7 +124,7 @@ public MOTD_Playerskills(id, saychat){
 		iTotalRace[p_data[players[k]][P_RACE]]++
 	}
 
-	for(k=1;k<iCvar[FT_RACES]+1;k++){
+	for(k=1;k<get_pcvar_num( CVAR_FT_Races )+1;k++){
 		if( iTotalRace[k] > 0 )
 			lang_GetRaceName(k,id,race_name[k],64)
 	}
@@ -144,7 +132,7 @@ public MOTD_Playerskills(id, saychat){
 	if(saychat)
 		pos += formatex(message[pos], 2048-pos, "%s", MOTD_header)
 
-	for(k=1;k<(iCvar[FT_RACES]+1);k++){
+	for(k=1;k<(get_pcvar_num( CVAR_FT_Races )+1);k++){
 
 		if(iTotalRace[k] > 0){
 			
@@ -202,14 +190,11 @@ public MOTD_Playerskills(id, saychat){
 }
 
 public MOTD_Skillsinfo(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("MOTD_Skillsinfo",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if (0 < p_data[id][P_RACE] <= iCvar[FT_RACES]){
+	if (0 < p_data[id][P_RACE] <= get_pcvar_num( CVAR_FT_Races )){
 		new message[2048], szGame[8]
 		new race_skill[4][64], skill_description[4][256], race_name[64]
 		new pos = 0, i

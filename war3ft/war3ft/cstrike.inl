@@ -5,9 +5,6 @@
 #define MAX_CWEAPONS	6
 
 public on_SetSpecMode(id) {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_SetSpecMode",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -20,10 +17,6 @@ public on_SetSpecMode(id) {
 }
 
 public on_Spectate(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_Spectate",id)
-	#endif
-
 
 	if(!p_data[id][P_SPECMODE] || !warcraft3 || !SHOW_SPECTATE_INFO)
 		return PLUGIN_CONTINUE
@@ -43,9 +36,6 @@ public on_Spectate(id){
 }
 
 public on_EndRound(){
-	 #if ADVANCED_DEBUG
-		writeDebugInfo("on_EndRound",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -84,7 +74,7 @@ public on_EndRound(){
 		remove_task(TASK_BOMBTIMER)
 	
 	// Save XP at the end of the round?
-	if ( get_pcvar_num( CVAR_SAVE_Enabled ) && iCvar[SV_SAVE_END_ROUND] )
+	if ( get_pcvar_num( CVAR_SAVE_Enabled ) && get_pcvar_num( CVAR_SAVE_End_Round ) )
 	{
 		XP_Save_All();
 	}
@@ -95,9 +85,6 @@ public on_EndRound(){
 }
 
 public on_PlayerAction(){ 
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_PlayerAction",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -110,9 +97,6 @@ public on_PlayerAction(){
 	read_logargv(2,sAction,MAX_VAR_LENGTH) 
 	parse_loguser(sArg,sName,MAX_NAME_LENGTH,iUserId) 
 	id = find_player("k",iUserId)
-
-	if (!WAR3_CD_installed(id))
-		return PLUGIN_CONTINUE
 
 	if(id==0)						// Prevents the server from gaining XP
 		return PLUGIN_CONTINUE
@@ -140,19 +124,19 @@ public on_PlayerAction(){
 		
 		iXP = XP_give(id, iXP)
 					
-		if (get_pcvar_num( XP_Show_Objectives )){				
+		if (get_pcvar_num( CVAR_XP_Show_Objectives )){				
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_PLANTING_BOMB",sName,iXP)
 		}
 
 		for (new i=0; i<numplayers; ++i){		// Includes self
 			targetid=player[i]
 			get_user_origin(targetid, targetorigin)
-			if (get_distance(origin, targetorigin)<=get_pcvar_num(XP_Radius)){
-				iXP = get_pcvar_num( XP_Kill_Bomb_Planter ) + xpgiven[p_data[targetid][P_LEVEL]]	
+			if (get_distance(origin, targetorigin)<=get_pcvar_num(CVAR_XP_Radius)){
+				iXP = get_pcvar_num( CVAR_XP_Kill_Bomb_Planter ) + xpgiven[p_data[targetid][P_LEVEL]]	
 
 				iXP = XP_give(targetid, iXP)
 
-				if (get_pcvar_num( XP_Show_Objectives )){
+				if (get_pcvar_num( CVAR_XP_Show_Objectives )){
 					get_user_name(targetid,sName,31)					
 					client_print(targetid,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_SUPPORTING_BOMB",sName,iXP)
 				}				
@@ -177,19 +161,19 @@ public on_PlayerAction(){
 		
 		iXP = XP_give(id, iXP)
 				
-		if (get_pcvar_num( XP_Show_Objectives )){
+		if (get_pcvar_num( CVAR_XP_Show_Objectives )){
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_DEFUSING_BOMB",sName,iXP)
 		}
 
 		for (new i=0; i<numplayers; ++i){		// Includes self
 			targetid=player[i]
 			get_user_origin(targetid, targetorigin)
-			if (get_distance(origin, targetorigin) <= get_pcvar_num(XP_Radius)){
+			if (get_distance(origin, targetorigin) <= get_pcvar_num(CVAR_XP_Radius)){
 				
-				iXP = get_pcvar_num( XP_Defuse_Bomb ) +  xpgiven[p_data[targetid][P_LEVEL]]										
+				iXP = get_pcvar_num( CVAR_XP_Defuse_Bomb ) +  xpgiven[p_data[targetid][P_LEVEL]]										
 				iXP = XP_give(targetid, iXP)
 							
-				if (get_pcvar_num( XP_Show_Objectives )){
+				if (get_pcvar_num( CVAR_XP_Show_Objectives )){
 					get_user_name(targetid,sName,31)						
 					client_print(targetid,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_SUPPORT_BOMB_D",sName,iXP)
 				}					
@@ -200,11 +184,11 @@ public on_PlayerAction(){
 	else if (equal(sAction,"Begin_Bomb_Defuse_With_Kit")) { 
 
 		if((++p_data[id][P_DEFUSERINDEX] == 1) && (get_user_team(id) == 2) ){  // Team 1 = Terror, Team 2 = CT
-			new iXP = get_pcvar_num( XP_Defuse_Bomb ) + xpgiven[p_data[id][P_LEVEL]]
+			new iXP = get_pcvar_num( CVAR_XP_Defuse_Bomb ) + xpgiven[p_data[id][P_LEVEL]]
 
 			iXP = XP_give(id, iXP)
 				
-			if (get_pcvar_num( XP_Show_Objectives )){	
+			if (get_pcvar_num( CVAR_XP_Show_Objectives )){	
 				client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_ATTEMPT_BOMB_D",sName,iXP)
 			}
 		}               
@@ -217,7 +201,7 @@ public on_PlayerAction(){
 
 			iXP = XP_give(id, iXP)
 
-			if (get_pcvar_num( XP_Show_Objectives )){
+			if (get_pcvar_num( CVAR_XP_Show_Objectives )){
 				client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_ATTEMPT_BOMB_D_BARE",id,iXP)
 			}
 		}
@@ -230,7 +214,7 @@ public on_PlayerAction(){
 
 		iXP = XP_give(id, iXP)
 
-		if (get_pcvar_num( XP_Show_Objectives )){
+		if (get_pcvar_num( CVAR_XP_Show_Objectives )){
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_SPAWNING_WITH_BOMB",sName,iXP)
 		}
 	} 
@@ -243,7 +227,7 @@ public on_PlayerAction(){
 
 		iXP = XP_give(id, iXP)
 
-		if (get_pcvar_num( XP_Show_Objectives ))
+		if (get_pcvar_num( CVAR_XP_Show_Objectives ))
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_LOST_BOMB",sName,(-1*iXP))
 
    } 
@@ -255,7 +239,7 @@ public on_PlayerAction(){
 
 		iXP = XP_give(id, iXP)
 
-		if (get_pcvar_num( XP_Show_Objectives ))
+		if (get_pcvar_num( CVAR_XP_Show_Objectives ))
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_PICKING_UP_BOMB",sName,iXP)
 
 	} 
@@ -265,7 +249,7 @@ public on_PlayerAction(){
 
 		iXP = XP_give(id, iXP)
 				
-		if (get_pcvar_num( XP_Show_Objectives ))
+		if (get_pcvar_num( CVAR_XP_Show_Objectives ))
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_BEGINNING_HOSTAGE_RESCUE",sName,iXP)
 
 		g_hostageSaver = id
@@ -287,19 +271,19 @@ public on_PlayerAction(){
 			
 		iXP = XP_give(id, iXP)
 				
-		if (get_pcvar_num( XP_Show_Objectives ))
+		if (get_pcvar_num( CVAR_XP_Show_Objectives ))
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_RESCUING_HOSTAGE",sName,iXP)
 
 		// Supporters and self	
 		for (new i=0; i<numplayers; ++i){
 			targetid=player[i]
 			get_user_origin(targetid, targetorigin)
-			if (get_distance(origin, targetorigin)<=get_pcvar_num(XP_Radius)){
-				iXP = get_pcvar_num( XP_Rescue_Hostage ) +  xpgiven[p_data[targetid][P_LEVEL]]	
+			if (get_distance(origin, targetorigin)<=get_pcvar_num(CVAR_XP_Radius)){
+				iXP = get_pcvar_num( CVAR_XP_Rescue_Hostage ) +  xpgiven[p_data[targetid][P_LEVEL]]	
 
 				iXP = XP_give(targetid, iXP)
 
-				if (get_pcvar_num( XP_Show_Objectives )){
+				if (get_pcvar_num( CVAR_XP_Show_Objectives )){
 					get_user_name(targetid,sName,31)
 					client_print(targetid,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_SUPPORTING_HOSTAGE_RUN",sName,iXP)
 				}					
@@ -313,7 +297,7 @@ public on_PlayerAction(){
 
 		iXP = XP_give(id, iXP)
 
-		if (get_pcvar_num( XP_Show_Objectives ))
+		if (get_pcvar_num( CVAR_XP_Show_Objectives ))
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_KILLING_HOSTAGE",sName,(-1*iXP))		
 
 	} 
@@ -324,7 +308,7 @@ public on_PlayerAction(){
 		new iXP = xpgiven[p_data[id][P_LEVEL]]										
 		iXP = XP_give(id, iXP)
 
-		if (get_pcvar_num( XP_Show_Objectives )){
+		if (get_pcvar_num( CVAR_XP_Show_Objectives )){
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_SPAWN_AS_VIP",sName,iXP)
 		}
 		
@@ -335,11 +319,11 @@ public on_PlayerAction(){
 		new sNameVIP[MAX_NAME_LENGTH] 
 		get_user_name( g_vipID,sNameVIP,MAX_NAME_LENGTH) 		
 
-		new iXP = get_pcvar_num( XP_Kill_VIP ) + xpgiven[p_data[id][P_LEVEL]]	
+		new iXP = get_pcvar_num( CVAR_XP_Kill_VIP ) + xpgiven[p_data[id][P_LEVEL]]	
 
 		iXP = XP_give(id, iXP)
 
-		if (get_pcvar_num( XP_Show_Objectives ))
+		if (get_pcvar_num( CVAR_XP_Show_Objectives ))
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_KILLING_VIP",sName,iXP,sNameVIP) 	
 	} 
 	// VIP escaped 
@@ -360,19 +344,19 @@ public on_PlayerAction(){
 		iXP = XP_give(id, iXP)
 
 		new nName[31]			
-		if (get_pcvar_num( XP_Show_Objectives )){	
+		if (get_pcvar_num( CVAR_XP_Show_Objectives )){	
 			client_print(id,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_ESCAPED_VIP",sName,iXP)
 		}
 
 		for (new i=0; i<numplayers; ++i){		// Includes self
 			targetid=player[i]
 			get_user_origin(targetid, targetorigin)
-			if (get_distance(origin, targetorigin)<=get_pcvar_num(XP_Radius) && targetid!=id){
-				iXP = get_pcvar_num( XP_VIP_Escape ) + xpgiven[p_data[targetid][P_LEVEL]]
+			if (get_distance(origin, targetorigin)<=get_pcvar_num(CVAR_XP_Radius) && targetid!=id){
+				iXP = get_pcvar_num( CVAR_XP_VIP_Escape ) + xpgiven[p_data[targetid][P_LEVEL]]
 					
 				iXP = XP_give(targetid, iXP)
 
-				if (get_pcvar_num( XP_Show_Objectives )){
+				if (get_pcvar_num( CVAR_XP_Show_Objectives )){
 					get_user_name(targetid,nName,31)					
 					client_print(targetid,print_chat, "%s %L", g_MODclient, id,"AWARD_FOR_SUPPORTING_VIP",nName,iXP,sName)
 				}				
@@ -384,9 +368,6 @@ public on_PlayerAction(){
 }
 
 public on_TargetBombed() {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_TargetBombed",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -397,10 +378,6 @@ public on_TargetBombed() {
 }
 
 public _on_TargetBombed(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("_on_TargetBombed",0)
-	#endif
-
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -421,9 +398,6 @@ public _on_TargetBombed(){
 }
 
 public on_B4TargetBombed(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_B4TargetBombed",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -442,9 +416,6 @@ public on_B4TargetBombed(){
 
 
 public on_FreezeTimeComplete() {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_FreezeTimeComplete",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -466,9 +437,6 @@ public on_FreezeTimeComplete() {
 }
 
 public on_TerroristWin(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_TerroristWin",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -482,9 +450,9 @@ public on_TerroristWin(){
 			give = false
 
 		if(give){
-			new iXP = (get_pcvar_num(XP_Win_Round) + xpgiven[p_data[players[a]][P_LEVEL]])
+			new iXP = (get_pcvar_num(CVAR_XP_Win_Round) + xpgiven[p_data[players[a]][P_LEVEL]])
 			iXP = XP_give(players[a], iXP)
-			if (get_pcvar_num( XP_Show_Objectives )){				
+			if (get_pcvar_num( CVAR_XP_Show_Objectives )){				
 				client_print(players[a],print_chat, "%s %L", g_MODclient, players[a],"AWARD_FOR_WINNING_ROUND",iXP)
 			}				
 		}
@@ -493,9 +461,6 @@ public on_TerroristWin(){
 }
 
 public on_CTWin(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_CTWin",0)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -509,10 +474,10 @@ public on_CTWin(){
 			give = false
 
 		if(give){
-			new iXP = (get_pcvar_num(XP_Win_Round) + xpgiven[p_data[players[a]][P_LEVEL]])
+			new iXP = (get_pcvar_num(CVAR_XP_Win_Round) + xpgiven[p_data[players[a]][P_LEVEL]])
 			iXP = XP_give(players[a], iXP)
 
-			if (get_pcvar_num( XP_Show_Objectives )){			
+			if (get_pcvar_num( CVAR_XP_Show_Objectives )){			
 				client_print(players[a],print_chat, "%s %L", g_MODclient, players[a],"AWARD_FOR_WINNING_ROUND",iXP)
 			}				
 		}
@@ -521,9 +486,6 @@ public on_CTWin(){
 }
 
 public on_ArmorType(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_ArmorType",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -541,9 +503,6 @@ public on_ArmorType(id){
 }
 
 public on_WeapPickup(id){ 
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_WeapPickup",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE;
@@ -559,9 +518,6 @@ public on_WeapPickup(id){
 }
 
 public on_ShowStatus(id){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("on_ShowStatus",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -581,16 +537,16 @@ public on_ShowStatus(id){
 	// Used to show player icons
 	if (g_spritesEnabled){
 		if (warcraft3 && (get_user_team(id) == get_user_team(pid))){
-			if (iCvar[FT_RACE_ICONS] && p_data[id][P_SHOWICONS]){
+			if (get_pcvar_num( CVAR_ICON_Race ) && p_data[id][P_SHOWICONS]){
 				Create_TE_PLAYERATTACHMENT(id, pid, 55, g_sRace[p_data[pid][P_RACE]], 15)
 			}
 
-			if (iCvar[FT_LEVEL_ICONS] && p_data[id][P_SHOWICONS])
+			if (get_pcvar_num( CVAR_ICON_Level ) && p_data[id][P_SHOWICONS])
 				Create_TE_PLAYERATTACHMENT(id, pid, 35, g_sLevel[p_data[pid][P_LEVEL]], 16)
 		}
 	}
 
-	if ( iCvar[FT_SHOW_PLAYER] && !g_freezetime ){
+	if ( get_pcvar_num( CVAR_FT_Show_Player ) && !g_freezetime ){
 		// From miscstats.sma
 		new name[32], red = 0, blue = 0
 		new team = get_user_team(pid)
@@ -632,7 +588,7 @@ public on_ShowStatus(id){
 
 public on_HideStatus(id){
 
-	if ( iCvar[FT_SHOW_PLAYER] && !g_freezetime ){
+	if ( get_pcvar_num( CVAR_FT_Show_Player ) && !g_freezetime ){
 		set_hudmessage(0,0,0,0.0,0.0,0, 0.0, 0.01, 0.0, 0.0, 4) 
 		show_hudmessage(id,"")
 	}
@@ -640,7 +596,7 @@ public on_HideStatus(id){
 
 public WAR3_Mole_Fix(){
 
-	if ( iCvar[FT_QUERY_CLIENT] )
+	if ( get_pcvar_num( CVAR_FT_Query_Client ) )
 	{
 		new players[32], num
 		get_players(players, num, "c")

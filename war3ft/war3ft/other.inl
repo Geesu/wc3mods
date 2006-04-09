@@ -1,7 +1,4 @@
 public checkmap(){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("checkmap",0)
-	#endif
 
 	#if MOD ==0
 		new mapname[32]
@@ -23,9 +20,6 @@ public checkmap(){
 }
 
 public changeskin(id,reset){							// Function changes your skin for ITEM_MOLE and Chameleon
-	#if ADVANCED_DEBUG
-		writeDebugInfo("changeskin",id)
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -56,9 +50,6 @@ public changeskin(id,reset){							// Function changes your skin for ITEM_MOLE a
 }
 
 public getuserinput(parm[1]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("getuserinput",parm[0])
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -82,9 +73,6 @@ public getuserinput(parm[1]){
 
 public saveweapons(id)
 {
-	#if ADVANCED_DEBUG
-		writeDebugInfo("saveweapons",id)
-	#endif
 
 	#if MOD == 0
 		new CsArmorType:armortype
@@ -101,9 +89,6 @@ public saveweapons(id)
 }
 
 public glow_change(parm[]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("glow_change",parm[0])
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -160,9 +145,6 @@ public glow_change(parm[]){
 }
 
 public reset_maxspeed(parm[]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("reset_maxspeed",parm[0])
-	#endif
 
 	new enemy = parm[0]
 
@@ -177,9 +159,6 @@ public reset_maxspeed(parm[]){
 }
 
 public unholyspeed(parm[1]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("unholyspeed",parm[0])
-	#endif
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -227,9 +206,6 @@ public unholyspeed(parm[1]){
 }
 
 public func_spawn(parm[2]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("func_spawn",parm[0])
-	#endif
 
 	if (endround){
 		set_user_money(parm[0],get_user_money(parm[0])+itemcost2[0],1)
@@ -281,9 +257,6 @@ public func_spawn(parm[2]){
 
 
 public player_giveitems(parm[2]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("player_giveitems",parm[0])
-	#endif
 
 	new id = parm[0]
 
@@ -351,9 +324,6 @@ public player_giveitems(parm[2]){
 }
 
 public spawn_player(parm[2]){
-	#if ADVANCED_DEBUG
-		writeDebugInfo("spawn_player",parm[0])
-	#endif
 
 	new id = parm[0]
 
