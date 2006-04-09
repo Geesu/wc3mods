@@ -88,9 +88,9 @@ public on_EndRound(){
 		new iTeam = get_user_team( id );
 		if ( (iTeam == ALLIES && winner == 3) || (iTeam == AXIS && winner == 4) )
 		{
-			iXP = get_pcvar_num(XP_Win_Round) + xpgiven[p_data[id][P_LEVEL]];
+			iXP = get_pcvar_num(CVAR_XP_Win_Round) + xpgiven[p_data[id][P_LEVEL]];
 			iXPAwarded = XP_give(id, iXP);
-			if (get_pcvar_num( XP_Show_Objectives ))
+			if (get_pcvar_num( CVAR_XP_Show_Objectives ))
 			{
 				client_print(id,print_chat, "%s %L", g_MODclient, id, "AWARD_FOR_WINNING_ROUND", iXPAwarded);
 			}

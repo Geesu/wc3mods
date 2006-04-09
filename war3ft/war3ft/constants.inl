@@ -581,7 +581,7 @@ new g_MODclient[15] = "* [WAR3FT]"
 
 new iglow[33][4]
 new savedweapons[33][32]
-new bool:warcraft3
+new bool:warcraft3 = true
 new bool:endround
 
 new g_MOD = 0;

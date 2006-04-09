@@ -16,6 +16,7 @@ v2.3.3
 
  //CHEATING_DEATH_NOT_INSTALLED
  //RACE2_SKILL4_INFO_T
+ //MENU_TELEPORT_TO
 Add a disable orc nade map config file...
 Add a start/stop option
 

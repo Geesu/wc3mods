@@ -1,5 +1,5 @@
 
-#define TOTAL_MENUS 13
+#define TOTAL_MENUS 12
 
 
 // This is the list of menu titles that are in war3ft.txt
@@ -8,7 +8,6 @@ new const MENU_NAMES[TOTAL_MENUS][] =
 	"MENU_BUY_ITEM",
 	"MENU_BUY_ITEM2",
 	"MENU_SELECT_SKILL",
-	"MENU_TELEPORT_TO",
 	"MENU_SELECT_RACE",
 	"MENU_WAR3_FT_MENU",
 	"MENU_SKILLS_OPTIONS",
@@ -26,7 +25,6 @@ new const MENU_CALLBACK[TOTAL_MENUS][] =
 	"_menu_Shopmenu_One",
 	"_menu_Shopmenu_Two",
 	"_menu_Select_Skill",
-	"_menu_Teleport",
 	"_menu_Select_Race",
 	"_menu_War3menu",
 	"_menu_Skill_Options",
