@@ -1,194 +1,203 @@
 
 
 // Miscellaneous Configuration CVARs
-new CVAR_FT_Query_Client;
-new CVAR_FT_Show_Player;
-new CVAR_FT_Buy_Dead;
-new CVAR_FT_Buy_Time;
-new CVAR_FT_Buy_Zone;
-new CVAR_FT_Races;
-new CVAR_FT_Spec_Position;
-new CVAR_FT_Grenade_Protection;
+new CVAR_wc3_query_client;
+new CVAR_wc3_show_player;
+new CVAR_wc3_buy_dead;
+new CVAR_wc3_buy_time;
+new CVAR_wc3_buy_zone;
+new CVAR_wc3_races;
+new CVAR_wc3_spec_position;
+new CVAR_wc3_grenade_protection;
 
 // Icon CVARs
-new CVAR_ICON_Race;
-new CVAR_ICON_Level;
+new CVAR_wc3_race_icon;
+new CVAR_wc3_level_icon;
 
 // Admin CVARs
-new CVAR_ADMIN_Flag;
+new CVAR_wc3_admin_flag;
 
 // XP CVARs
-new CVAR_XP_Radius;
-new CVAR_XP_Win_Round;
-new CVAR_XP_Headshot;
-new CVAR_XP_Kill_Defuser;
-new CVAR_XP_VIP_Escape;
-new CVAR_XP_Kill_Bomb_Carrier;
-new CVAR_XP_Kill_Bomb_Planter;
-new CVAR_XP_Defuse_Bomb;
-new CVAR_XP_Rescue_Hostage;
-new CVAR_XP_Kill_Rescuer;
-new CVAR_XP_Kill_VIP;
-new CVAR_XP_Min_Players;
-new CVAR_XP_Multiplier;
-new CVAR_XP_Weapon_Multiplier;
-new CVAR_XP_Auto_Average;
-new CVAR_XP_Show_Kill_Objectives;
-new CVAR_XP_Show_Objectives;
+new CVAR_wc3_xp_radius;
+new CVAR_wc3_win_round;
+new CVAR_wc3_headshot;
+new CVAR_wc3_kill_defuser;
+new CVAR_wc3_vip_escape;
+new CVAR_wc3_kill_bomb_carrier;
+new CVAR_wc3_kill_bomb_planter;
+new CVAR_wc3_defuse_bomb;
+new CVAR_wc3_rescue_hostage;
+new CVAR_wc3_kill_rescuer;
+new CVAR_wc3_kill_vip;
+new CVAR_wc3_min_players;
+new CVAR_wc3_xp_multiplier;
+new CVAR_wc3_xp_weap_multiplier;
+new CVAR_wc3_xp_auto_average;
+new CVAR_wc3_show_kill_obj;
+new CVAR_wc3_show_objectives;
 
 // XP Saving CVARs
-new CVAR_SAVE_Enabled;
-new CVAR_SAVE_Pruning;
-new CVAR_SAVE_Days_Before_Delete;
-new CVAR_SQL_Save_By;
-new CVAR_SQL_Enabled;
+new CVAR_wc3_save_xp;
+new CVAR_wc3_save_pruning;
+new CVAR_wc3_days_before_delete;
+new CVAR_wc3_save_by;
+new CVAR_wc3_save_xp_sql;
 
 // Database CVARs
-new CVAR_SQL_tbname;
-new CVAR_SQL_dbhost;
-new CVAR_SQL_dbuser;
-new CVAR_SQL_dbpass;
-new CVAR_SQL_dbname;
-new CVAR_SAVE_End_Round;
+new CVAR_wc3_sql_tbname;
+new CVAR_wc3_sql_dbhost;
+new CVAR_wc3_sql_dbuser;
+new CVAR_wc3_sql_dbpass;
+new CVAR_wc3_sql_dbname;
+new CVAR_wc3_save_end_round;
 
 // Ultimate CVARs
-new CVAR_ULT_Entangle_Drop;
-new CVAR_ULT_Delay;
-new CVAR_ULT_Cooldown;
-new CVAR_ULT_Blink_Protection;
-new CVAR_ULT_Blink_Dizziness;
+new CVAR_wc3_entangle_drop;
+new CVAR_wc3_ult_delay;
+new CVAR_wc3_ult_cooldown;
+new CVAR_wc3_blink_protection;
+new CVAR_wc3_blink_dizziness;
 
 // Items
-new CVAR_ITEM_Tome;
-new CVAR_ITEM_Claw;
-new CVAR_ITEM_Health;
-new CVAR_ITEM_Frost;
-new CVAR_ITEM_Mask_Of_Death;
-new CVAR_ITEM_Cloak;
-new CVAR_ITEM_Sock;
-new CVAR_ITEM_Glove_Timer;
-new CVAR_ITEM_Glove_Orc_Damage;
-new CVAR_ITEM_Glove_Disable_KA;
+new CVAR_wc3_tome;
+new CVAR_wc3_claw;
+new CVAR_wc3_health;
+new CVAR_wc3_frost;
+new CVAR_wc3_mask;
+new CVAR_wc3_cloak;
+new CVAR_wc3_sock;
+new CVAR_wc3_glove_timer;
+new CVAR_wc3_glove_orc_damage;
+new CVAR_wc3_glove_disable_ka;
 
 // Chameleon
-new CVAR_CHAM_Random;
-new CVAR_CHAM_Skill1;
-new CVAR_CHAM_Skill2;
-new CVAR_CHAM_Skill3;
-new CVAR_CHAM_Ultimate;
+new CVAR_wc3_cham_random;
+new CVAR_wc3_cham_skill1;
+new CVAR_wc3_cham_skill2;
+new CVAR_wc3_cham_skill3;
+new CVAR_wc3_cham_ultimate;
 
 // Bot CVARs
-new CVAR_BOT_Buy_Item;
+new CVAR_wc3_bot_buy_item;
 
 // DOD CVARs
 #if MOD == 1
-	new CVAR_DOD_Start_Money;
+	new CVAR_wc3_dod_start_money;
 #endif
 #if MOD == 0
-	new CVAR_ITEM_Boots;
+	new CVAR_wc3_boots;
 #endif
 
 public CVAR_Init()
 {
-	
+	// Plugin Information CVARs
+
+	new szAmxCvar[32];
+	format( szAmxCvar, 31 , "%s %s", WC3NAME, WC3VERSION );
+
+									 register_cvar( "War3: Frozen Throne"		, WC3VERSION	, FCVAR_SERVER );
+									 register_cvar( "amx_war3_version"			, szAmxCvar		, FCVAR_SERVER );
+									 register_cvar( "amx_war3_date"				, WC3DATE		, FCVAR_SERVER );
+
+
 	// Admin CVARs
 
-	CVAR_ADMIN_Flag					= register_cvar("ADMIN_Flag"				, "m"							);
+	CVAR_wc3_admin_flag				= register_cvar( "wc3_admin_flag"				, "m"							);
 
 	// Miscellaneous Configuration CVARs
 
-	CVAR_FT_Query_Client			= register_cvar("FT_Query_Client"			, "1"							);
-	CVAR_FT_Show_Player				= register_cvar("FT_Show_Player"			, "1"							);
-	CVAR_FT_Buy_Dead				= register_cvar("FT_Buy_Dead"				, "1"							);
-	CVAR_FT_Buy_Time				= register_cvar("FT_Buy_Time"				, "0"							);
-	CVAR_FT_Buy_Zone				= register_cvar("FT_Buy_Zone"				, "0"							);
-	CVAR_FT_Races					= register_cvar("FT_Races"					, "8"			, FCVAR_SERVER	);
-	CVAR_FT_Spec_Position			= register_cvar("FT_Spec_Position"			, "0"							);
-	CVAR_FT_Grenade_Protection		= register_cvar("FT_Grenade_Protection"		, "0"							);
+	CVAR_wc3_query_client			= register_cvar( "wc3_query_client"			, "1"							);
+	CVAR_wc3_show_player			= register_cvar( "wc3_show_player"			, "1"							);
+	CVAR_wc3_buy_dead				= register_cvar( "wc3_buy_dead"				, "1"							);
+	CVAR_wc3_buy_time				= register_cvar( "wc3_buy_time"				, "0"							);
+	CVAR_wc3_buy_zone				= register_cvar( "wc3_buy_zone"				, "0"							);
+	CVAR_wc3_races					= register_cvar( "wc3_races"					, "8"			, FCVAR_SERVER	);
+	CVAR_wc3_spec_position			= register_cvar( "wc3_spec_position"			, "0"							);
+	CVAR_wc3_grenade_protection		= register_cvar( "wc3_grenade_protection"	, "0"							);
 
 	// Icon CVARs
 
-	CVAR_ICON_Race					= register_cvar("ICON_Race"					, "1"							);
-	CVAR_ICON_Level					= register_cvar("ICON_Level"				, "1"							);
+	CVAR_wc3_race_icon				= register_cvar( "wc3_race_icon"					, "1"							);
+	CVAR_wc3_level_icon				= register_cvar( "wc3_level_icon"				, "1"							);
 
 	// Saving CVARs
 
-	CVAR_SAVE_Enabled				= register_cvar("SAVE_Enabled"				, "0"			, FCVAR_SERVER	);
-	CVAR_SAVE_Pruning				= register_cvar("SAVE_Pruning"				, "0"			, FCVAR_SERVER	);
-	CVAR_SAVE_Days_Before_Delete	= register_cvar("SAVE_Expire_Time"			, "31"							);
-	CVAR_SAVE_End_Round				= register_cvar("SAVE_End_Round"			, "1"							);
-	CVAR_SQL_Enabled				= register_cvar("SQL_Enabled"				, "0"							);
-	CVAR_SQL_Save_By				= register_cvar("SQL_Save_By"				, "0"							);
+	CVAR_wc3_save_xp				= register_cvar( "wc3_save_xp"				, "0"			, FCVAR_SERVER	);
+	CVAR_wc3_save_pruning			= register_cvar( "wc3_save_pruning"				, "0"			, FCVAR_SERVER	);
+	CVAR_wc3_days_before_delete		= register_cvar( "SAVE_Expire_Time"			, "31"							);
+	CVAR_wc3_save_end_round			= register_cvar( "wc3_save_end_round"			, "1"							);
+	CVAR_wc3_save_xp_sql			= register_cvar( "wc3_save_xp_sql"				, "0"							);
+	CVAR_wc3_save_by				= register_cvar( "wc3_save_by"				, "0"							);
 
 
 	// Ultimate CVARs
 
-	CVAR_ULT_Entangle_Drop			= register_cvar( "ULT_Entangle_Drop"		, "0"							);
-	CVAR_ULT_Delay					= register_cvar( "ULT_Delay"				, "15.0"						);
-	CVAR_ULT_Cooldown				= register_cvar( "ULT_Cooldown"				, "35.0"						);
-	CVAR_ULT_Blink_Protection		= register_cvar( "ULT_Blink_Protection"		, "1"							);
-	CVAR_ULT_Blink_Dizziness		= register_cvar( "ULT_Blink_Dizziness"		, "0"							);
+	CVAR_wc3_entangle_drop			= register_cvar( "wc3_entangle_drop"		, "0"							);
+	CVAR_wc3_ult_delay				= register_cvar( "wc3_ult_delay"				, "15.0"						);
+	CVAR_wc3_ult_cooldown			= register_cvar( "wc3_ult_cooldown"				, "35.0"						);
+	CVAR_wc3_blink_protection		= register_cvar( "wc3_blink_protection"		, "1"							);
+	CVAR_wc3_blink_dizziness		= register_cvar( "wc3_blink_dizziness"		, "0"							);
 
 	// Item CVARs
 
-	CVAR_ITEM_Tome					= register_cvar( "ITEM_Tome"				, "50"							);
-	CVAR_ITEM_Claw					= register_cvar( "ITEM_Claw"				, "6"							);
-	CVAR_ITEM_Health				= register_cvar( "ITEM_Health"				, "15"							);
-	CVAR_ITEM_Frost					= register_cvar( "ITEM_Frost"				, "125"							);
-	CVAR_ITEM_Mask_Of_Death			= register_cvar( "ITEM_Mask_Of_Death"		, "0.3"							);
-	CVAR_ITEM_Cloak					= register_cvar( "ITEM_Cloak"				, "150"							);
-	CVAR_ITEM_Sock					= register_cvar( "ITEM_Sock"				, "0.5"							);
-	CVAR_ITEM_Glove_Timer			= register_cvar( "ITEM_Glove_Timer"			, "10"							);
-	CVAR_ITEM_Glove_Orc_Damage		= register_cvar( "ITEM_Glove_Orc_Damage"	, "0"							);
-	CVAR_ITEM_Glove_Disable_KA		= register_cvar( "ITEM_Glove_Disable_KA"	, "1"							);
+	CVAR_wc3_tome					= register_cvar( "wc3_tome"				, "50"							);
+	CVAR_wc3_claw					= register_cvar( "wc3_claw"				, "6"							);
+	CVAR_wc3_health					= register_cvar( "wc3_health"				, "15"							);
+	CVAR_wc3_frost					= register_cvar( "wc3_frost"				, "125"							);
+	CVAR_wc3_mask					= register_cvar( "wc3_mask"		, "0.3"							);
+	CVAR_wc3_cloak					= register_cvar( "wc3_cloak"				, "150"							);
+	CVAR_wc3_sock					= register_cvar( "wc3_sock"				, "0.5"							);
+	CVAR_wc3_glove_timer			= register_cvar( "wc3_glove_timer"			, "10"							);
+	CVAR_wc3_glove_orc_damage		= register_cvar( "wc3_glove_orc_damage"	, "0"							);
+	CVAR_wc3_glove_disable_ka		= register_cvar( "wc3_glove_disable_ka"	, "1"							);
 
 	// Chameleon Race CVARs
 
-	CVAR_CHAM_Random				= register_cvar( "CHAM_Random"				, "1"							);
-	CVAR_CHAM_Skill1				= register_cvar( "CHAM_Skill1"				, "1"							);
-	CVAR_CHAM_Skill2				= register_cvar( "CHAM_Skill2"				, "1"							);
-	CVAR_CHAM_Skill3				= register_cvar( "CHAM_Skill3"				, "1"							);
-	CVAR_CHAM_Ultimate				= register_cvar( "CHAM_Ultimate"			, "1"							);
+	CVAR_wc3_cham_random			= register_cvar( "wc3_cham_random"				, "1"							);
+	CVAR_wc3_cham_skill1			= register_cvar( "wc3_cham_skill1"				, "1"							);
+	CVAR_wc3_cham_skill2			= register_cvar( "wc3_cham_skill2"				, "1"							);
+	CVAR_wc3_cham_skill3			= register_cvar( "wc3_cham_skill3"				, "1"							);
+	CVAR_wc3_cham_ultimate			= register_cvar( "wc3_cham_ultimate"			, "1"							);
 	
 	// Database CVARs
 
-	CVAR_SQL_tbname					= register_cvar( "SQL_tbname"				, "war3users"					);
-	CVAR_SQL_dbhost					= register_cvar( "SQL_dbhost"				, "127.0.0.1"					);
-	CVAR_SQL_dbuser					= register_cvar( "SQL_dbuser"				, "root"						);
-	CVAR_SQL_dbpass					= register_cvar( "SQL_dbpass"				, ""							);
-	CVAR_SQL_dbname					= register_cvar( "SQL_dbname"				, "amx"							);
+	CVAR_wc3_sql_tbname				= register_cvar( "wc3_sql_tbname"				, "war3users"					);
+	CVAR_wc3_sql_dbhost				= register_cvar( "wc3_sql_dbhost"				, "127.0.0.1"					);
+	CVAR_wc3_sql_dbuser				= register_cvar( "wc3_sql_dbuser"				, "root"						);
+	CVAR_wc3_sql_dbpass				= register_cvar( "wc3_sql_dbpass"				, ""							);
+	CVAR_wc3_sql_dbname				= register_cvar( "wc3_sql_dbname"				, "amx"							);
 
 	// XP Modifier CVARs
 
-	CVAR_XP_Min_Players				= register_cvar( "XP_Min_Players"			, "2"							);
-	CVAR_XP_Radius 					= register_cvar( "XP_Radius"				, "750"							);
-	CVAR_XP_Win_Round				= register_cvar( "XP_Win_Round"				, "35"							);
-	CVAR_XP_Headshot				= register_cvar( "XP_Headshot"				, "9"							);
-	CVAR_XP_Kill_Defuser			= register_cvar( "XP_Kill_Defuser"			, "25"							);
-	CVAR_XP_VIP_Escape				= register_cvar( "XP_VIP_Escape"			, "30"							);
-	CVAR_XP_Kill_Bomb_Carrier		= register_cvar( "XP_Kill_Bomb_Carrier"		, "25"							);
-	CVAR_XP_Kill_Bomb_Planter		= register_cvar( "XP_Kill_Bomb_Planter"		, "15"							);
-	CVAR_XP_Defuse_Bomb				= register_cvar( "XP_Defuse_Bomb"			, "30"							);
-	CVAR_XP_Rescue_Hostage			= register_cvar( "XP_Rescue_Hostage"		, "25"							);
-	CVAR_XP_Kill_Rescuer			= register_cvar( "XP_Kill_Rescuer"			, "25"							);
-	CVAR_XP_Kill_VIP				= register_cvar( "XP_Kill_VIP"				, "25"							);
-	CVAR_XP_Show_Kill_Objectives	= register_cvar( "XP_Show_Kill_Objectives"	, "0"							);
-	CVAR_XP_Show_Objectives			= register_cvar( "XP_Show_Objectives"		, "1"							);
-	CVAR_XP_Multiplier				= register_cvar( "XP_Multiplier"			, "1.0"			, FCVAR_SERVER	);
-	CVAR_XP_Weapon_Multiplier		= register_cvar( "XP_Weapon_Multiplier"		, "1"							);
-	CVAR_XP_Auto_Average			= register_cvar( "CVAR_XP_Auto_Average"		, "0"							);
+	CVAR_wc3_min_players			= register_cvar( "wc3_min_players"			, "2"							);
+	CVAR_wc3_xp_radius 				= register_cvar( "wc3_xp_radius"				, "750"							);
+	CVAR_wc3_win_round				= register_cvar( "wc3_win_round"				, "35"							);
+	CVAR_wc3_headshot				= register_cvar( "wc3_headshot"				, "9"							);
+	CVAR_wc3_kill_defuser			= register_cvar( "wc3_kill_defuser"			, "25"							);
+	CVAR_wc3_vip_escape				= register_cvar( "wc3_vip_escape"			, "30"							);
+	CVAR_wc3_kill_bomb_carrier		= register_cvar( "wc3_kill_bomb_carrier"		, "25"							);
+	CVAR_wc3_kill_bomb_planter		= register_cvar( "wc3_kill_bomb_planter"		, "15"							);
+	CVAR_wc3_defuse_bomb			= register_cvar( "wc3_defuse_bomb"			, "30"							);
+	CVAR_wc3_rescue_hostage			= register_cvar( "wc3_rescue_hostage"		, "25"							);
+	CVAR_wc3_kill_rescuer			= register_cvar( "wc3_kill_rescuer"			, "25"							);
+	CVAR_wc3_kill_vip				= register_cvar( "wc3_kill_vip"				, "25"							);
+	CVAR_wc3_show_kill_obj			= register_cvar( "wc3_show_kill_obj"	, "0"							);
+	CVAR_wc3_show_objectives		= register_cvar( "wc3_show_objectives"		, "1"							);
+	CVAR_wc3_xp_multiplier			= register_cvar( "wc3_xp_multiplier"			, "1.0"			, FCVAR_SERVER	);
+	CVAR_wc3_xp_weap_multiplier		= register_cvar( "wc3_xp_weap_multiplier"		, "1"							);
+	CVAR_wc3_xp_auto_average		= register_cvar( "CVAR_wc3_xp_auto_average"		, "0"							);
 	
 	// Bot CVARs
 
-	CVAR_BOT_Buy_Item				= register_cvar("BOT_Buy_Item"				, "0.33"						);
+	CVAR_wc3_bot_buy_item			= register_cvar( "wc3_bot_buy_item"				, "0.33"						);
 
 	// MOD specific CVARs
 
 	#if MOD == 1
-		CVAR_DOD_Start_Money		= register_cvar("DOD_Start_Money"			, "800"							);
+		CVAR_wc3_dod_start_money	= register_cvar( "wc3_dod_start_money"			, "800"							);
 	#endif
 	#if MOD == 0
-		CVAR_ITEM_Boots				= register_cvar("ITEM_Boots"				, "275"							);
+		CVAR_wc3_boots				= register_cvar( "wc3_boots"				, "275"							);
 	#endif
 
 }
@@ -197,35 +206,35 @@ public CVAR_Init()
 public CVAR_Configure()
 {
 	// If there is no DBI module loaded than we will be unable to save XP with SQL
-	if ( !g_DBILoaded && get_pcvar_num( CVAR_SQL_Enabled ) )
+	if ( !g_DBILoaded && get_pcvar_num( CVAR_wc3_save_xp_sql ) )
 	{
-		set_pcvar_num( CVAR_SQL_Enabled, 0 );
+		set_pcvar_num( CVAR_wc3_save_xp_sql, 0 );
 	}
 	
 	// We will only change the bonus' if we are saving XP
-	if ( get_pcvar_num( CVAR_SAVE_Enabled ) )
+	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
 	{
 		new iXPDivisor = 5;
 	
-		set_pcvar_num( CVAR_XP_Win_Round			, (get_pcvar_num( CVAR_XP_Win_Round ) / iXPDivisor)			);
-		set_pcvar_num( CVAR_XP_Headshot				, (get_pcvar_num( CVAR_XP_Headshot ) / iXPDivisor)			);
-		set_pcvar_num( CVAR_XP_Kill_Defuser			, (get_pcvar_num( CVAR_XP_Kill_Defuser ) / iXPDivisor)		);
-		set_pcvar_num( CVAR_XP_VIP_Escape			, (get_pcvar_num( CVAR_XP_VIP_Escape ) / iXPDivisor)		);
-		set_pcvar_num( CVAR_XP_Kill_Bomb_Carrier	, (get_pcvar_num( CVAR_XP_Kill_Bomb_Carrier ) / iXPDivisor) );
-		set_pcvar_num( CVAR_XP_Kill_Bomb_Planter	, (get_pcvar_num( CVAR_XP_Kill_Bomb_Planter ) / iXPDivisor) );
-		set_pcvar_num( CVAR_XP_Defuse_Bomb			, (get_pcvar_num( CVAR_XP_Defuse_Bomb ) / iXPDivisor)		);
-		set_pcvar_num( CVAR_XP_Rescue_Hostage		, (get_pcvar_num( CVAR_XP_Rescue_Hostage ) / iXPDivisor)	);
-		set_pcvar_num( CVAR_XP_Kill_Rescuer			, (get_pcvar_num( CVAR_XP_Kill_Rescuer ) / iXPDivisor)		);
-		set_pcvar_num( CVAR_XP_Kill_VIP				, (get_pcvar_num( CVAR_XP_Kill_VIP ) / iXPDivisor)			);
-		set_pcvar_num( CVAR_ITEM_Tome				, (get_pcvar_num( CVAR_ITEM_Tome ) / iXPDivisor)			);
+		set_pcvar_num( CVAR_wc3_win_round			, (get_pcvar_num( CVAR_wc3_win_round ) / iXPDivisor)			);
+		set_pcvar_num( CVAR_wc3_headshot			, (get_pcvar_num( CVAR_wc3_headshot ) / iXPDivisor)				);
+		set_pcvar_num( CVAR_wc3_kill_defuser		, (get_pcvar_num( CVAR_wc3_kill_defuser ) / iXPDivisor)			);
+		set_pcvar_num( CVAR_wc3_vip_escape			, (get_pcvar_num( CVAR_wc3_vip_escape ) / iXPDivisor)			);
+		set_pcvar_num( CVAR_wc3_kill_bomb_carrier	, (get_pcvar_num( CVAR_wc3_kill_bomb_carrier ) / iXPDivisor)	);
+		set_pcvar_num( CVAR_wc3_kill_bomb_planter	, (get_pcvar_num( CVAR_wc3_kill_bomb_planter ) / iXPDivisor)	);
+		set_pcvar_num( CVAR_wc3_defuse_bomb			, (get_pcvar_num( CVAR_wc3_defuse_bomb ) / iXPDivisor)			);
+		set_pcvar_num( CVAR_wc3_rescue_hostage		, (get_pcvar_num( CVAR_wc3_rescue_hostage ) / iXPDivisor)		);
+		set_pcvar_num( CVAR_wc3_kill_rescuer		, (get_pcvar_num( CVAR_wc3_kill_rescuer ) / iXPDivisor)			);
+		set_pcvar_num( CVAR_wc3_kill_vip			, (get_pcvar_num( CVAR_wc3_kill_vip ) / iXPDivisor)				);
+		set_pcvar_num( CVAR_wc3_tome				, (get_pcvar_num( CVAR_wc3_tome ) / iXPDivisor)					);
 	}
 
 	// Configure the Chameleon Race
-	if ( !get_pcvar_num( CVAR_CHAM_Random ) )
+	if ( !get_pcvar_num( CVAR_wc3_cham_random ) )
 	{
-		race9Options[1] = get_pcvar_num( CVAR_CHAM_Skill1 );
-		race9Options[2] = get_pcvar_num( CVAR_CHAM_Skill2 );
-		race9Options[3] = get_pcvar_num( CVAR_CHAM_Skill3 );
-		race9Options[4] = get_pcvar_num( CVAR_CHAM_Ultimate );
+		race9Options[1] = get_pcvar_num( CVAR_wc3_cham_skill1 );
+		race9Options[2] = get_pcvar_num( CVAR_wc3_cham_skill2 );
+		race9Options[3] = get_pcvar_num( CVAR_wc3_cham_skill3 );
+		race9Options[4] = get_pcvar_num( CVAR_wc3_cham_ultimate );
 	}
 }

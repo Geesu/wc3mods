@@ -22,7 +22,7 @@ public Admin_GiveMole(id, level, cid){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-    if ( id && !( get_user_flags( id ) & XP_get_admin_flag() ) )
+    if ( id && !( get_user_flags( id ) & XP_get_wc3_admin_flag() ) )
 	{
 		client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MODclient)
 		return PLUGIN_HANDLED
@@ -89,7 +89,7 @@ public Admin_SaveXP(id, level, cid){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-    if ( id && !( get_user_flags( id ) & XP_get_admin_flag() ) )
+    if ( id && !( get_user_flags( id ) & XP_get_wc3_admin_flag() ) )
 	{
 		client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MODclient)
 		return PLUGIN_HANDLED
@@ -144,7 +144,7 @@ public Admin_GiveXP(id, level, cid){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-    if ( id && !( get_user_flags( id ) & XP_get_admin_flag() ) )
+    if ( id && !( get_user_flags( id ) & XP_get_wc3_admin_flag() ) )
 	{
 			client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MODclient)
 			return PLUGIN_HANDLED
@@ -211,7 +211,7 @@ public _Admin_GiveXP(id, target[], iXP){
 public ADMIN_wc3(id, level, cid)
 {
 
-    if ( id && !( get_user_flags( id ) & XP_get_admin_flag() ) )
+    if ( id && !( get_user_flags( id ) & XP_get_wc3_admin_flag() ) )
 	{
 			client_print( id, print_console, "%L", id, "YOU_HAVE_NO_ACCESS", g_MODclient );
 			return PLUGIN_HANDLED;
@@ -263,7 +263,6 @@ stock ADMIN_Print( id, const text[] = "", {Float,_}:...)
 	else
 	{
 		client_print( id, print_console, szFormattedText );
-
 	}
 
 	return;

@@ -73,6 +73,7 @@
 //#define TASK_WAR3CHECK		2015	// Checks the value of sv_warcraft3 every 5 seconds (better than checking it on every function call)
 #define TASK_SIPHON			2016
 #define TASK_ENDULTIMATE	2017
+#define TASK_BEFORE_ROUND_START		2018
 #define TASK_MOLEFIX		3000
 
 // From ../multiplayer source/dlls/player.cpp
@@ -191,20 +192,20 @@
 #define SHOPMENU_TWO			2
 
 #define ITEM_ANKH 1
-#define ITEM_BOOTS 2
-#define ITEM_CLAWS 3
-#define ITEM_CLOAK 4
+#define wc3_boots 2
+#define wc3_clawS 3
+#define wc3_cloak 4
 #define ITEM_MASK 5
 #define ITEM_NECKLACE 6
-#define ITEM_FROST 7
-#define ITEM_HEALTH 8
-#define ITEM_TOME 9
+#define wc3_frost 7
+#define wc3_health 8
+#define wc3_tome 9
 
 #define ITEM_SCROLL 1
 #define ITEM_PROTECTANT 2
 #define ITEM_HELM 3
 #define ITEM_AMULET 4
-#define ITEM_SOCK 5
+#define wc3_sock 5
 #define ITEM_GLOVES 6
 #define ITEM_RING 7
 #define ITEM_CHAMELEON 8
@@ -341,7 +342,7 @@
 	#define	P_HECOUNT				15		// Number of HE's bought that round
 	#define P_SMOKECOUNT			16		// Number of smoke grenades bought that round
 	#define P_ARMORONDEATH			17		// Amount of armor the player had when he/she died
-	#define P_SAVEDNUMBER			19
+//	#define P_SAVEDNUMBER			19
 
 	// Used by various ultimates/abilities
 	#define P_TELEMENU				19		// Used by teleport
@@ -398,7 +399,7 @@
 	#define PB_SLOWED				23
 	#define PB_ISSEARCHING			24
 	#define PB_LIGHTNINGHIT			25
-//	#define PB_HEALINGHIT			26
+	#define PB_INVIS				26
 	#define PB_ULTIMATEUSED			27
 	#define PB_HEXED				28		// Is the player hexed? (All abilities are disabled)
 	#define PB_SILENT				29
@@ -407,8 +408,8 @@
 	#define PB_JUSTJOINED			30
 	#define PB_ISCONNECTED			31
 	
-//	#define PB_BUYZONE				33		// Player in buyzone?
-	#define PB_RENDER				34
+	//#define PB_RENDERED				33
+	#define PB_CAN_RENDER			34
 	
 	#define PB_IMMUNE_HEADSHOTS		35		// Player immune to headshots?
 
@@ -454,7 +455,7 @@ new SOUND_TELEPORT[64]
 new SOUND_BLINK[64]
 new SOUND_LEVELUP[64]
 new SOUND_PICKUPITEM[64]
-new SOUND_ITEM_TOME[64]
+new SOUND_wc3_tome[64]
 new SOUND_ULTIMATESCAN[64]
 new SOUND_ULTIMATEREADY[64]
 new SOUND_HEX[64]
@@ -493,39 +494,44 @@ new g_menuPlayersNum[33]
 new g_menuOption[33]
 new g_menuSettings[33]
 
-#if MOD == 0	
-	new gmsgStatusText
-	new gmsgBarTime
+new gmsgStatusText
+new gmsgBarTime
 
-	new Float:g_fBombTime
-	new g_hostageSaver
-	new g_bombCarrier
-	new g_bombDefuser
-	new g_vipID = 0
-	new bool:g_freezetime = false
-	new g_freezecalled = 0
-	new bool:g_buyTime
-	new bool:g_buyCalled = false
-	new bool:g_givePistol
-	new bool:g_giveHE
-	
-	new PhoenixFound[2]
-	new CTSkins[5][]={"sas","gsg9","urban","gign","spetsnaz"}
-	new TSkins[5][]={"arctic","leet","guerilla","terror","militia"}
-	new spawnEntString[2][] = {"info_player_start","info_player_deathmatch"}
+/*  START - CSTRIKE VARIABLES */
+new Float:g_fBombTime
+new g_hostageSaver
+new g_bombCarrier
+new g_bombDefuser
+new g_vipID = 0
+new bool:g_freezetime = false
+new g_freezecalled = 0
+new bool:g_buyTime
+new bool:g_buyCalled = false
+new bool:g_givePistol
+new bool:g_giveHE
 
-	new CsArmorType:g_ArmorType[33];
+new PhoenixFound[2]
+new CTSkins[5][]={"sas","gsg9","urban","gign","spetsnaz"}
+new TSkins[5][]={"arctic","leet","guerilla","terror","militia"}
+#if MOD == 0
+new spawnEntString[2][] = {"info_player_start","info_player_deathmatch"}
 #endif
+
+new CsArmorType:g_ArmorType[33];
+/*  END - CSTRIKE VARIABLES */
+
+/*  START - DOD VARIABLES */
+//new gmsgObject
+//new gmsgClientAreas
+new gmsgHudText
+//new AlliedSkins[2][]={"us-inf","us-para"}
+//new AxisSkins[2][]={"axis-inf","axis-para"}
 #if MOD == 1
-	//new gmsgObject
-	//new gmsgClientAreas
-	new gmsgHudText
-	//new AlliedSkins[2][]={"us-inf","us-para"}
-	//new AxisSkins[2][]={"axis-inf","axis-para"}
-	new spawnEntString[2][] = {"info_player_axis","info_player_allies"}
-	
-	new iReincarnation[33][3];
+new spawnEntString[2][] = {"info_player_axis","info_player_allies"}
 #endif
+
+new iReincarnation[33][3];
+/*  END - DOD VARIABLES */
 
 // Used with helm
 new Float:fLastShotFired[33];
@@ -583,6 +589,9 @@ new iglow[33][4]
 new savedweapons[33][32]
 new bool:warcraft3 = true
 new bool:endround
+
+
+new g_PlayerWeapons[33][32];			// Stores player weapons after they have been purchased
 
 new g_MOD = 0;
 

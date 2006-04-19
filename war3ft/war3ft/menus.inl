@@ -7,17 +7,17 @@ public menu_Shopmenu_One(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if(!get_pcvar_num( CVAR_FT_Buy_Dead ) && !is_user_alive(id)){
+	if(!get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
 		return PLUGIN_HANDLED
 	}
 	#if MOD == 0
-		else if(get_pcvar_num( CVAR_FT_Buy_Time ) && !g_buyTime){
+		else if(get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime){
 			new Float:thetime = get_cvar_float("mp_buytime")*60.0
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_HANDLED
 		}
-		else if(get_pcvar_num( CVAR_FT_Buy_Zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
+		else if(get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_HANDLED
 		}
@@ -53,17 +53,17 @@ public _menu_Shopmenu_One(id, key){
 	if (key==9)
 		return PLUGIN_CONTINUE
 
-	if(!get_pcvar_num( CVAR_FT_Buy_Dead ) && !is_user_alive(id)){
+	if(!get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
 		return PLUGIN_CONTINUE
 	}
 	#if MOD == 0
-		else if(get_pcvar_num( CVAR_FT_Buy_Time ) && !g_buyTime){
+		else if(get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime){
 			new Float:thetime = get_cvar_float("mp_buytime")*60.0
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_CONTINUE
 		}
-		else if(get_pcvar_num( CVAR_FT_Buy_Zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
+		else if(get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_CONTINUE
 		}
@@ -71,12 +71,12 @@ public _menu_Shopmenu_One(id, key){
 
 	new iShopmenuItem = key+1
 
-	if (!is_user_alive(id) && (iShopmenuItem==ITEM_BOOTS || iShopmenuItem==ITEM_CLAWS || iShopmenuItem==ITEM_CLOAK || iShopmenuItem==ITEM_MASK || iShopmenuItem==ITEM_NECKLACE || iShopmenuItem==ITEM_FROST || iShopmenuItem==ITEM_HEALTH)){
+	if (!is_user_alive(id) && (iShopmenuItem==wc3_boots || iShopmenuItem==wc3_clawS || iShopmenuItem==wc3_cloak || iShopmenuItem==ITEM_MASK || iShopmenuItem==ITEM_NECKLACE || iShopmenuItem==wc3_frost || iShopmenuItem==wc3_health)){
 		client_print(id,print_center,"%L",id,"NOT_PURCHASE_WHEN_DEAD")
 		return PLUGIN_CONTINUE
 	}
 
-	if(iShopmenuItem==p_data[id][P_ITEM] && iShopmenuItem!=ITEM_TOME){
+	if(iShopmenuItem==p_data[id][P_ITEM] && iShopmenuItem!=wc3_tome){
 		client_print(id,print_center,"%L",id,"ALREADY_OWN_THAT_ITEM")
 
 		return PLUGIN_CONTINUE
@@ -86,14 +86,14 @@ public _menu_Shopmenu_One(id, key){
 
 		return PLUGIN_CONTINUE
 	}
-	else if (iShopmenuItem==ITEM_TOME){
+	else if (iShopmenuItem==wc3_tome){
 		set_user_money(id,get_user_money(id)-itemcost[key],1)
 
 	#if MOD == 0
-		XP_give(id, get_pcvar_num( CVAR_ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]])
+		XP_give(id, get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]])
 	#endif
 	#if MOD == 1
-		XP_give(id, 2 * (get_pcvar_num( CVAR_ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]]))
+		XP_give(id, 2 * (get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]]))
 	#endif
 		emit_sound(id,CHAN_STATIC, "warcraft3/Tomes.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)
 
@@ -110,16 +110,16 @@ public _menu_Shopmenu_One(id, key){
 
 		// Remove health bonus after buying new item
 
-		if (p_data[id][P_ITEM]==ITEM_HEALTH)
-			set_user_health(id,get_user_health(id)-get_pcvar_num( CVAR_ITEM_Health ))
+		if (p_data[id][P_ITEM]==wc3_health)
+			set_user_health(id,get_user_health(id)-get_pcvar_num( CVAR_wc3_health ))
 
 		p_data[id][P_ITEM]=iShopmenuItem
 
 
 		// Give health bonus for buying periapt of health
 
-		if (p_data[id][P_ITEM]==ITEM_HEALTH)		
-			set_user_health(id,get_user_health(id)+get_pcvar_num( CVAR_ITEM_Health ))
+		if (p_data[id][P_ITEM]==wc3_health)		
+			set_user_health(id,get_user_health(id)+get_pcvar_num( CVAR_wc3_health ))
 
 
 		// Display a message regarding what the item does
@@ -144,20 +144,20 @@ public menu_Shopmenu_Two(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if(get_pcvar_num( CVAR_FT_Races ) < 5)
+	if(get_pcvar_num( CVAR_wc3_races ) < 5)
 		return PLUGIN_HANDLED
 
-	if(!get_pcvar_num( CVAR_FT_Buy_Dead ) && !is_user_alive(id)){
+	if(!get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
 		return PLUGIN_HANDLED
 	}
 	#if MOD == 0
-		else if(get_pcvar_num( CVAR_FT_Buy_Time ) && !g_buyTime){
+		else if(get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime){
 			new Float:thetime = get_cvar_float("mp_buytime")*60.0
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_HANDLED
 		}
-		else if(get_pcvar_num( CVAR_FT_Buy_Zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
+		else if(get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_HANDLED
 		}
@@ -198,17 +198,17 @@ public _menu_Shopmenu_Two(id, key){
 	if (key==9)
 		return PLUGIN_CONTINUE
 
-	if(!get_pcvar_num( CVAR_FT_Buy_Dead ) && !is_user_alive(id)){
+	if(!get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
 		return PLUGIN_CONTINUE
 	}
 	#if MOD == 0
-		else if(get_pcvar_num( CVAR_FT_Buy_Time ) && !g_buyTime){
+		else if(get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime){
 			new Float:thetime = get_cvar_float("mp_buytime")*60.0
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_CONTINUE
 		}
-		else if(get_pcvar_num( CVAR_FT_Buy_Zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
+		else if(get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_CONTINUE
 		}
@@ -216,7 +216,7 @@ public _menu_Shopmenu_Two(id, key){
 
 	new iShopmenuItem = key+1
 
-	if (!is_user_alive(id) && (iShopmenuItem==ITEM_PROTECTANT || iShopmenuItem==ITEM_HELM || iShopmenuItem==ITEM_HELM || iShopmenuItem==ITEM_AMULET || iShopmenuItem==ITEM_SOCK || iShopmenuItem==ITEM_GLOVES || iShopmenuItem==ITEM_RING || iShopmenuItem==ITEM_CHAMELEON)){
+	if (!is_user_alive(id) && (iShopmenuItem==ITEM_PROTECTANT || iShopmenuItem==ITEM_HELM || iShopmenuItem==ITEM_HELM || iShopmenuItem==ITEM_AMULET || iShopmenuItem==wc3_sock || iShopmenuItem==ITEM_GLOVES || iShopmenuItem==ITEM_RING || iShopmenuItem==ITEM_CHAMELEON)){
 		client_print(id,print_center,"%L",id,"NOT_PURCHASE_WHEN_DEAD")
 		return PLUGIN_CONTINUE
 	}
@@ -229,7 +229,7 @@ public _menu_Shopmenu_Two(id, key){
 		client_print(id,print_center,"%L",id,"NOT_PURCHASE_AFTER_ENDROUND")
 		return PLUGIN_CONTINUE
 	}
-	else if(!g_giveHE && get_pcvar_num( CVAR_ITEM_Glove_Disable_KA ) && iShopmenuItem==ITEM_GLOVES){
+	else if(!g_giveHE && get_pcvar_num( CVAR_wc3_glove_disable_ka ) && iShopmenuItem==ITEM_GLOVES){
 		client_print(id,print_center,"%L",id,"FLAMING_GLOVES_RESTRICTED_ON_THIS_MAP")
 		return PLUGIN_CONTINUE
 	}
@@ -262,7 +262,7 @@ public _menu_Shopmenu_Two(id, key){
 			if(task_exists(TASK_ITEM_GLOVES+id))
 				remove_task(TASK_ITEM_GLOVES+id)
 		}
-		else if (p_data[id][P_ITEM2] == ITEM_SOCK)
+		else if (p_data[id][P_ITEM2] == wc3_sock)
 			set_user_gravity(id, 1.0)
 
 
@@ -277,8 +277,8 @@ public _menu_Shopmenu_Two(id, key){
 		else if (p_data[id][P_ITEM2]==ITEM_AMULET){
 			p_data_b[id][PB_SILENT] = true
 		}
-		else if (p_data[id][P_ITEM2] == ITEM_SOCK)
-			set_user_gravity(id, get_pcvar_float( CVAR_ITEM_Sock ))
+		else if (p_data[id][P_ITEM2] == wc3_sock)
+			set_user_gravity(id, get_pcvar_float( CVAR_wc3_sock ))
 #if MOD == 0
 		else if (p_data[id][P_ITEM2]==ITEM_SCROLL && !is_user_alive(id) && !endround){	
 			if(get_user_team(id)==TS || get_user_team(id)==CTS){
@@ -295,7 +295,7 @@ public _menu_Shopmenu_Two(id, key){
 		else if (p_data[id][P_ITEM2]==ITEM_GLOVES){
 			//new parm[2]
 			//parm[0]=id
-			//parm[1] = get_pcvar_num( CVAR_ITEM_Glove_Timer )
+			//parm[1] = get_pcvar_num( CVAR_wc3_glove_timer )
 			Item_Glove_Give(id)
 		}
 		else if (p_data[id][P_ITEM2]==ITEM_RING){
@@ -458,7 +458,7 @@ public _menu_Select_Skill(id,key){
 		new parm[1]
 		parm[0] = id
 
-		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_ULT_Cooldown )
+		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 		_Ultimate_Delay(parm)
 	}
 	else if ( key == KEY_4 && !p_data[id][P_ULTIMATEDELAY] && !p_data_b[id][PB_ULTIMATEUSED]){
@@ -491,6 +491,9 @@ public _menu_Select_Skill(id,key){
 			set_user_health(id,get_user_health(id) + (p_devotion[2] - p_devotion[1]))
 	}
 
+	// Check to see if they should be more invisible
+	SHARED_INVIS_Set( id );
+
 	return PLUGIN_HANDLED
 }
 
@@ -508,14 +511,14 @@ public menu_Select_Race(id, racexp[9]){
 	new keys
 	format(selectrace, 127, "%L",id ,"MENU_SELECT_RACE")
 
-	for(i=1;i<(get_pcvar_num( CVAR_FT_Races )+1);i++){
+	for(i=1;i<(get_pcvar_num( CVAR_wc3_races )+1);i++){
 		lang_GetRaceName(i,id,race_name[i],RACE_NAME_LENGTH_F)
 	}
 
-	if(get_pcvar_num( CVAR_SAVE_Enabled )){
+	if(get_pcvar_num( CVAR_wc3_save_xp )){
 		pos += format(menu_msg[pos], 512-pos, "%L",id,"SELECT_RACE_TITLE", selectrace)
 
-		for(i=1; i<(get_pcvar_num( CVAR_FT_Races )+1);i++){
+		for(i=1; i<(get_pcvar_num( CVAR_wc3_races )+1);i++){
 			if(i==5){
 				new selecthero[128]
 				format(selecthero, 127, "%L",id ,"SELECT_HERO")
@@ -535,7 +538,7 @@ public menu_Select_Race(id, racexp[9]){
 	else{
 		pos += format(menu_msg[pos], 512-pos, "%s^n^n", selectrace)
 
-		for(i=1; i<(get_pcvar_num( CVAR_FT_Races )+1);i++){
+		for(i=1; i<(get_pcvar_num( CVAR_wc3_races )+1);i++){
 			if(i==5){
 				new selecthero[128]
 				format(selecthero, 127, "%L",id ,"SELECT_HERO")
@@ -556,12 +559,12 @@ public menu_Select_Race(id, racexp[9]){
 
 	keys |= (1<<(i-1))
 
-	if(get_pcvar_num( CVAR_FT_Races ) == 9)
+	if(get_pcvar_num( CVAR_wc3_races ) == 9)
 		i = 0
 
 	pos += format(menu_msg[pos], 512-pos, "%L",id,"SELECT_RACE_FOOTER", i)
 
-	if(get_pcvar_num( CVAR_FT_Races ) != 9){	// Add a cancel button
+	if(get_pcvar_num( CVAR_wc3_races ) != 9){	// Add a cancel button
 		keys |= (1<<9)
 		pos += format(menu_msg[pos], 512-pos, "^n\w0. %L", id, "WORD_CANCEL")
 	}
@@ -577,7 +580,7 @@ public _menu_Select_Race(id,key){
 		return PLUGIN_CONTINUE
 	
 	// User pressed 0 (cancel)
-	if( get_pcvar_num( CVAR_FT_Races ) < 9 && key-1 == get_pcvar_num( CVAR_FT_Races ) )
+	if( get_pcvar_num( CVAR_wc3_races ) < 9 && key-1 == get_pcvar_num( CVAR_wc3_races ) )
 	{
 		return PLUGIN_HANDLED;
 	}
@@ -587,13 +590,13 @@ public _menu_Select_Race(id,key){
 
 	new race, autoselectkey
 
-	if(get_pcvar_num( CVAR_FT_Races ) == 9)
+	if(get_pcvar_num( CVAR_wc3_races ) == 9)
 		autoselectkey = KEY_0
 	else
-		autoselectkey = get_pcvar_num( CVAR_FT_Races )
+		autoselectkey = get_pcvar_num( CVAR_wc3_races )
 
 	if (key == autoselectkey)
-		race = random_num(1,get_pcvar_num( CVAR_FT_Races ))
+		race = random_num(1,get_pcvar_num( CVAR_wc3_races ))
 	else
 		race = (key+1)
 
@@ -764,7 +767,7 @@ public menu_Admin_Options(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-    if ( id && !( get_user_flags( id ) & XP_get_admin_flag() ) )
+    if ( id && !( get_user_flags( id ) & XP_get_wc3_admin_flag() ) )
 	{
 			client_print(id,print_center,"%s %L",g_MODclient, id,"YOU_HAVE_NO_ACCESS")
 			return PLUGIN_HANDLED

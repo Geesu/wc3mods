@@ -152,7 +152,7 @@ Ultimate_Blink(id){
 		new coolparm[2]
 		coolparm[0] = id
 
-		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_ULT_Cooldown )
+		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 
 		_Ultimate_Delay(coolparm)
 
@@ -177,7 +177,7 @@ Ultimate_Blink(id){
 	// Stop bomb planting...
 	client_cmd(id,"-use")
 
-	if ( get_pcvar_num( CVAR_ULT_Blink_Protection ) ){
+	if ( get_pcvar_num( CVAR_wc3_blink_protection ) ){
 		new mapname[32]
 		get_mapname(mapname,32) 
 		if (equali(mapname,"as_oilrig")){
@@ -258,7 +258,7 @@ public _Ultimate_Blink_Controller(parm[]){
 	}
 	else{
 		
-		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_ULT_Cooldown )
+		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 		_Ultimate_Delay(coolparm)
 
 		// Sprays white bubbles everywhere
@@ -271,7 +271,7 @@ public _Ultimate_Blink_Controller(parm[]){
 			Create_TE_SPRITETRAIL(origin2, origin, g_sFlare, 30, 10, 1, 50, 10)
 
 		// Flash the player
-		if( get_pcvar_num( CVAR_ULT_Blink_Dizziness ) == 1 )
+		if( get_pcvar_num( CVAR_wc3_blink_dizziness ) == 1 )
 			Create_ScreenFade(id, (1<<15), (1<<10), (1<<12), 0, 0, 255, 180)
 		else
 			Create_ScreenFade(id, (1<<15), (1<<10), (1<<12), 255, 255, 255, 255)			
@@ -457,7 +457,7 @@ public lightsearchtarget(parm[2]){
 		new cooldownparm[2]
 		cooldownparm[0]=id
 
-		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_ULT_Cooldown )
+		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 		_Ultimate_Delay(cooldownparm)
 	}
 	else{
@@ -618,7 +618,7 @@ public searchtarget(parm[2]){
 		set_user_maxspeed(enemy,1.0)			
 		waitstop(waitparm)
 		
-		if( get_pcvar_num( CVAR_ULT_Entangle_Drop ) )
+		if( get_pcvar_num( CVAR_wc3_entangle_drop ) )
 		{
 			new ammo, clip
 			new weapon = get_user_weapon(enemy, ammo, clip)
@@ -631,7 +631,7 @@ public searchtarget(parm[2]){
 		new cooldownparm[2]
 		cooldownparm[0]=id
 
-		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_ULT_Cooldown )
+		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 		_Ultimate_Delay(cooldownparm)	
 	}
 	else{
@@ -781,7 +781,7 @@ Ultimate_FlameStrike(id){
       new parm[2]
       parm[0]=id
 
-      p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_ULT_Cooldown )
+      p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
       _Ultimate_Delay(parm)
    }
    new speed1 = 160 
@@ -1013,7 +1013,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 		p_data_b[id][PB_GODMODE] = true
 
 		/* Do not allow other renderings to take place, like switching to invis, etc... */
-		p_data_b[id][PB_RENDER] = false
+		p_data_b[id][PB_CAN_RENDER] = false
 
 		set_user_health(id, get_user_health(id) + 2048)
 
@@ -1032,7 +1032,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 	}
 	else{
 		/* Allow other renderings to take place now */
-		p_data_b[id][PB_RENDER] = true
+		p_data_b[id][PB_CAN_RENDER] = true
 
 		set_user_rendering(id)
 
@@ -1043,7 +1043,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 	
 		Ultimate_Icon(id,ICON_HIDE)
 
-		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_ULT_Cooldown )
+		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 		_Ultimate_Delay(parm)
 	}
 
@@ -1117,7 +1117,7 @@ Ultimate_Vengeance(id){
 		new parm[2]
 		parm[0]=id
 		
-		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_ULT_Cooldown )
+		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 		_Ultimate_Delay(parm)
 	}
 }
@@ -1230,7 +1230,7 @@ public drawfunnels(parm[]){
 			new cooldownparm[2]
 			cooldownparm[0]=caster
 			
-			p_data[caster][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_ULT_Cooldown )
+			p_data[caster][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 			_Ultimate_Delay(cooldownparm)
 		}
 	}
@@ -1324,7 +1324,7 @@ public Ultimate_Icon(id, value){
 		case 1:format(string,31,"dmg_rad"),			r=255,	g=0,	b=0			// Undead
 		case 2:format(string,31,"item_longjump"),	r=0,	g=120,	b=120		// Human
 		case 3:format(string,31,"dmg_shock"),		r=255,	g=255,	b=255		// Orc
-		case 4:format(string,31,"item_healthkit"),	r=0,	g=0,	b=255		// Night Elf
+		case 4:format(string,31,"wc3_healthkit"),	r=0,	g=0,	b=255		// Night Elf
 		case 5:format(string,31,"dmg_heat"),		r=255,	g=0,	b=0			// Blood Mage
 		case 6:format(string,31,"suit_full"),		r=0,	g=200,	b=200		// Shadow Hunter
 		case 7:format(string,31,"cross"),			r=255,	g=0,	b=0			// Warden
@@ -1349,7 +1349,7 @@ public Ultimate_Clear_Icons(id){
 		if(id==0)
 			return PLUGIN_CONTINUE
 
-		new string[8][32] = {"dmg_rad","item_longjump","dmg_shock","item_healthkit","dmg_heat","suit_full","cross","dmg_gas"}
+		new string[8][32] = {"dmg_rad","item_longjump","dmg_shock","wc3_healthkit","dmg_heat","suit_full","cross","dmg_gas"}
 		for(new i=0;i<8;i++){
 			Create_StatusIcon(id, ICON_HIDE, string[i], 0, 0, 0)
 		}

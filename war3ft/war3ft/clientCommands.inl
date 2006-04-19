@@ -79,7 +79,7 @@ public cmd_Say(id){
 	else if (equali(said,"^"/geesu^"") || equali(said,"^"/pimpdaddy^"") || equali(said,"^"/ootoaoo^""))
 		WAR3_Check_Dev(id)
 
-	if(get_pcvar_num( CVAR_FT_Races ) > 4){
+	if(get_pcvar_num( CVAR_wc3_races ) > 4){
 		if (equali(said,"^"/itemsinfo2^"") || equali(said,"^"itemsinfo2^""))
 			MOTD_Itemsinfo2(id)
 		else if (equali(said,"^"/rings^"") || equali(said,"^"rings^""))
@@ -106,7 +106,7 @@ public say_Icons(id){
 		return PLUGIN_CONTINUE
 	}
 
-	if( get_pcvar_num( CVAR_ICON_Race ) || get_pcvar_num( CVAR_ICON_Level ) ){
+	if( get_pcvar_num( CVAR_wc3_race_icon ) || get_pcvar_num( CVAR_wc3_level_icon ) ){
 		if(p_data[id][P_SHOWICONS]){
 			p_data[id][P_SHOWICONS]=false
 
@@ -129,23 +129,23 @@ public cmd_Rings(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if(!get_pcvar_num( CVAR_FT_Buy_Dead ) && !is_user_alive(id)){
+	if(!get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive(id)){
 		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
 		return PLUGIN_HANDLED
 	}
 	#if MOD == 0
-		else if(get_pcvar_num( CVAR_FT_Buy_Time ) && !g_buyTime){
+		else if(get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime){
 			new Float:thetime = get_cvar_float("mp_buytime")*60.0
 			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
 			return PLUGIN_HANDLED
 		}
-		else if(get_pcvar_num( CVAR_FT_Buy_Zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
+		else if(get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
 			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
 			return PLUGIN_HANDLED
 		}
 	#endif
 
-	if(get_pcvar_num( CVAR_FT_Races )<5)
+	if(get_pcvar_num( CVAR_wc3_races )<5)
 		return PLUGIN_CONTINUE
 
 	new usermoney
@@ -185,7 +185,7 @@ public cmd_ability(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if(get_pcvar_num( CVAR_FT_Races ) < 5)
+	if(get_pcvar_num( CVAR_wc3_races ) < 5)
 		return PLUGIN_CONTINUE
 	
 	if ( p_data_b[id][PB_HEXED] )
@@ -229,7 +229,7 @@ public cmd_ability(id){
 		if (!warcraft3)
 			return PLUGIN_CONTINUE
 
-		if(get_pcvar_num( CVAR_FT_Grenade_Protection )==0)
+		if(get_pcvar_num( CVAR_wc3_grenade_protection )==0)
 			return PLUGIN_CONTINUE
 
 		if(!cs_get_user_buyzone(id))

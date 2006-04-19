@@ -1,6 +1,6 @@
 public MOTD_Itemsinfo(id){
 
-	if (!warcraft3)
+	if ( !WAR3_Check( id ) )
 		return PLUGIN_CONTINUE
 
 	new message[2048], title[128], pos = 0
@@ -24,7 +24,7 @@ public MOTD_Itemsinfo(id){
 		pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[0],id,"DOD_SHOPMENU_1")
 		pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[1],id,"DOD_SHOPMENU_2")
 	#endif
-	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[2],id,"SHOPMENU_3", get_pcvar_num( CVAR_ITEM_Claw ), get_pcvar_num( CVAR_ITEM_Claw ))
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[2],id,"SHOPMENU_3", get_pcvar_num( CVAR_wc3_claw ), get_pcvar_num( CVAR_wc3_claw ))
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[3],id,"SHOPMENU_4")
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[4],id,"SHOPMENU_5")
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[5],id,"SHOPMENU_6")
@@ -40,10 +40,10 @@ public MOTD_Itemsinfo(id){
 
 public MOTD_Itemsinfo2(id){
 
-	if (!warcraft3)
+	if ( !WAR3_Check( id ) )
 		return PLUGIN_CONTINUE
 
-	if(get_pcvar_num( CVAR_FT_Races ) < 5)
+	if(get_pcvar_num( CVAR_wc3_races ) < 5)
 		return PLUGIN_CONTINUE
 
 	new message[2048], title[128], pos = 0
@@ -64,7 +64,7 @@ public MOTD_Itemsinfo2(id){
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[2],id,"SHOPMENU2_3")
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[3],id,"SHOPMENU2_4")
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[4],id,"SHOPMENU2_5")
-	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[5],id,"SHOPMENU2_6",get_pcvar_num( CVAR_ITEM_Glove_Timer ))
+	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[5],id,"SHOPMENU2_6",get_pcvar_num( CVAR_wc3_glove_timer ))
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[6],id,"SHOPMENU2_7")
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[7],id,"SHOPMENU2_8")
 	pos += formatex(message[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[8],id,"SHOPMENU2_9")
@@ -77,7 +77,7 @@ public MOTD_Itemsinfo2(id){
 
 public MOTD_War3help(id){
 
-	if (!warcraft3)
+	if ( !WAR3_Check( id ) )
 		return PLUGIN_CONTINUE
 
 	new message[2048]
@@ -110,7 +110,7 @@ public MOTD_War3help(id){
 
 public MOTD_Playerskills(id, saychat){
 
-	if (!warcraft3)
+	if ( !WAR3_Check( id ) )
 		return PLUGIN_CONTINUE
 		
 	new name[32], message[2048]
@@ -124,7 +124,7 @@ public MOTD_Playerskills(id, saychat){
 		iTotalRace[p_data[players[k]][P_RACE]]++
 	}
 
-	for(k=1;k<get_pcvar_num( CVAR_FT_Races )+1;k++){
+	for(k=1;k<get_pcvar_num( CVAR_wc3_races )+1;k++){
 		if( iTotalRace[k] > 0 )
 			lang_GetRaceName(k,id,race_name[k],64)
 	}
@@ -132,7 +132,7 @@ public MOTD_Playerskills(id, saychat){
 	if(saychat)
 		pos += formatex(message[pos], 2048-pos, "%s", MOTD_header)
 
-	for(k=1;k<(get_pcvar_num( CVAR_FT_Races )+1);k++){
+	for(k=1;k<(get_pcvar_num( CVAR_wc3_races )+1);k++){
 
 		if(iTotalRace[k] > 0){
 			
@@ -191,10 +191,10 @@ public MOTD_Playerskills(id, saychat){
 
 public MOTD_Skillsinfo(id){
 
-	if (!warcraft3)
+	if ( !WAR3_Check( id ) )
 		return PLUGIN_CONTINUE
 
-	if (0 < p_data[id][P_RACE] <= get_pcvar_num( CVAR_FT_Races )){
+	if (0 < p_data[id][P_RACE] <= get_pcvar_num( CVAR_wc3_races )){
 		new message[2048], szGame[8]
 		new race_skill[4][64], skill_description[4][256], race_name[64]
 		new pos = 0, i

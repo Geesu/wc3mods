@@ -202,7 +202,7 @@ lang_GetSkillInfo( race_id, skill_id, id, skill_description[], len )
 				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL1_INFO" );
 				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL2_INFO", p_devotion[0], p_devotion[1], p_devotion[2] );
 				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL3_INFO", floatround(p_bash[0]*100), floatround(p_bash[1]*100), floatround(p_bash[2]*100) );
-				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL4_INFO_B");
+				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL4_INFO");
 			}
 		}
 

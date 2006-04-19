@@ -1,28 +1,32 @@
-/* AMXMOD X script. 
+/* AMX Mod X
+*   Warcraft 3 Frozen Throne
 *
-*  Warcraft 3: Frozen Throne
-*  by Geesu==Pimp Daddy==OoTOAoO=
+*  by Geesu
 *  http://www.war3ft.com
 *
-*  Credits to:
-*  Spacedude (for War3 MOD)
-*  Ludwig Van (for flamethrower)
-*  OLO (for spectating rank info)
-*  JGHG for the mole code
-*  [AOL]Demandred, [AOL]LuckyJ for help coding it for steam
-*  [AOL]Demandred for freezetime exploit fix
-*  Everyone at amxmod.net/amxmodx.org for help
-*  joecool12321 for various health related fixes
-*  Tri Moon for various improvements (No Race, war3menu, etc...)
-*  xeroblood for spotting some bugs for me :)
-*  bad-at-this for contributing the status bar code used for godmode (big bad voodoo)
-*  bad-at-this for creating race 9
-*  kamikaze for...
- 		help w/testing version before release
-		always helping people out on the forums
-		contributing code for the anti-skywalking
-*  ryannotfound (wc3mods.net/war3x) for some of the naming conventions used (function names, constants, etc...) and functions
-*  Lazarus Long for adding ALL of the sql-lite code and fine-tuning the existing MySQL code... It's so much pertier
+*  This program is free software; you can redistribute it and/or modify it
+*  under the terms of the GNU General Public License as published by the
+*  Free Software Foundation; either version 2 of the License, or (at
+*  your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful, but
+*  WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+*  General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software Foundation,
+*  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*
+*  In addition, as a special exception, the author gives permission to
+*  link the code of this program with the Half-Life Game Engine ("HL
+*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
+*  L.L.C ("Valve"). You must obey the GNU General Public License in all
+*  respects for all of the code used other than the HL Engine and MODs
+*  from Valve. If you modify this file, you may extend this exception
+*  to your version of the file, but you are not obligated to do so. If
+*  you do not wish to do so, delete this exception statement from your
+*  version.
 */
 
 #pragma tabsize 0
@@ -39,6 +43,9 @@ new const WC3DATE[] =		__DATE__
 #include <fun>
 #include <fakemeta>
 #include <dbi>
+#include <cstrike>
+#include <dodfun>
+#include <dodx>
 
 // Compiling Options
 #define MOD						1				// 0 = cstrike or czero, 1 = dod
@@ -46,13 +53,6 @@ new const WC3DATE[] =		__DATE__
 #define PRECACHE_WAR3FTSOUNDS	1
 #define SHOW_SPECTATE_INFO		1				// Show spectating information on users
 
-#if MOD == 0
-	#include <cstrike>
-#endif
-#if MOD == 1
-	#include <dodfun>
-	#include <dodx>
-#endif
 
 #include "war3ft/constants.inl"
 #include "war3ft/cvar.inl"
@@ -65,11 +65,14 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/stocks.inl"
 #include "war3ft/ultimates.inl"
 #include "war3ft/skills.inl"
+#include "war3ft/shared.inl"
 #include "war3ft/menus.inl"
 #include "war3ft/motd.inl"
 #include "war3ft/language.inl"
 #include "war3ft/other.inl"
 #include "war3ft/admin.inl"
+
+#include "war3ft/race_orc.inl"
 
 #if MOD == 0
 	#include "war3ft/cstrike.inl"
@@ -80,136 +83,132 @@ new const WC3DATE[] =		__DATE__
 
 public plugin_init()
 {
-	gmsgDeathMsg		= get_user_msgid("DeathMsg")
-	gmsgScreenFade		= get_user_msgid("ScreenFade")
-	gmsgScreenShake		= get_user_msgid("ScreenShake")
-	gmsgScoreInfo		= get_user_msgid("ScoreInfo")
-
-	#if MOD == 0
-		gmsgBarTime = get_user_msgid("BarTime")
-		gmsgStatusText = get_user_msgid("StatusText")
-		gmsgStatusIcon = get_user_msgid("StatusIcon") 
-	#endif
-	#if MOD == 1
-		gmsgHudText = get_user_msgid("HudText")
-	#endif
-
 	register_plugin(WC3NAME,WC3VERSION,WC3AUTHOR)
-	register_cvar("War3: Frozen Throne", WC3VERSION,FCVAR_SERVER)
-	new WC3AMXCVAR[32]
-	format(WC3AMXCVAR,31,"%s %s", WC3NAME,WC3VERSION)
-	register_cvar("amx_war3_version", WC3AMXCVAR,FCVAR_SERVER)
-	register_cvar("amx_war3_date", WC3DATE, FCVAR_SERVER);
 
-	register_clcmd("war3menu","menu_War3menu",-1,"- Show Warcraft 3 Frozen Throne Player menu")
-	register_clcmd("changerace","change_race",-1,"changerace")
-	register_clcmd("selectskill","menu_Select_Skill",-1,"selectskill")
-	register_clcmd("skillsinfo","MOTD_Skillsinfo",-1,"skillsinfo")
-	register_clcmd("resetskills","cmd_ResetSkill",-1,"resetskills")
-	register_clcmd("resetxp","XP_Reset",-1,"resetxp")
-	register_clcmd("itemsinfo","MOTD_Itemsinfo",-1,"itemsinfo")
-	register_clcmd("itemsinfo2","MOTD_Itemsinfo2",-1,"itemsinfo2")
-	register_clcmd("war3help","MOTD_War3help",-1,"war3help")
-	register_clcmd("ultimate","cmd_Ultimate",-1,"ultimate")
-	register_clcmd("shopmenu","menu_Shopmenu_One",-1,"shopmenu")
-	register_clcmd("shopmenu2","menu_Shopmenu_Two",-1,"shopmenu2")
+	// Lets determine which game is running
+	WAR3_Determine_Game();
 
-	register_clcmd("ability","cmd_ability",-1,"ability")
-	register_clcmd("rings","cmd_Rings",-1,"rings")
-	register_clcmd("fullupdate", "cmd_fullupdate")
-	register_clcmd("say","cmd_Say")
-	register_clcmd("say_team","cmd_Say")
-	register_clcmd("jointeam","cmd_Jointeam") 
-	register_clcmd("level","cmd_Level")
+	gmsgDeathMsg		= get_user_msgid( "DeathMsg"	);
+	gmsgScreenFade		= get_user_msgid( "ScreenFade"	);
+	gmsgScreenShake		= get_user_msgid( "ScreenShake"	);
+	gmsgScoreInfo		= get_user_msgid( "ScoreInfo"	);
+	
+	register_clcmd( "war3menu"			, "menu_War3menu"		, -1 );
+	register_clcmd( "changerace"		, "change_race"			, -1 );
+	register_clcmd( "selectskill"		, "menu_Select_Skill"	, -1 );
+	register_clcmd( "skillsinfo"		, "MOTD_Skillsinfo"		, -1 );
+	register_clcmd( "resetskills"		, "cmd_ResetSkill"		, -1 );
+	register_clcmd( "resetxp"			, "XP_Reset"			, -1 );
+	register_clcmd( "itemsinfo"			, "MOTD_Itemsinfo"		, -1 );
+	register_clcmd( "itemsinfo2"		, "MOTD_Itemsinfo2"		, -1 );
+	register_clcmd( "war3help"			, "MOTD_War3help"		, -1 );
+	register_clcmd( "ultimate"			, "cmd_Ultimate"		, -1 );
+	register_clcmd( "shopmenu"			, "menu_Shopmenu_One"	, -1 );
+	register_clcmd( "shopmenu2"			, "menu_Shopmenu_Two"	, -1 );
+	register_clcmd( "ability"			, "cmd_ability"			, -1 );
+	register_clcmd( "rings"				, "cmd_Rings"			, -1 );
+	register_clcmd( "fullupdate"		, "cmd_fullupdate"		, -1 );
+	register_clcmd( "say"				, "cmd_Say"				, -1 );
+	register_clcmd( "say_team"			, "cmd_Say"				, -1 );
+	register_clcmd( "jointeam"			, "cmd_Jointeam"		, -1 );
+	register_clcmd( "level"				, "cmd_Level"			, -1 );
+	register_clcmd( "drop"				, "on_Drop"				, -1 );
 
-	register_concmd("playerskills","MOTD_Playerskills",-1,"playerskills")
+	register_concmd( "playerskills"		, "MOTD_Playerskills"	, -1 );
 
 	// Admin Commands
-	register_concmd("amx_givexp","Admin_GiveXP",-1,"amx_givexp")
-	register_concmd("amx_savexp","Admin_SaveXP",-1,"amx_savexp")
-	register_concmd("amx_givemole","Admin_GiveMole",-1,"amx_givemole")
-	register_concmd("amx_wc3"		, "ADMIN_wc3", -1, "amx_wc3");
+	register_concmd( "amx_givexp"		, "Admin_GiveXP"		, 0 , " -- Gives XP to players"				);
+	register_concmd( "amx_savexp"		, "Admin_SaveXP"		, 0 , " -- Saves XP for players"			);
+	register_concmd( "amx_givemole"		, "Admin_GiveMole"		, 0 , " -- Gives the mole item to a player"	);
+	register_concmd( "amx_wc3"			, "ADMIN_wc3"			, 0 , " -- Enables/disables war3ft"			);
 	
 	// Server Admin Commands (used by external plugins)
-	register_srvcmd("amx_takexp","Admin_TakeXP")
-	register_srvcmd("changexp","changeXP")
+	register_srvcmd( "amx_takexp"		, "Admin_TakeXP"	);
+	register_srvcmd( "changexp"			, "changeXP"		);
 	
 	// Register forwards (from fakemeta)
-	register_forward(FM_TraceLine, "traceline");
+	register_forward( FM_TraceLine		, "traceline"		);
 
-	#if MOD == 1
-		register_statsfwd(XMF_SCORE);
-		register_statsfwd(XMF_DAMAGE);
+	register_event( "DeathMsg"			, "on_DeathMsg"		,"a"								);
+	register_event( "CurWeapon"			, "on_CurWeapon"	,"be"	, "1=1"						);
+	register_event( "HideWeapon"		, "on_CurWeapon"	, "b"								);
+	register_event( "ResetHUD"			, "on_ResetHud"		, "b"								);
+	register_event( "TextMsg"			, "on_GameRestart"	,"a"	, "2&#Game_will_restart_in" );
 
-		register_event("RoundState","on_EndRound","a","1=3","1=4");
-		register_event("StatusValue","on_StatusValue","b");
+	register_dictionary( "war3FT.txt")
 
-	#endif
-	#if MOD == 0
-		register_logevent("on_PlayerAction",3,"1=triggered") 
-		register_logevent("on_FreezeTimeComplete",2,"0=World triggered","1=Round_Start")
-		register_logevent("on_EndRound",2,"0=World triggered","1=Round_End")
+	// Game Specific Initialization
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		gmsgBarTime			= get_user_msgid( "BarTime"		);
+		gmsgStatusText		= get_user_msgid( "StatusText"	);
+		gmsgStatusIcon		= get_user_msgid( "StatusIcon"	);
 
-		register_event("SendAudio", "on_TerroristWin", "a", "2=%!MRAD_terwin")
-		register_event("SendAudio", "on_CTWin", "a", "2=%!MRAD_ctwin")
+		register_logevent( "on_PlayerAction"		, 3		, "1=triggered"								);
+		register_logevent( "on_FreezeTimeComplete"	, 2		, "0=World triggered"	, "1=Round_Start"	);
+		register_logevent( "on_EndRound"			, 2		, "0=World triggered"	, "1=Round_End"		);
 
-		register_event("23", "on_TargetBombed", "a", "1=17", "6=-105", "7=17")
-
-		register_event("ArmorType", "on_ArmorType", "be")
-		register_event("WeapPickup","on_WeapPickup","b") 
-
-		register_event("StatusValue","on_ShowStatus","be","1=2","2!0")
-		register_event("StatusValue","on_HideStatus","be","1=1","2=0")  
-
-		register_event("TextMsg","on_SetSpecMode","bd","2&ec_Mod")
-
-		register_event("Damage", "on_Damage", "b", "2!0")
-
-		register_event("StatusValue","on_Spectate","bd","1=2")
-
+		register_event( "SendAudio"		, "on_TerroristWin"	, "a"	, "2=%!MRAD_terwin"					);
+		register_event( "SendAudio"		, "on_CTWin"		, "a"	, "2=%!MRAD_ctwin"					);
+		register_event( "23"			, "on_TargetBombed"	, "a"	, "1=17"	, "6=-105"	, "7=17"	);
+		register_event( "ArmorType"		, "on_ArmorType"	, "be"										);
+		register_event( "WeapPickup"	, "on_WeapPickup"	, "b"										); 
+		register_event( "StatusValue"	, "on_ShowStatus"	, "be"	, "1=2"		,"2!0"					);
+		register_event( "StatusValue"	, "on_HideStatus"	, "be"	, "1=1"		,"2=0"					);
+		register_event( "TextMsg"		, "on_SetSpecMode"	, "bd"	, "2&ec_Mod"						);
+		register_event( "Damage"		, "on_Damage"		, "b"	, "2!0"								);
+		register_event( "StatusValue"	, "on_Spectate"		, "bd"	, "1=2"								);
 
 		// Old Style
-		register_menucmd(register_menuid("BuyItem"),(1<<2),"cmd_flash")
-		register_menucmd(register_menuid("BuyItem"),(1<<3),"cmd_hegren")
+		register_menucmd( register_menuid( "BuyItem" )	, (1<<2)	, "cmd_flash"	);
+		register_menucmd( register_menuid( "BuyItem" )	, (1<<3)	, "cmd_hegren"	);
 
 		// VGUI
-		register_menucmd(-34,(1<<2),"cmd_flash")
-		register_menucmd(-34,(1<<3),"cmd_hegren")
+		register_menucmd( -34	, (1<<2)	, "cmd_flash"	);
+		register_menucmd( -34	, (1<<3)	, "cmd_hegren"	);
 
 		// Steam
-		register_clcmd("flash",  "cmd_flash")
-		register_clcmd("hegren", "cmd_hegren")
+		register_clcmd( "flash"		, "cmd_flash"	);
+		register_clcmd( "hegren"	, "cmd_hegren"	);
 
-		register_menucmd(register_menuid("Team_Select",1),(1<<0)|(1<<1)|(1<<4),"cmd_Teamselect")
+		register_menucmd( register_menuid( "Team_Select" , 1 )	, (1<<0)|(1<<1)|(1<<4)	, "cmd_Teamselect" );
 
-		set_task(0.7, "WAR3_Mole_Fix", TASK_MOLEFIX, "", 0, "b");
-	#endif
-
-	register_event("DeathMsg","on_DeathMsg","a")
-	register_event("CurWeapon","on_CurWeapon","be","1=1")
-	register_event("HideWeapon", "on_CurWeapon", "b")
-	register_event("ResetHUD", "on_ResetHud", "b")
-	register_event("TextMsg","on_GameRestart","a","2&#Game_will_restart_in")
-
-
-	if(is_running("czero"))
-	{
-		register_event("TextMsg", "on_GameRestart", "a", "2&#Game_Commencing")
+		// Condition Zero
+		if ( g_MOD == GAME_CZERO )
+		{
+			register_event("TextMsg", "on_GameRestart", "a", "2&#Game_Commencing")
+		}
+		// Counter-Strike
+		else
+		{
+			register_event("TextMsg", "on_GameRestart", "a", "2&#Game_C")
+		}
 	}
-	else
+	else if ( g_MOD == GAME_DOD )
 	{
-		register_event("TextMsg", "on_GameRestart", "a", "2&#Game_C")
+		gmsgHudText = get_user_msgid("HudText");
+
+		register_statsfwd( XMF_SCORE	);
+		register_statsfwd( XMF_DAMAGE	);
+
+		register_event( "RoundState"	, "on_EndRound"		, "a"	, "1=3"	, "1=4"	);
+		register_event( "StatusValue"	, "on_StatusValue"	, "b"					);
 	}
-	
-	register_dictionary("war3FT.txt")
 	
 	// Plugin initialization procedures
 	WAR3_Init();
+
+	register_concmd( "test", "test" );
+}
+
+public test()
+{
+	ADMIN_Print( 0, "This is a %d fucking %s message", 5, "asdf" );
 }
 
 public plugin_end()
 {
-	if ( !get_pcvar_num( CVAR_SAVE_Enabled ) )
+	if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
 	{
 		return;
 	}
@@ -246,7 +245,7 @@ public client_putinserver(id)
 	p_data_b[id][PB_ISCONNECTED] = true;
 
 	#if MOD == 1
-		p_data[id][P_MONEY] = get_pcvar_num( CVAR_DOD_Start_Money );
+		p_data[id][P_MONEY] = get_pcvar_num( CVAR_wc3_dod_start_money );
 		new parm[3];
 		parm[0] = id;
 		parm[1] = 0;
@@ -277,14 +276,14 @@ public client_connect(id)
 	p_data_b[id][PB_ISBURNING]	= false;
 	p_data[id][P_SPECMODE]		= 0;
 	p_data_b[id][PB_JUSTJOINED] = true;
-	p_data_b[id][PB_RENDER]		= true;
+	p_data_b[id][PB_CAN_RENDER]		= true;
 	
 	// These were on disconnect, might as well do them on connect
 	p_data[id][P_HECOUNT]		= 0;
 	p_data[id][P_FLASHCOUNT]	= 0;
 
 	// Automatically set their XP if it's enabled
-	if ( get_pcvar_num( CVAR_XP_Auto_Average ) && !get_pcvar_num( CVAR_SAVE_Enabled ) )
+	if ( get_pcvar_num( CVAR_wc3_xp_auto_average ) && !get_pcvar_num( CVAR_wc3_save_xp ) )
 	{
 		new iTotalXP;
 		new iNum, i;
@@ -312,10 +311,10 @@ public client_connect(id)
 	#endif
 	
 	// Give the bot a random amount of XP
-	if ( is_user_bot(id) && get_pcvar_num( CVAR_SAVE_Enabled ) )
+	if ( is_user_bot(id) && get_pcvar_num( CVAR_wc3_save_xp ) )
 	{
 		p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
-		p_data[id][P_RACE] = random_num(1, get_pcvar_num( CVAR_FT_Races ));
+		p_data[id][P_RACE] = random_num(1, get_pcvar_num( CVAR_wc3_races ));
 	}
 
 	return PLUGIN_CONTINUE;
@@ -348,7 +347,7 @@ public client_disconnect(id)
 	
 	// Save the user's XP if we have XP to save
 
-	if (get_pcvar_num( CVAR_SAVE_Enabled ) && !is_user_bot(id) && p_data[id][P_RACE] && p_data[id][P_XP])
+	if (get_pcvar_num( CVAR_wc3_save_xp ) && !is_user_bot(id) && p_data[id][P_RACE] && p_data[id][P_XP])
 	{
 		XP_Save( id );
 	}
@@ -423,7 +422,13 @@ public client_disconnect(id)
 
 
 
-public client_PreThink(id){
+public client_PreThink(id)
+{
+
+	if ( !warcraft3 )
+	{
+		return PLUGIN_CONTINUE;
+	}
 
 	if( p_data_b[id][PB_ISCONNECTED] )
 	{
@@ -452,7 +457,7 @@ public client_PreThink(id){
 			}
 		}
 	#if MOD == 1
-		if( Verify_Skill(id, RACE_UNDEAD, SKILL2) || p_data[id][P_ITEM] == ITEM_BOOTS)
+		if( Verify_Skill(id, RACE_UNDEAD, SKILL2) || p_data[id][P_ITEM] == wc3_boots)
 		{
 			// They have a rocket launcher "deployed" or are using their stamina
 			new prone = entity_get_int( id, EV_INT_iuser3 );
@@ -471,12 +476,14 @@ public client_PreThink(id){
 				}
 			}
 		}
-		if( p_data[id][P_ITEM] == ITEM_BOOTS && entity_get_float(id,EV_FL_fuser4) < DOD_BOOT_SPEED )
+		if( p_data[id][P_ITEM] == wc3_boots && entity_get_float(id,EV_FL_fuser4) < DOD_BOOT_SPEED )
 		{
 			entity_set_float( id, EV_FL_fuser4, DOD_BOOT_SPEED );
 		}
 	#endif
 	}
+
+	return PLUGIN_CONTINUE;
 }
 
 // This functionality allows us to no longer requires a DBI module to be loaded
@@ -494,6 +501,18 @@ public module_filter(const module[])
 		g_DBILoaded = false;
 		log_amx("[ERROR] No DBI module found, defaulting to vault");
 
+		return PLUGIN_HANDLED;
+	}
+	else if ( equali( module, "dod" ) )
+	{
+		return PLUGIN_HANDLED;
+	}
+	else if ( equali( module, "dodx" ) )
+	{
+		return PLUGIN_HANDLED;
+	}
+	else if ( equali( module, "cstrike" ) )
+	{
 		return PLUGIN_HANDLED;
 	}
 

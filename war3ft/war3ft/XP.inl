@@ -11,7 +11,7 @@ stock XP_give(id, iXP)
 	}
 
 	// Make sure we have the minimum amount of players
-	if( get_playersnum() < get_pcvar_num( CVAR_XP_Min_Players ) )
+	if( get_playersnum() < get_pcvar_num( CVAR_wc3_min_players ) )
 	{
 		return 0;
 	}
@@ -41,17 +41,17 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 		{
 			iXP = -1 * xpgiven[p_data[killer_id][P_LEVEL]];
 			iXPAwarded = XP_give(killer_id, iXP);
-			if (get_pcvar_num( CVAR_XP_Show_Kill_Objectives ))
+			if (get_pcvar_num( CVAR_wc3_show_kill_obj ))
 			{
 				client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_TEAMMATE", iXPAwarded);
 			}
 		}
 		else{
-			if ( !get_pcvar_num( CVAR_XP_Weapon_Multiplier ))
+			if ( !get_pcvar_num( CVAR_wc3_xp_weap_multiplier ))
 			{
 				iXP = xpgiven[p_data[victim_id][P_LEVEL]];
 				iXPAwarded = XP_give(killer_id, iXP);
-				if (get_pcvar_num( CVAR_XP_Show_Kill_Objectives ))
+				if (get_pcvar_num( CVAR_wc3_show_kill_obj ))
 				{			
 					new szVictimName[32];
 					get_user_name(victim_id, szVictimName, 31);
@@ -63,7 +63,7 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			{
 				iXP = floatround(xpgiven[p_data[victim_id][P_LEVEL]] * weaponxpmultiplier[weapon]);
 				iXPAwarded = XP_give(killer_id, iXP);
-				if (get_pcvar_num( CVAR_XP_Show_Kill_Objectives ))
+				if (get_pcvar_num( CVAR_wc3_show_kill_obj ))
 				{
 					new szVictimName[32];
 					get_user_name(victim_id, szVictimName, 31);
@@ -74,9 +74,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for getting a headshot
 			if( headshot )
 			{
-				iXP = get_pcvar_num(CVAR_XP_Headshot);
+				iXP = get_pcvar_num(CVAR_wc3_headshot);
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( CVAR_XP_Show_Kill_Objectives ) )
+				if ( get_pcvar_num( CVAR_wc3_show_kill_obj ) )
 				{
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_HEADSHOT", iXPAwarded);		
 				}
@@ -85,9 +85,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for killing the hostage saver
 			if ( victim_id == g_hostageSaver )
 			{
-				iXP = get_pcvar_num( CVAR_XP_Kill_Rescuer );
+				iXP = get_pcvar_num( CVAR_wc3_kill_rescuer );
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( CVAR_XP_Show_Objectives ) )
+				if ( get_pcvar_num( CVAR_wc3_show_objectives ) )
 				{	
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_HOSTAGE_R", iXPAwarded);
 				}
@@ -95,9 +95,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for killing the bomb defuser
 			else if ( victim_id == g_bombDefuser )
 			{						
-				iXP = get_pcvar_num( CVAR_XP_Kill_Defuser );
+				iXP = get_pcvar_num( CVAR_wc3_kill_defuser );
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( CVAR_XP_Show_Objectives ) )
+				if ( get_pcvar_num( CVAR_wc3_show_objectives ) )
 				{				
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_BOMB_D", iXPAwarded);
 				}	
@@ -105,9 +105,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for killing the bomb carrier
 			else if ( victim_id == g_bombCarrier )
 			{						
-				iXP = get_pcvar_num( CVAR_XP_Kill_Bomb_Carrier );
+				iXP = get_pcvar_num( CVAR_wc3_kill_bomb_carrier );
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( CVAR_XP_Show_Objectives ) )
+				if ( get_pcvar_num( CVAR_wc3_show_objectives ) )
 				{
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_BOMB_C", iXPAwarded);
 				}
@@ -115,9 +115,9 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 			// Award XP for killing the VIP
 			else if ( victim_id==g_vipID )
 			{
-				iXP = get_pcvar_num( CVAR_XP_Kill_VIP );
+				iXP = get_pcvar_num( CVAR_wc3_kill_vip );
 				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( CVAR_XP_Show_Objectives ) )
+				if ( get_pcvar_num( CVAR_wc3_show_objectives ) )
 				{
 					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARD_FOR_KILLING_VIP", iXPAwarded);
 				}
@@ -133,7 +133,7 @@ stock XP_Set()
 {
 
 	// If we're saving XP, we want to set the max. amount of XP higher and the amount gained per kill/objective lower
-	if ( get_pcvar_num( CVAR_SAVE_Enabled ) )
+	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
 	{
 		xpgiven = {6,8,10,12,14,16,18,20,24,28,32};
 		xplevel = {0,100,200,400,800,1600,3200,6400,12800,25600,51200};
@@ -142,7 +142,7 @@ stock XP_Set()
 	// Set the XP multiplier
 	for( new i=0; i<11; i++ )
 	{
-		xplevel[i] = floatround(xplevel[i] * get_pcvar_float( CVAR_XP_Multiplier ));
+		xplevel[i] = floatround(xplevel[i] * get_pcvar_float( CVAR_wc3_xp_multiplier ));
 	}
 
 	XP_Set_Multiplier();
@@ -151,7 +151,7 @@ stock XP_Set()
 stock XP_Set_Multiplier()
 {
 
-	if ( get_pcvar_num( CVAR_XP_Weapon_Multiplier ) )
+	if ( get_pcvar_num( CVAR_wc3_xp_weap_multiplier ) )
 	{
 		return PLUGIN_CONTINUE;
 	}
@@ -263,7 +263,7 @@ public XP_Save(id){
 		return PLUGIN_CONTINUE;
 	}
 
-	if ( p_data[id][P_RACE] == 0 || is_user_bot(id) || !get_pcvar_num( CVAR_SAVE_Enabled ) || p_data[id][P_XP] == 0 )
+	if ( p_data[id][P_RACE] == 0 || is_user_bot(id) || !get_pcvar_num( CVAR_wc3_save_xp ) || p_data[id][P_XP] == 0 )
 	{
 		return PLUGIN_CONTINUE;
 	}
@@ -271,7 +271,7 @@ public XP_Save(id){
 	// If we're saving by STEAM_ID, lets make sure the user has a steam ID
 	new szPlayerID[33];
 	get_user_authid(id, szPlayerID, 31);
-	if( get_pcvar_float( CVAR_SQL_Save_By) == 0 && equal(szPlayerID, "STEAM_ID_PENDING") )
+	if( get_pcvar_float( CVAR_wc3_save_by) == 0 && equal(szPlayerID, "STEAM_ID_PENDING") )
 	{
 		return PLUGIN_CONTINUE;
 	}
@@ -281,7 +281,7 @@ public XP_Save(id){
 	get_user_ip(id, szPlayerIP, 19);
 
 	// Save to the database
-	if ( get_pcvar_num( CVAR_SQL_Enabled ) )
+	if ( get_pcvar_num( CVAR_wc3_save_xp_sql ) )
 	{
 		// Verify we have a database connection
 		if ( !XP_Check_Connection() )
@@ -294,7 +294,7 @@ public XP_Save(id){
 			
 		// Save the data
 		new szQuery[512];
-		format(szQuery, 511, "REPLACE INTO `%s` (`playerid`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', %d, %d, %d, %d, %d, %d)", g_DBTableName, (get_pcvar_float( CVAR_SQL_Save_By)==2) ? szPlayerName : ((get_pcvar_float( CVAR_SQL_Save_By)==1) ? szPlayerIP : szPlayerID), szPlayerName, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE]);
+		format(szQuery, 511, "REPLACE INTO `%s` (`playerid`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', %d, %d, %d, %d, %d, %d)", g_DBTableName, (get_pcvar_float( CVAR_wc3_save_by)==2) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==1) ? szPlayerIP : szPlayerID), szPlayerName, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE]);
 
  		new Result:res = dbi_query(sql, szQuery);
 		
@@ -315,7 +315,7 @@ public XP_Save(id){
 		format( szData, 511, "%s %d %d %d %d %d %d %s %d %s", szPlayerID, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE], szPlayerIP, get_systime(), szPlayerName );
 		
 		// Format the vault key
-		format( szKey, 127, "%s_%d", (get_pcvar_float( CVAR_SQL_Save_By)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_SQL_Save_By)==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE] );
+		format( szKey, 127, "%s_%d", (get_pcvar_float( CVAR_wc3_save_by)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE] );
 		
 		// Save the data
 		set_vaultdata(szKey, szData);
@@ -331,13 +331,13 @@ public XP_Set_Race_Data( id )
 	if ( !warcraft3 )
 		return PLUGIN_CONTINUE;
 
-	if ( !get_pcvar_num( CVAR_SAVE_Enabled ) || !id )
+	if ( !get_pcvar_num( CVAR_wc3_save_xp ) || !id )
 		return PLUGIN_CONTINUE;
 
 	// If we're saving by STEAM_ID, lets make sure the user has a steam ID
 	new szPlayerID[33];
 	get_user_authid(id, szPlayerID, 31);
-	if( get_pcvar_float( CVAR_SQL_Save_By) == SAVE_STEAMID && equal(szPlayerID, "STEAM_ID_PENDING") )
+	if( get_pcvar_float( CVAR_wc3_save_by) == SAVE_STEAMID && equal(szPlayerID, "STEAM_ID_PENDING") )
 	{
 		client_print(id, print_chat, "%s Unable to retreive race information, you have no STEAM ID, please rejoin the server.", g_MODclient);
 		return PLUGIN_CONTINUE;
@@ -347,7 +347,7 @@ public XP_Set_Race_Data( id )
 	get_user_name(id, szPlayerName, 32);
 	get_user_ip(id, szPlayerIP, 19);
 
-	if ( get_pcvar_num( CVAR_SQL_Enabled ) )
+	if ( get_pcvar_num( CVAR_wc3_save_xp_sql ) )
 	{
 		// Verify we have a database connection
 		if ( !XP_Check_Connection() )
@@ -359,7 +359,7 @@ public XP_Set_Race_Data( id )
 		XP_AddSlashes( szPlayerName, 65 );
 
 		new szQuery[256];
-		format( szQuery, 255, "SELECT `xp`, `skill1`, `skill2`, `skill3`, `skill4` FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", g_DBTableName, (get_pcvar_float( CVAR_SQL_Save_By)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_SQL_Save_By)==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE])
+		format( szQuery, 255, "SELECT `xp`, `skill1`, `skill2`, `skill3`, `skill4` FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", g_DBTableName, (get_pcvar_float( CVAR_wc3_save_by)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE])
 
 		new Result:res = dbi_query(sql, szQuery)
 		
@@ -405,7 +405,7 @@ public XP_Set_Race_Data( id )
 	{
 		new szKey[128], szData[256], iAttempt;
 
-		format( szKey, 127, "%s_%d", (get_pcvar_float( CVAR_SQL_Save_By)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_SQL_Save_By)==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE] );
+		format( szKey, 127, "%s_%d", (get_pcvar_float( CVAR_wc3_save_by)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE] );
 
 		iAttempt = get_vaultdata(szKey, szData, 255);
 		
@@ -447,13 +447,13 @@ public XP_Get( id )
 	if ( !warcraft3 )
 		return PLUGIN_CONTINUE;
 
-	if ( !get_pcvar_num( CVAR_SAVE_Enabled ) || !id )
+	if ( !get_pcvar_num( CVAR_wc3_save_xp ) || !id )
 		return PLUGIN_CONTINUE;
 
 	// If we're saving by STEAM_ID, lets make sure the user has a steam ID
 	new szPlayerID[33];
 	get_user_authid(id, szPlayerID, 31);
-	if( get_pcvar_float( CVAR_SQL_Save_By) == SAVE_STEAMID && equal(szPlayerID, "STEAM_ID_PENDING") )
+	if( get_pcvar_float( CVAR_wc3_save_by) == SAVE_STEAMID && equal(szPlayerID, "STEAM_ID_PENDING") )
 	{
 		client_print(id, print_chat, "%s Unable to retreive race information, you have no STEAM ID, please rejoin the server.", g_MODclient);
 		return PLUGIN_CONTINUE;
@@ -465,7 +465,7 @@ public XP_Get( id )
 	get_user_ip(id, szPlayerIP, 19);
 
 	// Retreive data via SQL
-	if ( get_pcvar_num( CVAR_SQL_Enabled ) )
+	if ( get_pcvar_num( CVAR_wc3_save_xp_sql ) )
 	{
 		// Make sure we have a valid SQL Connection
 		if ( !XP_Check_Connection() )
@@ -477,7 +477,7 @@ public XP_Get( id )
 		XP_AddSlashes( szPlayerName, 65 );
 	
 		new szQuery[256];
-		format(szQuery, 255, "SELECT `xp`, `race` FROM `%s` WHERE (`playerid` = '%s')", g_DBTableName, (get_pcvar_float( CVAR_SQL_Save_By)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_SQL_Save_By)==SAVE_IP) ? szPlayerIP : szPlayerID));
+		format(szQuery, 255, "SELECT `xp`, `race` FROM `%s` WHERE (`playerid` = '%s')", g_DBTableName, (get_pcvar_float( CVAR_wc3_save_by)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==SAVE_IP) ? szPlayerIP : szPlayerID));
  		
 		new Result:res = dbi_query(sql, szQuery);
 		
@@ -515,7 +515,7 @@ public XP_Get( id )
 		new iRace, iXP, iAttempt, szKey[128], szXP[8], szData[256];
 		for( iRace = 1; iRace < 10; iRace++ )
 		{
-			format( szKey, 127, "%s_%d", (get_pcvar_float( CVAR_SQL_Save_By)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_SQL_Save_By)==SAVE_IP) ? szPlayerIP : szPlayerID), iRace );
+			format( szKey, 127, "%s_%d", (get_pcvar_float( CVAR_wc3_save_by)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==SAVE_IP) ? szPlayerIP : szPlayerID), iRace );
 
 			iAttempt = get_vaultdata( szKey, szData, 255 );
 			
@@ -556,11 +556,11 @@ public XP_Set_DBI(){
 	if ( !g_DBILoaded )
 	{
 		// Fall back to vault
-		set_pcvar_num( CVAR_SQL_Enabled, 0 );
+		set_pcvar_num( CVAR_wc3_save_xp_sql, 0 );
 	}
 
 	// Try to open a database connection
-	if ( get_pcvar_num( CVAR_SQL_Enabled ) )
+	if ( get_pcvar_num( CVAR_wc3_save_xp_sql ) )
 	{
 		// We have an attempt, lets increment our counter
 		iSQLAttempts++;
@@ -586,10 +586,10 @@ public XP_Set_DBI(){
 
 		// Determine the database information
 		new szHost[64], szUser[32], szPass[32], szDB[128], szError[256];
-		get_pcvar_string( CVAR_SQL_dbhost, szHost, 63);
-		get_pcvar_string( CVAR_SQL_dbuser, szUser, 31);
-		get_pcvar_string( CVAR_SQL_dbpass, szPass, 31);
-		get_pcvar_string( CVAR_SQL_dbname, szDB, 127);
+		get_pcvar_string( CVAR_wc3_sql_dbhost, szHost, 63);
+		get_pcvar_string( CVAR_wc3_sql_dbuser, szUser, 31);
+		get_pcvar_string( CVAR_wc3_sql_dbpass, szPass, 31);
+		get_pcvar_string( CVAR_wc3_sql_dbname, szDB, 127);
 		
 		// Set a default DB if it's SQLite and the user didn't supply one
 		if ( iSQLtype == SQL_SQLITE && strlen(szDB) < 1 )
@@ -610,7 +610,7 @@ public XP_Set_DBI(){
 
 
 		// Get the table name
-		get_pcvar_string( CVAR_SQL_tbname, g_DBTableName, 63);
+		get_pcvar_string( CVAR_wc3_sql_tbname, g_DBTableName, 63);
 
 		// Format the create table statement
 		new szQuery[512];
@@ -716,7 +716,7 @@ public XP_Reset(id)
 // This function will prune a single player (checks for the latest date and sets them all to the same)
 public XP_Prune_Player(id)
 {
-	if ( get_pcvar_num( CVAR_SAVE_Enabled ) && get_pcvar_num( CVAR_SAVE_Pruning ) )
+	if ( get_pcvar_num( CVAR_wc3_save_xp ) && get_pcvar_num( CVAR_wc3_save_pruning ) )
 	{
 		new szPlayerID[32], szPlayerName[32], szPlayerIP[32];
 		get_user_authid(id, szPlayerID, 31);
@@ -724,14 +724,14 @@ public XP_Prune_Player(id)
 		get_user_ip(id, szPlayerIP, 31);
 
 		// Update all records if we're using the vault
-		if ( !get_pcvar_num( CVAR_SQL_Enabled ) )
+		if ( !get_pcvar_num( CVAR_wc3_save_xp_sql ) )
 		{
 			new iRace, iAttempt, szKey[128], szData[512];
 
 			// Loop through and find the latest timestamp and re-save
 			for( iRace = 1; iRace < 10; iRace++ )
 			{
-				format( szKey, 127, "%s_%d", (get_pcvar_float( CVAR_SQL_Save_By)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_SQL_Save_By)==SAVE_IP) ? szPlayerIP : szPlayerID), iRace );
+				format( szKey, 127, "%s_%d", (get_pcvar_float( CVAR_wc3_save_by)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==SAVE_IP) ? szPlayerIP : szPlayerID), iRace );
 
 				iAttempt = get_vaultdata( szKey, szData, 511 );
 				
@@ -757,7 +757,7 @@ public XP_Prune_Player(id)
 		else
 		{
 			new szQuery[512];
-			format(szQuery, 511, "UPDATE `%s` SET `time` = NOW() WHERE `playerid` = '%s';", g_DBTableName, (get_pcvar_float( CVAR_SQL_Save_By)==2) ? szPlayerName : ((get_pcvar_float( CVAR_SQL_Save_By)==1) ? szPlayerIP : szPlayerID));
+			format(szQuery, 511, "UPDATE `%s` SET `time` = NOW() WHERE `playerid` = '%s';", g_DBTableName, (get_pcvar_float( CVAR_wc3_save_by)==2) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==1) ? szPlayerIP : szPlayerID));
 
 			new Result:res = dbi_query(sql, szQuery);
 			
@@ -777,10 +777,10 @@ public XP_Prune_Player(id)
 public XP_Prune()
 {
 
-	if ( get_pcvar_num( CVAR_SAVE_Pruning ) )
+	if ( get_pcvar_num( CVAR_wc3_save_pruning ) )
 	{
 		// Vault pruning (only works with vaults created with version 2.2.8)
-		if ( !get_pcvar_num( CVAR_SQL_Enabled ) )
+		if ( !get_pcvar_num( CVAR_wc3_save_xp_sql ) )
 		{
 			new szVault[] = "addons/amxmodx/data/vault.ini";
 			
@@ -790,7 +790,7 @@ public XP_Prune()
 				new len, line, szText[256];
 				new iCurrentTime = get_systime();
 				// 86400 = 24 hours * 60 minutes * 60 seconds
-				new iExpiredTime = iCurrentTime - (get_pcvar_num( CVAR_SAVE_Days_Before_Delete ) * 86400);
+				new iExpiredTime = iCurrentTime - (get_pcvar_num( CVAR_wc3_days_before_delete ) * 86400);
 
 				// Check every line in the vault
 				while ( (line = read_file(szVault, line, szText, 255, len)) != 0 )
@@ -825,13 +825,13 @@ public XP_Prune()
 			{
 				// Timestamp format: 20030912122142
 				// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42	
-				format( query, 255, "DELETE FROM `%s` WHERE DATE_SUB(CURDATE(),INTERVAL %d DAY) > time;", g_DBTableName, get_pcvar_num( CVAR_SAVE_Days_Before_Delete ) );
+				format( query, 255, "DELETE FROM `%s` WHERE DATE_SUB(CURDATE(),INTERVAL %d DAY) > time;", g_DBTableName, get_pcvar_num( CVAR_wc3_days_before_delete ) );
 			}
 			else if ( iSQLtype == SQL_SQLITE )
 			{
 				// Timestamp format: 2003-09-12 12:21:42
 				// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42
-				format( query, 255, "DELETE FROM `%s` WHERE ((julianday(`time`) + %d) < julianday('now'))", g_DBTableName, get_pcvar_num( CVAR_SAVE_Days_Before_Delete ) );
+				format( query, 255, "DELETE FROM `%s` WHERE ((julianday(`time`) + %d) < julianday('now'))", g_DBTableName, get_pcvar_num( CVAR_wc3_days_before_delete ) );
 			}
 
 			dbi_query(sql, query);
@@ -845,7 +845,7 @@ public XP_Prune()
 			}
 		}
 
-		log_amx("Database pruning successful, data older than %d days was removed", get_pcvar_num( CVAR_SAVE_Days_Before_Delete ));
+		log_amx("Database pruning successful, data older than %d days was removed", get_pcvar_num( CVAR_wc3_days_before_delete ));
 	}
 }
 
@@ -853,7 +853,7 @@ public XP_Prune()
 public XP_CloseDB()
 {
 
-	if ( get_pcvar_num( CVAR_SQL_Enabled ) )
+	if ( get_pcvar_num( CVAR_wc3_save_xp_sql ) )
 	{
 		if( sql )
 		{
@@ -870,7 +870,7 @@ public XP_Save_All()
 	if (!warcraft3)
 		return PLUGIN_CONTINUE;
 	
-	if ( !get_pcvar_num( CVAR_SAVE_Enabled ) )
+	if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
 		return PLUGIN_CONTINUE;
 
 	new players[32], numofplayers, parm[1];
@@ -934,8 +934,8 @@ public XP_Check_Connection()
 		}
 		else if( iSQLAttempts >= SQL_ATTEMPTS )
 		{
-			set_pcvar_num( CVAR_SAVE_Enabled, 0 )
-			set_pcvar_num( CVAR_SQL_Enabled, 0 )
+			set_pcvar_num( CVAR_wc3_save_xp, 0 )
+			set_pcvar_num( CVAR_wc3_save_xp_sql, 0 )
 
 			log_amx("Unable to connect to the %s database after %d attempts, switching to short-term mode", SQLtype, iSQLAttempts)
 		}
@@ -947,11 +947,11 @@ public XP_Check_Connection()
 }
 
 // Function from war3x thanks ryan!!!
-public XP_get_admin_flag()
+public XP_get_wc3_admin_flag()
 {
 
     new szFlags[24];
-    get_pcvar_string( CVAR_ADMIN_Flag, szFlags, 23 );
+    get_pcvar_string( CVAR_wc3_admin_flag, szFlags, 23 );
 
     return ( read_flags( szFlags ) );
 }

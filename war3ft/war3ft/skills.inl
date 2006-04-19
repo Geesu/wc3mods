@@ -97,9 +97,9 @@ public Skill_UnholyAura( id )
 				set_user_gravity(id, p_levitation[p_data[id][P_SKILL3]-1]);
 			}
 		}
-		else if ( p_data[id][P_ITEM2] == ITEM_SOCK )
+		else if ( p_data[id][P_ITEM2] == wc3_sock )
 		{
-			set_user_gravity(id, get_pcvar_float( CVAR_ITEM_Sock ));
+			set_user_gravity(id, get_pcvar_float( CVAR_wc3_sock ));
 		}
 		else if ( get_user_gravity(id) != 1.0 )
 		{
@@ -110,48 +110,6 @@ public Skill_UnholyAura( id )
 	else
 	{
 		set_user_gravity(id, 1.0);
-	}
-}
-
-// ****************************************
-// Human's Invisibility
-// ****************************************
-
-public Skill_Invisibility(id)
-{
-	if ( p_data_b[id][PB_RENDER] && !p_data_b[id][PB_HEXED])
-	{
-		new clipamount = 0, ammoamount = 0, weaponnum = 0
-		weaponnum = get_user_weapon(id,clipamount,ammoamount)
-
-		if ( Verify_Skill(id, RACE_HUMAN, SKILL1) ){
-		#if MOD == 0
-			if (weaponnum==CSW_KNIFE){
-		#endif
-		#if MOD == 1
-			if (weaponnum==DODW_AMERKNIFE || weaponnum==DODW_GERKNIFE || weaponnum==DODW_SPADE){
-		#endif
-				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,p_invisibility[p_data[id][P_SKILL1]-1]/2)
-			}
-			else{
-				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,p_invisibility[p_data[id][P_SKILL1]-1])
-			}
-		}
-		else if ( p_data[id][P_ITEM]==ITEM_CLOAK ){
-		#if MOD == 0
-			if (weaponnum==CSW_KNIFE){
-		#endif
-		#if MOD == 1
-			if (weaponnum==DODW_AMERKNIFE || weaponnum==DODW_GERKNIFE || weaponnum==DODW_SPADE){
-		#endif
-				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture, get_pcvar_num( CVAR_ITEM_Cloak )/2)
-			}
-			else{
-				set_user_rendering(id,kRenderFxNone, 0,0,0, kRenderTransTexture,get_pcvar_num( CVAR_ITEM_Cloak ))
-			}
-		}
-		else
-			set_user_rendering(id)
 	}
 }
 
@@ -319,10 +277,6 @@ public Skill_Invisibility(id)
 
 public Skill_Reincarnation( parm[2] )
 {
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
 	#if MOD == 0
 		new id = parm[0]
 
@@ -366,8 +320,11 @@ public Skill_Reincarnation( parm[2] )
 
 				// Screen fade green
 				Create_ScreenFade(id, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[id][1])
+				
+				// Remove all weapons
+				strip_user_weapons( id );
 
-				_Skill_Reincarnation_Drop(id)
+				// Give the user their weapons from last round
 				_Skill_Reincarnation_Give(id)
 		}else{
 			if(!cs_get_user_nvg(id))
@@ -381,41 +338,10 @@ public Skill_Reincarnation( parm[2] )
 	return PLUGIN_HANDLED	
 }	
 
-public _Skill_Reincarnation_Drop(id){
+public _Skill_Reincarnation_Give(id)
+{
+	give_item( id, "weapon_knife" );
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new origin[3]
-	new iweapons[32] = 0, wpname[32] = 0, inum = 0
-	get_user_weapons(id,iweapons,inum)
-
-	// Disarm and Isolate Player Before Re-Incarnation
-	get_user_origin(id,origin)
-	origin[2] -= 2000
-	set_user_origin(id,origin)
-	for(new a=0;a<inum;++a){
-		if(iweapons[a] != CSW_C4 && iweapons[a] != CSW_KNIFE){
-			get_weaponname(iweapons[a],wpname,31)
-			engclient_cmd(id,"drop",wpname)
-		}
-	}
-	client_cmd(id,"weapon_knife")
-
-	return PLUGIN_CONTINUE
-}
-
-public _Skill_Reincarnation_Give(id){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new origin[3]
-	new weaponname[20] = 0, ammoname[20] = 0
-
-	get_user_origin(id,origin)
-	origin[2] += 2005
-	
 	// Give armor
 	if ( p_data[id][P_ARMORONDEATH] )
 	{
@@ -443,172 +369,51 @@ public _Skill_Reincarnation_Give(id){
 		cs_set_user_nvg(id, 1);
 	}
 
-	if( p_data_b[id][PB_SHIELD] )
+	if ( p_data_b[id][PB_SHIELD] )
 	{
 		give_item(id, "weapon_shield");
 	}
+	
+	// hegren + smoke grenades will not be given, also only 1 flash grenade, not 2...  fix these pls :P
+	new iWeapID = 0, i = 0;
+	for ( i = 0; i < 32; i++ )
+	{
+		iWeapID = g_PlayerWeapons[id][i];
 
-	new weaponid = 0, j
-	for (j=0; (j < p_data[id][P_SAVEDNUMBER]) && (j < 32); ++j){
-		weaponid=savedweapons[id][j]
+		if ( iWeapID )
+		{
+			if ( iWeapID != CSW_C4 && iWeapID != CSW_KNIFE )
+			{
+				new szWeaponName[32], szAmmoName[32];
+				get_weaponname( iWeapID, szWeaponName, 31 );
+				get_ammo_name( iWeapID, szAmmoName, 31 );
+				
+				if ( contain( szWeaponName, "weapon_" ) == 0 )
+				{
+					give_item( id, szWeaponName );
 
-		if(weaponid==CSW_USP){
-			weaponname="weapon_usp"
-			ammoname="ammo_45acp"
-		}
-		else if(weaponid==CSW_ELITE){
-			weaponname="weapon_elite"
-			ammoname="ammo_9mm"
-		}
-		else if(weaponid==CSW_FIVESEVEN){
-			weaponname="weapon_fiveseven"
-			ammoname="ammo_57mm"
-		}
-		else if(weaponid==CSW_GLOCK18){
-			weaponname="weapon_glock18"
-			ammoname="ammo_9mm"
-		}
-		else if(weaponid==CSW_DEAGLE){
-			weaponname="weapon_deagle"
-			ammoname="ammo_50ae"
-		}
-		else if(weaponid==CSW_P228){
-			weaponname="weapon_p228"
-			ammoname="ammo_357sig"
-		}
-		else if (weaponid==3){
-			weaponname="weapon_scout"
-			ammoname="ammo_762nato"
-		}
-		else if (weaponid==4){
-			give_item(id,"weapon_hegrenade")
-		}
-		else if (weaponid==5){
-			weaponname="weapon_xm1014"
-			ammoname="ammo_buckshot"
-		}
-		else if (weaponid==7){
-			weaponname="weapon_mac10"
-			ammoname="ammo_45acp"
-		}
-		else if (weaponid==8){
-			weaponname="weapon_aug"
-			ammoname="ammo_556nato"
-		}
-		else if (weaponid==9){
-			give_item(id,"weapon_smokegrenade")	
-		}
-		else if (weaponid==12){
-			weaponname="weapon_ump45"
-			ammoname="ammo_45acp"
-		}
-		else if (weaponid==13){
-			weaponname="weapon_sg550"
-			ammoname="ammo_556nato"
-		}
-		else if (weaponid==14){
-			weaponname="weapon_galil"
-			ammoname="ammo_556nato"
-		}
-		else if (weaponid==15){
-			weaponname="weapon_famas"
-			ammoname="ammo_556nato"
-		}
-		else if (weaponid==18){
-			weaponname="weapon_awp"
-			ammoname="ammo_338magnum"
-		}
-		else if (weaponid==19){
-			weaponname="weapon_mp5navy"
-			ammoname="ammo_9mm"				
-		}
-		else if (weaponid==20){
-			weaponname="weapon_m249"
-			ammoname="ammo_556natobox"
-		}
-		else if (weaponid==21){
-			weaponname="weapon_m3"
-			ammoname="ammo_buckshot"
-		}
-		else if (weaponid==22){
-			weaponname="weapon_m4a1"
-			ammoname="ammo_556nato"
-		}
-		else if (weaponid==23){
-			weaponname="weapon_tmp"
-			ammoname="ammo_9mm"
-		}
-		else if (weaponid==24){
-			weaponname="weapon_g3sg1"
-			ammoname="ammo_762nato"
-		}
-		else if (weaponid==25){
-			if(p_data[id][P_FLASHCOUNT]==1)
-				give_item(id,"weapon_flashbang")
-			else{
-				give_item(id,"weapon_flashbang")
-				give_item(id,"weapon_flashbang")
+					if ( strlen( szAmmoName ) > 0 )
+					{
+						give_item( id, szAmmoName );
+						give_item( id, szAmmoName );
+						give_item( id, szAmmoName );
+						give_item( id, szAmmoName );
+						give_item( id, szAmmoName );
+					}
+				}
 			}
 		}
-		else if (weaponid==27){
-			weaponname="weapon_sg552"
-			ammoname="ammo_556nato"
-		}
-		else if (weaponid==28){
-			weaponname="weapon_ak47"
-			ammoname="ammo_762nato"
-		}
-		else if (weaponid==30){
-			weaponname="weapon_p90"
-			ammoname="ammo_57mm"
-		}
-		else{
-			weaponname=""
-			ammoname=""
-		}
-		if (contain(weaponname,"weapon_")==0){	//  if no match found, 0 if match
-			give_item(id,weaponname)
-			give_item(id,ammoname)
-			give_item(id,ammoname)
-			give_item(id,ammoname)
-			give_item(id,ammoname)
-			give_item(id,ammoname)
-		}
 	}
-
-	// Restore Re-Incarnated Player to the map
-	set_user_origin(id,origin)
-
-	// This will make the player have the new reincarnated weapon selected
-	// instead of the player's knife being selected
-	new iweapons[32] = 0, wpname[32] = 0, inum = 0
-	new bool:foundPrim = false
-	//new bool:foundSec = false
-	get_user_weapons(id,iweapons,inum)
-
-	for(new a=0;a<inum;++a){
-		if(isPrimary(iweapons[a])){
-			get_weaponname(iweapons[a],wpname,31)
-			client_cmd(id,wpname)
-			foundPrim = true
-			break
-		}
-	}
-
-	if(!foundPrim){
-		for(new a=0;a<inum;++a){
-			if(isSecondary(iweapons[a])){
-				get_weaponname(iweapons[a],wpname,31)
-				client_cmd(id,wpname)
-				//foundSec = true
-				break
-			}
-		}
-	}	
 
 	return PLUGIN_CONTINUE
 }
 #endif
+
+public ORC_Reincarnation_Save( id )
+{
+	new num = 0;
+	get_user_weapons( id, g_PlayerWeapons[id], num );
+}
 
 // ****************************************
 // Night Elf's Evasion
@@ -833,7 +638,7 @@ public _Skill_Hex(parm[2]){
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 	
-	p_data_b[id][PB_RENDER] = true
+	p_data_b[id][PB_CAN_RENDER] = true
 	p_data_b[id][PB_HEXED] = false
 	
 	/* Reset the user's speed */

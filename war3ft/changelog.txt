@@ -1,5 +1,9 @@
 v2.3.3
+ - Added: Start/Stop command: amx_wc3 <on|off>
  - Bug Fix: cl_minmodels task was not repeating
+ - Change: Cloak stacks with invisibility
+ - Change: Config file location moved
+ - Change: When weapon reincarnation's weapons are saved
  - Removed: FT_impale_intensity cvar (edit this constant at the top of skills.inl)
  - Removed: FT_blink_radius cvar (replaced with NECKLACE_RADIUS define)
  - Removed: FT_healing_range cvar (defined at top of skills.inl)
@@ -12,11 +16,7 @@ v2.3.3
  - Removed: FT_centerhud (this actually hasn't done anything for quite a few versions)
  - Removed: DOD_bootspeed (you can change it at the top of items.inl)
  - Removed: sv_warcraft3 (added a start/stop option)
- - Change: Config file location moved
 
- //CHEATING_DEATH_NOT_INSTALLED
- //RACE2_SKILL4_INFO_T
- //MENU_TELEPORT_TO
 Add a disable orc nade map config file...
 Add a start/stop option
 
@@ -56,12 +56,12 @@ v2.2.9
  - Update: languages.txt file
 
 v2.2.8
- - Addition: Added FT_query_client cvar, setting this to 1 will NOT query the client's cl_minmodel value
+ - Addition: Added wc3_query_client cvar, setting this to 1 will NOT query the client's cl_minmodel value
  - Addition: Vault pruning (only works with data inserted from version 2.2.8 and onward)
- - Change: sv_mysql_save_end_round changed to sv_save_end_round
+ - Change: sv_mysql_wc3_save_end_round changed to sv_wc3_save_end_round
  - Change: (VAULT) When saving data, playername is now at the end of the string (vault conversion will be able to pull the playername)
  - Change: Saving at the end of the round is improved (one query for every .1 seconds, not ALL queries at once)
- - Change: sv_save_end_round default changed from 0 to 1
+ - Change: sv_wc3_save_end_round default changed from 0 to 1
  - Change: sv_mysql_auto_pruning changed to FT_auto_pruning (b/c its not just mysql, also sqlite)
  - Improvement: Re-wrote/updated the MySQL/Vault/SQLLite code (XP.inl)
  - Bug Fix: Pruning now works for MySQL (untested for SQLLITE) - now occurs on EVERY map change
@@ -173,7 +173,7 @@ v2.1.8
  - Change: (DOD) Tome of Experience now awards roughly twice as much XP
  - Special thanks to Damaged Soul for the CSHack module and for taking the time to get the one native to function on czero
  - Addition: /level will show the hero abilities
- - Addition: FT_show_player, this will show teammate/enemy info on the center of the screen
+ - Addition: wc3_show_player, this will show teammate/enemy info on the center of the screen
  - Addition: Fix for cl_minmodels (I removed this a few versions ago for efficiencies sake)
  - Language: Various updates
  - Language: Hungarian added (thanks almasrates, please replace the languages.txt file with mine)
@@ -424,12 +424,12 @@ v2.0.2
  - Addition: FT_ultimatedelay is default at 15.0 seconds
  - Addition: Ultimate not found message/sound (from war3x)
  - Addition: Ultimate ready message/sound (from war3x)
- - Addition: You can now specify EXACTLY how many races you would like (FT_races)
+ - Addition: You can now specify EXACTLY how many races you would like (wc3_races)
  - Addition: Playerskills is now divided by race (similar to war3x)
  - Removed: Walker function, put it's code in client_prethink
  - Removed: Individual cooldown cvars, now it's FT_ultimate_cooldown
  - Removed: Explosion cvars for undead
- - Removed: FT_show_player (feature removed)
+ - Removed: wc3_show_player (feature removed)
  - Removed: FT_reset_skills (option is always on)
  - Removed: FT_showblood (feature removed)
  - Removed: CSSTATS_ENABLED define
@@ -483,17 +483,24 @@ v2.0
 v2.01
  - added a check for maps that will not work in dod, war3FT will be disabled for those maps (see list below)
 
-Non-fixable bugs:
- - /icons does not work with de_inferno_cz, this is not fixable, it's a limitation of the HL engine
- - The following maps will not work b/c of the 512 items precached limit:
-	dod_caen, dod_charlie, dod_escape, dod_falaise, dod_forest, dod_kalt, dod_vicenza
- - The following maps will not have all sounds b/c of the 512 items precached limit:
-	dod_anzio
-
-Fixable bugs:
- - clear all huds
-
-To dos:
- - use set_user_hitzones for mole protectant
- - DOD: Assign a skill for weapon reincarnation
- - DOD: Assign something for helm of excellence
+/*
+*  Credits to:
+*  Spacedude (for War3 MOD)
+*  Ludwig Van (for flamethrower)
+*  OLO (for spectating rank info)
+*  JGHG for the mole code
+*  [AOL]Demandred, [AOL]LuckyJ for help coding it for steam
+*  [AOL]Demandred for freezetime exploit fix
+*  Everyone at amxmod.net/amxmodx.org for help
+*  joecool12321 for various health related fixes
+*  Tri Moon for various improvements (No Race, war3menu, etc...)
+*  xeroblood for spotting some bugs for me :)
+*  bad-at-this for contributing the status bar code used for godmode (big bad voodoo)
+*  bad-at-this for creating race 9
+*  kamikaze for...
+ 		help w/testing version before release
+		always helping people out on the forums
+		contributing code for the anti-skywalking
+*  ryannotfound (wc3mods.net/war3x) for some of the naming conventions used (function names, constants, etc...) and functions
+*  Lazarus Long for adding ALL of the sql-lite code and fine-tuning the existing MySQL code... It's so much pertier
+*/

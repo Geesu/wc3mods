@@ -128,8 +128,8 @@ stock get_user_maxhealth(id){
 
 	// Player has a health bonus from the Periapt of Health
 
-	if ( p_data[id][P_ITEM]==ITEM_HEALTH ){
-		maxHealth += get_pcvar_num( CVAR_ITEM_Health );
+	if ( p_data[id][P_ITEM]==wc3_health ){
+		maxHealth += get_pcvar_num( CVAR_wc3_health );
 	}
 
 	return maxHealth
@@ -186,9 +186,9 @@ stock Status_Text(id, szMessage[], Float:fDuration, Float:iYPos){
 
 stock race9_randomize(){
 
-	if (get_pcvar_num( CVAR_FT_Races ) == 9)
+	if (get_pcvar_num( CVAR_wc3_races ) == 9)
 	{
-		if (get_pcvar_num( CVAR_CHAM_Random ))
+		if (get_pcvar_num( CVAR_wc3_cham_random ))
 		{
 			new myintvallocal = 0
 			// loop through all four skill options (3 + ultimate) pick a new race at random and update the skill
@@ -239,4 +239,60 @@ stock get_user_money(id){
 	#if MOD == 1
 		return p_data[id][P_MONEY]
 	#endif
+}
+
+
+stock get_ammo_name( iWeapID, szAmmoName[], len )
+{
+	switch( iWeapID )
+	{
+		case CSW_USP, CSW_MAC10, CSW_UMP45:
+		{ 
+			copy( szAmmoName, len, "ammo_45acp" );
+		}
+		case CSW_ELITE, CSW_GLOCK18, CSW_MP5NAVY, CSW_TMP:
+		{
+			copy( szAmmoName, len, "ammo_9mm" );
+		}
+		case CSW_FIVESEVEN, CSW_P90:
+		{
+			copy( szAmmoName, len, "ammo_57mm" );
+		}
+		case CSW_DEAGLE:
+		{
+			copy( szAmmoName, len, "ammo_50ae" );
+		}
+		case CSW_P228:
+		{
+			copy( szAmmoName, len, "ammo_357sig" );
+		}
+		case CSW_SCOUT, CSW_G3SG1, CSW_AK47:
+		{
+			copy( szAmmoName, len, "ammo_762nato" );
+		}
+		case CSW_XM1014, CSW_M3:
+		{
+			copy( szAmmoName, len, "ammo_buckshot" );
+		}
+		case CSW_AUG, CSW_SG550, CSW_GALIL, CSW_FAMAS, CSW_M4A1:
+		{
+			copy( szAmmoName, len, "ammo_556nato" );
+		}
+		case CSW_AWP:
+		{
+			copy( szAmmoName, len, "ammo_338magnum" );
+		}
+		case CSW_M249:
+		{
+			copy( szAmmoName, len, "ammo_556natobox" );
+		}
+		case CSW_SG552:
+		{
+			copy( szAmmoName, len, "ammo_556nato" );
+		}
+		default:
+		{
+			copy( szAmmoName, len, "" );
+		}
+	}
 }

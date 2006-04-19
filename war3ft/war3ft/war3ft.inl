@@ -22,7 +22,7 @@ public WAR3_precache() {
 		copy( SOUND_BLINK, 63,				"warcraft3/blinkarrival.wav"					)  // Blink Teleport
 		copy( SOUND_LEVELUP, 63,			"warcraft3/Levelupcaster.wav"					)  // Level up
 		copy( SOUND_PICKUPITEM, 63,			"warcraft3/PickUpItem.wav"						)  // Buy / Pick up item
-		copy( SOUND_ITEM_TOME, 63,				"warcraft3/Tomes.wav"							)  // Tome of Experience
+		copy( SOUND_wc3_tome, 63,				"warcraft3/Tomes.wav"							)  // Tome of Experience
 		copy( SOUND_ULTIMATESCAN, 63,		"turret/tu_ping.wav"							)  // Ultimate Beep
 		copy( SOUND_ULTIMATEREADY, 63,		"warcraft3/ResurrectTarget.wav"					)  // Ultimate Beep
 		copy( SOUND_ANNIHILATION, 63,		"warcraft3/PurgeTarget1.wav"					)	// Orb of Annihilation
@@ -45,7 +45,7 @@ public WAR3_precache() {
 		copy( SOUND_BLINK, 63,				"x/x_shoot1.wav"								)  // Blink Teleport
 		copy( SOUND_LEVELUP, 63,			"plats/elevbell1.wav"							)  // Level up
 		copy( SOUND_PICKUPITEM, 63,			"items/ammopickup1.wav"							)  // Buy / Pick up item
-		copy( SOUND_ITEM_TOME, 63,				"items/suitchargeok1.wav"						)  // Tome of Experience
+		copy( SOUND_wc3_tome, 63,				"items/suitchargeok1.wav"						)  // Tome of Experience
 		copy( SOUND_ULTIMATESCAN, 63,		"turret/tu_ping.wav"							)  // Ultimate Beep
 		copy( SOUND_ULTIMATEREADY, 63,		"buttons/bell1.wav"								)  // Ultimate Beep
 //		copy( SOUND_ANNIHILATION, 63,		"warcraft3/PurgeTarget1.wav"					)	// Orb of Annihilation
@@ -77,7 +77,7 @@ public WAR3_precache() {
 	// Miscellaneous
 	precache_sound(SOUND_LEVELUP) 
 	precache_sound(SOUND_PICKUPITEM) 
-	precache_sound(SOUND_ITEM_TOME) 
+	precache_sound(SOUND_wc3_tome) 
 	precache_sound(SOUND_ULTIMATESCAN) 
 	precache_sound(SOUND_ULTIMATEREADY) 
 	precache_sound("warcraft3/soundpack/reincarnation.wav") 
@@ -171,7 +171,7 @@ public WAR3_chooserace(id){
 	if( iTeam == ALLIES || iTeam == AXIS )
 #endif
 	{
-		if( get_pcvar_num( CVAR_SAVE_Enabled ) )
+		if( get_pcvar_num( CVAR_wc3_save_xp ) )
 		{
 			XP_Get( id );
 		}
@@ -307,7 +307,7 @@ public WAR3_death_victim(victim_id, killer_id){
 		new parm[1]
 		parm[0] = victim_id
 
-		p_data[victim_id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_ULT_Cooldown )
+		p_data[victim_id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 		_Ultimate_Delay(parm)
 	}
 
@@ -376,7 +376,7 @@ public WAR3_death_victim(victim_id, killer_id){
 
 		Create_TE_IMPLOSION(origin, 100, 20, 5)
 
-		p_data[victim_id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_ULT_Cooldown )
+		p_data[victim_id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 
 		if(task_exists(TASK_UDELAY+victim_id))
 			remove_task(TASK_UDELAY+victim_id)
@@ -391,7 +391,7 @@ public WAR3_death_victim(victim_id, killer_id){
 
 		p_data_b[victim_id][PB_ULTIMATEUSED]=true
 
-		p_data[victim_id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_ULT_Cooldown )
+		p_data[victim_id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 
 		if(task_exists(TASK_UDELAY+victim_id))
 			remove_task(TASK_UDELAY+victim_id)
@@ -656,7 +656,7 @@ public WAR3_set_race(id,race){
 	new parm[1]
 	parm[0]=id
 
-	if (get_pcvar_num( CVAR_SAVE_Enabled )){
+	if (get_pcvar_num( CVAR_wc3_save_xp )){
 		p_data[id][P_XP] = 0
 		p_data[id][P_LEVEL] = 0
 		XP_Set_Race_Data( id );
@@ -894,9 +894,6 @@ public WAR3_Display_Level(id, flag){
 	}
 
 	Skill_UnholyAura(id);
-
-	// Check Invisibility
-	Skill_Invisibility(id)
 	
 	// Check Evasion (don't do set here, b/c we don't want to re-check the skill everytime someone types /level)
 	Skill_Evasion_Check( id );
@@ -965,7 +962,7 @@ WAR3_Show_Spectator_Info(id, targetid){
 		format(temp,511,"%L",id,"CURRENT_HEALTH",thehealth,0)
 	#endif
 	add(message,1047,temp)
-	if(get_pcvar_num( CVAR_FT_Spec_Position )==0)
+	if(get_pcvar_num( CVAR_wc3_spec_position )==0)
 		set_hudmessage(255,255,255,0.018,0.9,2, 1.5, 12.0, 0.02, 5.0, 1) 
 	else
 		set_hudmessage(255,255,255,0.65,0.9,2, 1.5, 12.0, 0.02, 5.0, 1) 
@@ -1037,10 +1034,20 @@ public WAR3_Init()
 	checkmap()
 
 	// Set which string should be displayed with messages (war3ft or war3)
-	if ( get_pcvar_num( CVAR_FT_Races ) < 5 )
+	if ( get_pcvar_num( CVAR_wc3_races ) < 5 )
 	{
 		g_MODclient = "* [WAR3]"
 	}
+	
+	// cl_minmodels check
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		set_task( 0.7, "WAR3_Mole_Fix", TASK_MOLEFIX, "", 0, "b" );
+	}
+}
+
+public WAR3_Determine_Game()
+{
 
 	// This may be used in the future to remove the #defines based on which mod is running
 	if ( is_running("cstrike") )
@@ -1055,4 +1062,19 @@ public WAR3_Init()
 	{
 		g_MOD = GAME_DOD;
 	}
+}
+
+WAR3_Check( id = 0, print_location = print_chat )
+{
+	if ( warcraft3 )
+	{
+		return true;
+	}
+
+	if ( id != 0 && print_location )
+	{
+		client_print( id, print_location, "%s war3ft has been disabled by an admin of this server", g_MODclient );
+	}
+
+	return false;
 }

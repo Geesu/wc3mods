@@ -12,23 +12,23 @@ public Item_Message(id, item, shopmenu){
 		switch(item){
 		#if MOD == 0
 			case ITEM_ANKH:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_1")
-			case ITEM_BOOTS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_2", (100.0 * (1.0-(260.0/get_pcvar_float( CVAR_ITEM_Boots )))))
+			case wc3_boots:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_2", (100.0 * (1.0-(260.0/get_pcvar_float( CVAR_wc3_boots )))))
 		#endif
 		#if MOD == 1
 			case ITEM_ANKH:			client_print(id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_1")
-			case ITEM_BOOTS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_2")
+			case wc3_boots:		client_print(id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_2")
 		#endif
-			case ITEM_CLAWS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_3", get_pcvar_num( CVAR_ITEM_Claw ))
-			case ITEM_CLOAK:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_4", (100.0 * (float(get_pcvar_num( CVAR_ITEM_Cloak ))/255.0)))
-			case ITEM_MASK:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_5", (100.0 * get_pcvar_num( CVAR_ITEM_Mask_Of_Death )))
+			case wc3_clawS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_3", get_pcvar_num( CVAR_wc3_claw ))
+			case wc3_cloak:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_4", (100.0 * (float(get_pcvar_num( CVAR_wc3_cloak ))/255.0)))
+			case ITEM_MASK:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_5", (100.0 * get_pcvar_num( CVAR_wc3_mask )))
 			case ITEM_NECKLACE:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_6")
-			case ITEM_FROST:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_7", (100.0 * (get_pcvar_float( CVAR_ITEM_Frost )/260.0)))
-			case ITEM_HEALTH:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_8", get_pcvar_num( CVAR_ITEM_Health ))
+			case wc3_frost:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_7", (100.0 * (get_pcvar_float( CVAR_wc3_frost )/260.0)))
+			case wc3_health:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_8", get_pcvar_num( CVAR_wc3_health ))
 		#if MOD == 0
-			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (get_pcvar_num( CVAR_ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]]))
+			case wc3_tome:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]]))
 		#endif
 		#if MOD == 1
-			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (2 * (get_pcvar_num( CVAR_ITEM_Tome ) + xpgiven[p_data[id][P_LEVEL]])))
+			case wc3_tome:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (2 * (get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]])))
 		#endif
 		}
 	}
@@ -48,8 +48,8 @@ public Item_Message(id, item, shopmenu){
 			case ITEM_PROTECTANT:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_2")
 			case ITEM_HELM:				client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_3")
 			case ITEM_AMULET:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_4")
-			case ITEM_SOCK:				client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_5")
-			case ITEM_GLOVES:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_6", get_pcvar_num( CVAR_ITEM_Glove_Timer ))
+			case wc3_sock:				client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_5")
+			case ITEM_GLOVES:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_6", get_pcvar_num( CVAR_wc3_glove_timer ))
 			case ITEM_RING:				client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_7")
 		#if MOD == 0
 			case ITEM_CHAMELEON:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_8")
@@ -115,8 +115,8 @@ public Item_Check(parm[]){
 	if (task_exists(TASK_ITEM_RINGERATE+id) && p_data[id][P_ITEM2]!=ITEM_RING)
 		remove_task(TASK_ITEM_RINGERATE+id)
 
-	if (p_data[id][P_ITEM]==ITEM_HEALTH)
-		set_user_health(id,get_user_health(id)+get_pcvar_num( CVAR_ITEM_Health ))
+	if (p_data[id][P_ITEM]==wc3_health)
+		set_user_health(id,get_user_health(id)+get_pcvar_num( CVAR_wc3_health ))
 	
 	if(p_data[id][P_ITEM2]==ITEM_RING && !task_exists(TASK_ITEM_RINGERATE+id))
 		_Item_Ring(parm)
@@ -198,52 +198,69 @@ public _Item_Glove(parm[2]){
 	return PLUGIN_CONTINUE
 }
 
-public Item_Glove_Give(id) { 
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	new wpnList[32] = 0 
-	new number = 0
-	new foundNade = false 
-	get_user_weapons(id,wpnList,number) 
-	for (new i = 0;i < number && !foundNade;i++) { 
-		#if MOD == 0
-			if (wpnList[i] == CSW_HEGRENADE) 
-				foundNade = true 
-		#endif
-		#if MOD == 1
-			if (wpnList[i] == DODW_HANDGRENADE || wpnList[i] == DODW_STICKGRENADE) 
-				foundNade = true 
-		#endif
+public Item_Glove_Give(id) 
+{ 
+	if ( !warcraft3 )
+	{
+		return PLUGIN_CONTINUE;
 	}
 
-	if (!foundNade && is_user_alive(id)){
-	#if MOD == 0
-		set_hudmessage(0, 100, 0, 0.05, 0.65, 2, 0.02, 10.0, 0.01, 0.1, 2)
-		show_hudmessage(id,"%L",id,"ENJOY_A_GRENADE")
+	// User needs to be connected and alive
+	if( !p_data_b[id][PB_ISCONNECTED] || !is_user_alive(id) )
+	{
+		return PLUGIN_CONTINUE;
+	}
 
-		give_item(id,"weapon_hegrenade")
-	#endif
-	#if MOD == 1
-		new message[128]
-		format(message,127,"%L",id,"ENJOY_A_GRENADE")
-		Create_HudText(id, message, 1)
-	
-		if(get_user_team(id)==ALLIES)
-			give_item(id,"weapon_handgrenade")
-		else
-			give_item(id,"weapon_stickgrenade")
-	#endif
+	// If the user doesn't have a grenade then we can give him one
+	if ( !SHARED_HasGrenade( id ) )
+	{
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			set_hudmessage( 0, 100, 0, 0.05, 0.65, 2, 0.02, 10.0, 0.01, 0.1, 2 );
+			show_hudmessage( id, "%L", id, "ENJOY_A_GRENADE" );
+
+			give_item( id, "weapon_hegrenade" );
+		}
+		else if ( g_MOD == GAME_DOD )
+		{
+			new szMessage[128];
+			format( szMessage, 127, "%L", id, "ENJOY_A_GRENADE" );
+			Create_HudText( id, szMessage, 1 );
+		
+			// Give the user a grenade based on their team
+			if( get_user_team( id ) == ALLIES )
+			{
+				give_item( id, "weapon_handgrenade" );
+			}
+			else
+			{
+				give_item( id, "weapon_stickgrenade" );
+			}
+		}
 	} 
 
-	p_data_b[id][PB_NADEJUSTRECEIVED]=false
-	return PLUGIN_CONTINUE 
+	p_data_b[id][PB_NADEJUSTRECEIVED] = false;
+
+	return PLUGIN_CONTINUE;
 } 
 
+
+public ITEM_Glove_Check( id )
+{
+	if ( p_data[id][P_ITEM2] == ITEM_GLOVES )
+	{
+		
+		if( !p_data_b[id][PB_NADEJUSTRECEIVED] && !SHARED_HasGrenade( id ) )
+		{
+			new parm[2];
+			parm[0] = id;
+			parm[1] = get_pcvar_num( CVAR_wc3_glove_timer );
+
+			p_data_b[id][PB_NADEJUSTRECEIVED] = true;
+			_Item_Glove( parm );
+		}
+	}
+}
 
 // ****************************************
 // Mole

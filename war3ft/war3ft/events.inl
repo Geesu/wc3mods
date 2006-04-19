@@ -16,7 +16,7 @@ public grenade_throw(index,greindex,wId){
 	if(greindex && (equal(szModel, "models/w_grenade.mdl") || equal(szModel, "models/w_stick.mdl"))){
 #endif
 		if( Verify_Skill(index, RACE_ORC, SKILL2) ){
-			if( ( (p_data[index][P_ITEM2]==ITEM_GLOVES && get_pcvar_num( CVAR_ITEM_Glove_Orc_Damage )) || (p_data[index][P_ITEM2]!=ITEM_GLOVES) ) && is_user_alive(index) ) { 
+			if( ( (p_data[index][P_ITEM2]==ITEM_GLOVES && get_pcvar_num( CVAR_wc3_glove_orc_damage )) || (p_data[index][P_ITEM2]!=ITEM_GLOVES) ) && is_user_alive(index) ) { 
 					Create_TE_BEAMFOLLOW(greindex, g_siTrail, 20, 10, 255, 32, 32, 196)
 			} 
 		} 
@@ -240,7 +240,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 			new bool:allow=true
 
 			if(p_data[attacker][P_ITEM2]==ITEM_GLOVES){
-				if(get_pcvar_num( CVAR_ITEM_Glove_Orc_Damage ))
+				if(get_pcvar_num( CVAR_wc3_glove_orc_damage ))
 					allow=true
 				else
 					allow=false
@@ -373,7 +373,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 				set_user_rendering(victim, kRenderFxDistort, 0, 0, 0, kRenderTransTexture, 0)
 				
 				/* Do not allow other renderings to take place like invisibility */
-				p_data_b[victim][PB_RENDER] = false
+				p_data_b[victim][PB_CAN_RENDER] = false
 				
 				p_data_b[victim][PB_HEXED] = true
 					
@@ -502,8 +502,8 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	// Item abilities
 
 	// Claws of Attack
-	if ( p_data[attacker][P_ITEM] == ITEM_CLAWS && !p_data_b[attacker][PB_HEXED] ){	
-		WAR3_damage(victim, attacker, get_pcvar_num( CVAR_ITEM_Claw ), wpnindex, hitplace)
+	if ( p_data[attacker][P_ITEM] == wc3_clawS && !p_data_b[attacker][PB_HEXED] ){	
+		WAR3_damage(victim, attacker, get_pcvar_num( CVAR_wc3_claw ), wpnindex, hitplace)
 
 		if (iglow[victim][0] < 1){
 			new parm[2]
@@ -525,7 +525,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	else if ( p_data[attacker][P_ITEM] == ITEM_MASK && !Verify_Skill(attacker, RACE_UNDEAD, SKILL1) && !p_data_b[attacker][PB_HEXED] ){
 		new iHealth = get_user_actualhealth(attacker)
 
-		tempdamage = floatround(float(damage) * get_pcvar_num( CVAR_ITEM_Mask_Of_Death ))
+		tempdamage = floatround(float(damage) * get_pcvar_num( CVAR_wc3_mask ))
 
 		if ( iHealth + tempdamage > get_user_maxhealth(attacker) ){
 			new iTotalHealth = get_user_health(attacker)
@@ -556,10 +556,10 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	}
 
 	// Orb of Frost
-	else if ( p_data[attacker][P_ITEM] == ITEM_FROST && !p_data_b[attacker][PB_HEXED] ){
+	else if ( p_data[attacker][P_ITEM] == wc3_frost && !p_data_b[attacker][PB_HEXED] ){
 		if (get_user_maxspeed(victim) > 10 && !p_data_b[victim][PB_SLOWED]){
 			new normalspeed = floatround(get_user_maxspeed(victim))
-			set_user_maxspeed(victim, get_pcvar_float( CVAR_ITEM_Frost ))
+			set_user_maxspeed(victim, get_pcvar_float( CVAR_wc3_frost ))
 			p_data_b[victim][PB_SLOWED]=true
 			new parm[2]
 			parm[0]=victim
@@ -776,6 +776,7 @@ public on_CurWeapon(id) {
 	// read_data(1) = isActive?
 	// read_data(2) = weapon index
 	// read_data(3) = ammo
+
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
@@ -784,33 +785,10 @@ public on_CurWeapon(id) {
 
 	// Record the last time a shot was fired
 	fLastShotFired[id] = halflife_time();
+	
+	ORC_Reincarnation_Save( id );
 
-	if (p_data[id][P_ITEM2]==ITEM_GLOVES){
-		new wpnList[32] = 0 
-		new number  = 0
-		new foundNade = false 
-		get_user_weapons(id,wpnList,number) 
-		for (new i = 0;i < number && !foundNade;i++) { 
-		#if MOD == 0
-			if (wpnList[i] == CSW_HEGRENADE) 
-				foundNade = true 
-		#endif
-		#if MOD == 1
-			if (wpnList[i] == DODW_HANDGRENADE || wpnList[i] == DODW_STICKGRENADE) 
-				foundNade = true 
-		#endif
-		}
-		
-		if(!p_data_b[id][PB_NADEJUSTRECEIVED] && !foundNade){
-			new parm[2]
-			parm[0] = id
-			parm[1] = get_pcvar_num( CVAR_ITEM_Glove_Timer )
-
-			p_data_b[id][PB_NADEJUSTRECEIVED]=true
-			_Item_Glove(parm)
-		}
-	}
-
+	ITEM_Glove_Check( id );
 
 	#if MOD == 1
 		new clipamount = 0, ammoamount = 0, weaponnum = 0
@@ -825,7 +803,7 @@ public on_CurWeapon(id) {
 	#endif
 
 	// Check to see if we should set the player's invisibility
-	Skill_Invisibility(id)
+	SHARED_INVIS_Set( id );
 
 	new parm[1]
 	parm[0]=id
@@ -843,16 +821,19 @@ public on_ResetHud(id){
 	if ( endround )
 	{
 		// have "fake" ultimate delay
-		iUltimateDelay = get_pcvar_num( CVAR_ULT_Delay );
+		iUltimateDelay = get_pcvar_num( CVAR_wc3_ult_delay );
 		
 		new parm[1];
 		parm[0] = 0;
 		_Ultimate_Delay(parm);
 	}
 
+	// Set the user's Invisibility
+	SHARED_INVIS_Set( id );
+
 	if(is_user_bot(id)){
 		new Float:randomnumber = random_float(0.0,1.0)
-		if (randomnumber <= get_pcvar_num( CVAR_BOT_Buy_Item )){
+		if (randomnumber <= get_pcvar_num( CVAR_wc3_bot_buy_item )){
 			new num = random_num(1,2)
 			if (num == 1)
 				_menu_Shopmenu_One(id, random_num(0,8))
@@ -861,7 +842,7 @@ public on_ResetHud(id){
 		}
 		if (randomnumber <= 0.06){
 			p_data[id][P_XP]=xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))]
-			p_data[id][P_RACE] = random_num(1,get_pcvar_num( CVAR_FT_Races ))
+			p_data[id][P_RACE] = random_num(1,get_pcvar_num( CVAR_wc3_races ))
 		}
 	}
 
@@ -916,7 +897,7 @@ public on_ResetHud(id){
 		#endif
 	}
 	#if MOD == 0
-		if(get_pcvar_num( CVAR_FT_Buy_Time ) && !g_buyCalled){
+		if(get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyCalled){
 			set_task(get_cvar_float("mp_buytime")*60.0,"_WAR3_set_buytime",TASK_BUYTIME)
 			g_buyCalled = true
 		}
@@ -983,7 +964,7 @@ public on_ResetHud(id){
 	Ultimate_Icon(id,ICON_HIDE)
 	// Start a new cooldown
 	
-	new iUltDelay = get_pcvar_num( CVAR_ULT_Delay );
+	new iUltDelay = get_pcvar_num( CVAR_wc3_ult_delay );
 	if ( iUltDelay > 0){
 		p_data_b[id][PB_ULTIMATEUSED] = true
 		p_data[id][P_ULTIMATEDELAY] = iUltDelay
@@ -995,7 +976,7 @@ public on_ResetHud(id){
 
 	_Ultimate_Delay(parm)
 
-	if (p_data[id][P_RACE] == 9 && get_pcvar_num( CVAR_CHAM_Random )){
+	if (p_data[id][P_RACE] == 9 && get_pcvar_num( CVAR_wc3_cham_random )){
 		WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
 	}
 
@@ -1083,7 +1064,7 @@ public on_GameRestart(){
 		p_data[id][P_ITEM2] = 0
 		p_data_b[id][PB_DIEDLASTROUND] = false
 		p_data[id][P_RINGS]=0
-		if(get_pcvar_num( CVAR_SAVE_Enabled )==0){
+		if(get_pcvar_num( CVAR_wc3_save_xp )==0){
 			p_data[id][P_LEVEL]=0
 			p_data[id][P_RACE]=0
 			p_data[id][P_SKILL1]=0
@@ -1099,4 +1080,29 @@ public on_GameRestart(){
 	}
 
 	return PLUGIN_CONTINUE
+}
+
+
+public on_WeapPickup(id){ 
+
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
+	ORC_Reincarnation_Save( id );
+
+	return;
+}
+
+public on_Drop(id)
+{
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
+	ORC_Reincarnation_Save( id );
+
+	return;
 }
