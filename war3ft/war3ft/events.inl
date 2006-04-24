@@ -340,10 +340,10 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 
 		// Siphon Mana
 		if ( Verify_Skill(attacker, RACE_BLOOD, SKILL3) && !p_data_b[attacker][PB_HEXED] ){
-			new money = floatround( p_mana[p_data[attacker][P_SKILL3]-1] * get_user_money(victim) )  
+			new money = floatround( p_mana[p_data[attacker][P_SKILL3]-1] * SHARED_GetUserMoney(victim) )  
 
-			set_user_money(attacker,get_user_money(attacker)+money,1)
-			set_user_money(victim,get_user_money(victim)-money,1)
+			SHARED_SetUserMoney(attacker,SHARED_GetUserMoney(attacker)+money,1)
+			SHARED_SetUserMoney(victim,SHARED_GetUserMoney(victim)-money,1)
 
 			if (iglow[attacker][1] < 1){
 				new parm[2]
@@ -502,7 +502,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	// Item abilities
 
 	// Claws of Attack
-	if ( p_data[attacker][P_ITEM] == wc3_clawS && !p_data_b[attacker][PB_HEXED] ){	
+	if ( p_data[attacker][P_ITEM] == ITEM_CLAWS && !p_data_b[attacker][PB_HEXED] ){	
 		WAR3_damage(victim, attacker, get_pcvar_num( CVAR_wc3_claw ), wpnindex, hitplace)
 
 		if (iglow[victim][0] < 1){
@@ -556,7 +556,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	}
 
 	// Orb of Frost
-	else if ( p_data[attacker][P_ITEM] == wc3_frost && !p_data_b[attacker][PB_HEXED] ){
+	else if ( p_data[attacker][P_ITEM] == ITEM_FROST && !p_data_b[attacker][PB_HEXED] ){
 		if (get_user_maxspeed(victim) > 10 && !p_data_b[victim][PB_SLOWED]){
 			new normalspeed = floatround(get_user_maxspeed(victim))
 			set_user_maxspeed(victim, get_pcvar_float( CVAR_wc3_frost ))
@@ -786,7 +786,7 @@ public on_CurWeapon(id) {
 	// Record the last time a shot was fired
 	fLastShotFired[id] = halflife_time();
 	
-	ORC_Reincarnation_Save( id );
+	SHARED_SaveWeapons( id );
 
 	ITEM_Glove_Check( id );
 
@@ -812,272 +812,17 @@ public on_CurWeapon(id) {
 	return PLUGIN_CONTINUE
 }
 
-public on_ResetHud(id){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-	
-	// Then this is the first call of the new round
-	if ( endround )
-	{
-		// have "fake" ultimate delay
-		iUltimateDelay = get_pcvar_num( CVAR_wc3_ult_delay );
-		
-		new parm[1];
-		parm[0] = 0;
-		_Ultimate_Delay(parm);
-	}
-
-	// Set the user's Invisibility
-	SHARED_INVIS_Set( id );
-
-	if(is_user_bot(id)){
-		new Float:randomnumber = random_float(0.0,1.0)
-		if (randomnumber <= get_pcvar_num( CVAR_wc3_bot_buy_item )){
-			new num = random_num(1,2)
-			if (num == 1)
-				_menu_Shopmenu_One(id, random_num(0,8))
-			else
-				_menu_Shopmenu_Two(id, random_num(0,8))
-		}
-		if (randomnumber <= 0.06){
-			p_data[id][P_XP]=xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))]
-			p_data[id][P_RACE] = random_num(1,get_pcvar_num( CVAR_wc3_races ))
-		}
-	}
-
-	new parm[2]
-	parm[0] = id
-
-	// Remove any reset_maxspeeds occuring (could cause a person to move during freezetime)
-	if (task_exists(TASK_RESETSPEED+id)){			
-		remove_task(TASK_RESETSPEED+id)
-	}
-
-	// The user should not be frozen at the start of the round	
-	p_data_b[id][PB_STUNNED] = false
-	p_data_b[id][PB_SLOWED] = false
-
-	/* Stop the user from searching (chain lightning) */
-	if (task_exists(TASK_LIGHTSEARCH+id)){
-		remove_task(TASK_LIGHTSEARCH+id)
-	}
-
-	/* Stop the user from searching (entangling roots) */
-	if (task_exists(TASK_SEARCHTARGET+id)){
-		remove_task(TASK_SEARCHTARGET+id)
-	}
-
-	/* Set this to false just to be safe (used by NE and ORC ultimates) */
-	p_data_b[id][PB_ISSEARCHING]=false
-
-	if(is_user_alive(id)){
-		p_data_b[id][PB_JUSTJOINED] = false
-	}
-
-	if(p_data[id][P_RACE]==0){
-		new parameter[1]
-		parameter[0]=id
-		set_task(0.3,"getuserinput",TASK_GETINPUT+id,parameter,1)
-	}
-
-	if(!g_randomizeCalled){
-		race9_randomize()
-		g_randomizeCalled = true
-	}
-
-	if(p_data_b[id][PB_GAMECOMMENCING]){
-		p_data[id][P_ITEM] = 0
-		p_data[id][P_ITEM2] = 0
-		p_data_b[id][PB_DIEDLASTROUND]=false
-		p_data_b[id][PB_GAMECOMMENCING]=false
-		#if MOD == 0
-			p_data[id][P_HECOUNT] = 0
-			p_data[id][P_FLASHCOUNT]=0
-		#endif
-	}
-	#if MOD == 0
-		if(get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyCalled){
-			set_task(get_cvar_float("mp_buytime")*60.0,"_WAR3_set_buytime",TASK_BUYTIME)
-			g_buyCalled = true
-		}
-	#endif	
-
-	p_data_b[id][PB_TOBEREVIVED] = false
-	p_data_b[id][PB_CHANGINGTEAM] = false
-	
-	// Skill Checks for functions that should occur on every spawn
-	Skill_Evasion_Set( id );
-
-	#if MOD == 1
-		if(p_data[id][P_ITEM] == ITEM_ANKH){
-			p_data_b[id][PB_REINCARNATION_DELAY] = false
-			SKILL_Reincarnation(id)
-		}
-		else if( Verify_Skill(id, RACE_ORC, SKILL3) ){
-			new Float:randomnumber = random_float(0.0,1.0)
-			if(randomnumber <= p_ankh[p_data[id][P_SKILL3]-1])
-				SKILL_Reincarnation(id)
-
-		}
-	#endif
-
-	#if MOD == 0
-		if (p_data_b[id][PB_PLAYERSPAWNED]){
-
-			// Reset Serpent Wards
-			if( Verify_Skill(id, RACE_SHADOW, SKILL3) ){
-				p_data[id][P_SERPENTCOUNT] = p_serpent[p_data[id][P_SKILL3]-1]
-			}
-
-			Ultimate_Icon(id,ICON_SHOW)
-
-			if(p_data_b[id][PB_STUNNED] || p_data_b[id][PB_SLOWED]){
-				p_data_b[id][PB_STUNNED] = false
-				p_data_b[id][PB_SLOWED] = false
-			}
-
-			new unholyparm[1]
-			unholyparm[0]=id
-			unholyspeed(unholyparm)
-
-			if(p_data[id][P_ITEM2]!=ITEM_MOLE)
-				p_data[id][P_ITEM2]=0
-
-			p_data[id][P_ITEM]=0
-			changeskin(id,SKIN_RESET)
-
-			WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
-
-			return PLUGIN_HANDLED
-		}
-	#endif
-
-	p_data[id][P_HECOUNT]=0
-	p_data[id][P_FLASHCOUNT]=0
-
-	// Stop any cooldowns in effect	
-	
-	if (task_exists(TASK_UDELAY+id))		
-		remove_task(TASK_UDELAY+id)
-	
-	Ultimate_Icon(id,ICON_HIDE)
-	// Start a new cooldown
-	
-	new iUltDelay = get_pcvar_num( CVAR_wc3_ult_delay );
-	if ( iUltDelay > 0){
-		p_data_b[id][PB_ULTIMATEUSED] = true
-		p_data[id][P_ULTIMATEDELAY] = iUltDelay
-	}
-	else if(p_data[id][P_ULTIMATE]){
-		p_data[id][P_ULTIMATEDELAY] = 0
-		p_data_b[id][PB_ULTIMATEUSED] = false
-	}
-
-	_Ultimate_Delay(parm)
-
-	if (p_data[id][P_RACE] == 9 && get_pcvar_num( CVAR_wc3_cham_random )){
-		WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
-	}
-
-	// User has a race selection pending, set it
-	if (p_data[id][P_CHANGERACE]){
-		WAR3_set_race(id, p_data[id][P_CHANGERACE])
-	}	
-
-	#if MOD == 0
-		g_buyTime=true
-
-		if (g_freezecalled==0){
-			g_freezetime = true
-			g_freezecalled = 1
-		}
-
-		g_hostageSaver = 0
-		g_bombDefuser = 0
-
-	#endif
-
-	p_data_b[id][PB_SUICIDEATTEMPT] = false
-
-	#if MOD == 0
-		// Weapon Reincarnation
-		set_task(0.1, "Skill_Reincarnation", TASK_REINCARNATION+id, parm, 2)
-	#endif
-
-	endround=false
-	p_data_b[id][PB_ISBURNING] = false
-	p_data[id][P_FLAMECOUNT]=0
-	p_data_b[id][PB_WARDENBLINK] = false
-
-	// Fan of Knives Check
-
-	if ( Verify_Skill(id, RACE_WARDEN, SKILL1) && is_user_alive(id) && !p_data_b[id][PB_RESETSKILLS] ){
-		new Float:randomnumber = random_float(0.0,1.0)
-		if (randomnumber <= p_fan[p_data[id][P_SKILL1]-1]){
-			new fanparm[2]
-			fanparm[0]=id
-			fanparm[1]=7
-			set_task(0.1,"_Item_Mole",TASK_FAN+id,fanparm,2)
-		}
-	}
-
-	if (p_data_b[id][PB_RESETSKILLS]) {
-		p_data[id][P_SKILL1] = 0
-		p_data[id][P_SKILL2] = 0
-		p_data[id][P_SKILL3] = 0
-		p_data[id][P_ULTIMATE] = 0
-		p_data[id][P_LEVEL] = 0
-		WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
-	}
-
-	// Checks skills
-	Skill_Check(id)
-
-	new skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]+p_data[id][P_ULTIMATE]
-	if (skillsused < p_data[id][P_LEVEL]){
-		menu_Select_Skill(id,0)
-	}
-	return PLUGIN_CONTINUE
-}
 
 public on_GameRestart(){
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
+	if ( !warcraft3 )
+	{
+		return PLUGIN_CONTINUE;
+	}
 
 	XP_Save_All()
 
-	new players[32], numplayers, id
-	get_players(players, numplayers)
-	for (new i=0; i<numplayers; i++){
-		id=players[i]
-		p_data_b[id][PB_GAMECOMMENCING]=true
-
-		if(task_exists(TASK_UDELAY+id))
-			remove_task(TASK_UDELAY+id)
-		
-		if(p_data[id][P_ITEM2])
-			p_data_b[id][PB_IMMUNE_HEADSHOTS] = false;
-
-		p_data[id][P_ITEM] = 0
-		p_data[id][P_ITEM2] = 0
-		p_data_b[id][PB_DIEDLASTROUND] = false
-		p_data[id][P_RINGS]=0
-		if(get_pcvar_num( CVAR_wc3_save_xp )==0){
-			p_data[id][P_LEVEL]=0
-			p_data[id][P_RACE]=0
-			p_data[id][P_SKILL1]=0
-			p_data[id][P_SKILL2]=0
-			p_data[id][P_SKILL3]=0
-			p_data[id][P_ULTIMATE]=0
-			p_data[id][P_XP]=0
-		}
-		#if MOD == 0
-			p_data[id][P_HECOUNT]=0
-			p_data[id][P_FLASHCOUNT]=0
-		#endif
-	}
+	g_GameRestarting = true;
 
 	return PLUGIN_CONTINUE
 }
@@ -1090,7 +835,7 @@ public on_WeapPickup(id){
 		return;
 	}
 
-	ORC_Reincarnation_Save( id );
+	SHARED_SaveWeapons( id );
 
 	return;
 }
@@ -1102,7 +847,248 @@ public on_Drop(id)
 		return;
 	}
 
-	ORC_Reincarnation_Save( id );
+	SHARED_SaveWeapons( id );
 
 	return;
+}
+
+public on_ResetHud(id)
+{
+
+	if ( !warcraft3 )
+	{
+		return PLUGIN_CONTINUE;
+	}
+
+	// Then this is the first call of the new round
+	if ( endround )
+	{
+		EVENT_NewRound();
+	}
+	
+	// ResetHUD can be called when the user is not alive, lets ignore those calls
+	if ( !is_user_alive( id ) )
+	{
+		return PLUGIN_CONTINUE;
+	}
+
+	EVENT_PlayerSpawned( id );
+
+	// This is the first time the user has spawned this round
+	if ( !p_data_b[id][PB_HAS_SPAWNED] )
+	{	
+		EVENT_PlayerInitialSpawn( id );
+
+		p_data_b[id][PB_HAS_SPAWNED] = true;
+	}
+
+	return PLUGIN_CONTINUE;
+}
+
+// Function called 0.1 seconds before ResetHUD is called (before a user spawns after a round has ended) - untested with DOD
+public _EVENT_Before_ResetHUD()
+{
+	new players[32], num, i, id;
+	get_players( players, num );
+	for ( i = 0; i < num; i++ )
+	{
+		id = players[i];
+
+		p_data_b[id][PB_HAS_SPAWNED] = false;
+
+		// Remove any reset_maxspeeds occuring (could cause a person to move during freezetime)
+		task_exists( TASK_RESETSPEED + id ) ? remove_task( TASK_RESETSPEED + id ) : 0;
+	}
+	
+	// We don't want ultimates to continue into the next round
+	ULT_Reset();
+}
+
+// Function is called when the user is spawned at the START of each round
+public EVENT_PlayerInitialSpawn( id )
+{
+	// User didn't just join
+	p_data_b[id][PB_JUSTJOINED] = false;
+
+	// Stop any cooldowns in effect	
+	task_exists( TASK_UDELAY + id ) ? remove_task( TASK_UDELAY + id ) : 0;
+	
+	// Hide their ultimate icon
+	Ultimate_Icon( id, ICON_HIDE );
+
+	// Reset the user's skills
+	if ( p_data_b[id][PB_RESETSKILLS] ) 
+	{
+		p_data[id][P_SKILL1]	= 0;
+		p_data[id][P_SKILL2]	= 0;
+		p_data[id][P_SKILL3]	= 0;
+		p_data[id][P_ULTIMATE]	= 0;
+		p_data[id][P_LEVEL]		= 0;
+		WAR3_Display_Level( id, DISPLAYLEVEL_NONE );
+
+		return PLUGIN_CONTINUE;
+	}
+
+	// Start a new cooldown
+	new iUltDelay = get_pcvar_num( CVAR_wc3_ult_delay );
+	if ( iUltDelay > 0)
+	{
+		p_data_b[id][PB_ULTIMATEUSED]	= true;
+		p_data[id][P_ULTIMATEDELAY]		= iUltDelay;
+	}
+	else if( p_data[id][P_ULTIMATE] )
+	{
+		p_data[id][P_ULTIMATEDELAY]		= 0;
+		p_data_b[id][PB_ULTIMATEUSED]	= false;
+	}
+	_ULT_Delay( id );
+	
+	// User has a race selection pending, set it
+	if ( p_data[id][P_CHANGERACE] )
+	{
+		WAR3_set_race( id, p_data[id][P_CHANGERACE] );
+	}
+
+	// Display the new Chameleon skills for the round
+	if ( p_data[id][P_RACE] == 9 && get_pcvar_num( CVAR_wc3_cham_random ) )
+	{
+		WAR3_Display_Level( id, DISPLAYLEVEL_SHOWRACE );
+	}
+
+	// Fan of Knives Check
+	if ( Verify_Skill(id, RACE_WARDEN, SKILL1) )
+	{
+		if ( random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] )
+		{
+			new parm[2];
+			parm[0]	= id;
+			parm[1]	= 7;
+			set_task( 0.1, "_Item_Mole", TASK_FAN+id, parm, 2 );
+		}
+	}
+
+	return PLUGIN_CONTINUE;
+}
+
+// Function is called everytime a user spawns
+public EVENT_PlayerSpawned( id )
+{
+	// Find out if they need to choose a race or select a skill
+	set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + id );
+
+	// Player has spawned, so they shouldn't be ready to be revived
+	p_data_b[id][PB_TOBEREVIVED]	= false;
+
+	// User isn't changing a team if they just spawned
+	p_data_b[id][PB_CHANGINGTEAM]	= false;
+	
+	// Reset suicide attempt
+	p_data_b[id][PB_SUICIDEATTEMPT] = false;
+	
+	// User should not be burning
+	p_data_b[id][PB_ISBURNING]		= false;
+
+	// Reset the flame count
+	p_data[id][P_FLAMECOUNT]		= 0;
+
+	// Reset Blink
+	p_data_b[id][PB_WARDENBLINK]	= false;
+
+	// Set the user's Invisibility
+	SHARED_INVIS_Set( id );
+
+	// User's need their skillz
+	Skill_Check( id );
+
+	//Item_Check(parm) - removed from reincarnation
+
+	// The user should not be frozen when they spawn
+	p_data_b[id][PB_STUNNED]		= false;
+	p_data_b[id][PB_SLOWED]			= false;
+
+
+	// If the user is a bot they should have a chance to buy an item
+	if(is_user_bot(id))
+	{
+		if ( random_float(0.0,1.0) <= get_pcvar_num( CVAR_wc3_bot_buy_item ) )
+		{
+			( random_num( 1, 2 ) == 1 ) ? _menu_Shopmenu_One( id, random_num( 0, 8 ) ) : _menu_Shopmenu_Two( id, random_num( 0, 8 ) );
+		}
+	}
+	
+	// Check for Counter-Strike or Condition Zero
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		if (p_data_b[id][PB_PLAYERSPAWNED])
+		{
+			changeskin( id, SKIN_RESET );
+
+			WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
+		}
+
+		p_data[id][P_HECOUNT]		= 0;
+		p_data[id][P_FLASHCOUNT]	= 0;
+		
+		// If we need to give the user their weapons back, then lets
+		SHARED_CS_Reincarnation( id );
+	}
+
+	// Check for Day of Defeat
+	else if ( g_MOD == GAME_DOD )
+	{
+
+		// Should the user be reincarnated ??
+		if( p_data[id][P_ITEM] == ITEM_ANKH )
+		{
+			// We don't want to skip since the user has this item
+			p_data_b[id][PB_REINCARNATION_SKIP] = false;
+			SHARED_DOD_Reincarnation( id );
+		}
+		else if( Verify_Skill(id, RACE_ORC, SKILL3) )
+		{
+			new Float:randomnumber = random_float(0.0,1.0)
+			if(randomnumber <= p_ankh[p_data[id][P_SKILL3]-1])
+				SHARED_DOD_Reincarnation(id)
+
+		}
+	}
+}
+
+// Function is called ONCE at the start of a new round
+public EVENT_NewRound()
+{
+	
+	// If someone restarted the game, then lets reset war3
+	if ( g_GameRestarting )
+	{
+		WC3_ResetGame();
+	}
+
+	// Randomize Chameleon if we need to
+	CHAM_Randomize();
+
+	// have "fake" ultimate delay
+	iUltimateDelay = get_pcvar_num( CVAR_wc3_ult_delay );
+	_ULT_Delay( 0 );
+
+	// We need to determine when the buytime is up
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		if ( get_pcvar_num( CVAR_wc3_buy_time ) )
+		{
+			g_buyTime = true;
+			set_task( get_cvar_float("mp_buytime") * 60.0, "_WAR3_set_buytime", TASK_BUYTIME );
+		}
+
+		if ( !g_freezeCalled )
+		{
+			g_freezeTime	= true;
+			g_freezeCalled	= true;
+		}
+
+		g_hostageSaver		= 0;
+		g_bombDefuser		= 0;
+	}
+
+	endround = false;
 }

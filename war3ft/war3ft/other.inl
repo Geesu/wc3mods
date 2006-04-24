@@ -49,28 +49,6 @@ public changeskin(id,reset){							// Function changes your skin for ITEM_MOLE a
 	return PLUGIN_CONTINUE
 }
 
-public getuserinput(parm[1]){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	new skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]+p_data[id][P_ULTIMATE]
-	if (p_data[id][P_RACE] == 0){
-		WAR3_chooserace(id)
-	}
-	else if (skillsused < p_data[id][P_LEVEL])
-		menu_Select_Skill(id,0)
-	else
-		WAR3_Display_Level(id, DISPLAYLEVEL_NONE)
-
-	return PLUGIN_HANDLED
-}
-
 public saveweapons(id)
 {
 
@@ -110,7 +88,7 @@ public glow_change(parm[]){
 		iglow[id][2] = 0
 		iglow[id][3] = 0
 	}
-	else if ( p_data[id][P_ITEM]==wc3_cloak ){		// Don't glow if player is invisible
+	else if ( p_data[id][P_ITEM]==ITEM_CLOAK ){		// Don't glow if player is invisible
 		iglow[id][0] = 0
 		iglow[id][1] = 0
 		iglow[id][2] = 0
@@ -189,16 +167,16 @@ public unholyspeed(parm[1]){
 
 		return PLUGIN_HANDLED
 	}
-	else if(get_user_maxspeed(id) == 50.0 && ( p_data[id][P_ITEM] == wc3_boots || Verify_Skill(id, RACE_UNDEAD, SKILL2) ) && !p_data_b[id][PB_HEXED] ){		// User has a rocket launcher "mounted"
+	else if(get_user_maxspeed(id) == 50.0 && ( p_data[id][P_ITEM] == ITEM_BOOTS || Verify_Skill(id, RACE_UNDEAD, SKILL2) ) && !p_data_b[id][PB_HEXED] ){		// User has a rocket launcher "mounted"
 		set_user_maxspeed(id, 600.0)
 	}
 #endif
 #if MOD == 0
-	else if ( Verify_Skill(id, RACE_UNDEAD, SKILL2) && !g_freezetime && !p_data_b[id][PB_HEXED] ){              // Unholy Aura
+	else if ( Verify_Skill(id, RACE_UNDEAD, SKILL2) && !g_freezeTime && !p_data_b[id][PB_HEXED] ){              // Unholy Aura
 		if (get_user_maxspeed(id)>5 && get_user_maxspeed(id)!=p_unholy[p_data[id][P_SKILL2]-1])
 			set_user_maxspeed(id,(p_unholy[p_data[id][P_SKILL2]-1]))
 	}
-	else if ( p_data[id][P_ITEM]==wc3_boots && !g_freezetime && !p_data_b[id][PB_HEXED] ){			// Boots of Speed
+	else if ( p_data[id][P_ITEM]==ITEM_BOOTS && !g_freezeTime && !p_data_b[id][PB_HEXED] ){			// Boots of Speed
 		if (get_user_maxspeed(id)!=get_pcvar_float( CVAR_wc3_boots ))
 			set_user_maxspeed(id,get_pcvar_float( CVAR_wc3_boots ))
 	}
@@ -207,137 +185,3 @@ public unholyspeed(parm[1]){
 	return PLUGIN_CONTINUE
 }
 
-public func_spawn(parm[2]){
-
-	if (endround){
-		set_user_money(parm[0],get_user_money(parm[0])+itemcost2[0],1)
-		return PLUGIN_HANDLED
-	}
-
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	if(get_user_team(id)==UNASSIGNED)
-		return PLUGIN_CONTINUE
-
-	p_data[id][P_ITEM]=0
-	p_data[id][P_ITEM2]=0
-	
-	if (is_user_alive(id))
-		return PLUGIN_CONTINUE
-
-	new team[32]
-	get_user_team(id,team,31)
-	p_data_b[id][PB_PLAYERSPAWNED]=true
-	Ultimate_Icon(id,ICON_SHOW)
-	spawn(id)
-	p_data_b[id][PB_SLOWED]=false
-	p_data_b[id][PB_STUNNED]=false
-	spawn(id)
-	set_task(0.3,"spawn_player",TASK_SPAWNPLAYER+id,parm,2)
-	set_task(0.5,"player_giveitems",TASK_GIVEITEMS+id,parm,2)
-
-#if MOD == 0
-	give_item(id, "weapon_knife")
-#endif
-	
-	new money = get_user_money(id)
-
-	#if MOD == 0
-		if (money < get_cvar_num("mp_startmoney"))
-			set_user_money(id,get_cvar_num("mp_startmoney"),0)
-	#endif
-	#if MOD == 1
-		if (money < get_pcvar_num( CVAR_wc3_dod_start_money ))
-			set_user_money(id,get_pcvar_num( CVAR_wc3_dod_start_money ),0)
-
-	#endif
-	return PLUGIN_CONTINUE
-}
-
-
-public player_giveitems(parm[2]){
-
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	// Vengeance
-	if( Verify_Skill(id, RACE_WARDEN, SKILL4) && !p_data_b[id][PB_SPAWNEDFROMITEM])
-		set_user_health(id, 50)
-
-	// Devotion Aura
-	else if ( Verify_Skill(id, RACE_HUMAN, SKILL2))							
-		set_user_health(id,p_devotion[p_data[id][P_SKILL2]-1])
-
-	p_data_b[id][PB_GIVEITEMS]=true
-	set_task(0.1, "Skill_Reincarnation", TASK_REINCARNATION+id, parm, 2)							// Give weapons back
-
-	give_item(id, "item_suit")
-
-	#if MOD == 0
-		give_item(id, "weapon_knife")
-	#endif
-
-	// The following code decides if pistols should be given
-	#if MOD == 0
-		if (!g_givePistol)
-			return PLUGIN_CONTINUE
-
-		new wpnList[32] = 0, number = 0, foundGlock = false, foundUSP = false 
-		get_user_weapons(id,wpnList,number)
-		for (new i = 0;i < number;i++) { 
-			if (wpnList[i] == CSW_GLOCK18) 
-				foundGlock = true 
-			if (wpnList[i] == CSW_USP) 
-				foundUSP = true 
-		} 
-		if (get_user_team(id)==TS){
-			if(foundGlock)
-				return PLUGIN_CONTINUE
-			else{
-				give_item(id,"weapon_glock18")
-				give_item(id,"ammo_9mm")
-				give_item(id,"ammo_9mm")
-				give_item(id,"ammo_9mm")
-			}
-
-		}
-		if (get_user_team(id)==CTS){
-			if(foundUSP)
-				return PLUGIN_CONTINUE
-			else{
-				give_item(id,"weapon_usp")
-				give_item(id,"ammo_45acp")
-				give_item(id,"ammo_45acp")
-				give_item(id,"ammo_45acp")
-				give_item(id,"ammo_45acp")
-				give_item(id,"ammo_45acp")
-				give_item(id,"ammo_45acp")
-				give_item(id,"ammo_45acp")
-			}
-		}
-	#endif
-	return PLUGIN_CONTINUE
-
-}
-
-public spawn_player(parm[2]){
-
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	p_data_b[id][PB_PLAYERSPAWNED]=true
-	spawn(id)
-	give_item(id, "item_suit")
-#if MOD == 0
-	give_item(id, "weapon_knife")
-#endif
-	return PLUGIN_CONTINUE
-
-}

@@ -160,10 +160,10 @@ public cmd_Rings(id){
 		changeskin(id,SKIN_RESET)
 	
 	while(p_data[id][P_RINGS]<5){
-		usermoney = get_user_money(id)
+		usermoney = SHARED_GetUserMoney(id)
 		if(usermoney<itemcost2[ITEM_RING-1])
 			break
-		set_user_money(id,usermoney-itemcost2[ITEM_RING-1],1)
+		SHARED_SetUserMoney(id,usermoney-itemcost2[ITEM_RING-1],1)
 		++p_data[id][P_RINGS]
 		p_data[id][P_ITEM2]=ITEM_RING
 		if(!task_exists(TASK_ITEM_RINGERATE+id))
@@ -190,10 +190,8 @@ public cmd_ability(id){
 	
 	if ( p_data_b[id][PB_HEXED] )
 	{
-		new message[128]
-		format(message, 127, "%L",id,"HEX_NO_ABILITY")
-		Status_Text(id, message, 4.0, HUDMESSAGE_POS_INFO)
-		return PLUGIN_HANDLED
+		WC3_Status_Text( id, 4.0, HUDMESSAGE_POS_INFO, "%L", id, "HEX_NO_ABILITY" );
+		return PLUGIN_HANDLED;
 	}
 
 	if(is_user_alive(id)){
@@ -211,13 +209,7 @@ public cmd_ability(id){
 			_Skill_SerpentWard(parm)
 			p_data[id][P_SERPENTCOUNT]--
 
-			new message[128]
-			format(message, 127,"%L",id,"SERPENT_WARD", p_data[id][P_SERPENTCOUNT])
-
-			Status_Text(id, message, 3.5, HUDMESSAGE_POS_INFO)
-
-			//set_hudmessage(200, 100, 0, 0.2, 0.3, 0, 1.0, 5.0, 0.1, 0.2, 2)
-			//show_hudmessage(id,"%L",id,"SERPENT_WARD", p_data[id][P_SERPENTCOUNT])
+			WC3_Status_Text( id, 3.5, HUDMESSAGE_POS_INFO, "%L", id, "SERPENT_WARD", p_data[id][P_SERPENTCOUNT] );
 		}
 	}
 	return PLUGIN_HANDLED
@@ -277,9 +269,10 @@ public cmd_ResetSkill(id,saychat){
 	return PLUGIN_HANDLED
 }
 
-public cmd_Ultimate(id){
+public cmd_Ultimate(id)
+{
 
-	if (!warcraft3)
+	if ( !warcraft3 )
 		return PLUGIN_CONTINUE
 
 	if (!is_user_alive(id))
@@ -287,35 +280,37 @@ public cmd_Ultimate(id){
 
 	if ( p_data_b[id][PB_HEXED] )
 	{
-		new message[128]
-		format(message, 127, "%L",id,"HEX_NO_ABILITY")
-		Status_Text(id, message, 3.0, HUDMESSAGE_POS_STATUS)
+		WC3_Status_Text( id, 3.0, HUDMESSAGE_POS_STATUS, "%L", id, "HEX_NO_ABILITY" );
+
 		client_cmd(id, "speak warcraft3/bonus/Error.wav")
+
 		return PLUGIN_HANDLED
 	}
 
-	if(!p_data[id][P_ULTIMATE]){
-		new message[128]
-		format(message, 127, "%L",id,"ULTIMATE_NOT_FOUND")
-		Status_Text(id, message, 0.5, HUDMESSAGE_POS_STATUS)
+	if(!p_data[id][P_ULTIMATE])
+	{
+		WC3_Status_Text( id, 0.5, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_NOT_FOUND" );
+
 		client_cmd(id, "speak warcraft3/bonus/Error.wav")
+
 		return PLUGIN_HANDLED
 	}
 
-	if(p_data_b[id][PB_ULTIMATEUSED]){
-		new message[128]
-		format(message, 127, "%L",id,"ULTIMATE_NOT_READY",p_data[id][P_ULTIMATEDELAY])
-		Status_Text(id, message, 0.5, HUDMESSAGE_POS_STATUS)
+	if(p_data_b[id][PB_ULTIMATEUSED])
+	{
+		WC3_Status_Text( id, 0.5, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_NOT_READY", iUltimateDelay );
+
 		client_cmd(id, "speak warcraft3/bonus/Error.wav")
+
 		return PLUGIN_HANDLED
 	}
 
 	if ( iUltimateDelay > 0 )
 	{
-		new message[128]
-		format(message, 127, "%L",id,"ULTIMATE_NOT_READY", iUltimateDelay)
-		Status_Text(id, message, 0.5, HUDMESSAGE_POS_STATUS)
+		WC3_Status_Text( id, 0.5, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_NOT_READY", iUltimateDelay );
+
 		client_cmd(id, "speak warcraft3/bonus/Error.wav")
+
 		return PLUGIN_HANDLED
 	}
 

@@ -156,7 +156,7 @@ lang_GetSkillName( race_id, skill_id, id, skill_name[], len )
 	{
 		new szSkillHelper[64];
 
-		formatex ( szSkillHelper, 63, "RACE%d_SKILL%d", race9Options[skill_id], skill_id );
+		formatex ( szSkillHelper, 63, "RACE%d_SKILL%d", g_ChamSkills[skill_id], skill_id );
 		formatex ( skill_name, len-1, "%L", id, szSkillHelper );
 	}
 	else if ( race_id != 0 )

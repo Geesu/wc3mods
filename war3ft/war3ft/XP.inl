@@ -947,7 +947,7 @@ public XP_Check_Connection()
 }
 
 // Function from war3x thanks ryan!!!
-public XP_get_wc3_admin_flag()
+public XP_get_admin_flag()
 {
 
     new szFlags[24];

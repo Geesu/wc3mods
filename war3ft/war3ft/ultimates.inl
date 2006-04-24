@@ -1,17 +1,30 @@
-public _Ultimate_End(){
+// Function will stop all ultimates from functioning
+public ULT_Reset()
+{
+	new players[32], num, id, i;
+	get_players( players, num );
+	
+	for( i = 0; i < num; i++ )
+	{
+		id = players[i];
+		
+		// Set this to true so that ultimates cannot be used
+		p_data_b[id][PB_ULTIMATEUSED] = true
 
-	new players[32], num
-	get_players(players, num, "c")
+		// Remove any explosions that are occuring, we don't want them carried over to the next round
+		task_exists( TASK_EXPLOSION + id )		? remove_task( TASK_EXPLOSION + id ) : 0;
+		task_exists( TASK_BEAMCYLINDER + id)	? remove_task( TASK_BEAMCYLINDER + id ) : 0;
 
-	for(new i = 0; i < num; i++){
-		p_data_b[players[i]][PB_ULTIMATEUSED] = true
+		// Stop the user from searching (chain lightning)
+		task_exists( TASK_LIGHTSEARCH + id )	? remove_task( TASK_LIGHTSEARCH + id ) : 0;
 
-		/* Remove any explosions that are occuring, we don't want them carried over to the next round */
-		if( task_exists(TASK_EXPLOSION + players[i]) )
-			remove_task(TASK_EXPLOSION + players[i])
-		if( task_exists(TASK_BEAMCYLINDER + players[i]) )
-			remove_task(TASK_BEAMCYLINDER + players[i])
+		// Stop the user from searching (entangling roots)
+		task_exists( TASK_SEARCHTARGET + id )	? remove_task( TASK_SEARCHTARGET + id ) : 0;
 
+		// Set this to false just to be safe (used by NE and ORC ultimates)
+		p_data_b[id][PB_ISSEARCHING] = false;
+
+		// Need to add big bad voodoo check here...
 	}
 }
 
@@ -148,13 +161,10 @@ Ultimate_Blink(id){
 	if(WAR3_Immunity_Found_Near(id, oldLocation) || WAR3_Immunity_Found_Near(id, newLocation)){
 		set_hudmessage(255, 255, 10, -1.0, -0.4, 1, 0.5, BLINK_COOLDOWN, 0.2, 0.2,5)
 		show_hudmessage(id,"%L",id,"TELEPORT_FAILED_ENEMY_IMMUNITY")
-		
-		new coolparm[2]
-		coolparm[0] = id
 
 		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 
-		_Ultimate_Delay(coolparm)
+		_ULT_Delay( id )
 
 		emit_sound(id,CHAN_STATIC, SOUND_BLINK, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
@@ -239,8 +249,6 @@ public _Ultimate_Blink_Controller(parm[]){
 	oldLocation[2] = parm[4]
 
 	// Teleport failure check and unsticker
-	new coolparm[2]
-	coolparm[0] = id
 
 	get_user_origin(id, origin)
 
@@ -253,13 +261,13 @@ public _Ultimate_Blink_Controller(parm[]){
 
 		p_data[id][P_ULTIMATEDELAY] = floatround(BLINK_COOLDOWN + 1.0)
 
-		_Ultimate_Delay(coolparm)
+		_ULT_Delay( id )
 
 	}
 	else{
 		
 		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_Ultimate_Delay(coolparm)
+		_ULT_Delay( id )
 
 		// Sprays white bubbles everywhere
 		new origin2[3]
@@ -454,11 +462,9 @@ public lightsearchtarget(parm[2]){
 		lightparm[3]=id
 		lightparm[4]=bodypart
 		set_task(0.2,"lightningnext",TASK_LIGHTNING+enemy,lightparm,5)
-		new cooldownparm[2]
-		cooldownparm[0]=id
 
 		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_Ultimate_Delay(cooldownparm)
+		_ULT_Delay( id )
 	}
 	else{
 		p_data_b[id][PB_ISSEARCHING]=true
@@ -623,16 +629,14 @@ public searchtarget(parm[2]){
 			new ammo, clip
 			new weapon = get_user_weapon(enemy, ammo, clip)
 
-			if(isPrimary(weapon))
+			if(SHARED_IsPrimaryWeapon(weapon))
 				client_cmd(enemy, "drop")
 		}
 
 		p_data_b[enemy][PB_STUNNED]=true
-		new cooldownparm[2]
-		cooldownparm[0]=id
 
 		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_Ultimate_Delay(cooldownparm)	
+		_ULT_Delay( id )	
 	}
 	else{
 		p_data_b[id][PB_ISSEARCHING]=true
@@ -778,11 +782,9 @@ Ultimate_FlameStrike(id){
    new dist = get_distance(vec,aimvec) 
 
    if (p_data[id][P_FLAMECOUNT]==1){
-      new parm[2]
-      parm[0]=id
 
       p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-      _Ultimate_Delay(parm)
+      _ULT_Delay( id )
    }
    new speed1 = 160 
    new speed2 = 350 
@@ -1044,7 +1046,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 		Ultimate_Icon(id,ICON_HIDE)
 
 		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_Ultimate_Delay(parm)
+		_ULT_Delay( id )
 	}
 
 	return PLUGIN_CONTINUE
@@ -1113,12 +1115,9 @@ Ultimate_Vengeance(id){
 		p_data_b[id][PB_ULTIMATEUSED]=true
 
 		Ultimate_Icon(id,ICON_HIDE)
-
-		new parm[2]
-		parm[0]=id
 		
 		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_Ultimate_Delay(parm)
+		_ULT_Delay( id )
 	}
 }
 
@@ -1226,54 +1225,59 @@ public drawfunnels(parm[]){
 			emit_sound(id,CHAN_STATIC, SOUND_LOCUSTSWARM, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
 			Ultimate_Icon(caster,ICON_HIDE)
-
-			new cooldownparm[2]
-			cooldownparm[0]=caster
 			
 			p_data[caster][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-			_Ultimate_Delay(cooldownparm)
+			_ULT_Delay( caster )
 		}
 	}
 	return PLUGIN_HANDLED
 }
 
-public _Ultimate_Delay(parm[]){
-/*	#if ADVANCED_DEBUG
-		writeDebugInfo("_Ultimate_Delay",p_data[parm[0]][P_ULTIMATEDELAY])
-	#endif*/
+public _ULT_Delay( id )
+{
+	if ( !warcraft3 )
+	{
+		return PLUGIN_CONTINUE;
+	}
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new id = parm[0]
+	id -= TASK_UDELAY;
 	
 	// Player call
 	if ( id != 0 )
 	{
-		if(!p_data_b[id][PB_ISCONNECTED])
-			return PLUGIN_CONTINUE
+		if( !p_data_b[id][PB_ISCONNECTED] )
+		{
+			return PLUGIN_CONTINUE;
+		}
 
-		p_data[id][P_ULTIMATEDELAY]--
+		p_data[id][P_ULTIMATEDELAY]--;
 
 		if (p_data[id][P_ULTIMATEDELAY] > 0)
-			set_task(1.0,"_Ultimate_Delay",TASK_UDELAY+id, parm, 1)
-		else{
-			Ultimate_Ready(id)
+		{
+			set_task( 1.0, "_ULT_Delay", TASK_UDELAY + id );
+		}
+		else
+		{
+			Ultimate_Ready( id );
 		}
 	}
 
 	// Server check
 	else
 	{
-		iUltimateDelay--
+		iUltimateDelay--;
 
 		if ( iUltimateDelay > 0 )
-			set_task(1.0,"_Ultimate_Delay",TASK_UDELAY+id, parm, 1)
+		{
+			set_task( 1.0, "_ULT_Delay", TASK_UDELAY + id );
+		}
 		else
+		{
 			iUltimateDelay = 0;
+		}
 	}
 
-	return PLUGIN_CONTINUE
+	return PLUGIN_CONTINUE;
 }
 
 public Ultimate_Ready(id){
@@ -1293,7 +1297,7 @@ public Ultimate_Ready(id){
 		new szMessage[128]
 		format(szMessage, 127, "%L", id, "ULTIMATE_READY")
 
-		Status_Text(id, szMessage, 2.0, HUDMESSAGE_POS_STATUS)
+		//Status_Text(id, szMessage, 2.0, HUDMESSAGE_POS_STATUS)
 
 		Ultimate_Icon(id, ICON_SHOW)
 	}
@@ -1316,7 +1320,7 @@ public Ultimate_Icon(id, value){
 #if MOD == 0
 	new string[32], r, g, b, switchValue
 	if(p_data[id][P_RACE] == 9)
-		switchValue = race9Options[4]
+		switchValue = g_ChamSkills[4]
 	else
 		switchValue = p_data[id][P_RACE]
 
@@ -1324,7 +1328,7 @@ public Ultimate_Icon(id, value){
 		case 1:format(string,31,"dmg_rad"),			r=255,	g=0,	b=0			// Undead
 		case 2:format(string,31,"item_longjump"),	r=0,	g=120,	b=120		// Human
 		case 3:format(string,31,"dmg_shock"),		r=255,	g=255,	b=255		// Orc
-		case 4:format(string,31,"wc3_healthkit"),	r=0,	g=0,	b=255		// Night Elf
+		case 4:format(string,31,"item_healthkit"),	r=0,	g=0,	b=255		// Night Elf
 		case 5:format(string,31,"dmg_heat"),		r=255,	g=0,	b=0			// Blood Mage
 		case 6:format(string,31,"suit_full"),		r=0,	g=200,	b=200		// Shadow Hunter
 		case 7:format(string,31,"cross"),			r=255,	g=0,	b=0			// Warden
@@ -1349,7 +1353,7 @@ public Ultimate_Clear_Icons(id){
 		if(id==0)
 			return PLUGIN_CONTINUE
 
-		new string[8][32] = {"dmg_rad","item_longjump","dmg_shock","wc3_healthkit","dmg_heat","suit_full","cross","dmg_gas"}
+		new string[8][32] = {"dmg_rad","item_longjump","dmg_shock","item_healthkit","dmg_heat","suit_full","cross","dmg_gas"}
 		for(new i=0;i<8;i++){
 			Create_StatusIcon(id, ICON_HIDE, string[i], 0, 0, 0)
 		}

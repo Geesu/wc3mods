@@ -5,7 +5,7 @@ public client_score(index,score,total){
 		return PLUGIN_CONTINUE
 
 	// Award the user money
-	set_user_money( index, get_user_money(index)+(score*1000), 1 );
+	SHARED_SetUserMoney( index, SHARED_GetUserMoney(index)+(score*1000), 1 );
 
 	// Award the user XP
 	new iXP, iXPAwarded;
@@ -76,7 +76,7 @@ public on_EndRound(){
 	for ( a = 0; a < numberofplayers; ++a )
 	{
 		id = players[a];
-		p_data_b[id][PB_REINCARNATION_DELAY] = false;
+		p_data_b[id][PB_REINCARNATION_SKIP] = false;
 
 		// Skip reincarnation for the start of the next round
 		if( Verify_Skill(id, RACE_ORC, SKILL3) || p_data[id][P_ITEM] == ITEM_ANKH )
@@ -98,25 +98,6 @@ public on_EndRound(){
 	}
 
 	return PLUGIN_CONTINUE
-}
-// DOD Specific stocks
-stock Create_HudText(id,message[], flag)
-{
-
-	message_begin( MSG_ONE, gmsgHudText, {0,0,0}, id)
-	write_string(message)
-	write_byte(flag)					// 1 = Show
-	message_end()
-}
-
-stock Create_DeathMsg_DOD(killer_id,victim_id,weapon)
-{
-
-	message_begin(MSG_ALL,gmsgDeathMsg)
-	write_byte(killer_id)
-	write_byte(victim_id)
-	write_byte(weapon)
-	message_end()
 }
 
 public on_StatusValue(id)

@@ -53,7 +53,10 @@ new const WC3DATE[] =		__DATE__
 #define PRECACHE_WAR3FTSOUNDS	1
 #define SHOW_SPECTATE_INFO		1				// Show spectating information on users
 
+// Header files that contain function declarations
+//#include "war3ft/dod_h.inl"
 
+// Source Code
 #include "war3ft/constants.inl"
 #include "war3ft/cvar.inl"
 #include "war3ft/effects.inl"
@@ -73,6 +76,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/admin.inl"
 
 #include "war3ft/race_orc.inl"
+#include "war3ft/race_chameleon.inl"
 
 #if MOD == 0
 	#include "war3ft/cstrike.inl"
@@ -457,7 +461,7 @@ public client_PreThink(id)
 			}
 		}
 	#if MOD == 1
-		if( Verify_Skill(id, RACE_UNDEAD, SKILL2) || p_data[id][P_ITEM] == wc3_boots)
+		if( Verify_Skill(id, RACE_UNDEAD, SKILL2) || p_data[id][P_ITEM] == ITEM_BOOTS)
 		{
 			// They have a rocket launcher "deployed" or are using their stamina
 			new prone = entity_get_int( id, EV_INT_iuser3 );
@@ -476,7 +480,7 @@ public client_PreThink(id)
 				}
 			}
 		}
-		if( p_data[id][P_ITEM] == wc3_boots && entity_get_float(id,EV_FL_fuser4) < DOD_BOOT_SPEED )
+		if( p_data[id][P_ITEM] == ITEM_BOOTS && entity_get_float(id,EV_FL_fuser4) < DOD_BOOT_SPEED )
 		{
 			entity_set_float( id, EV_FL_fuser4, DOD_BOOT_SPEED );
 		}

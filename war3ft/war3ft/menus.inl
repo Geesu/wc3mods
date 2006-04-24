@@ -71,23 +71,23 @@ public _menu_Shopmenu_One(id, key){
 
 	new iShopmenuItem = key+1
 
-	if (!is_user_alive(id) && (iShopmenuItem==wc3_boots || iShopmenuItem==wc3_clawS || iShopmenuItem==wc3_cloak || iShopmenuItem==ITEM_MASK || iShopmenuItem==ITEM_NECKLACE || iShopmenuItem==wc3_frost || iShopmenuItem==wc3_health)){
+	if (!is_user_alive(id) && (iShopmenuItem==ITEM_BOOTS || iShopmenuItem==ITEM_CLAWS || iShopmenuItem==ITEM_CLOAK || iShopmenuItem==ITEM_MASK || iShopmenuItem==ITEM_NECKLACE || iShopmenuItem==ITEM_FROST || iShopmenuItem==ITEM_HEALTH)){
 		client_print(id,print_center,"%L",id,"NOT_PURCHASE_WHEN_DEAD")
 		return PLUGIN_CONTINUE
 	}
 
-	if(iShopmenuItem==p_data[id][P_ITEM] && iShopmenuItem!=wc3_tome){
+	if(iShopmenuItem==p_data[id][P_ITEM] && iShopmenuItem!=ITEM_TOME){
 		client_print(id,print_center,"%L",id,"ALREADY_OWN_THAT_ITEM")
 
 		return PLUGIN_CONTINUE
 	}
-	else if (get_user_money(id)<itemcost[key]){
+	else if (SHARED_GetUserMoney(id)<itemcost[key]){
 		client_print(id,print_center,"%L",id,"INSUFFICIENT_FUNDS")
 
 		return PLUGIN_CONTINUE
 	}
-	else if (iShopmenuItem==wc3_tome){
-		set_user_money(id,get_user_money(id)-itemcost[key],1)
+	else if (iShopmenuItem==ITEM_TOME){
+		SHARED_SetUserMoney(id,SHARED_GetUserMoney(id)-itemcost[key],1)
 
 	#if MOD == 0
 		XP_give(id, get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]])
@@ -105,12 +105,12 @@ public _menu_Shopmenu_One(id, key){
 		return PLUGIN_CONTINUE
 	}
 	else{
-		set_user_money(id,get_user_money(id)-itemcost[key],1)
+		SHARED_SetUserMoney(id,SHARED_GetUserMoney(id)-itemcost[key],1)
 
 
 		// Remove health bonus after buying new item
 
-		if (p_data[id][P_ITEM]==wc3_health)
+		if (p_data[id][P_ITEM]==ITEM_HEALTH)
 			set_user_health(id,get_user_health(id)-get_pcvar_num( CVAR_wc3_health ))
 
 		p_data[id][P_ITEM]=iShopmenuItem
@@ -118,7 +118,7 @@ public _menu_Shopmenu_One(id, key){
 
 		// Give health bonus for buying periapt of health
 
-		if (p_data[id][P_ITEM]==wc3_health)		
+		if (p_data[id][P_ITEM]==ITEM_HEALTH)		
 			set_user_health(id,get_user_health(id)+get_pcvar_num( CVAR_wc3_health ))
 
 
@@ -216,7 +216,7 @@ public _menu_Shopmenu_Two(id, key){
 
 	new iShopmenuItem = key+1
 
-	if (!is_user_alive(id) && (iShopmenuItem==ITEM_PROTECTANT || iShopmenuItem==ITEM_HELM || iShopmenuItem==ITEM_HELM || iShopmenuItem==ITEM_AMULET || iShopmenuItem==wc3_sock || iShopmenuItem==ITEM_GLOVES || iShopmenuItem==ITEM_RING || iShopmenuItem==ITEM_CHAMELEON)){
+	if (!is_user_alive(id) && (iShopmenuItem==ITEM_PROTECTANT || iShopmenuItem==ITEM_HELM || iShopmenuItem==ITEM_HELM || iShopmenuItem==ITEM_AMULET || iShopmenuItem==ITEM_SOCK || iShopmenuItem==ITEM_GLOVES || iShopmenuItem==ITEM_RING || iShopmenuItem==ITEM_CHAMELEON)){
 		client_print(id,print_center,"%L",id,"NOT_PURCHASE_WHEN_DEAD")
 		return PLUGIN_CONTINUE
 	}
@@ -239,7 +239,7 @@ public _menu_Shopmenu_Two(id, key){
 		return PLUGIN_CONTINUE
 	}
 
-	if (get_user_money(id)<itemcost2[key]){
+	if (SHARED_GetUserMoney(id)<itemcost2[key]){
 		client_print(id,print_center,"%L",id,"INSUFFICIENT_FUNDS")
 		return PLUGIN_CONTINUE
 	}
@@ -262,7 +262,7 @@ public _menu_Shopmenu_Two(id, key){
 			if(task_exists(TASK_ITEM_GLOVES+id))
 				remove_task(TASK_ITEM_GLOVES+id)
 		}
-		else if (p_data[id][P_ITEM2] == wc3_sock)
+		else if (p_data[id][P_ITEM2] == ITEM_SOCK)
 			set_user_gravity(id, 1.0)
 
 
@@ -277,7 +277,7 @@ public _menu_Shopmenu_Two(id, key){
 		else if (p_data[id][P_ITEM2]==ITEM_AMULET){
 			p_data_b[id][PB_SILENT] = true
 		}
-		else if (p_data[id][P_ITEM2] == wc3_sock)
+		else if (p_data[id][P_ITEM2] == ITEM_SOCK)
 			set_user_gravity(id, get_pcvar_float( CVAR_wc3_sock ))
 #if MOD == 0
 		else if (p_data[id][P_ITEM2]==ITEM_SCROLL && !is_user_alive(id) && !endround){	
@@ -307,7 +307,7 @@ public _menu_Shopmenu_Two(id, key){
 				_Item_Ring(parm)
 			}
 		}
-		set_user_money(id,get_user_money(id)-itemcost2[key],1)
+		SHARED_SetUserMoney(id,SHARED_GetUserMoney(id)-itemcost2[key],1)
 
 		Item_Message(id, iShopmenuItem, SHOPMENU_TWO)
 	}
@@ -455,11 +455,8 @@ public _menu_Select_Skill(id,key){
 	// Initiate cooldown for player's ultimate, or give them they're ultimate
 
 	if( !task_exists(TASK_UDELAY+id) && key == KEY_4 ){
-		new parm[1]
-		parm[0] = id
-
 		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_Ultimate_Delay(parm)
+		_ULT_Delay( id )
 	}
 	else if ( key == KEY_4 && !p_data[id][P_ULTIMATEDELAY] && !p_data_b[id][PB_ULTIMATEUSED]){
 		Ultimate_Ready(id)
@@ -767,7 +764,7 @@ public menu_Admin_Options(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-    if ( id && !( get_user_flags( id ) & XP_get_wc3_admin_flag() ) )
+    if ( id && !( get_user_flags( id ) & XP_get_admin_flag() ) )
 	{
 			client_print(id,print_center,"%s %L",g_MODclient, id,"YOU_HAVE_NO_ACCESS")
 			return PLUGIN_HANDLED

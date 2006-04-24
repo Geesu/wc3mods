@@ -222,7 +222,7 @@ public MOTD_Skillsinfo(id){
 
 			// Get Skill Description
 			if(p_data[id][P_RACE] == RACE_CHAMELEON)
-				lang_GetSkillInfo(race9Options[i+1], i+1, id, skill_description[i], 256)
+				lang_GetSkillInfo(g_ChamSkills[i+1], i+1, id, skill_description[i], 256)
 			else
 				lang_GetSkillInfo(p_data[id][P_RACE], i+1, id, skill_description[i], 256)
 

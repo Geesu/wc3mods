@@ -3,15 +3,19 @@
 
 
 // Gives skill abilities at beginning of round and when skills are selected
-public Skill_Check(id){
+public Skill_Check(id)
+{
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
+	if ( !warcraft3 )
+	{
+		return PLUGIN_CONTINUE;
+	}
 
-	if( p_data_b[id][PB_RESETSKILLS] ){
-		p_data_b[id][PB_RESETSKILLS] = false
+	if( p_data_b[id][PB_RESETSKILLS] )
+	{
+		p_data_b[id][PB_RESETSKILLS] = false;
 		
-		return PLUGIN_CONTINUE
+		return PLUGIN_CONTINUE;
 	}
 
 	new parm[2]
@@ -20,6 +24,9 @@ public Skill_Check(id){
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 	
+	// Set the number of serpent wards
+	p_data[id][P_SERPENTCOUNT]		= p_serpent[p_data[id][P_SKILL3]-1];
+
 	// Undead's Unholy Aura
 	Skill_UnholyAura(id);
 
@@ -97,7 +104,7 @@ public Skill_UnholyAura( id )
 				set_user_gravity(id, p_levitation[p_data[id][P_SKILL3]-1]);
 			}
 		}
-		else if ( p_data[id][P_ITEM2] == wc3_sock )
+		else if ( p_data[id][P_ITEM2] == ITEM_SOCK )
 		{
 			set_user_gravity(id, get_pcvar_float( CVAR_wc3_sock ));
 		}
@@ -113,307 +120,39 @@ public Skill_UnholyAura( id )
 	}
 }
 
-#if MOD == 1
 // ****************************************
-// Orc's Reincarnation ability in Day of Defeat
-// ****************************************
-
-	public SKILL_Reincarnation(id){
-
-		if (!warcraft3)
-			return PLUGIN_CONTINUE
-		
-		// User just joined or should skip reincarnation
-		if ( p_data_b[id][PB_REINCARNATION_SKIP] )
-		{
-			p_data_b[id][PB_REINCARNATION_SKIP] = false;
-			return PLUGIN_CONTINUE;
-		}
-
-		
-		if(p_data_b[id][PB_REINCARNATION_DELAY])
-		{
-			client_print(id,print_chat,"%s %L", g_MODclient, id, "SKILL_REINCARNATION_SKIPPING")
-			p_data_b[id][PB_REINCARNATION_DELAY] = false
-		}
-		else
-		{
-			new parm[2]
-			parm[0] = id
-
-			client_cmd(id, "speak warcraft3/soundpack/reincarnation.wav")
-
-			if (iglow[id][1] < 1){
-				parm[0] = id
-				set_task(0.1,"glow_change",TASK_GLOW+id,parm,2)
-			} 
-			iglow[id][1] += 100
-			iglow[id][0] = 0
-			iglow[id][2] = 0
-			iglow[id][3] = 0
-			if (iglow[id][1]>MAXGLOW)
-				iglow[id][1]=MAXGLOW
-
-			// Screen fade green
-			Create_ScreenFade(id, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[id][1])
-
-			iReincarnation[id][ZPOS]+=30
-
-			set_user_origin(id,iReincarnation[id])
-
-			set_task(0.1,"_SKILL_Reincarnation", TASK_REINCARNATION+id,parm,1)
-			set_task(2.5,"_SKILL_Reincarnation_Status", TASK_REINCCHECK+id,parm,1)
-		}
-
-		return PLUGIN_CONTINUE
-	}
-
-	public _SKILL_Reincarnation(parm[]){
-		
-		if (!warcraft3)
-			return PLUGIN_CONTINUE
-
-		new id = parm[0]
-		new origin[3]
-		get_user_origin(id,origin)
-
-		// Failure, stuck somewhere, put them back
-		if(origin[2] == iReincarnation[id][2]){
-
-			new spawnID, playersInVicinity, entList[1], i
-			new ent = -1
-			new Float:spawnOrigin[3]
-			new Float:vicinity = 96.0		//(32x32x96)
-			new bool:found = false
-			if(get_user_team(id) == CTS)
-				spawnID = 0
-			else
-				spawnID = 1
-
-			do {
-				ent = find_ent_by_class(ent,spawnEntString[spawnID])
-				if (ent != 0) {
-					entity_get_vector(ent,EV_VEC_origin,spawnOrigin)
-					for(i=0;i<3;i++)
-						origin[i] = floatround(spawnOrigin[i])
-
-					playersInVicinity = find_sphere_class(0, "player", vicinity, entList, 1, spawnOrigin)
-
-					if (playersInVicinity == 0)
-						found = true
-				}
-			}
-			while (ent && !found)
-			
-			if(found){
-				for(i=0;i<3;i++)
-					origin[i] = floatround(spawnOrigin[i])
-
-				set_user_origin(id, origin)
-
-				client_print(id,print_chat,"%s %L", g_MODclient, id, "SKILL_REINCARNATION_FAILED")
-			}
-			else
-				set_task(0.1,"_SKILL_Reincarnation", TASK_REINCARNATION+id,parm,1)
-
-		}
-
-		return PLUGIN_CONTINUE
-	}
-
-	public _SKILL_Reincarnation_Status(parm[]){
-
-		if (!warcraft3)
-			return PLUGIN_CONTINUE
-
-		new id = parm[0]
-
-		if(!is_user_alive(id))
-			p_data_b[id][PB_REINCARNATION_DELAY] = true
-		else
-			p_data_b[id][PB_REINCARNATION_DELAY] = false
-
-		return PLUGIN_CONTINUE
-	}
-
-	// ****************************************
-	// Blood Mage's Pheonix Ability in DOD
-	// ****************************************
-
-	public Skill_Pheonix(id){
-		set_user_money(id, get_user_money(id) + p_pheonix[p_data[id][P_SKILL1]-1])
-
-		new name[32], team
-		get_user_name(id, name, 31)
-		team = get_user_team(id)
-
-		new players[32], numberofplayers
-		new i, targetid, distancebetween, targetorigin[3], origin[3]
-
-		get_user_origin(id, origin)
-		get_players(players, numberofplayers,"a")
-
-		new money = p_pheonix[p_data[id][P_SKILL1]-1] / 2
-		for (i = 0; i < numberofplayers; ++i){
-			targetid=players[i]
-
-			if ( targetid != id && p_data_b[targetid][PB_ISCONNECTED] && get_user_team(targetid) == team){
-				get_user_origin(targetid, targetorigin)
-				distancebetween = get_distance(origin, targetorigin)
-
-				if (distancebetween < HEALING_WAVE_RANGE){
-					set_user_money(targetid, get_user_money(targetid) + money)
-					client_print(targetid, print_chat, "%s %L", g_MODclient, targetid, "DOD_PHOENIX", money, name)
-				}
-			}
-		}
-	}
-#endif
-#if MOD == 0
-
-// ****************************************
-// Orc's Reincarnation Ability in CS/CZ
+// Blood Mage's Pheonix Ability in DOD
 // ****************************************
 
-public Skill_Reincarnation( parm[2] )
-{
-	#if MOD == 0
-		new id = parm[0]
+public Skill_Pheonix(id){
+	SHARED_SetUserMoney(id, SHARED_GetUserMoney(id) + p_pheonix[p_data[id][P_SKILL1]-1])
 
-		if(!p_data_b[id][PB_ISCONNECTED])
-			return PLUGIN_CONTINUE
+	new name[32], team
+	get_user_name(id, name, 31)
+	team = get_user_team(id)
 
-		new bool:reincarnate = false
-		
-		// Give items because of respawning...
-		if(p_data_b[id][PB_GIVEITEMS]){
-			reincarnate = true
-			p_data_b[id][PB_GIVEITEMS]=false
-		}
-									
-		// Equipement & Eligibility Check for Re-Incarnation
-		if (p_data_b[id][PB_DIEDLASTROUND]){	// DIED LAST ROUND		
-			new Float:randomnumber = random_float(0.0,1.0)   
-			if ( Verify_Skill(id, RACE_ORC, SKILL3) ){
-				if( randomnumber <= p_ankh[p_data[id][P_SKILL3]-1] ){
-					reincarnate = true				
-				}
-			}
-			if (p_data[id][P_ITEM]==ITEM_ANKH){
-				reincarnate=true
-			}	
-		}
+	new players[32], numberofplayers
+	new i, targetid, distancebetween, targetorigin[3], origin[3]
 
-		if (reincarnate){
-				client_cmd(id, "speak warcraft3/soundpack/reincarnation.wav")
+	get_user_origin(id, origin)
+	get_players(players, numberofplayers,"a")
 
-				if (iglow[id][1] < 1){
-					parm[0] = id
-					set_task(0.1,"glow_change",TASK_GLOW+id,parm,2)
-				} 
-				iglow[id][1] += 100
-				iglow[id][0] = 0
-				iglow[id][2] = 0
-				iglow[id][3] = 0
-				if (iglow[id][1]>MAXGLOW)
-					iglow[id][1]=MAXGLOW
+	new money = p_pheonix[p_data[id][P_SKILL1]-1] / 2
+	for (i = 0; i < numberofplayers; ++i){
+		targetid=players[i]
 
-				// Screen fade green
-				Create_ScreenFade(id, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[id][1])
-				
-				// Remove all weapons
-				strip_user_weapons( id );
+		if ( targetid != id && p_data_b[targetid][PB_ISCONNECTED] && get_user_team(targetid) == team){
+			get_user_origin(targetid, targetorigin)
+			distancebetween = get_distance(origin, targetorigin)
 
-				// Give the user their weapons from last round
-				_Skill_Reincarnation_Give(id)
-		}else{
-			if(!cs_get_user_nvg(id))
-				p_data_b[id][PB_NIGHTVISION]=false
-
-		}
-	#endif
-
-	Item_Check(parm)
-
-	return PLUGIN_HANDLED	
-}	
-
-public _Skill_Reincarnation_Give(id)
-{
-	give_item( id, "weapon_knife" );
-
-	// Give armor
-	if ( p_data[id][P_ARMORONDEATH] )
-	{
-		// Not sure why I need to do this (shouldn't the cs_set_user_armor function do it dangit) but I do :/
-		if ( g_ArmorType[id] == CS_ARMOR_KEVLAR )
-		{
-			give_item(id, "item_kevlar");
-		}
-		else if ( g_ArmorType[id] == CS_ARMOR_VESTHELM )
-		{
-			give_item(id, "item_assaultsuit");
-		}
-
-		cs_set_user_armor( id, p_data[id][P_ARMORONDEATH], g_ArmorType[id] );
-	}
-	
-	// Give a defuse kit
-	if ( p_data_b[id][PB_DEFUSE] )
-	{
-		give_item(id, "item_thighpack");
-	}
-
-	if ( p_data_b[id][PB_NIGHTVISION] )
-	{
-		cs_set_user_nvg(id, 1);
-	}
-
-	if ( p_data_b[id][PB_SHIELD] )
-	{
-		give_item(id, "weapon_shield");
-	}
-	
-	// hegren + smoke grenades will not be given, also only 1 flash grenade, not 2...  fix these pls :P
-	new iWeapID = 0, i = 0;
-	for ( i = 0; i < 32; i++ )
-	{
-		iWeapID = g_PlayerWeapons[id][i];
-
-		if ( iWeapID )
-		{
-			if ( iWeapID != CSW_C4 && iWeapID != CSW_KNIFE )
-			{
-				new szWeaponName[32], szAmmoName[32];
-				get_weaponname( iWeapID, szWeaponName, 31 );
-				get_ammo_name( iWeapID, szAmmoName, 31 );
-				
-				if ( contain( szWeaponName, "weapon_" ) == 0 )
-				{
-					give_item( id, szWeaponName );
-
-					if ( strlen( szAmmoName ) > 0 )
-					{
-						give_item( id, szAmmoName );
-						give_item( id, szAmmoName );
-						give_item( id, szAmmoName );
-						give_item( id, szAmmoName );
-						give_item( id, szAmmoName );
-					}
-				}
+			if (distancebetween < HEALING_WAVE_RANGE){
+				SHARED_SetUserMoney(targetid, SHARED_GetUserMoney(targetid) + money)
+				client_print(targetid, print_chat, "%s %L", g_MODclient, targetid, "DOD_PHOENIX", money, name)
 			}
 		}
 	}
-
-	return PLUGIN_CONTINUE
 }
-#endif
 
-public ORC_Reincarnation_Save( id )
-{
-	new num = 0;
-	get_user_weapons( id, g_PlayerWeapons[id], num );
-}
 
 // ****************************************
 // Night Elf's Evasion
@@ -540,7 +279,7 @@ stock Skill_Evasion_Reset( id, damage )
 					/* Verify that the players are on the same team and that a caster is found */
 					if ( get_user_team(targetid) == vTeam && p_data_b[targetid][PB_PHOENIXCASTER] && !p_data_b[id][PB_TOBEREVIVED] && !endround && id!=targetid && !p_data_b[id][PB_SPAWNEDFROMITEM] )
 					{
-						new parm[2], name[32], victimName[32], message[128]
+						new parm[2], name[32], victimName[32];
 						parm[0] = id
 
 						p_data_b[id][PB_SPAWNEDFROMITEM] = true
@@ -550,12 +289,8 @@ stock Skill_Evasion_Reset( id, damage )
 						get_user_name(targetid,name,31)
 						get_user_name(id,victimName,31)
 
-						format(message, 127, "%L",id,"HAS_REVIVED_YOU",name)
-						Status_Text(id, message, 3.0, HUDMESSAGE_POS_INFO)
-						client_print(id, print_chat, "%s %s", g_MODclient, message)
-						format(message, 127, "%L",targetid,"YOU_HAVE_REVIVED",victimName)
-						Status_Text(targetid, message, 3.0, HUDMESSAGE_POS_INFO)
-						client_print(targetid, print_chat, "%s %s", g_MODclient, message)
+						client_print(id, print_chat, "%s %L", g_MODclient, id, "HAS_REVIVED_YOU", name );
+						client_print(targetid, print_chat, "%s %L", g_MODclient, targetid, "YOU_HAVE_REVIVED", victimName );
 
 						p_data_b[id][PB_TOBEREVIVED]=true
 						PhoenixFound[vTeam-1]--

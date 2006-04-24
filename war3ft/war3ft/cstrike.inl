@@ -40,10 +40,9 @@ public on_EndRound(){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	endround=true
+	endround = true;
 
-	set_task( 4.9, "_Ultimate_End",TASK_ENDULTIMATE )
-	set_task( 4.9, "_on_Before_ResetHUD", TASK_BEFORE_ROUND_START );
+	set_task( 4.9, "_EVENT_Before_ResetHUD", TASK_BEFORE_ROUND_START );
 
 	new players[32], numberofplayers
 	new y, id
@@ -62,11 +61,9 @@ public on_EndRound(){
 	for(y=0;y<33;++y)
 		spawnPointsused[y]=false
 
-	g_freezecalled = 0
-	g_buyCalled=false
+	g_freezeCalled = false
 	PhoenixFound[0]=0
 	PhoenixFound[1]=0
-	g_randomizeCalled = false
 
 	if( task_exists(TASK_BUYTIME) )
 		remove_task(TASK_BUYTIME)
@@ -79,8 +76,6 @@ public on_EndRound(){
 	{
 		XP_Save_All();
 	}
-
-	race9_randomize()
 	
 	return PLUGIN_CONTINUE
 }
@@ -421,7 +416,7 @@ public on_FreezeTimeComplete() {
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	g_freezetime = false
+	g_freezeTime = false
 	
 	new players[32],numberofplayers, id, i, parm[1]
 	get_players(players, numberofplayers)
@@ -508,7 +503,7 @@ public on_ShowStatus(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if (g_freezetime){
+	if (g_freezeTime){
 		Create_StatusText(id, 0, "")
 		return PLUGIN_HANDLED
 	}
@@ -532,7 +527,7 @@ public on_ShowStatus(id){
 		}
 	}
 
-	if ( get_pcvar_num( CVAR_wc3_show_player ) && !g_freezetime ){
+	if ( get_pcvar_num( CVAR_wc3_show_player ) && !g_freezeTime ){
 		// From miscstats.sma
 		new name[32], red = 0, blue = 0
 		new team = get_user_team(pid)
@@ -574,7 +569,7 @@ public on_ShowStatus(id){
 
 public on_HideStatus(id){
 
-	if ( get_pcvar_num( CVAR_wc3_show_player ) && !g_freezetime ){
+	if ( get_pcvar_num( CVAR_wc3_show_player ) && !g_freezeTime ){
 		set_hudmessage(0,0,0,0.0,0.0,0, 0.0, 0.01, 0.0, 0.0, 4) 
 		show_hudmessage(id,"")
 	}
@@ -609,9 +604,3 @@ public check_cvars(id, const cvar[], const value[])
 		server_cmd("kick #%d ^"cl_minmodels 1 is not allowed on this server^"", get_user_userid(id));
 	} 
 } 
-
-// Function called 0.1 seconds before ResetHUD is called (before a user spawns after a round has ended)
-public _on_Before_ResetHUD()
-{
-	//ORC_Reincarnation_Copy_Saved();
-}

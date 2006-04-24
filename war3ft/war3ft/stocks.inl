@@ -24,20 +24,6 @@ return 0
 return player
 }
 
-stock isPrimary(weapon){
-	if(weapon==CSW_GALIL||weapon==CSW_FAMAS||weapon==CSW_M3||weapon==CSW_XM1014||weapon==CSW_MP5NAVY||weapon==CSW_TMP ||weapon==CSW_P90||weapon==CSW_MAC10||weapon==CSW_UMP45||weapon==CSW_AK47||weapon==CSW_SG552||weapon==CSW_M4A1||weapon==CSW_AUG||weapon==CSW_SCOUT ||weapon==CSW_AWP||weapon==CSW_G3SG1||weapon==CSW_SG550||weapon==CSW_M249)
-		return true
-
-	return false
-}
-
-stock isSecondary(weapon){
-	if(weapon==CSW_P228||weapon==CSW_ELITE||weapon==CSW_FIVESEVEN||weapon==CSW_USP||weapon==CSW_GLOCK18||weapon==CSW_DEAGLE)
-		return true
-
-	return false
-}
-
 stock find_free_spawn(id, iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]){
 	new iSpawn
 	if(iTeamNumber == CTS)
@@ -128,7 +114,7 @@ stock get_user_maxhealth(id){
 
 	// Player has a health bonus from the Periapt of Health
 
-	if ( p_data[id][P_ITEM]==wc3_health ){
+	if ( p_data[id][P_ITEM]==ITEM_HEALTH ){
 		maxHealth += get_pcvar_num( CVAR_wc3_health );
 	}
 
@@ -144,13 +130,13 @@ stock Verify_Race(id, race){
 		return true
 
 	else if( (p_data[id][P_RACE] == 9) ){
-		if ( race9Options[1] == race )
+		if ( g_ChamSkills[1] == race )
 			return true
-		if ( race9Options[2] == race )
+		if ( g_ChamSkills[2] == race )
 			return true
-		if ( race9Options[3] == race )
+		if ( g_ChamSkills[3] == race )
 			return true
-		if ( race9Options[4] == race )
+		if ( g_ChamSkills[4] == race )
 			return true
 	}
 
@@ -162,137 +148,9 @@ stock Verify_Skill(id, race, skill){
 	if( id == 0 )
 		return false
 
-	if( ((p_data[id][P_RACE] == 9 && race9Options[skill] == race) || p_data[id][P_RACE] == race) && p_data[id][skill] )
+	if( ((p_data[id][P_RACE] == 9 && g_ChamSkills[skill] == race) || p_data[id][P_RACE] == race) && p_data[id][skill] )
 		return true
 
 	return false
 }
 
-stock Status_Text(id, szMessage[], Float:fDuration, Float:iYPos){
-
-	#if MOD == 1
-		Create_HudText(id, szMessage, 1)
-		iYPos--
-	#else
-		set_hudmessage(255, 208, 0, HUDMESSAGE_POS_CENTER, iYPos, 0, 6.0, fDuration, 0.1, 0.5, HUDMESSAGE_CHAN_STATUS)
-		show_hudmessage(id, szMessage)
-	#endif
-
-    // Print important messages to console
-    if ( fDuration > 4.0 ){
-        console_print( id, "%s %s", g_MODclient, szMessage )
-    }
-}
-
-stock race9_randomize(){
-
-	if (get_pcvar_num( CVAR_wc3_races ) == 9)
-	{
-		if (get_pcvar_num( CVAR_wc3_cham_random ))
-		{
-			new myintvallocal = 0
-			// loop through all four skill options (3 + ultimate) pick a new race at random and update the skill
-			while (myintvallocal < 4)
-			{
-				race9Options[myintvallocal + 1] = random_num(1,8) 
-				++myintvallocal
-			}
-		}
-	} 
-}
-
-stock set_user_money(id, money, show = 1){
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	#if MOD == 0
-		cs_set_user_money(id,money,show)
-	#endif
-	#if MOD == 1
-		show--
-		new parm[3]
-		parm[0] = id
-		parm[1] = 1
-		parm[2] = money - get_user_money(id)
-
-		p_data[id][P_MONEY]=money
-		_DOD_showMoney(parm)
-	#endif
-	return PLUGIN_CONTINUE
-}
-
-stock get_user_money(id){
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	#if MOD == 0
-		new money = cs_get_user_money(id)
-		if (cs_get_user_money(id) > 16000 && !Verify_Skill(id, RACE_BLOOD, SKILL3)){
-			set_user_money(id, 16000, 0)
-			return 16000
-		}
-			
-		return money
-	#endif
-	#if MOD == 1
-		return p_data[id][P_MONEY]
-	#endif
-}
-
-
-stock get_ammo_name( iWeapID, szAmmoName[], len )
-{
-	switch( iWeapID )
-	{
-		case CSW_USP, CSW_MAC10, CSW_UMP45:
-		{ 
-			copy( szAmmoName, len, "ammo_45acp" );
-		}
-		case CSW_ELITE, CSW_GLOCK18, CSW_MP5NAVY, CSW_TMP:
-		{
-			copy( szAmmoName, len, "ammo_9mm" );
-		}
-		case CSW_FIVESEVEN, CSW_P90:
-		{
-			copy( szAmmoName, len, "ammo_57mm" );
-		}
-		case CSW_DEAGLE:
-		{
-			copy( szAmmoName, len, "ammo_50ae" );
-		}
-		case CSW_P228:
-		{
-			copy( szAmmoName, len, "ammo_357sig" );
-		}
-		case CSW_SCOUT, CSW_G3SG1, CSW_AK47:
-		{
-			copy( szAmmoName, len, "ammo_762nato" );
-		}
-		case CSW_XM1014, CSW_M3:
-		{
-			copy( szAmmoName, len, "ammo_buckshot" );
-		}
-		case CSW_AUG, CSW_SG550, CSW_GALIL, CSW_FAMAS, CSW_M4A1:
-		{
-			copy( szAmmoName, len, "ammo_556nato" );
-		}
-		case CSW_AWP:
-		{
-			copy( szAmmoName, len, "ammo_338magnum" );
-		}
-		case CSW_M249:
-		{
-			copy( szAmmoName, len, "ammo_556natobox" );
-		}
-		case CSW_SG552:
-		{
-			copy( szAmmoName, len, "ammo_556nato" );
-		}
-		default:
-		{
-			copy( szAmmoName, len, "" );
-		}
-	}
-}

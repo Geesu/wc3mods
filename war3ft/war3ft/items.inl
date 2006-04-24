@@ -12,23 +12,23 @@ public Item_Message(id, item, shopmenu){
 		switch(item){
 		#if MOD == 0
 			case ITEM_ANKH:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_1")
-			case wc3_boots:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_2", (100.0 * (1.0-(260.0/get_pcvar_float( CVAR_wc3_boots )))))
+			case ITEM_BOOTS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_2", (100.0 * (1.0-(260.0/get_pcvar_float( CVAR_wc3_boots )))))
 		#endif
 		#if MOD == 1
 			case ITEM_ANKH:			client_print(id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_1")
-			case wc3_boots:		client_print(id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_2")
+			case ITEM_BOOTS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_2")
 		#endif
-			case wc3_clawS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_3", get_pcvar_num( CVAR_wc3_claw ))
-			case wc3_cloak:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_4", (100.0 * (float(get_pcvar_num( CVAR_wc3_cloak ))/255.0)))
+			case ITEM_CLAWS:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_3", get_pcvar_num( CVAR_wc3_claw ))
+			case ITEM_CLOAK:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_4", (100.0 * (float(get_pcvar_num( CVAR_wc3_cloak ))/255.0)))
 			case ITEM_MASK:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_5", (100.0 * get_pcvar_num( CVAR_wc3_mask )))
 			case ITEM_NECKLACE:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_6")
-			case wc3_frost:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_7", (100.0 * (get_pcvar_float( CVAR_wc3_frost )/260.0)))
-			case wc3_health:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_8", get_pcvar_num( CVAR_wc3_health ))
+			case ITEM_FROST:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_7", (100.0 * (get_pcvar_float( CVAR_wc3_frost )/260.0)))
+			case ITEM_HEALTH:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_8", get_pcvar_num( CVAR_wc3_health ))
 		#if MOD == 0
-			case wc3_tome:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]]))
+			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]]))
 		#endif
 		#if MOD == 1
-			case wc3_tome:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (2 * (get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]])))
+			case ITEM_TOME:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_9", (2 * (get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]])))
 		#endif
 		}
 	}
@@ -48,7 +48,7 @@ public Item_Message(id, item, shopmenu){
 			case ITEM_PROTECTANT:		client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_2")
 			case ITEM_HELM:				client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_3")
 			case ITEM_AMULET:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_4")
-			case wc3_sock:				client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_5")
+			case ITEM_SOCK:				client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_5")
 			case ITEM_GLOVES:			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_6", get_pcvar_num( CVAR_wc3_glove_timer ))
 			case ITEM_RING:				client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU2_7")
 		#if MOD == 0
@@ -115,7 +115,7 @@ public Item_Check(parm[]){
 	if (task_exists(TASK_ITEM_RINGERATE+id) && p_data[id][P_ITEM2]!=ITEM_RING)
 		remove_task(TASK_ITEM_RINGERATE+id)
 
-	if (p_data[id][P_ITEM]==wc3_health)
+	if (p_data[id][P_ITEM]==ITEM_HEALTH)
 		set_user_health(id,get_user_health(id)+get_pcvar_num( CVAR_wc3_health ))
 	
 	if(p_data[id][P_ITEM2]==ITEM_RING && !task_exists(TASK_ITEM_RINGERATE+id))
@@ -288,7 +288,7 @@ public _Item_Mole(parm[]){ // For ITEM_MOLE, checks to see if there is an open s
 	if (!entSpawn) { 
 		// Didn't find a free spawn spot. Quit... 
 		if(parm[1]!=7){
-			set_user_money(id,get_user_money(id)+itemcost2[8],1)
+			SHARED_SetUserMoney(id,SHARED_GetUserMoney(id)+itemcost2[8],1)
 			client_print(id,print_chat,"%s %L",g_MODclient,id,"NO_SPOT_MOLE_MONEY")
 		}
 		else{

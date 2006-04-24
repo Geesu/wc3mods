@@ -232,9 +232,9 @@ public CVAR_Configure()
 	// Configure the Chameleon Race
 	if ( !get_pcvar_num( CVAR_wc3_cham_random ) )
 	{
-		race9Options[1] = get_pcvar_num( CVAR_wc3_cham_skill1 );
-		race9Options[2] = get_pcvar_num( CVAR_wc3_cham_skill2 );
-		race9Options[3] = get_pcvar_num( CVAR_wc3_cham_skill3 );
-		race9Options[4] = get_pcvar_num( CVAR_wc3_cham_ultimate );
+		g_ChamSkills[1] = get_pcvar_num( CVAR_wc3_cham_skill1 );
+		g_ChamSkills[2] = get_pcvar_num( CVAR_wc3_cham_skill2 );
+		g_ChamSkills[3] = get_pcvar_num( CVAR_wc3_cham_skill3 );
+		g_ChamSkills[4] = get_pcvar_num( CVAR_wc3_cham_ultimate );
 	}
 }

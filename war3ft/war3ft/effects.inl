@@ -352,3 +352,23 @@ stock Create_TE_BUBBLES(start[3], end[3], height, iSprite, count, speed){
 	write_coord( speed )				// speed
 	message_end()
 }
+
+// DOD Specific stocks
+stock Create_HudText(id,message[], flag)
+{
+
+	message_begin( MSG_ONE, gmsgHudText, {0,0,0}, id)
+	write_string(message)
+	write_byte(flag)					// 1 = Show
+	message_end()
+}
+
+stock Create_DeathMsg_DOD(killer_id,victim_id,weapon)
+{
+
+	message_begin(MSG_ALL,gmsgDeathMsg)
+	write_byte(killer_id)
+	write_byte(victim_id)
+	write_byte(weapon)
+	message_end()
+}

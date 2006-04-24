@@ -22,7 +22,7 @@ public WAR3_precache() {
 		copy( SOUND_BLINK, 63,				"warcraft3/blinkarrival.wav"					)  // Blink Teleport
 		copy( SOUND_LEVELUP, 63,			"warcraft3/Levelupcaster.wav"					)  // Level up
 		copy( SOUND_PICKUPITEM, 63,			"warcraft3/PickUpItem.wav"						)  // Buy / Pick up item
-		copy( SOUND_wc3_tome, 63,				"warcraft3/Tomes.wav"							)  // Tome of Experience
+		copy( SOUND_TOME, 63,				"warcraft3/Tomes.wav"							)  // Tome of Experience
 		copy( SOUND_ULTIMATESCAN, 63,		"turret/tu_ping.wav"							)  // Ultimate Beep
 		copy( SOUND_ULTIMATEREADY, 63,		"warcraft3/ResurrectTarget.wav"					)  // Ultimate Beep
 		copy( SOUND_ANNIHILATION, 63,		"warcraft3/PurgeTarget1.wav"					)	// Orb of Annihilation
@@ -45,7 +45,7 @@ public WAR3_precache() {
 		copy( SOUND_BLINK, 63,				"x/x_shoot1.wav"								)  // Blink Teleport
 		copy( SOUND_LEVELUP, 63,			"plats/elevbell1.wav"							)  // Level up
 		copy( SOUND_PICKUPITEM, 63,			"items/ammopickup1.wav"							)  // Buy / Pick up item
-		copy( SOUND_wc3_tome, 63,				"items/suitchargeok1.wav"						)  // Tome of Experience
+		copy( SOUND_TOME, 63,				"items/suitchargeok1.wav"						)  // Tome of Experience
 		copy( SOUND_ULTIMATESCAN, 63,		"turret/tu_ping.wav"							)  // Ultimate Beep
 		copy( SOUND_ULTIMATEREADY, 63,		"buttons/bell1.wav"								)  // Ultimate Beep
 //		copy( SOUND_ANNIHILATION, 63,		"warcraft3/PurgeTarget1.wav"					)	// Orb of Annihilation
@@ -77,7 +77,7 @@ public WAR3_precache() {
 	// Miscellaneous
 	precache_sound(SOUND_LEVELUP) 
 	precache_sound(SOUND_PICKUPITEM) 
-	precache_sound(SOUND_wc3_tome) 
+	precache_sound(SOUND_TOME) 
 	precache_sound(SOUND_ULTIMATESCAN) 
 	precache_sound(SOUND_ULTIMATEREADY) 
 	precache_sound("warcraft3/soundpack/reincarnation.wav") 
@@ -292,10 +292,10 @@ public WAR3_death_victim(victim_id, killer_id){
 
 #if MOD == 1
 	if ( killer_id == 0 || get_user_team(victim_id) != get_user_team(killer_id) && killer_id != victim_id )
-		set_user_money(victim_id, get_user_money(victim_id)+300, 1)
+		SHARED_SetUserMoney(victim_id, SHARED_GetUserMoney(victim_id)+300, 1)
 
 	if( victim_id != killer_id )
-		set_user_money(killer_id, get_user_money(killer_id) + 600,1)
+		SHARED_SetUserMoney(killer_id, SHARED_GetUserMoney(killer_id) + 600,1)
 
 	if ( Verify_Skill(killer_id, RACE_BLOOD, SKILL1) && killer_id != victim_id ){
 		Skill_Pheonix(killer_id)
@@ -304,11 +304,9 @@ public WAR3_death_victim(victim_id, killer_id){
 
 	// In case they respawn, continue ultimate delay check
 	if(!task_exists(TASK_UDELAY+victim_id)){
-		new parm[1]
-		parm[0] = victim_id
 
 		p_data[victim_id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_Ultimate_Delay(parm)
+		_ULT_Delay( victim_id )
 	}
 
 #if MOD == 0
@@ -381,7 +379,7 @@ public WAR3_death_victim(victim_id, killer_id){
 		if(task_exists(TASK_UDELAY+victim_id))
 			remove_task(TASK_UDELAY+victim_id)
 
-		_Ultimate_Delay(parm)
+		_ULT_Delay( victim_id )
 	}
 #if MOD == 0
 	else if (Verify_Skill(victim_id, RACE_WARDEN, SKILL4) && !p_data_b[victim_id][PB_CHANGINGTEAM] && (!p_data_b[killer_id][PB_WARDENBLINK] || killer_id==victim_id) && !g_ultimateDelay && !p_data_b[victim_id][PB_ULTIMATEUSED] && !endround ){	// Vengeance
@@ -396,7 +394,7 @@ public WAR3_death_victim(victim_id, killer_id){
 		if(task_exists(TASK_UDELAY+victim_id))
 			remove_task(TASK_UDELAY+victim_id)
 		
-		_Ultimate_Delay(parm)
+		_ULT_Delay( victim_id )
 
 		set_task(1.2,"func_spawn",TASK_VENGEANCE+victim_id,parm,2)
 
@@ -464,7 +462,7 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 #if MOD == 0
 	// Award $300 for a Kill
 	if (get_user_team(killer_id)!=get_user_team(victim_id))
-		set_user_money(killer_id,get_user_money(killer_id)+300,1)
+		SHARED_SetUserMoney(killer_id,SHARED_GetUserMoney(killer_id)+300,1)
 #endif
 
 	if(get_user_team(killer_id) == get_user_team(victim_id) && killer_id != victim_id){		// Team Kill
@@ -673,21 +671,10 @@ public WAR3_set_race(id,race){
 			menu_Select_Skill(id,0)
 	}
 
-	//if(((p_data[id][P_RACE] == 9 && race9Options[2] == 2) || p_data[id][P_RACE] == 2) && p_data[id][P_SKILL2] && get_user_health(id) <= 100){	// set_health
-	//	set_user_health(id, p_devotion[p_data[id][P_SKILL2]-1])
-	//}
-
 	WAR3_Display_Level(id, DISPLAYLEVEL_SHOWRACE)
 
 	return PLUGIN_CONTINUE
 }
-
-#if MOD == 0
-	public _WAR3_set_buytime(){
-
-		g_buyTime=false
-	}
-#endif
 
 public WAR3_Check_Dev( id )
 {
@@ -1077,4 +1064,113 @@ WAR3_Check( id = 0, print_location = print_chat )
 	}
 
 	return false;
+}
+
+// Function will print a message in the center of the screen
+WC3_Status_Text( id, Float:fDuration, Float:iYPos, const text[] = "", {Float,_}:... )
+{
+	new szFormattedText[128];
+
+	format_args( szFormattedText, 127, 3 );
+
+	log_amx( "Text: %s",  text );
+
+	log_amx( "Formatted: %s", szFormattedText );
+
+
+	// Check for Counter-Strike or Condition Zero
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		set_hudmessage( 255, 208, 0, HUDMESSAGE_POS_CENTER, iYPos, 0, 6.0, fDuration, 0.1, 0.5, -1 );
+		show_hudmessage( id, szFormattedText );
+	}
+
+	// Check for Day of Defeat
+	else if ( g_MOD == GAME_DOD )
+	{
+		Create_HudText( id, szFormattedText, 1 );
+	}
+	
+	// Gets rid of compiler warning
+	if ( text[0] == 0 )
+	{
+		return;
+	}
+}
+
+// Function will prompt a user for a race or skill selection
+public WC3_GetUserInput( id )
+{
+
+	id -= TASK_GETINPUT;
+
+	if( !warcraft3 || !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return PLUGIN_CONTINUE;
+	}
+
+	new iTotalSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+
+	if ( p_data[id][P_RACE] == 0 )
+	{
+		WAR3_chooserace( id );
+	}
+	else if ( iTotalSkillsUsed < p_data[id][P_LEVEL] )
+	{
+		menu_Select_Skill( id, 0 );
+	}
+	else
+	{
+		WAR3_Display_Level( id, DISPLAYLEVEL_NONE );
+	}
+
+	return PLUGIN_CONTINUE;
+}
+
+// Function is called when the buytime is over
+public _WC3_BuyTimeDone()
+{
+	g_buyTime = false;
+}
+
+// Function will "reset" the game - i.e. "sv_restart 1"
+public WC3_ResetGame()
+{
+	new players[32], numplayers, id, i
+	get_players(players, numplayers);
+
+	for ( i=0; i < numplayers; i++ )
+	{
+		id = players[i];
+		
+		// Remove Ultimate Delay
+		task_exists( TASK_UDELAY + id ) ? remove_task( TASK_UDELAY + id ) : 0;
+		
+		// User didn't die last round... 
+		p_data_b[id][PB_DIEDLASTROUND]		= false;
+		
+		// Remove player's items
+		p_data[id][P_ITEM]					= 0;
+		p_data[id][P_ITEM2]					= 0;
+		p_data[id][P_RINGS]					= 0;
+		p_data_b[id][PB_IMMUNE_HEADSHOTS]	= false;
+
+		// Reset user's XP
+		p_data[id][P_LEVEL]					= 0;
+		p_data[id][P_RACE]					= 0;
+		p_data[id][P_SKILL1]				= 0;
+		p_data[id][P_SKILL2]				= 0;
+		p_data[id][P_SKILL3]				= 0;
+		p_data[id][P_ULTIMATE]				= 0;
+		p_data[id][P_XP]					= 0;
+
+		// Check for Counter-Strike or Condition Zero
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			p_data[id][P_HECOUNT]			= 0;
+			p_data[id][P_FLASHCOUNT]		= 0;
+		}
+	}
+
+	g_GameRestarting = false;
 }

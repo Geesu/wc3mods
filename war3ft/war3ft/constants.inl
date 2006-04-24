@@ -191,25 +191,25 @@
 #define SHOPMENU_ONE			1
 #define SHOPMENU_TWO			2
 
-#define ITEM_ANKH 1
-#define wc3_boots 2
-#define wc3_clawS 3
-#define wc3_cloak 4
-#define ITEM_MASK 5
-#define ITEM_NECKLACE 6
-#define wc3_frost 7
-#define wc3_health 8
-#define wc3_tome 9
+#define ITEM_ANKH		1
+#define ITEM_BOOTS		2
+#define ITEM_CLAWS		3
+#define ITEM_CLOAK		4
+#define ITEM_MASK		5
+#define ITEM_NECKLACE	6
+#define ITEM_FROST		7
+#define ITEM_HEALTH		8
+#define ITEM_TOME		9
 
-#define ITEM_SCROLL 1
+#define ITEM_SCROLL		1
 #define ITEM_PROTECTANT 2
-#define ITEM_HELM 3
-#define ITEM_AMULET 4
-#define wc3_sock 5
-#define ITEM_GLOVES 6
-#define ITEM_RING 7
-#define ITEM_CHAMELEON 8
-#define ITEM_MOLE 9
+#define ITEM_HELM		3
+#define ITEM_AMULET		4
+#define ITEM_SOCK		5
+#define ITEM_GLOVES		6
+#define ITEM_RING		7
+#define ITEM_CHAMELEON	8
+#define ITEM_MOLE		9
 
 // team ids 
 #define UNASSIGNED 0 
@@ -371,7 +371,7 @@
 	// ***************************
 
 	// Miscellaneous
-	#define PB_GAMECOMMENCING		0		// Was there a game commencing message? (change how this functions?  do we really need it to be [33]?)
+//	#define PB_GAMECOMMENCING		0		// Was there a game commencing message? (change how this functions?  do we really need it to be [33]?)
 	#define PB_RESETSKILLS			1		// Does the player want to reset their skills in the next round?
 	#define PB_CHANGINGTEAM			2		// Is the user currently changing his/her team?
 	#define PB_DIEDLASTROUND		4
@@ -384,7 +384,7 @@
 
 	// Used by various ultimates/abilities
 	#define PB_GIVEITEMS			10		// Tells weapon controller function to give the player his items after respawning
-	#define PB_PLAYERSPAWNED		11		// Did the player respawn from an ability?
+	#define PB_PLAYERSPAWNED		11		// Did the player respawn from a skill/item?
 	#define PB_SPAWNEDFROMITEM		12		// Did the player spawn from an item/teammate ability? (used to determine the health to give the player after they spawn)
 	#define PB_NADEJUSTRECEIVED		13		// Used with flaming gloves... (removable?)
 	#define PB_BLINKDELAYED			14		// Used to determine if the blink ability should be delayed (change this so its not [33])
@@ -403,20 +403,18 @@
 	#define PB_ULTIMATEUSED			27
 	#define PB_HEXED				28		// Is the player hexed? (All abilities are disabled)
 	#define PB_SILENT				29
-	#define PB_GODMODE				32
-
 	#define PB_JUSTJOINED			30
 	#define PB_ISCONNECTED			31
+	#define PB_GODMODE				32
+
 	
-	//#define PB_RENDERED				33
+	#define PB_HAS_SPAWNED			33		// Has the player previously spawned this round?
 	#define PB_CAN_RENDER			34
 	
 	#define PB_IMMUNE_HEADSHOTS		35		// Player immune to headshots?
 
-#if MOD == 1
 	#define PB_REINCARNATION_DELAY	36
 	#define PB_REINCARNATION_SKIP	37
-#endif
 
 	#define PB_LAST					38
 	// ***************************
@@ -455,13 +453,13 @@ new SOUND_TELEPORT[64]
 new SOUND_BLINK[64]
 new SOUND_LEVELUP[64]
 new SOUND_PICKUPITEM[64]
-new SOUND_wc3_tome[64]
+new SOUND_TOME[64]
 new SOUND_ULTIMATESCAN[64]
 new SOUND_ULTIMATEREADY[64]
 new SOUND_HEX[64]
 
 // Race9 Setup 
-new race9Options[5] = {0,1,1,1,1}		// the value is what race that skill should be copied from so race9Options[1] = 1 means that skill1 is undead skill1 this means you can not have skill 1 form more than one race.
+new g_ChamSkills[5] = {0,1,1,1,1}		// the value is what race that skill should be copied from so g_ChamSkills[1] = 1 means that skill1 is undead skill1 this means you can not have skill 1 form more than one race.
 										// this default setting of 0,1,1,1,1 will make the 9th race have all the undead skills 
 										// note that the first value does not do anything.
 
@@ -503,10 +501,9 @@ new g_hostageSaver
 new g_bombCarrier
 new g_bombDefuser
 new g_vipID = 0
-new bool:g_freezetime = false
-new g_freezecalled = 0
+new bool:g_freezeTime	= false;
+new bool:g_freezeCalled = false;
 new bool:g_buyTime
-new bool:g_buyCalled = false
 new bool:g_givePistol
 new bool:g_giveHE
 
@@ -547,12 +544,13 @@ new gmsgScoreInfo
 new gmsgStatusIcon
 
 new bool:g_mapDisabled = false
-new bool:g_randomizeCalled = false
 new bool:g_spritesEnabled = false
 new Float:g_ultimateDelay = 0.0
 
 // Used for Mole
 new bool:spawnPointsused[33] = false
+
+new bool:g_GameRestarting = false;
 
 // Sprites
 new g_sShadow

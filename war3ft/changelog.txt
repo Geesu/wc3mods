@@ -1,9 +1,11 @@
 v2.3.3
  - Added: Start/Stop command: amx_wc3 <on|off>
  - Bug Fix: cl_minmodels task was not repeating
+ - Change: If you respawn with Vengeance, you will spawn with full health
  - Change: Cloak stacks with invisibility
  - Change: Config file location moved
  - Change: When weapon reincarnation's weapons are saved
+ - Change: When a user spawns their money is not longer set to mp_startmoney (for CS/CZ)
  - Removed: FT_impale_intensity cvar (edit this constant at the top of skills.inl)
  - Removed: FT_blink_radius cvar (replaced with NECKLACE_RADIUS define)
  - Removed: FT_healing_range cvar (defined at top of skills.inl)
