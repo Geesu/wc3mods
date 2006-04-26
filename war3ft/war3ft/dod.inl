@@ -60,7 +60,7 @@ public _DOD_showMoney(parm[3]){
 	return PLUGIN_CONTINUE
 }
 
-public on_EndRound(){
+public EVENT_DOD_EndRound(){
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE;

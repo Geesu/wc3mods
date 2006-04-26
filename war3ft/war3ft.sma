@@ -48,13 +48,13 @@ new const WC3DATE[] =		__DATE__
 #include <dodx>
 
 // Compiling Options
-#define MOD						1				// 0 = cstrike or czero, 1 = dod
+#define MOD						0				// 0 = cstrike or czero, 1 = dod
 #define ADVANCED_STATS			1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define PRECACHE_WAR3FTSOUNDS	1
 #define SHOW_SPECTATE_INFO		1				// Show spectating information on users
 
 // Header files that contain function declarations
-//#include "war3ft/dod_h.inl"
+#include "war3ft/dod_h.inl"
 
 // Source Code
 #include "war3ft/constants.inl"
@@ -78,12 +78,8 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/race_orc.inl"
 #include "war3ft/race_chameleon.inl"
 
-#if MOD == 0
-	#include "war3ft/cstrike.inl"
-#endif
-#if MOD == 1
-	#include "war3ft/dod.inl"
-#endif
+#include "war3ft/cstrike.inl"
+#include "war3ft/dod.inl"
 
 public plugin_init()
 {
@@ -195,7 +191,7 @@ public plugin_init()
 		register_statsfwd( XMF_SCORE	);
 		register_statsfwd( XMF_DAMAGE	);
 
-		register_event( "RoundState"	, "on_EndRound"		, "a"	, "1=3"	, "1=4"	);
+		register_event( "RoundState"	, "EVENT_DOD_EndRound"		, "a"	, "1=3"	, "1=4"	);
 		register_event( "StatusValue"	, "on_StatusValue"	, "b"					);
 	}
 	
@@ -505,6 +501,8 @@ public module_filter(const module[])
 		g_DBILoaded = false;
 		log_amx("[ERROR] No DBI module found, defaulting to vault");
 
+		MODULE_Enable( "mysql_amxx" );
+
 		return PLUGIN_HANDLED;
 	}
 	else if ( equali( module, "dod" ) )
@@ -529,4 +527,45 @@ public native_filter(const name[], index, trap)
             return PLUGIN_HANDLED;
 
       return PLUGIN_CONTINUE;
+}
+
+public MODULE_Enable( module_name[] )
+{
+
+	new fp = fopen( "addons/amxmodx/configs/modules.ini", "r+t" );
+	new data[128];
+
+	while( !feof( fp ) )
+	{
+		fgets( fp, data, 63 );
+		
+		server_print( "Searching %s", data );
+
+		// Module Name Found
+		if ( contain( data, module_name ) != -1 )
+		{
+			// Semicolon before module name found
+			if ( contain( data, ";" ) != -1 )
+			{
+				// Lets go to the start of the line we're on so we can remove the ;
+				fseek( fp, strlen(data), SEEK_CUR );
+				
+				// Remove the ; from the line
+				replace( data, strlen(data), ";" , "" );
+
+				server_print( "%s", data );
+				
+				new len = strlen( data );
+				for ( new i = 0; i < len; i++ )
+				{
+					fputc( fp, data[i] );
+					server_print( "%c", data[i] );
+				}
+
+				server_print( "done" );
+			}
+		}
+	} 
+
+	fclose( fp );
 }

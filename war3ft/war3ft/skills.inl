@@ -25,7 +25,10 @@ public Skill_Check(id)
 		return PLUGIN_CONTINUE
 	
 	// Set the number of serpent wards
-	p_data[id][P_SERPENTCOUNT]		= p_serpent[p_data[id][P_SKILL3]-1];
+	if ( Verify_Skill(id, RACE_SHADOW, SKILL3) )
+	{
+		p_data[id][P_SERPENTCOUNT]		= p_serpent[p_data[id][P_SKILL3]-1];
+	}
 
 	// Undead's Unholy Aura
 	Skill_UnholyAura(id);

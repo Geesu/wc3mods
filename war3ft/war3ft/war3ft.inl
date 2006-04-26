@@ -421,9 +421,7 @@ public WAR3_death_victim(victim_id, killer_id){
 	Skill_Phoenix(victim_id)
 #endif
 
-	new parameter[1]
-	parameter[0]=victim_id
-	set_task(1.0,"getuserinput",TASK_GETINPUT+victim_id,parameter,1)
+	set_task( 1.0, "WC3_GetUserInput", TASK_GETINPUT + victim_id );
 
 	return PLUGIN_CONTINUE
 }
@@ -1101,8 +1099,11 @@ WC3_Status_Text( id, Float:fDuration, Float:iYPos, const text[] = "", {Float,_}:
 // Function will prompt a user for a race or skill selection
 public WC3_GetUserInput( id )
 {
-
-	id -= TASK_GETINPUT;
+	
+	if ( id > TASK_GETINPUT )
+	{
+		id -= TASK_GETINPUT;
+	}
 
 	if( !warcraft3 || !p_data_b[id][PB_ISCONNECTED] )
 	{

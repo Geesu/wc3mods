@@ -1239,8 +1239,14 @@ public _ULT_Delay( id )
 	{
 		return PLUGIN_CONTINUE;
 	}
+	
+	log_amx( "id: %d, %d", id, id - TASK_UDELAY );
 
-	id -= TASK_UDELAY;
+	// If the function is called from a task, modify the id
+	if ( id > TASK_UDELAY && id != 0 )
+	{
+		id -= TASK_UDELAY;
+	}
 	
 	// Player call
 	if ( id != 0 )
