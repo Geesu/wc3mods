@@ -455,11 +455,10 @@ public SHARED_CS_Reincarnation( id )
 		bGiveWeapons = true;
 		p_data_b[id][PB_GIVEITEMS] = false;
 	}
-								
+	
 	// Check based on skill or if the user has an item
 	if (p_data_b[id][PB_DIEDLASTROUND])
 	{
-		
 		// Orc's Reincarnation
 		if ( Verify_Skill(id, RACE_ORC, SKILL3) )
 		{
@@ -468,9 +467,9 @@ public SHARED_CS_Reincarnation( id )
 				bGiveWeapons = true;		
 			}
 		}
-
+		
 		// Ankh
-		if ( p_data[id][P_ITEM] == ITEM_ANKH )
+		if ( p_data[id][P_LASTITEM] == ITEM_ANKH )
 		{
 			bGiveWeapons = true;
 		}	
@@ -504,7 +503,7 @@ public SHARED_CS_Reincarnation( id )
 		strip_user_weapons( id );
 
 		// Give the user their weapons from last round
-		_SHARED_CS_GiveWeapons( id );
+		set_task( 0.1, "_SHARED_CS_GiveWeapons", TASK_REINCARNATION + id );
 	}
 	else
 	{
@@ -519,6 +518,11 @@ public SHARED_CS_Reincarnation( id )
 
 public _SHARED_CS_GiveWeapons(id)
 {
+	if ( id > TASK_REINCARNATION )
+	{
+		id -= TASK_REINCARNATION;
+	}
+
 	if ( !warcraft3 || !p_data_b[id][PB_ISCONNECTED] )
 	{
 		return PLUGIN_CONTINUE;
@@ -557,19 +561,11 @@ public _SHARED_CS_GiveWeapons(id)
 	{
 		give_item(id, "weapon_shield");
 	}
-
-/*	- Taken from the old give weapons function, is this really needed???
-	if ( !g_givePistol )
-	{
-		return PLUGIN_CONTINUE;
-	}
-*/
-
-	// hegren + smoke grenades will not be given, also only 1 flash grenade, not 2...  fix these pls :P
+	
 	new iWeapID = 0, i = 0;
 	for ( i = 0; i < 32; i++ )
 	{
-		iWeapID = g_PlayerWeapons[id][i];
+		iWeapID = g_PlayerLastWeapons[id][i];
 
 		if ( iWeapID )
 		{
@@ -592,6 +588,8 @@ public _SHARED_CS_GiveWeapons(id)
 						give_item( id, szAmmoName );
 					}
 				}
+
+				client_print( id, print_console, "(%d) %d:%s", i, iWeapID, szWeaponName );
 			}
 		}
 	}
@@ -601,6 +599,257 @@ public _SHARED_CS_GiveWeapons(id)
 
 public SHARED_SaveWeapons( id )
 {
+	if ( !is_user_alive( id ) )
+	{
+		return;
+	}
+
+	// Clear Array
+	for( new i = 0; i < 32; i++ )
+	{
+		g_PlayerWeapons[id][i] = 0;
+	}
+
 	new num = 0;
 	get_user_weapons( id, g_PlayerWeapons[id], num );
+	
+	new szWeaponName[32];
+	for( new i = 0; i < 32; i++ )
+	{
+		if ( g_PlayerWeapons[id][i] )
+		{
+			get_weaponname( g_PlayerWeapons[id][i], szWeaponName, 31 );
+		}
+	}
+
+	return;
+}
+
+// Copy the weapons over right before reset hud is called, that way we don't lose our last round weapons when the round restarts
+public SHARED_CopySavedWeapons( id )
+{
+	for ( new i = 0; i < 33; i++ )
+	{
+		for ( new j = 0; j < 32; j++ )
+		{
+			g_PlayerLastWeapons[i][j] = g_PlayerWeapons[i][j];
+		}
+	}
+}
+
+// Sets the user's speed, should be called after freezetime, on weapon change and after a speed modifying skill has been called
+public SHARED_SetSpeed( id )
+{
+	if ( id > TASK_UNHOLYSPEED )
+	{
+		id -= TASK_UNHOLYSPEED;
+	}
+
+	if( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
+	
+	// We should NOT change the user's speed during freezetime
+	if ( g_freezeTime && ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO ) )
+	{
+		return;
+	}
+
+	// User is stunned, we shouldn't change their speed
+	else if ( p_data_b[id][PB_STUNNED] )
+	{
+		set_user_maxspeed( id, 1.0 );
+
+		return;
+	}
+
+	// User is hexed, they should be slowed
+	else if ( p_data_b[id][PB_HEXED] )
+	{
+		set_user_maxspeed( id, SKILL_HEX_SPEED );
+
+		return;
+	}
+
+	// User is slowed
+	else if ( p_data_b[id][PB_SLOWED] )
+	{
+		set_user_maxspeed( id, get_pcvar_float( CVAR_wc3_frost ) );
+		
+		return;
+	}
+	
+	// Day of Defeat specific checks
+	else if ( g_MOD == GAME_DOD )
+	{
+		
+		// User is in the prone position so we shouldn't change their speed
+		if( entity_get_int( id, EV_INT_iuser3 ) )
+		{
+			// When prone the maxspeed should be 50, never let it be different than this
+			if( get_user_maxspeed( id ) > 500.0 )
+			{
+				set_user_maxspeed( id, 50.0 );
+			}
+
+			return;
+		}
+
+		// User has a rocket launcher "mounted", we let users w/unholy aura + boots of speed run faster with it
+		else if ( get_user_maxspeed( id ) == 50.0 && ( p_data[id][P_ITEM] == ITEM_BOOTS || Verify_Skill( id, RACE_UNDEAD, SKILL2 ) ) )
+		{
+			set_user_maxspeed( id, 600.0 );
+
+			return;
+		}
+	}
+
+	// Counter-Strike and Condition Zero specific checks
+	else if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+
+		// Unholy Aura bonus
+		if ( Verify_Skill( id, RACE_UNDEAD, SKILL2 ) )
+		{
+			// Give them the bonus
+			set_user_maxspeed( id, p_unholy[p_data[id][P_SKILL2]-1] );
+
+			return;
+		}
+
+		// Boots of Speed bonus
+		else if ( p_data[id][P_ITEM] == ITEM_BOOTS )
+		{
+
+			// Give them the bonus
+			set_user_maxspeed( id, get_pcvar_float( CVAR_wc3_boots ) );
+
+			return;
+		}
+	}
+
+	// We would never get here unless we didn't hit any if statement from above
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		set_user_maxspeed( id, 250.0 );
+	}
+	else if ( g_MOD == GAME_DOD )
+	{
+		set_user_maxspeed( id, 600.0 );
+	}
+
+	return;
+}
+
+public SHARED_ResetMaxSpeed( id )
+{
+
+	if ( id >= TASK_RESETSPEED )
+	{
+		id -= TASK_RESETSPEED;
+	}
+
+
+	if( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
+	
+	// User should no longer be stunned
+	p_data_b[id][PB_STUNNED]	= false;
+
+	// User should no longer be slowed
+	p_data_b[id][PB_SLOWED]		= false;
+
+	SHARED_SetSpeed( id );
+
+	return;
+}
+
+// Returns true if the user is hexed/stunned/slowed
+SHARED_IsPlayerSlowed( id )
+{
+
+	if ( p_data_b[id][PB_STUNNED] || p_data_b[id][PB_SLOWED] )
+	{
+		return true;
+	}
+
+	return false;
+}
+
+// Function changes your skin for ITEM_MOLE and Chameleon
+public SHARED_ChangeSkin( id, reset )
+{
+
+	if ( !warcraft3 || g_MOD == GAME_DOD )
+	{
+		return;
+	}
+
+	new szSkin[32];
+	
+	// Reset the user's model
+	if ( reset == SKIN_RESET && p_data[id][P_SKINCHANGED] == SKIN_SWITCH )
+	{
+		cs_reset_user_model( id );
+		p_data[id][P_SKINCHANGED] = SKIN_RESET;
+	}
+	
+	// Switch the user's skin to the opposing team
+	else if ( reset == SKIN_SWITCH )
+	{
+		new iModelNum = random_num( 0, 3 );
+
+		if ( g_MOD == GAME_CZERO )
+		{
+			iModelNum = random_num( 0, 4 );
+		}
+
+		if ( get_user_team( id ) == TS )
+		{
+			add( szSkin, 31, CTSkins[iModelNum] );
+		}
+		else
+		{
+			add( szSkin, 31, TSkins[iModelNum] );
+		}
+
+		cs_set_user_model( id, szSkin );
+
+		p_data[id][P_SKINCHANGED] = SKIN_SWITCH;
+	}
+
+	return;
+}
+
+public SHARED_SetGravity( id )
+{
+	
+	// If gravity is less than this, lets not change per-user b/c it BLOWS ASS in game
+
+	if ( get_cvar_num("sv_gravity") > 650 )
+	{
+		// Set the user's gravity based on the item
+		if ( p_data[id][P_ITEM2] == ITEM_SOCK )
+		{
+			set_user_gravity( id, get_pcvar_float( CVAR_wc3_sock ) );
+		}
+
+		// Set the user's gravity based on undead's levitation
+		else if ( Verify_Skill( id, RACE_UNDEAD, P_SKILL3 ) )
+		{
+			if ( get_user_gravity( id ) != p_levitation[p_data[id][P_SKILL3]-1] )
+			{
+				set_user_gravity( id, p_levitation[p_data[id][P_SKILL3]-1] );
+			}
+		}
+		else
+		{
+			set_user_gravity( id, 1.0 );
+		}
+	}
+
+	return;
 }

@@ -4,9 +4,6 @@ public grenade_throw(index,greindex,wId){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if(g_mapDisabled)
-		return PLUGIN_CONTINUE
-
 	new szModel[64]
 	entity_get_string(greindex, EV_SZ_model, szModel, 63)
 #if MOD == 0
@@ -180,19 +177,22 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	// Human Alliance
 	else if ( Verify_Race(attacker, RACE_HUMAN) ){
 
-		// Bash
-		if ( Verify_Skill(attacker, RACE_HUMAN, SKILL3) && !p_data_b[attacker][PB_HEXED] ) {
-			new Float:randomnumber = random_float(0.0,1.0)
-			if (randomnumber <= p_bash[p_data[attacker][P_SKILL3]-1] && get_user_maxspeed(victim) > 10 && !p_data_b[victim][PB_SLOWED]){		// Cannot bash if already bashed or frosted
-				new normalspeed = floatround(get_user_maxspeed(victim))
-				set_user_maxspeed(victim,1.0)
-				p_data_b[victim][PB_STUNNED]=true
-				new parm[2]
-				parm[0]=victim
-				parm[1]=normalspeed
-				set_task(1.0,"reset_maxspeed",TASK_RESETSPEED+victim,parm,2)
+		// Bash - cannot occur if caster is hexed (hex disables abilities)
+		if ( Verify_Skill(attacker, RACE_HUMAN, SKILL3) && !p_data_b[attacker][PB_HEXED] )
+		{
+			new Float:randomnumber = random_float( 0.0, 1.0 );
 
+			// Cannot bash if already bashed or user is slowed
+			if ( randomnumber <= p_bash[p_data[attacker][P_SKILL3]-1] && !SHARED_IsPlayerSlowed( victim ) )
+			{		
+
+				p_data_b[victim][PB_STUNNED] = true;
+				SHARED_SetSpeed( victim );
+				
+				set_task( 1.0, "SHARED_ResetMaxSpeed", TASK_RESETSPEED + victim );
+				
 				if (iglow[victim][3] < 1){
+					new parm[2];
 					parm[0] = victim
 					parm[1] = 0
 					set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
@@ -373,14 +373,13 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 				set_user_rendering(victim, kRenderFxDistort, 0, 0, 0, kRenderTransTexture, 0)
 				
 				/* Do not allow other renderings to take place like invisibility */
-				p_data_b[victim][PB_CAN_RENDER] = false
+				p_data_b[victim][PB_CAN_RENDER] = false;
 				
 				p_data_b[victim][PB_HEXED] = true
+				p_data_b[victim][PB_SLOWED] = true;
 					
 				/* Set the user's speed */
-				new unholyparm[1]
-				unholyparm[0] = victim
-				unholyspeed(unholyparm)
+				SHARED_SetSpeed( victim );
 
 				/* Hex will only last for 10 seconds */
 				new parm[2]
@@ -406,8 +405,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 					get_user_origin(victim,origin)
 					get_user_origin(attacker,attackerorigin)
 					
-					if(!g_mapDisabled)
-						Create_TE_SPRITETRAIL(attackerorigin, origin, g_sShadow, 50, 15, 1, 2, 6 )
+					Create_TE_SPRITETRAIL(attackerorigin, origin, g_sShadow, 50, 15, 1, 2, 6 )
 
 					Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[victim][2])
 
@@ -463,8 +461,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 					get_user_origin(victim,origin)
 					get_user_origin(attacker,attackerorigin)
 
-					if(!g_mapDisabled)
-						Create_TE_SPRITETRAIL(attackerorigin, origin, g_sBeetle, 15, 15, 1, 2, 6 )
+					Create_TE_SPRITETRAIL(attackerorigin, origin, g_sBeetle, 15, 15, 1, 2, 6 )
 
 					emit_sound(victim,CHAN_STATIC, SOUND_CARRION, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
@@ -556,17 +553,19 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	}
 
 	// Orb of Frost
-	else if ( p_data[attacker][P_ITEM] == ITEM_FROST && !p_data_b[attacker][PB_HEXED] ){
-		if (get_user_maxspeed(victim) > 10 && !p_data_b[victim][PB_SLOWED]){
-			new normalspeed = floatround(get_user_maxspeed(victim))
-			set_user_maxspeed(victim, get_pcvar_float( CVAR_wc3_frost ))
-			p_data_b[victim][PB_SLOWED]=true
-			new parm[2]
-			parm[0]=victim
-			parm[1]=normalspeed
-			set_task(1.0,"reset_maxspeed",TASK_RESETSPEED+victim,parm,2)
+	else if ( p_data[attacker][P_ITEM] == ITEM_FROST && !p_data_b[attacker][PB_HEXED] )
+	{
+		// Only slow them if they aren't slowed/stunned already
+		if ( !SHARED_IsPlayerSlowed( victim ) )
+		{
+
+			p_data_b[victim][PB_SLOWED]	= true;
+			SHARED_SetSpeed( victim );
+
+			set_task( 1.0, "SHARED_ResetMaxSpeed", TASK_RESETSPEED + victim );
 
 			if (iglow[victim][3] < 1){
+				new parm[2];
 				parm[0] = victim
 				parm[1] = 0
 				set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
@@ -805,9 +804,8 @@ public on_CurWeapon(id) {
 	// Check to see if we should set the player's invisibility
 	SHARED_INVIS_Set( id );
 
-	new parm[1]
-	parm[0]=id
-	unholyspeed(parm)
+	// Set the user's speed
+	SHARED_SetSpeed( id );
 
 	return PLUGIN_CONTINUE
 }
@@ -872,8 +870,6 @@ public on_ResetHud(id)
 		return PLUGIN_CONTINUE;
 	}
 
-	EVENT_PlayerSpawned( id );
-
 	// This is the first time the user has spawned this round
 	if ( !p_data_b[id][PB_HAS_SPAWNED] )
 	{	
@@ -881,6 +877,8 @@ public on_ResetHud(id)
 
 		p_data_b[id][PB_HAS_SPAWNED] = true;
 	}
+
+	EVENT_PlayerSpawned( id );
 
 	return PLUGIN_CONTINUE;
 }
@@ -898,13 +896,15 @@ public _EVENT_Before_ResetHUD()
 
 		// Remove any reset_maxspeeds occuring (could cause a person to move during freezetime)
 		task_exists( TASK_RESETSPEED + id ) ? remove_task( TASK_RESETSPEED + id ) : 0;
+
+		SHARED_CopySavedWeapons( id );
 	}
 	
 	// We don't want ultimates to continue into the next round
 	ULT_Reset();
 }
 
-// Function is called when the user is spawned at the START of each round
+// Function is called when the user is spawned at the START of each round (called before EVENT_PlayerSpawned)
 public EVENT_PlayerInitialSpawn( id )
 {
 	// User didn't just join
@@ -955,22 +955,10 @@ public EVENT_PlayerInitialSpawn( id )
 		WAR3_Display_Level( id, DISPLAYLEVEL_SHOWRACE );
 	}
 
-	// Fan of Knives Check
-	if ( Verify_Skill(id, RACE_WARDEN, SKILL1) )
-	{
-		if ( random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] )
-		{
-			new parm[2];
-			parm[0]	= id;
-			parm[1]	= 7;
-			set_task( 0.1, "_Item_Mole", TASK_FAN+id, parm, 2 );
-		}
-	}
-
 	return PLUGIN_CONTINUE;
 }
 
-// Function is called everytime a user spawns
+// Function is called everytime a user spawns (called after EVENT_PlayerInitialSpawn)
 public EVENT_PlayerSpawned( id )
 {
 	// Find out if they need to choose a race or select a skill
@@ -1000,32 +988,12 @@ public EVENT_PlayerSpawned( id )
 	// User's need their skillz
 	Skill_Check( id );
 
-	//Item_Check(parm) - removed from reincarnation
-
 	// The user should not be frozen when they spawn
-	p_data_b[id][PB_STUNNED]		= false;
-	p_data_b[id][PB_SLOWED]			= false;
+	SHARED_ResetMaxSpeed( id );
 
-
-	// If the user is a bot they should have a chance to buy an item
-	if(is_user_bot(id))
-	{
-		if ( random_float(0.0,1.0) <= get_pcvar_num( CVAR_wc3_bot_buy_item ) )
-		{
-			( random_num( 1, 2 ) == 1 ) ? _menu_Shopmenu_One( id, random_num( 0, 8 ) ) : _menu_Shopmenu_Two( id, random_num( 0, 8 ) );
-		}
-	}
-	
 	// Check for Counter-Strike or Condition Zero
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		if (p_data_b[id][PB_PLAYERSPAWNED])
-		{
-			changeskin( id, SKIN_RESET );
-
-			WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
-		}
-
 		p_data[id][P_HECOUNT]		= 0;
 		p_data[id][P_FLASHCOUNT]	= 0;
 		
@@ -1038,20 +1006,46 @@ public EVENT_PlayerSpawned( id )
 	{
 
 		// Should the user be reincarnated ??
-		if( p_data[id][P_ITEM] == ITEM_ANKH )
+		if ( p_data[id][P_LASTITEM] == ITEM_ANKH )
 		{
 			// We don't want to skip since the user has this item
 			p_data_b[id][PB_REINCARNATION_SKIP] = false;
+
 			SHARED_DOD_Reincarnation( id );
 		}
-		else if( Verify_Skill(id, RACE_ORC, SKILL3) )
+		else if ( Verify_Skill(id, RACE_ORC, SKILL3) )
 		{
-			new Float:randomnumber = random_float(0.0,1.0)
-			if(randomnumber <= p_ankh[p_data[id][P_SKILL3]-1])
-				SHARED_DOD_Reincarnation(id)
+			if ( random_float( 0.0, 1.0 ) <= p_ankh[p_data[id][P_SKILL3]-1] )
+			{
+				SHARED_DOD_Reincarnation( id );
+			}
 
 		}
 	}
+
+	// Check the user's items to see if something should be done
+	ITEM_Check( id );
+	
+	// Should the user mole from fan of knives or an item?
+	if ( p_data[id][P_LASTITEM] == ITEM_MOLE || ( Verify_Skill(id, RACE_WARDEN, SKILL1) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
+	{
+		new parm[2];
+		parm[0] = id;
+		parm[1] = (p_data[id][P_LASTITEM] == ITEM_MOLE) ? 7 : 0;
+		set_task( 0.1, "ITEM_Mole", TASK_FAN + id, parm, 2 );
+	}
+
+
+	// If the user is a bot they should have a chance to buy an item
+	if(is_user_bot(id))
+	{
+		if ( random_float(0.0,1.0) <= get_pcvar_num( CVAR_wc3_bot_buy_item ) )
+		{
+			( random_num( 1, 2 ) == 1 ) ? _menu_Shopmenu_One( id, random_num( 0, 8 ) ) : _menu_Shopmenu_Two( id, random_num( 0, 8 ) );
+		}
+	}
+
+	p_data_b[id][PB_DIEDLASTROUND]	= false;
 }
 
 // Function is called ONCE at the start of a new round
@@ -1062,6 +1056,12 @@ public EVENT_NewRound()
 	if ( g_GameRestarting )
 	{
 		WC3_ResetGame();
+	}
+	
+	// This shouldn't exist unless the game is starting or there is a round restart, so lets remove it
+	if ( task_exists( TASK_BEFORE_ROUND_START ) )
+	{
+		remove_task( TASK_BEFORE_ROUND_START );
 	}
 
 	// Randomize Chameleon if we need to

@@ -33,13 +33,13 @@
 #define	TASK_UNSTICK		832		// "Unsticks" a stuck teleported player
 #define	TASK_SEARCHTARGET	864		// Used by some ultimates
 //#define TASK_WALKER			896		// Walker process
-#define	TASK_WAITSTOP		928		// Used for entangling roots
+#define	TASK_ENTANGLEWAIT	928		// Used for entangling roots
 #define	TASK_LIGHTNING		960		// Used for chain lightning
 #define	TASK_LIGHTSEARCH	992		// Used for chain lightning
 #define	TASK_LIGHTNINGNEXT	1024	// Used for chain lightning
 #define TASK_SPAWNPLAYER	1056	// Used within func_spawn to spawn a player
 #define TASK_GIVEITEMS		1088	// Used to give a player his items after spawning
-#define	TASK_ITEM_RINGERATE	1120	// Used with rings of regeneration
+#define	TASK_ITEM_RING	1120	// Used with rings of regeneration
 #define	TASK_TESPRAY		1152	// Used with flamethrower
 #define	TASK_ONFIRE			1184	// Used with flamethrower
 //#define	TASK_HEALNOW		1226	// Used with Healing Waves
@@ -54,9 +54,9 @@
 #define TASK_HELM			1524
 #define	TASK_REINCCHECK		1556
 #define TASK_SAVE_ALL		1588	// Used for saving XP
+#define TASK_UDELAY			1620	// Ultimate Delay Function
 
 #define TASK_BUYTIME		2000	// Checks for buytime
-#define TASK_UDELAY			2001	// Ultimate Delay Function
 #define	TASK_CHECKVOTES		2002	// Used for checking the votes
 #define	TASK_FTCONTROLLER	2003	// Used for automatic start/stop
 #define	TASK_CHECKWAR3		2004
@@ -75,6 +75,7 @@
 #define TASK_ENDULTIMATE	2017
 #define TASK_BEFORE_ROUND_START		2018
 #define TASK_MOLEFIX		3000
+#define TASK_CHECKMODULES	3001
 
 // From ../multiplayer source/dlls/player.cpp
 #define ARMOR_RATIO	 0.7	// Armor Takes 30% of the damage (was .2 in the SDK)
@@ -187,9 +188,6 @@
 #define RACE_WARDEN				7
 #define RACE_CRYPT				8
 #define RACE_CHAMELEON			9
-
-#define SHOPMENU_ONE			1
-#define SHOPMENU_TWO			2
 
 #define ITEM_ANKH		1
 #define ITEM_BOOTS		2
@@ -351,8 +349,8 @@
 	#define P_FLAMECOUNT			22		// Number of flame shots the player has left
 	#define P_SERPENTCOUNT			23		// Number of serpent wards the player has left
 	#define P_RINGS					24
-//	#define P_NADETIME				25
-//	#define P_SERPENTTEAM			26
+	#define P_LASTITEM				25		// Holds the item that the user had during the previous round
+	#define P_LASTITEM2				26
 	#define P_SKINCHANGED			27		// Did the user's skin change?
 	#define P_ULTIMATEDELAY			30
 //	#define P_SIPHONMONEY			31
@@ -402,7 +400,7 @@
 	#define PB_INVIS				26
 	#define PB_ULTIMATEUSED			27
 	#define PB_HEXED				28		// Is the player hexed? (All abilities are disabled)
-	#define PB_SILENT				29
+//	#define PB_SILENT				29
 	#define PB_JUSTJOINED			30
 	#define PB_ISCONNECTED			31
 	#define PB_GODMODE				32
@@ -411,7 +409,7 @@
 	#define PB_HAS_SPAWNED			33		// Has the player previously spawned this round?
 	#define PB_CAN_RENDER			34
 	
-	#define PB_IMMUNE_HEADSHOTS		35		// Player immune to headshots?
+//	#define PB_IMMUNE_HEADSHOTS		35		// Player immune to headshots?
 
 	#define PB_REINCARNATION_DELAY	36
 	#define PB_REINCARNATION_SKIP	37
@@ -427,6 +425,9 @@
 
 // Enemies who have immunity w/in this radius will cause blink to fail 
 #define NECKLACE_RADIUS		500
+
+#define SHOPMENU_ONE			P_ITEM
+#define SHOPMENU_TWO			P_ITEM2
 
 // ***************************************************************************
 //  Start of variables
@@ -543,7 +544,6 @@ new gmsgScreenShake
 new gmsgScoreInfo
 new gmsgStatusIcon
 
-new bool:g_mapDisabled = false
 new bool:g_spritesEnabled = false
 new Float:g_ultimateDelay = 0.0
 
@@ -572,7 +572,10 @@ new g_sWave
 	new g_sSmoke
 #endif
 
-new bool:g_DBILoaded = true;
+new bool:g_DBILoaded		= true;
+new szNotLoadedModules[10][32];
+new iTotalNotLoadedModules = 0;
+
 new Sql:sql
 new g_DBTableName[64]
 new iSQLAttempts = 0
@@ -590,6 +593,7 @@ new bool:endround
 
 
 new g_PlayerWeapons[33][32];			// Stores player weapons after they have been purchased
+new g_PlayerLastWeapons[33][32];		// Stores player weapons after they have been purchased
 
 new g_MOD = 0;
 
@@ -615,12 +619,9 @@ new const Float:p_evasion[3] =			{0.1,0.175,0.25}		// Evasion					(skill 1)
 new const Float:p_thorns[3] =			{0.05,0.1,0.15}			// Thorns Aura				(skill 2)
 new const Float:p_trueshot[3] =			{0.1,0.2,0.35}			// Trueshot Aura			(skill 3)
 
-#if MOD == 0
-	new const Float:p_pheonix[3] =			{0.333,0.666,1.0}	// Pheonix					(skill 1)
-#endif
-#if MOD == 1
-	new const p_pheonix[3] =			{300,600,900}			// Pheonix					(skill 1)
-#endif
+
+new const Float:p_pheonix[3] =			{0.333,0.666,1.0}		// Pheonix					(skill 1)
+new const p_pheonix_dod[3] =			{300,600,900}			// Pheonix - DOD			(skill 1)
 new const Float:p_banish[3] =			{0.07,0.13,0.20}		// Banish					(skill 2)
 new const Float:p_mana[3] =				{0.02,0.04,0.08}		// Siphon Mana				(skill 3)
 new const Float:p_resistant[11] =		{0.0, 0.04, 0.08, 0.12, 0.16, 0.20, 0.24, 0.28, 0.32, 0.36, 0.40}	// Resistant Skin		(Skill 4)

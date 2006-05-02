@@ -60,74 +60,32 @@ public Item_Message(id, item, shopmenu){
 	return PLUGIN_CONTINUE
 }
 
-public Item_Clear(id){
+public Item_Check( id )
+{
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
-
-	// Remove Helm
-	if(p_data[id][P_ITEM2]==ITEM_HELM)
-		p_data_b[id][PB_IMMUNE_HEADSHOTS] = false;
-
-	// Reset Skin
-	if (p_data[id][P_ITEM2]==ITEM_CHAMELEON)
-		changeskin(id,1)	
-
-	// Amulet of the Cat
-	if (p_data[id][P_ITEM2] == ITEM_AMULET)
-		p_data_b[id][PB_SILENT] = false
-
-	// Reset rings and footsteps
-	p_data[id][P_RINGS]=0
-	p_data_b[id][PB_SILENT] = false
-
-	return PLUGIN_CONTINUE
-}
-
-
-public Item_Check(parm[]){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new id = parm[0]
 	
 	if(!p_data_b[id][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
-	if(p_data[id][P_ITEM2]==ITEM_MOLE)
-		set_task(0.1,"_Item_Mole",TASK_FAN+id,parm,1)
-		
 	if(p_data_b[id][PB_DIEDLASTROUND])
 	{
-		p_data[id][P_ITEM]=0
-		p_data[id][P_ITEM2]=0
 		WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
 	}
 
-	p_data_b[id][PB_DIEDLASTROUND] = false
 	
-	Skill_UnholyAura(id);
+	SHARED_SetGravity( id );
 
 	if(p_data[id][P_ITEM2]!=ITEM_CHAMELEON && p_data[id][P_SKINCHANGED]==SKIN_SWITCH)
-		changeskin(id,SKIN_RESET)
-
-	if (task_exists(TASK_ITEM_RINGERATE+id) && p_data[id][P_ITEM2]!=ITEM_RING)
-		remove_task(TASK_ITEM_RINGERATE+id)
+		SHARED_ChangeSkin(id,SKIN_RESET)
 
 	if (p_data[id][P_ITEM]==ITEM_HEALTH)
 		set_user_health(id,get_user_health(id)+get_pcvar_num( CVAR_wc3_health ))
 	
-	if(p_data[id][P_ITEM2]==ITEM_RING && !task_exists(TASK_ITEM_RINGERATE+id))
-		_Item_Ring(parm)
-
 	if (p_data[id][P_ITEM2]==ITEM_CHAMELEON && is_user_alive(id))
-		changeskin(id,SKIN_SWITCH)
+		SHARED_ChangeSkin(id,SKIN_SWITCH)
 
-	if (p_data[id][P_ITEM2] == ITEM_AMULET)
-		p_data_b[id][PB_SILENT] = true
-	else
-		p_data_b[id][PB_SILENT] = false
 
 	return PLUGIN_CONTINUE
 }
@@ -180,7 +138,7 @@ public _Item_Glove(parm[2]){
 
 	// Give the nade or subtract 1 from the timer and call this again a second later
 	if(parm[1] < 1){
-		Item_Glove_Give(id)
+		ITEM_Gloves(id)
 	}else{
 		#if MOD == 0
 			set_hudmessage(0, 100, 0, 0.05, 0.65, 2, 0.02, 10.0, 0.01, 0.1, 2)	
@@ -198,7 +156,7 @@ public _Item_Glove(parm[2]){
 	return PLUGIN_CONTINUE
 }
 
-public Item_Glove_Give(id) 
+public ITEM_Gloves(id) 
 { 
 	if ( !warcraft3 )
 	{
@@ -266,7 +224,7 @@ public ITEM_Glove_Check( id )
 // Mole
 // ****************************************
 
-public _Item_Mole(parm[]){ // For ITEM_MOLE, checks to see if there is an open spot on the other team's spawn 
+public ITEM_Mole(parm[]){ // For ITEM_MOLE, checks to see if there is an open spot on the other team's spawn 
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -306,7 +264,7 @@ public _Item_Mole(parm[]){ // For ITEM_MOLE, checks to see if there is an open s
 
 	FVecIVec(spawnOrigin, origin)
 
-	changeskin(id,SKIN_SWITCH)
+	SHARED_ChangeSkin(id,SKIN_SWITCH)
 
 	entity_set_vector(id, EV_VEC_angles, spawnAngle)
 	set_user_origin(id,origin) 
@@ -316,32 +274,40 @@ public _Item_Mole(parm[]){ // For ITEM_MOLE, checks to see if there is an open s
 	return PLUGIN_HANDLED 
 } 
 
-public _Item_Ring(parm[]){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	if(p_data[id][P_ITEM2]!=ITEM_RING)
-		return PLUGIN_HANDLED
-
-	new awardHealth = p_data[id][P_RINGS]
-
-	while(awardHealth!=0){
-		if( get_user_actualhealth(id) + 1 <= get_user_maxhealth(id) ){
-			set_user_health(id, get_user_health(id) + 1)
-		}
-
-		awardHealth--
+public ITEM_Ring( id )
+{
+	if ( !warcraft3 )
+	{
+		return;
 	}
 
-	set_task(2.0,"_Item_Ring",TASK_ITEM_RINGERATE+id,parm,2)
+	if ( id > TASK_ITEM_RING )
+	{
+		id -= TASK_ITEM_RING;
+	}
 
-	return PLUGIN_CONTINUE
+
+	// User no longer has rings or isn't connected
+	if( !p_data_b[id][PB_ISCONNECTED] || p_data[id][P_ITEM2] != ITEM_RING )
+	{
+		return;
+	}
+
+	new iBonusHealth = p_data[id][P_RINGS];
+
+	while( iBonusHealth > 0 )
+	{
+		if ( get_user_actualhealth( id ) + 1 <= get_user_maxhealth( id ) )
+		{
+			set_user_health( id, get_user_health( id ) + 1 );
+		}
+
+		iBonusHealth--;
+	}
+
+	set_task( 2.0, "ITEM_Ring", TASK_ITEM_RING + id );
+
+	return;
 }
 
 // Called when a user looks/shoots somewhere
@@ -351,7 +317,7 @@ public traceline(Float:v1[3], Float:v2[3], noMonsters, pentToSkip)
 	new iVictim = get_tr(TR_pHit);
 	new iHitZone = (1 << get_tr(TR_iHitgroup));
 
-	if ( iVictim >= 1 && iVictim <= MAXPLAYERS && p_data_b[iVictim][PB_IMMUNE_HEADSHOTS] )
+	if ( iVictim >= 1 && iVictim <= MAXPLAYERS && p_data[iVictim][P_ITEM2] == ITEM_HELM )
 	{
 		// If its a headshot then we want to block it
 		if ( iHitZone & (1 << 1) )
@@ -370,4 +336,255 @@ public traceline(Float:v1[3], Float:v2[3], noMonsters, pentToSkip)
 	}
 	
 	return FMRES_IGNORED;
+}
+
+public ITEM_Set( id, iItemID, iShopmenuID )
+{
+
+	new iLastItemID = p_data[id][iShopmenuID];
+
+	// Lets "officially" give them the new item
+	if ( iItemID != -1 )
+	{
+		p_data[id][iShopmenuID] = iItemID;
+	}
+
+	// Give an item bonus for shopmenu 1
+	if ( iShopmenuID == SHOPMENU_ONE )
+	{
+
+		// Remove health bonus after buying new item
+		if ( iLastItemID == ITEM_HEALTH )
+		{
+			set_user_health( id, get_user_health( id ) - get_pcvar_num( CVAR_wc3_health ) );
+		}
+
+		// Give health bonus for buying periapt of health
+		if ( iItemID == ITEM_HEALTH )
+		{
+			set_user_health( id, get_user_health( id ) + get_pcvar_num( CVAR_wc3_health ) );
+		}
+		
+		// If the current or last item was boots, we need to change their speed
+		if ( iLastItemID == ITEM_BOOTS || iItemID == ITEM_BOOTS )
+		{
+			SHARED_SetSpeed( id );
+		}
+
+		// If the current or last item was cloak, we need to change their invisibility
+		else if ( iLastItemID == ITEM_CLOAK || iItemID == ITEM_CLOAK )
+		{
+			SHARED_INVIS_Set( id );
+		}
+	}
+
+	// Give an item bonus for shopmenu 2
+	else if ( iShopmenuID == SHOPMENU_TWO )
+	{
+
+		// Remove all ring of regeneration functions
+		if ( iLastItemID == ITEM_RING && iItemID != ITEM_RING )
+		{
+			if ( task_exists( TASK_ITEM_RING + id ) )
+			{
+				remove_task( TASK_ITEM_RING + id );
+			}
+
+			p_data[id][P_RINGS] = 0;
+		}
+	
+		// The user no longer has gloves, lets not give him grenades
+		else if ( iLastItemID == ITEM_GLOVES )
+		{
+			if ( task_exists( TASK_ITEM_GLOVES + id ) )
+			{
+				remove_task( TASK_ITEM_GLOVES + id );
+			}
+		}
+
+		// Reset the user's skin if they don't have chameleon anymore
+		else if ( iLastItemID == ITEM_CHAMELEON )
+		{
+			SHARED_ChangeSkin( id, SKIN_RESET );
+		}
+		
+		//******* START GIVING
+		
+		// User just bought chameleon
+		if ( iItemID == ITEM_CHAMELEON )
+		{
+			SHARED_ChangeSkin( id, SKIN_SWITCH );
+		}
+
+		// User has bought gloves...
+		else if ( iItemID == ITEM_GLOVES )
+		{
+			ITEM_Gloves( id );
+		}
+
+		// User just bought a ring
+		else if ( iItemID == ITEM_RING )
+		{
+			p_data[id][P_RINGS]++;
+
+			if( !task_exists( TASK_ITEM_RING + id ) )
+			{
+				ITEM_Ring( id )
+			}
+		}
+
+		// Change the user's gravity if they bought/lost sock of the feather
+		if ( iLastItemID == ITEM_SOCK || iItemID == ITEM_SOCK )
+		{
+			SHARED_SetGravity( id );
+		}
+	}
+	
+	// Display the new item on the user's HUD
+	WAR3_Display_Level( id, DISPLAYLEVEL_NONE );
+}
+
+public ITEM_CanBuy( id )
+{
+	// Can we buy items when dead?
+	if( !get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive( id ) )
+	{
+		client_print( id, print_center, "%L", id, "NOT_BUY_ITEMS_WHEN_DEAD" );
+		
+		return false;
+	}
+	
+	// Counter-strike and Condition Zero ONLY check
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		
+		// Are we restricting to only buying during the buytime?
+		if( get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime )
+		{
+			client_print( id, print_center, "%L", id, "SECONDS_HAVE_PASSED_CANT_BUY", ( get_cvar_float( "mp_buytime" ) * 60.0) );
+
+			return false;
+		}
+		
+		// Can we only purchase an item if we're in the buyzone?
+		else if( get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone( id ) && is_user_alive( id ) )
+		{
+			client_print( id, print_center, "%L", id, "MUST_BE_IN_BUYZONE" );
+			
+			return false;
+		}
+	}
+
+	return true;
+}
+
+public ITEM_CanBuyItem( id, iItemID, iShopmenuID )
+{
+	if ( !ITEM_CanBuy( id ) )
+	{
+		return false;
+	}
+
+	// Shopmenu 1 Checks
+	if ( iShopmenuID == SHOPMENU_ONE )
+	{
+		// Cannot purchase some items when dead
+		if ( !is_user_alive(id) && ( iItemID == ITEM_BOOTS || iItemID == ITEM_CLAWS || iItemID == ITEM_CLOAK || iItemID == ITEM_MASK || iItemID == ITEM_NECKLACE || iItemID == ITEM_FROST || iItemID == ITEM_HEALTH) ) 
+		{
+			client_print( id, print_center, "%L", id, "NOT_PURCHASE_WHEN_DEAD" );
+
+			return false;
+		}
+
+		// Cannot purchase an item they already own
+		else if ( iItemID == p_data[id][iShopmenuID] && iItemID!=ITEM_TOME )
+		{
+			client_print( id, print_center, "%L", id, "ALREADY_OWN_THAT_ITEM" );
+
+			return false;
+		}
+		
+		// They don't have enough money
+		else if ( SHARED_GetUserMoney( id ) < itemcost[iItemID - 1] )
+		{
+			client_print( id, print_center, "%L", id, "INSUFFICIENT_FUNDS" );
+
+			return false;
+		}
+	}
+
+	// Shopmenu 2 Checks
+	else if ( iShopmenuID == SHOPMENU_TWO )
+	{
+		// Cannot only purchase mole when dead
+		if ( !is_user_alive(id) && iItemID != ITEM_MOLE )
+		{
+			client_print( id, print_center, "%L", id, "NOT_PURCHASE_WHEN_DEAD" );
+
+			return false;
+		}
+
+		// Cannot purchase an item they already own
+		else if( iItemID == p_data[id][iShopmenuID] && iItemID != ITEM_RING )
+		{
+			client_print( id, print_center, "%L", id, "ALREADY_OWN_THAT_ITEM" );
+
+			return false;
+		}
+
+		// They don't have enough money
+		else if ( SHARED_GetUserMoney( id ) < itemcost2[iItemID - 1] )
+		{
+			client_print( id, print_center, "%L", id, "INSUFFICIENT_FUNDS" );
+
+			return false;
+		}
+
+		// Cannot buy more than 5 rings
+		else if( p_data[id][P_RINGS] > 4 && iItemID == ITEM_RING )
+		{
+			client_print( id, print_center, "%L", id, "NOT_PURCHASE_MORE_THAN_FIVE_RINGS" );
+
+			return false;
+		}
+		
+		// Counter-Strike and Condition Zero only check
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			if ( iItemID == ITEM_SCROLL && endround )
+			{
+				client_print( id, print_center, "%L", id, "NOT_PURCHASE_AFTER_ENDROUND" );
+
+				return false;
+			}
+			else if( !g_giveHE && get_pcvar_num( CVAR_wc3_glove_disable_ka ) && iItemID == ITEM_GLOVES )
+			{
+				client_print( id, print_center, "%L", id, "FLAMING_GLOVES_RESTRICTED_ON_THIS_MAP" );
+
+				return false;
+			}
+
+		}
+	}
+
+	return true;
+}
+
+// Called when the user dies so we can remove the abilities
+public ITEM_Reset( id )
+{
+	// Lets save the user's items from when they died
+	p_data[victim_id][P_LASTITEM]			= p_data[victim_id][P_ITEM];
+	p_data[victim_id][P_LASTITEM2]			= p_data[victim_id][P_ITEM2];
+
+	// Reset the user's items
+	p_data[id][P_ITEM]		= 0;
+	p_data[id][P_ITEM2]		= 0;
+
+	// Reset shopmenu 1 items
+	ITEM_Set( id, -1, SHOPMENU_ONE );
+
+	// Reset shopmenu 2 items
+	ITEM_Set( id, -1, SHOPMENU_TWO );
+
 }

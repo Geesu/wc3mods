@@ -22,6 +22,7 @@ v2.3.3
 Add a disable orc nade map config file...
 Add a start/stop option
 
+// remove - MAP_DISABLED, MAP_DISABLED_DUE
 v2.3.2
  - Addition: Admin flag added to war3FT.cfg file as a cvar
  - Bug Fix: Index out of bounds in events.inl on an attacker check - thanks Striker

@@ -19,36 +19,6 @@ public checkmap(){
 	return PLUGIN_CONTINUE
 }
 
-public changeskin(id,reset){							// Function changes your skin for ITEM_MOLE and Chameleon
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-#if MOD == 0
-	new num = 0, newSkin[32]
-	if (is_running("cstrike"))
-		num = random_num(0,3)
-	else if (is_running("czero"))
-		num = random_num(0,4)
-
-	
-	if (reset==SKIN_RESET && p_data[id][P_SKINCHANGED]==SKIN_SWITCH){
-		cs_reset_user_model(id)
-		p_data[id][P_SKINCHANGED]=SKIN_RESET
-	}
-	else if (reset==SKIN_SWITCH){
-		if (get_user_team(id)==TS)
-			add(newSkin,31,CTSkins[num])
-		else
-			add(newSkin,31,TSkins[num])
-
-		cs_set_user_model(id,newSkin)
-		p_data[id][P_SKINCHANGED]=SKIN_SWITCH
-	}
-#endif
-	return PLUGIN_CONTINUE
-}
-
 public saveweapons(id)
 {
 
@@ -123,65 +93,3 @@ public glow_change(parm[]){
 	}
 	return PLUGIN_CONTINUE
 }
-
-public reset_maxspeed(parm[]){
-
-	new enemy = parm[0]
-
-	if(!p_data_b[enemy][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	p_data_b[enemy][PB_STUNNED]=false
-	p_data_b[enemy][PB_SLOWED]=false
-
-	set_user_maxspeed( enemy, float(parm[1]) )
-	return PLUGIN_CONTINUE
-}
-
-public unholyspeed(parm[1]){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	if (p_data_b[id][PB_STUNNED]){
-		set_user_maxspeed(id,1.0)
-		return PLUGIN_HANDLED
-	}
-	else if (p_data_b[id][PB_HEXED]){
-		set_user_maxspeed(id, SKILL_HEX_SPEED)
-		return PLUGIN_HANDLED
-	}
-	else if (p_data_b[id][PB_SLOWED]){
-		set_user_maxspeed(id, get_pcvar_float( CVAR_wc3_frost ))
-		return PLUGIN_HANDLED
-	}
-#if MOD == 1
-	else if(entity_get_int(id,EV_INT_iuser3)){	// User is in prone position, don't change speed
-		if(get_user_maxspeed(id) > 500.0)
-			set_user_maxspeed(id, 50.0)
-
-		return PLUGIN_HANDLED
-	}
-	else if(get_user_maxspeed(id) == 50.0 && ( p_data[id][P_ITEM] == ITEM_BOOTS || Verify_Skill(id, RACE_UNDEAD, SKILL2) ) && !p_data_b[id][PB_HEXED] ){		// User has a rocket launcher "mounted"
-		set_user_maxspeed(id, 600.0)
-	}
-#endif
-#if MOD == 0
-	else if ( Verify_Skill(id, RACE_UNDEAD, SKILL2) && !g_freezeTime && !p_data_b[id][PB_HEXED] ){              // Unholy Aura
-		if (get_user_maxspeed(id)>5 && get_user_maxspeed(id)!=p_unholy[p_data[id][P_SKILL2]-1])
-			set_user_maxspeed(id,(p_unholy[p_data[id][P_SKILL2]-1]))
-	}
-	else if ( p_data[id][P_ITEM]==ITEM_BOOTS && !g_freezeTime && !p_data_b[id][PB_HEXED] ){			// Boots of Speed
-		if (get_user_maxspeed(id)!=get_pcvar_float( CVAR_wc3_boots ))
-			set_user_maxspeed(id,get_pcvar_float( CVAR_wc3_boots ))
-	}
-#endif
-
-	return PLUGIN_CONTINUE
-}
-

@@ -1,3 +1,7 @@
+
+#define	ENTANGLE_TIME		10.0
+
+
 // Function will stop all ultimates from functioning
 public ULT_Reset()
 {
@@ -50,12 +54,10 @@ public apacheexplode(parm[5]){		// Suicide Bomber
 	origin2[1] = origin[1] + random_num( -100, 100 )
 	origin2[2] = origin[2] + random_num( -50, 50 )
 	
-	if(!g_mapDisabled)
-		Create_TE_EXPLOSION(origin, origin2, g_sFireball, (random_num(0,20) + 20), 12, TE_EXPLFLAG_NONE)
+	Create_TE_EXPLOSION(origin, origin2, g_sFireball, (random_num(0,20) + 20), 12, TE_EXPLFLAG_NONE)
 
 #if MOD == 0
-	if(!g_mapDisabled)
-		Create_TE_Smoke(origin, origin2, g_sSmoke, 60, 10)
+	Create_TE_Smoke(origin, origin2, g_sSmoke, 60, 10)
 #endif
 
 	new players[32]
@@ -96,10 +98,6 @@ public blastcircles(parm[5]){
 
 	if ( endround )
 		return 0
-
-	// Create Blast Circles
-	if(g_mapDisabled)
-		return PLUGIN_CONTINUE
 
 	new origin[3], origin2[3]
 
@@ -275,8 +273,7 @@ public _Ultimate_Blink_Controller(parm[]){
 		origin2[1] = origin[1]
 		origin2[2] = origin[2] + 40
 		
-		if(!g_mapDisabled)
-			Create_TE_SPRITETRAIL(origin2, origin, g_sFlare, 30, 10, 1, 50, 10)
+		Create_TE_SPRITETRAIL(origin2, origin, g_sFlare, 30, 10, 1, 50, 10)
 
 		// Flash the player
 		if( get_pcvar_num( CVAR_wc3_blink_dizziness ) == 1 )
@@ -574,8 +571,7 @@ public lightningeffect(caster,targetid,linewidth,damage,bodypart){
 
 	WAR3_damage(targetid, caster, damage, CSW_LIGHTNING, bodypart)
 
-	if(!g_mapDisabled)
-		Create_TE_BEAMENTS(caster, targetid, g_sLightning, 0, 15, 10, linewidth, 10, 255, 255, 255, 255, 0)
+	Create_TE_BEAMENTS(caster, targetid, g_sLightning, 0, 15, 10, linewidth, 10, 255, 255, 255, 255, 0)
 
 	new origin[3]
 	get_user_origin(targetid,origin)
@@ -612,17 +608,22 @@ public searchtarget(parm[2]){
 		p_data_b[id][PB_ULTIMATEUSED]=true
 		Ultimate_Icon(id,ICON_HIDE)
 
-		if(!g_mapDisabled)
-			Create_TE_BEAMFOLLOW(enemy, g_siTrail, 10, 5, 10, 108, 23, 255)
+		Create_TE_BEAMFOLLOW(enemy, g_siTrail, 10, 5, 10, 108, 23, 255)
 
 //		emit_sound(id,CHAN_STATIC, SOUND_ENTANGLING, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
-		new waitparm[6]
-		waitparm[0]=enemy
-		waitparm[1]=100
-		waitparm[5]=floatround(get_user_maxspeed(enemy))
-		set_user_maxspeed(enemy,1.0)			
-		waitstop(waitparm)
+
+		p_data[enemy][PB_STUNNED] = true;
+
+		SHARED_SetSpeed( enemy );
+		
+		// Start waiting for the user to stop...
+		new waitparm[4];
+		waitparm[0] = enemy;
+		waitparm[1] = 0;
+		waitparm[2] = 0;
+		waitparm[3] = 0;
+		_ULT_Entangle_Wait(waitparm)
 		
 		if( get_pcvar_num( CVAR_wc3_entangle_drop ) )
 		{
@@ -632,8 +633,6 @@ public searchtarget(parm[2]){
 			if(SHARED_IsPrimaryWeapon(weapon))
 				client_cmd(enemy, "drop")
 		}
-
-		p_data_b[enemy][PB_STUNNED]=true
 
 		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 		_ULT_Delay( id )	
@@ -664,55 +663,55 @@ public searchtarget(parm[2]){
 	return PLUGIN_CONTINUE
 }
 
-public waitstop(parm[6]){
+public _ULT_Entangle_Wait( parm[4] )
+{
 
-	new id=parm[0]
+	new id = parm[0];
 
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	new origin[3]
-	get_user_origin(id, origin)
-	if (origin[0]==parm[2] && origin[1]==parm[3] && origin[2]==parm[4]){
-		new normalspeed = parm[5]
-		new resetparm[2]
-		resetparm[0]=id
-		resetparm[1]=normalspeed
-		set_task(float(parm[1]/10),"reset_maxspeed",TASK_RESETSPEED+id,resetparm,2)
-		new entangleparm[2]
-		entangleparm[0]=parm[0]
-		entangleparm[1]=parm[1]
-		entangle(entangleparm)
+	if( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
 	}
-	else{
-		parm[2]=origin[0]
-		parm[3]=origin[1]
-		parm[4]=origin[2]
-		set_task(0.1,"waitstop",TASK_WAITSTOP+id,parm,6)
+
+	new origin[3];
+	get_user_origin( id, origin );
+	
+	// Checking to see if the user has actually stopped yet?
+	if ( origin[0] == parm[1] && origin[1] == parm[2] && origin[2] == parm[3] )
+	{
+		// Reset the user's speed in ENTANGLE_TIME amount of time
+		set_task( ENTANGLE_TIME, "SHARED_ResetMaxSpeed", TASK_RESETSPEED + id );
+		
+		// Entangle the user
+		ULT_NE_Entangle( id )
 	}
-	return PLUGIN_CONTINUE
+
+	// If not lets run another check in 0.1 seconds
+	else
+	{
+		parm[1] = origin[0];
+		parm[2] = origin[1];
+		parm[3] = origin[2];
+
+		set_task(0.1,"_ULT_Entangle_Wait",TASK_ENTANGLEWAIT+id,parm,4)
+	}
+	return;
 }
 
-public entangle(parm[2]){
+public ULT_NE_Entangle( id )
+{
+	new life	= floatround( ENTANGLE_TIME );
+	new radius	= 20;
+	new counter = 0;
+	new origin[3];
+	new x1, y1, x2, y2;
 
-	new id=parm[0]
+	get_user_origin( id, origin );
 
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
+	emit_sound( id, CHAN_STATIC, SOUND_ENTANGLING, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-	new life=parm[1]
-	new radius = 20
-	new counter = 0
-	new origin[3]
-	new x1
-	new y1
-	new x2
-	new y2
-	get_user_origin(id,origin)
-
-	emit_sound(id,CHAN_STATIC, SOUND_ENTANGLING, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-	while (counter<=7){
+	while (counter<=7)
+	{
 		if (counter==0 || counter==8)
 			x1= -radius
 		else if (counter==1 || counter==7)
@@ -744,23 +743,24 @@ public entangle(parm[2]){
 			y2 = -sqroot(radius*radius-x2*x2)
 		new height=16+2*counter
 		new start[3], end[3]
-		if(!g_mapDisabled){
-			while (height > -40){
-				
-				start[0] = origin[0] + x1
-				start[1] = origin[1]+y1
-				start[2] = origin[2]+height
-				end[0] = origin[0]+x2
-				end[1] = origin[1]+y2
-				end[2] = origin[2]+height+2
-				
-				Create_TE_BEAMPOINTS(start, end, g_siBeam4, 0, 0, life, 10, 5, 10, 108, 23, 255, 0)
 
-				height -= 16
-			}
+		while (height > -40)
+		{
+			
+			start[0] = origin[0] + x1
+			start[1] = origin[1]+y1
+			start[2] = origin[2]+height
+			end[0] = origin[0]+x2
+			end[1] = origin[1]+y2
+			end[2] = origin[2]+height+2
+			
+			Create_TE_BEAMPOINTS(start, end, g_siBeam4, 0, 0, life, 10, 5, 10, 108, 23, 255, 0)
+
+			height -= 16
 		}
 	}
-	return PLUGIN_CONTINUE
+
+	return;
 }
 
 
@@ -864,8 +864,7 @@ public te_spray(args[]){
 	direction[1] = args[4]
 	direction[2] = args[5]
 
-	if(!g_mapDisabled)
-		Create_TE_SPRAY(position, direction, g_sFire, 8, 70, 100, 5)
+	Create_TE_SPRAY(position, direction, g_sFire, 8, 70, 100, 5)
 
 	return PLUGIN_CONTINUE 
 } 
@@ -967,16 +966,14 @@ public on_fire(args[]){
 	position[1] = origin[1] + ry
 	position[2] = origin[2] + 10 + rz
 
-	if(!g_mapDisabled)
-		Create_TE_SPRITE(position, g_sBurning, 30, 200)
+	Create_TE_SPRITE(position, g_sBurning, 30, 200)
 
 	position[0] = origin[0]+(rx*2)
 	position[1] = origin[1]+(ry*2)
 	position[2] = origin[2]+100+(rz*2)
 
 #if MOD == 0
-	if(!g_mapDisabled)
-		Create_TE_Smoke(position, position, g_sSmoke, 60, 15)
+	Create_TE_Smoke(position, position, g_sSmoke, 60, 15)
 #endif
 
 	if( !is_user_alive(victim) && p_data[victim][P_ITEM] == ITEM_NECKLACE ) 
@@ -1183,8 +1180,7 @@ public drawfunnels(parm[]){
 	funnel[1]=parm[1]
 	funnel[2]=parm[2]
 	
-	if(!g_mapDisabled)
-		Create_TE_LARGEFUNNEL(funnel, g_sSnow, 0)
+	Create_TE_LARGEFUNNEL(funnel, g_sSnow, 0)
 	
 	new xdist = diff(origin[0],funnel[0])
 	new ydist = diff(origin[1],funnel[1])
@@ -1240,13 +1236,13 @@ public _ULT_Delay( id )
 		return PLUGIN_CONTINUE;
 	}
 	
-	log_amx( "id: %d, %d", id, id - TASK_UDELAY );
-
 	// If the function is called from a task, modify the id
-	if ( id > TASK_UDELAY && id != 0 )
+	if ( id >= TASK_UDELAY )
 	{
 		id -= TASK_UDELAY;
 	}
+
+	server_print( "%d", id );
 	
 	// Player call
 	if ( id != 0 )

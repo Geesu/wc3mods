@@ -83,10 +83,9 @@ new const WC3DATE[] =		__DATE__
 
 public plugin_init()
 {
-	register_plugin(WC3NAME,WC3VERSION,WC3AUTHOR)
-
-	// Lets determine which game is running
-	WAR3_Determine_Game();
+	register_plugin( WC3NAME, WC3VERSION, WC3AUTHOR );
+	
+	WC3_DetermineGame();
 
 	gmsgDeathMsg		= get_user_msgid( "DeathMsg"	);
 	gmsgScreenFade		= get_user_msgid( "ScreenFade"	);
@@ -196,7 +195,7 @@ public plugin_init()
 	}
 	
 	// Plugin initialization procedures
-	WAR3_Init();
+	WC3_Init();
 
 	register_concmd( "test", "test" );
 }
@@ -451,7 +450,7 @@ public client_PreThink(id)
 				}
 			}
 	#endif
-			if(p_data_b[id][PB_SILENT])
+			if( p_data[id][P_ITEM2] == ITEM_AMULET )
 			{
 				entity_set_int( id, EV_INT_flTimeStepSound, 999 );
 			}
@@ -495,30 +494,19 @@ public plugin_natives()
 
 public module_filter(const module[])
 {
-	// Then we obviously don't want to save XP via mysql or SQLite now do we?  Lets default to vault and print an error message
+	copy( szNotLoadedModules[iTotalNotLoadedModules++], 31, module );
+	
+	if ( !task_exists( TASK_CHECKMODULES ) )
+	{
+		set_task( 0.1, "WC3_CheckModules", TASK_CHECKMODULES );
+	}
+
 	if ( equali( module, "dbi" ) )
 	{
 		g_DBILoaded = false;
-		log_amx("[ERROR] No DBI module found, defaulting to vault");
-
-		MODULE_Enable( "mysql_amxx" );
-
-		return PLUGIN_HANDLED;
-	}
-	else if ( equali( module, "dod" ) )
-	{
-		return PLUGIN_HANDLED;
-	}
-	else if ( equali( module, "dodx" ) )
-	{
-		return PLUGIN_HANDLED;
-	}
-	else if ( equali( module, "cstrike" ) )
-	{
-		return PLUGIN_HANDLED;
 	}
 
-	return PLUGIN_CONTINUE;
+	return PLUGIN_HANDLED;
 }
 
 public native_filter(const name[], index, trap)
@@ -527,45 +515,4 @@ public native_filter(const name[], index, trap)
             return PLUGIN_HANDLED;
 
       return PLUGIN_CONTINUE;
-}
-
-public MODULE_Enable( module_name[] )
-{
-
-	new fp = fopen( "addons/amxmodx/configs/modules.ini", "r+t" );
-	new data[128];
-
-	while( !feof( fp ) )
-	{
-		fgets( fp, data, 63 );
-		
-		server_print( "Searching %s", data );
-
-		// Module Name Found
-		if ( contain( data, module_name ) != -1 )
-		{
-			// Semicolon before module name found
-			if ( contain( data, ";" ) != -1 )
-			{
-				// Lets go to the start of the line we're on so we can remove the ;
-				fseek( fp, strlen(data), SEEK_CUR );
-				
-				// Remove the ; from the line
-				replace( data, strlen(data), ";" , "" );
-
-				server_print( "%s", data );
-				
-				new len = strlen( data );
-				for ( new i = 0; i < len; i++ )
-				{
-					fputc( fp, data[i] );
-					server_print( "%c", data[i] );
-				}
-
-				server_print( "done" );
-			}
-		}
-	} 
-
-	fclose( fp );
 }

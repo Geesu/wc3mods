@@ -31,7 +31,7 @@ public Skill_Check(id)
 	}
 
 	// Undead's Unholy Aura
-	Skill_UnholyAura(id);
+	SHARED_SetGravity(id);
 
 	// Crypt Lord's Carrion Beetles
 	if ( Verify_Skill(id, RACE_CRYPT, SKILL3) ){
@@ -93,42 +93,11 @@ public Skill_Check(id)
 }
 
 // ****************************************
-// Undead's Unholy Aura
-// ****************************************
-public Skill_UnholyAura( id )
-{
-	if( get_cvar_num("sv_gravity") > 650 )
-	{
-		// Levitation
-		if ( Verify_Skill(id, RACE_UNDEAD, P_SKILL3) )
-		{		
-			if ( get_user_gravity(id) != p_levitation[p_data[id][P_SKILL3]-1] )
-			{
-				set_user_gravity(id, p_levitation[p_data[id][P_SKILL3]-1]);
-			}
-		}
-		else if ( p_data[id][P_ITEM2] == ITEM_SOCK )
-		{
-			set_user_gravity(id, get_pcvar_float( CVAR_wc3_sock ));
-		}
-		else if ( get_user_gravity(id) != 1.0 )
-		{
-			set_user_gravity(id, 1.0);
-		}
-
-	}
-	else
-	{
-		set_user_gravity(id, 1.0);
-	}
-}
-
-// ****************************************
 // Blood Mage's Pheonix Ability in DOD
 // ****************************************
 
 public Skill_Pheonix(id){
-	SHARED_SetUserMoney(id, SHARED_GetUserMoney(id) + p_pheonix[p_data[id][P_SKILL1]-1])
+	SHARED_SetUserMoney(id, SHARED_GetUserMoney(id) + p_pheonix_dod[p_data[id][P_SKILL1]-1])
 
 	new name[32], team
 	get_user_name(id, name, 31)
@@ -140,7 +109,7 @@ public Skill_Pheonix(id){
 	get_user_origin(id, origin)
 	get_players(players, numberofplayers,"a")
 
-	new money = p_pheonix[p_data[id][P_SKILL1]-1] / 2
+	new money = p_pheonix_dod[p_data[id][P_SKILL1]-1] / 2
 	for (i = 0; i < numberofplayers; ++i){
 		targetid=players[i]
 
@@ -379,8 +348,8 @@ public _Skill_Hex(parm[2]){
 	p_data_b[id][PB_CAN_RENDER] = true
 	p_data_b[id][PB_HEXED] = false
 	
-	/* Reset the user's speed */
-	set_user_maxspeed(id, 250.0)
+	// Reset the user's speed
+	SHARED_ResetMaxSpeed( id );
 
 	set_user_rendering(id)
 
@@ -443,8 +412,8 @@ public _Skill_SerpentWard(parm[5]){
 		green = 76
 	}
 #endif
-	if(!g_mapDisabled)
-		Create_TE_BEAMPOINTS(start, end, g_sLightning, 1, 5, 2, 500, 20, red, green, blue, 100, 100)
+
+	Create_TE_BEAMPOINTS(start, end, g_sLightning, 1, 5, 2, 500, 20, red, green, blue, 100, 100)
 
 	new players[32], numberofplayers
 	new i, targetid, distancebetween, targetorigin[3]

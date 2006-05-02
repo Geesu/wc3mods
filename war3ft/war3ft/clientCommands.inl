@@ -124,55 +124,35 @@ public say_Icons(id){
 	return PLUGIN_HANDLED
 }
 
-public cmd_Rings(id){
+public cmd_Rings( id )
+{
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if(!get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive(id)){
-		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
-		return PLUGIN_HANDLED
+	if ( !warcraft3 || get_pcvar_num( CVAR_wc3_races ) < 5 || !ITEM_CanBuy( id ) )
+	{
+		return;
 	}
-	#if MOD == 0
-		else if(get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime){
-			new Float:thetime = get_cvar_float("mp_buytime")*60.0
-			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
-			return PLUGIN_HANDLED
-		}
-		else if(get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
-			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
-			return PLUGIN_HANDLED
-		}
-	#endif
 
-	if(get_pcvar_num( CVAR_wc3_races )<5)
-		return PLUGIN_CONTINUE
-
-	new usermoney
-	new parm[2]
-	parm[0]=id
-
-	if (p_data[id][P_ITEM2]==ITEM_AMULET)
-		p_data_b[id][PB_SILENT] = false
-	if (p_data[id][P_ITEM2]==ITEM_HELM)
-		p_data_b[id][PB_IMMUNE_HEADSHOTS] = false;
-	if (p_data[id][P_ITEM2]==ITEM_CHAMELEON)
-		changeskin(id,SKIN_RESET)
+	new iMoney;
 	
-	while(p_data[id][P_RINGS]<5){
-		usermoney = SHARED_GetUserMoney(id)
-		if(usermoney<itemcost2[ITEM_RING-1])
-			break
-		SHARED_SetUserMoney(id,usermoney-itemcost2[ITEM_RING-1],1)
-		++p_data[id][P_RINGS]
-		p_data[id][P_ITEM2]=ITEM_RING
-		if(!task_exists(TASK_ITEM_RINGERATE+id))
-			_Item_Ring(parm)
+	// Lets buy as many rings as we can!
+	while ( p_data[id][P_RINGS] < 5 )
+	{
+		iMoney = SHARED_GetUserMoney( id );
+
+		// Check to see if the user can buy another ring
+		if ( iMoney < itemcost2[ITEM_RING-1] )
+		{
+			break;
+		}
+		
+		// Take their money
+		SHARED_SetUserMoney( id, iMoney - itemcost2[ITEM_RING-1], 1 );
+
+		// Give them the rings
+		ITEM_Set( id, ITEM_RING, SHOPMENU_TWO );
 	}
 
-	WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
-
-	return PLUGIN_HANDLED
+	return;
 }
 
 public cmd_fullupdate(){

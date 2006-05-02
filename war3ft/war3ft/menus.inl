@@ -2,136 +2,83 @@
 // Shopmenu One
 // **************************************************
 
-public menu_Shopmenu_One(id){
+public menu_Shopmenu_One( id )
+{
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if(!get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive(id)){
-		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
-		return PLUGIN_HANDLED
-	}
-	#if MOD == 0
-		else if(get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime){
-			new Float:thetime = get_cvar_float("mp_buytime")*60.0
-			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
-			return PLUGIN_HANDLED
-		}
-		else if(get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
-			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
-			return PLUGIN_HANDLED
-		}
-	#endif
-	
-	new pos = 0
-	new keys = (1<<9)
-	new menu_body[512]
-
-	pos += format(menu_body[pos], 511-pos, "%L",id,"MENU_BUY_ITEM")
-	
-	new item_name[9][ITEM_NAME_LENGTH]
-	for(new i=0;i<9;i++){
-		lang_GetItemName ( i+1, id, item_name[i], ITEM_NAME_LENGTH_F, 1 );
-
-		pos += format(menu_body[pos], 511-pos, "\w%d. %s\y\R%d^n",i+1,item_name[i],itemcost[i])
-		keys |= (1<<i)
+	if ( !warcraft3 || !ITEM_CanBuy( id ) )
+	{
+		return;
 	}
 
-	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
+	new pos = 0;
+	new keys = (1<<9);
+	new menu_body[512];
+	new item_name[9][64];
 
+	pos += format( menu_body[pos], 511-pos, "%L", id, "MENU_BUY_ITEM" );
+	
+	for( new i = 0; i < 9; i++ )
+	{
+		lang_GetItemName( i + 1, id, item_name[i], 63, 1 );
 
-	show_menu(id,keys,menu_body,-1)
+		pos += format( menu_body[pos], 511-pos, "\w%d. %s\y\R%d^n", i+1, item_name[i], itemcost[i] );
+		keys |= (1<<i);
+	}
 
-	return PLUGIN_HANDLED
+	pos += format( menu_body[pos], 511-pos, "^n\w0. %L", id, "EXIT_STRING" );
+
+	show_menu( id, keys, menu_body, -1 );
+
+	return;
 }
 
 public _menu_Shopmenu_One(id, key){
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if (key==9)
-		return PLUGIN_CONTINUE
-
-	if(!get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive(id)){
-		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
-		return PLUGIN_CONTINUE
+	if ( !warcraft3 || key == 9 )
+	{
+		return;
 	}
-	#if MOD == 0
-		else if(get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime){
-			new Float:thetime = get_cvar_float("mp_buytime")*60.0
-			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
-			return PLUGIN_CONTINUE
+
+	new iShopItem = key + 1;
+	
+	// Check if the user is permitted to buy the item
+	if ( !ITEM_CanBuyItem( id, iShopItem, SHOPMENU_ONE ) )
+	{
+		return;
+	}
+	
+	// This needs to be in here since we don't actually SET the item to a tome
+	if ( iShopItem == ITEM_TOME )
+	{
+		new iXP = get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]];
+	
+		// Give extra XP if its Day of Defeat
+		if ( g_MOD == GAME_DOD )
+		{
+			iXP *= 2;
 		}
-		else if(get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
-			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
-			return PLUGIN_CONTINUE
-		}
-	#endif
 
-	new iShopmenuItem = key+1
+		XP_give( id, iXP );
 
-	if (!is_user_alive(id) && (iShopmenuItem==ITEM_BOOTS || iShopmenuItem==ITEM_CLAWS || iShopmenuItem==ITEM_CLOAK || iShopmenuItem==ITEM_MASK || iShopmenuItem==ITEM_NECKLACE || iShopmenuItem==ITEM_FROST || iShopmenuItem==ITEM_HEALTH)){
-		client_print(id,print_center,"%L",id,"NOT_PURCHASE_WHEN_DEAD")
-		return PLUGIN_CONTINUE
+		emit_sound( id, CHAN_STATIC, "warcraft3/Tomes.wav", 1.0, ATTN_NORM, 0, PITCH_NORM );
 	}
 
-	if(iShopmenuItem==p_data[id][P_ITEM] && iShopmenuItem!=ITEM_TOME){
-		client_print(id,print_center,"%L",id,"ALREADY_OWN_THAT_ITEM")
+	// We only want to set the item and play the pickup sound if its not a tome
+	else
+	{
+		emit_sound( id, CHAN_STATIC, SOUND_PICKUPITEM, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-		return PLUGIN_CONTINUE
-	}
-	else if (SHARED_GetUserMoney(id)<itemcost[key]){
-		client_print(id,print_center,"%L",id,"INSUFFICIENT_FUNDS")
-
-		return PLUGIN_CONTINUE
-	}
-	else if (iShopmenuItem==ITEM_TOME){
-		SHARED_SetUserMoney(id,SHARED_GetUserMoney(id)-itemcost[key],1)
-
-	#if MOD == 0
-		XP_give(id, get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]])
-	#endif
-	#if MOD == 1
-		XP_give(id, 2 * (get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]]))
-	#endif
-		emit_sound(id,CHAN_STATIC, "warcraft3/Tomes.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-
-		// Display a message regarding what the item does
-
-		Item_Message(id, iShopmenuItem, SHOPMENU_ONE)
-
-		return PLUGIN_CONTINUE
-	}
-	else{
-		SHARED_SetUserMoney(id,SHARED_GetUserMoney(id)-itemcost[key],1)
-
-
-		// Remove health bonus after buying new item
-
-		if (p_data[id][P_ITEM]==ITEM_HEALTH)
-			set_user_health(id,get_user_health(id)-get_pcvar_num( CVAR_wc3_health ))
-
-		p_data[id][P_ITEM]=iShopmenuItem
-
-
-		// Give health bonus for buying periapt of health
-
-		if (p_data[id][P_ITEM]==ITEM_HEALTH)		
-			set_user_health(id,get_user_health(id)+get_pcvar_num( CVAR_wc3_health ))
-
-
-		// Display a message regarding what the item does
-
-		Item_Message(id, iShopmenuItem, SHOPMENU_ONE)
+		// Give the item bonuses
+		ITEM_Set( id, iShopItem, SHOPMENU_ONE );
 	}
 
-	emit_sound(id,CHAN_STATIC, SOUND_PICKUPITEM, 1.0, ATTN_NORM, 0, PITCH_NORM)
+	// Display a message regarding what the item does
+	Item_Message( id, iShopItem, SHOPMENU_ONE )
+	
+	// Remove the money for the item
+	SHARED_SetUserMoney( id, SHARED_GetUserMoney(id) - itemcost[key], 1 );
 
-	WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
-
-	return PLUGIN_HANDLED
+	return;
 }
 
 
@@ -139,184 +86,72 @@ public _menu_Shopmenu_One(id, key){
 // Shopmenu Two
 // **************************************************
 
-public menu_Shopmenu_Two(id){
+public menu_Shopmenu_Two(id)
+{
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if(get_pcvar_num( CVAR_wc3_races ) < 5)
-		return PLUGIN_HANDLED
-
-	if(!get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive(id)){
-		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
-		return PLUGIN_HANDLED
-	}
-	#if MOD == 0
-		else if(get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime){
-			new Float:thetime = get_cvar_float("mp_buytime")*60.0
-			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
-			return PLUGIN_HANDLED
-		}
-		else if(get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
-			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
-			return PLUGIN_HANDLED
-		}
-	#endif
-	new pos = 0
-	new keys = (1<<9)
-	new menu_body[512]
-
-	pos += format(menu_body[pos], 511-pos, "%L",id,"MENU_BUY_ITEM2")
-
-	new item_name2[9][ITEM_NAME_LENGTH]
-	for(new i=0;i<9;i++){
-		lang_GetItemName ( i+1, id, item_name2[i], ITEM_NAME_LENGTH_F, 2 );
-
-	#if MOD == 1
-		if(i==ITEM_CHAMELEON-1 || i==ITEM_SCROLL-1)
-			pos += format(menu_body[pos], 511-pos, "\d%d. %s\y\R%d^n",i+1,item_name2[i],itemcost2[i])
-		else{
-	#endif
-		pos += format(menu_body[pos], 511-pos, "\w%d. %s\y\R%d^n",i+1,item_name2[i],itemcost2[i])
-		keys |= (1<<i)
-	#if MOD == 1
-		}
-	#endif
+	if ( !warcraft3 || get_pcvar_num( CVAR_wc3_races ) < 5 || !ITEM_CanBuy( id ) )
+	{
+		return;
 	}
 
-	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
+	new pos = 0;
+	new keys = (1<<9);
+	new menu_body[512];
+	new item_name2[9][64];
 
-	show_menu(id,keys,menu_body,-1)
-	return PLUGIN_HANDLED
+	pos += format( menu_body[pos], 511-pos, "%L", id, "MENU_BUY_ITEM2" );
+
+	for( new i = 0; i < 9; i++ )
+	{
+		lang_GetItemName( i+1, id, item_name2[i], ITEM_NAME_LENGTH_F, 2 );
+	
+		if ( g_MOD == GAME_DOD && i==ITEM_CHAMELEON-1 || i==ITEM_SCROLL-1 )
+		{
+			pos += format( menu_body[pos], 511-pos, "\d%d. %s\y\R%d^n", i+1, item_name2[i], itemcost2[i] );
+		}
+		else
+		{
+			pos += format( menu_body[pos], 511-pos, "\w%d. %s\y\R%d^n", i+1, item_name2[i], itemcost2[i] );
+			keys |= (1<<i);
+		}
+	}
+
+	pos += format( menu_body[pos], 511-pos, "^n\w0. %L", id, "EXIT_STRING" );
+
+	show_menu( id, keys, menu_body, -1 );
+	
+	return;
 }
 
-public _menu_Shopmenu_Two(id, key){
+public _menu_Shopmenu_Two(id, key)
+{
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if (key==9)
-		return PLUGIN_CONTINUE
-
-	if(!get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive(id)){
-		client_print(id,print_center,"%L",id,"NOT_BUY_ITEMS_WHEN_DEAD")
-		return PLUGIN_CONTINUE
-	}
-	#if MOD == 0
-		else if(get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime){
-			new Float:thetime = get_cvar_float("mp_buytime")*60.0
-			client_print(id,print_center,"%L",id,"SECONDS_HAVE_PASSED_CANT_BUY",thetime)
-			return PLUGIN_CONTINUE
-		}
-		else if(get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone(id) && is_user_alive(id)){
-			client_print(id,print_center,"%L",id,"MUST_BE_IN_BUYZONE")
-			return PLUGIN_CONTINUE
-		}
-	#endif
-
-	new iShopmenuItem = key+1
-
-	if (!is_user_alive(id) && (iShopmenuItem==ITEM_PROTECTANT || iShopmenuItem==ITEM_HELM || iShopmenuItem==ITEM_HELM || iShopmenuItem==ITEM_AMULET || iShopmenuItem==ITEM_SOCK || iShopmenuItem==ITEM_GLOVES || iShopmenuItem==ITEM_RING || iShopmenuItem==ITEM_CHAMELEON)){
-		client_print(id,print_center,"%L",id,"NOT_PURCHASE_WHEN_DEAD")
-		return PLUGIN_CONTINUE
-	}
-	else if(iShopmenuItem==p_data[id][P_ITEM2] && iShopmenuItem!=ITEM_RING){
-		client_print(id,print_center,"%L",id,"ALREADY_OWN_THAT_ITEM")
-		return PLUGIN_CONTINUE
-	}
-#if MOD == 0
-	else if(iShopmenuItem==ITEM_SCROLL && endround){
-		client_print(id,print_center,"%L",id,"NOT_PURCHASE_AFTER_ENDROUND")
-		return PLUGIN_CONTINUE
-	}
-	else if(!g_giveHE && get_pcvar_num( CVAR_wc3_glove_disable_ka ) && iShopmenuItem==ITEM_GLOVES){
-		client_print(id,print_center,"%L",id,"FLAMING_GLOVES_RESTRICTED_ON_THIS_MAP")
-		return PLUGIN_CONTINUE
-	}
-#endif
-	else if(p_data[id][P_RINGS] > 4 && iShopmenuItem==ITEM_RING){
-		client_print(id,print_center,"%L",id,"NOT_PURCHASE_MORE_THAN_FIVE_RINGS")
-		return PLUGIN_CONTINUE
+	if ( !warcraft3 || key == 9 )
+	{
+		return;
 	}
 
-	if (SHARED_GetUserMoney(id)<itemcost2[key]){
-		client_print(id,print_center,"%L",id,"INSUFFICIENT_FUNDS")
-		return PLUGIN_CONTINUE
-	}
-	else{
-		if (p_data[id][P_ITEM2]==ITEM_AMULET){
-			p_data_b[id][PB_SILENT] = false
-		}
-		else if (p_data[id][P_ITEM2]==ITEM_HELM){
-			p_data_b[id][PB_IMMUNE_HEADSHOTS] = false;
-		}		
-		else if (p_data[id][P_ITEM2]==ITEM_CHAMELEON){
-			changeskin(id,SKIN_SWITCH)
-		}
-		else if (p_data[id][P_ITEM2]==ITEM_RING && iShopmenuItem!=ITEM_RING){
-			if(task_exists(TASK_ITEM_RINGERATE+id))
-				remove_task(TASK_ITEM_RINGERATE+id)
-			p_data[id][P_RINGS]=0
-		}
-		else if (p_data[id][P_ITEM2]==ITEM_GLOVES){
-			if(task_exists(TASK_ITEM_GLOVES+id))
-				remove_task(TASK_ITEM_GLOVES+id)
-		}
-		else if (p_data[id][P_ITEM2] == ITEM_SOCK)
-			set_user_gravity(id, 1.0)
-
-
-		p_data[id][P_ITEM2]=iShopmenuItem
-
-		if (p_data[id][P_ITEM2]==ITEM_CHAMELEON){
-			changeskin(id,SKIN_RESET)
-		}
-		else if (p_data[id][P_ITEM2]==ITEM_HELM){
-			p_data_b[id][PB_IMMUNE_HEADSHOTS] = true;
-		}
-		else if (p_data[id][P_ITEM2]==ITEM_AMULET){
-			p_data_b[id][PB_SILENT] = true
-		}
-		else if (p_data[id][P_ITEM2] == ITEM_SOCK)
-			set_user_gravity(id, get_pcvar_float( CVAR_wc3_sock ))
-#if MOD == 0
-		else if (p_data[id][P_ITEM2]==ITEM_SCROLL && !is_user_alive(id) && !endround){	
-			if(get_user_team(id)==TS || get_user_team(id)==CTS){
-				new parm[2]
-				parm[0]=id
-				parm[1]=6
-				set_task(0.2,"func_spawn",TASK_ITEM_SCROLL+id,parm,2)
-				p_data_b[id][PB_SPAWNEDFROMITEM]=true
-				p_data[id][P_ITEM2]=0
-				p_data[id][P_ITEM]=0
-			}
-		}
-#endif
-		else if (p_data[id][P_ITEM2]==ITEM_GLOVES){
-			//new parm[2]
-			//parm[0]=id
-			//parm[1] = get_pcvar_num( CVAR_wc3_glove_timer )
-			Item_Glove_Give(id)
-		}
-		else if (p_data[id][P_ITEM2]==ITEM_RING){
-
-			++p_data[id][P_RINGS]
-			if(!task_exists(TASK_ITEM_RINGERATE+id)){
-				new parm[1]
-				parm[0]=id
-				_Item_Ring(parm)
-			}
-		}
-		SHARED_SetUserMoney(id,SHARED_GetUserMoney(id)-itemcost2[key],1)
-
-		Item_Message(id, iShopmenuItem, SHOPMENU_TWO)
+	new iShopItem = key + 1;
+	
+	// Check if the user is permitted to buy the item
+	if ( !ITEM_CanBuyItem( id, iShopItem, SHOPMENU_TWO ) )
+	{
+		return;
 	}
 
-	emit_sound(id,CHAN_STATIC, SOUND_PICKUPITEM, 1.0, ATTN_NORM, 0, PITCH_NORM)
+	// Give the item bonuses
+	ITEM_Set( id, iShopItem, SHOPMENU_TWO );
+	
+	// Display a message regarding what the item does
+	Item_Message( id, iShopItem, SHOPMENU_TWO );
 
-	WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
+	// Remove the money for the item
+	SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) - itemcost2[key], 1 );
 
-	return PLUGIN_HANDLED
+	// Play the item pickup sound
+	emit_sound( id, CHAN_STATIC, SOUND_PICKUPITEM, 1.0, ATTN_NORM, 0, PITCH_NORM );
+
+	return;
 }
 
 public menu_Select_Skill(id,saychat){
@@ -498,11 +333,6 @@ public menu_Select_Race(id, racexp[9]){
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
-
-	if(g_mapDisabled){
-		client_print(id,print_chat,"%s %L", g_MODclient, id, "MAP_DISABLED")
-		client_print(id,print_chat,"%s %L", g_MODclient, id, "MAP_DISABLED_DUE")
-	}
 
 	new race_name[10][RACE_NAME_LENGTH], i, pos, menu_msg[512], selectrace[128]
 	new keys

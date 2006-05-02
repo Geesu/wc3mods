@@ -245,7 +245,7 @@ lang_GetSkillInfo( race_id, skill_id, id, skill_description[], len )
 			switch(skill_id)
 			{
 			#if MOD == 1
-				case SKILL1: formatex ( skill_description, len-1, "%L", id, "DOD_RACE5_SKILL1_INFO", p_pheonix[0], p_pheonix[1], p_pheonix[2] );
+				case SKILL1: formatex ( skill_description, len-1, "%L", id, "DOD_RACE5_SKILL1_INFO", p_pheonix_dod[0], p_pheonix_dod[1], p_pheonix_dod[2] );
 			#endif
 			#if MOD == 0
 				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE5_SKILL1_INFO", floatround(p_pheonix[0]*100), floatround(p_pheonix[1]*100), floatround(p_pheonix[2]*100) );

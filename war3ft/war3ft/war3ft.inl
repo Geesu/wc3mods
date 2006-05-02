@@ -285,7 +285,8 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 	return PLUGIN_CONTINUE
 }
 
-public WAR3_death_victim(victim_id, killer_id){
+public WAR3_death_victim(victim_id, killer_id)
+{
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -350,11 +351,11 @@ public WAR3_death_victim(victim_id, killer_id){
 
 	if (task_exists(TASK_HEX+victim_id)){		// Remove the function that makes you jump from Hex
 		remove_task(TASK_HEX+victim_id)
-		changeskin(victim_id,SKIN_RESET)
+		SHARED_ChangeSkin( victim_id, SKIN_RESET );
 	}
-
-	// Clear Item Information because the player just died
-	Item_Clear(victim_id)
+	
+	// The user just died, remove all items
+	ITEM_Reset( victim_id );
 
 	// Check for Ultimate abilities
 	if (Verify_Skill(victim_id, RACE_UNDEAD, SKILL4) && !p_data_b[victim_id][PB_CHANGINGTEAM] && !g_ultimateDelay && !p_data_b[victim_id][PB_ULTIMATEUSED] )	// Suicide Bomber
@@ -877,15 +878,9 @@ public WAR3_Display_Level(id, flag){
 		set_hudmessage(255, 255, 255, -1.0, 0.3, 0, 3.0, 5.0, 0.1, 0.2, HUDMESSAGE_CHAN_LEVEL)
 		show_hudmessage(id,message)
 	}
-
-	Skill_UnholyAura(id);
 	
 	// Check Evasion (don't do set here, b/c we don't want to re-check the skill everytime someone types /level)
 	Skill_Evasion_Check( id );
-
-	new parm4[1]
-	parm4[0]=id
-	unholyspeed(parm4)
 
 	return PLUGIN_CONTINUE
 }
@@ -993,62 +988,6 @@ public WAR3_Kill( id, weapon )
 	#endif
 }
 
-public WAR3_Init()
-{
-	// Store this now so we don't need to make a native call everytime we use it
-	MAXPLAYERS = get_global_int( GL_maxClients );
-
-	// Register the CVARs
-	CVAR_Init();
-	
-	// Execute the config file to get the CVAR values
-	new configsDir[64];
-	get_configsdir( configsDir, 63 );
-	server_cmd( "exec %s/war3ft/war3FT.cfg", configsDir );
-	
-	// Register the player menus
-	lang_SetMenus()
-
-	// Configure the database connection
-	XP_Set_DBI()
-
-	// Configure the XP based on level
-	XP_Set()
-	
-	// Determine if anything should be restricted based on the current map
-	checkmap()
-
-	// Set which string should be displayed with messages (war3ft or war3)
-	if ( get_pcvar_num( CVAR_wc3_races ) < 5 )
-	{
-		g_MODclient = "* [WAR3]"
-	}
-	
-	// cl_minmodels check
-	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-	{
-		set_task( 0.7, "WAR3_Mole_Fix", TASK_MOLEFIX, "", 0, "b" );
-	}
-}
-
-public WAR3_Determine_Game()
-{
-
-	// This may be used in the future to remove the #defines based on which mod is running
-	if ( is_running("cstrike") )
-	{
-		g_MOD = GAME_CSTRIKE;
-	}
-	else if ( is_running("czero") )
-	{
-		g_MOD = GAME_CZERO;
-	}
-	else if ( is_running("dod") )
-	{
-		g_MOD = GAME_DOD;
-	}
-}
-
 WAR3_Check( id = 0, print_location = print_chat )
 {
 	if ( warcraft3 )
@@ -1093,6 +1032,62 @@ WC3_Status_Text( id, Float:fDuration, Float:iYPos, const text[] = "", {Float,_}:
 	if ( text[0] == 0 )
 	{
 		return;
+	}
+}
+
+public WC3_Init()
+{
+	// Store this now so we don't need to make a native call everytime we use it
+	MAXPLAYERS = get_global_int( GL_maxClients );
+
+	// Register the CVARs
+	CVAR_Init();
+	
+	// Execute the config file to get the CVAR values
+	new configsDir[64];
+	get_configsdir( configsDir, 63 );
+	server_cmd( "exec %s/war3ft/war3FT.cfg", configsDir );
+	
+	// Register the player menus
+	lang_SetMenus()
+
+	// Configure the database connection
+	XP_Set_DBI()
+
+	// Configure the XP based on level
+	XP_Set()
+	
+	// Determine if anything should be restricted based on the current map
+	checkmap()
+
+	// Set which string should be displayed with messages (war3ft or war3)
+	if ( get_pcvar_num( CVAR_wc3_races ) < 5 )
+	{
+		g_MODclient = "* [WAR3]"
+	}
+	
+	// cl_minmodels check
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		set_task( 0.7, "WAR3_Mole_Fix", TASK_MOLEFIX, "", 0, "b" );
+	}
+}
+
+public WC3_DetermineGame()
+{
+
+	// This may be used in the future to remove the #defines based on which mod is running
+	if ( is_running("cstrike") )
+	{
+		g_MOD = GAME_CSTRIKE;
+	}
+	else if ( is_running("czero") )
+	{
+		g_MOD = GAME_CZERO;
+	}
+	else if ( is_running("dod") )
+	{
+		g_MOD = GAME_DOD;
 	}
 }
 
@@ -1154,7 +1149,6 @@ public WC3_ResetGame()
 		p_data[id][P_ITEM]					= 0;
 		p_data[id][P_ITEM2]					= 0;
 		p_data[id][P_RINGS]					= 0;
-		p_data_b[id][PB_IMMUNE_HEADSHOTS]	= false;
 
 		// Reset user's XP
 		p_data[id][P_LEVEL]					= 0;
@@ -1174,4 +1168,158 @@ public WC3_ResetGame()
 	}
 
 	g_GameRestarting = false;
+}
+
+public WC3_CheckModules()
+{
+	WC3_DetermineGame();
+
+	new bool:bReloadMap = false;
+	
+	server_print( "Checking %d modules with game %d", iTotalNotLoadedModules, g_MOD );
+
+	// Loop through all the modules and determine what we need to do
+	for ( new i = 0; i < iTotalNotLoadedModules; i++ )
+	{
+
+		// Enable cstrike module
+		if ( equal( szNotLoadedModules[i], "cstrike" ) )
+		{
+			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+			{
+				WC3_EnableModule( "cstrike_amxx" );
+				bReloadMap = true;
+			}
+		}
+
+		// Enable DOD Fun module
+		else if ( equal( szNotLoadedModules[i], "dod" ) && 0 )
+		{
+			if ( g_MOD == GAME_DOD )
+			{
+				WC3_EnableModule( "dodfun_amxx" );
+				bReloadMap = true;
+			}
+		}
+
+		// Enable DOD X module
+		else if ( equal( szNotLoadedModules[i], "dodx" ) && 0 )
+		{
+			if ( g_MOD == GAME_DOD )
+			{
+				WC3_EnableModule( "dodx_amxx" );
+				bReloadMap = true;
+			}
+		}
+
+		// Enable SQL Module
+		else if ( equal( szNotLoadedModules[i], "dbi" ) && 0 )
+		{
+			WC3_EnableModule( "sqlite_amxx" );
+			bReloadMap = true;
+		}
+
+		// Enable Engine module
+		else if ( equal( szNotLoadedModules[i], "engine" ) )
+		{
+			WC3_EnableModule( "engine_amxx" );
+			bReloadMap = true;
+		}
+
+		// Enable Fakemeta module
+		else if ( equal( szNotLoadedModules[i], "fakemeta" ) )
+		{
+			WC3_EnableModule( "fakemeta_amxx" );
+			bReloadMap = true;
+		}
+
+		// Enable Fun module
+		else if ( equal( szNotLoadedModules[i], "fun" ) )
+		{
+			WC3_EnableModule( "fun_amxx" );
+			bReloadMap = true;
+		}
+
+		server_print( "Module Not Loaded: %s", szNotLoadedModules[i] );
+	}
+
+
+
+	if ( bReloadMap )
+	{
+		server_print( "Going to reload the map soon..." );
+		set_task( 2.0, "WC3_ReloadMap" );
+	}
+}
+
+public WC3_EnableModule( module_name[] )
+{
+	new modulesINI[] = "addons/amxmodx/configs/modules.ini";
+	new tempModulesINI[] ="addons/amxmodx/configs/temp_modules.ini";
+
+    new fp = fopen( modulesINI, "r" );
+    new data[128];
+    new fptemp = fopen( tempModulesINI, "w" );
+    while( !feof( fp ) )
+    {
+        fgets( fp, data, 63 );
+
+        // Module Name Found
+        if ( contain( data, module_name ) != -1 )
+        {
+            // Semicolon before module name found
+            if ( contain( data, ";" ) != -1 )
+            {
+                new len = strlen( data );
+                for ( new i = 1; i < len; i++ )
+                {
+                    fputc( fptemp, data[i] );
+                }
+
+            }
+        }
+		else
+		{
+			new len = strlen( data );
+			for ( new i = 0; i < len; i++ )
+			{
+				fputc( fptemp, data[i] );
+			}
+		}
+    } 
+
+    fclose( fp );
+    fclose( fptemp );
+    
+    delete_file( modulesINI );
+    
+    //we dont have an rename_file function so we have to copy the temp file again
+    fp = fopen( modulesINI, "w" );
+    fptemp = fopen( tempModulesINI, "r" );
+    while( !feof( fptemp ) )
+    {
+        fgets( fptemp, data, 63 );
+        
+        new len = strlen( data );
+        for ( new i = 0; i < len; i++ )
+        {
+            fputc( fp, data[i] );
+        }        
+    } 
+    
+    fclose( fp );
+    fclose( fptemp );
+    
+    //delete the tempfile
+    //delete_file( tempModulesINI );
+}
+
+public WC3_ReloadMap()
+{
+	new szMapName[32];
+	get_mapname( szMapName, 31 );
+	
+	server_print( "Attempting Changeleve: %s", szMapName );
+	server_cmd( "changelevel %s", szMapName );
+	server_print( "Done attempting Changeleve: %s", szMapName );
 }

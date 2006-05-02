@@ -418,15 +418,15 @@ public on_FreezeTimeComplete() {
 
 	g_freezeTime = false
 	
-	new players[32],numberofplayers, id, i, parm[1]
+	new players[32],numberofplayers, id, i
 	get_players(players, numberofplayers)
 	
 	for (i = 0; i < numberofplayers; ++i){
 		id=players[i]
 
 		WAR3_Display_Level(id, DISPLAYLEVEL_NONE)
-		parm[0]=id
-		set_task(0.1,"unholyspeed",TASK_UNHOLYSPEED+id,parm,1)
+		
+		set_task( 0.1, "SHARED_SetSpeed", TASK_UNHOLYSPEED + id );
 	}
 
 	return PLUGIN_CONTINUE
