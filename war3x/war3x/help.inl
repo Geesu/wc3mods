@@ -594,6 +594,7 @@ public HELP_get_values_skills( iRaceId, iSkillNum, iSkillLevel, szValue[32] ) {
 
 
 // omg this crap is so sloppy right now. oh well.
+// we need to verify the help dir exists...
 
 public HELP_create_files() {
 

@@ -150,7 +150,8 @@ public LANG_GetSkillDesc( race_id, skill_id, id, skill_desc[], len ) {
 		skill_id -=	( TOTAL_SKILLS - 1 );
 		formatex( szSkillHelper, 31, "RACE%d_ULTIMATE%d_DESC", race_id,	skill_id );
 	}
-
+	
+	log_amx( "%s", szSkillHelper );
 	formatex( skill_desc, len, "%L", id, szSkillHelper );
 
 	return PLUGIN_HANDLED;

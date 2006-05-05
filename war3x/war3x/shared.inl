@@ -1323,9 +1323,15 @@ public War3x_GetSkillCheck( iLevel, iSkillLevel ) {
 // Map Start event
 
 public WAR3_map_start() {
-
+	
 	if ( !get_pcvar_num( CVAR_enabled ) )
 		return PLUGIN_HANDLED;
+
+	CVAR_mp_playerid    = get_cvar_pointer( "mp_playerid" );
+	CVAR_mp_freezetime  = get_cvar_pointer( "mp_freezetime" );
+	CVAR_mp_c4timer     = get_cvar_pointer( "mp_c4timer" );
+	CVAR_sv_restart     = get_cvar_pointer( "sv_restart" );
+	CVAR_mp_buytime     = get_cvar_pointer( "mp_buytime" );
 
 	g_bWar3xEnabled = true;
 
@@ -1389,13 +1395,7 @@ public WAR3_map_start() {
 
 		server_cmd( szCmd );
 	}
-
-	CVAR_mp_playerid    = get_cvar_pointer( "mp_playerid" );
-	CVAR_mp_freezetime  = get_cvar_pointer( "mp_freezetime" );
-	CVAR_mp_c4timer     = get_cvar_pointer( "mp_c4timer" );
-	CVAR_sv_restart     = get_cvar_pointer( "sv_restart" );
-	CVAR_mp_buytime     = get_cvar_pointer( "mp_buytime" );
-
+	
 	return PLUGIN_HANDLED;
 }
 
