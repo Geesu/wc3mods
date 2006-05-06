@@ -50,7 +50,6 @@ new const WC3DATE[] =		__DATE__
 // Compiling Options
 #define MOD						0				// 0 = cstrike or czero, 1 = dod
 #define ADVANCED_STATS			1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
-#define PRECACHE_WAR3FTSOUNDS	1
 #define SHOW_SPECTATE_INFO		1				// Show spectating information on users
 
 // Header files that contain function declarations
@@ -157,6 +156,7 @@ public plugin_init()
 		register_event( "TextMsg"		, "on_SetSpecMode"	, "bd"	, "2&ec_Mod"						);
 		register_event( "Damage"		, "on_Damage"		, "b"	, "2!0"								);
 		register_event( "StatusValue"	, "on_Spectate"		, "bd"	, "1=2"								);
+		register_event("HLTV", "event_new_round", "a", "1=0", "2=0")   
 
 		// Old Style
 		register_menucmd( register_menuid( "BuyItem" )	, (1<<2)	, "cmd_flash"	);
@@ -198,6 +198,11 @@ public plugin_init()
 	WC3_Init();
 
 	register_concmd( "test", "test" );
+}
+
+public event_new_round()
+{
+	log_amx( "It's a new round!!");
 }
 
 public test()
@@ -494,11 +499,22 @@ public plugin_natives()
 
 public module_filter(const module[])
 {
+	WC3_DetermineGame();
+
 	copy( szNotLoadedModules[iTotalNotLoadedModules++], 31, module );
 	
+	// The required module doesn't even exist!!!
+	if ( WC3_MissingModules( module ) )
+	{
+		log_amx( "Please verify the module '%s' exists in your modules folder, otherwise war3ft will not start.", ( equal( module, "dod" ) ) ? "sqlite" : module );
+		
+		return PLUGIN_CONTINUE;
+	}
+
+	// Check to make sure the modules are enabled
 	if ( !task_exists( TASK_CHECKMODULES ) )
 	{
-		set_task( 0.1, "WC3_CheckModules", TASK_CHECKMODULES );
+		set_task( 0.3, "_WC3_CheckModules", TASK_CHECKMODULES );
 	}
 
 	if ( equali( module, "dbi" ) )

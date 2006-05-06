@@ -2,87 +2,69 @@
 		Precaching FUNCTIONS (idea from war3x)
 ***********************************************************************/
 
-public WAR3_precache() {
+public WAR3_precache()
+{
 	
 	precache_generic( "wc3.css" );
 
-    #if PRECACHE_WAR3FTSOUNDS
-		copy( SOUND_VENGEANCE, 63,			"warcraft3/MiniSpiritPissed1.wav"				)  // Warden's Ultimate
-		copy( SOUND_SUICIDE, 63,			"ambience/particle_suck1.wav"					)  // Undead's Ultimate
-		copy( SOUND_BANISH, 63,				"warcraft3/banishcaster.wav"					)  // Banish
-		copy( SOUND_LOCUSTSWARM, 63,		"warcraft3/locustswarmloop.wav"					)  // Locust Swarm
-		copy( SOUND_SHADOWSTRIKE,63,		"warcraft3/shadowstrikebirth.wav"				)  // Shadow Strike
-		copy( SOUND_CARRION, 63,			"warcraft3/carrionswarmlaunch1.wav"				)  // Carrion Beetles
-		copy( SOUND_IMPALE, 63,				"warcraft3/impalehit.wav"						)  // Impale
-		copy( SOUND_VOODOO, 63,				"warcraft3/divineshield.wav"					)  // Big Bad Voodoo
-		copy( SOUND_FLAMESTRIKE, 63,		"warcraft3/flamestriketargetwavenonloop1.wav"	)  // Flame Strike
-		copy( SOUND_ENTANGLING, 63,			"warcraft3/entanglingrootstarget1.wav"			)  // Entangling Roots
-		copy( SOUND_LIGHTNING, 63,			"warcraft3/lightningbolt.wav"					)  // Chain Lightning
-		copy( SOUND_TELEPORT, 63,			"warcraft3/massteleporttarget.wav"				)  // Teleport
-		copy( SOUND_BLINK, 63,				"warcraft3/blinkarrival.wav"					)  // Blink Teleport
-		copy( SOUND_LEVELUP, 63,			"warcraft3/Levelupcaster.wav"					)  // Level up
-		copy( SOUND_PICKUPITEM, 63,			"warcraft3/PickUpItem.wav"						)  // Buy / Pick up item
-		copy( SOUND_TOME, 63,				"warcraft3/Tomes.wav"							)  // Tome of Experience
-		copy( SOUND_ULTIMATESCAN, 63,		"turret/tu_ping.wav"							)  // Ultimate Beep
-		copy( SOUND_ULTIMATEREADY, 63,		"warcraft3/ResurrectTarget.wav"					)  // Ultimate Beep
-		copy( SOUND_ANNIHILATION, 63,		"warcraft3/PurgeTarget1.wav"					)	// Orb of Annihilation
-		copy( SOUND_CONCOCTION_CAST, 63,	"warcraft3/PossessionMissileLaunch1.wav"		)	// Unstable Concoction Cast
-		copy( SOUND_CONCOCTION_HIT, 63,		"warcraft3/PossessionMissileHit1.wav"			)	// Unstable Concoction Hit
-		copy( SOUND_HEX, 63,				"warcraft3/PolymorphDone.wav"					)	// Hex
-	#else
-		copy( SOUND_VENGEANCE, 63,			"ambience/des_wind2.wav"						)  // Warden's Ultimate
-		copy( SOUND_SUICIDE, 63,			"ambience/particle_suck1.wav"					)  // Undead's Ultimate
-		copy( SOUND_BANISH, 63,				"player/pl_fallpain3.wav"						)  // Banish
-		copy( SOUND_LOCUSTSWARM, 63,		"ambience/bee1.wav"								)  // Locust Swarm
-		copy( SOUND_SHADOWSTRIKE,63,		"ambience/alienlaser1.wav"						)  // Shadow Strike
-		copy( SOUND_CARRION, 63,			"player/sqk_blast1.wav"							)  // Carrion Beetles
-		copy( SOUND_IMPALE, 63,				"doors/aliendoor3.wav"							)  // Impale
-		copy( SOUND_VOODOO, 63,				"turret/tu_die2.wav"							)  // Big Bad Voodoo
-		copy( SOUND_FLAMESTRIKE, 63,		"garg/gar_flameoff1.wav"						)  // Flame Strike
-		copy( SOUND_ENTANGLING, 63,			"weapons/electro5.wav"							)  // Entangling Roots
-		copy( SOUND_LIGHTNING, 63,			"weapons/gauss2.wav"							)  // Chain Lightning
-		copy( SOUND_TELEPORT, 63,			"x/x_shoot1.wav"								)  // Teleport
-		copy( SOUND_BLINK, 63,				"x/x_shoot1.wav"								)  // Blink Teleport
-		copy( SOUND_LEVELUP, 63,			"plats/elevbell1.wav"							)  // Level up
-		copy( SOUND_PICKUPITEM, 63,			"items/ammopickup1.wav"							)  // Buy / Pick up item
-		copy( SOUND_TOME, 63,				"items/suitchargeok1.wav"						)  // Tome of Experience
-		copy( SOUND_ULTIMATESCAN, 63,		"turret/tu_ping.wav"							)  // Ultimate Beep
-		copy( SOUND_ULTIMATEREADY, 63,		"buttons/bell1.wav"								)  // Ultimate Beep
-//		copy( SOUND_ANNIHILATION, 63,		"warcraft3/PurgeTarget1.wav"					)	// Orb of Annihilation
-//		copy( SOUND_CONCOCTION_CAST, 63,	"warcraft3/PossessionMissileLaunch1.wav"		)	// Unstable Concoction Cast
-//		copy( SOUND_CONCOCTION_HIT, 63,		"warcraft3/PossessionMissileHit1.wav"			)	// Unstable Concoction Hit
-//		copy( SOUND_HEX, 63,				"warcraft3/PolymorphDone.wav"					)	// Hex
+	copy( SOUND_VENGEANCE		, 63, "warcraft3/MiniSpiritPissed1.wav"				);	// Warden's Ultimate
+	copy( SOUND_SUICIDE			, 63, "ambience/particle_suck1.wav"					);	// Undead's Ultimate
+	copy( SOUND_BANISH			, 63, "warcraft3/banishcaster.wav"					);	// Banish
+	copy( SOUND_LOCUSTSWARM		, 63, "warcraft3/locustswarmloop.wav"				);	// Locust Swarm
+	copy( SOUND_SHADOWSTRIKE	, 63, "warcraft3/shadowstrikebirth.wav"				);	// Shadow Strike
+	copy( SOUND_CARRION			, 63, "warcraft3/carrionswarmlaunch1.wav"			);	// Carrion Beetles
+	copy( SOUND_IMPALE			, 63, "warcraft3/impalehit.wav"						);	// Impale
+	copy( SOUND_VOODOO			, 63, "warcraft3/divineshield.wav"					);	// Big Bad Voodoo
+	copy( SOUND_FLAMESTRIKE		, 63, "warcraft3/flamestriketargetwavenonloop1.wav"	);	// Flame Strike
+	copy( SOUND_ENTANGLING		, 63, "warcraft3/entanglingrootstarget1.wav"		);	// Entangling Roots
+	copy( SOUND_LIGHTNING		, 63, "warcraft3/lightningbolt.wav"					);	// Chain Lightning
+	copy( SOUND_TELEPORT		, 63, "warcraft3/massteleporttarget.wav"			);	// Teleport
+	copy( SOUND_BLINK			, 63, "warcraft3/blinkarrival.wav"					);	// Blink Teleport
+	copy( SOUND_LEVELUP			, 63, "warcraft3/Levelupcaster.wav"					);	// Level up
+	copy( SOUND_PICKUPITEM		, 63, "warcraft3/PickUpItem.wav"					);	// Buy / Pick up item
+	copy( SOUND_TOME			, 63, "warcraft3/Tomes.wav"							);	// Tome of Experience
+	copy( SOUND_ULTIMATESCAN	, 63, "turret/tu_ping.wav"							);	// Ultimate Beep
+	copy( SOUND_ULTIMATEREADY	, 63, "warcraft3/ResurrectTarget.wav"				);	// Ultimate Beep
+	copy( SOUND_ANNIHILATION	, 63, "warcraft3/PurgeTarget1.wav"					);	// Orb of Annihilation
+	copy( SOUND_CONCOCTION_CAST	, 63, "warcraft3/PossessionMissileLaunch1.wav"		);	// Unstable Concoction Cast
+	copy( SOUND_CONCOCTION_HIT	, 63, "warcraft3/PossessionMissileHit1.wav"			);	// Unstable Concoction Hit
+	copy( SOUND_HEX				, 63, "warcraft3/PolymorphDone.wav"					);	// Hex
 
-	#endif
+
+	copy( SOUND_REINCARNATION	, 63, "warcraft3/soundpack/reincarnation.wav"		);	// Weapon Reincarnation/Ankh
+	copy( SOUND_ANTEND			, 63, "warcraft3/antend.wav"						);	// Sound played when you try to shoot a chameleoned teammate 
+	copy( SOUND_ERROR			, 63, "warcraft3/bonus/Error.wav"					);	// Sound played on errors 
 
 	// Skills / Ultimates
-	precache_sound(SOUND_VENGEANCE)
- 	precache_sound(SOUND_SUICIDE) 
-	precache_sound(SOUND_BANISH) 
-	precache_sound(SOUND_LOCUSTSWARM)	 
-	precache_sound(SOUND_SHADOWSTRIKE) 
-	precache_sound(SOUND_CARRION) 
-	precache_sound(SOUND_IMPALE) 
-	precache_sound(SOUND_VOODOO) 
-	precache_sound(SOUND_FLAMESTRIKE) 
-	precache_sound(SOUND_ENTANGLING) 
-	precache_sound(SOUND_LIGHTNING) 
-	precache_sound(SOUND_TELEPORT) 
-	precache_sound(SOUND_BLINK) 
-	precache_sound(SOUND_ANNIHILATION) 
-	precache_sound(SOUND_CONCOCTION_CAST) 
-	precache_sound(SOUND_CONCOCTION_HIT) 
-	precache_sound(SOUND_HEX) 
+	precache_sound( SOUND_VENGEANCE			);
+ 	precache_sound( SOUND_SUICIDE			);
+	precache_sound( SOUND_BANISH			);
+	precache_sound( SOUND_LOCUSTSWARM		);
+	precache_sound( SOUND_SHADOWSTRIKE		);
+	precache_sound( SOUND_CARRION			);
+	precache_sound( SOUND_IMPALE			);
+	precache_sound( SOUND_VOODOO			);
+	precache_sound( SOUND_FLAMESTRIKE		);
+	precache_sound( SOUND_ENTANGLING		);
+	precache_sound( SOUND_LIGHTNING			);
+	precache_sound( SOUND_TELEPORT			);
+	precache_sound( SOUND_BLINK				);
+	precache_sound( SOUND_ANNIHILATION		);
+	precache_sound( SOUND_CONCOCTION_CAST	);
+	precache_sound( SOUND_CONCOCTION_HIT	);
+	precache_sound( SOUND_HEX				);
 
 	// Miscellaneous
-	precache_sound(SOUND_LEVELUP) 
-	precache_sound(SOUND_PICKUPITEM) 
-	precache_sound(SOUND_TOME) 
-	precache_sound(SOUND_ULTIMATESCAN) 
-	precache_sound(SOUND_ULTIMATEREADY) 
-	precache_sound("warcraft3/soundpack/reincarnation.wav") 
-	precache_sound("warcraft3/antend.wav") 
-	precache_sound("warcraft3/bonus/Error.wav") 
+	precache_sound( SOUND_LEVELUP			);
+	precache_sound( SOUND_PICKUPITEM		);
+	precache_sound( SOUND_TOME				);
+	precache_sound( SOUND_ULTIMATESCAN		);
+	precache_sound( SOUND_ULTIMATEREADY		);
+	precache_sound( SOUND_REINCARNATION		);
+	precache_sound( SOUND_ANTEND			);
+	precache_sound( SOUND_ERROR				);
+
+
 
 	// Precache objects/sprites used
 	g_sFireball = precache_model("sprites/zerogxplode.spr")
@@ -99,66 +81,75 @@ public WAR3_precache() {
 	g_sFlare = precache_model( "sprites/blueflare2.spr") 
 	g_sWave = precache_model("sprites/gwave1.spr")
 
-#if MOD == 0
-	g_sSmoke = precache_model("sprites/steam1.spr")
 
-	if(is_running("czero")){
-		precache_model("models/player/spetsnaz/spetsnaz.mdl")
-		precache_model("models/player/militia/militia.mdl")
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		if ( g_MOD == GAME_CZERO )
+		{
+			precache_model("models/player/spetsnaz/spetsnaz.mdl")
+			precache_model("models/player/militia/militia.mdl")
+		}
+
+		precache_model("models/player/gign/gign.mdl")
+		precache_model("models/player/sas/sas.mdl")
+		precache_model("models/player/gsg9/gsg9.mdl")
+		precache_model("models/player/urban/urban.mdl")
+
+		precache_model("models/player/arctic/arctic.mdl") 
+		precache_model("models/player/leet/leet.mdl") 
+		precache_model("models/player/guerilla/guerilla.mdl") 
+		precache_model("models/player/terror/terror.mdl") 
+
+		g_sSmoke = precache_model("sprites/steam1.spr")
 	}
+	/*	 - Still can't change the model in DOD, so this precache isn't needed
+	else if ( g_MOD == GAME_DOD )
+	{
+		precache_model("models/player/axis-inf/axis-inf.mdl")
+		precache_model("models/player/axis-para/axis-para.mdl")
+		//precache_model("models/player/brit-inf/brit-inf.mdl")
+		precache_model("models/player/us-inf/us-inf.mdl")
+		precache_model("models/player/us-para/us-para.mdl")
 
-	precache_model("models/player/gign/gign.mdl")
-	precache_model("models/player/sas/sas.mdl")
-	precache_model("models/player/gsg9/gsg9.mdl")
-	precache_model("models/player/urban/urban.mdl")
-
-	precache_model("models/player/arctic/arctic.mdl") 
-	precache_model("models/player/leet/leet.mdl") 
-	precache_model("models/player/guerilla/guerilla.mdl") 
-	precache_model("models/player/terror/terror.mdl") 
-#endif
-
-#if MOD == 1
-	precache_model("models/player/axis-inf/axis-inf.mdl")
-	precache_model("models/player/axis-para/axis-para.mdl")
-	//precache_model("models/player/brit-inf/brit-inf.mdl")
-	precache_model("models/player/us-inf/us-inf.mdl")
-	precache_model("models/player/us-para/us-para.mdl")
-#endif
-
-#if MOD == 0
-	new mapname[32]
-	get_mapname(mapname,31)
-
-	if (!equali(mapname,"de_inferno_cz")){
-		g_spritesEnabled = true
-		g_sRace[0] = precache_model("sprites/warcraft3/races/wc3_none_01.spr")
-		g_sRace[1] = precache_model("sprites/warcraft3/races/wc3_undead_01.spr")
-		g_sRace[2] = precache_model("sprites/warcraft3/races/wc3_human_01.spr")
-		g_sRace[3] = precache_model("sprites/warcraft3/races/wc3_orc_01.spr")
-		g_sRace[4] = precache_model("sprites/warcraft3/races/wc3_elves_01.spr")
-		g_sRace[5] = precache_model("sprites/warcraft3/races/wc3_bloodmage_01.spr")
-		g_sRace[6] = precache_model("sprites/warcraft3/races/wc3_shadow_01.spr")
-		g_sRace[7] = precache_model("sprites/warcraft3/races/wc3_warden_01.spr")
-		g_sRace[8] = precache_model("sprites/warcraft3/races/wc3_cryptlord_01.spr")
-		g_sRace[9] = precache_model("sprites/warcraft3/races/wc3_chameleon_01.spr")
-	
-		g_sLevel[0] = precache_model("sprites/warcraft3/level/a_level_0.spr")
-		g_sLevel[1] = precache_model("sprites/warcraft3/level/a_level_1.spr")
-		g_sLevel[2] = precache_model("sprites/warcraft3/level/a_level_2.spr")
-		g_sLevel[3] = precache_model("sprites/warcraft3/level/a_level_3.spr")
-		g_sLevel[4] = precache_model("sprites/warcraft3/level/a_level_4.spr")
-		g_sLevel[5] = precache_model("sprites/warcraft3/level/a_level_5.spr")
-		g_sLevel[6] = precache_model("sprites/warcraft3/level/a_level_6.spr")
-		g_sLevel[7] = precache_model("sprites/warcraft3/level/a_level_7.spr")
-		g_sLevel[8] = precache_model("sprites/warcraft3/level/a_level_8.spr")
-		g_sLevel[9] = precache_model("sprites/warcraft3/level/a_level_9.spr")
-		g_sLevel[10] = precache_model("sprites/warcraft3/level/a_level_10.spr")
 	}
-#else
-	g_spritesEnabled = false
-#endif
+	*/
 
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		new szMapName[32];
+		get_mapname( szMapName, 31 );
+
+		if ( !equali( szMapName, "de_inferno_cz" ) )
+		{
+			g_spritesEnabled	= true;
+			g_sRace[0]			= precache_model( "sprites/warcraft3/races/wc3_none_01.spr" );
+			g_sRace[1]			= precache_model( "sprites/warcraft3/races/wc3_undead_01.spr" );
+			g_sRace[2]			= precache_model( "sprites/warcraft3/races/wc3_human_01.spr" );
+			g_sRace[3]			= precache_model( "sprites/warcraft3/races/wc3_orc_01.spr" );
+			g_sRace[4]			= precache_model( "sprites/warcraft3/races/wc3_elves_01.spr" );
+			g_sRace[5]			= precache_model( "sprites/warcraft3/races/wc3_bloodmage_01.spr" );
+			g_sRace[6]			= precache_model( "sprites/warcraft3/races/wc3_shadow_01.spr" );
+			g_sRace[7]			= precache_model( "sprites/warcraft3/races/wc3_warden_01.spr" );
+			g_sRace[8]			= precache_model( "sprites/warcraft3/races/wc3_cryptlord_01.spr" );
+			g_sRace[9]			= precache_model( "sprites/warcraft3/races/wc3_chameleon_01.spr" );
+		
+			g_sLevel[0]			= precache_model( "sprites/warcraft3/level/a_level_0.spr" );
+			g_sLevel[1]			= precache_model( "sprites/warcraft3/level/a_level_1.spr" );
+			g_sLevel[2]			= precache_model( "sprites/warcraft3/level/a_level_2.spr" );
+			g_sLevel[3]			= precache_model( "sprites/warcraft3/level/a_level_3.spr" );
+			g_sLevel[4]			= precache_model( "sprites/warcraft3/level/a_level_4.spr" );
+			g_sLevel[5]			= precache_model( "sprites/warcraft3/level/a_level_5.spr" );
+			g_sLevel[6]			= precache_model( "sprites/warcraft3/level/a_level_6.spr" );
+			g_sLevel[7]			= precache_model( "sprites/warcraft3/level/a_level_7.spr" );
+			g_sLevel[8]			= precache_model( "sprites/warcraft3/level/a_level_8.spr" );
+			g_sLevel[9]			= precache_model( "sprites/warcraft3/level/a_level_9.spr" );
+			g_sLevel[10]		= precache_model( "sprites/warcraft3/level/a_level_10.spr" );
+		}
+	}
+	else
+	{
+		g_spritesEnabled		= false;
+	}
 }
 
 public WAR3_chooserace(id){
@@ -1170,14 +1161,11 @@ public WC3_ResetGame()
 	g_GameRestarting = false;
 }
 
-public WC3_CheckModules()
+// Called .3 seconds after the modules have been "loaded"
+public _WC3_CheckModules()
 {
-	WC3_DetermineGame();
-
-	new bool:bReloadMap = false;
+	new bool:bReloadMap = false;	
 	
-	server_print( "Checking %d modules with game %d", iTotalNotLoadedModules, g_MOD );
-
 	// Loop through all the modules and determine what we need to do
 	for ( new i = 0; i < iTotalNotLoadedModules; i++ )
 	{
@@ -1193,7 +1181,7 @@ public WC3_CheckModules()
 		}
 
 		// Enable DOD Fun module
-		else if ( equal( szNotLoadedModules[i], "dod" ) && 0 )
+		else if ( equal( szNotLoadedModules[i], "dod" ) )
 		{
 			if ( g_MOD == GAME_DOD )
 			{
@@ -1203,7 +1191,7 @@ public WC3_CheckModules()
 		}
 
 		// Enable DOD X module
-		else if ( equal( szNotLoadedModules[i], "dodx" ) && 0 )
+		else if ( equal( szNotLoadedModules[i], "dodx" ) )
 		{
 			if ( g_MOD == GAME_DOD )
 			{
@@ -1212,11 +1200,15 @@ public WC3_CheckModules()
 			}
 		}
 
-		// Enable SQL Module
-		else if ( equal( szNotLoadedModules[i], "dbi" ) && 0 )
+		// Enable SQL Module - I'm pretty sure we can safely enable this, since in theory no other plugins need mysql (DBI isn't running after all)
+		else if ( equal( szNotLoadedModules[i], "dbi" ) )
 		{
-			WC3_EnableModule( "sqlite_amxx" );
-			bReloadMap = true;
+			// Make sure the module exists - only need to check this one since we check the others in WC3_MissingModules
+			if ( WC3_ModuleExists( "sqlite_amxx" ) )
+			{
+				WC3_EnableModule( "sqlite_amxx" );
+				bReloadMap = true;
+			}
 		}
 
 		// Enable Engine module
@@ -1239,87 +1231,121 @@ public WC3_CheckModules()
 			WC3_EnableModule( "fun_amxx" );
 			bReloadMap = true;
 		}
-
-		server_print( "Module Not Loaded: %s", szNotLoadedModules[i] );
 	}
-
-
 
 	if ( bReloadMap )
 	{
-		server_print( "Going to reload the map soon..." );
 		set_task( 2.0, "WC3_ReloadMap" );
 	}
 }
 
 public WC3_EnableModule( module_name[] )
 {
-	new modulesINI[] = "addons/amxmodx/configs/modules.ini";
-	new tempModulesINI[] ="addons/amxmodx/configs/temp_modules.ini";
+	new szModulesINI[256];
 
-    new fp = fopen( modulesINI, "r" );
-    new data[128];
-    new fptemp = fopen( tempModulesINI, "w" );
-    while( !feof( fp ) )
+	get_configsdir( szModulesINI, 255 );
+	add( szModulesINI, 255, "/modules.ini" );
+
+    if ( file_exists( szModulesINI ) )
     {
-        fgets( fp, data, 63 );
-
-        // Module Name Found
-        if ( contain( data, module_name ) != -1 )
-        {
-            // Semicolon before module name found
-            if ( contain( data, ";" ) != -1 )
-            {
-                new len = strlen( data );
-                for ( new i = 1; i < len; i++ )
-                {
-                    fputc( fptemp, data[i] );
-                }
-
-            }
-        }
-		else
-		{
-			new len = strlen( data );
-			for ( new i = 0; i < len; i++ )
-			{
-				fputc( fptemp, data[i] );
-			}
-		}
-    } 
-
-    fclose( fp );
-    fclose( fptemp );
-    
-    delete_file( modulesINI );
-    
-    //we dont have an rename_file function so we have to copy the temp file again
-    fp = fopen( modulesINI, "w" );
-    fptemp = fopen( tempModulesINI, "r" );
-    while( !feof( fptemp ) )
-    {
-        fgets( fptemp, data, 63 );
+        new line = 0, oldline = 0, len = 0;
+        new szLine[256];
         
-        new len = strlen( data );
-        for ( new i = 0; i < len; i++ )
+        // Check out every line in the file
+        while ( ((line = read_file( szModulesINI, line, szLine, 255, len)) != 0) )
         {
-            fputc( fp, data[i] );
-        }        
-    } 
-    
-    fclose( fp );
-    fclose( fptemp );
-    
-    //delete the tempfile
-    //delete_file( tempModulesINI );
-}
+            // Module Name Found
+            if ( contain( szLine, module_name ) != -1 )
+            {
+                // Semicolon found in line
+                if ( contain( szLine, ";" ) != -1 )
+                {
+                    write_file( szModulesINI, szLine[1], oldline );
+                }
+            }
 
+            oldline = line;
+        }
+    }
+}  
 public WC3_ReloadMap()
 {
 	new szMapName[32];
 	get_mapname( szMapName, 31 );
 	
-	server_print( "Attempting Changeleve: %s", szMapName );
 	server_cmd( "changelevel %s", szMapName );
-	server_print( "Done attempting Changeleve: %s", szMapName );
+}
+
+// Checks to see if the module exists
+public WC3_MissingModules( const module_name[] )
+{
+	new bool:bMissing = false;
+
+	// Check cstrike module
+	if ( equal( module_name, "cstrike" ) )
+	{
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			bMissing = !WC3_ModuleExists( "cstrike_amxx" );
+		}
+	}
+
+	// Check DOD Fun module
+	else if ( equal( module_name, "dod" ) )
+	{
+		if ( g_MOD == GAME_DOD )
+		{
+			bMissing = !WC3_ModuleExists( "dodfun_amxx" );
+		}
+	}
+
+	// Check DOD X module
+	else if ( equal( module_name, "dodx" ) )
+	{
+		if ( g_MOD == GAME_DOD )
+		{
+			bMissing = !WC3_ModuleExists( "dodx_amxx" );
+		}
+	}
+
+	// Check Engine module
+	else if ( equal( module_name, "engine" ) )
+	{
+		bMissing = !WC3_ModuleExists( "engine_amxx" );
+	}
+
+	// Check Fakemeta module
+	else if ( equal( module_name, "fakemeta" ) )
+	{
+		bMissing = !WC3_ModuleExists( "fakemeta_amxx" );
+	}
+
+	// Check Fun module
+	else if ( equal( module_name, "fun" ) )
+	{
+		bMissing = !WC3_ModuleExists( "fun_amxx" );
+	}
+
+	return bMissing;
+}
+
+
+public WC3_ModuleExists( module_name[] )
+{
+	new szExt[16] = ".dll";
+
+	if ( is_linux_server() )
+	{
+		copy( szExt, 15, "_i386.so" );
+	}
+	else if ( is_amd64_server() )
+	{
+		copy( szExt, 15, "_amd64.so" );
+	}
+
+	new szFullPath[128];
+
+	format( szFullPath, 127, "addons/amxmodx/modules/%s%s", module_name, szExt );
+
+	return file_exists( szFullPath );
 }

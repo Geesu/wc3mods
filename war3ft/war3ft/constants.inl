@@ -459,6 +459,10 @@ new SOUND_ULTIMATESCAN[64]
 new SOUND_ULTIMATEREADY[64]
 new SOUND_HEX[64]
 
+new SOUND_REINCARNATION[64]
+new SOUND_ANTEND[64];
+new SOUND_ERROR[64];
+
 // Race9 Setup 
 new g_ChamSkills[5] = {0,1,1,1,1}		// the value is what race that skill should be copied from so g_ChamSkills[1] = 1 means that skill1 is undead skill1 this means you can not have skill 1 form more than one race.
 										// this default setting of 0,1,1,1,1 will make the 9th race have all the undead skills 
@@ -505,7 +509,6 @@ new g_vipID = 0
 new bool:g_freezeTime	= false;
 new bool:g_freezeCalled = false;
 new bool:g_buyTime
-new bool:g_givePistol
 new bool:g_giveHE
 
 new PhoenixFound[2]

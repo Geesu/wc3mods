@@ -4,7 +4,6 @@ public checkmap(){
 		new mapname[32]
 		get_mapname(mapname,31) 
 		if (containi(mapname,"ka_")!=-1 || containi(mapname,"scoutzknivez")!=-1){
-			g_givePistol=false
 			if (get_pcvar_num( CVAR_wc3_glove_disable_ka ))
 				g_giveHE=false
 			else
@@ -12,7 +11,6 @@ public checkmap(){
 		}
 		else{
 			g_giveHE=true
-			g_givePistol=true
 		}
 	#endif
 	

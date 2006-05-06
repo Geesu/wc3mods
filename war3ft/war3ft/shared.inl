@@ -117,13 +117,13 @@ public SHARED_HasGrenade( id )
 	return bNadeFound;
 }
 
-// Function checks to see if the user is holding a primary weapon (used with Night Elf's Entangle)
+// Function checks to see if the weapon id is a primary weapon (used with Night Elf's Entangle)
 SHARED_IsPrimaryWeapon( iWeaponID )
 {
 	// Check for Counter-Strike or Condition Zero
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		if( iWeaponID == CSW_GALIL || iWeaponID == CSW_FAMAS || iWeaponID == CSW_M3 || iWeaponID == CSW_XM1014 || iWeaponID == CSW_MP5NAVY || iWeaponID == CSW_TMP || iWeaponID == CSW_P90 || iWeaponID == CSW_MAC10 || iWeaponID == CSW_UMP45 || iWeaponID == CSW_AK47 || iWeaponID == CSW_SG552 || iWeaponID == CSW_M4A1 || iWeaponID == CSW_AUG || iWeaponID == CSW_SCOUT || iWeaponID == CSW_AWP || iWeaponID == CSW_G3SG1 || iWeaponID == CSW_SG550 || iWeaponID == CSW_M249)
+		if ( iWeaponID == CSW_GALIL || iWeaponID == CSW_FAMAS || iWeaponID == CSW_M3 || iWeaponID == CSW_XM1014 || iWeaponID == CSW_MP5NAVY || iWeaponID == CSW_TMP || iWeaponID == CSW_P90 || iWeaponID == CSW_MAC10 || iWeaponID == CSW_UMP45 || iWeaponID == CSW_AK47 || iWeaponID == CSW_SG552 || iWeaponID == CSW_M4A1 || iWeaponID == CSW_AUG || iWeaponID == CSW_SCOUT || iWeaponID == CSW_AWP || iWeaponID == CSW_G3SG1 || iWeaponID == CSW_SG550 || iWeaponID == CSW_M249)
 		{
 			return true;
 		}
@@ -134,6 +134,28 @@ SHARED_IsPrimaryWeapon( iWeaponID )
 	{
 		return false;
 	}
+
+	return false;
+}
+
+// Function checks to see if the weapon is a pistol
+SHARED_IsSecondaryWeapon( iWeaponID )
+{
+	// Check for Counter-Strike or Condition Zero
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		if ( iWeaponID == CSW_ELITE || iWeaponID == CSW_FIVESEVEN || iWeaponID == CSW_USP || iWeaponID == CSW_GLOCK18 || iWeaponID == CSW_DEAGLE || iWeaponID == CSW_P90 )
+		{
+			return true;
+		}
+	}
+	
+	// Check for Day of Defeat
+	else if ( g_MOD == GAME_DOD )
+	{
+
+	}
+
 
 	return false;
 }
@@ -325,7 +347,7 @@ public SHARED_DOD_Reincarnation( id )
 	else
 	{
 
-		client_cmd( id, "speak warcraft3/soundpack/reincarnation.wav" );
+		client_cmd( id, "speak %s", SOUND_REINCARNATION );
 
 		if ( iglow[id][1] < 1 )
 		{
@@ -477,7 +499,7 @@ public SHARED_CS_Reincarnation( id )
 
 	if ( bGiveWeapons )
 	{
-		client_cmd( id, "speak warcraft3/soundpack/reincarnation.wav" );
+		client_cmd( id, "speak %s", SOUND_REINCARNATION );
 
 		if (iglow[id][1] < 1)
 		{
@@ -592,6 +614,36 @@ public _SHARED_CS_GiveWeapons(id)
 				client_print( id, print_console, "(%d) %d:%s", i, iWeapID, szWeaponName );
 			}
 		}
+	}
+
+	// Remove USP/Glock if they have 2 pistols?
+	new bool:bHasDefaultPistol = false, bool:bHasNonDefaultPistol = false;
+	new CsTeams:iUserTeam = cs_get_user_team( id );
+
+	for ( i = 0; i < 32; i++ )
+	{
+		iWeapID = g_PlayerLastWeapons[id][i];
+
+		if ( iWeapID )
+		{
+			// User has a default pistol
+			if ( ( iWeapID == CSW_USP && iUserTeam == CS_TEAM_CT ) || ( iWeapID == CSW_GLOCK18 && iUserTeam == CS_TEAM_T ) )
+			{
+				bHasDefaultPistol = true;
+			}
+			else if ( SHARED_IsSecondaryWeapon( iWeapID ) )
+			{
+				bHasNonDefaultPistol = true;
+			}
+		}
+	}
+
+	// Then we need to remove one of the pistols
+	if ( bHasDefaultPistol && bHasNonDefaultPistol )
+	{
+		new iWeapToRemove = ( iUserTeam == CS_TEAM_CT ) ? CSW_USP : CSW_GLOCK18;
+		
+		strip_user_gun( id, iWeapToRemove );
 	}
 
 	return PLUGIN_CONTINUE;

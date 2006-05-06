@@ -574,8 +574,8 @@ public ITEM_CanBuyItem( id, iItemID, iShopmenuID )
 public ITEM_Reset( id )
 {
 	// Lets save the user's items from when they died
-	p_data[victim_id][P_LASTITEM]			= p_data[victim_id][P_ITEM];
-	p_data[victim_id][P_LASTITEM2]			= p_data[victim_id][P_ITEM2];
+	p_data[id][P_LASTITEM]			= p_data[id][P_ITEM];
+	p_data[id][P_LASTITEM2]			= p_data[id][P_ITEM2];
 
 	// Reset the user's items
 	p_data[id][P_ITEM]		= 0;

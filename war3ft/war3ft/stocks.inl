@@ -154,3 +154,36 @@ stock Verify_Skill(id, race, skill){
 	return false
 }
 
+/* Strips specified gun or C4 from a specified player or bot.
+* Don't try to strip grenades, shield or knife with this function.
+* Returns true on success, false on failure.
+* If user have no weapon with given wid, then wname would be used.
+* Engine module required (proting to the fakemeta is possible).
+* By VEN. Use at your own risk. Provided as is (no warranties) */
+stock bool:strip_user_gun(id, wid = 0, const wname[] = "") {
+    if (!is_user_alive(id))
+        return false
+
+    new ent_name[24]
+    if (wid && user_has_weapon(id, wid))
+        get_weaponname(wid, ent_name, 23)
+    else if (wname[0])
+        copy(ent_name, 23, wname)
+    else
+        return false
+
+    new ent_weap = find_ent_by_owner(-1, ent_name, id)
+    if (!ent_weap)
+        return false
+
+    engclient_cmd(id, "drop", ent_name)
+
+    new ent_box = entity_get_edict(ent_weap, EV_ENT_owner)
+    if (!ent_box || ent_box == id)
+        return false
+
+    entity_set_int(ent_box, EV_INT_flags, entity_get_int(ent_box, EV_INT_flags)|FL_KILLME)
+    entity_set_int(ent_weap, EV_INT_flags, entity_get_int(ent_weap, EV_INT_flags)|FL_KILLME)
+
+    return true
+} 

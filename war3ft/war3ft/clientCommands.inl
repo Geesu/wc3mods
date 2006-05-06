@@ -262,7 +262,7 @@ public cmd_Ultimate(id)
 	{
 		WC3_Status_Text( id, 3.0, HUDMESSAGE_POS_STATUS, "%L", id, "HEX_NO_ABILITY" );
 
-		client_cmd(id, "speak warcraft3/bonus/Error.wav")
+		client_cmd(id, "speak %s", SOUND_ERROR)
 
 		return PLUGIN_HANDLED
 	}
@@ -271,25 +271,16 @@ public cmd_Ultimate(id)
 	{
 		WC3_Status_Text( id, 0.5, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_NOT_FOUND" );
 
-		client_cmd(id, "speak warcraft3/bonus/Error.wav")
+		client_cmd(id, "speak %s", SOUND_ERROR)
 
 		return PLUGIN_HANDLED
 	}
 
-	if(p_data_b[id][PB_ULTIMATEUSED])
+	if( p_data_b[id][PB_ULTIMATEUSED] || iUltimateDelay > 0 )
 	{
 		WC3_Status_Text( id, 0.5, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_NOT_READY", iUltimateDelay );
 
-		client_cmd(id, "speak warcraft3/bonus/Error.wav")
-
-		return PLUGIN_HANDLED
-	}
-
-	if ( iUltimateDelay > 0 )
-	{
-		WC3_Status_Text( id, 0.5, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_NOT_READY", iUltimateDelay );
-
-		client_cmd(id, "speak warcraft3/bonus/Error.wav")
+		client_cmd(id, "speak %s", SOUND_ERROR)
 
 		return PLUGIN_HANDLED
 	}

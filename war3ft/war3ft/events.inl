@@ -1024,7 +1024,7 @@ public EVENT_PlayerSpawned( id )
 	}
 
 	// Check the user's items to see if something should be done
-	ITEM_Check( id );
+	//ITEM_Check( id );
 	
 	// Should the user mole from fan of knives or an item?
 	if ( p_data[id][P_LASTITEM] == ITEM_MOLE || ( Verify_Skill(id, RACE_WARDEN, SKILL1) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )

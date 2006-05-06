@@ -1,5 +1,6 @@
 v2.3.3
- - Added: Start/Stop command: amx_wc3 <on|off>
+ - Addition: Start/Stop command: amx_wc3 <on|off>
+ - Addition: If a needed module isn't loaded, the plugin will modify the modules.ini + reload the map
  - Bug Fix: cl_minmodels task was not repeating
  - Change: If you respawn with Vengeance, you will spawn with full health
  - Change: Cloak stacks with invisibility
@@ -18,11 +19,12 @@ v2.3.3
  - Removed: FT_centerhud (this actually hasn't done anything for quite a few versions)
  - Removed: DOD_bootspeed (you can change it at the top of items.inl)
  - Removed: sv_warcraft3 (added a start/stop option)
+ - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
 Add a disable orc nade map config file...
 Add a start/stop option
-
 // remove - MAP_DISABLED, MAP_DISABLED_DUE
+
 v2.3.2
  - Addition: Admin flag added to war3FT.cfg file as a cvar
  - Bug Fix: Index out of bounds in events.inl on an attacker check - thanks Striker
