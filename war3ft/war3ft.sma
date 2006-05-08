@@ -47,8 +47,11 @@ new const WC3DATE[] =		__DATE__
 #include <dodfun>
 #include <dodx>
 
+// If we include CSX, we have conflicts w/dodx
+#pragma library csx
+
 // Compiling Options
-#define MOD						0				// 0 = cstrike or czero, 1 = dod
+#define MOD						1				// 0 = cstrike or czero, 1 = dod
 #define ADVANCED_STATS			1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define SHOW_SPECTATE_INFO		1				// Show spectating information on users
 
@@ -156,7 +159,6 @@ public plugin_init()
 		register_event( "TextMsg"		, "on_SetSpecMode"	, "bd"	, "2&ec_Mod"						);
 		register_event( "Damage"		, "on_Damage"		, "b"	, "2!0"								);
 		register_event( "StatusValue"	, "on_Spectate"		, "bd"	, "1=2"								);
-		register_event("HLTV", "event_new_round", "a", "1=0", "2=0")   
 
 		// Old Style
 		register_menucmd( register_menuid( "BuyItem" )	, (1<<2)	, "cmd_flash"	);
@@ -194,6 +196,8 @@ public plugin_init()
 		register_event( "StatusValue"	, "on_StatusValue"	, "b"					);
 	}
 	
+	register_event("HLTV", "event_new_round", "a", "1=0", "2=0")   
+
 	// Plugin initialization procedures
 	WC3_Init();
 
@@ -212,6 +216,11 @@ public test()
 
 public plugin_end()
 {
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
 	{
 		return;
@@ -229,8 +238,13 @@ public plugin_precache()
 	WAR3_precache()
 }
 
-public client_putinserver(id)
+public client_putinserver( id )
 {
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	// Check for steam ID pending
 	new szPlayerID[32];
 	get_user_authid( id, szPlayerID, 31 );
@@ -247,25 +261,34 @@ public client_putinserver(id)
 	}
 
 	p_data_b[id][PB_ISCONNECTED] = true;
+	
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		// Check user's cvar
+		if ( !is_user_bot(id) )
+		{
+			query_client_cvar( id, "cl_minmodels", "check_cvars" );
+		}
+	}
 
-	#if MOD == 1
+	// Start showing the user their money
+	else if ( g_MOD == GAME_DOD )
+	{
 		p_data[id][P_MONEY] = get_pcvar_num( CVAR_wc3_dod_start_money );
 		new parm[3];
 		parm[0] = id;
 		parm[1] = 0;
 		_DOD_showMoney( parm );
-	#endif
-	#if MOD == 0
-		if ( !is_user_bot(id) )
-		{
-			query_client_cvar( id, "cl_minmodels", "check_cvars" );
-		}
-	#endif
+	}
+
+
+
+
+	return;
 }
 
-public client_connect(id)
+public client_connect( id )
 {
-	
 	client_cmd( id, "hud_centerid 0" );
 
 	p_data[id][P_RACE]			= 0;
@@ -280,8 +303,8 @@ public client_connect(id)
 	p_data_b[id][PB_ISBURNING]	= false;
 	p_data[id][P_SPECMODE]		= 0;
 	p_data_b[id][PB_JUSTJOINED] = true;
-	p_data_b[id][PB_CAN_RENDER]		= true;
-	
+	p_data_b[id][PB_CAN_RENDER]	= true;
+
 	// These were on disconnect, might as well do them on connect
 	p_data[id][P_HECOUNT]		= 0;
 	p_data[id][P_FLASHCOUNT]	= 0;
@@ -305,36 +328,42 @@ public client_connect(id)
 		}
 	}
 
-	#if MOD == 1
-		// Skip Reincarnation since the user just joined
-		p_data_b[id][PB_REINCARNATION_SKIP] = true;
-	#endif
-	#if MOD == 0
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
 		p_data[id][P_HECOUNT]		= 0;
 		p_data[id][P_FLASHCOUNT]	= 0;
-	#endif
-	
-	// Give the bot a random amount of XP
-	if ( is_user_bot(id) && get_pcvar_num( CVAR_wc3_save_xp ) )
+	}
+	else if ( g_MOD == GAME_DOD )
 	{
-		p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
+		// Skip Reincarnation since the user just joined
+		p_data_b[id][PB_REINCARNATION_SKIP] = true;
+
+		p_data[id][P_MONEY] = 0;
+	}
+	
+	// Bot options
+	if ( is_user_bot(id) )
+	{
+		// Give the bot some random XP if we're saving XP
+		if ( get_pcvar_num( CVAR_wc3_save_xp ) )
+		{
+			p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
+		}
+
 		p_data[id][P_RACE] = random_num(1, get_pcvar_num( CVAR_wc3_races ));
 	}
 
-	return PLUGIN_CONTINUE;
+	return;
 }
 
 public client_disconnect(id)
 {
-	#if MOD == 1
-		// Remove the money task when a user disconnects
 
-		if( task_exists( TASK_MONEYLOOP+id ) )
-		{
-			remove_task( TASK_MONEYLOOP+id );
-		}
-		p_data[id][P_MONEY] = 0;
-	#endif
+	// Remove the money task when a user disconnects
+	if ( g_MOD == GAME_DOD )
+	{
+		task_exists( TASK_MONEYLOOP + id ) ? remove_task( TASK_MONEYLOOP + id ) : 0;
+	}
 
 	p_data[id][P_SPECMODE]			= 0;
 	p_data_b[id][PB_ISBURNING]		= false;
@@ -342,16 +371,8 @@ public client_disconnect(id)
 	p_data_b[id][PB_JUSTJOINED]		= false;
 	p_data_b[id][PB_ISCONNECTED]	= false;
 	
-	// Reset Equipment Reincarnation
-	new i=0;
-	for (i=0; i<32; ++i)
-	{
-		savedweapons[id][i] = 0;
-	}
-	
 	// Save the user's XP if we have XP to save
-
-	if (get_pcvar_num( CVAR_wc3_save_xp ) && !is_user_bot(id) && p_data[id][P_RACE] && p_data[id][P_XP])
+	if ( get_pcvar_num( CVAR_wc3_save_xp ) && !is_user_bot(id) && p_data[id][P_RACE] && p_data[id][P_XP] )
 	{
 		XP_Save( id );
 	}
@@ -395,15 +416,19 @@ public client_disconnect(id)
 		if ( iStatsShots[id][WEAPON] || iStatsHits[id][WEAPON] || iStatsKills[id][WEAPON] ||  iStatsHS[id][WEAPON] || iStatsTKS[id][WEAPON] || iStatsDamage[id][WEAPON] || iStatsDeaths[id][WEAPON] || iStatsHead[id][WEAPON] || iStatsChest[id][WEAPON] || iStatsStomach[id][WEAPON] || iStatsLeftArm[id][WEAPON] || iStatsRightArm[id][WEAPON] || iStatsLeftLeg[id][WEAPON] || iStatsRightLeg[id][WEAPON] )
 		{
 
-			// Save Statistics For War3 Abilities (allows for detailed reports with psychostats)
+			// Counter-Strike/Condition Zero log format is different than the DOD
+			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+			{
+				log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^")", szName, iUserid, szAuthid, szTeam, szWeapon, iStatsShots[id][WEAPON], iStatsHits[id][WEAPON], iStatsKills[id][WEAPON], iStatsHS[id][WEAPON], iStatsTKS[id][WEAPON], iStatsDamage[id][WEAPON], iStatsDeaths[id][WEAPON] );
+			}
 
-			#if MOD == 0
-				log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^")", szName,iUserid,szAuthid,szTeam,szWeapon,iStatsShots[id][WEAPON],iStatsHits[id][WEAPON],iStatsKills[id][WEAPON], iStatsHS[id][WEAPON],iStatsTKS[id][WEAPON],iStatsDamage[id][WEAPON],iStatsDeaths[id][WEAPON])
-			#endif
-			#if MOD == 1
-				log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^") (score ^"%d^")", szName,iUserid,szAuthid,szTeam,szWeapon,iStatsShots[id][WEAPON],iStatsHits[id][WEAPON],iStatsKills[id][WEAPON], iStatsHS[id][WEAPON],iStatsTKS[id][WEAPON],iStatsDamage[id][WEAPON],iStatsDeaths[id][WEAPON],0)
-			#endif
-			log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats2^" (weapon ^"%s^") (head ^"%d^") (chest ^"%d^") (stomach ^"%d^") (leftarm ^"%d^") (rightarm ^"%d^") (leftleg ^"%d^") (rightleg ^"%d^")", szName,iUserid,szAuthid,szTeam,szWeapon,iStatsHead[id][WEAPON],iStatsChest[id][WEAPON],iStatsStomach[id][WEAPON],  iStatsLeftArm[id][WEAPON],iStatsRightArm[id][WEAPON],iStatsLeftLeg[id][WEAPON],iStatsRightLeg[id][WEAPON])
+			// Day of Defeat log format
+			else if ( g_MOD == GAME_DOD )
+			{
+				log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^") (score ^"%d^")", szName, iUserid, szAuthid, szTeam, szWeapon, iStatsShots[id][WEAPON], iStatsHits[id][WEAPON], iStatsKills[id][WEAPON], iStatsHS[id][WEAPON], iStatsTKS[id][WEAPON], iStatsDamage[id][WEAPON], iStatsDeaths[id][WEAPON], 0 );
+			}
+			
+			log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats2^" (weapon ^"%s^") (head ^"%d^") (chest ^"%d^") (stomach ^"%d^") (leftarm ^"%d^") (rightarm ^"%d^") (leftleg ^"%d^") (rightleg ^"%d^")", szName, iUserid, szAuthid, szTeam, szWeapon, iStatsHead[id][WEAPON], iStatsChest[id][WEAPON], iStatsStomach[id][WEAPON], iStatsLeftArm[id][WEAPON], iStatsRightArm[id][WEAPON], iStatsLeftLeg[id][WEAPON], iStatsRightLeg[id][WEAPON] );
 		
 			iStatsShots[id][WEAPON]		= 0;
 			iStatsHits[id][WEAPON]		= 0;
@@ -426,68 +451,62 @@ public client_disconnect(id)
 
 
 
-public client_PreThink(id)
+public client_PreThink( id )
 {
-
-	if ( !warcraft3 )
+	if ( !WAR3_Check() )
 	{
-		return PLUGIN_CONTINUE;
+		return;
 	}
 
-	if( p_data_b[id][PB_ISCONNECTED] )
+	if ( p_data_b[id][PB_ISCONNECTED] )
 	{
-
-		if( is_user_alive(id) )
+		if ( is_user_alive( id ) )
 		{
-	#if MOD == 0
-			if ( Verify_Skill(id, RACE_UNDEAD, SKILL3) && !p_data_b[id][PB_STUNNED] && !p_data_b[id][PB_SLOWED])
+			
+			// Counter-Strike or Condition Zero
+			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 			{
-				new Float:vel[3];
-				entity_get_vector( id, EV_VEC_velocity, vel );
-				new Float:length = vector_length( vel );
-				if (length < 180.0)
+
+				// This is used so we can't hear the undead's footsteps at level 3
+				if ( Verify_Skill( id, RACE_UNDEAD, SKILL3 ) && !p_data_b[id][PB_STUNNED] && !p_data_b[id][PB_SLOWED] )
 				{
-					entity_set_int( id, EV_INT_flTimeStepSound, 999 );
-				}
-				else if (entity_get_int(id, EV_INT_flTimeStepSound) > 500)
-				{
-					entity_set_int( id, EV_INT_flTimeStepSound, 200 );
+					new Float:vel[3];
+					entity_get_vector( id, EV_VEC_velocity, vel );
+
+					if ( vector_length( vel ) < 180.0 )
+					{
+						entity_set_int( id, EV_INT_flTimeStepSound, 999 );
+					}
+					else if ( entity_get_int(id, EV_INT_flTimeStepSound) > 500 )
+					{
+						entity_set_int( id, EV_INT_flTimeStepSound, 200 );
+					}
 				}
 			}
-	#endif
+
+			// Day of Defeat
+			else if ( g_MOD == GAME_DOD )
+			{
+
+				// Set the user's speed
+				SHARED_SetSpeed( id );
+				
+				// Give the user more stamina
+				if( p_data[id][P_ITEM] == ITEM_BOOTS && entity_get_float( id, EV_FL_fuser4 ) < DOD_BOOT_SPEED )
+				{
+					entity_set_float( id, EV_FL_fuser4, DOD_BOOT_SPEED );
+				}
+			}
+
+			// Amulet of the Cat
 			if( p_data[id][P_ITEM2] == ITEM_AMULET )
 			{
 				entity_set_int( id, EV_INT_flTimeStepSound, 999 );
 			}
 		}
-	#if MOD == 1
-		if( Verify_Skill(id, RACE_UNDEAD, SKILL2) || p_data[id][P_ITEM] == ITEM_BOOTS)
-		{
-			// They have a rocket launcher "deployed" or are using their stamina
-			new prone = entity_get_int( id, EV_INT_iuser3 );
-			new Float:maxspeed = entity_get_float( id, EV_FL_maxspeed );
-			if( ( maxspeed == 50.0 && !prone ) || entity_get_float( id, EV_FL_fuser4 ) < 100.0 || ( maxspeed > 500.0 && prone ) )
-			{		
-				new parm[1];
-				parm[0] = id;
-				unholyspeed( parm );
-			}
-			if ( Verify_Skill(id, RACE_UNDEAD, SKILL2) )
-			{
-				if( entity_get_float( id, EV_FL_fuser4 ) < p_unholy[p_data[id][P_SKILL2]-1] )
-				{
-					entity_set_float( id, EV_FL_fuser4, p_unholy[p_data[id][P_SKILL2]-1] );
-				}
-			}
-		}
-		if( p_data[id][P_ITEM] == ITEM_BOOTS && entity_get_float(id,EV_FL_fuser4) < DOD_BOOT_SPEED )
-		{
-			entity_set_float( id, EV_FL_fuser4, DOD_BOOT_SPEED );
-		}
-	#endif
 	}
 
-	return PLUGIN_CONTINUE;
+	return;
 }
 
 // This functionality allows us to no longer requires a DBI module to be loaded
@@ -497,7 +516,7 @@ public plugin_natives()
 	set_native_filter("native_filter");
 }
 
-public module_filter(const module[])
+public module_filter( const module[] )
 {
 	WC3_DetermineGame();
 
@@ -525,10 +544,12 @@ public module_filter(const module[])
 	return PLUGIN_HANDLED;
 }
 
-public native_filter(const name[], index, trap)
+public native_filter( const name[], index, trap )
 {
-      if (!trap)
-            return PLUGIN_HANDLED;
+	if ( !trap )
+	{
+		return PLUGIN_HANDLED;
+	}
 
-      return PLUGIN_CONTINUE;
+	return PLUGIN_CONTINUE;
 }

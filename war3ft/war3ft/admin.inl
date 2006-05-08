@@ -238,6 +238,12 @@ public ADMIN_wc3(id, level, cid)
 	{
 		warcraft3 = false;
 		ADMIN_Print( id, "War3ft plugin disabled" );
+
+		// Save everyone's XP since we're not going to be saving it later
+		if ( get_pcvar_num( CVAR_wc3_save_xp ) )
+		{
+			XP_Save_All();
+		}
 	}
 	else
 	{

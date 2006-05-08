@@ -557,13 +557,6 @@ public ITEM_CanBuyItem( id, iItemID, iShopmenuID )
 
 				return false;
 			}
-			else if( !g_giveHE && get_pcvar_num( CVAR_wc3_glove_disable_ka ) && iItemID == ITEM_GLOVES )
-			{
-				client_print( id, print_center, "%L", id, "FLAMING_GLOVES_RESTRICTED_ON_THIS_MAP" );
-
-				return false;
-			}
-
 		}
 	}
 

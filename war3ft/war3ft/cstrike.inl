@@ -393,21 +393,9 @@ public _on_TargetBombed(){
 	return PLUGIN_CONTINUE
 }
 
-public on_B4TargetBombed(){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new players[32], numberofplayers, id, i
-	get_players(players, numberofplayers)
-	for(i=0;i<numberofplayers;i++){
-		id = players[i]
-		if(is_user_alive(id)){
-			saveweapons(id)
-		}
-	}
-
-	return PLUGIN_CONTINUE
+public on_B4TargetBombed()
+{
+	return;
 }
 
 
@@ -481,19 +469,25 @@ public on_CTWin(){
 	return PLUGIN_CONTINUE
 }
 
-public on_ArmorType(id){
+public on_ArmorType(id)
+{
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	if ( read_data(1) )
+	client_print( id, print_chat, "ArmorType: %d Total: %d", read_data(1), read_datanum() );
+	
+	// Save user's armor
+	p_data[id][P_ARMORONDEATH] = cs_get_user_armor( id, g_ArmorType[id] );
+
+	/*if ( read_data(1) )
 	{
 		g_ArmorType[id] = CS_ARMOR_VESTHELM;
 	}
 	else
 	{
 		g_ArmorType[id] = CS_ARMOR_KEVLAR;
-	}
+	}*/
 
 	return PLUGIN_CONTINUE;
 }

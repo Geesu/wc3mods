@@ -1068,7 +1068,7 @@ Ultimate_Vengeance(id){
 		spawnID = 1
 
 	do {
-		ent = find_ent_by_class(ent,spawnEntString[spawnID])
+		ent = find_ent_by_class(ent,szSpawnEnt[spawnID])
 		if (ent != 0) {
 			entity_get_vector(ent,EV_VEC_origin,spawnOrigin)
 			for(i=0;i<3;i++)
@@ -1241,8 +1241,6 @@ public _ULT_Delay( id )
 	{
 		id -= TASK_UDELAY;
 	}
-
-	server_print( "%d", id );
 	
 	// Player call
 	if ( id != 0 )
@@ -1282,29 +1280,23 @@ public _ULT_Delay( id )
 	return PLUGIN_CONTINUE;
 }
 
-public Ultimate_Ready(id){
+public Ultimate_Ready(id)
+{
+	p_data_b[id][PB_ULTIMATEUSED] = false;
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	p_data_b[id][PB_ULTIMATEUSED] = false
-
-	if(is_user_alive(id) && p_data_b[id][PB_ISCONNECTED] && p_data[id][P_ULTIMATE]){
-
-		new szCommand[32]
-		format(szCommand, 31, "speak %s", SOUND_ULTIMATEREADY)
-
-		client_cmd(id, szCommand)
-
-		new szMessage[128]
-		format(szMessage, 127, "%L", id, "ULTIMATE_READY")
-
-		//Status_Text(id, szMessage, 2.0, HUDMESSAGE_POS_STATUS)
-
-		Ultimate_Icon(id, ICON_SHOW)
+	if( is_user_alive( id ) && p_data_b[id][PB_ISCONNECTED] && p_data[id][P_ULTIMATE] )
+	{
+		// Play the ultimate ready sound
+		client_cmd( id, "speak %s", SOUND_ULTIMATEREADY )
+		
+		// Give the user a graphical message that their ultimate is ready
+		WC3_Status_Text( id, 2.0, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_READY" );
+		
+		// Show their ultimate icon
+		Ultimate_Icon( id, ICON_SHOW );
 	}
 	
-	return PLUGIN_CONTINUE
+	return;
 }
 
 public Ultimate_Icon(id, value){

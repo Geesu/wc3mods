@@ -23,7 +23,8 @@ v2.3.3
 
 Add a disable orc nade map config file...
 Add a start/stop option
-// remove - MAP_DISABLED, MAP_DISABLED_DUE
+//Need to give 2 flashbangs, not one
+//FLAMING_GLOVES_RESTRICTED_ON_THIS_MAP
 
 v2.3.2
  - Addition: Admin flag added to war3FT.cfg file as a cvar

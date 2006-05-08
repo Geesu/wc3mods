@@ -37,7 +37,7 @@ stock find_free_spawn(id, iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]
 
 	/* Find all of the spawn points */
 	do {
-		ent = find_ent_by_class(ent,spawnEntString[iSpawn])
+		ent = find_ent_by_class(ent,szSpawnEnt[iSpawn])
 		if (ent != 0) {
 			spawnPoints[spawnsFound] = ent
 			spawnsFound++
@@ -187,3 +187,25 @@ stock bool:strip_user_gun(id, wid = 0, const wname[] = "") {
 
     return true
 } 
+
+// Function checks to see if the weapon is a pistol
+stock SHARED_IsSecondaryWeapon( iWeaponID )
+{
+	// Check for Counter-Strike or Condition Zero
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		if ( iWeaponID == CSW_ELITE || iWeaponID == CSW_FIVESEVEN || iWeaponID == CSW_USP || iWeaponID == CSW_GLOCK18 || iWeaponID == CSW_DEAGLE || iWeaponID == CSW_P90 )
+		{
+			return true;
+		}
+	}
+	
+	// Check for Day of Defeat
+	else if ( g_MOD == GAME_DOD )
+	{
+
+	}
+
+
+	return false;
+}

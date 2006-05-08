@@ -340,6 +340,7 @@
 	#define	P_HECOUNT				15		// Number of HE's bought that round
 	#define P_SMOKECOUNT			16		// Number of smoke grenades bought that round
 	#define P_ARMORONDEATH			17		// Amount of armor the player had when he/she died
+//	#define P_ARMORTYPE				18		// Type of armor the user had on death
 //	#define P_SAVEDNUMBER			19
 
 	// Used by various ultimates/abilities
@@ -500,6 +501,8 @@ new g_menuSettings[33]
 new gmsgStatusText
 new gmsgBarTime
 
+new szSpawnEnt[2][32];				// Used for Mole
+
 /*  START - CSTRIKE VARIABLES */
 new Float:g_fBombTime
 new g_hostageSaver
@@ -509,16 +512,13 @@ new g_vipID = 0
 new bool:g_freezeTime	= false;
 new bool:g_freezeCalled = false;
 new bool:g_buyTime
-new bool:g_giveHE
 
 new PhoenixFound[2]
 new CTSkins[5][]={"sas","gsg9","urban","gign","spetsnaz"}
 new TSkins[5][]={"arctic","leet","guerilla","terror","militia"}
-#if MOD == 0
-new spawnEntString[2][] = {"info_player_start","info_player_deathmatch"}
-#endif
 
 new CsArmorType:g_ArmorType[33];
+
 /*  END - CSTRIKE VARIABLES */
 
 /*  START - DOD VARIABLES */
@@ -527,9 +527,6 @@ new CsArmorType:g_ArmorType[33];
 new gmsgHudText
 //new AlliedSkins[2][]={"us-inf","us-para"}
 //new AxisSkins[2][]={"axis-inf","axis-para"}
-#if MOD == 1
-new spawnEntString[2][] = {"info_player_axis","info_player_allies"}
-#endif
 
 new iReincarnation[33][3];
 /*  END - DOD VARIABLES */
@@ -568,12 +565,9 @@ new g_sSpriteTexture
 new g_sLightning
 new g_sFlare
 new g_sWave
-
-#if MOD != 1
-	new g_sRace[10]
-	new g_sLevel[11]
-	new g_sSmoke
-#endif
+new g_sRace[10]
+new g_sLevel[11]
+new g_sSmoke
 
 new bool:g_DBILoaded		= true;
 new szNotLoadedModules[10][32];
@@ -590,7 +584,6 @@ new const g_SQLite[] = "SQLite"
 new g_MODclient[15] = "* [WAR3FT]"
 
 new iglow[33][4]
-new savedweapons[33][32]
 new bool:warcraft3 = true
 new bool:endround
 

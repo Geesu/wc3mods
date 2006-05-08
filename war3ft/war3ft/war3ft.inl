@@ -331,13 +331,6 @@ public WAR3_death_victim(victim_id, killer_id)
 
 	p_data_b[victim_id][PB_DIEDLASTROUND] = true
 
-
-	#if MOD == 0
-		// Save Items for Weapon Reincarnation
-		saveweapons(victim_id)
-	#endif
-
-
 	// Remove task that makes the victim jump
 
 	if (task_exists(TASK_HEX+victim_id)){		// Remove the function that makes you jump from Hex
@@ -995,16 +988,11 @@ WAR3_Check( id = 0, print_location = print_chat )
 }
 
 // Function will print a message in the center of the screen
-WC3_Status_Text( id, Float:fDuration, Float:iYPos, const text[] = "", {Float,_}:... )
+WC3_Status_Text( id, Float:fDuration, Float:iYPos, const fmt[], ... )
 {
-	new szFormattedText[128];
+	static szFormattedText[128];
 
-	format_args( szFormattedText, 127, 3 );
-
-	log_amx( "Text: %s",  text );
-
-	log_amx( "Formatted: %s", szFormattedText );
-
+	vformat( szFormattedText, 127, fmt, 5 );
 
 	// Check for Counter-Strike or Condition Zero
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
@@ -1017,12 +1005,6 @@ WC3_Status_Text( id, Float:fDuration, Float:iYPos, const text[] = "", {Float,_}:
 	else if ( g_MOD == GAME_DOD )
 	{
 		Create_HudText( id, szFormattedText, 1 );
-	}
-	
-	// Gets rid of compiler warning
-	if ( text[0] == 0 )
-	{
-		return;
 	}
 }
 
@@ -1047,9 +1029,6 @@ public WC3_Init()
 
 	// Configure the XP based on level
 	XP_Set()
-	
-	// Determine if anything should be restricted based on the current map
-	checkmap()
 
 	// Set which string should be displayed with messages (war3ft or war3)
 	if ( get_pcvar_num( CVAR_wc3_races ) < 5 )
@@ -1061,6 +1040,19 @@ public WC3_Init()
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
 		set_task( 0.7, "WAR3_Mole_Fix", TASK_MOLEFIX, "", 0, "b" );
+	}
+
+
+	// Set up the spawn entities
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		copy( szSpawnEnt[0], 31, "info_player_start" );
+		copy( szSpawnEnt[1], 31, "info_player_deathmatch" );
+	}
+	else if ( g_MOD == GAME_DOD )
+	{
+		copy( szSpawnEnt[0], 31, "info_player_axis" );
+		copy( szSpawnEnt[1], 31, "info_player_allies" );
 	}
 }
 
@@ -1180,6 +1172,16 @@ public _WC3_CheckModules()
 			}
 		}
 
+		// Enable cstrike module
+		else if ( equal( szNotLoadedModules[i], "csx" ) )
+		{
+			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+			{
+				WC3_EnableModule( "csx_amxx" );
+				bReloadMap = true;
+			}
+		}
+
 		// Enable DOD Fun module
 		else if ( equal( szNotLoadedModules[i], "dod" ) )
 		{
@@ -1287,6 +1289,15 @@ public WC3_MissingModules( const module_name[] )
 		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 		{
 			bMissing = !WC3_ModuleExists( "cstrike_amxx" );
+		}
+	}
+
+	// Check csx module
+	else if ( equal( module_name, "csx" ) )
+	{
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			bMissing = !WC3_ModuleExists( "csx_amxx" );
 		}
 	}
 

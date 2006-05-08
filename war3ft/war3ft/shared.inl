@@ -138,28 +138,6 @@ SHARED_IsPrimaryWeapon( iWeaponID )
 	return false;
 }
 
-// Function checks to see if the weapon is a pistol
-SHARED_IsSecondaryWeapon( iWeaponID )
-{
-	// Check for Counter-Strike or Condition Zero
-	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-	{
-		if ( iWeaponID == CSW_ELITE || iWeaponID == CSW_FIVESEVEN || iWeaponID == CSW_USP || iWeaponID == CSW_GLOCK18 || iWeaponID == CSW_DEAGLE || iWeaponID == CSW_P90 )
-		{
-			return true;
-		}
-	}
-	
-	// Check for Day of Defeat
-	else if ( g_MOD == GAME_DOD )
-	{
-
-	}
-
-
-	return false;
-}
-
 // Function will return the user's money
 SHARED_GetUserMoney( id )
 {
@@ -381,12 +359,17 @@ public SHARED_DOD_Reincarnation( id )
 public _SHARED_DOD_Reincarnation_Check( id )
 {
 	
-	if ( !warcraft3 || !p_data_b[id][PB_ISCONNECTED] )
+	if ( !warcraft3 )
 	{
-		return PLUGIN_CONTINUE;
+		return;
 	}
 
 	id -= TASK_REINCARNATION;
+
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
 
 	new origin[3];
 	get_user_origin( id, origin );
@@ -407,7 +390,7 @@ public _SHARED_DOD_Reincarnation_Check( id )
 
 		do
 		{
-			ent = find_ent_by_class( ent, spawnEntString[iSpawnID] );
+			ent = find_ent_by_class( ent, szSpawnEnt[iSpawnID] );
 			if ( ent != 0 )
 			{
 				entity_get_vector( ent, EV_VEC_origin, spawnOrigin );
@@ -441,21 +424,26 @@ public _SHARED_DOD_Reincarnation_Check( id )
 
 	}
 
-	return PLUGIN_CONTINUE
+	return;
 }
 
 public _SHARED_DOD_Reincarnation_Loc( id )
 {
-	if ( !warcraft3 || !p_data_b[id][PB_ISCONNECTED] )
+	if ( !warcraft3 )
 	{
-		return PLUGIN_CONTINUE;
+		return;
 	}
 
 	id -= TASK_REINCCHECK;
+
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
 	
 	p_data_b[id][PB_REINCARNATION_DELAY] = ( is_user_alive( id ) ) ? true : false;
 
-	return PLUGIN_CONTINUE;
+	return;
 }
 
 /*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
@@ -519,13 +507,10 @@ public SHARED_CS_Reincarnation( id )
 		}
 
 		// Screen fade green
-		Create_ScreenFade( id, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[id][1] );
+		Create_ScreenFade( id, (1<<10), (1<<10), (1<<12), 0, 255, 0, 255 );
 		
-		// Remove all weapons
-		strip_user_weapons( id );
-
 		// Give the user their weapons from last round
-		set_task( 0.1, "_SHARED_CS_GiveWeapons", TASK_REINCARNATION + id );
+		set_task( 0.3, "_SHARED_CS_GiveWeapons", TASK_REINCARNATION + id );
 	}
 	else
 	{
@@ -550,21 +535,15 @@ public _SHARED_CS_GiveWeapons(id)
 		return PLUGIN_CONTINUE;
 	}
 
+	// Remove all weapons
+	strip_user_weapons( id );
+
 	give_item( id, "weapon_knife" );
 
 	// Give armor
 	if ( p_data[id][P_ARMORONDEATH] )
 	{
-		// Not sure why I need to do this (shouldn't the cs_set_user_armor function do it dangit) but I do :/
-		if ( g_ArmorType[id] == CS_ARMOR_KEVLAR )
-		{
-			give_item(id, "item_kevlar");
-		}
-		else if ( g_ArmorType[id] == CS_ARMOR_VESTHELM )
-		{
-			give_item(id, "item_assaultsuit");
-		}
-
+		// g_ArmorType
 		cs_set_user_armor( id, p_data[id][P_ARMORONDEATH], g_ArmorType[id] );
 	}
 	
@@ -610,40 +589,8 @@ public _SHARED_CS_GiveWeapons(id)
 						give_item( id, szAmmoName );
 					}
 				}
-
-				client_print( id, print_console, "(%d) %d:%s", i, iWeapID, szWeaponName );
 			}
 		}
-	}
-
-	// Remove USP/Glock if they have 2 pistols?
-	new bool:bHasDefaultPistol = false, bool:bHasNonDefaultPistol = false;
-	new CsTeams:iUserTeam = cs_get_user_team( id );
-
-	for ( i = 0; i < 32; i++ )
-	{
-		iWeapID = g_PlayerLastWeapons[id][i];
-
-		if ( iWeapID )
-		{
-			// User has a default pistol
-			if ( ( iWeapID == CSW_USP && iUserTeam == CS_TEAM_CT ) || ( iWeapID == CSW_GLOCK18 && iUserTeam == CS_TEAM_T ) )
-			{
-				bHasDefaultPistol = true;
-			}
-			else if ( SHARED_IsSecondaryWeapon( iWeapID ) )
-			{
-				bHasNonDefaultPistol = true;
-			}
-		}
-	}
-
-	// Then we need to remove one of the pistols
-	if ( bHasDefaultPistol && bHasNonDefaultPistol )
-	{
-		new iWeapToRemove = ( iUserTeam == CS_TEAM_CT ) ? CSW_USP : CSW_GLOCK18;
-		
-		strip_user_gun( id, iWeapToRemove );
 	}
 
 	return PLUGIN_CONTINUE;
@@ -737,7 +684,7 @@ public SHARED_SetSpeed( id )
 	{
 		
 		// User is in the prone position so we shouldn't change their speed
-		if( entity_get_int( id, EV_INT_iuser3 ) )
+		if ( entity_get_int( id, EV_INT_iuser3 ) )
 		{
 			// When prone the maxspeed should be 50, never let it be different than this
 			if( get_user_maxspeed( id ) > 500.0 )

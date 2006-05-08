@@ -1,24 +1,43 @@
 // Forwards from the CSX module and DODX module
-public grenade_throw(index,greindex,wId){
+public grenade_throw( index, greindex, wId )
+{
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new szModel[64]
-	entity_get_string(greindex, EV_SZ_model, szModel, 63)
-#if MOD == 0
-	if (greindex && equal(szModel, "models/w_hegrenade.mdl")){
-#endif
-#if MOD == 1
-	if(greindex && (equal(szModel, "models/w_grenade.mdl") || equal(szModel, "models/w_stick.mdl"))){
-#endif
-		if( Verify_Skill(index, RACE_ORC, SKILL2) ){
-			if( ( (p_data[index][P_ITEM2]==ITEM_GLOVES && get_pcvar_num( CVAR_wc3_glove_orc_damage )) || (p_data[index][P_ITEM2]!=ITEM_GLOVES) ) && is_user_alive(index) ) { 
-					Create_TE_BEAMFOLLOW(greindex, g_siTrail, 20, 10, 255, 32, 32, 196)
-			} 
-		} 
+	if ( !WAR3_Check() )
+	{
+		return;
 	}
-	return PLUGIN_CONTINUE
+
+	// Make sure the user has the skill and we actually have a grenade index
+	if ( greindex && Verify_Skill( index, RACE_ORC, SKILL2 ) )
+	{
+
+		// Don't do extra damage if they have gloves
+		if ( !get_pcvar_num( CVAR_wc3_glove_orc_damage ) && p_data[index][P_ITEM2] == ITEM_GLOVES )
+		{
+			return;
+		}
+
+		new bool:bShow = false;
+
+		// Check for a Counter-Strike grenade
+		if ( (g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO) && wId == CSW_HEGRENADE )
+		{
+			bShow = true;
+		}
+
+		// Check for a Day of Defeat grenade
+		else if ( g_MOD == GAME_DOD && ( wId == DODW_HANDGRENADE || wId == DODW_STICKGRENADE ) )
+		{
+			bShow = true;
+		}
+
+		// Then draw it!
+		if ( bShow )
+		{
+			Create_TE_BEAMFOLLOW( greindex, g_siTrail, 20, 10, 255, 32, 32, 196 );
+		}
+	}
+	return;
 }
 
 #if MOD == 1
@@ -743,10 +762,6 @@ public on_Death(victim, killer, wpnindex, headshot){
 		// Check if a user had a shield on death
 		p_data_b[victim][PB_SHIELD] = (cs_get_user_shield( victim )) ? true : false;
 
-		// Get the user's armor on death
-		new CsArmorType:armortype
-		p_data[victim][P_ARMORONDEATH] = cs_get_user_armor( victim, armortype );
-		
 		// See if the user has a defuse kit
 		p_data_b[victim][PB_DEFUSE] = (cs_get_user_defuse( victim )) ? true : false;
 	#endif
