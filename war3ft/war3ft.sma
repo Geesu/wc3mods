@@ -43,6 +43,7 @@ new const WC3DATE[] =		__DATE__
 #include <fun>
 #include <fakemeta>
 #include <dbi>
+#include <nvault>
 #include <cstrike>
 #include <dodfun>
 #include <dodx>
@@ -63,6 +64,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/cvar.inl"
 #include "war3ft/effects.inl"
 #include "war3ft/XP.inl"
+#include "war3ft/db.inl"
 #include "war3ft/war3ft.inl"
 #include "war3ft/events.inl"
 #include "war3ft/clientCommands.inl"
@@ -281,9 +283,6 @@ public client_putinserver( id )
 		_DOD_showMoney( parm );
 	}
 
-
-
-
 	return;
 }
 
@@ -374,7 +373,7 @@ public client_disconnect(id)
 	// Save the user's XP if we have XP to save
 	if ( get_pcvar_num( CVAR_wc3_save_xp ) && !is_user_bot(id) && p_data[id][P_RACE] && p_data[id][P_XP] )
 	{
-		XP_Save( id );
+		DB_SaveXP( id );
 	}
 
 #if ADVANCED_STATS
@@ -539,6 +538,10 @@ public module_filter( const module[] )
 	if ( equali( module, "dbi" ) )
 	{
 		g_DBILoaded = false;
+	}
+	else if ( equali( module, "nvault" ) )
+	{
+		g_NVaultLoaded = false;
 	}
 
 	return PLUGIN_HANDLED;

@@ -110,7 +110,7 @@ _Admin_SaveXP(id, target[]){
 		get_players(players,inum,"c") 
 
 		for(new a=0;a<inum;++a){
-			XP_Save(players[a])
+			DB_SaveXP(players[a])
 		} 
 
 		return PLUGIN_CONTINUE
@@ -125,7 +125,7 @@ _Admin_SaveXP(id, target[]){
 		} 
 
 		for(new a=0;a<inum;++a){
-			XP_Save(players[a])
+			DB_SaveXP(players[a])
 		} 
 	}
 	else { 
@@ -134,7 +134,7 @@ _Admin_SaveXP(id, target[]){
 		if (!player)
 			return PLUGIN_CONTINUE 
 
-		XP_Save(player)
+		DB_SaveXP(player)
 	} 
 	return PLUGIN_CONTINUE 
 } 

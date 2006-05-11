@@ -287,25 +287,15 @@
 
 #define MAX_LEVELS					10
 
-// Number of attempts to make to connect to the database if it fails (only if sv_sql is 1)
-#define	SQL_ATTEMPTS				3
-#define SQL_ATTEMPT_DELAY			5.0
-
-// Type of SQL being used (only if sv_sql is 1)
-#define SQL_FAIL				-1
-#define SQL_NONE				0
-#define SQL_MYSQL				1
-#define SQL_SQLITE				2
-
 // Type of SQlite database synchronization
 #define SQLITE_SYNC_OFF				0
 #define SQLITE_SYNC_NORMAL			1
 #define SQLITE_SYNC_FULL			2
 
 // Based on what we're saving by (FT_saveby)
-#define SAVE_STEAMID			0
-#define SAVE_IP					1
-#define SAVE_NAME				2
+#define DB_SAVEBY_STEAMID			0
+#define DB_SAVEBY_IP				1
+#define DB_SAVEBY_NAME				2
 
 // ***************************************************************************
 // The following section contains defines for the player_data array, it pretty much
@@ -430,10 +420,29 @@
 #define SHOPMENU_ONE			P_ITEM
 #define SHOPMENU_TWO			P_ITEM2
 
+// Used with g_DBType
+#define DB_VAULT			1
+#define DB_MYSQL			2
+#define DB_SQLITE			3
+
+#define SQL_ATTEMPT_DELAY	15.0
+#define SQL_ATTEMPTS		5
+
 // ***************************************************************************
 //  Start of variables
 // ***************************************************************************
 
+// Database variables
+
+new g_Vault[MAX_RACES+1];
+new g_szDBType[16];
+new g_szDBKey[32];
+
+new Sql:g_DB;
+new g_DBType				= -1;
+new bool:g_DBILoaded		= true;
+new bool:g_NVaultLoaded		= true;
+new iSQLAttempts			= 0;
 /* Variables for precaching sounds */
 
 new SOUND_ANNIHILATION[64]
@@ -569,17 +578,10 @@ new g_sRace[10]
 new g_sLevel[11]
 new g_sSmoke
 
-new bool:g_DBILoaded		= true;
 new szNotLoadedModules[10][32];
 new iTotalNotLoadedModules = 0;
 
-new Sql:sql
 new g_DBTableName[64]
-new iSQLAttempts = 0
-new iSQLtype = SQL_NONE
-new SQLtype[16]
-new const g_MySQL[] = "MySQL"
-new const g_SQLite[] = "SQLite"
 
 new g_MODclient[15] = "* [WAR3FT]"
 

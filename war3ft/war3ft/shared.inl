@@ -852,3 +852,28 @@ public SHARED_SetGravity( id )
 
 	return;
 }
+
+public SHARED_IsOnTeam( id )
+{
+	new iTeam = get_user_team( id );
+
+	// Counter-Strike or Condition Zero Check
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		if ( iTeam == CTS || iTeam == TS )
+		{
+			return true;
+		}
+	}
+
+	// Day of Defeat Check
+	else if ( g_MOD == GAME_DOD )
+	{
+		if ( iTeam == ALLIES || iTeam == AXIS )
+		{
+			return true;
+		}
+	}
+
+	return false;
+}

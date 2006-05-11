@@ -152,24 +152,22 @@ public WAR3_precache()
 	}
 }
 
-public WAR3_chooserace(id){
+public WAR3_chooserace(id)
+{
 
-	new iTeam = get_user_team( id );
-#if MOD == 0
-	if( iTeam == CTS || iTeam == TS )
-#endif
-#if MOD == 1
-	if( iTeam == ALLIES || iTeam == AXIS )
-#endif
+	if ( SHARED_IsOnTeam( id ) )
 	{
-		if( get_pcvar_num( CVAR_wc3_save_xp ) )
+		// We need the amount of XP to display to the select race screen
+		new iXP[MAX_RACES] = {0};
+
+		// Get the XP if we're saving XP
+		if ( get_pcvar_num( CVAR_wc3_save_xp ) )
 		{
-			XP_Get( id );
+			XP_Get( id, iXP );
 		}
-		else
-		{
-			menu_Select_Race( id, {0,0,0,0,0,0,0,0,0} )
-		}
+
+		menu_Select_Race( id, iXP );
+
 	}
 
 }
@@ -1205,10 +1203,21 @@ public _WC3_CheckModules()
 		// Enable SQL Module - I'm pretty sure we can safely enable this, since in theory no other plugins need mysql (DBI isn't running after all)
 		else if ( equal( szNotLoadedModules[i], "dbi" ) )
 		{
-			// Make sure the module exists - only need to check this one since we check the others in WC3_MissingModules
+			// Make sure the module exists - only need to check this since we didn't in WC3_MissingModules
 			if ( WC3_ModuleExists( "sqlite_amxx" ) )
 			{
 				WC3_EnableModule( "sqlite_amxx" );
+				bReloadMap = true;
+			}
+		}
+		
+		// Enable nvault module
+		else if ( equal( szNotLoadedModules[i], "nvault" ) )
+		{
+			// Make sure the module exists - only need to check this since we didn't in WC3_MissingModules
+			if ( WC3_ModuleExists( "nvault_amxx" ) )
+			{
+				WC3_EnableModule( "nvault_amxx" );
 				bReloadMap = true;
 			}
 		}

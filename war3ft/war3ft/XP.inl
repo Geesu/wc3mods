@@ -256,73 +256,6 @@ stock XP_Set_Multiplier()
 	return PLUGIN_CONTINUE;
 }
 
-public XP_Save(id){
-	
-	if ( !warcraft3 )
-	{
-		return PLUGIN_CONTINUE;
-	}
-
-	if ( p_data[id][P_RACE] == 0 || is_user_bot(id) || !get_pcvar_num( CVAR_wc3_save_xp ) || p_data[id][P_XP] == 0 )
-	{
-		return PLUGIN_CONTINUE;
-	}
-	
-	// If we're saving by STEAM_ID, lets make sure the user has a steam ID
-	new szPlayerID[33];
-	get_user_authid(id, szPlayerID, 31);
-	if( get_pcvar_float( CVAR_wc3_save_by) == 0 && equal(szPlayerID, "STEAM_ID_PENDING") )
-	{
-		return PLUGIN_CONTINUE;
-	}
-
-	new szPlayerIP[20], szPlayerName[66];
-	get_user_name(id, szPlayerName, 32);
-	get_user_ip(id, szPlayerIP, 19);
-
-	// Save to the database
-	if ( get_pcvar_num( CVAR_wc3_save_xp_sql ) )
-	{
-		// Verify we have a database connection
-		if ( !XP_Check_Connection() )
-		{
-			return PLUGIN_CONTINUE;
-		}
-
-		// Prepare name for the query (playername is 66 in case all 33 characters are ')
-		XP_AddSlashes( szPlayerName, 65 );
-			
-		// Save the data
-		new szQuery[512];
-		format(szQuery, 511, "REPLACE INTO `%s` (`playerid`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', %d, %d, %d, %d, %d, %d)", g_DBTableName, (get_pcvar_float( CVAR_wc3_save_by)==2) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==1) ? szPlayerIP : szPlayerID), szPlayerName, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE]);
-
- 		new Result:res = dbi_query(sql, szQuery);
-		
-		// Verify we have a result
-		if (res < RESULT_NONE)
-		{
-			client_print(id, print_chat, "%s An error has occurred when saving your race information, please contact a server administrator", g_MODclient);
-			XP_DBI_Error( res, szQuery, 3 );
-			return PLUGIN_CONTINUE;
-		} 	
-	}
-	// Otherwise lets save to the vault
-	else
-	{		
-		new szKey[128], szData[512];
-		
-		// Format the data for entry
-		format( szData, 511, "%s %d %d %d %d %d %d %s %d %s", szPlayerID, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE], szPlayerIP, get_systime(), szPlayerName );
-		
-		// Format the vault key
-		format( szKey, 127, "%s_%d", (get_pcvar_float( CVAR_wc3_save_by)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE] );
-		
-		// Save the data
-		set_vaultdata(szKey, szData);
-	}
-
-	return PLUGIN_CONTINUE
-}
 
 // Function will get data about a player's current race, and set it to whats in the DB/vault
 public XP_Set_Race_Data( id )
@@ -356,7 +289,7 @@ public XP_Set_Race_Data( id )
 		}
 
 		// Prepare name for the query
-		XP_AddSlashes( szPlayerName, 65 );
+		DB_FormatString( szPlayerName, 65 );
 
 		new szQuery[256];
 		format( szQuery, 255, "SELECT `xp`, `skill1`, `skill2`, `skill3`, `skill4` FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", g_DBTableName, (get_pcvar_float( CVAR_wc3_save_by)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE])
@@ -440,252 +373,9 @@ public XP_Set_Race_Data( id )
 	return PLUGIN_CONTINUE;
 }
 
-// Function will retreive the XP for a user's race and call the changerace menu function
-public XP_Get( id )
-{
-
-	if ( !warcraft3 )
-		return PLUGIN_CONTINUE;
-
-	if ( !get_pcvar_num( CVAR_wc3_save_xp ) || !id )
-		return PLUGIN_CONTINUE;
-
-	// If we're saving by STEAM_ID, lets make sure the user has a steam ID
-	new szPlayerID[33];
-	get_user_authid(id, szPlayerID, 31);
-	if( get_pcvar_float( CVAR_wc3_save_by) == SAVE_STEAMID && equal(szPlayerID, "STEAM_ID_PENDING") )
-	{
-		client_print(id, print_chat, "%s Unable to retreive race information, you have no STEAM ID, please rejoin the server.", g_MODclient);
-		return PLUGIN_CONTINUE;
-	}
-	
-	new szPlayerIP[20], szPlayerName[66];
-	new iRaceXP[9]= {0,0,0,0,0,0,0,0,0};
-	get_user_name(id, szPlayerName, 32);
-	get_user_ip(id, szPlayerIP, 19);
-
-	// Retreive data via SQL
-	if ( get_pcvar_num( CVAR_wc3_save_xp_sql ) )
-	{
-		// Make sure we have a valid SQL Connection
-		if ( !XP_Check_Connection() )
-		{
-			return PLUGIN_CONTINUE;
-		}
-
-		// Prepare name for the query
-		XP_AddSlashes( szPlayerName, 65 );
-	
-		new szQuery[256];
-		format(szQuery, 255, "SELECT `xp`, `race` FROM `%s` WHERE (`playerid` = '%s')", g_DBTableName, (get_pcvar_float( CVAR_wc3_save_by)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==SAVE_IP) ? szPlayerIP : szPlayerID));
- 		
-		new Result:res = dbi_query(sql, szQuery);
-		
-		// Make sure we have a result
-		if (res < RESULT_NONE)
-		{
-			client_print(id, print_chat, "%s An error has occurred when retreiving your race information, please contact a server administrator", g_MODclient);
-			XP_DBI_Error( res, szQuery, 0 );
-			return PLUGIN_CONTINUE;
-		}
-
-		// Loop through all of the records
-		new szXP[8], szRace[2], iXP, iRace;
-		while ( res && dbi_nextrow(res) > 0 )
-		{
-			dbi_result(res, "xp", szXP, 7);
-			dbi_result(res, "race", szRace, 1);
-
-			iXP = str_to_num( szXP );
-			iRace = str_to_num( szRace );
-			
-			// Save the user's XP in an array
-			if ( iRace > 0 && iRace < 10)
-			{
-				iRaceXP[iRace-1] = iXP;
-			}
-		}
-		
-		// Free the result set
-		dbi_free_result(res); 
-	}
-	// Retrieve data via the vault
-	else
-	{
-		new iRace, iXP, iAttempt, szKey[128], szXP[8], szData[256];
-		for( iRace = 1; iRace < 10; iRace++ )
-		{
-			format( szKey, 127, "%s_%d", (get_pcvar_float( CVAR_wc3_save_by)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==SAVE_IP) ? szPlayerIP : szPlayerID), iRace );
-
-			iAttempt = get_vaultdata( szKey, szData, 255 );
-			
-			// Only want to check if a key was found
-			if ( iAttempt )
-			{
-				format( szXP, 7, "" );
-
-				// Parse the vault data
-				parse( szData, szPlayerID, 31, szXP, 7 );
-				
-				iXP = str_to_num( szXP );
-				
-				// Save the user's XP in an array
-				if ( iRace > 0 && iRace < 10 )
-				{
-					iRaceXP[iRace-1] = iXP;
-				}
-			}
-		}
-	}
-
-	// We don't want to replace the player's current XP with whats in the database now do we ?
-	if ( p_data[id][P_RACE] )
-	{
-		iRaceXP[p_data[id][P_RACE]-1] = p_data[id][P_XP];
-	}
-
-	// Display the menu to the user
-	menu_Select_Race(id, iRaceXP);
-
-	return PLUGIN_CONTINUE;
-}
 
 public XP_Set_DBI(){
 	
-	// Check the DBI loaded variable
-	if ( !g_DBILoaded )
-	{
-		// Fall back to vault
-		set_pcvar_num( CVAR_wc3_save_xp_sql, 0 );
-	}
-
-	// Try to open a database connection
-	if ( get_pcvar_num( CVAR_wc3_save_xp_sql ) )
-	{
-		// We have an attempt, lets increment our counter
-		iSQLAttempts++;
-		
-		// Verify the type of DBI module that is loaded is supported
-		dbi_type(SQLtype, 15);
-		if (equali(SQLtype, g_MySQL))
-		{
-			iSQLtype = SQL_MYSQL;
-			copy(SQLtype, strlen(g_MySQL)+1, g_MySQL);
-		}
-		else if (equali(SQLtype, g_SQLite))
-		{
-			iSQLtype = SQL_SQLITE;
-			copy(SQLtype, strlen(g_SQLite)+1, g_SQLite);
-		}
-		else
-		{
-			iSQLtype = SQL_NONE;
-			log_amx("Unsupported database type found (%s), the supported databases are %s or %s", SQLtype, g_MySQL, g_SQLite);
-			return PLUGIN_CONTINUE;
-		}
-
-		// Determine the database information
-		new szHost[64], szUser[32], szPass[32], szDB[128], szError[256];
-		get_pcvar_string( CVAR_wc3_sql_dbhost, szHost, 63);
-		get_pcvar_string( CVAR_wc3_sql_dbuser, szUser, 31);
-		get_pcvar_string( CVAR_wc3_sql_dbpass, szPass, 31);
-		get_pcvar_string( CVAR_wc3_sql_dbname, szDB, 127);
-		
-		// Set a default DB if it's SQLite and the user didn't supply one
-		if ( iSQLtype == SQL_SQLITE && strlen(szDB) < 1 )
-		{
-			copy( szDB, 127, "addons/amxmodx/data/war3ft.db" );
-		}
-
-		// Attempt the Connection
-		sql = dbi_connect(szHost, szUser, szPass, szDB, szError, 255);
-		
-		// Verify our database connection has worked
-		if ( !XP_Check_Connection() )
-		{
-			log_amx( "Error: %s", szError );
-			return PLUGIN_CONTINUE;
-		}
-		log_amx( "Connection to %s database successful", SQLtype );
-
-
-		// Get the table name
-		get_pcvar_string( CVAR_wc3_sql_tbname, g_DBTableName, 63);
-
-		// Format the create table statement
-		new szQuery[512];
-		if ( iSQLtype == SQL_MYSQL )
-		{
-			format( szQuery, 511, "CREATE TABLE IF NOT EXISTS `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL, PRIMARY KEY (`playerid`, `race`))", g_DBTableName );
-		}
-		else if ( iSQLtype == SQL_SQLITE )
-		{
-			format( szQuery, 511, "CREATE TABLE `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`playerid`, `race`))", g_DBTableName );
-		}
-
-		// Execute our CREATE TABLE statement if it's MySQL or the SQL LITE table doesn't exist
-		if ( iSQLtype != SQL_SQLITE || !sqlite_table_exists(sql, g_DBTableName) )
-		{
-			new Result:ret = dbi_query(sql, szQuery)
-
-			if ( ret < RESULT_NONE )
-			{
-				XP_DBI_Error( ret, szQuery, 2 );
-				return PLUGIN_CONTINUE;
-			}
-		}
-
-		/*
-			These probably should be subject to a CVAR
-			Lets fine tune the database:
-				"synchronous = NORMAL"	- Put back the 2.x behaviour (faster than the defalt
-							  for 3.x)
-				"synchronous = OFF"	- Way faster, but it might get corrupted data if a
-							  server os system crash occurs
-				"integrity_check"	- well it's what it says, we do have to check the
-							  value it returns since it's important
-			PRAGMA commands don't return anything so no need to check the result of the query
-		*/	
-		if ( iSQLtype == SQL_SQLITE ) 
-		{
-			new szIntegrityCheck[64];
-			format(szQuery, 511, "PRAGMA integrity_check");
-			new Result:res = dbi_query(sql, szQuery);
-			
-			// Check for an error
-			if ( res < RESULT_NONE )
-			{
-				XP_DBI_Error( res, szQuery, 2 );
-				return PLUGIN_CONTINUE;
-			}
-			
-			// Get the integrity check value
-			while ( res && dbi_nextrow(res) > 0 )
-			{
-				dbi_result(res, "integrity_check", szIntegrityCheck, 63);
-			}
-
-			// Free the result
-			dbi_free_result(res);
-
-			// Check to make sure the integrity check passed
-			if ( !equali(szIntegrityCheck, "ok") )
-			{
-				// Should we disable saving here?
-				log_amx("SQL Lite integrity check failed");
-				return PLUGIN_CONTINUE;
-			}
-				
-			// Do some synchronous crap
-			format(szQuery, 511, "PRAGMA synchronous = %d", SQLITE_SYNC_OFF);
-			dbi_query(sql, szQuery);
-		}
-	}
-	// Tell the vault what version is running (we need this for the vault conversion)
-	else
-	{
-		set_vaultdata( "war3ft_version", WC3VERSION );
-	}
 
 	return PLUGIN_CONTINUE;
 }
@@ -704,7 +394,7 @@ public XP_Reset(id)
 	p_data[id][P_SKILL3]	= 0;
 	p_data[id][P_ULTIMATE]	= 0;
 
-	XP_Save(id);
+	DB_SaveXP(id);
 
 	WAR3_Display_Level(id, DISPLAYLEVEL_NONE);
 
@@ -821,13 +511,13 @@ public XP_Prune()
 		{
 			new query[256];
 
-			if ( iSQLtype == SQL_MYSQL )
+			if ( g_DBType == DB_MYSQL )
 			{
 				// Timestamp format: 20030912122142
 				// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42	
 				format( query, 255, "DELETE FROM `%s` WHERE DATE_SUB(CURDATE(),INTERVAL %d DAY) > time;", g_DBTableName, get_pcvar_num( CVAR_wc3_days_before_delete ) );
 			}
-			else if ( iSQLtype == SQL_SQLITE )
+			else if ( g_DBType == DB_SQLITE )
 			{
 				// Timestamp format: 2003-09-12 12:21:42
 				// Y = 2003 M = 09 D = 12 H = 12 M = 21 S = 42
@@ -837,7 +527,7 @@ public XP_Prune()
 			dbi_query(sql, query);
 
 			// Vacuum the SQL LITE DB Table
-			if (iSQLtype == SQL_SQLITE)
+			if ( g_DBType == DB_SQLITE )
 			{
 				format( query, 255, "VACUUM `%s`", g_DBTableName );
 
@@ -858,7 +548,7 @@ public XP_CloseDB()
 		if( sql )
 		{
 			dbi_close( sql );
-			log_amx( "%s database connection closed", SQLtype );
+			log_amx( "%s database connection closed", g_szDBType );
 		}
 	}
 }
@@ -893,32 +583,7 @@ public XP_Save_All()
 public XP_Save_Helper( parm[1] )
 {
 
-	XP_Save( parm[0] );
-}
-
-// The id should be a unique number, so we know what function called it (useful for debugging)
-public XP_DBI_Error( Result:res, query[], id )
-{
-
-	// Get the error message and log it
-	new szError[255];
-	new iError = dbi_error(sql, szError, 254);
-	log_amx("Error in querying database, location: %d", id);
-	log_amx("Message: %s (%d)", szError, iError);
-	log_amx("Query statement: %s ", query);
-
-	// Free the result
-	if ( res > RESULT_FAILED )
-	{
-		dbi_free_result(res);
-	}
-}
-
-// Prepares text for database insertion
-public XP_AddSlashes( text[], len )
-{
-
-	replace_all( text, len, "'", "\'" );
+	DB_SaveXP( parm[0] );
 }
 
 // Verifies that the database connection is ok
@@ -937,7 +602,7 @@ public XP_Check_Connection()
 			set_pcvar_num( CVAR_wc3_save_xp, 0 )
 			set_pcvar_num( CVAR_wc3_save_xp_sql, 0 )
 
-			log_amx("Unable to connect to the %s database after %d attempts, switching to short-term mode", SQLtype, iSQLAttempts)
+			log_amx("Unable to connect to the %s database after %d attempts, switching to short-term mode", g_szDBType, iSQLAttempts)
 		}
 
 		return false;

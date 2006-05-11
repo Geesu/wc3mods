@@ -413,7 +413,7 @@ public _menu_Select_Race(id,key){
 	}
 
 	// Save the current race data before we change
-	XP_Save(id);
+	DB_SaveXP(id);
 
 	new race, autoselectkey
 
