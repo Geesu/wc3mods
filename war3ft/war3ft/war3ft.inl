@@ -163,7 +163,7 @@ public WAR3_chooserace(id)
 		// Get the XP if we're saving XP
 		if ( get_pcvar_num( CVAR_wc3_save_xp ) )
 		{
-			XP_Get( id, iXP );
+			DB_GetAllXP( id, iXP );
 		}
 
 		menu_Select_Race( id, iXP );
@@ -635,10 +635,10 @@ public WAR3_set_race(id,race){
 	new parm[1]
 	parm[0]=id
 
-	if (get_pcvar_num( CVAR_wc3_save_xp )){
-		p_data[id][P_XP] = 0
+	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
+	{
 		p_data[id][P_LEVEL] = 0
-		XP_Set_Race_Data( id );
+		DB_SetDataForRace( id );
 	}
 
 	Skill_Check(id)
@@ -1023,10 +1023,10 @@ public WC3_Init()
 	lang_SetMenus()
 
 	// Configure the database connection
-	XP_Set_DBI()
+	set_task( 1.0, "DB_Init", TASK_SETSQL );
 
 	// Configure the XP based on level
-	XP_Set()
+	XP_Configure()
 
 	// Set which string should be displayed with messages (war3ft or war3)
 	if ( get_pcvar_num( CVAR_wc3_races ) < 5 )

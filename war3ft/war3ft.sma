@@ -52,7 +52,7 @@ new const WC3DATE[] =		__DATE__
 #pragma library csx
 
 // Compiling Options
-#define MOD						1				// 0 = cstrike or czero, 1 = dod
+#define MOD						0				// 0 = cstrike or czero, 1 = dod
 #define ADVANCED_STATS			1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define SHOW_SPECTATE_INFO		1				// Show spectating information on users
 
@@ -228,9 +228,9 @@ public plugin_end()
 		return;
 	}
 	
-	XP_Save_All();
-	XP_Prune();
-	XP_CloseDB();
+	XP_SaveAll();
+	DB_Prune();
+	DB_Close();
 
 	return;
 }
@@ -255,11 +255,6 @@ public client_putinserver( id )
 	if ( equal(szPlayerID, "STEAM_ID_PENDING") )
 	{
 		client_cmd(id, "reconnect");
-	}
-	// Update all XP records to the current timestamp
-	else
-	{
-		XP_Prune_Player(id);
 	}
 
 	p_data_b[id][PB_ISCONNECTED] = true;

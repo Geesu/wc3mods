@@ -833,7 +833,7 @@ public on_GameRestart(){
 		return PLUGIN_CONTINUE;
 	}
 
-	XP_Save_All()
+	XP_SaveAll()
 
 	g_GameRestarting = true;
 

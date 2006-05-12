@@ -74,7 +74,7 @@ public on_EndRound(){
 	// Save XP at the end of the round?
 	if ( get_pcvar_num( CVAR_wc3_save_xp ) && get_pcvar_num( CVAR_wc3_save_end_round ) )
 	{
-		XP_Save_All();
+		XP_SaveAll();
 	}
 	
 	return PLUGIN_CONTINUE

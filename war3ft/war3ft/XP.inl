@@ -1,11 +1,11 @@
-/***********************************************************************
-		XP FUNCTIONS (idea from war3x)
-***********************************************************************/
+/*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
+*	XP Functions
+´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
-stock XP_give(id, iXP)
+XP_give(id, iXP)
 {
 
-	if ( !warcraft3 || id == 0 )
+	if ( !WAR3_Check() || !id )
 	{
 		return 0;
 	}
@@ -23,13 +23,8 @@ stock XP_give(id, iXP)
 	return iXP;
 }
 
-stock XP_onDeath(victim_id, killer_id, weapon, headshot)
+XP_onDeath( victim_id, killer_id, weapon, headshot )
 {
-
-	if ( !warcraft3 )
-	{
-		return PLUGIN_CONTINUE;
-	}
 
 	// Assuming we have a victim, a killer, and the victim is not the killer
 	if ( killer_id && killer_id != victim_id && victim_id )
@@ -37,99 +32,128 @@ stock XP_onDeath(victim_id, killer_id, weapon, headshot)
 		new iXP, iXPAwarded;
 
 		// Attacker killed a teammate
-		if ( get_user_team(killer_id) == get_user_team(victim_id) )
+		if ( get_user_team( killer_id ) == get_user_team( victim_id ) )
 		{
 			iXP = -1 * xpgiven[p_data[killer_id][P_LEVEL]];
-			iXPAwarded = XP_give(killer_id, iXP);
-			if (get_pcvar_num( CVAR_wc3_show_kill_obj ))
+			iXPAwarded = XP_give( killer_id, iXP );
+
+			if ( get_pcvar_num( CVAR_wc3_show_kill_obj ) )
 			{
-				client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_TEAMMATE", iXPAwarded);
+				client_print( killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_TEAMMATE", iXPAwarded );
 			}
 		}
-		else{
-			if ( !get_pcvar_num( CVAR_wc3_xp_weap_multiplier ))
+
+		// User didn't kill a teammate, so we can give some XP
+		else
+		{
+			// We have no weapon multiplier - same XP awarded for each weapon
+			if ( !get_pcvar_num( CVAR_wc3_xp_weap_multiplier ) )
 			{
 				iXP = xpgiven[p_data[victim_id][P_LEVEL]];
-				iXPAwarded = XP_give(killer_id, iXP);
-				if (get_pcvar_num( CVAR_wc3_show_kill_obj ))
+				iXPAwarded = XP_give( killer_id, iXP );
+
+				if ( get_pcvar_num( CVAR_wc3_show_kill_obj ) )
 				{			
 					new szVictimName[32];
-					get_user_name(victim_id, szVictimName, 31);
+					get_user_name( victim_id, szVictimName, 31 );
 
-					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING", iXPAwarded, szVictimName);
+					client_print( killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING", iXPAwarded, szVictimName );
 				}
 			}
+
+			// Give bonus XP based on the weapon used
 			else
 			{
-				iXP = floatround(xpgiven[p_data[victim_id][P_LEVEL]] * weaponxpmultiplier[weapon]);
-				iXPAwarded = XP_give(killer_id, iXP);
-				if (get_pcvar_num( CVAR_wc3_show_kill_obj ))
-				{
-					new szVictimName[32];
-					get_user_name(victim_id, szVictimName, 31);
-
-					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING", iXPAwarded, szVictimName);
-				}
-			}
-			// Award XP for getting a headshot
-			if( headshot )
-			{
-				iXP = get_pcvar_num(CVAR_wc3_headshot);
-				iXPAwarded = XP_give(killer_id, iXP);
+				iXP = floatround( xpgiven[p_data[victim_id][P_LEVEL]] * weaponxpmultiplier[weapon] );
+				iXPAwarded = XP_give( killer_id, iXP );
+				
+				// Display a message to the user
 				if ( get_pcvar_num( CVAR_wc3_show_kill_obj ) )
 				{
-					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_HEADSHOT", iXPAwarded);		
-				}
-			}
-		#if MOD == 0
-			// Award XP for killing the hostage saver
-			if ( victim_id == g_hostageSaver )
-			{
-				iXP = get_pcvar_num( CVAR_wc3_kill_rescuer );
-				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( CVAR_wc3_show_objectives ) )
-				{	
-					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_HOSTAGE_R", iXPAwarded);
-				}
-			}
-			// Award XP for killing the bomb defuser
-			else if ( victim_id == g_bombDefuser )
-			{						
-				iXP = get_pcvar_num( CVAR_wc3_kill_defuser );
-				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( CVAR_wc3_show_objectives ) )
-				{				
-					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_BOMB_D", iXPAwarded);
-				}	
-			}
-			// Award XP for killing the bomb carrier
-			else if ( victim_id == g_bombCarrier )
-			{						
-				iXP = get_pcvar_num( CVAR_wc3_kill_bomb_carrier );
-				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( CVAR_wc3_show_objectives ) )
-				{
-					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_BOMB_C", iXPAwarded);
-				}
-			}
-			// Award XP for killing the VIP
-			else if ( victim_id==g_vipID )
-			{
-				iXP = get_pcvar_num( CVAR_wc3_kill_vip );
-				iXPAwarded = XP_give(killer_id, iXP);
-				if ( get_pcvar_num( CVAR_wc3_show_objectives ) )
-				{
-					client_print(killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARD_FOR_KILLING_VIP", iXPAwarded);
-				}
-			}
-		#endif
-		}
-	}
+					new szVictimName[32];
+					get_user_name( victim_id, szVictimName, 31 );
 
-	return PLUGIN_CONTINUE
+					client_print( killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING", iXPAwarded, szVictimName );
+				}
+			}
+
+			// Bonus XP for getting a headshot
+			if ( headshot )
+			{
+				iXP = get_pcvar_num( CVAR_wc3_headshot );
+				iXPAwarded = XP_give( killer_id, iXP );
+				
+				// Display a message to the user
+				if ( get_pcvar_num( CVAR_wc3_show_kill_obj ) )
+				{
+					client_print( killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_HEADSHOT", iXPAwarded );		
+				}
+			}
+
+			// Counter-Strike and Condition Zero specific awards
+
+			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+			{
+
+				// Award XP for killing the hostage saver
+				if ( victim_id == g_hostageSaver )
+				{
+					iXP = get_pcvar_num( CVAR_wc3_kill_rescuer );
+					iXPAwarded = XP_give( killer_id, iXP );
+
+					// Display a message to the user
+					if ( get_pcvar_num( CVAR_wc3_show_objectives ) )
+					{	
+						client_print( killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_HOSTAGE_R", iXPAwarded );
+					}
+				}
+
+				// Award XP for killing the bomb defuser
+				else if ( victim_id == g_bombDefuser )
+				{						
+					iXP = get_pcvar_num( CVAR_wc3_kill_defuser );
+					iXPAwarded = XP_give( killer_id, iXP );
+
+					// Display a message to the user
+					if ( get_pcvar_num( CVAR_wc3_show_objectives ) )
+					{				
+						client_print( killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_BOMB_D", iXPAwarded );
+					}	
+				}
+
+				// Award XP for killing the bomb carrier
+				else if ( victim_id == g_bombCarrier )
+				{						
+					iXP = get_pcvar_num( CVAR_wc3_kill_bomb_carrier );
+					iXPAwarded = XP_give( killer_id, iXP );
+
+					// Display a message to the user
+					if ( get_pcvar_num( CVAR_wc3_show_objectives ) )
+					{
+						client_print( killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARDED_FOR_KILLING_BOMB_C", iXPAwarded );
+					}
+				}
+
+				// Award XP for killing the VIP
+				else if ( victim_id == g_vipID )
+				{
+					iXP = get_pcvar_num( CVAR_wc3_kill_vip );
+					iXPAwarded = XP_give( killer_id, iXP );
+
+					// Display a message to the user
+					if ( get_pcvar_num( CVAR_wc3_show_objectives ) )
+					{
+						client_print( killer_id, print_chat, "%s %L", g_MODclient, killer_id, "AWARD_FOR_KILLING_VIP", iXPAwarded );
+					}
+				}
+			}// end cstrike/czero check
+		}// user didn't kill teammate
+	}// valid killer/victim
+
+	return;
 }
 
-stock XP_Set()
+XP_Configure()
 {
 
 	// If we're saving XP, we want to set the max. amount of XP higher and the amount gained per kill/objective lower
@@ -140,111 +164,105 @@ stock XP_Set()
 	}
 
 	// Set the XP multiplier
-	for( new i=0; i<11; i++ )
+	for ( new i = 0; i < 11; i++ )
 	{
-		xplevel[i] = floatround(xplevel[i] * get_pcvar_float( CVAR_wc3_xp_multiplier ));
+		xplevel[i] = floatround( xplevel[i] * get_pcvar_float( CVAR_wc3_xp_multiplier ) );
 	}
 
-	XP_Set_Multiplier();
-}
+	// Configure based on weapon multiplier
 
-stock XP_Set_Multiplier()
-{
-
-	if ( get_pcvar_num( CVAR_wc3_xp_weap_multiplier ) )
+	// Counter-Strike and Condition Zero weapons
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		return PLUGIN_CONTINUE;
+		weaponxpmultiplier[CSW_USP]				= 2.5;
+		weaponxpmultiplier[CSW_DEAGLE]			= 2.5;
+		weaponxpmultiplier[CSW_GLOCK18]			= 2.5;
+		weaponxpmultiplier[CSW_ELITE]			= 3.5;
+		weaponxpmultiplier[CSW_P228]			= 2.5;
+		weaponxpmultiplier[CSW_FIVESEVEN]		= 2.5;
+
+		weaponxpmultiplier[CSW_XM1014]			= 1.25;
+		weaponxpmultiplier[CSW_M3]				= 1.5;
+
+		weaponxpmultiplier[CSW_MP5NAVY]			= 1.0;
+		weaponxpmultiplier[CSW_UMP45]			= 1.25;
+		weaponxpmultiplier[CSW_P90]				= 1.25;
+		weaponxpmultiplier[CSW_TMP]				= 1.5;
+		weaponxpmultiplier[CSW_MAC10]			= 1.5;
+		weaponxpmultiplier[CSW_GALIL]			= 1.15;
+		weaponxpmultiplier[CSW_FAMAS]			= 1.15;
+
+		weaponxpmultiplier[CSW_AWP]				= 1.0;
+		weaponxpmultiplier[CSW_M4A1]			= 1.0;
+		weaponxpmultiplier[CSW_AK47]			= 1.0;
+		weaponxpmultiplier[CSW_AUG]				= 1.0;
+		weaponxpmultiplier[CSW_SG552]			= 1.0;
+		weaponxpmultiplier[CSW_G3SG1]			= 1.0;
+		weaponxpmultiplier[CSW_SG550]			= 1.0;
+		weaponxpmultiplier[CSW_M249]			= 1.25;
+		weaponxpmultiplier[CSW_SCOUT]			= 3.0;
+
+		weaponxpmultiplier[CSW_HEGRENADE]		= 1.75;
+		weaponxpmultiplier[CSW_KNIFE]			= 6.0;
+
+		weaponxpmultiplier[CSW_C4]				= 2.0;
+		weaponxpmultiplier[CSW_SMOKEGRENADE]	= 1.0;
+		weaponxpmultiplier[CSW_FLASHBANG]		= 1.0;
+	}
+
+	// Day of Defeat weapons
+	else if ( g_MOD == GAME_DOD )
+	{
+		weaponxpmultiplier[DODW_AMERKNIFE		] = 6.0;
+		weaponxpmultiplier[DODW_GERKNIFE		] = 6.0;
+		weaponxpmultiplier[DODW_BRITKNIFE		] = 6.0;
+		weaponxpmultiplier[DODW_GARAND_BUTT		] = 6.0;
+
+		weaponxpmultiplier[DODW_HANDGRENADE		] = 1.75;
+		weaponxpmultiplier[DODW_STICKGRENADE	] = 1.75;
+		weaponxpmultiplier[DODW_STICKGRENADE_EX	] = 1.75;
+		weaponxpmultiplier[DODW_HANDGRENADE_EX	] = 1.75;
+
+		weaponxpmultiplier[DODW_COLT			] = 1.0;
+		weaponxpmultiplier[DODW_LUGER			] = 1.0;
+		weaponxpmultiplier[DODW_GARAND			] = 1.0;
+		weaponxpmultiplier[DODW_SCOPED_KAR		] = 1.0;
+		weaponxpmultiplier[DODW_THOMPSON		] = 1.0;
+		weaponxpmultiplier[DODW_STG44			] = 1.0;
+		weaponxpmultiplier[DODW_SPRINGFIELD		] = 1.0;
+		weaponxpmultiplier[DODW_KAR				] = 1.0;
+		weaponxpmultiplier[DODW_BAR				] = 1.0;
+		weaponxpmultiplier[DODW_MP40			] = 1.0;
+		weaponxpmultiplier[DODW_MG42			] = 1.0;
+		weaponxpmultiplier[DODW_30_CAL			] = 1.0;
+		weaponxpmultiplier[DODW_SPADE			] = 1.0;
+		weaponxpmultiplier[DODW_M1_CARBINE		] = 1.0;
+		weaponxpmultiplier[DODW_MG34			] = 1.0;
+		weaponxpmultiplier[DODW_GREASEGUN		] = 1.0;
+		weaponxpmultiplier[DODW_FG42			] = 1.0;
+		weaponxpmultiplier[DODW_K43				] = 1.0;
+		weaponxpmultiplier[DODW_ENFIELD			] = 1.0;
+		weaponxpmultiplier[DODW_STEN			] = 1.0;
+		weaponxpmultiplier[DODW_BREN			] = 1.0;
+		weaponxpmultiplier[DODW_WEBLEY			] = 1.0;
+		weaponxpmultiplier[DODW_BAZOOKA			] = 1.0;
+		weaponxpmultiplier[DODW_PANZERSCHRECK	] = 1.0;
+		weaponxpmultiplier[DODW_PIAT			] = 1.0;
+		weaponxpmultiplier[DODW_SCOPED_FG42		] = 1.0;
+		weaponxpmultiplier[DODW_FOLDING_CARBINE	] = 1.0;
+		weaponxpmultiplier[DODW_KAR_BAYONET		] = 1.0;
+		weaponxpmultiplier[DODW_SCOPED_ENFIELD	] = 1.0;
+		weaponxpmultiplier[DODW_MILLS_BOMB		] = 1.0;
+		weaponxpmultiplier[DODW_ENFIELD_BAYONET	] = 1.0;
+		weaponxpmultiplier[DODW_MORTAR			] = 1.0;
+		weaponxpmultiplier[DODW_K43_BUTT		] = 1.0;
 	}
 
 	weaponxpmultiplier[CSW_WORLDSPAWN]		= 0.0;
-
-#if MOD == 0
-	weaponxpmultiplier[CSW_USP]				= 2.5;
-	weaponxpmultiplier[CSW_DEAGLE]			= 2.5;
-	weaponxpmultiplier[CSW_GLOCK18]			= 2.5;
-	weaponxpmultiplier[CSW_ELITE]			= 3.5;
-	weaponxpmultiplier[CSW_P228]			= 2.5;
-	weaponxpmultiplier[CSW_FIVESEVEN]		= 2.5;
-
-	weaponxpmultiplier[CSW_XM1014]			= 1.25;
-	weaponxpmultiplier[CSW_M3]				= 1.5;
-
-	weaponxpmultiplier[CSW_MP5NAVY]			= 1.0;
-	weaponxpmultiplier[CSW_UMP45]			= 1.25;
-	weaponxpmultiplier[CSW_P90]				= 1.25;
-	weaponxpmultiplier[CSW_TMP]				= 1.5;
-	weaponxpmultiplier[CSW_MAC10]			= 1.5;
-	weaponxpmultiplier[CSW_GALIL]			= 1.15;
-	weaponxpmultiplier[CSW_FAMAS]			= 1.15;
-
-	weaponxpmultiplier[CSW_AWP]				= 1.0;
-	weaponxpmultiplier[CSW_M4A1]			= 1.0;
-	weaponxpmultiplier[CSW_AK47]			= 1.0;
-	weaponxpmultiplier[CSW_AUG]				= 1.0;
-	weaponxpmultiplier[CSW_SG552]			= 1.0;
-	weaponxpmultiplier[CSW_G3SG1]			= 1.0;
-	weaponxpmultiplier[CSW_SG550]			= 1.0;
-	weaponxpmultiplier[CSW_M249]			= 1.25;
-	weaponxpmultiplier[CSW_SCOUT]			= 3.0;
-
-	weaponxpmultiplier[CSW_HEGRENADE]		= 1.75;
-	weaponxpmultiplier[CSW_KNIFE]			= 6.0;
-
-	weaponxpmultiplier[CSW_C4]				= 2.0;
-	weaponxpmultiplier[CSW_SMOKEGRENADE]	= 1.0;
-	weaponxpmultiplier[CSW_FLASHBANG]		= 1.0;
-#endif
-#if MOD == 1
-	weaponxpmultiplier[DODW_AMERKNIFE		] = 6.0;
-	weaponxpmultiplier[DODW_GERKNIFE		] = 6.0;
-	weaponxpmultiplier[DODW_BRITKNIFE		] = 6.0;
-	weaponxpmultiplier[DODW_GARAND_BUTT		] = 6.0;
-
-	weaponxpmultiplier[DODW_HANDGRENADE		] = 1.75;
-	weaponxpmultiplier[DODW_STICKGRENADE	] = 1.75;
-	weaponxpmultiplier[DODW_STICKGRENADE_EX	] = 1.75;
-	weaponxpmultiplier[DODW_HANDGRENADE_EX	] = 1.75;
-
-	weaponxpmultiplier[DODW_COLT			] = 1.0;
-	weaponxpmultiplier[DODW_LUGER			] = 1.0;
-	weaponxpmultiplier[DODW_GARAND			] = 1.0;
-	weaponxpmultiplier[DODW_SCOPED_KAR		] = 1.0;
-	weaponxpmultiplier[DODW_THOMPSON		] = 1.0;
-	weaponxpmultiplier[DODW_STG44			] = 1.0;
-	weaponxpmultiplier[DODW_SPRINGFIELD		] = 1.0;
-	weaponxpmultiplier[DODW_KAR				] = 1.0;
-	weaponxpmultiplier[DODW_BAR				] = 1.0;
-	weaponxpmultiplier[DODW_MP40			] = 1.0;
-	weaponxpmultiplier[DODW_MG42			] = 1.0;
-	weaponxpmultiplier[DODW_30_CAL			] = 1.0;
-	weaponxpmultiplier[DODW_SPADE			] = 1.0;
-	weaponxpmultiplier[DODW_M1_CARBINE		] = 1.0;
-	weaponxpmultiplier[DODW_MG34			] = 1.0;
-	weaponxpmultiplier[DODW_GREASEGUN		] = 1.0;
-	weaponxpmultiplier[DODW_FG42			] = 1.0;
-	weaponxpmultiplier[DODW_K43				] = 1.0;
-	weaponxpmultiplier[DODW_ENFIELD			] = 1.0;
-	weaponxpmultiplier[DODW_STEN			] = 1.0;
-	weaponxpmultiplier[DODW_BREN			] = 1.0;
-	weaponxpmultiplier[DODW_WEBLEY			] = 1.0;
-	weaponxpmultiplier[DODW_BAZOOKA			] = 1.0;
-	weaponxpmultiplier[DODW_PANZERSCHRECK	] = 1.0;
-	weaponxpmultiplier[DODW_PIAT			] = 1.0;
-	weaponxpmultiplier[DODW_SCOPED_FG42		] = 1.0;
-	weaponxpmultiplier[DODW_FOLDING_CARBINE	] = 1.0;
-	weaponxpmultiplier[DODW_KAR_BAYONET		] = 1.0;
-	weaponxpmultiplier[DODW_SCOPED_ENFIELD	] = 1.0;
-	weaponxpmultiplier[DODW_MILLS_BOMB		] = 1.0;
-	weaponxpmultiplier[DODW_ENFIELD_BAYONET	] = 1.0;
-	weaponxpmultiplier[DODW_MORTAR			] = 1.0;
-	weaponxpmultiplier[DODW_K43_BUTT		] = 1.0;
-
-#endif
-
 	weaponxpmultiplier[CSW_LIGHTNING]		= 1.0;
 	weaponxpmultiplier[CSW_SUICIDE]			= 1.0;
 	weaponxpmultiplier[CSW_FLAME]			= 1.0;
-	weaponxpmultiplier[CSW_LOCUSTS]			= 1.1;
+	weaponxpmultiplier[CSW_LOCUSTS]			= 1.0;
 	weaponxpmultiplier[CSW_SERPENTWARD]		= 1.0;
 	weaponxpmultiplier[CSW_SHADOW]			= 1.0;	
 	weaponxpmultiplier[CSW_THORNS]			= 1.0;
@@ -252,140 +270,11 @@ stock XP_Set_Multiplier()
 	weaponxpmultiplier[CSW_CARRION]			= 1.0;
 	weaponxpmultiplier[CSW_ORB]				= 1.0;
 	weaponxpmultiplier[CSW_CONCOCTION]		= 1.0;
-
-	return PLUGIN_CONTINUE;
-}
-
-
-// Function will get data about a player's current race, and set it to whats in the DB/vault
-public XP_Set_Race_Data( id )
-{
-
-	if ( !warcraft3 )
-		return PLUGIN_CONTINUE;
-
-	if ( !get_pcvar_num( CVAR_wc3_save_xp ) || !id )
-		return PLUGIN_CONTINUE;
-
-	// If we're saving by STEAM_ID, lets make sure the user has a steam ID
-	new szPlayerID[33];
-	get_user_authid(id, szPlayerID, 31);
-	if( get_pcvar_float( CVAR_wc3_save_by) == SAVE_STEAMID && equal(szPlayerID, "STEAM_ID_PENDING") )
-	{
-		client_print(id, print_chat, "%s Unable to retreive race information, you have no STEAM ID, please rejoin the server.", g_MODclient);
-		return PLUGIN_CONTINUE;
-	}
-	
-	new szPlayerIP[20], szPlayerName[66];
-	get_user_name(id, szPlayerName, 32);
-	get_user_ip(id, szPlayerIP, 19);
-
-	if ( get_pcvar_num( CVAR_wc3_save_xp_sql ) )
-	{
-		// Verify we have a database connection
-		if ( !XP_Check_Connection() )
-		{
-			return PLUGIN_CONTINUE;
-		}
-
-		// Prepare name for the query
-		DB_FormatString( szPlayerName, 65 );
-
-		new szQuery[256];
-		format( szQuery, 255, "SELECT `xp`, `skill1`, `skill2`, `skill3`, `skill4` FROM `%s` WHERE (`playerid` = '%s' AND `race` = %d)", g_DBTableName, (get_pcvar_float( CVAR_wc3_save_by)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE])
-
-		new Result:res = dbi_query(sql, szQuery)
-		
-		// Verify we have a result
-		if (res < RESULT_NONE)
-		{
-			client_print(id, print_chat, "%s An error has occurred when retreiving your race information, please contact a server administrator", g_MODclient);
-			XP_DBI_Error( res, szQuery, 1 );
-			return PLUGIN_CONTINUE;
-		}
-		
-		// Then we have data in the database
-		if ( res && dbi_nextrow(res)>0 )
-		{
-			new szXP[8], szSkill1[2], szSkill2[2], szSkill3[2], szSkill4[2];
-			dbi_result(res, "xp", szXP, 7);
-			dbi_result(res, "skill1", szSkill1, 1);
-			dbi_result(res, "skill2", szSkill2, 1);
-			dbi_result(res, "skill3", szSkill3, 1);
-			dbi_result(res, "skill4", szSkill4, 1);			
-
-			p_data[id][P_XP]		= str_to_num(szXP);
-			p_data[id][P_SKILL1]	= str_to_num(szSkill1);
-			p_data[id][P_SKILL2]	= str_to_num(szSkill2);
-			p_data[id][P_SKILL3]	= str_to_num(szSkill3);
-			p_data[id][P_ULTIMATE]	= str_to_num(szSkill4);
-		}
-		// The user has no record, start them at 0
-		else
-		{
-			p_data[id][P_XP]		= 0;
-			p_data[id][P_SKILL1]	= 0;
-			p_data[id][P_SKILL2]	= 0;
-			p_data[id][P_SKILL3]	= 0;
-			p_data[id][P_ULTIMATE]	= 0;
-		}
-		
-		dbi_free_result(res);
-
-	}
-	// Retreive data from the vault
-	else
-	{
-		new szKey[128], szData[256], iAttempt;
-
-		format( szKey, 127, "%s_%d", (get_pcvar_float( CVAR_wc3_save_by)==SAVE_NAME) ? szPlayerName : ((get_pcvar_float( CVAR_wc3_save_by)==SAVE_IP) ? szPlayerIP : szPlayerID), p_data[id][P_RACE] );
-
-		iAttempt = get_vaultdata(szKey, szData, 255);
-		
-		// Then we found a record in the vault
-		if ( iAttempt )
-		{
-			new szXP[8], szSkill1[2], szSkill2[2], szSkill3[2], szSkill4[2], szRace[2];
-
-			// Parse the vault entry
-			parse(szData, szPlayerID, 31, szXP, 7, szRace, 1, szSkill1, 1, szSkill2, 1, szSkill3, 1, szSkill4, 1);
-
-			p_data[id][P_XP]		= str_to_num(szXP);
-			p_data[id][P_SKILL1]	= str_to_num(szSkill1);
-			p_data[id][P_SKILL2]	= str_to_num(szSkill2);
-			p_data[id][P_SKILL3]	= str_to_num(szSkill3);
-			p_data[id][P_ULTIMATE]	= str_to_num(szSkill4);
-		}
-		// No record was found, lets start them at 0
-		else
-		{
-			p_data[id][P_XP]		= 0;
-			p_data[id][P_SKILL1]	= 0;
-			p_data[id][P_SKILL2]	= 0;
-			p_data[id][P_SKILL3]	= 0;
-			p_data[id][P_ULTIMATE]	= 0;
-		}
-	}
-	
-	// Display the race information to the user
-	WAR3_Display_Level(id, DISPLAYLEVEL_SHOWRACE);
-
-	return PLUGIN_CONTINUE;
-}
-
-
-public XP_Set_DBI(){
-	
-
-	return PLUGIN_CONTINUE;
 }
 
 // Reset the user's XP to 0
 public XP_Reset(id)
 {
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE;
 
 	p_data[id][P_LEVEL]		= 0;
 	p_data[id][P_XP]		= 0;
@@ -394,16 +283,18 @@ public XP_Reset(id)
 	p_data[id][P_SKILL3]	= 0;
 	p_data[id][P_ULTIMATE]	= 0;
 
-	DB_SaveXP(id);
+	DB_SaveXP( id );
 
-	WAR3_Display_Level(id, DISPLAYLEVEL_NONE);
+	WAR3_Display_Level( id, DISPLAYLEVEL_NONE );
 
-	client_print(id, print_chat, "%s %L", g_MODclient, id, "YOUR_XP_HAS_BEEN_RESET");
+	client_print( id, print_chat, "%s %L", g_MODclient, id, "YOUR_XP_HAS_BEEN_RESET" );
 
 	return PLUGIN_CONTINUE;
 }	
 
 // This function will prune a single player (checks for the latest date and sets them all to the same)
+
+/*
 public XP_Prune_Player(id)
 {
 	if ( get_pcvar_num( CVAR_wc3_save_xp ) && get_pcvar_num( CVAR_wc3_save_pruning ) )
@@ -538,78 +429,40 @@ public XP_Prune()
 		log_amx("Database pruning successful, data older than %d days was removed", get_pcvar_num( CVAR_wc3_days_before_delete ));
 	}
 }
+*/
 
-// Close the database connection
-public XP_CloseDB()
-{
-
-	if ( get_pcvar_num( CVAR_wc3_save_xp_sql ) )
-	{
-		if( sql )
-		{
-			dbi_close( sql );
-			log_amx( "%s database connection closed", g_szDBType );
-		}
-	}
-}
 
 // This function will save the XP for all players, but it will save the data every 0.1 seconds (reduce lag?)
-public XP_Save_All()
+public XP_SaveAll()
 {
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE;
-	
 	if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
-		return PLUGIN_CONTINUE;
+	{
+		return;
+	}
 
-	new players[32], numofplayers, parm[1];
-	get_players( players, numofplayers );
 	new Float:time = 0.0;
+	new players[32], numofplayers;
+	get_players( players, numofplayers );
 
 	for ( new i=0; i < numofplayers; i++ )
 	{
-		parm[0] = players[i];
-
-		set_task( time, "XP_Save_Helper", TASK_SAVE_ALL + players[i], parm[0], 1 );
+		set_task( time, "XP_SaveHelper", TASK_SAVE_ALL + players[i] );
 
 		time += 0.1;
 	}
 
-	return PLUGIN_CONTINUE;
+	return;
 }
 
-// Helper function to call save for XP_Save_All
-public XP_Save_Helper( parm[1] )
+// Helper function to call save for XP_SaveAll
+public XP_SaveHelper( id )
 {
+	id -= TASK_SAVE_ALL;
 
-	DB_SaveXP( parm[0] );
+	DB_SaveXP( id );
 }
 
-// Verifies that the database connection is ok
-public XP_Check_Connection()
-{
-
-	if( sql < SQL_OK )
-	{
-		if( iSQLAttempts < SQL_ATTEMPTS )
-		{
-			log_amx( "Database connection failed, attempting to reconnect in %0.0f seconds", SQL_ATTEMPT_DELAY );
-			set_task( SQL_ATTEMPT_DELAY, "XP_Set_DBI", TASK_SETSQL );
-		}
-		else if( iSQLAttempts >= SQL_ATTEMPTS )
-		{
-			set_pcvar_num( CVAR_wc3_save_xp, 0 )
-			set_pcvar_num( CVAR_wc3_save_xp_sql, 0 )
-
-			log_amx("Unable to connect to the %s database after %d attempts, switching to short-term mode", g_szDBType, iSQLAttempts)
-		}
-
-		return false;
-	}
-
-	return true;
-}
 
 // Function from war3x thanks ryan!!!
 public XP_get_admin_flag()

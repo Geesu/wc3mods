@@ -242,7 +242,7 @@ public ADMIN_wc3(id, level, cid)
 		// Save everyone's XP since we're not going to be saving it later
 		if ( get_pcvar_num( CVAR_wc3_save_xp ) )
 		{
-			XP_Save_All();
+			XP_SaveAll();
 		}
 	}
 	else
