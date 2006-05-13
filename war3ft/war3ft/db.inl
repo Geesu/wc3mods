@@ -8,25 +8,71 @@ public DB_Upgrade()
 	{
 		return;
 	}
+	
 
-	//ALTER TABLE `war3users` ADD `playerip` VARCHAR( 20 ) NOT NULL AFTER `playerid` ;
-	new szQuery[256];
-	format( szQuery, 255, "SHOW COLUMNS FROM `war3users` LIKE 'playerip';" );
-	
-	new Result:res = dbi_query( g_DB, szQuery );
-	
-	// We have no result from the above query - so we need to add this to the table
-	if ( !res || !dbi_nextrow( res ) > 0 )
+	// MySQL
+	if ( g_DBType == DB_MYSQL )
 	{
-		format( szQuery, 255, "ALTER TABLE `war3users` ADD `playerip` VARCHAR( 20 ) NOT NULL AFTER `playerid`;" );
+		new szQuery[256];
+		format( szQuery, 255, "SHOW COLUMNS FROM `%s` LIKE 'playerip';", g_DBTableName );
 		
-		new Result:ret = dbi_query( g_DB, szQuery );
-
-		if ( ret < RESULT_NONE )
+		new Result:res = dbi_query( g_DB, szQuery );
+		
+		// We have no result from the above query - so we need to add this to the table
+		if ( !res || !( dbi_nextrow( res ) > 0 ) )
 		{
-			DB_Error( ret, szQuery, 5 );
+			format( szQuery, 255, "ALTER TABLE `%s` ADD `playerip` VARCHAR( 20 ) NOT NULL AFTER `playerid`;", g_DBTableName );
+			
+			new Result:ret = dbi_query( g_DB, szQuery );
 
-			return;
+			if ( ret < RESULT_NONE )
+			{
+				DB_Error( ret, szQuery, 5 );
+
+				return;
+			}
+		}
+	}
+
+	// SQLite - this is sort of NOT smart to figure this out :/  But who cares it works!!!
+	else if ( g_DBType == DB_SQLITE )
+	{
+		new szQuery[256];
+		format( szQuery, 255, "SELECT sql FROM sqlite_master" );
+		new Result:res = dbi_query( g_DB, szQuery );
+		
+		// We have a result, lets check to see if 'playerip' is in the result
+		new szResultData[512];
+		new bool:bFound = false;
+
+		if ( res && dbi_nextrow( res ) > 0 )
+		{
+			for ( new i = 1; i <= dbi_num_fields( res ); i++ )
+			{
+				dbi_result( res, "sql", szResultData, 511 );
+
+				log_amx( "%s", szResultData );
+
+				if ( containi( szResultData, "playerip" ) != -1 )
+				{
+					bFound = true;
+				}
+			}
+		}
+		
+		// We didn't find the field, we need to add it
+		if ( !bFound )
+		{
+			format( szQuery, 255, "ALTER TABLE `%s` ADD `playerip` VARCHAR( 20 ) NOT NULL DEFAULT '';", g_DBTableName );
+			
+			new Result:ret = dbi_query( g_DB, szQuery );
+
+			if ( ret < RESULT_NONE )
+			{
+				DB_Error( ret, szQuery, 5 );
+
+				return;
+			}
 		}
 	}
 }
@@ -63,16 +109,21 @@ public DB_UpdateKey()
 		}
 	}
 	
-	// Then we have a query to execute
-	if ( strlen( szQuery ) > 0 )
+	// MySQL
+	if ( g_DBType == DB_MYSQL )
 	{
-		new Result:ret = dbi_query( g_DB, szQuery );
 
-		if ( ret < RESULT_NONE )
+		// Then we have a query to execute
+		if ( strlen( szQuery ) > 0 )
 		{
-			DB_Error( ret, szQuery, 6 );
+			new Result:ret = dbi_query( g_DB, szQuery );
 
-			return;
+			if ( ret < RESULT_NONE )
+			{
+				DB_Error( ret, szQuery, 6 );
+
+				return;
+			}
 		}
 	}
 }
@@ -273,7 +324,7 @@ public DB_Init()
 		// Get the integrity check value
 		while ( res && dbi_nextrow(res) > 0 )
 		{
-			dbi_result(res, "integrity_check", szIntegrityCheck, 63);
+			dbi_result( res, "integrity_check", szIntegrityCheck, 63 );
 		}
 
 		// Free the result
