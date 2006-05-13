@@ -922,6 +922,23 @@ public _EVENT_Before_ResetHUD()
 // Function is called when the user is spawned at the START of each round (called before EVENT_PlayerSpawned)
 public EVENT_PlayerInitialSpawn( id )
 {
+
+	// Bot options
+	if ( is_user_bot(id) )
+	{
+		// Give the bot some random XP if we're saving XP
+		if ( get_pcvar_num( CVAR_wc3_save_xp ) && !p_data[id][P_XP] )
+		{
+			p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
+		}
+
+		if ( !p_data[id][P_RACE] )
+		{
+			p_data[id][P_RACE] = random_num(1, get_pcvar_num( CVAR_wc3_races ));
+		}
+	}
+
+
 	// User didn't just join
 	p_data_b[id][PB_JUSTJOINED] = false;
 

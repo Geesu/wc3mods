@@ -32,6 +32,9 @@ public DB_Upgrade()
 				return;
 			}
 		}
+
+		// Free the result
+		dbi_free_result( res );
 	}
 
 	// SQLite - this is sort of NOT smart to figure this out :/  But who cares it works!!!
@@ -51,14 +54,16 @@ public DB_Upgrade()
 			{
 				dbi_result( res, "sql", szResultData, 511 );
 
-				log_amx( "%s", szResultData );
-
 				if ( containi( szResultData, "playerip" ) != -1 )
 				{
 					bFound = true;
 				}
 			}
 		}
+
+		// Free the result
+		dbi_free_result( res );
+
 		
 		// We didn't find the field, we need to add it
 		if ( !bFound )

@@ -198,22 +198,10 @@ public plugin_init()
 		register_event( "StatusValue"	, "on_StatusValue"	, "b"					);
 	}
 	
-	register_event("HLTV", "event_new_round", "a", "1=0", "2=0")   
+	//register_event("HLTV", "event_new_round", "a", "1=0", "2=0")   
 
 	// Plugin initialization procedures
 	WC3_Init();
-
-	register_concmd( "test", "test" );
-}
-
-public event_new_round()
-{
-	log_amx( "It's a new round!!");
-}
-
-public test()
-{
-	ADMIN_Print( 0, "This is a %d fucking %s message", 5, "asdf" );
 }
 
 public plugin_end()
@@ -335,18 +323,6 @@ public client_connect( id )
 		p_data[id][P_MONEY] = 0;
 	}
 	
-	// Bot options
-	if ( is_user_bot(id) )
-	{
-		// Give the bot some random XP if we're saving XP
-		if ( get_pcvar_num( CVAR_wc3_save_xp ) )
-		{
-			p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
-		}
-
-		p_data[id][P_RACE] = random_num(1, get_pcvar_num( CVAR_wc3_races ));
-	}
-
 	return;
 }
 
