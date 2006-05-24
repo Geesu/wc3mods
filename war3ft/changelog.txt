@@ -8,6 +8,7 @@ v2.3.3
  - Change: Config file location moved
  - Change: When weapon reincarnation's weapons are saved
  - Change: When a user spawns their money is not longer set to mp_startmoney (for CS/CZ)
+ - Change: All DB functions re-written (Now uses MySQL X, NVault, SQLite)
  - Removed: FT_impale_intensity cvar (edit this constant at the top of skills.inl)
  - Removed: FT_blink_radius cvar (replaced with NECKLACE_RADIUS define)
  - Removed: FT_healing_range cvar (defined at top of skills.inl)
@@ -25,7 +26,6 @@ v2.3.3
 Add a disable orc nade map config file...
 Add a start/stop option
 //Need to give 2 flashbangs, not one
-//FLAMING_GLOVES_RESTRICTED_ON_THIS_MAP
 
 v2.3.2
  - Addition: Admin flag added to war3FT.cfg file as a cvar

@@ -43,6 +43,7 @@ new const WC3DATE[] =		__DATE__
 #include <fun>
 #include <fakemeta>
 #include <dbi>
+#include <sqlx>
 #include <nvault>
 #include <cstrike>
 #include <dodfun>
@@ -58,13 +59,19 @@ new const WC3DATE[] =		__DATE__
 
 // Header files that contain function declarations
 #include "war3ft/dod_h.inl"
+#include "war3ft/db/db_mysqlx.h"
+#include "war3ft/db/db_sqlite.h"
+#include "war3ft/db/db_nvault.h"
 
 // Source Code
 #include "war3ft/constants.inl"
 #include "war3ft/cvar.inl"
 #include "war3ft/effects.inl"
 #include "war3ft/XP.inl"
-#include "war3ft/db.inl"
+#include "war3ft/db/db_mysqlx.inl"
+#include "war3ft/db/db_sqlite.inl"
+#include "war3ft/db/db_nvault.inl"
+#include "war3ft/db/db_common.inl"
 #include "war3ft/war3ft.inl"
 #include "war3ft/events.inl"
 #include "war3ft/clientCommands.inl"
@@ -250,7 +257,7 @@ public client_putinserver( id )
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
 		// Check user's cvar
-		if ( !is_user_bot(id) )
+		if ( !is_user_bot( id ) )
 		{
 			query_client_cvar( id, "cl_minmodels", "check_cvars" );
 		}
@@ -443,10 +450,13 @@ public client_PreThink( id )
 					new Float:vel[3];
 					entity_get_vector( id, EV_VEC_velocity, vel );
 
+					// When this is true, the user is walking...  lets hope :P
 					if ( vector_length( vel ) < 180.0 )
 					{
 						entity_set_int( id, EV_INT_flTimeStepSound, 999 );
 					}
+
+					// Otherwise if we just set it on the previous tick we need to set it back
 					else if ( entity_get_int(id, EV_INT_flTimeStepSound) > 500 )
 					{
 						entity_set_int( id, EV_INT_flTimeStepSound, 200 );

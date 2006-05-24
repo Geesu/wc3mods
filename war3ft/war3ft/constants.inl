@@ -438,11 +438,18 @@ new g_Vault[MAX_RACES+1];
 new g_szDBType[16];
 new g_szDBKey[32];
 
+// MYSQL X
+new Handle:g_DBTuple;					// Used with MySQL X
+new Handle:g_DBConn;
+
+// Generic Database
 new Sql:g_DB;
 new g_DBType				= -1;
 new bool:g_DBILoaded		= true;
 new bool:g_NVaultLoaded		= true;
 new iSQLAttempts			= 0;
+
+new g_iRaceXP[33][MAX_RACES];			// Used to store the race XP when it's retreived from the DB
 /* Variables for precaching sounds */
 
 new SOUND_ANNIHILATION[64]
