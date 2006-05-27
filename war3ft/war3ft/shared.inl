@@ -237,8 +237,11 @@ public SHARED_GetAmmoName( iWeapID, szAmmoName[], len )
 }
 
 // Function used to spawn a player
-public SHARED_Spawn( id )
+public _SHARED_Spawn( id )
 {
+
+	id -= TASK_SPAWN;
+
 	// Spawning doesn't work in DOD
 	if ( g_MOD == GAME_DOD )
 	{
@@ -510,7 +513,7 @@ public SHARED_CS_Reincarnation( id )
 		Create_ScreenFade( id, (1<<10), (1<<10), (1<<12), 0, 255, 0, 255 );
 		
 		// Give the user their weapons from last round
-		set_task( 0.3, "_SHARED_CS_GiveWeapons", TASK_REINCARNATION + id );
+		set_task( 0.3, "_SHARED_CS_GiveWeapons", TASK_GIVEITEMS + id );
 	}
 	else
 	{
@@ -525,9 +528,10 @@ public SHARED_CS_Reincarnation( id )
 
 public _SHARED_CS_GiveWeapons(id)
 {
-	if ( id > TASK_REINCARNATION )
+
+	if ( id > TASK_GIVEITEMS )
 	{
-		id -= TASK_REINCARNATION;
+		id -= TASK_GIVEITEMS;
 	}
 
 	if ( !warcraft3 || !p_data_b[id][PB_ISCONNECTED] )
@@ -541,10 +545,10 @@ public _SHARED_CS_GiveWeapons(id)
 	give_item( id, "weapon_knife" );
 
 	// Give armor
-	if ( p_data[id][P_ARMORONDEATH] )
+	if ( p_data[id][P_LASTARMOR] )
 	{
 		// g_ArmorType
-		cs_set_user_armor( id, p_data[id][P_ARMORONDEATH], g_ArmorType[id] );
+		cs_set_user_armor( id, p_data[id][P_LASTARMOR], g_ArmorType[id] );
 	}
 	
 	// Give a defuse kit
@@ -666,7 +670,7 @@ public SHARED_SetSpeed( id )
 	// User is hexed, they should be slowed
 	else if ( p_data_b[id][PB_HEXED] )
 	{
-		set_user_maxspeed( id, SKILL_HEX_SPEED );
+		set_user_maxspeed( id, SH_HEX_SPEED );
 
 		return;
 	}

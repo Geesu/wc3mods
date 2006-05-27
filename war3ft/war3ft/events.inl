@@ -403,7 +403,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 				/* Hex will only last for 10 seconds */
 				new parm[2]
 				parm[0]=victim
-				set_task(SKILL_HEX_LENGTH,"_Skill_Hex",TASK_HEX+victim,parm,2)
+				set_task( SH_HEX_LENGTH ,"_SH_RemoveHex", TASK_HEX + victim );
 
 				emit_sound(victim, CHAN_STATIC, SOUND_HEX, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
@@ -947,7 +947,7 @@ public EVENT_PlayerInitialSpawn( id )
 	
 	// Hide their ultimate icon
 	Ultimate_Icon( id, ICON_HIDE );
-
+	
 	// Reset the user's skills
 	if ( p_data_b[id][PB_RESETSKILLS] ) 
 	{
@@ -956,7 +956,9 @@ public EVENT_PlayerInitialSpawn( id )
 		p_data[id][P_SKILL3]	= 0;
 		p_data[id][P_ULTIMATE]	= 0;
 		p_data[id][P_LEVEL]		= 0;
-		WAR3_Display_Level( id, DISPLAYLEVEL_NONE );
+
+		WC3_ShowBar( id );
+		XP_Check( id, false );
 
 		return PLUGIN_CONTINUE;
 	}
@@ -978,13 +980,13 @@ public EVENT_PlayerInitialSpawn( id )
 	// User has a race selection pending, set it
 	if ( p_data[id][P_CHANGERACE] )
 	{
-		WAR3_set_race( id, p_data[id][P_CHANGERACE] );
+		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
 	}
 
 	// Display the new Chameleon skills for the round
 	if ( p_data[id][P_RACE] == 9 && get_pcvar_num( CVAR_wc3_cham_random ) )
 	{
-		WAR3_Display_Level( id, DISPLAYLEVEL_SHOWRACE );
+		WC3_ShowRaceInfo( id );
 	}
 
 	return PLUGIN_CONTINUE;

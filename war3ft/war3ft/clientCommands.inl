@@ -1,13 +1,3 @@
-public change_race(id,saychat){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	WAR3_chooserace(id)
-
-	return PLUGIN_CONTINUE
-}
-
 public cmd_Teamselect(id,key) {
 
 	// key+1 is the team they choose
@@ -32,166 +22,8 @@ public cmd_Jointeam(id){
 	return PLUGIN_CONTINUE
 }
 
-public cmd_Level(id){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	WAR3_Display_Level(id, DISPLAYLEVEL_SHOWRACECHAT)
-
-	return PLUGIN_HANDLED
-}
-
-public cmd_Say(id){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new said[32]
-	read_args(said,31) 
-
-	if (equali(said,"^"/changerace^"") || equali(said,"^"changerace^""))
-		change_race(id,1)
-	else if (equali(said,"^"/selectskill^"") || equali(said,"^"selectskill^""))
-		menu_Select_Skill(id,1)
-	else if (equali(said,"^"/playerskills^"") || equali(said,"^"playerskills^""))
-		MOTD_Playerskills(id, 1)
-	else if (equali(said,"^"/skillsinfo^"") || equali(said,"^"skillsinfo^""))
-		MOTD_Skillsinfo(id)
-	else if (equali(said,"^"/war3help^"") || equali(said,"^"war3help^""))
-		MOTD_War3help(id)
-	else if (equali(said,"^"/icons^"") || equali(said,"^"icons^""))
-		say_Icons(id)
-	else if (equali(said,"^"/level^"") || equali(said,"^"level^""))
-		WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACECHAT)
-	else if (equali(said,"^"/shopmenu^"") || equali(said,"^"shopmenu^""))
-		menu_Shopmenu_One(id)
-	else if (equali(said,"^"/resetxp^"") || equali(said,"^"resetxp^""))
-		menu_ResetXP(id);
-	else if (equali(said,"^"/itemsinfo^"") || equali(said,"^"itemsinfo^""))
-		MOTD_Itemsinfo(id)
-	else if (equali(said,"^"/war3menu^"") || equali(said,"^"war3menu^""))
-		menu_War3menu(id)
-	else if (equali(said,"^"/savexp^"") || equali(said,"^"savexp^""))
-       client_print( id, print_chat, "%s XP is saved automatically, you do not need to type this command", g_MODclient );
-	else if (equali(said,"^"/resetskills^"") || equali(said,"^"resetskills^""))
-		cmd_ResetSkill(id, 1);
-	else if (equali(said,"^"/geesu^"") || equali(said,"^"/pimpdaddy^"") || equali(said,"^"/ootoaoo^""))
-		WAR3_Check_Dev(id)
-
-	if(get_pcvar_num( CVAR_wc3_races ) > 4){
-		if (equali(said,"^"/itemsinfo2^"") || equali(said,"^"itemsinfo2^""))
-			MOTD_Itemsinfo2(id)
-		else if (equali(said,"^"/rings^"") || equali(said,"^"rings^""))
-			cmd_Rings(id)
-		else if (equali(said,"^"/ability^"") || equali(said,"^"ability^""))
-			cmd_ability(id)
-		else if (equali(said,"^"/shopmenu2^"") || equali(said,"^"shopmenu2^""))
-			menu_Shopmenu_Two(id)
-	}
-
-	return PLUGIN_CONTINUE
-}
-
-public say_Icons(id){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	set_hudmessage(200, 100, 0, -1.0, 0.3, 0, 1.0, 5.0, 0.1, 0.2, 1)
-
-	if (!g_spritesEnabled){
-		show_hudmessage(id,"%L",id,"ICONS_ARE_DISABLED")
-		client_print(id,print_chat,"%s %L",g_MODclient,id,"ICONS_ARE_DISABLED_DO")
-		return PLUGIN_CONTINUE
-	}
-
-	if( get_pcvar_num( CVAR_wc3_race_icon ) || get_pcvar_num( CVAR_wc3_level_icon ) ){
-		if(p_data[id][P_SHOWICONS]){
-			p_data[id][P_SHOWICONS]=false
-
-			show_hudmessage(id,"%L",id,"NO_LONGER_SEE_ICONS")
-		}
-		else{
-			p_data[id][P_SHOWICONS]=true
-
-			show_hudmessage(id,"%L",id,"NOW_SEE_ICONS")
-		}
-	}
-	else
-		show_hudmessage(id,"%L",id,"ICONS_DISABLED_THIS_SERVER")
-
-	return PLUGIN_HANDLED
-}
-
-public cmd_Rings( id )
+public cmd_fullupdate()
 {
-
-	if ( !warcraft3 || get_pcvar_num( CVAR_wc3_races ) < 5 || !ITEM_CanBuy( id ) )
-	{
-		return;
-	}
-
-	new iMoney;
-	
-	// Lets buy as many rings as we can!
-	while ( p_data[id][P_RINGS] < 5 )
-	{
-		iMoney = SHARED_GetUserMoney( id );
-
-		// Check to see if the user can buy another ring
-		if ( iMoney < itemcost2[ITEM_RING-1] )
-		{
-			break;
-		}
-		
-		// Take their money
-		SHARED_SetUserMoney( id, iMoney - itemcost2[ITEM_RING-1], 1 );
-
-		// Give them the rings
-		ITEM_Set( id, ITEM_RING, SHOPMENU_TWO );
-	}
-
-	return;
-}
-
-public cmd_fullupdate(){
-
-	return PLUGIN_HANDLED
-}
-
-public cmd_ability(id){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if(get_pcvar_num( CVAR_wc3_races ) < 5)
-		return PLUGIN_CONTINUE
-	
-	if ( p_data_b[id][PB_HEXED] )
-	{
-		WC3_Status_Text( id, 4.0, HUDMESSAGE_POS_INFO, "%L", id, "HEX_NO_ABILITY" );
-		return PLUGIN_HANDLED;
-	}
-
-	if(is_user_alive(id)){
-		if ( Verify_Skill(id, RACE_SHADOW, SKILL3) && p_data[id][P_SERPENTCOUNT]>0 && !endround){	 //Serpent Ward
-
-			new parm[5], origin[3]
-
-			get_user_origin(id,origin)
-			parm[0]=origin[0]
-			parm[1]=origin[1]
-			parm[2]=origin[2]
-			parm[3]=id
-			parm[4]=get_user_team(id)
-
-			_Skill_SerpentWard(parm)
-			p_data[id][P_SERPENTCOUNT]--
-
-			WC3_Status_Text( id, 3.5, HUDMESSAGE_POS_INFO, "%L", id, "SERPENT_WARD", p_data[id][P_SERPENTCOUNT] );
-		}
-	}
 	return PLUGIN_HANDLED
 }
 
@@ -231,23 +63,6 @@ public cmd_ability(id){
 		return PLUGIN_CONTINUE
 	} 
 #endif
-
-public cmd_ResetSkill(id,saychat){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if(saychat==1){
-		client_print(id,print_center,"%s %L",g_MODclient, id,"SKILLS_RESET_NEXT_ROUND")
-	}
-	else{
-		console_print(id,"%L",id,"SKILLS_RESET_NEXT_ROUND")
-	}
-	p_data_b[id][PB_RESETSKILLS]=true
-
-
-	return PLUGIN_HANDLED
-}
 
 public cmd_Ultimate(id)
 {
@@ -369,4 +184,35 @@ public cmd_Ultimate(id)
 	}
 
 	return PLUGIN_HANDLED
+}
+
+
+public CMD_Handler( id )
+{
+
+	new szCmd[32];
+
+	read_argv( 0, szCmd, 31 );
+
+	WC3_HandleCommand( id, szCmd );
+
+	return PLUGIN_HANDLED;
+}
+
+public cmd_Say( id )
+{
+	
+	if ( !WAR3_Check( id ) )
+	{
+		return;
+	}
+
+	new szSaid[32];
+	read_args( szSaid, 31 );
+
+	remove_quotes( szSaid );
+
+	WC3_HandleCommand( id, szSaid );
+
+	return;
 }

@@ -209,7 +209,7 @@ SQLITE_GetAllXP( id )
 	}
 
 	// Loop through all of the records to find the XP data
-	new szXP[8], szRace[2], iXP, iRace;
+	new szXP[8], szRace[2], iXP, iRace, iRaceXP[MAX_RACES] = {0};
 	while ( res && dbi_nextrow( res ) > 0 )
 	{
 		dbi_result( res, "xp", szXP, 7 );
@@ -221,12 +221,15 @@ SQLITE_GetAllXP( id )
 		// Save the user's XP in an array
 		if ( iRace > 0 && iRace < MAX_RACES + 1 )
 		{
-			g_iRaceXP[id][iRace-1] = iXP;
+			iRaceXP[iRace-1] = iXP;
 		}
 	}
 	
 	// Free the result set
 	dbi_free_result( res );
+
+	// Call the function that will display the "select a race" menu
+	WC3_ChangeRaceEnd( id, iRaceXP );
 
 	return;
 }
@@ -285,6 +288,9 @@ SQLITE_SetData( id )
 	
 	// Free the result
 	dbi_free_result( res );
+
+	// Set the race up
+	WC3_SetRaceUp( id );
 
 	return;
 }

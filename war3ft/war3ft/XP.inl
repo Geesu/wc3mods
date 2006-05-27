@@ -17,11 +17,94 @@ XP_give(id, iXP)
 	}
 	
 	p_data[id][P_XP] += iXP;
-
-	WAR3_Display_Level(id, DISPLAYLEVEL_SHOWGAINED);
+	
+	XP_Check( id );
 
 	return iXP;
 }
+
+// Function will verify if the user's level/information is correct and checks to see if the user has gained a level
+XP_Check( id, bShowGained = true )
+{
+	new iOldLevel = p_data[id][P_LEVEL];
+	
+	// Make sure the user doesn't have negative experience
+	if ( p_data[id][P_XP] < 0 )
+	{
+		p_data[id][P_XP] = 0;
+	}
+
+	// Determine what the user's level should be
+	for ( new i = 0; i < MAX_RACES; i++ )
+	{
+		// User has enough XP to advance to the next level
+		if ( p_data[id][P_XP] >= xplevel[i] )
+		{
+			p_data[id][P_LEVEL] = i;
+		}
+
+		// On this increment the user doesn't have enough XP to advance to the next level
+		else
+		{
+			break;
+		}
+	}
+
+	// User gained a level
+	if ( p_data[id][P_LEVEL] > iOldLevel && p_data[id][P_RACE] != 0 && bShowGained )
+	{
+		new szMsg[128];
+		formatex( szMsg, 127, "%L", id, "YOU_GAINED_A_LEVEL" );
+
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			set_hudmessage( 200, 100, 0, -1.0, 0.25, 0, 1.0, 2.0, 0.1, 0.2, HUDMESSAGE_CHAN_INFO );
+			show_hudmessage( id, szMsg );
+		}
+		else if ( g_MOD == GAME_DOD )
+		{
+			Create_HudText( id, szMsg, 1 );
+		}
+
+		emit_sound( id, CHAN_STATIC, SOUND_LEVELUP, 1.0, ATTN_NORM, 0, PITCH_NORM );
+	}
+
+	// We might need to lower the skills the user has ( can occur if you load XP info from a database and the XP multiplier has changed)
+	new iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+
+	while ( iSkillsUsed > p_data[id][P_LEVEL] )
+	{
+
+		// Remove the user's ultimate
+		if ( p_data[id][P_ULTIMATE] == 1 && p_data[id][P_LEVEL] < 6 )
+		{
+			p_data[id][P_ULTIMATE] = 0;
+		}
+
+		// Remove first skill
+		else if ( p_data[id][P_SKILL1] >= p_data[id][P_SKILL2] && p_data[id][P_SKILL1] >= p_data[id][P_SKILL3] )
+		{
+			--p_data[id][P_SKILL1];
+		}
+
+		// Remove second skill
+		else if ( p_data[id][P_SKILL2] >= p_data[id][P_SKILL1] && p_data[id][P_SKILL2] >= p_data[id][P_SKILL3] )
+		{
+			--p_data[id][P_SKILL2];
+		}
+
+		// Remove third skill
+		else if ( p_data[id][P_SKILL3] >= p_data[id][P_SKILL1] && p_data[id][P_SKILL3] >= p_data[id][P_SKILL2] )
+		{
+			--p_data[id][P_SKILL3];
+		}
+
+		iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+	}
+
+	WC3_ShowBar( id );
+}
+
 
 XP_onDeath( victim_id, killer_id, weapon, headshot )
 {
@@ -284,8 +367,8 @@ public XP_Reset(id)
 	p_data[id][P_ULTIMATE]	= 0;
 
 	DB_SaveXP( id );
-
-	WAR3_Display_Level( id, DISPLAYLEVEL_NONE );
+	
+	WC3_ShowBar( id );
 
 	client_print( id, print_chat, "%s %L", g_MODclient, id, "YOUR_XP_HAS_BEEN_RESET" );
 

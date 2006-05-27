@@ -5,7 +5,7 @@
 public DB_DetermineType()
 {
 	// If the DBI Module isn't loaded then we can't use SQL for saving XP
-	if ( !g_DBILoaded && get_pcvar_num( CVAR_wc3_save_xp_sql ) )
+	if ( ( !is_module_loaded( "dbi" ) && !is_module_loaded( "mysqlx" ) ) && get_pcvar_num( CVAR_wc3_save_xp_sql ) )
 	{
 
 		log_amx( "Unable to saving using DBI, please enable a DBI module (SQLite or MySQL X) to save XP using DBI" );
@@ -17,28 +17,34 @@ public DB_DetermineType()
 	// Then we are saving using SQL, lets determine if it's sqlite or mysql
 	if ( get_pcvar_num( CVAR_wc3_save_xp_sql ) == 1 )
 	{
-		// Get the DB Type
-		new szDBIType[16];
-		dbi_type( szDBIType, 15 );
-
-		// We're using MySQL X
-		if ( equali( szDBIType, "MySQL" ) )
+		
+		// Using MySQL X
+		if ( is_module_loaded( "mysqlx" ) )
 		{
-			g_DBType = DB_MYSQL;
-			copy( g_szDBType, 15, "MySQL" );
+			g_DBType = DB_MYSQLX;
+			copy( g_szDBType, 15, "MySQLX" );
 		}
 
-		// We're using SQLite
-		else if ( equali( szDBIType, "SQLite" ) )
+		// Using SQLite (lets hope if we get here)
+		else if ( is_module_loaded( "dbi" ) )
 		{
-			g_DBType = DB_SQLITE;
-			copy( g_szDBType, 15, "SQLite" );
-		}
 
-		// Using an unsupported DB Type - lets default to vault
-		else
-		{
-			log_amx( "Unsupported database type loaded: %s, the supported databases are MySQL or SQLite.", szDBIType );
+			// Get the DB Type
+			new szDBIType[16];
+			dbi_type( szDBIType, 15 );
+
+			// We're using SQLite
+			if ( equali( szDBIType, "SQLite" ) )
+			{
+				g_DBType = DB_SQLITE;
+				copy( g_szDBType, 15, "SQLite" );
+			}
+
+			// Using an unsupported DB Type - lets default to vault
+			else
+			{
+				log_amx( "Unsupported database type loaded: %s, the supported databases are MySQL X or SQLite.", szDBIType );
+			}
 		}
 	}
 	
@@ -47,7 +53,7 @@ public DB_DetermineType()
 	{
 
 		// We can use the nvault if it's loaded
-		if ( g_NVaultLoaded )
+		if ( is_module_loaded( "nvault" ) )
 		{
 			g_DBType = DB_VAULT;
 		}
@@ -85,7 +91,7 @@ public DB_Init()
 	// Initiate our database
 	switch( g_DBType )
 	{
-		case DB_MYSQL:	MYSQLX_Init();
+		case DB_MYSQLX:	MYSQLX_Init();
 		case DB_SQLITE:	SQLITE_Init();
 		case DB_VAULT:	NVAULT_Init();
 	}
@@ -139,7 +145,7 @@ public DB_SaveXP( id )
 	// Save the XP	
 	switch( g_DBType )
 	{
-		case DB_MYSQL:	MYSQLX_Save( id );
+		case DB_MYSQLX:	MYSQLX_Save( id );
 		case DB_SQLITE:	SQLITE_Save( id );
 		case DB_VAULT:	NVAULT_Save( id );
 	}
@@ -166,7 +172,7 @@ DB_GetKey( id, szKey[], len )
 }
 
 // Function will get the user's XP for each race
-public DB_GetAllXP( id, iRaceXP[MAX_RACES] )
+public DB_GetAllXP( id )
 {
 	// If we're not saving XP, why do this?
 	if ( !get_pcvar_num( CVAR_wc3_save_xp ) || !id )
@@ -177,21 +183,9 @@ public DB_GetAllXP( id, iRaceXP[MAX_RACES] )
 	// Get the XP	
 	switch( g_DBType )
 	{
-		case DB_MYSQL:	MYSQLX_GetAllXP( id );
+		case DB_MYSQLX:	MYSQLX_GetAllXP( id );
 		case DB_SQLITE:	SQLITE_GetAllXP( id );
 		case DB_VAULT:	NVAULT_GetAllXP( id );
-	}
-
-	// Copy this over
-	for ( new i = 0; i < MAX_RACES; i++ )
-	{
-		iRaceXP[i] = g_iRaceXP[id][i];
-	}
-
-	// We don't want to replace the player's current XP with whats in the database now do we ?
-	if ( p_data[id][P_RACE] )
-	{
-		iRaceXP[p_data[id][P_RACE]-1] = p_data[id][P_XP];
 	}
 
 	return;
@@ -209,7 +203,7 @@ public DB_SetDataForRace( id )
 	// Set the user's race information
 	switch( g_DBType )
 	{
-		case DB_MYSQL:	MYSQLX_SetData( id );
+		case DB_MYSQLX:	MYSQLX_SetData( id );
 		case DB_SQLITE:	SQLITE_SetData( id );
 		case DB_VAULT:	NVAULT_SetData( id );
 	}

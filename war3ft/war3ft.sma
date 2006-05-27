@@ -36,21 +36,26 @@ new const WC3AUTHOR[] =		"Geesu"
 new const WC3VERSION[] =	"2.3.3 RC1"
 new const WC3DATE[] =		__DATE__
 
+// Let AMX X know that we NEED these modules (as of amx x 1.75)
+#pragma reqclass	xstats
+#pragma reqlib		engine
+#pragma reqlib		fun
+#pragma reqlib		fakemeta
+#pragma reqlib		nvault
 
 #include <amxmodx>
 #include <amxmisc>
 #include <engine>
 #include <fun>
 #include <fakemeta>
+#include <nvault>
+
+#define AMXMODX_NOAUTOLOAD
 #include <dbi>
 #include <sqlx>
-#include <nvault>
 #include <cstrike>
 #include <dodfun>
 #include <dodx>
-
-// If we include CSX, we have conflicts w/dodx
-#pragma library csx
 
 // Compiling Options
 #define MOD						0				// 0 = cstrike or czero, 1 = dod
@@ -66,6 +71,11 @@ new const WC3DATE[] =		__DATE__
 // Source Code
 #include "war3ft/constants.inl"
 #include "war3ft/cvar.inl"
+
+#include "war3ft/race_shadow.inl"
+#include "war3ft/race_orc.inl"
+#include "war3ft/race_chameleon.inl"
+
 #include "war3ft/effects.inl"
 #include "war3ft/XP.inl"
 #include "war3ft/db/db_mysqlx.inl"
@@ -86,9 +96,6 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/other.inl"
 #include "war3ft/admin.inl"
 
-#include "war3ft/race_orc.inl"
-#include "war3ft/race_chameleon.inl"
-
 #include "war3ft/cstrike.inl"
 #include "war3ft/dod.inl"
 
@@ -103,28 +110,30 @@ public plugin_init()
 	gmsgScreenShake		= get_user_msgid( "ScreenShake"	);
 	gmsgScoreInfo		= get_user_msgid( "ScoreInfo"	);
 	
-	register_clcmd( "war3menu"			, "menu_War3menu"		, -1 );
-	register_clcmd( "changerace"		, "change_race"			, -1 );
-	register_clcmd( "selectskill"		, "menu_Select_Skill"	, -1 );
-	register_clcmd( "skillsinfo"		, "MOTD_Skillsinfo"		, -1 );
-	register_clcmd( "resetskills"		, "cmd_ResetSkill"		, -1 );
-	register_clcmd( "resetxp"			, "XP_Reset"			, -1 );
-	register_clcmd( "itemsinfo"			, "MOTD_Itemsinfo"		, -1 );
-	register_clcmd( "itemsinfo2"		, "MOTD_Itemsinfo2"		, -1 );
-	register_clcmd( "war3help"			, "MOTD_War3help"		, -1 );
-	register_clcmd( "ultimate"			, "cmd_Ultimate"		, -1 );
-	register_clcmd( "shopmenu"			, "menu_Shopmenu_One"	, -1 );
-	register_clcmd( "shopmenu2"			, "menu_Shopmenu_Two"	, -1 );
-	register_clcmd( "ability"			, "cmd_ability"			, -1 );
-	register_clcmd( "rings"				, "cmd_Rings"			, -1 );
-	register_clcmd( "fullupdate"		, "cmd_fullupdate"		, -1 );
-	register_clcmd( "say"				, "cmd_Say"				, -1 );
-	register_clcmd( "say_team"			, "cmd_Say"				, -1 );
-	register_clcmd( "jointeam"			, "cmd_Jointeam"		, -1 );
-	register_clcmd( "level"				, "cmd_Level"			, -1 );
-	register_clcmd( "drop"				, "on_Drop"				, -1 );
 
-	register_concmd( "playerskills"		, "MOTD_Playerskills"	, -1 );
+	register_concmd( "playerskills"		, "CMD_Handler"		, -1 );
+
+	register_clcmd( "war3menu"			, "CMD_Handler"		, -1 );
+	register_clcmd( "changerace"		, "CMD_Handler"		, -1 );
+	register_clcmd( "selectskill"		, "CMD_Handler"		, -1 );
+	register_clcmd( "skillsinfo"		, "CMD_Handler"		, -1 );
+	register_clcmd( "resetskills"		, "CMD_Handler"		, -1 );
+	register_clcmd( "resetxp"			, "CMD_Handler"		, -1 );
+	register_clcmd( "itemsinfo"			, "CMD_Handler"		, -1 );
+	register_clcmd( "itemsinfo2"		, "CMD_Handler"		, -1 );
+	register_clcmd( "shopmenu"			, "CMD_Handler"		, -1 );
+	register_clcmd( "shopmenu2"			, "CMD_Handler"		, -1 );
+	register_clcmd( "ability"			, "CMD_Handler"		, -1 );
+	register_clcmd( "rings"				, "CMD_Handler"		, -1 );
+	register_clcmd( "level"				, "CMD_Handler"		, -1 );
+	register_clcmd( "say"				, "cmd_Say"			, -1 );
+	register_clcmd( "say_team"			, "cmd_Say"			, -1 );
+	register_clcmd( "war3help"			, "MOTD_War3help"	, -1 );
+	register_clcmd( "ultimate"			, "cmd_Ultimate"	, -1 );
+	register_clcmd( "jointeam"			, "cmd_Jointeam"	, -1 );
+	register_clcmd( "fullupdate"		, "cmd_fullupdate"	, -1 );
+	register_clcmd( "drop"				, "on_Drop"			, -1 );
+
 
 	// Admin Commands
 	register_concmd( "amx_givexp"		, "Admin_GiveXP"		, 0 , " -- Gives XP to players"				);
@@ -162,6 +171,7 @@ public plugin_init()
 		register_event( "SendAudio"		, "on_CTWin"		, "a"	, "2=%!MRAD_ctwin"					);
 		register_event( "23"			, "on_TargetBombed"	, "a"	, "1=17"	, "6=-105"	, "7=17"	);
 		register_event( "ArmorType"		, "on_ArmorType"	, "be"										);
+		register_event( "Battery"		, "on_Battery"		, "be"										);
 		register_event( "WeapPickup"	, "on_WeapPickup"	, "b"										); 
 		register_event( "StatusValue"	, "on_ShowStatus"	, "be"	, "1=2"		,"2!0"					);
 		register_event( "StatusValue"	, "on_HideStatus"	, "be"	, "1=1"		,"2=0"					);
@@ -514,15 +524,6 @@ public module_filter( const module[] )
 	if ( !task_exists( TASK_CHECKMODULES ) )
 	{
 		set_task( 0.3, "_WC3_CheckModules", TASK_CHECKMODULES );
-	}
-
-	if ( equali( module, "dbi" ) )
-	{
-		g_DBILoaded = false;
-	}
-	else if ( equali( module, "nvault" ) )
-	{
-		g_NVaultLoaded = false;
 	}
 
 	return PLUGIN_HANDLED;

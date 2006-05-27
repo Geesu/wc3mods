@@ -25,7 +25,7 @@ new const MENU_CALLBACK[TOTAL_MENUS][] =
 	"_menu_Shopmenu_One",
 	"_menu_Shopmenu_Two",
 	"_menu_Select_Skill",
-	"_menu_Select_Race",
+	"_MENU_SelectRace",
 	"_menu_War3menu",
 	"_menu_Skill_Options",
 	"_menu_Item_Options",
@@ -99,6 +99,11 @@ lang_GetRaceName ( race_id, id, race_name[], len, bool:shortLookup = false )
 */
 lang_GetItemName ( item_id, id, item_name[], len, shop_id, bool:shortLookup = false )
 {
+	
+	if ( item_id == 0 )
+	{
+		return;
+	}
 
 	new szItemHelper[64];
 

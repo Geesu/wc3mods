@@ -6,8 +6,8 @@
 
 #define TASK_ITEMS			0		// Showing items in the HUD
 #define TASK_SPAWN			32		// Respawning from revive
-#define TASK_ITEM_SCROLL	64		// Respawning after death from an item
-#define TASK_VENGEANCE		96		// Respawning from having vengeance (warden ultimate)
+//#define TASK_ITEM_SCROLL	64		// Respawning after death from an item
+//#define TASK_VENGEANCE		96		// Respawning from having vengeance (warden ultimate)
 //#define TASK_SETXP			128		// Sets the XP
 #define TASK_EXPLOSION		160		// From Suicide Bomber
 #define TASK_BEAMCYLINDER	192		// From Suicide Bomber
@@ -37,7 +37,7 @@
 #define	TASK_LIGHTNING		960		// Used for chain lightning
 #define	TASK_LIGHTSEARCH	992		// Used for chain lightning
 #define	TASK_LIGHTNINGNEXT	1024	// Used for chain lightning
-#define TASK_SPAWNPLAYER	1056	// Used within func_spawn to spawn a player
+#define TASK_SPAWNPLAYER	1056	// Used to spawn a player (final spawn call)
 #define TASK_GIVEITEMS		1088	// Used to give a player his items after spawning
 #define	TASK_ITEM_RING	1120	// Used with rings of regeneration
 #define	TASK_TESPRAY		1152	// Used with flamethrower
@@ -130,8 +130,6 @@
 #define CONCOCTION_DAMAGE		15			// Damage done by Unstable Concoction
 #define CONCOCTION_RADIUS		300
 #define CRITICAL_STRIKE_CHANCE	0.15		// 15% chance of Critical Strike working
-#define SKILL_HEX_LENGTH		5.0			// Length that hex lasts in seconds
-#define SKILL_HEX_SPEED			175.0		// Speed hexed player will move at
 #define SKILL_EVASION_ADJ		1024		// The amount of health that is given/taken for evasion
 
 // CS AmmoX Types
@@ -330,6 +328,7 @@
 	#define	P_HECOUNT				15		// Number of HE's bought that round
 	#define P_SMOKECOUNT			16		// Number of smoke grenades bought that round
 	#define P_ARMORONDEATH			17		// Amount of armor the player had when he/she died
+	#define P_LASTARMOR				18		// This will contain the previous value of P_ARMORONDEATH
 //	#define P_ARMORTYPE				18		// Type of armor the user had on death
 //	#define P_SAVEDNUMBER			19
 
@@ -376,7 +375,7 @@
 	#define PB_PLAYERSPAWNED		11		// Did the player respawn from a skill/item?
 	#define PB_SPAWNEDFROMITEM		12		// Did the player spawn from an item/teammate ability? (used to determine the health to give the player after they spawn)
 	#define PB_NADEJUSTRECEIVED		13		// Used with flaming gloves... (removable?)
-	#define PB_BLINKDELAYED			14		// Used to determine if the blink ability should be delayed (change this so its not [33])
+//	#define PB_BLINKDELAYED			14		// Used to determine if the blink ability should be delayed (change this so its not [33])
 	#define PB_MOLE					15		// Is the player a mole?
 	#define PB_TOBEREVIVED			16		// Will this player be revived?
 	#define PB_PHOENIXCASTER		17		// Did this player use his/her ability to give the team pheonix? (reviving)
@@ -422,7 +421,7 @@
 
 // Used with g_DBType
 #define DB_VAULT			1
-#define DB_MYSQL			2
+#define DB_MYSQLX			2
 #define DB_SQLITE			3
 
 #define SQL_ATTEMPT_DELAY	15.0
@@ -445,11 +444,8 @@ new Handle:g_DBConn;
 // Generic Database
 new Sql:g_DB;
 new g_DBType				= -1;
-new bool:g_DBILoaded		= true;
-new bool:g_NVaultLoaded		= true;
 new iSQLAttempts			= 0;
 
-new g_iRaceXP[33][MAX_RACES];			// Used to store the race XP when it's retreived from the DB
 /* Variables for precaching sounds */
 
 new SOUND_ANNIHILATION[64]

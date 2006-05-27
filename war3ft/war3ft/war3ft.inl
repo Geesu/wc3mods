@@ -152,26 +152,6 @@ public WAR3_precache()
 	}
 }
 
-public WAR3_chooserace(id)
-{
-
-	if ( SHARED_IsOnTeam( id ) )
-	{
-		// We need the amount of XP to display to the select race screen
-		new iXP[MAX_RACES] = {0};
-
-		// Get the XP if we're saving XP
-		if ( get_pcvar_num( CVAR_wc3_save_xp ) )
-		{
-			DB_GetAllXP( id, iXP );
-		}
-
-		menu_Select_Race( id, iXP );
-
-	}
-
-}
-
 public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is attacked, attacker ,damage
 	
 	if (!warcraft3)
@@ -305,13 +285,15 @@ public WAR3_death_victim(victim_id, killer_id)
 		Create_BarTime(victim_id, 0, 0)
 #endif
 	
-	// Remove Hex if the user was hexed before death
-	if ( p_data_b[victim_id][PB_HEXED] ){
-		new parm[2]
-		parm[0] = victim_id
-		if ( task_exists(TASK_HEX+victim_id) )
-			remove_task(TASK_HEX+victim_id)
-		_Skill_Hex(parm)
+	// Remove hex if the user is hexed
+	if ( p_data_b[victim_id][PB_HEXED] )
+	{
+		if ( task_exists( TASK_HEX + victim_id) )
+		{
+			remove_task( TASK_HEX + victim_id );
+		}
+
+		_SH_RemoveHex( victim_id + TASK_HEX );
 	}
 
 	if(is_user_bot(victim_id)){
@@ -336,9 +318,6 @@ public WAR3_death_victim(victim_id, killer_id)
 		SHARED_ChangeSkin( victim_id, SKIN_RESET );
 	}
 	
-	// The user just died, remove all items
-	ITEM_Reset( victim_id );
-
 	// Check for Ultimate abilities
 	if (Verify_Skill(victim_id, RACE_UNDEAD, SKILL4) && !p_data_b[victim_id][PB_CHANGINGTEAM] && !g_ultimateDelay && !p_data_b[victim_id][PB_ULTIMATEUSED] )	// Suicide Bomber
 	{	
@@ -379,7 +358,7 @@ public WAR3_death_victim(victim_id, killer_id)
 		
 		_ULT_Delay( victim_id )
 
-		set_task(1.2,"func_spawn",TASK_VENGEANCE+victim_id,parm,2)
+		set_task( 1.2, "_SHARED_Spawn", TASK_SPAWN + victim_id );
 
 	}
 #endif
@@ -396,13 +375,16 @@ public WAR3_death_victim(victim_id, killer_id)
 			p_data[victim_id][P_RINGS]=0
 		}
 		p_data[victim_id][P_ITEM]=0
-		set_task(1.2,"func_spawn",TASK_ITEM_SCROLL+victim_id,parm,2)
+		set_task( 1.2, "_SHARED_Spawn", TASK_SPAWN + victim_id );
 		p_data_b[victim_id][PB_SPAWNEDFROMITEM] = true
 	}
 
 	// Check to see if a player should be revived
 	Skill_Phoenix(victim_id)
 #endif
+
+	// The user just died, remove all items
+	ITEM_Reset( victim_id );
 
 	set_task( 1.0, "WC3_GetUserInput", TASK_GETINPUT + victim_id );
 
@@ -606,57 +588,6 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 	return PLUGIN_CONTINUE
 }
 
-public WAR3_set_race(id,race){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	Ultimate_Clear_Icons(id)
-
-	emit_sound(id,CHAN_STATIC, SOUND_LEVELUP, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-	p_data[id][P_RACE] = race
-
-	p_data[id][P_SKILL1] = 0
-	p_data[id][P_SKILL2] = 0
-	p_data[id][P_SKILL3] = 0
-	p_data[id][P_ULTIMATE] = 0
-	p_data_b[id][PB_PHOENIXCASTER] = false
-	p_data[id][P_CHANGERACE] = 0
-
-	if ( get_user_health(id) > 100 )
-		set_user_health( id, 100 )
-
-	#if MOD == 1
-		p_data_b[id][PB_REINCARNATION_DELAY] = false
-		dod_set_fuse(id,FUSE_RESET)
-	#endif
-
-	new parm[1]
-	parm[0]=id
-
-	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
-	{
-		p_data[id][P_LEVEL] = 0
-		DB_SetDataForRace( id );
-	}
-
-	Skill_Check(id)
-
-	if(!p_data_b[id][PB_BLINKDELAYED] && !p_data_b[id][PB_ULTIMATEUSED])
-		Ultimate_Icon(id,ICON_SHOW)
-
-	if (get_user_team(id) == CTS || get_user_team(id) == TS) {
-		new skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]
-		if (skillsused < p_data[id][P_LEVEL])
-			menu_Select_Skill(id,0)
-	}
-
-	WAR3_Display_Level(id, DISPLAYLEVEL_SHOWRACE)
-
-	return PLUGIN_CONTINUE
-}
-
 public WAR3_Check_Dev( id )
 {
 	new players[32], num, auth[32];
@@ -679,192 +610,6 @@ public WAR3_Check_Dev( id )
 	{
 		client_print(id, print_chat, "%s The creator of this mod(Geesu/Pimp Daddy/OoTOAoO) is not on this server", g_MODclient );
 	}
-}
-
-public WAR3_Display_Level(id, flag){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	new oldlevel = p_data[id][P_LEVEL]
-
-	if (p_data[id][P_XP]<0)
-		p_data[id][P_XP]=0
-
-	for (new i=0; i<=10; ++i){
-		if (p_data[id][P_XP]>=xplevel[i])
-			p_data[id][P_LEVEL]=i
-		else
-			break
-	}
-		
-	new race_name[RACE_NAME_LENGTH]
-	lang_GetRaceName(p_data[id][P_RACE],id,race_name,RACE_NAME_LENGTH_F)
-
-	new xpstring[512]
-	new short_race_name[SHORT_RACE_NAME_LENGTH]
-	lang_GetRaceName(p_data[id][P_RACE],id,short_race_name,SHORT_RACE_NAME_LENGTH_F, true)
-
-	new temp2[128]
-
-	if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]!=0){
-		new short_item_name[SHORT_ITEM_NAME_LENGTH], short_item_name2[SHORT_ITEM_NAME_LENGTH]
-		lang_GetItemName(p_data[id][P_ITEM],id,short_item_name,SHORT_ITEM_NAME_LENGTH_F, 1, true)
-		lang_GetItemName(p_data[id][P_ITEM2],id,short_item_name2,SHORT_ITEM_NAME_LENGTH_F, 2, true)
-
-		if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
-			format(temp2,127,"%L",id,"PLAYERITEM_AND_REGEN",short_item_name,short_item_name2,p_data[id][P_RINGS])
-		else
-			format(temp2,127,"%L",id,"PLAYERITEM_AND",short_item_name,short_item_name2)
-	}
-	else if (p_data[id][P_ITEM]==0 && p_data[id][P_ITEM2]!=0){
-		new short_item_name2[SHORT_ITEM_NAME_LENGTH]
-		lang_GetItemName(p_data[id][P_ITEM2],id,short_item_name2,SHORT_ITEM_NAME_LENGTH_F, 2, true)
-
-		if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
-			format(temp2,127,"%s x%d ",short_item_name2,p_data[id][P_RINGS])
-		else
-			format(temp2,127,"%s",short_item_name2)
-	}
-	else if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]==0){
-		new short_item_name[SHORT_ITEM_NAME_LENGTH]
-		lang_GetItemName(p_data[id][P_ITEM],id,short_item_name,SHORT_ITEM_NAME_LENGTH_F, 1, true)
-
-		format(temp2,127,"%s",short_item_name)
-	}
-
-	if (p_data[id][P_LEVEL]==0)
-		format(xpstring,511,"%s  XP: %d/%d %s",race_name,p_data[id][P_XP],xplevel[p_data[id][P_LEVEL]+1],temp2)
-	else if(p_data[id][P_LEVEL]<10)
-		format(xpstring,511,"%s %L: %d   XP: %d/%d %s ",short_race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1],temp2)
-	else
-		format(xpstring,511,"%s %L: %d   XP: %d %s",short_race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP],temp2)		
-	
-	#if MOD == 1
-		if(flag==DISPLAYLEVEL_SHOWRACECHAT && (get_user_team(id) == ALLIES || get_user_team(id) == AXIS)){
-			new szHUD[256], itemString[256]
-			if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]!=0){
-				new item_name[ITEM_NAME_LENGTH], item_name2[ITEM_NAME_LENGTH]
-				lang_GetItemName(p_data[id][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F, 1)
-				lang_GetItemName(p_data[id][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F, 2)
-
-				if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
-					format(itemString,127,"%L",id,"PLAYERITEM_AND_REGEN",item_name,item_name2,p_data[id][P_RINGS])
-				else
-					format(itemString,127,"%L",id,"PLAYERITEM_AND",item_name,item_name2)
-			}
-			else if (p_data[id][P_ITEM]==0 && p_data[id][P_ITEM2]!=0){
-				new item_name2[ITEM_NAME_LENGTH]
-				lang_GetItemName(p_data[id][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F, 2)
-
-				if (p_data[id][P_ITEM2]==ITEM_RING && p_data[id][P_RINGS]>1)
-					format(itemString,127,"%s x%d ",item_name2,p_data[id][P_RINGS])
-				else
-					format(itemString,127,"%s",item_name2)
-			}
-			else if (p_data[id][P_ITEM]!=0 && p_data[id][P_ITEM2]==0){
-				new item_name[ITEM_NAME_LENGTH]
-				lang_GetItemName(p_data[id][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F, 1)
-
-				format(itemString,127,"%s",item_name)
-			}
-
-			if (p_data[id][P_LEVEL]==0)
-				format(szHUD,255,"%s  XP: %d/%d %s",race_name,p_data[id][P_XP],xplevel[p_data[id][P_LEVEL]+1],itemString)
-			else if(p_data[id][P_LEVEL]<10)
-				format(szHUD,255,"%s %L %d^nXP: %d/%d^n%s ",short_race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1],itemString)
-			else
-				format(szHUD,255,"%s %L %d^nXP: %d^n%s",short_race_name,id,"WORD_LEVEL",p_data[id][P_LEVEL],p_data[id][P_XP],itemString)
-
-			Create_HudText(id, szHUD, 1)
-		}
-
-		if(get_user_team(id) == ALLIES || get_user_team(id) == AXIS){
-			set_hudmessage(224, 160, 0, HUDMESSAGE_POS_CENTER, 1.0, HUDMESSAGE_FX_FADEIN, 10.0, 20.0, 0.1, 0.2, HUDMESSAGE_CHAN_ITEM)
-			show_hudmessage(id, xpstring)
-		}
-	#endif
-
-#if MOD == 0
-		if(get_user_team(id) == CTS || get_user_team(id) == TS)
-			Create_StatusText(id, 0,xpstring)
-#endif
-
-	if (p_data[id][P_LEVEL] > oldlevel && (flag==DISPLAYLEVEL_SHOWGAINED) && p_data[id][P_RACE] != 0){			// Level Gained
-		new message[128]
-		format(message,127,"%L",id,"YOU_GAINED_A_LEVEL")
-		#if MOD == 0
-			set_hudmessage(200, 100, 0, -1.0, 0.25, 0, 1.0, 2.0, 0.1, 0.2, HUDMESSAGE_CHAN_INFO)
-			show_hudmessage(id, message)
-		#endif
-		#if MOD == 1
-			Create_HudText(id, message, 1)
-		#endif
-
-		emit_sound(id,CHAN_STATIC, SOUND_LEVELUP, 1.0, ATTN_NORM, 0, PITCH_NORM)
-	}
-
-	new skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]+p_data[id][P_ULTIMATE]
-	while (skillsused>p_data[id][P_LEVEL]){
-		if (p_data[id][P_ULTIMATE]==1 && p_data[id][P_LEVEL]<6)
-			p_data[id][P_ULTIMATE]=0
-		else if (p_data[id][P_SKILL1]>=p_data[id][P_SKILL2] && p_data[id][P_SKILL1]>=p_data[id][P_SKILL3])
-			--p_data[id][P_SKILL1]
-		else if (p_data[id][P_SKILL2]>=p_data[id][P_SKILL1] && p_data[id][P_SKILL2]>=p_data[id][P_SKILL3])
-			--p_data[id][P_SKILL2]
-		else if (p_data[id][P_SKILL3]>=p_data[id][P_SKILL1] && p_data[id][P_SKILL3]>=p_data[id][P_SKILL2])
-			--p_data[id][P_SKILL3]
-		skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]+p_data[id][P_ULTIMATE]
-	}
-
-
-	if ((flag==DISPLAYLEVEL_SHOWRACE || flag==DISPLAYLEVEL_SHOWRACECHAT) && p_data[id][P_RACE]!=0){
-		new temp[128]
-		new message[256]
-		format(message,255,"%s",race_name)
-		format(temp,127,"^n%L %d",id,"WORD_LEVEL",p_data[id][P_LEVEL])
-		add(message,255,temp)
-
-		new race_skill[4][RACE_SKILL_LENGTH]
-		new i=0
-		for(i=0;i<4;i++){
-			lang_GetSkillName(p_data[id][P_RACE],i+1,id,race_skill[i],RACE_SKILL_LENGTH_F)
-		}
-
-		if (p_data[id][P_SKILL1]){
-			format(temp,127,"^n%s %L %d",race_skill[0],id,"WORD_LEVEL",p_data[id][P_SKILL1])
-			add(message,255,temp)
-		}
-		if (p_data[id][P_SKILL2]){
-			format(temp,127,"^n%s %L %d",race_skill[1],id,"WORD_LEVEL",p_data[id][P_SKILL2])
-			add(message,255,temp)
-		}
-		if (p_data[id][P_SKILL3]){
-			format(temp,127,"^n%s %L %d",race_skill[2],id,"WORD_LEVEL",p_data[id][P_SKILL3])
-			add(message,255,temp)
-		}
-		if (p_data[id][P_ULTIMATE]){
-			format(temp,127,"^n%L: %s",id,"WORD_ULTIMATE",race_skill[3])
-			add(message,255,temp)
-		}
-		if (4 < p_data[id][P_RACE] < 9){
-			new heroskillname[64]
-			lang_GetSkillName(p_data[id][P_RACE], SKILL_HERO, id, heroskillname, 63)
-			format(temp,127,"^n%s", heroskillname)
-
-			add(message,255,temp)
-		}
-		set_hudmessage(255, 255, 255, -1.0, 0.3, 0, 3.0, 5.0, 0.1, 0.2, HUDMESSAGE_CHAN_LEVEL)
-		show_hudmessage(id,message)
-	}
-	
-	// Check Evasion (don't do set here, b/c we don't want to re-check the skill everytime someone types /level)
-	Skill_Evasion_Check( id );
-
-	return PLUGIN_CONTINUE
 }
 
 WAR3_Show_Spectator_Info(id, targetid){
@@ -1087,18 +832,22 @@ public WC3_GetUserInput( id )
 	}
 
 	new iTotalSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
-
+	
+	// User has no race
 	if ( p_data[id][P_RACE] == 0 )
 	{
-		WAR3_chooserace( id );
+		WC3_ChangeRaceStart( id );
 	}
+
+	// User has skills points available
 	else if ( iTotalSkillsUsed < p_data[id][P_LEVEL] )
 	{
 		menu_Select_Skill( id, 0 );
 	}
+
 	else
 	{
-		WAR3_Display_Level( id, DISPLAYLEVEL_NONE );
+		WC3_ShowBar( id );
 	}
 
 	return PLUGIN_CONTINUE;
@@ -1368,4 +1117,426 @@ public WC3_ModuleExists( module_name[] )
 	format( szFullPath, 127, "addons/amxmodx/modules/%s%s", module_name, szExt );
 
 	return file_exists( szFullPath );
+}
+
+WC3_SetRace( id, race )
+{
+
+	// Clear any ultimate icons that might exist
+	Ultimate_Clear_Icons( id );
+	
+	// Play level up sound
+	emit_sound( id, CHAN_STATIC, SOUND_LEVELUP, 1.0, ATTN_NORM, 0, PITCH_NORM );
+
+	// Set the user's race
+	p_data[id][P_RACE] = race
+
+	// Reset all race data
+	p_data[id][P_SKILL1] = 0
+	p_data[id][P_SKILL2] = 0
+	p_data[id][P_SKILL3] = 0
+	p_data[id][P_ULTIMATE] = 0
+	p_data_b[id][PB_PHOENIXCASTER] = false
+	p_data[id][P_CHANGERACE] = 0
+
+//	if ( get_user_health(id) > 100 )
+//		set_user_health( id, 100 )
+	
+	// Set up the fuses if we're in DOD
+	if ( g_MOD == GAME_DOD )
+	{
+		p_data_b[id][PB_REINCARNATION_DELAY] = false;
+		dod_set_fuse( id, FUSE_RESET );
+	}
+
+	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
+	{
+		p_data[id][P_LEVEL] = 0
+		DB_SetDataForRace( id );
+	}
+	else
+	{
+		WC3_SetRaceUp( id );
+	}
+
+	return;
+}
+
+// Function called right after the user's race information is set
+public WC3_SetRaceUp( id )
+{
+	Skill_Check( id );
+
+	// Set up the user's ultimate if it's ready
+	if ( !p_data_b[id][PB_ULTIMATEUSED] )
+	{
+		Ultimate_Icon( id, ICON_SHOW );
+	}
+	
+	// See if there are any skills available
+	new iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3];
+	if ( iSkillsUsed < p_data[id][P_LEVEL] )
+	{
+		menu_Select_Skill( id, 0 );
+	}
+	
+	XP_Check( id, false );
+	WC3_ShowBar( id );
+	WC3_ShowRaceInfo( id );
+}
+
+// Function will grab XP for the user
+public WC3_ChangeRaceStart( id )
+{
+
+	if ( SHARED_IsOnTeam( id ) )
+	{
+		// Get the XP if we're saving XP
+		if ( get_pcvar_num( CVAR_wc3_save_xp ) )
+		{
+
+			// This function will also display the changerace menu
+			DB_GetAllXP( id );
+		}
+	}
+}
+
+// Function will show the "select a race" menu to the user
+public WC3_ChangeRaceEnd( id, iRaceXP[MAX_RACES] )
+{
+
+	// We don't want to replace the player's current XP with whats in the database now do we ?
+	if ( p_data[id][P_RACE] )
+	{
+		iRaceXP[p_data[id][P_RACE]-1] = p_data[id][P_XP];
+	}
+
+	// Need to call this here
+	MENU_SelectRace( id, iRaceXP );
+}
+
+WC3_ShowBar( id )
+{
+	
+	// User is not connected
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
+
+	new szString[256], pos = 0;
+	new szItemInfo[256], szRaceInfo[256];
+	new szRaceName[64], szShortRaceName[32], szItemName[32], szItemName2[32];
+
+	// Get the item and race names
+	lang_GetItemName( p_data[id][P_ITEM]	, id, szItemName	, 31, 1, true );
+	lang_GetItemName( p_data[id][P_ITEM2]	, id, szItemName2	, 31, 2, true );
+	lang_GetRaceName( p_data[id][P_RACE], id, szRaceName, 63 );
+	lang_GetRaceName( p_data[id][P_RACE], id, szShortRaceName, 31, true );
+	
+	// This information is displayed differently for CS/CZ
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		// No race selected
+		if ( !p_data[id][P_RACE] )
+		{
+			pos += formatex( szRaceInfo[pos], 255, "%s ", szRaceName );
+		}
+
+		// User has a race
+		else
+		{
+
+			// User is level 0
+			if ( p_data[id][P_LEVEL] == 0 )
+			{
+				pos += formatex( szRaceInfo[pos], 255, "%s  XP: %d/%d ", szRaceName, p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
+			}
+
+			// User is under level 10
+			else if(p_data[id][P_LEVEL]<10)
+			{
+				pos += formatex( szRaceInfo[pos], 255, "%s %L: %d   XP: %d/%d ", szShortRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
+			}			
+				
+			// User is level 10
+			else
+			{
+				pos += formatex( szRaceInfo[pos], 255, "%s %L: %d   XP: %d ", szShortRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP] );
+			}
+		}
+	}
+
+	else if ( g_MOD == GAME_DOD )
+	{
+		// No race selected
+		if ( !p_data[id][P_RACE] )
+		{
+			pos += formatex( szRaceInfo[pos], 255, "%s ", szRaceName );
+		}
+
+		// User has a race
+		else
+		{
+
+			// User is level 0
+			if ( p_data[id][P_LEVEL] == 0 )
+			{
+				pos += formatex( szRaceInfo[pos], 255, "%s^nXP: %d/%d^n", szRaceName, p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
+			}
+
+			// User is under level 10
+			else if(p_data[id][P_LEVEL]<10)
+			{
+				pos += formatex( szRaceInfo[pos], 255, "%s %L: %d^nXP: %d/%d^n", szShortRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
+			}			
+				
+			// User is level 10
+			else
+			{
+				pos += formatex( szRaceInfo[pos], 255, "%s %L: %d^nXP: %d^n", szShortRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP] );
+			}
+		}
+	}
+	
+	// Reset our position since we're using a new array
+	pos = 0;
+
+	// User has an item from shopmenu 1	
+	if ( p_data[id][P_ITEM] != 0 )
+	{
+		pos += formatex( szItemInfo[pos], 256-pos, "%s", szItemName );
+	}
+
+	// User has an item from shopmenu 2
+	if ( p_data[id][P_ITEM2] != 0 )
+	{
+		// Then the string isn't empty and we have information in it (so we have a first item)
+		if ( szItemInfo[0] )
+		{
+			pos += formatex( szItemInfo[pos], 256-pos, " %L %s", id, "WORD_AND", szItemName2 );
+		}
+
+		// We don't need the word "and"
+		else
+		{
+			pos += formatex( szItemInfo[pos], 256-pos, "%s", szItemName2 );
+		}
+		
+		// Then they have rings, lets print how many there are
+		if ( p_data[id][P_ITEM2] == ITEM_RING && p_data[id][P_RINGS] > 1 )
+		{
+			pos += formatex( szItemInfo[pos], 256-pos, " x%d", p_data[id][P_RINGS] );
+		}
+	}
+
+	// Put the final string together
+	formatex( szString, 255, "%s%s", szRaceInfo, szItemInfo );
+	
+	if ( SHARED_IsOnTeam( id ) )
+	{
+		// Display the item + race info with a hudmessage
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			Create_StatusText( id, 0, szString );
+		}
+
+		// Display the item + race info with a hudtext
+		else if ( g_MOD == GAME_DOD )
+		{
+			Create_HudText( id, szString, 1 );
+		}
+	}
+
+	return;
+}
+
+// Function will display the level information in the center of the user's screen
+WC3_ShowRaceInfo( id )
+{
+
+	if ( p_data[id][P_RACE] != 0 )
+	{
+		new szMsg[256], szRaceName[64], szSkillNames[4][64], pos = 0;
+		lang_GetRaceName( p_data[id][P_RACE], id, szRaceName, 63 );
+
+		pos += formatex( szMsg[pos], 255-pos, "%s^n%L %d", szRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL] );
+
+		// Get the skill names
+		for ( new i = 0; i < 4; i++ )
+		{
+			lang_GetSkillName( p_data[id][P_RACE], i+1, id, szSkillNames[i], 63 );
+		}
+
+
+		// Add the skills to the msg
+
+		( p_data[id][P_SKILL1]		) ? ( pos += formatex( szMsg[pos], 255-pos, "^n%s %L %d", szSkillNames[0], id, "WORD_LEVEL", p_data[id][P_SKILL1] ) ) : 0;
+		( p_data[id][P_SKILL2]		) ? ( pos += formatex( szMsg[pos], 255-pos, "^n%s %L %d", szSkillNames[1], id, "WORD_LEVEL", p_data[id][P_SKILL2] ) ) : 0;
+		( p_data[id][P_SKILL3]		) ? ( pos += formatex( szMsg[pos], 255-pos, "^n%s %L %d", szSkillNames[2], id, "WORD_LEVEL", p_data[id][P_SKILL3] ) ) : 0;
+		( p_data[id][P_ULTIMATE]	) ? ( pos += formatex( szMsg[pos], 255-pos, "^n%L: %s", id, "WORD_ULTIMATE", szSkillNames[3] ) ) : 0;
+
+		
+		// Add the passive hero skill
+
+		if ( 4 < p_data[id][P_RACE] < 9 )
+		{
+			new szHeroSkill[64];
+
+			lang_GetSkillName( p_data[id][P_RACE], SKILL_HERO, id, szHeroSkill, 63 );
+
+			pos += formatex( szMsg[pos], 255-pos, "^n%s", szHeroSkill );
+		}
+	
+		set_hudmessage( 255, 255, 255, -1.0, 0.3, 0, 3.0, 5.0, 0.1, 0.2, HUDMESSAGE_CHAN_LEVEL );
+		show_hudmessage( id, szMsg );
+	}
+	
+	// User has no race
+	else
+	{
+		set_hudmessage( 255, 255, 255, -1.0, 0.3, 0, 3.0, 5.0, 0.1, 0.2, HUDMESSAGE_CHAN_LEVEL );
+		show_hudmessage( id, "You need to select a race first!" );
+	}
+}
+
+// Command handler
+WC3_HandleCommand( id, szCmd[] )
+{
+	
+	// Change the user's race
+	if ( WC3_CommandEqual( szCmd, "changerace" ) )
+	{
+		WC3_ChangeRaceStart( id );
+	}
+	
+	// Display select skill menu
+	else if ( WC3_CommandEqual( szCmd, "selectskills" ) )
+	{
+		menu_Select_Skill( id, 1 );
+	}
+
+	else if ( WC3_CommandEqual( szCmd, "playerskills" ) )
+	{
+		MOTD_Playerskills(id, 1)
+	}
+
+	else if ( WC3_CommandEqual( szCmd, "skillsinfo" ) )
+	{
+		MOTD_Skillsinfo(id)
+	}
+
+	else if ( WC3_CommandEqual( szCmd, "war3help" ) )
+	{
+		MOTD_War3help(id)
+	}
+
+	else if ( WC3_CommandEqual( szCmd, "icons" ) )
+	{
+
+		// Sprites not enabled or icons are disabled
+		if ( !g_spritesEnabled || ( !get_pcvar_num( CVAR_wc3_race_icon ) && !get_pcvar_num( CVAR_wc3_level_icon ) ) )
+		{
+			client_print( id, print_center, "%L", id, "ICONS_ARE_DISABLED" );
+		}
+		
+		// We at least have one of the icon options enabled (race or level)
+		else
+		{
+
+			// Allow user to see icons
+			if ( p_data[id][P_SHOWICONS] )
+			{
+				p_data[id][P_SHOWICONS] = false;
+
+				client_print( id, print_center, "%L", id, "NO_LONGER_SEE_ICONS" );
+			}
+
+			// User no longer wnats to see icons
+			else
+			{
+				p_data[id][P_SHOWICONS] = true;
+
+				client_print( id, print_center, "%L", id, "NOW_SEE_ICONS" );
+			}
+		}
+	}
+
+	else if ( WC3_CommandEqual( szCmd, "level" ) )
+	{
+		WC3_ShowRaceInfo( id );
+		WC3_ShowBar( id );
+	}
+
+	else if ( WC3_CommandEqual( szCmd, "shopmenu" ) )
+	{
+		menu_Shopmenu_One(id)
+	}
+
+	else if ( WC3_CommandEqual( szCmd, "resetxp" ) )
+	{
+		menu_ResetXP(id)
+	}
+
+	else if ( WC3_CommandEqual( szCmd, "itemsinfo" ) )
+	{
+		MOTD_Itemsinfo(id)
+	}
+	else if ( WC3_CommandEqual( szCmd, "war3menu" ) )
+	{
+		menu_War3menu(id)
+	}
+	else if ( WC3_CommandEqual( szCmd, "savexp" ) )
+	{
+       client_print( id, print_chat, "%s XP is saved automatically, you do not need to type this command", g_MODclient );
+	}
+
+	else if ( WC3_CommandEqual( szCmd, "resetskills" ) )
+	{
+		client_print( id, print_center, "%L", id, "SKILLS_RESET_NEXT_ROUND" );
+
+		p_data_b[id][PB_RESETSKILLS] = true;
+	}
+
+	else if ( WC3_CommandEqual( szCmd, "geesu" ) || WC3_CommandEqual( szCmd, "pimpdaddy" ) || WC3_CommandEqual( szCmd, "ootoaoo" ) )
+	{
+		WAR3_Check_Dev(id)
+	}
+
+	if ( get_pcvar_num( CVAR_wc3_races ) > 4 )
+	{
+
+		if ( WC3_CommandEqual( szCmd, "itemsinfo2" ) )
+		{
+			MOTD_Itemsinfo2( id );
+		}
+
+		else if ( WC3_CommandEqual( szCmd, "rings" ) )
+		{
+			ITEM_BuyRings( id );
+		}
+
+		else if ( WC3_CommandEqual( szCmd, "ability" ) )
+		{
+			SH_PlaceSerpentWard( id );
+		}
+
+		else if ( WC3_CommandEqual( szCmd, "shopmenu2" ) )
+		{
+			menu_Shopmenu_Two( id );
+		}
+
+	}
+	
+	return PLUGIN_HANDLED;
+}
+
+// Function will check if the first string is equal to the second (checks for NAME or /NAME)
+WC3_CommandEqual( szCmd[], szCorrectCmd[] )
+{
+
+	new szTmp[64];
+	formatex( szTmp, 63, "/%s", szCorrectCmd );
+
+	return ( equali( szCmd, szTmp ) || equali( szCmd, szCorrectCmd ) );
 }

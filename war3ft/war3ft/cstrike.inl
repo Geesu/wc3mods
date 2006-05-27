@@ -411,9 +411,9 @@ public on_FreezeTimeComplete() {
 	
 	for (i = 0; i < numberofplayers; ++i){
 		id=players[i]
-
-		WAR3_Display_Level(id, DISPLAYLEVEL_NONE)
 		
+		WC3_ShowBar( id );
+
 		set_task( 0.1, "SHARED_SetSpeed", TASK_UNHOLYSPEED + id );
 	}
 
@@ -469,27 +469,35 @@ public on_CTWin(){
 	return PLUGIN_CONTINUE
 }
 
+
+// Function called when a user's armor changes
+public on_Battery( id )
+{	
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+	
+	// Store the previous value (we do this b/c the Battery event is triggered (and set to 0) before weapon reincarnation)
+	p_data[id][P_LASTARMOR] = p_data[id][P_ARMORONDEATH];
+
+	p_data[id][P_ARMORONDEATH] = read_data( 1 );
+
+	return;
+}
+
 public on_ArmorType(id)
 {
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	client_print( id, print_chat, "ArmorType: %d Total: %d", read_data(1), read_datanum() );
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
 	
 	// Save user's armor
 	p_data[id][P_ARMORONDEATH] = cs_get_user_armor( id, g_ArmorType[id] );
 
-	/*if ( read_data(1) )
-	{
-		g_ArmorType[id] = CS_ARMOR_VESTHELM;
-	}
-	else
-	{
-		g_ArmorType[id] = CS_ARMOR_KEVLAR;
-	}*/
-
-	return PLUGIN_CONTINUE;
+	return;
 }
 
 public on_ShowStatus(id){

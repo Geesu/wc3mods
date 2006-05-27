@@ -196,12 +196,6 @@ public CVAR_Init()
 // Function will configure the various CVARs
 public CVAR_Configure()
 {
-	// If there is no DBI module loaded than we will be unable to save XP with SQL
-	if ( !g_DBILoaded && get_pcvar_num( CVAR_wc3_save_xp_sql ) )
-	{
-		set_pcvar_num( CVAR_wc3_save_xp_sql, 0 );
-	}
-	
 	// We will only change the bonus' if we are saving XP
 	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
 	{

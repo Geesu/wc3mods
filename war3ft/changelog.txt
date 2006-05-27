@@ -26,6 +26,7 @@ v2.3.3
 Add a disable orc nade map config file...
 Add a start/stop option
 //Need to give 2 flashbangs, not one
+Fix bug with doing autoselect w/FT_Races 8 then changeracve and CENTER_CHANGED_NEXT displaying
 
 v2.3.2
  - Addition: Admin flag added to war3FT.cfg file as a cvar

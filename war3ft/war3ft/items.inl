@@ -71,7 +71,7 @@ public Item_Check( id )
 
 	if(p_data_b[id][PB_DIEDLASTROUND])
 	{
-		WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
+		WC3_ShowBar( id );
 	}
 
 	
@@ -274,6 +274,29 @@ public ITEM_Mole(parm[]){ // For ITEM_MOLE, checks to see if there is an open sp
 	return PLUGIN_HANDLED 
 } 
 
+public ITEM_BuyRings( id )
+{
+	new iMoney;
+	
+	// Lets buy as many rings as we can!
+	while ( p_data[id][P_RINGS] < 5 )
+	{
+		iMoney = SHARED_GetUserMoney( id );
+
+		// Check to see if the user can buy another ring
+		if ( iMoney < itemcost2[ITEM_RING-1] )
+		{
+			break;
+		}
+		
+		// Take their money
+		SHARED_SetUserMoney( id, iMoney - itemcost2[ITEM_RING-1], 1 );
+
+		// Give them the rings
+		ITEM_Set( id, ITEM_RING, SHOPMENU_TWO );
+	}
+}
+
 public ITEM_Ring( id )
 {
 	if ( !warcraft3 )
@@ -441,7 +464,7 @@ public ITEM_Set( id, iItemID, iShopmenuID )
 	}
 	
 	// Display the new item on the user's HUD
-	WAR3_Display_Level( id, DISPLAYLEVEL_NONE );
+	WC3_ShowBar( id );
 }
 
 public ITEM_CanBuy( id )

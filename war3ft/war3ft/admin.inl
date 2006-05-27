@@ -12,7 +12,7 @@ public Admin_TakeXP(){
 
 	p_data[id][P_XP] -= str_to_num(argXP)
 
-	WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
+	XP_Check( id );
 
 	return PLUGIN_HANDLED
 }
@@ -35,7 +35,7 @@ public Admin_GiveMole(id, level, cid){
 		get_players(players,inum) 
 		for(new a=0;a<inum;++a){
 			p_data[players[a]][P_ITEM2]=ITEM_MOLE
-			WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
+			WC3_ShowBar( players[a] );
 		} 
 		return PLUGIN_HANDLED
 	}
@@ -48,14 +48,14 @@ public Admin_GiveMole(id, level, cid){
 		} 
 		for(new a=0;a<inum;++a){
 			p_data[players[a]][P_ITEM2]=ITEM_MOLE
-			WAR3_Display_Level(id,DISPLAYLEVEL_NONE)
+			WC3_ShowBar( players[a] );
 		} 
 	}
 	else { 
 		new player = find_target(id,arg) 
 		if (!player) return PLUGIN_HANDLED 
 		p_data[player][P_ITEM2]=ITEM_MOLE
-		WAR3_Display_Level(player,DISPLAYLEVEL_NONE)
+		WC3_ShowBar( player );
 	} 
 
 	return PLUGIN_HANDLED 
@@ -78,9 +78,9 @@ public changeXP(){
 		p_data[id][P_XP] = 0
 	else
 		p_data[id][P_XP] += xp
-	
-	WAR3_Display_Level(id, DISPLAYLEVEL_NONE)
 
+	XP_Check( id );
+	
 	return PLUGIN_CONTINUE
 }
 
@@ -170,7 +170,7 @@ public _Admin_GiveXP(id, target[], iXP){
 
 			p_data[players[a]][P_XP] += iXP
 
-			WAR3_Display_Level(players[a],DISPLAYLEVEL_NONE)
+			XP_Check( id );
 		}
 
 		return PLUGIN_CONTINUE
@@ -190,7 +190,7 @@ public _Admin_GiveXP(id, target[], iXP){
 
 			p_data[players[a]][P_XP] += iXP
 
-			WAR3_Display_Level(players[a],DISPLAYLEVEL_NONE)
+			XP_Check( id );
 		}
 	}
 	else { 
@@ -203,7 +203,7 @@ public _Admin_GiveXP(id, target[], iXP){
 
 		p_data[player][P_XP] += iXP
 
-		WAR3_Display_Level(player,DISPLAYLEVEL_NONE)
+		XP_Check( id );
 	}
 	return PLUGIN_CONTINUE 
 } 

@@ -1,5 +1,4 @@
 #define IMPALE_INTENSITY		10.0		// Intensity of impale
-#define HEALING_WAVE_RANGE		750			// Range to heal teammates
 
 
 // Gives skill abilities at beginning of round and when skills are selected
@@ -60,7 +59,7 @@ public Skill_Check(id)
 	// Shadow Hunter's Healing Wave
 	if ( Verify_Skill(id, RACE_SHADOW, SKILL1) ){
 		if (!task_exists(id+TASK_WAVE))
-			set_task(1.0,"_Skill_Healing_Wave",TASK_WAVE+id,parm,2)
+			set_task( 1.0, "_SH_HealingWave", TASK_WAVE + id );
 	}
 	else{
 		if (task_exists(id+TASK_WAVE))
@@ -96,6 +95,8 @@ public Skill_Check(id)
 // Blood Mage's Pheonix Ability in DOD
 // ****************************************
 
+#define BM_PHEONIX_RANGE		750
+
 public Skill_Pheonix(id){
 	SHARED_SetUserMoney(id, SHARED_GetUserMoney(id) + p_pheonix_dod[p_data[id][P_SKILL1]-1])
 
@@ -117,7 +118,7 @@ public Skill_Pheonix(id){
 			get_user_origin(targetid, targetorigin)
 			distancebetween = get_distance(origin, targetorigin)
 
-			if (distancebetween < HEALING_WAVE_RANGE){
+			if (distancebetween < BM_PHEONIX_RANGE){
 				SHARED_SetUserMoney(targetid, SHARED_GetUserMoney(targetid) + money)
 				client_print(targetid, print_chat, "%s %L", g_MODclient, targetid, "DOD_PHOENIX", money, name)
 			}
@@ -149,8 +150,8 @@ public Skill_Evasion_Set( id )
 	Skill_Evasion_Check( id );
 }
 
-// Called on Skill_Evasion_Set and when a user types /level
-public Skill_Evasion_Check( id )
+// Called on Skill_Evasion_Set
+Skill_Evasion_Check( id )
 {
 	new iHealth = get_user_health( id );
 	
@@ -255,8 +256,10 @@ stock Skill_Evasion_Reset( id, damage )
 						parm[0] = id
 
 						p_data_b[id][PB_SPAWNEDFROMITEM] = true
+						
+					
+						set_task( 0.7, "_SHARED_Spawn", TASK_SPAWN + id );
 
-						set_task(0.7,"func_spawn",TASK_SPAWN+id,parm,2)
 						set_hudmessage(200, 100, 0, -0.8, 0.1, 0, 1.0, 5.0, 0.1, 0.2, 2) 
 						get_user_name(targetid,name,31)
 						get_user_name(id,victimName,31)
@@ -273,173 +276,6 @@ stock Skill_Evasion_Reset( id, damage )
 		}
 	}
 #endif
-
-
-// ****************************************
-// Shadow Hunter's Healing Wave
-// ****************************************
-
-public _Skill_Healing_Wave(parm[2]){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	if ( Verify_Skill(id, RACE_SHADOW, SKILL1) && is_user_alive(id) ){
-		set_task(p_heal[p_data[id][P_SKILL1]-1],"_Skill_Healing_Wave",TASK_WAVE+id,parm,2)
-	}
-	
-	// Prevent healing if this player is Hexed
-	if ( p_data_b[id][PB_HEXED] )
-		return PLUGIN_CONTINUE
-
-	new team = get_user_team(id)
-
-	new players[32], numberofplayers
-	new i, targetid, distancebetween, targetorigin[3]
-	new origin[3]
-
-	get_user_origin(id, origin)
-	get_players(players, numberofplayers,"a")
-
-	for (i = 0; i < numberofplayers; ++i){
-		targetid=players[i]
-
-		if (p_data_b[targetid][PB_ISCONNECTED] && get_user_team(targetid) == team){
-			get_user_origin(targetid, targetorigin)
-			distancebetween = get_distance(origin, targetorigin)
-
-			if (distancebetween < HEALING_WAVE_RANGE){
-
-				get_user_origin(targetid,origin)
-				
-				if( get_user_actualhealth(targetid) + 1 <= get_user_maxhealth(targetid) ){
-
-					set_user_health(targetid, get_user_health(targetid) + 1)
-
-					Create_TE_IMPLOSION(origin, 100, 8, 1)
-				}
-			}
-		}
-	}
-
-	return PLUGIN_CONTINUE
-}
-
-
-// ****************************************
-// Shadow Hunter's Hex
-// ****************************************
-
-public _Skill_Hex(parm[2]){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-	
-	p_data_b[id][PB_CAN_RENDER] = true
-	p_data_b[id][PB_HEXED] = false
-	
-	// Reset the user's speed
-	SHARED_ResetMaxSpeed( id );
-
-	set_user_rendering(id)
-
-	emit_sound(id, CHAN_STATIC, SOUND_HEX, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-	return PLUGIN_CONTINUE
-}
-
-
-// ****************************************
-// Shadow Hunter's Serpent Ward
-// ****************************************
-
-public _Skill_SerpentWard(parm[5]){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new id = parm[3]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	if (!is_user_alive(id))
-		return PLUGIN_CONTINUE
-
-	new origin[3], damage, start[3], end[3], red, blue, green
-	origin[0]=parm[0]
-	origin[1]=parm[1]
-	origin[2]=parm[2]
-
-	start[0] = origin[0]
-	start[1] = origin[1]
-	start[2] = origin[2] + 600
-	end[0] = origin[0]
-	end[1] = origin[1]
-	end[2] = origin[2] - 600
-
-#if MOD == 0
-	if(parm[4]==TS){
-		red = 255
-		blue = 0
-		green = 0
-	}
-	else{
-		red = 0
-		blue = 255
-		green = 0
-	}
-#endif
-#if MOD == 1
-	if(parm[4]==AXIS){
-		red = 255
-		blue = 63
-		green = 63
-	}
-	else{
-		red = 76
-		blue = 102
-		green = 76
-	}
-#endif
-
-	Create_TE_BEAMPOINTS(start, end, g_sLightning, 1, 5, 2, 500, 20, red, green, blue, 100, 100)
-
-	new players[32], numberofplayers
-	new i, targetid, distancebetween, targetorigin[3]
-
-	get_players(players, numberofplayers, "a")
-	
-	for (i = 0; i < numberofplayers; ++i){
-		targetid=players[i]
-		if ( parm[4]!=get_user_team(targetid) ){
-			get_user_origin(targetid,targetorigin)
-			distancebetween = get_distance(origin, targetorigin)
-
-			if ( distancebetween < 85 ){
-				damage = 10
-				WAR3_damage(targetid, id, damage, CSW_SERPENTWARD, -1)
-				client_cmd(targetid, "speak ambience/thunder_clap.wav")
-				Create_ScreenFade(targetid, (1<<10), (1<<10), (1<<12), red, green, blue, 255)
-			}
-		}
-	}
-
-	if (!endround)
-		set_task(0.5,"_Skill_SerpentWard",TASK_LIGHT+id,parm,5)
-
-	return PLUGIN_CONTINUE
-}
 
 
 // ****************************************

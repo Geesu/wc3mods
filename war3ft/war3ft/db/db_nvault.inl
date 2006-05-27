@@ -69,7 +69,7 @@ NVAULT_Save( id )
 
 NVAULT_GetAllXP( id )
 {
-	new iAttempt, szKey[66], szXP[8], szData[256], iTimestamp, szPlayerID[32];
+	new iAttempt, szKey[66], szXP[8], szData[256], iTimestamp, szPlayerID[32], iRaceXP[MAX_RACES] = {0};
 
 	DB_GetKey( id, szKey, 65 );
 
@@ -88,10 +88,15 @@ NVAULT_GetAllXP( id )
 			// Save the user's XP in an array
 			if ( iRace > 0 && iRace < MAX_RACES + 1 )
 			{
-				g_iRaceXP[id][iRace-1] = str_to_num( szXP );
+				iRaceXP[iRace-1] = str_to_num( szXP );
 			}
 		}
 	}
+
+	// Call the function that will display the "select a race" menu
+	WC3_ChangeRaceEnd( id, iRaceXP );
+
+	return;
 }
 
 NVAULT_SetData( id )
@@ -127,4 +132,9 @@ NVAULT_SetData( id )
 		p_data[id][P_SKILL3]	= 0;
 		p_data[id][P_ULTIMATE]	= 0;
 	}
+
+	// Set the race up
+	WC3_SetRaceUp( id );
+
+	return;
 }

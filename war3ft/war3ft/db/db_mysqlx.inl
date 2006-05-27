@@ -115,25 +115,20 @@ MYSQLX_UpdateKey()
 		case DB_SAVEBY_NAME:	format( szQuery, 255, "ALTER TABLE `war3users` DROP PRIMARY KEY, ADD PRIMARY KEY ( `playername`, `race` );" );
 	}
 	
-	// MySQL
-	if ( g_DBType == DB_MYSQL )
+	// Then we have a query to execute
+	if ( strlen( szQuery ) > 0 )
 	{
 
-		// Then we have a query to execute
-		if ( strlen( szQuery ) > 0 )
+		new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+		if ( !SQL_Execute( query ) )
 		{
+			MYSQLX_Error( query, szQuery, 4 );
 
-			new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
-
-			if ( !SQL_Execute( query ) )
-			{
-				MYSQLX_Error( query, szQuery, 4 );
-
-				return;
-			}
-
-			SQL_FreeHandle( query );
+			return;
 		}
+
+		SQL_FreeHandle( query );
 	}
 
 	return;
@@ -188,6 +183,7 @@ MYSQLX_GetAllXP( id )
 public _MYSQLX_GetAllXP( failstate, Handle:query, error[], errnum, data[], size )
 {
 	new id = data[0];
+	new iRaceXP[MAX_RACES] = {0};
 
 	// Error during the query
 	if ( failstate )
@@ -211,7 +207,7 @@ public _MYSQLX_GetAllXP( failstate, Handle:query, error[], errnum, data[], size 
 			// Save the user's XP in an array
 			if ( iRace > 0 && iRace < MAX_RACES + 1 )
 			{
-				g_iRaceXP[id][iRace-1] = iXP;
+				iRaceXP[iRace-1] = iXP;
 			}
 
 			SQL_NextRow( query );
@@ -220,6 +216,9 @@ public _MYSQLX_GetAllXP( failstate, Handle:query, error[], errnum, data[], size 
 		// Free the handle
 		SQL_FreeHandle( query );
 	}
+
+	// Call the function that will display the "select a race" menu
+	WC3_ChangeRaceEnd( id, iRaceXP );
 
 	return;
 }
@@ -230,7 +229,7 @@ MYSQLX_SetData( id )
 	DB_GetKey( id, szKey, 65 );
 
 	new szQuery[256], data[1];
-	format( szQuery, 255, "SELECT `xp`, `skill1`, `skill2`, `skill3`, `skill4` FROM `%s` WHERE (`%s` = '%s' AND `race` = %d)", g_DBTableName, g_szDBKey, szKey );
+	format( szQuery, 255, "SELECT `xp`, `skill1`, `skill2`, `skill3`, `skill4` FROM `%s` WHERE (`%s` = '%s' AND `race` = %d)", g_DBTableName, g_szDBKey, szKey, p_data[id][P_RACE] );
 
 	data[0] = id;
 
@@ -278,6 +277,9 @@ public _MYSQLX_SetData( failstate, Handle:query, error[], errnum, data[], size )
 
 		// Free the handle
 		SQL_FreeHandle( query );
+		
+		// Set the race up
+		WC3_SetRaceUp( id );
 	}
 
 	return;

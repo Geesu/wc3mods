@@ -105,7 +105,7 @@ public menu_Shopmenu_Two(id)
 	{
 		lang_GetItemName( i+1, id, item_name2[i], ITEM_NAME_LENGTH_F, 2 );
 	
-		if ( g_MOD == GAME_DOD && i==ITEM_CHAMELEON-1 || i==ITEM_SCROLL-1 )
+		if ( g_MOD == GAME_DOD && ( i == ITEM_CHAMELEON - 1 || i == ITEM_SCROLL - 1 ) )
 		{
 			pos += format( menu_body[pos], 511-pos, "\d%d. %s\y\R%d^n", i+1, item_name2[i], itemcost2[i] );
 		}
@@ -284,8 +284,7 @@ public _menu_Select_Skill(id,key){
 	if (skillsused < p_data[id][P_LEVEL])
 		menu_Select_Skill(id,0)
 	else
-		WAR3_Display_Level(id, DISPLAYLEVEL_NONE)
-
+		WC3_ShowBar( id );
 
 	// Initiate cooldown for player's ultimate, or give them they're ultimate
 
@@ -325,118 +324,6 @@ public _menu_Select_Skill(id,key){
 
 	// Check to see if they should be more invisible
 	SHARED_INVIS_Set( id );
-
-	return PLUGIN_HANDLED
-}
-
-public menu_Select_Race(id, racexp[9]){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new race_name[10][RACE_NAME_LENGTH], i, pos, menu_msg[512], selectrace[128]
-	new keys
-	format(selectrace, 127, "%L",id ,"MENU_SELECT_RACE")
-
-	for(i=1;i<(get_pcvar_num( CVAR_wc3_races )+1);i++){
-		lang_GetRaceName(i,id,race_name[i],RACE_NAME_LENGTH_F)
-	}
-
-	if(get_pcvar_num( CVAR_wc3_save_xp )){
-		pos += format(menu_msg[pos], 512-pos, "%L",id,"SELECT_RACE_TITLE", selectrace)
-
-		for(i=1; i<(get_pcvar_num( CVAR_wc3_races )+1);i++){
-			if(i==5){
-				new selecthero[128]
-				format(selecthero, 127, "%L",id ,"SELECT_HERO")
-				pos += format(menu_msg[pos], 512-pos, "%s", selecthero)
-			}
-
-			if(i==p_data[id][P_RACE])
-				pos += format(menu_msg[pos], 512-pos, "\d%d. %s\d\R%d^n", i, race_name[i], racexp[i-1])
-			else if(i==p_data[id][P_CHANGERACE])
-				pos += format(menu_msg[pos], 512-pos, "\r%d. %s\r\R%d^n", i, race_name[i], racexp[i-1])
-			else
-				pos += format(menu_msg[pos], 512-pos, "\w%d. %s\y\R%d^n", i, race_name[i], racexp[i-1])
-
-			keys |= (1<<(i-1))
-		}
-	}
-	else{
-		pos += format(menu_msg[pos], 512-pos, "%s^n^n", selectrace)
-
-		for(i=1; i<(get_pcvar_num( CVAR_wc3_races )+1);i++){
-			if(i==5){
-				new selecthero[128]
-				format(selecthero, 127, "%L",id ,"SELECT_HERO")
-				pos += format(menu_msg[pos], 512-pos, "%s", selecthero)
-			}
-
-			if(i==p_data[id][P_RACE])
-				pos += format(menu_msg[pos], 512-pos, "\d%d. %s^n", i, race_name[i])
-			else if(i==p_data[id][P_CHANGERACE])
-				pos += format(menu_msg[pos], 512-pos, "\r%d. %s^n", i, race_name[i])
-			else
-				pos += format(menu_msg[pos], 512-pos, "\w%d. %s^n", i, race_name[i])
-
-			keys |= (1<<(i-1))
-		}
-	}
-
-
-	keys |= (1<<(i-1))
-
-	if(get_pcvar_num( CVAR_wc3_races ) == 9)
-		i = 0
-
-	pos += format(menu_msg[pos], 512-pos, "%L",id,"SELECT_RACE_FOOTER", i)
-
-	if(get_pcvar_num( CVAR_wc3_races ) != 9){	// Add a cancel button
-		keys |= (1<<9)
-		pos += format(menu_msg[pos], 512-pos, "^n\w0. %L", id, "WORD_CANCEL")
-	}
-
-	show_menu(id, keys, menu_msg, -1)
-
-	return PLUGIN_HANDLED
-}
-
-public _menu_Select_Race(id,key){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-	
-	// User pressed 0 (cancel)
-	if( get_pcvar_num( CVAR_wc3_races ) < 9 && key-1 == get_pcvar_num( CVAR_wc3_races ) )
-	{
-		return PLUGIN_HANDLED;
-	}
-
-	// Save the current race data before we change
-	DB_SaveXP(id);
-
-	new race, autoselectkey
-
-	if(get_pcvar_num( CVAR_wc3_races ) == 9)
-		autoselectkey = KEY_0
-	else
-		autoselectkey = get_pcvar_num( CVAR_wc3_races )
-
-	if (key == autoselectkey)
-		race = random_num(1,get_pcvar_num( CVAR_wc3_races ))
-	else
-		race = (key+1)
-
-	if(p_data[id][P_RACE]!=0){
-		if(race != p_data[id][P_RACE]){
-			client_print(id, print_center,"%L", id, "CENTER_CHANGED_NEXT")
-			p_data[id][P_CHANGERACE] = race
-		}
-		else
-			p_data[id][P_CHANGERACE] = 0
-	}
-	else
-		WAR3_set_race(id, race)
 
 	return PLUGIN_HANDLED
 }
@@ -508,7 +395,7 @@ public _menu_Skill_Options(id,key){
 	switch (key){
 		case 0:	menu_Select_Skill(id,1)
 		case 1:	MOTD_Skillsinfo(id)
-		case 2:	cmd_ResetSkill(id, 1)
+		case 2:	WC3_HandleCommand( id, "resetskills" );
 		case 8: menu_War3menu(id)
 		default: return PLUGIN_HANDLED
 	}
@@ -542,8 +429,8 @@ public menu_Race_Options(id){
 public _menu_Race_Options(id,key){
 
 	switch (key){
-		case 0:	change_race(id,1)
-		case 1:	WAR3_Display_Level(id,DISPLAYLEVEL_SHOWRACE)
+		case 0:	WC3_ChangeRaceStart( id );
+		case 1:	WC3_ShowRaceInfo( id );
 		case 2:	menu_ResetXP(id)
 		case 3:	MOTD_Playerskills(id, 1)
 		case 8: menu_War3menu(id)
@@ -717,7 +604,7 @@ public _menu_PlayerXP_Options(id,key){
 			client_print(player,print_chat,"%s %L",g_MODclient, id,"THE_ADMIN_JUST_GAVE_YOU_XP",g_menuSettings[id])
 			p_data[player][P_XP] += g_menuSettings[id]
 
-			WAR3_Display_Level(player,DISPLAYLEVEL_SHOWGAINED) 
+			XP_Check( player );
 
 			menu_PlayerXP_Options(id,g_menuPosition[id])
 		}
@@ -812,5 +699,145 @@ public _menu_ResetXP( id, key )
 		XP_Reset(id);
 	}
 	
+	return;
+}
+
+// Function will display the changerace menu
+public MENU_SelectRace( id, iRaceXP[MAX_RACES] )
+{
+	
+	if ( !WAR3_Check( id ) )
+	{
+		return;
+	}
+
+	new szRaceName[MAX_RACES+1][64], i, pos, iKeys = 0, szMenu[512], szXP[16];
+
+	// Get our race names
+	for ( i = 0; i < get_pcvar_num( CVAR_wc3_races ); i++ )
+	{
+		lang_GetRaceName( i + 1, id, szRaceName[i], 63 );
+	}
+
+	pos += formatex( szMenu[pos], 512-pos, "%L", id, "MENU_SELECT_RACE" );
+	pos += formatex( szMenu[pos], 512-pos, "%L", id, "SELECT_RACE_TITLE" );
+
+	// Build the changerace menu (for every race)
+	for ( i = 0; i < get_pcvar_num( CVAR_wc3_races ); i++ )
+	{
+		num_to_str( iRaceXP[i], szXP, 15 );
+		
+		// Add the "Select a Hero" message if necessary
+		if ( i == 4 )
+		{
+			pos += format( szMenu[pos], 512-pos, "%L", id, "SELECT_HERO" );
+		}
+		
+		// User's current race
+		if ( i == p_data[id][P_RACE] - 1 )
+		{
+			pos += formatex( szMenu[pos], 512-pos, "\d%d. %s\d\R%s^n", i + 1, szRaceName[i], ( (get_pcvar_num( CVAR_wc3_save_xp )) ? szXP : " " ) );
+		}
+
+		// Race the user wants to change to
+		else if ( i == p_data[id][P_CHANGERACE] - 1 )
+		{
+			pos += formatex( szMenu[pos], 512-pos, "\r%d. %s\r\R%s^n", i + 1, szRaceName[i], ( (get_pcvar_num( CVAR_wc3_save_xp )) ? szXP : " " ) );
+		}
+
+		// All other cases
+		else
+		{
+			pos += formatex( szMenu[pos], 512-pos, "\w%d. %s\y\R%s^n", i + 1, szRaceName[i], ( (get_pcvar_num( CVAR_wc3_save_xp )) ? szXP : " " ) );
+		}
+
+		iKeys |= (1<<i);
+	}
+
+	iKeys |= (1<<i);
+	
+	// This is needed so we can make the Auto-Select option "0" if the number of races is 9
+	if ( get_pcvar_num( CVAR_wc3_races ) == 9 )
+	{
+		i = -1;
+	}
+
+	pos += format( szMenu[pos], 512-pos, "%L", id, "SELECT_RACE_FOOTER", i + 1 );
+	
+	// Add a cancel button to the bottom
+	if ( get_pcvar_num( CVAR_wc3_races ) != 9 )
+	{
+		iKeys |= (1<<9);
+
+		pos += format( szMenu[pos], 512-pos, "^n\w0. %L", id, "WORD_CANCEL" );
+	}
+	
+	// Show the menu to the user!
+	show_menu( id, iKeys, szMenu, -1 );
+
+	return;
+}
+
+public _MENU_SelectRace( id, key )
+{
+
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+	
+	// User pressed 0 (cancel)
+	if( get_pcvar_num( CVAR_wc3_races ) < 9 && key-1 == get_pcvar_num( CVAR_wc3_races ) )
+	{
+		return;
+	}
+
+	// Save the current race data before we change
+	DB_SaveXP( id );
+
+	new iRace, iAutoSelectKey = KEY_0;
+	
+	if ( get_pcvar_num( CVAR_wc3_races ) != 9 )
+	{
+		iAutoSelectKey = get_pcvar_num( CVAR_wc3_races )
+	}
+	
+	// Auto select a race
+	if ( key == iAutoSelectKey )
+	{
+		iRace = random_num( 1, get_pcvar_num( CVAR_wc3_races ) );
+	}
+
+	// Otherwise race is set
+	else
+	{
+		iRace = key + 1;
+	}
+
+	// User currently has a race
+	if ( p_data[id][P_RACE] != 0 )
+	{
+
+		// Change the user's race at the start of next round
+		if ( iRace != p_data[id][P_RACE] )
+		{
+			client_print( id, print_center, "%L", id, "CENTER_CHANGED_NEXT" );
+
+			p_data[id][P_CHANGERACE] = iRace;
+		}
+
+		// Do nothing
+		else
+		{
+			p_data[id][P_CHANGERACE] = 0;
+		}
+	}
+
+	// User doesn't have a race so give it to him!!!
+	else
+	{
+		WC3_SetRace( id, iRace );
+	}
+
 	return;
 }
