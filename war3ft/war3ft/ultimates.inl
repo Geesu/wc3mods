@@ -156,7 +156,7 @@ Ultimate_Blink(id){
 
 	// Makes sure nearby enemy doesn't have immunity
 	
-	if(WAR3_Immunity_Found_Near(id, oldLocation) || WAR3_Immunity_Found_Near(id, newLocation)){
+	if(WC3_IsImmunePlayerNear(id, oldLocation) || WC3_IsImmunePlayerNear(id, newLocation)){
 		set_hudmessage(255, 255, 10, -1.0, -0.4, 1, 0.5, BLINK_COOLDOWN, 0.2, 0.2,5)
 		show_hudmessage(id,"%L",id,"TELEPORT_FAILED_ENEMY_IMMUNITY")
 
@@ -1049,76 +1049,6 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 	return PLUGIN_CONTINUE
 }
 
-
-// ****************************************
-// Warden's Vengeance
-// ****************************************
-
-Ultimate_Vengeance(id){
-
-	new spawnID, playersInVicinity, entList[1], origin[3], i
-	new ent = -1
-	new Float:spawnOrigin[3]
-	new Float:vicinity = 96.0		//(32x32x96)
-	new bool:found = false
-	new bool:immunityNear = false
-	if(get_user_team(id) == CTS)
-		spawnID = 0
-	else
-		spawnID = 1
-
-	do {
-		ent = find_ent_by_class(ent,szSpawnEnt[spawnID])
-		if (ent != 0) {
-			entity_get_vector(ent,EV_VEC_origin,spawnOrigin)
-			for(i=0;i<3;i++)
-				origin[i] = floatround(spawnOrigin[i])
-
-			playersInVicinity = find_sphere_class(0, "player", vicinity, entList, 1, spawnOrigin)
-			if(!WAR3_Immunity_Found_Near(id, origin)){
-				if (playersInVicinity == 0)
-					found = true
-				immunityNear = false
-			}
-			else
-				immunityNear = true
-		}
-	}
-	while (ent && !found)
-
-	if (!found){
-		set_hudmessage(255, 255, 10, -1.0, -0.4, 1, 0.5, 1.5, 0.2, 0.2,5)
-
-		if(immunityNear)
-			show_hudmessage(id,"%L",id,"TELEPORT_FAILED_ENEMY_IMMUNITY")
-		else
-			show_hudmessage(id,"%L",id,"NO_FREE_SPAWN_FOUND")
-	}
-	else{
-		get_user_origin(id,origin)
-
-		Create_TE_TELEPORT(origin)
-
-		for(i=0;i<3;i++)
-			origin[i] = floatround(spawnOrigin[i])
-
-		set_user_origin(id, origin)
-
-		if(get_user_health(id)<50)
-			set_user_health(id, 50)
-	
-		emit_sound(id,CHAN_STATIC, SOUND_VENGEANCE, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-		p_data_b[id][PB_ULTIMATEUSED]=true
-
-		Ultimate_Icon(id,ICON_HIDE)
-		
-		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_ULT_Delay( id )
-	}
-}
-
-
 // ****************************************
 // Crypt Lord's Locust Swarm
 // ****************************************
@@ -1252,8 +1182,14 @@ public _ULT_Delay( id )
 
 		p_data[id][P_ULTIMATEDELAY]--;
 
-		if (p_data[id][P_ULTIMATEDELAY] > 0)
+		if ( p_data[id][P_ULTIMATEDELAY] > 0 )
 		{
+			// If this exists then the user is getting his ult back quicker than he should
+			if ( task_exists( TASK_UDELAY + id ) )
+			{
+				remove_task( TASK_UDELAY + id );
+			}
+
 			set_task( 1.0, "_ULT_Delay", TASK_UDELAY + id );
 		}
 		else
@@ -1265,15 +1201,15 @@ public _ULT_Delay( id )
 	// Server check
 	else
 	{
-		iUltimateDelay--;
+		g_iUltimateDelay--;
 
-		if ( iUltimateDelay > 0 )
+		if ( g_iUltimateDelay > 0 )
 		{
 			set_task( 1.0, "_ULT_Delay", TASK_UDELAY + id );
 		}
 		else
 		{
-			iUltimateDelay = 0;
+			g_iUltimateDelay = 0;
 		}
 	}
 
@@ -1284,7 +1220,7 @@ public Ultimate_Ready(id)
 {
 	p_data_b[id][PB_ULTIMATEUSED] = false;
 
-	if( is_user_alive( id ) && p_data_b[id][PB_ISCONNECTED] && p_data[id][P_ULTIMATE] )
+	if ( is_user_alive( id ) && p_data_b[id][PB_ISCONNECTED] && p_data[id][P_ULTIMATE] )
 	{
 		// Play the ultimate ready sound
 		client_cmd( id, "speak %s", SOUND_ULTIMATEREADY )

@@ -170,7 +170,7 @@ public _Admin_GiveXP(id, target[], iXP){
 
 			p_data[players[a]][P_XP] += iXP
 
-			XP_Check( id );
+			XP_Check( players[a] );
 		}
 
 		return PLUGIN_CONTINUE
@@ -190,7 +190,7 @@ public _Admin_GiveXP(id, target[], iXP){
 
 			p_data[players[a]][P_XP] += iXP
 
-			XP_Check( id );
+			XP_Check( players[a] );
 		}
 	}
 	else { 
@@ -203,7 +203,7 @@ public _Admin_GiveXP(id, target[], iXP){
 
 		p_data[player][P_XP] += iXP
 
-		XP_Check( id );
+		XP_Check( player );
 	}
 	return PLUGIN_CONTINUE 
 } 

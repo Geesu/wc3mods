@@ -343,25 +343,15 @@ public WAR3_death_victim(victim_id, killer_id)
 
 		_ULT_Delay( victim_id )
 	}
-#if MOD == 0
-	else if (Verify_Skill(victim_id, RACE_WARDEN, SKILL4) && !p_data_b[victim_id][PB_CHANGINGTEAM] && (!p_data_b[killer_id][PB_WARDENBLINK] || killer_id==victim_id) && !g_ultimateDelay && !p_data_b[victim_id][PB_ULTIMATEUSED] && !endround ){	// Vengeance
-		new parm[2]
-		parm[0]=victim_id
-		parm[1]=6
-
-		p_data_b[victim_id][PB_ULTIMATEUSED]=true
-
-		p_data[victim_id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-
-		if(task_exists(TASK_UDELAY+victim_id))
-			remove_task(TASK_UDELAY+victim_id)
-		
-		_ULT_Delay( victim_id )
-
-		set_task( 1.2, "_SHARED_Spawn", TASK_SPAWN + victim_id );
-
+	
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{	
+		// Should we respawn for Vengeance?
+		if ( Verify_Skill( victim_id, RACE_WARDEN, SKILL4 ) && killer_id != victim_id && !p_data_b[killer_id][PB_WARDENBLINK] )
+		{
+			SH_ULT_Vengeance( victim_id );
+		}
 	}
-#endif
 
 
 	// Check to see if player should respawn from an item
@@ -677,28 +667,6 @@ WAR3_Show_Spectator_Info(id, targetid){
 	show_hudmessage(id,message) 
 }
 
-WAR3_Immunity_Found_Near(id, origin[3]){
-
-	new players[32], numplayers, targetid, targetorigin[3]
-	
-	new team = get_user_team(id)
-
-	get_players(players, numplayers, "a")
-
-	for (new i=0; i<numplayers; ++i){
-		targetid=players[i]
-
-		if( get_user_team(targetid) != team && ( p_data[targetid][P_ITEM] == ITEM_NECKLACE || p_data_b[targetid][PB_WARDENBLINK] ) ){
-			get_user_origin(targetid, targetorigin)
-
-			if (get_distance(origin, targetorigin) <= NECKLACE_RADIUS)
-				return true
-		}
-	}
-
-	return false
-}
-
 public WAR3_Kill( id, weapon )
 {
 	
@@ -826,7 +794,7 @@ public WC3_GetUserInput( id )
 		id -= TASK_GETINPUT;
 	}
 
-	if( !warcraft3 || !p_data_b[id][PB_ISCONNECTED] )
+	if ( !warcraft3 || !p_data_b[id][PB_ISCONNECTED] )
 	{
 		return PLUGIN_CONTINUE;
 	}
@@ -1539,4 +1507,57 @@ WC3_CommandEqual( szCmd[], szCorrectCmd[] )
 	formatex( szTmp, 63, "/%s", szCorrectCmd );
 
 	return ( equali( szCmd, szTmp ) || equali( szCmd, szCorrectCmd ) );
+}
+
+// Function simply checks if an enemy of id is near vOrigin and has a necklace/warden's blink
+WC3_IsImmunePlayerNear( id, vOrigin[3] )
+{
+	new players[32], numplayers, vTargetOrigin[3], i;
+	new iTeam = get_user_team( id );
+
+	// Get all players
+	get_players( players, numplayers, "a" );
+	
+	// Loop through all players and check for immunity
+	for ( i = 0; i < numplayers; i++ )
+	{
+		
+		// Make sure that the user we're looking at is on the opposite team of "id"
+		if ( get_user_team( players[i] ) != iTeam )
+		{	
+			// Does this player have a necklace or warden's blink?  If not we don't need to check the radius
+			if ( p_data[players[i]][P_ITEM] == ITEM_NECKLACE || p_data_b[players[i]][PB_WARDENBLINK] )
+			{
+				get_user_origin( players[i], vTargetOrigin );
+				
+				// Then immunity is near
+				if ( get_distance( vOrigin, vTargetOrigin ) <= NECKLACE_RADIUS )
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+WC3_ResetSkills( id )
+{
+	// Reset the user's skills
+	if ( p_data_b[id][PB_RESETSKILLS] ) 
+	{
+		p_data[id][P_SKILL1]	= 0;
+		p_data[id][P_SKILL2]	= 0;
+		p_data[id][P_SKILL3]	= 0;
+		p_data[id][P_ULTIMATE]	= 0;
+		p_data[id][P_LEVEL]		= 0;
+
+		WC3_ShowBar( id );
+		XP_Check( id, false );
+
+		return 1;
+	}
+
+	return 0;
 }

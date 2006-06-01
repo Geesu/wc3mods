@@ -873,6 +873,7 @@ NOT_ULTIMATE_DURING_FREEZETIME = You may not use your ultimate during freezetime
 SUICIDE_BOMB_ARMED = Suicide Bomb Armed^nPress Again To Detonate
 BLINK_DISABLED_FOR_FIRST = Blink disabled for the^nfirst %.0f seconds of the round
 TELEPORT_FAILED_ENEMY_IMMUNITY = Teleport Failed^nEnemy has Immunity
+VENGEANCE_FAILED_ENEMY_IMMUNITY = Vengeance Failed^nEnemy has Immunity
 SLAIN_FOR_TELEPORTING = You have been slain for teleporting into a restricted area
 TELEPORT_FAILED_BAD_DESTINATION = Teleport Failed^nBad Destination
 CANCEL_TELEMENU = ^n^n\w0. Cancel

@@ -90,15 +90,27 @@ public cmd_Ultimate(id)
 
 		return PLUGIN_HANDLED
 	}
-
-	if( p_data_b[id][PB_ULTIMATEUSED] || iUltimateDelay > 0 )
+	
+	// Global ultimate delay > 0
+	if ( g_iUltimateDelay > 0 )
 	{
-		WC3_Status_Text( id, 0.5, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_NOT_READY", iUltimateDelay );
+		WC3_Status_Text( id, 0.5, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_NOT_READY", g_iUltimateDelay );
 
 		client_cmd(id, "speak %s", SOUND_ERROR)
 
 		return PLUGIN_HANDLED
 	}
+
+	// Ultimate is used
+	if ( p_data_b[id][PB_ULTIMATEUSED] )
+	{
+		WC3_Status_Text( id, 0.5, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_NOT_READY", p_data[id][P_ULTIMATEDELAY] );
+
+		client_cmd(id, "speak %s", SOUND_ERROR)
+
+		return PLUGIN_HANDLED
+	}
+
 
 	// Suicide Bomber
 	if ( Verify_Skill(id, RACE_UNDEAD, SKILL4) ){
@@ -170,8 +182,9 @@ public cmd_Ultimate(id)
 	}
 
 	// Vengeance
-	else if ( Verify_Skill(id, RACE_WARDEN, SKILL4) ){
-		Ultimate_Vengeance(id)
+	else if ( Verify_Skill(id, RACE_WARDEN, SKILL4) )
+	{
+		SH_ULT_Vengeance( id );
 	}
 
 	// Locust Swarm

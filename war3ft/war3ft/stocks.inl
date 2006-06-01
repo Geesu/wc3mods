@@ -24,66 +24,6 @@ return 0
 return player
 }
 
-stock find_free_spawn(id, iTeamNumber, Float:spawnOrigin[3], Float:spawnAngle[3]){
-	new iSpawn
-	if(iTeamNumber == CTS)
-		iSpawn=0
-	else
-		iSpawn=1
-
-	const maxSpawns = 128
-	new spawnPoints[maxSpawns]
-	new ent = -1, spawnsFound = 0
-
-	/* Find all of the spawn points */
-	do {
-		ent = find_ent_by_class(ent,szSpawnEnt[iSpawn])
-		if (ent != 0) {
-			spawnPoints[spawnsFound] = ent
-			spawnsFound++
-		}
-	}
-	while (ent && spawnsFound < maxSpawns)
-
-	new bool:foundFreeSpawn
-	new Float:vicinity = 96.0		//(32x32x96)
-	new i
-	new playersInVicinity
-	new entList[1]
-	
-	/* Loop through all the spawn points */
-	for (i = 0;i < spawnsFound && !foundFreeSpawn;i++) {
-
-		if(spawnPoints[i] != 0 && !spawnPointsused[i]){
-			/* Get the origin of the spawn point */
-			entity_get_vector(spawnPoints[i],EV_VEC_origin,spawnOrigin)
-
-			/* Determine if a player is in this vicinity */
-			playersInVicinity = find_sphere_class(0, "player", vicinity, entList, 1, spawnOrigin)
-
-			/* If not, we want to transport the player here */
-			if (playersInVicinity == 0){
-				foundFreeSpawn = true
-				spawnPointsused[i] = true
-			}
-			/* Otherwise we don't */
-			else{
-				foundFreeSpawn = false
-			}
-		}
-		id--
-
-	}
-
-	if( foundFreeSpawn && spawnPoints[i] ){
-		entity_get_vector(spawnPoints[i], EV_VEC_angles, spawnAngle)
-
-		return spawnPoints[i]
-	}
-
-	return -1
-}
-
 stock get_user_actualhealth(id){
 
 	new health = get_user_health(id)

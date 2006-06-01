@@ -948,19 +948,14 @@ public EVENT_PlayerInitialSpawn( id )
 	// Hide their ultimate icon
 	Ultimate_Icon( id, ICON_HIDE );
 	
-	// Reset the user's skills
-	if ( p_data_b[id][PB_RESETSKILLS] ) 
+	// We only want to do this here for CS/CZ... in DOD it should be done on every spawn
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		p_data[id][P_SKILL1]	= 0;
-		p_data[id][P_SKILL2]	= 0;
-		p_data[id][P_SKILL3]	= 0;
-		p_data[id][P_ULTIMATE]	= 0;
-		p_data[id][P_LEVEL]		= 0;
-
-		WC3_ShowBar( id );
-		XP_Check( id, false );
-
-		return PLUGIN_CONTINUE;
+		// Reset user skills if we need to (returns 1 if skills were reset)
+		if ( WC3_ResetSkills( id ) )
+		{
+			return;
+		}
 	}
 
 	// Start a new cooldown
@@ -977,10 +972,14 @@ public EVENT_PlayerInitialSpawn( id )
 	}
 	_ULT_Delay( id );
 	
-	// User has a race selection pending, set it
-	if ( p_data[id][P_CHANGERACE] )
+	// We only want to do this here for CS/CZ... in DOD it should be done on every spawn
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
+		// User has a race selection pending, set it
+		if ( p_data[id][P_CHANGERACE] )
+		{
+			WC3_SetRace( id, p_data[id][P_CHANGERACE] );
+		}
 	}
 
 	// Display the new Chameleon skills for the round
@@ -989,7 +988,7 @@ public EVENT_PlayerInitialSpawn( id )
 		WC3_ShowRaceInfo( id );
 	}
 
-	return PLUGIN_CONTINUE;
+	return;
 }
 
 // Function is called everytime a user spawns (called after EVENT_PlayerInitialSpawn)
@@ -1015,6 +1014,22 @@ public EVENT_PlayerSpawned( id )
 
 	// Reset Blink
 	p_data_b[id][PB_WARDENBLINK]	= false;
+
+	// We only want to do this here for DOD
+	if ( g_MOD == GAME_DOD )
+	{
+		// Reset user skills if we need to (returns 1 if skills were reset)
+		if ( WC3_ResetSkills( id ) )
+		{
+			return;
+		}
+
+		// User has a race selection pending, set it
+		if ( p_data[id][P_CHANGERACE] )
+		{
+			WC3_SetRace( id, p_data[id][P_CHANGERACE] );
+		}
+	}
 
 	// Set the user's Invisibility
 	SHARED_INVIS_Set( id );
@@ -1061,17 +1076,14 @@ public EVENT_PlayerSpawned( id )
 	//ITEM_Check( id );
 	
 	// Should the user mole from fan of knives or an item?
-	if ( p_data[id][P_LASTITEM] == ITEM_MOLE || ( Verify_Skill(id, RACE_WARDEN, SKILL1) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
+	if ( p_data[id][P_LASTITEM2] == ITEM_MOLE || ( Verify_Skill(id, RACE_WARDEN, SKILL1) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
 	{
-		new parm[2];
-		parm[0] = id;
-		parm[1] = (p_data[id][P_LASTITEM] == ITEM_MOLE) ? 7 : 0;
-		set_task( 0.1, "ITEM_Mole", TASK_FAN + id, parm, 2 );
+		set_task( 0.1, "_SHARED_Mole", TASK_MOLE + id );
 	}
 
 
 	// If the user is a bot they should have a chance to buy an item
-	if(is_user_bot(id))
+	if ( is_user_bot( id ) )
 	{
 		if ( random_float(0.0,1.0) <= get_pcvar_num( CVAR_wc3_bot_buy_item ) )
 		{
@@ -1102,7 +1114,7 @@ public EVENT_NewRound()
 	CHAM_Randomize();
 
 	// have "fake" ultimate delay
-	iUltimateDelay = get_pcvar_num( CVAR_wc3_ult_delay );
+	g_iUltimateDelay = get_pcvar_num( CVAR_wc3_ult_delay );
 	_ULT_Delay( 0 );
 
 	// We need to determine when the buytime is up

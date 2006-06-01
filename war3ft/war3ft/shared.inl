@@ -245,12 +245,12 @@ public _SHARED_Spawn( id )
 	// Spawning doesn't work in DOD
 	if ( g_MOD == GAME_DOD )
 	{
-		return PLUGIN_CONTINUE;
+		return;
 	}
 
-	if( !p_data_b[id][PB_ISCONNECTED] || get_user_team( id ) == UNASSIGNED )
+	if( !p_data_b[id][PB_ISCONNECTED] || !SHARED_IsOnTeam( id ) )
 	{
-		return PLUGIN_CONTINUE;
+		return;
 	}
 
 	p_data[id][P_ITEM]	= 0;
@@ -258,7 +258,7 @@ public _SHARED_Spawn( id )
 	
 	if ( is_user_alive( id ) )
 	{
-		return PLUGIN_CONTINUE;
+		return;
 	}
 
 	p_data_b[id][PB_PLAYERSPAWNED] = true;
@@ -274,7 +274,7 @@ public _SHARED_Spawn( id )
 	set_task( 0.2, "_SHARED_Spawn_Final", TASK_SPAWNPLAYER + id );
 	set_task( 0.4, "_SHARED_CS_GiveWeapons", TASK_GIVEITEMS + id );
 
-	return PLUGIN_CONTINUE;
+	return;
 }
 
 // Function will just spawn a player again
@@ -284,7 +284,7 @@ public _SHARED_Spawn_Final( id )
 
 	if( !p_data_b[id][PB_ISCONNECTED] )
 	{
-		return PLUGIN_CONTINUE;
+		return;
 	}
 
 	spawn( id );
@@ -298,7 +298,16 @@ public _SHARED_Spawn_Final( id )
 		give_item( id, "weapon_knife" );
 	}
 
-	return PLUGIN_CONTINUE;
+	// Vengeance Check
+	if ( p_data_b[id][PB_VENGEANCE_SPAWN] )
+	{
+		set_user_health( id, VENGEANCE_HEALTH );
+
+		p_data_b[id][PB_VENGEANCE_SPAWN] = false;
+	}
+
+
+	return;
 }
 
 /*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
@@ -381,50 +390,30 @@ public _SHARED_DOD_Reincarnation_Check( id )
 	if( origin[2] == iReincarnation[id][2] )
 	{
 
-		new iSpawnID = 0, playersInVicinity, entList[1], i, ent = -1;
-		new Float:spawnOrigin[3];
-		new const Float:vicinity = 96.0;
-		new bool:bPlayerFound = false
+		new ent = SHARED_FindFreeSpawn( id, false );
 		
-		if ( get_user_team( id ) == TS )
+		// Valid spawn found
+		if ( ent > 0 )
 		{
-			iSpawnID = 1;
-		}
+			new Float:fSpawnOrigin[3], vOrigin[3];
+			
+			// Get the origin of the spawn point
+			entity_get_vector( ent, EV_VEC_origin, fSpawnOrigin );
 
-		do
-		{
-			ent = find_ent_by_class( ent, szSpawnEnt[iSpawnID] );
-			if ( ent != 0 )
-			{
-				entity_get_vector( ent, EV_VEC_origin, spawnOrigin );
-
-				playersInVicinity = find_sphere_class( 0, "player", vicinity, entList, 1, spawnOrigin );
-
-				if ( playersInVicinity == 0 )
-				{
-					bPlayerFound = true
-				}
-			}
-		}
-		while ( ent && !bPlayerFound )
-		
-		// Player is in the way, we can't spawn
-		if( bPlayerFound )
-		{
-			for( i=0; i<3; i++ )
-			{
-				origin[i] = floatround( spawnOrigin[i] );
-			}
-
-			set_user_origin( id, origin );
+			// Convert float vector to int vector
+			FVecIVec( fSpawnOrigin, vOrigin );
+			
+			// Move the user
+			set_user_origin( id, vOrigin );
 
 			client_print( id, print_chat, "%s %L", g_MODclient, id, "SKILL_REINCARNATION_FAILED" )
 		}
+
+		// No Spawn found
 		else
 		{
 			set_task( 0.1, "_SHARED_DOD_Reincarnation", TASK_REINCARNATION + id );
 		}
-
 	}
 
 	return;
@@ -881,3 +870,173 @@ public SHARED_IsOnTeam( id )
 
 	return false;
 }
+
+SHARED_FindFreeSpawn( id, bImmunityCheck = false, bReverseTeam = false )
+{
+
+	new iPlayersInVicinity, iSpawnID, iEntList[1], vOrigin[3];
+	new ent = -1;
+	new Float:fSpawnOrigin[3];
+	new Float:fVicinity = 96.0;
+	new bool:bFound = false;
+	new bool:bImmunityNear = false;
+	
+	new iTeam = get_user_team( id );
+
+	// Reverse the team IDs (i.e. Mole would want this)
+	if ( bReverseTeam )
+	{
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			iTeam = ( ( iTeam == TEAM_CT ) ? TEAM_T : TEAM_CT );
+		}
+		else if ( g_MOD == GAME_DOD )
+		{
+			iTeam = ( ( iTeam == AXIS ) ? ALLIES : AXIS );
+		}
+	}
+
+	// Need to determine which spawn point to look for based on the user's team
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		iSpawnID = ( ( iTeam == TEAM_CT ) ? 0 : 1 );
+	}
+	else if ( g_MOD == GAME_DOD )
+	{
+		iSpawnID = ( ( iTeam == AXIS ) ? 0 : 1 );
+	}
+
+	// Loop through each ent until we find a spawn entity that we want
+	do {
+		ent = find_ent_by_class( ent, szSpawnEnt[iSpawnID] );
+		
+		// Valid ent found
+		if ( ent != 0 )
+		{
+			entity_get_vector( ent, EV_VEC_origin, fSpawnOrigin );
+			
+			// Convert float vector to int vector
+			FVecIVec( fSpawnOrigin, vOrigin );
+
+			// Check to see if there are players in this spawn
+			iPlayersInVicinity = find_sphere_class( 0, "player", fVicinity, iEntList, 1, fSpawnOrigin );
+			
+			// We have a free spawn!!
+			if ( iPlayersInVicinity == 0 )
+			{
+				
+				// We need to make sure there isn't anyone nearby that is immune
+				if ( bImmunityCheck )
+				{
+					// Immune found
+					if ( WC3_IsImmunePlayerNear( id, vOrigin ) )
+					{
+						bImmunityNear = true;
+					}
+
+					// We're clear!
+					else
+					{
+						bImmunityNear = false;
+						bFound = true;
+					}
+				}
+				
+				// We have a free spawn we can quit!
+				else
+				{
+					bFound = true;
+				}
+			}
+		}
+	}
+	while ( ent && !bFound )
+	
+	// Failed, nothing found
+	if ( !bFound )
+	{
+		// Return a different value so they know the reason for failing
+		if ( bImmunityCheck && bImmunityNear )
+		{
+			return -2;
+		}
+
+		return -1;
+	}
+	
+	// Otherwise we found something!
+	return ent;
+}
+
+
+public _SHARED_Mole( id )
+{
+	
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
+	id -= TASK_MOLE;
+
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
+
+	// Lets search for a new spawn (ignore immunity, reverse team ids)	
+	new ent = SHARED_FindFreeSpawn( id, false, true );
+	
+	// Free spawn found!!
+	if ( ent > 0 )
+	{
+		new vOrigin[3], Float:fSpawnOrigin[3];
+		
+		// Get the origin of the spawn
+		entity_get_vector( ent, EV_VEC_origin, fSpawnOrigin );
+		
+		// Convert float vector to int vector
+		FVecIVec( fSpawnOrigin, vOrigin );
+		
+		// Change the user's skin
+		SHARED_ChangeSkin( id, SKIN_SWITCH );
+		
+		// Move the user
+		set_user_origin( id, vOrigin );
+
+		// Shake the user's screen
+		Create_ScreenShake( id, (255<< 14), (10 << 14), (255<< 14) );
+		
+		// User is a mole
+		p_data_b[id][PB_MOLE] = true;
+
+		// If it's b/c of an item, we need to remove that item
+		if ( p_data[id][P_LASTITEM2] == ITEM_MOLE )
+		{
+			p_data[id][P_LASTITEM2] = 0;
+		}
+
+	}
+
+	// No spawn found
+	else
+	{
+		// Moving b/c of item
+		if ( p_data[id][P_LASTITEM2] == ITEM_MOLE )
+		{
+			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + itemcost2[8], 1 );
+
+			client_print( id, print_chat, "%s %L", g_MODclient, id, "NO_SPOT_MOLE_MONEY" );
+
+			p_data[id][P_LASTITEM2] = 0;
+		}
+
+		// Moving b/c of skill
+		else
+		{
+			client_print( id, print_chat, "%s %L", g_MODclient, id, "NO_SPOT_TO_MOLE" )
+		}
+	}
+
+	return; 
+} 

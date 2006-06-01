@@ -220,60 +220,6 @@ public ITEM_Glove_Check( id )
 	}
 }
 
-// ****************************************
-// Mole
-// ****************************************
-
-public ITEM_Mole(parm[]){ // For ITEM_MOLE, checks to see if there is an open spot on the other team's spawn 
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-	
-	new entSpawn
-	new Float:spawnAngle[3] 
-	new Float:spawnOrigin[3]
-
-	if(get_user_team(id)==CTS)
-		 entSpawn = find_free_spawn(id, TS, spawnOrigin, spawnAngle)
-	else
-		 entSpawn = find_free_spawn(id, CTS, spawnOrigin, spawnAngle)
-
-	if (!entSpawn) { 
-		// Didn't find a free spawn spot. Quit... 
-		if(parm[1]!=7){
-			SHARED_SetUserMoney(id,SHARED_GetUserMoney(id)+itemcost2[8],1)
-			client_print(id,print_chat,"%s %L",g_MODclient,id,"NO_SPOT_MOLE_MONEY")
-		}
-		else{
-			client_print(id,print_chat,"%s %L",g_MODclient,id,"NO_SPOT_TO_MOLE")
-		}
-		return PLUGIN_CONTINUE 
-	}
-
-	new origin[3]
-
-	if(p_data[id][P_ITEM2] == ITEM_MOLE)
-		p_data[id][P_ITEM2] = 0
-
-	p_data_b[id][PB_MOLE] = true
-
-	FVecIVec(spawnOrigin, origin)
-
-	SHARED_ChangeSkin(id,SKIN_SWITCH)
-
-	entity_set_vector(id, EV_VEC_angles, spawnAngle)
-	set_user_origin(id,origin) 
-
-	Create_ScreenShake(id, (255<< 14), (10 << 14), (255<< 14))
-
-	return PLUGIN_HANDLED 
-} 
-
 public ITEM_BuyRings( id )
 {
 	new iMoney;

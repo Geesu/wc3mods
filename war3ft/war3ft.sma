@@ -33,7 +33,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu"
-new const WC3VERSION[] =	"2.3.3 RC1"
+new const WC3VERSION[] =	"3.0 RC1"
 new const WC3DATE[] =		__DATE__
 
 // Let AMX X know that we NEED these modules (as of amx x 1.75)
@@ -58,7 +58,7 @@ new const WC3DATE[] =		__DATE__
 #include <dodx>
 
 // Compiling Options
-#define MOD						0				// 0 = cstrike or czero, 1 = dod
+#define MOD						1				// 0 = cstrike or czero, 1 = dod
 #define ADVANCED_STATS			1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define SHOW_SPECTATE_INFO		1				// Show spectating information on users
 
@@ -290,23 +290,20 @@ public client_connect( id )
 {
 	client_cmd( id, "hud_centerid 0" );
 
-	p_data[id][P_RACE]			= 0;
-	p_data[id][P_SKILL1]		= 0;
-	p_data[id][P_SKILL2]		= 0;
-	p_data[id][P_SKILL3]		= 0;
-	p_data[id][P_ULTIMATE]		= 0;
-	p_data[id][P_LEVEL]			= 0;
-	p_data[id][P_XP]			= 0;
-	p_data[id][P_ITEM]			= 0;
-	p_data[id][P_ITEM2]			= 0;
-	p_data_b[id][PB_ISBURNING]	= false;
-	p_data[id][P_SPECMODE]		= 0;
-	p_data_b[id][PB_JUSTJOINED] = true;
-	p_data_b[id][PB_CAN_RENDER]	= true;
-
-	// These were on disconnect, might as well do them on connect
-	p_data[id][P_HECOUNT]		= 0;
-	p_data[id][P_FLASHCOUNT]	= 0;
+	p_data[id][P_RACE]					= 0;
+	p_data[id][P_SKILL1]				= 0;
+	p_data[id][P_SKILL2]				= 0;
+	p_data[id][P_SKILL3]				= 0;
+	p_data[id][P_ULTIMATE]				= 0;
+	p_data[id][P_LEVEL]					= 0;
+	p_data[id][P_XP]					= 0;
+	p_data[id][P_ITEM]					= 0;
+	p_data[id][P_ITEM2]					= 0;
+	p_data_b[id][PB_ISBURNING]			= false;
+	p_data[id][P_SPECMODE]				= 0;
+	p_data_b[id][PB_JUSTJOINED]			= true;
+	p_data_b[id][PB_CAN_RENDER]			= true;
+	p_data_b[id][PB_VENGEANCE_SPAWN]	= false;
 
 	// Automatically set their XP if it's enabled
 	if ( get_pcvar_num( CVAR_wc3_xp_auto_average ) && !get_pcvar_num( CVAR_wc3_save_xp ) )

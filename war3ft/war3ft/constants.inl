@@ -14,7 +14,7 @@
 #define	TASK_GETINPUT		224		// Calls getuserinput function
 #define TASK_COOLDOWN		256		// Ultimate Cooldown function
 #define TASK_TRANSPORT		288		// Transport function for ITEM_MOLE
-#define TASK_FAN			320		// Calls check_spot function
+#define TASK_MOLE			320		// Used for mole + fan of knives
 #define	TASK_WAVE			352		// Healing Wave
 #define	TASK_REINCARNATION	384		// Weapon Reincarnation
 #define	TASK_GLOW			416		// Calls glow_change
@@ -213,6 +213,11 @@
 #define CTS 2 
 #define AUTO_TEAM 5 
 
+// New team ID defines
+#define TEAM_T		1
+#define TEAM_CT		2
+
+
 // For Icon events
 #define ICON_HIDE 0 
 #define ICON_SHOW 1 
@@ -399,7 +404,7 @@
 	#define PB_HAS_SPAWNED			33		// Has the player previously spawned this round?
 	#define PB_CAN_RENDER			34
 	
-//	#define PB_IMMUNE_HEADSHOTS		35		// Player immune to headshots?
+	#define PB_VENGEANCE_SPAWN		35		// Player spawned from vengeance?
 
 	#define PB_REINCARNATION_DELAY	36
 	#define PB_REINCARNATION_SKIP	37
@@ -513,7 +518,7 @@ new g_menuSettings[33]
 new gmsgStatusText
 new gmsgBarTime
 
-new szSpawnEnt[2][32];				// Used for Mole
+new szSpawnEnt[2][32];
 
 /*  START - CSTRIKE VARIABLES */
 new Float:g_fBombTime
@@ -537,8 +542,6 @@ new CsArmorType:g_ArmorType[33];
 //new gmsgObject
 //new gmsgClientAreas
 new gmsgHudText
-//new AlliedSkins[2][]={"us-inf","us-para"}
-//new AxisSkins[2][]={"axis-inf","axis-para"}
 
 new iReincarnation[33][3];
 /*  END - DOD VARIABLES */
@@ -547,7 +550,7 @@ new iReincarnation[33][3];
 new Float:fLastShotFired[33];
 
 // Used to determine if the ultimatedelay is valid
-new iUltimateDelay;
+new g_iUltimateDelay;
 
 // Captured Messages
 new gmsgDeathMsg
