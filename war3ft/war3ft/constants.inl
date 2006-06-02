@@ -55,6 +55,7 @@
 #define	TASK_REINCCHECK		1556
 #define TASK_SAVE_ALL		1588	// Used for saving XP
 #define TASK_UDELAY			1620	// Ultimate Delay Function
+#define TASK_BURN           1652
 
 #define TASK_BUYTIME		2000	// Checks for buytime
 #define	TASK_CHECKVOTES		2002	// Used for checking the votes
@@ -161,7 +162,7 @@
 
 #define	CSW_LIGHTNING			51
 #define	CSW_SUICIDE				52
-#define	CSW_FLAME				53
+#define	CSW_IMMOLATE			53
 #define	CSW_LOCUSTS				54
 #define	CSW_SERPENTWARD			55
 #define CSW_SHADOW				56
@@ -386,7 +387,7 @@
 	#define PB_PHOENIXCASTER		17		// Did this player use his/her ability to give the team pheonix? (reviving)
 	#define PB_WARDENBLINK			18		// Does this player have blink enabled?
 	#define PB_SUICIDEATTEMPT		19		// Has this player made a suicide attempt for undead's ultimate?
-	#define PB_ISBURNING			20		// Is the player burning from the flame strike ultimate?
+	#define PB_ISBURNING			20		// Is the player burning from the immolate ultimate?
 	#define PB_EVADENEXTSHOT		21
 	#define PB_STUNNED				22
 	#define PB_SLOWED				23

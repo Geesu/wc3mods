@@ -158,7 +158,7 @@ public cmd_Ultimate(id)
 		searchtarget(parm)
 	}
 
-	// Flame Strike
+	// Immolate
 	else if ( Verify_Skill(id, RACE_BLOOD, SKILL4) ){
 		#if ADVANCED_STATS
 			new WEAPON = CSW_FLAME - CSW_WAR3_MIN
