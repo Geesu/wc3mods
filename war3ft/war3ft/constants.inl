@@ -56,6 +56,7 @@
 #define TASK_SAVE_ALL		1588	// Used for saving XP
 #define TASK_UDELAY			1620	// Ultimate Delay Function
 #define TASK_BURN           1652
+#define TASK_BURNING		1684	// Used for Blood Mage Ultimate
 
 #define TASK_BUYTIME		2000	// Checks for buytime
 #define	TASK_CHECKVOTES		2002	// Used for checking the votes

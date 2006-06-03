@@ -1290,3 +1290,97 @@ public Ultimate_Clear_Icons(id){
 	#endif
 	return PLUGIN_CONTINUE
 }
+
+public ULT_IsImmune( id )
+{
+	return ( p_data[enemy][P_ITEM] == ITEM_NECKLACE || p_data_b[enemy][PB_WARDENBLINK] )
+}
+
+// Function will search for a target (where player is looking)
+public _ULT_FindTarget( parm[2] )
+{
+	
+	// This is the caster
+	new id = parm[0]
+	
+	// Stop searching if user died or isn't connected anymore
+	if ( !p_data_b[id][PB_ISCONNECTED] || !is_user_alive( id ) )
+	{
+		p_data_b[id][PB_ISSEARCHING] = false;
+
+		return;
+	}
+
+	// Find out where the user is aiming at...
+
+	new iEnemy, iBodyPart
+	get_user_aiming( id, iEnemy, iBodyPart );
+
+	new iCasterTeam = get_user_team( id )
+	
+	// Make sure we have a valid enemy and the enemy is not immune
+	if ( 0 < iEnemy < MAXPLAYERS && iCasterTeam != get_user_team( iEnemy ) && !ULT_IsImmune( iEnemy ) )
+	{
+		
+		//p_data_b[id][PB_ULTIMATEUSED]=true
+		//Ultimate_Icon(id,ICON_HIDE)
+
+		switch ( p_data[id][P_RACE] )
+		{
+
+
+
+
+		}
+
+
+		//p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
+		//_ULT_Delay( id )
+
+	}
+	else
+	{
+		// User is searching for a target
+		p_data_b[id][PB_ISSEARCHING] = true;
+
+		// Flash their ultimate icon
+		Ultimate_Icon( id, ICON_FLASH );
+		
+		// This is the number of seconds we should search
+		new iCounter = parm[1];
+		
+		// Every second we need to execute the "ping" sound
+	
+		if ( ( iCounter -= 10 ) % 10 == 0 )
+		while ( iCounter >= 0 )
+		{
+			iCounter -= 10;
+
+			if ( counter == 0 )
+			{
+				//#if ADVANCED_STATS
+				//	new WEAPON = CSW_LIGHTNING - CSW_WAR3_MIN;
+				//	iStatsShots[id][WEAPON]++;
+				//#endif
+
+				emit_sound( id, CHAN_STATIC, "turret/tu_ping.wav", 1.0, ATTN_NORM, 0, PITCH_NORM );
+			}
+		}
+
+		// Decrement the overall counter
+		--parm[1]	
+		if(!p_data_b[id][PB_ULTIMATEUSED]){
+			if (parm[1]>0 && get_user_health(id)>=0){
+				set_task(0.1,"_ULT_FindTarget",TASK_LIGHTSEARCH+id,parm,2)
+			}else{
+				p_data_b[id][PB_ISSEARCHING]=false
+				Ultimate_Icon(id,ICON_SHOW)
+			}
+		}
+		else{
+			Ultimate_Icon(id,ICON_HIDE)
+		}
+	}
+
+	return PLUGIN_CONTINUE
+}
