@@ -739,7 +739,7 @@ public _ULT_FindTarget( parm[2] )
 	
 	// This is the caster
 	new id = parm[0]
-	
+
 	// Stop searching if user died or isn't connected anymore
 	if ( !p_data_b[id][PB_ISCONNECTED] || !is_user_alive( id ) )
 	{

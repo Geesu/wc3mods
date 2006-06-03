@@ -23,13 +23,14 @@ v3.0
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
-Add a disable orc nade map config file...
+//change orc nades so it CANNOT kill anyone w >= 100 health
 Add a start/stop option
 //Need to give 2 flashbangs, not one
 Fix bug with doing autoselect w/FT_Races 8 then changeracve and CENTER_CHANGED_NEXT displaying
 //don't allow vip's to tele
 //bug: gain money when 0 players in DOD
 //bug: mole on top of each other
+//remove option to enable suicide warning (just always have the warning)
 
 v2.3.2
  - Addition: Admin flag added to war3FT.cfg file as a cvar

@@ -272,6 +272,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 			if ((wpnindex == DODW_HANDGRENADE || wpnindex == DODW_STICKGRENADE) && allow){
 		#endif
 				tempdamage = floatround(float(damage) * p_grenade[p_data[attacker][P_SKILL2]-1])
+
 				WAR3_damage(victim, attacker, tempdamage, wpnindex, hitplace)
 				new name[32]
 				get_user_name(victim,name,31)
