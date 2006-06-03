@@ -1,3 +1,5 @@
+#define ULT_SEARCHTIME		50			// Translates to 5 seconds
+
 public cmd_Teamselect(id,key) {
 
 	// key+1 is the team they choose
@@ -155,22 +157,15 @@ public cmd_Ultimate(id)
 		new parm[2]
 		parm[0]=id
 		parm[1]=ULT_SEARCHTIME
-		_ULT_FindTarget(parm)
+		_ULT_FindTarget( parm );
 	}
 
 	// Immolate
 	else if ( Verify_Skill(id, RACE_BLOOD, SKILL4) ){
-		#if ADVANCED_STATS
-			new WEAPON = CSW_FLAME - CSW_WAR3_MIN
-			iStatsShots[id][WEAPON]++
-		#endif
-		Ultimate_FlameStrike(id) 
-		p_data[id][P_FLAMECOUNT]++
-		if(p_data[id][P_FLAMECOUNT]>5){
-			p_data_b[id][PB_ULTIMATEUSED]=true
-			Ultimate_Icon(id,ICON_HIDE)
-			p_data[id][P_FLAMECOUNT]=0
-		}
+		new parm[2]
+		parm[0]=id
+		parm[1]=ULT_SEARCHTIME
+		_ULT_FindTarget( parm );
 	}
 
 	// Big Bad Voodoo
@@ -178,13 +173,13 @@ public cmd_Ultimate(id)
 		new parm[2]
 		parm[0] = id
 		parm[1] = 1
-		_Ultimate_BigBadVoodoo(parm)
+		_Ultimate_BigBadVoodoo( parm )
 	}
 
 	// Vengeance
 	else if ( Verify_Skill(id, RACE_WARDEN, SKILL4) )
 	{
-		SH_ULT_Vengeance( id );
+		WA_ULT_Vengeance( id );
 	}
 
 	// Locust Swarm

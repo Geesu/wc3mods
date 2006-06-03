@@ -344,7 +344,7 @@ XP_Configure()
 	weaponxpmultiplier[CSW_WORLDSPAWN]		= 0.0;
 	weaponxpmultiplier[CSW_LIGHTNING]		= 1.0;
 	weaponxpmultiplier[CSW_SUICIDE]			= 1.0;
-	weaponxpmultiplier[CSW_FLAME]			= 1.0;
+	weaponxpmultiplier[CSW_IMMOLATE]			= 1.0;
 	weaponxpmultiplier[CSW_LOCUSTS]			= 1.0;
 	weaponxpmultiplier[CSW_SERPENTWARD]		= 1.0;
 	weaponxpmultiplier[CSW_SHADOW]			= 1.0;	

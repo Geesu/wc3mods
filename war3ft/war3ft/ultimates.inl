@@ -1,7 +1,4 @@
 
-
-#define ULT_SEARCHTIME		50			// Translates to 5 seconds
-
 // Function will stop all ultimates from functioning
 public ULT_Reset()
 {
@@ -730,7 +727,7 @@ public Ultimate_Clear_Icons(id){
 
 public ULT_IsImmune( id )
 {
-	return ( p_data[enemy][P_ITEM] == ITEM_NECKLACE || p_data_b[enemy][PB_WARDENBLINK] )
+	return ( p_data[id][P_ITEM] == ITEM_NECKLACE || p_data_b[id][PB_WARDENBLINK] )
 }
 
 // Function will search for a target (where player is looking)
@@ -762,7 +759,7 @@ public _ULT_FindTarget( parm[2] )
 		switch ( p_data[id][P_RACE] )
 		{
 			case RACE_ORC:		OR_ULT_ChainLightning( id, iEnemy, iBodyPart );
-			case NIGHT_ELF:		NE_ULT_Entangle( id, iEnemy );
+			case RACE_ELF:		NE_ULT_Entangle( id, iEnemy );
 			case RACE_BLOOD:	SH_ULT_Immolate( id, iEnemy );
 		}
 		
@@ -796,7 +793,7 @@ public _ULT_FindTarget( parm[2] )
 		{
 			iCounter -= 10;
 
-			if ( counter == 0 )
+			if ( iCounter == 0 )
 			{
 				//#if ADVANCED_STATS
 				//	new WEAPON = CSW_LIGHTNING - CSW_WAR3_MIN;

@@ -166,7 +166,7 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 	if(!is_user_alive(victim))
 		return PLUGIN_CONTINUE
 	
-	if( p_data_b[victim][PB_WARDENBLINK] && (weapon == CSW_LIGHTNING || weapon == CSW_SUICIDE || weapon == CSW_FLAME || weapon == CSW_LOCUSTS))
+	if( p_data_b[victim][PB_WARDENBLINK] && (weapon == CSW_LIGHTNING || weapon == CSW_SUICIDE || weapon == CSW_IMMOLATE || weapon == CSW_LOCUSTS))
 		return PLUGIN_CONTINUE
 
 	// Warden's Hardened Skin
@@ -352,7 +352,7 @@ public WAR3_death_victim(victim_id, killer_id)
 		// Should we respawn for Vengeance?
 		if ( Verify_Skill( victim_id, RACE_WARDEN, SKILL4 ) && killer_id != victim_id && !p_data_b[killer_id][PB_WARDENBLINK] )
 		{
-			SH_ULT_Vengeance( victim_id );
+			WA_ULT_Vengeance( victim_id );
 		}
 	}
 
@@ -547,7 +547,7 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 
 	case CSW_LIGHTNING:     lang_GetSkillName(3,4,LANG_SERVER,weaponname,31)
 	case CSW_SUICIDE:		lang_GetSkillName(1,4,LANG_SERVER,weaponname,31)
-	case CSW_FLAME:			lang_GetSkillName(5,4,LANG_SERVER,weaponname,31)
+	case CSW_IMMOLATE:			lang_GetSkillName(5,4,LANG_SERVER,weaponname,31)
 	case CSW_LOCUSTS:		lang_GetSkillName(8,4,LANG_SERVER,weaponname,31)
 	case CSW_SERPENTWARD:   lang_GetSkillName(6,3,LANG_SERVER,weaponname,31)
 	case CSW_SHADOW:		lang_GetSkillName(7,3,LANG_SERVER,weaponname,31)

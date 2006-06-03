@@ -1010,9 +1010,6 @@ public EVENT_PlayerSpawned( id )
 	// User should not be burning
 	p_data_b[id][PB_ISBURNING]		= false;
 
-	// Reset the flame count
-	p_data[id][P_FLAMECOUNT]		= 0;
-
 	// Reset Blink
 	p_data_b[id][PB_WARDENBLINK]	= false;
 

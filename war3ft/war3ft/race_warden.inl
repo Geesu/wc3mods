@@ -10,7 +10,7 @@ public WA_ULT_Vengeance( id )
 	// If the user's ultimate is used or we're still in the ultimate delay, then why are we here?
 	if ( p_data_b[id][PB_ULTIMATEUSED] || g_ultimateDelay )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	// We need to respawn the user!!

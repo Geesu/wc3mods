@@ -76,6 +76,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/race_elf.inl"				// Night Elf		- 4
 #include "war3ft/race_blood.inl"			// Blood Mage		- 5
 #include "war3ft/race_shadow.inl"			// Shadow Hunter	- 6
+#include "war3ft/race_warden.inl"           // Warden           - 7
 
 #include "war3ft/race_chameleon.inl"		// Chameleon		- 9
 
@@ -385,7 +386,7 @@ public client_disconnect(id)
 		{
 			case CSW_LIGHTNING:     lang_GetSkillName( 3				, 4				, LANG_SERVER,	szWeapon,	63 );
 			case CSW_SUICIDE:		lang_GetSkillName( 1				, 4				, LANG_SERVER,	szWeapon,	63 );
-			case CSW_FLAME:			lang_GetSkillName( 5				, 4				, LANG_SERVER,	szWeapon,	63 );
+			case CSW_IMMOLATE:	    lang_GetSkillName( 5				, 4				, LANG_SERVER,	szWeapon,	63 );
 			case CSW_LOCUSTS:		lang_GetSkillName( 8				, 4				, LANG_SERVER,	szWeapon,	63 );
 			case CSW_SERPENTWARD:   lang_GetSkillName( 6				, 3				, LANG_SERVER,	szWeapon,	63 );
 			case CSW_SHADOW:		lang_GetSkillName( 7				, 3				, LANG_SERVER,	szWeapon,	63 );
