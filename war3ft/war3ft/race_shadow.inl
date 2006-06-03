@@ -114,11 +114,11 @@ public SH_PlaceSerpentWard( id )
 	}
 
 	// User is alive we can place a ward!
-	else if ( is_user_alive( id ) )
+	else if ( is_user_alive( id ) && Verify_Skill( id, RACE_SHADOW, SKILL3 ) && p_data[id][P_SERPENTCOUNT] > 0 && !endround )
 	{
 
 		// Serpent Ward
-		if ( Verify_Skill(id, RACE_SHADOW, SKILL3) && p_data[id][P_SERPENTCOUNT] > 0 && !endround )
+		if ( SH_CanPlaceWard( id ) )
 		{
 			new parm[5], origin[3]
 
@@ -133,6 +133,11 @@ public SH_PlaceSerpentWard( id )
 			p_data[id][P_SERPENTCOUNT]--;
 
 			WC3_Status_Text( id, 3.5, HUDMESSAGE_POS_INFO, "%L", id, "SERPENT_WARD", p_data[id][P_SERPENTCOUNT] );
+		}
+		else
+		{
+			// Geesu needs to add language support for this message
+			WC3_Status_Text( id, 3.5, HUDMESSAGE_POS_INFO, "You cannot place a serpent ward here." );
 		}
 	}
 }
@@ -244,4 +249,43 @@ public _SH_DrawSerpentWard( parm[5] )
 	set_task( 0.5, "_SH_DrawSerpentWard", TASK_LIGHT + id, parm, 5 );
 
 	return;
+}
+
+bool:SH_CanPlaceWard( id )
+{
+	new vPlayerOrigin[3];
+ 	get_user_origin( id, vPlayerOrigin );
+ 	
+ 	new Float:vEntOrigin[3];
+ 	new vEntityOrigin[3];
+ 	
+ 	new iEnt = find_ent_by_model( -1, "grenade", "models/w_c4.mdl" )
+ 	
+	if ( iEnt && is_valid_ent( iEnt ) ) 
+	{
+		
+    	entity_get_vector( iEnt, EV_VEC_origin, vEntOrigin )
+    
+    	vEntityOrigin[0] = floatround( vEntOrigin[0] );
+    	vEntityOrigin[1] = floatround( vEntOrigin[1] );
+    	vEntityOrigin[2] = floatround( vEntOrigin[2] );
+    	
+    	if ( get_distance( vPlayerOrigin, vEntityOrigin ) < 250 )
+    		return false;
+	}
+	
+	iEnt = -1;
+	
+	while( iEnt = find_ent_by_class( iEnt, "hostage_entity" ) )
+	{
+    	entity_get_vector( iEnt, EV_VEC_origin, vEntOrigin )
+    
+    	vEntityOrigin[0] = floatround( vEntOrigin[0] );
+    	vEntityOrigin[1] = floatround( vEntOrigin[1] );
+    	vEntityOrigin[2] = floatround( vEntOrigin[2] );
+    	
+    	if ( get_distance( vPlayerOrigin, vEntityOrigin ) < 200 )
+    		return false;
+	}	 	
+	return true;
 }

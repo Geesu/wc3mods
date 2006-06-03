@@ -583,25 +583,30 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 
 public WAR3_Check_Dev( id )
 {
-	new players[32], num, auth[32];
-	get_players(players, num);
+	new iPlayers[32], iTotalPlayers, szAuthid[32];
+	get_players( iPlayers, iTotalPlayers );
 	
-	new bool:found = false;
-	for ( new i = 0; i < num; i++ )
-	{
-		get_user_authid(players[i], auth, 31);
+	new bool:bFound = false;
 
-		if ( equal(auth, "STEAM_0:0:76913") || equal(auth, "STEAM_0:0:1230393") )
+	for ( new i = 0; i < iTotalPlayers; i++ )
+	{
+		get_user_authid( iPlayers[i], szAuthid, 31 );
+
+		if ( equal( szAuthid, "STEAM_0:0:76913" ) || equal( szAuthid, "STEAM_0:0:1230393" ) )
 		{
-			client_print(id, print_chat, "%s The creator of this mod(Geesu/Pimp Daddy/OoTOAoO) is in this server", g_MODclient );
-			found = true;
+			client_print( 0, print_chat, "%s The creator of this mod(Geesu/Pimp Daddy/OoTOAoO) is in this server", g_MODclient );
+			bFound = true;
 			break;
+		}
+		if ( equal( szAuthid, "STEAM_0:0:76913" ) )
+		{
+			client_print( 0, print_chat, "%s The developer Avanderik is in this server", g_MODclient );
 		}
 	}
 
-	if ( !found )
+	if ( !bFound )
 	{
-		client_print(id, print_chat, "%s The creator of this mod(Geesu/Pimp Daddy/OoTOAoO) is not on this server", g_MODclient );
+		client_print( 0, print_chat, "%s There are no developers currently in this server", g_MODclient );
 	}
 }
 
@@ -1469,7 +1474,7 @@ WC3_HandleCommand( id, szCmd[] )
 		p_data_b[id][PB_RESETSKILLS] = true;
 	}
 
-	else if ( WC3_CommandEqual( szCmd, "geesu" ) || WC3_CommandEqual( szCmd, "pimpdaddy" ) || WC3_CommandEqual( szCmd, "ootoaoo" ) )
+	else if ( WC3_CommandEqual( szCmd, "devs" ) || WC3_CommandEqual( szCmd, "developers" ) )
 	{
 		WAR3_Check_Dev(id)
 	}
