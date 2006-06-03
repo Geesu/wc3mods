@@ -72,9 +72,12 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/constants.inl"
 #include "war3ft/cvar.inl"
 
-#include "war3ft/race_shadow.inl"
-#include "war3ft/race_orc.inl"
-#include "war3ft/race_chameleon.inl"
+#include "war3ft/race_orc.inl"				// Orcish Horde		- 3
+#include "war3ft/race_elf.inl"				// Night Elf		- 4
+#include "war3ft/race_blood.inl"			// Blood Mage		- 5
+#include "war3ft/race_shadow.inl"			// Shadow Hunter	- 6
+
+#include "war3ft/race_chameleon.inl"		// Chameleon		- 9
 
 #include "war3ft/effects.inl"
 #include "war3ft/XP.inl"

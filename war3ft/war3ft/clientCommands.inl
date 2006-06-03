@@ -146,16 +146,16 @@ public cmd_Ultimate(id)
 	else if ( Verify_Skill(id, RACE_ORC, SKILL4) && !p_data_b[id][PB_ISSEARCHING] ){
 		new parm[2]
 		parm[0]=id
-		parm[1]=ULTIMATESEARCHTIME
-		lightsearchtarget(parm)
+		parm[1]=ULT_SEARCHTIME
+		_ULT_FindTarget( parm );
 	}
 
 	// Entangling Roots
 	else if ( Verify_Skill(id, RACE_ELF, SKILL4) && !p_data_b[id][PB_ISSEARCHING] ){
 		new parm[2]
 		parm[0]=id
-		parm[1]=ULTIMATESEARCHTIME
-		searchtarget(parm)
+		parm[1]=ULT_SEARCHTIME
+		_ULT_FindTarget(parm)
 	}
 
 	// Immolate

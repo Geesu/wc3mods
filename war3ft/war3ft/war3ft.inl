@@ -29,7 +29,7 @@ public WAR3_precache()
 	copy( SOUND_CONCOCTION_CAST	, 63, "warcraft3/PossessionMissileLaunch1.wav"		);	// Unstable Concoction Cast
 	copy( SOUND_CONCOCTION_HIT	, 63, "warcraft3/PossessionMissileHit1.wav"			);	// Unstable Concoction Hit
 	copy( SOUND_HEX				, 63, "warcraft3/PolymorphDone.wav"					);	// Hex
-
+	copy( SOUND_IMMOLATE		, 63, ""											);	// Immolate
 
 	copy( SOUND_REINCARNATION	, 63, "warcraft3/soundpack/reincarnation.wav"		);	// Weapon Reincarnation/Ankh
 	copy( SOUND_ANTEND			, 63, "warcraft3/antend.wav"						);	// Sound played when you try to shoot a chameleoned teammate 
@@ -53,6 +53,7 @@ public WAR3_precache()
 	precache_sound( SOUND_CONCOCTION_CAST	);
 	precache_sound( SOUND_CONCOCTION_HIT	);
 	precache_sound( SOUND_HEX				);
+	precache_sound( SOUND_IMMOLATE			);
 
 	// Miscellaneous
 	precache_sound( SOUND_LEVELUP			);
@@ -80,6 +81,8 @@ public WAR3_precache()
 	g_sSnow = precache_model("sprites/snow.spr")  
 	g_sFlare = precache_model( "sprites/blueflare2.spr") 
 	g_sWave = precache_model("sprites/gwave1.spr")
+
+	//SPR_IMMOLATE = precache_model("");
 
 
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )

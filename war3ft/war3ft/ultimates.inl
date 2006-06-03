@@ -1,6 +1,6 @@
 
-#define	ENTANGLE_TIME		10.0
 
+#define ULT_SEARCHTIME		50			// Translates to 5 seconds
 
 // Function will stop all ultimates from functioning
 public ULT_Reset()
@@ -421,569 +421,6 @@ public ceiling_check(parm[2]){
 	return PLUGIN_CONTINUE
 }
 
-// ****************************************
-// Orc's Change Lightning
-// ****************************************
-
-public lightsearchtarget(parm[2]){
-	
-	// This is the caster
-	new id = parm[0]
-	
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	if(!is_user_alive(id)){
-		p_data_b[id][PB_ISSEARCHING] = false
-		return PLUGIN_CONTINUE
-	}
-
-	new enemy, bodypart
-	get_user_aiming(id,enemy,bodypart)
-
-	new CasterTeam = get_user_team(id)
-
-	if ( 0<enemy<=MAXPLAYERS && CasterTeam!=get_user_team(enemy) && p_data[enemy][P_ITEM]!=ITEM_NECKLACE && !p_data_b[enemy][PB_WARDENBLINK] && is_user_alive(enemy)){
-		p_data_b[id][PB_ULTIMATEUSED]=true
-		Ultimate_Icon(id,ICON_HIDE)
-		new linewidth = 80
-		new damage = 50
-
-		p_data_b[id][PB_ISSEARCHING]=false
-		
-		lightningeffect(id,enemy,linewidth,damage,bodypart)
-		new lightparm[5]
-		lightparm[0]=enemy
-		lightparm[1]=damage
-		lightparm[2]=linewidth
-		lightparm[3]=id
-		lightparm[4]=bodypart
-		set_task(0.2,"lightningnext",TASK_LIGHTNING+enemy,lightparm,5)
-
-		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_ULT_Delay( id )
-	}
-	else{
-		p_data_b[id][PB_ISSEARCHING]=true
-		Ultimate_Icon(id,ICON_FLASH)
-		new counter = parm[1]
-		while (counter >= 0){
-			counter -= 10
-			if (counter==0){
-				#if ADVANCED_STATS
-					new WEAPON = CSW_LIGHTNING - CSW_WAR3_MIN
-					iStatsShots[id][WEAPON]++
-				#endif
-
-				emit_sound(id,CHAN_STATIC, "turret/tu_ping.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)
-			}
-		}
-		--parm[1]	
-		if(!p_data_b[id][PB_ULTIMATEUSED]){
-			if (parm[1]>0 && get_user_health(id)>=0){
-				set_task(0.1,"lightsearchtarget",TASK_LIGHTSEARCH+id,parm,2)
-			}else{
-				p_data_b[id][PB_ISSEARCHING]=false
-				Ultimate_Icon(id,ICON_SHOW)
-			}
-		}
-		else{
-			Ultimate_Icon(id,ICON_HIDE)
-		}
-	}
-
-	return PLUGIN_CONTINUE
-}
-
-
-public lightningnext(parm[5]){		// Chain Lightning
-
-	// parm[0] = enemy
-	// parm[1] = damage
-	// parm[2] = linewidth
-	// parm[3] = caster
-	// parm[4] = bodypart
-
-	new enemy = parm[0]
-
-	if(!p_data_b[enemy][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	new caster=parm[3]
-	new bodypart=parm[4]
-	new CasterTeam = get_user_team(caster)
-
-	new origin[3]
-	get_user_origin(enemy, origin)
-
-	new players[32], numberofplayers
-	get_players(players, numberofplayers,"a")
-
-
-	new i
-	new targetid = 0
-	new distancebetween = 0
-	new targetorigin[3]
-	new damage = parm[1]*2/3
-	new linewidth = parm[2]*2/3
-	new closestdistance = 0
-	new closestid = 0
-
-	for (i = 0; i < numberofplayers; ++i){
-		targetid=players[i]
-		if ( get_user_team(targetid) != CasterTeam && is_user_alive(targetid) ){
-			get_user_origin(targetid,targetorigin)
-			distancebetween=get_distance(origin,targetorigin)
-			if (distancebetween < LIGHTNING_RANGE && !p_data_b[targetid][PB_LIGHTNINGHIT] && p_data[targetid][P_ITEM]!=ITEM_NECKLACE && !p_data_b[targetid][PB_WARDENBLINK]){
-				if (distancebetween < closestdistance || closestid==0){
-					closestdistance = distancebetween
-					closestid = targetid
-				}
-			}
-		}
-	}
-
-	if (closestid){
-		lightningeffect(caster,closestid,linewidth,damage,bodypart)
-		parm[0]=targetid
-		parm[1]=damage
-		parm[2]=linewidth
-		parm[3]=caster
-		parm[4]=0
-		set_task(0.2,"lightningnext",TASK_LIGHTNINGNEXT+caster,parm,4)
-	}
-	else{
-		for (i = 0; i < numberofplayers; ++i){
-			targetid=players[i]
-			p_data_b[targetid][PB_LIGHTNINGHIT]=false
-		}
-	}
-	return PLUGIN_CONTINUE
-}
-
-public lightningeffect(caster,targetid,linewidth,damage,bodypart){
-
-	p_data_b[targetid][PB_LIGHTNINGHIT]=true
-
-	new parm[1]
-	parm[0]=caster
-	Ultimate_Icon(caster,ICON_HIDE)
-
-	WAR3_damage(targetid, caster, damage, CSW_LIGHTNING, bodypart)
-
-	Create_TE_BEAMENTS(caster, targetid, g_sLightning, 0, 15, 10, linewidth, 10, 255, 255, 255, 255, 0)
-
-	new origin[3]
-	get_user_origin(targetid,origin)
-
-	Create_TE_ELIGHT(targetid, origin, 100, 255, 255, 255, 10, 0)
-
-	emit_sound(caster,CHAN_STATIC, SOUND_LIGHTNING, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-	return PLUGIN_CONTINUE
-}
-
-
-// ****************************************
-// Night Elf's Entangle
-// ****************************************
-
-public searchtarget(parm[2]){
-
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	if(!is_user_alive(id)){
-		p_data_b[id][PB_ISSEARCHING] = false
-		return PLUGIN_CONTINUE
-	}
-
-	new enemy, body
-	get_user_aiming(id,enemy,body)
-
-	if ( 0<enemy<=MAXPLAYERS &&!p_data_b[enemy][PB_STUNNED] && get_user_team(id)!=get_user_team(enemy) && p_data[enemy][P_ITEM]!=ITEM_NECKLACE && !p_data_b[enemy][PB_WARDENBLINK] && is_user_alive(id) && is_user_alive(enemy)){
-		p_data_b[id][PB_ISSEARCHING]=false
-		p_data_b[id][PB_ULTIMATEUSED]=true
-		Ultimate_Icon(id,ICON_HIDE)
-
-		Create_TE_BEAMFOLLOW(enemy, g_siTrail, 10, 5, 10, 108, 23, 255)
-
-//		emit_sound(id,CHAN_STATIC, SOUND_ENTANGLING, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-
-		p_data[enemy][PB_STUNNED] = true;
-
-		SHARED_SetSpeed( enemy );
-		
-		// Start waiting for the user to stop...
-		new waitparm[4];
-		waitparm[0] = enemy;
-		waitparm[1] = 0;
-		waitparm[2] = 0;
-		waitparm[3] = 0;
-		_ULT_Entangle_Wait(waitparm)
-		
-		if( get_pcvar_num( CVAR_wc3_entangle_drop ) )
-		{
-			new ammo, clip
-			new weapon = get_user_weapon(enemy, ammo, clip)
-
-			if(SHARED_IsPrimaryWeapon(weapon))
-				client_cmd(enemy, "drop")
-		}
-
-		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_ULT_Delay( id )	
-	}
-	else{
-		p_data_b[id][PB_ISSEARCHING]=true
-		Ultimate_Icon(id,ICON_FLASH)
-		new counter = parm[1]
-		while (counter >= 0){
-			counter -= 10
-			if (counter==0){
-				emit_sound(id,CHAN_STATIC, SOUND_ULTIMATESCAN, 1.0, ATTN_NORM, 0, PITCH_NORM)
-			}
-		}			
-		--parm[1]
-		if(!p_data_b[id][PB_ULTIMATEUSED]){
-			if (parm[1]>0 && get_user_health(id)>0){
-				set_task(0.1,"searchtarget",TASK_SEARCHTARGET+id,parm,2)
-			}else{
-				p_data_b[id][PB_ISSEARCHING]=false
-				Ultimate_Icon(id,ICON_SHOW)
-			}
-		}
-		else{
-			Ultimate_Icon(id,ICON_HIDE)
-		}
-	}
-	return PLUGIN_CONTINUE
-}
-
-public _ULT_Entangle_Wait( parm[4] )
-{
-
-	new id = parm[0];
-
-	if( !p_data_b[id][PB_ISCONNECTED] )
-	{
-		return;
-	}
-
-	new origin[3];
-	get_user_origin( id, origin );
-	
-	// Checking to see if the user has actually stopped yet?
-	if ( origin[0] == parm[1] && origin[1] == parm[2] && origin[2] == parm[3] )
-	{
-		// Reset the user's speed in ENTANGLE_TIME amount of time
-		set_task( ENTANGLE_TIME, "SHARED_ResetMaxSpeed", TASK_RESETSPEED + id );
-		
-		// Entangle the user
-		ULT_NE_Entangle( id )
-	}
-
-	// If not lets run another check in 0.1 seconds
-	else
-	{
-		parm[1] = origin[0];
-		parm[2] = origin[1];
-		parm[3] = origin[2];
-
-		set_task(0.1,"_ULT_Entangle_Wait",TASK_ENTANGLEWAIT+id,parm,4)
-	}
-	return;
-}
-
-public ULT_NE_Entangle( id )
-{
-	new life	= floatround( ENTANGLE_TIME );
-	new radius	= 20;
-	new counter = 0;
-	new origin[3];
-	new x1, y1, x2, y2;
-
-	get_user_origin( id, origin );
-
-	emit_sound( id, CHAN_STATIC, SOUND_ENTANGLING, 1.0, ATTN_NORM, 0, PITCH_NORM );
-
-	while (counter<=7)
-	{
-		if (counter==0 || counter==8)
-			x1= -radius
-		else if (counter==1 || counter==7)
-			x1= -radius*100/141
-		else if (counter==2 || counter==6)
-			x1= 0
-		else if (counter==3 || counter==5)
-			x1= radius*100/141
-		else if (counter==4)
-			x1= radius
-		if (counter<=4)
-			y1 = sqroot(radius*radius-x1*x1)
-		else
-			y1 = -sqroot(radius*radius-x1*x1)
-		++counter
-		if (counter==0 || counter==8)
-			x2= -radius
-		else if (counter==1 || counter==7)
-			x2= -radius*100/141
-		else if (counter==2 || counter==6)
-			x2= 0
-		else if (counter==3 || counter==5)
-			x2= radius*100/141
-		else if (counter==4)
-			x2= radius
-		if (counter<=4)
-			y2 = sqroot(radius*radius-x2*x2)
-		else
-			y2 = -sqroot(radius*radius-x2*x2)
-		new height=16+2*counter
-		new start[3], end[3]
-
-		while (height > -40)
-		{
-			
-			start[0] = origin[0] + x1
-			start[1] = origin[1]+y1
-			start[2] = origin[2]+height
-			end[0] = origin[0]+x2
-			end[1] = origin[1]+y2
-			end[2] = origin[2]+height+2
-			
-			Create_TE_BEAMPOINTS(start, end, g_siBeam4, 0, 0, life, 10, 5, 10, 108, 23, 255, 0)
-
-			height -= 16
-		}
-	}
-
-	return;
-}
-
-
-// ****************************************
-// Blood Mage's Flame Strike
-// ****************************************
-
-Ultimate_FlameStrike(id){ 
-
-   emit_sound(id, CHAN_STATIC, SOUND_FLAMESTRIKE, 1.0, ATTN_NORM, 0, PITCH_NORM) 
-
-   new vec[3] 
-   new aimvec[3] 
-   new velocityvec[3] 
-   new length
-   new speed = 10 
-   get_user_origin(id,vec) 
-   get_user_origin(id,aimvec,2) 
-   new dist = get_distance(vec,aimvec) 
-
-   if (p_data[id][P_FLAMECOUNT]==1){
-
-      p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-      _ULT_Delay( id )
-   }
-   new speed1 = 160 
-   new speed2 = 350 
-   new radius = 105 
-
-   if(dist < 50){ 
-      radius = 0 
-      speed = 5 
-   } 
-   else if(dist < 150){ 
-      speed1 = speed2 = 1 
-      speed = 5 
-      radius = 50 
-   } 
-   else if(dist < 200){ 
-      speed1 = speed2 = 1 
-      speed = 5 
-      radius = 90 
-   } 
-   else if(dist < 250){ 
-      speed1 = speed2 = 90 
-      speed = 6 
-      radius = 90 
-   } 
-   else if(dist < 300){ 
-      speed1 = speed2 = 140 
-      speed = 7 
-   } 
-   else if(dist < 350){ 
-      speed1 = speed2 = 190 
-      speed = 7 
-   } 
-   else if(dist < 400){ 
-      speed1 = 150 
-      speed2 = 240 
-      speed = 8 
-   } 
-   else if(dist < 450){ 
-      speed1 = 150 
-      speed2 = 290 
-      speed = 8 
-   } 
-   else if(dist < 500){ 
-      speed1 = 180 
-      speed2 = 340 
-      speed = 9 
-   } 
-
-   velocityvec[0]=aimvec[0]-vec[0] 
-   velocityvec[1]=aimvec[1]-vec[1] 
-   velocityvec[2]=aimvec[2]-vec[2] 
-   length=sqroot(velocityvec[0]*velocityvec[0]+velocityvec[1]*velocityvec[1]+velocityvec[2]*velocityvec[2]) 
-   velocityvec[0]=velocityvec[0]*speed/length 
-   velocityvec[1]=velocityvec[1]*speed/length 
-   velocityvec[2]=velocityvec[2]*speed/length 
-
-   new args[8] 
-   args[0] = vec[0] 
-   args[1] = vec[1] 
-   args[2] = vec[2] 
-   args[3] = velocityvec[0] 
-   args[4] = velocityvec[1] 
-   args[5] = velocityvec[2] 
-	
-   set_task(0.1,"te_spray",TASK_TESPRAY+id,args,8,"a",2) 
-   check_burnzone(id,vec,aimvec,speed1,speed2,radius) 
-
-} 
-
-public te_spray(args[]){ 
-
-	new position[3], direction[3]
-	position[0] = args[0]
-	position[1] = args[1]
-	position[2] = args[2]
-	direction[0] = args[3]
-	direction[1] = args[4]
-	direction[2] = args[5]
-
-	Create_TE_SPRAY(position, direction, g_sFire, 8, 70, 100, 5)
-
-	return PLUGIN_CONTINUE 
-} 
-
-check_burnzone(id,vec[],aimvec[],speed1,speed2,radius){ 
-
-	new maxplayers = get_maxplayers()
-	new bodypart, victim 
-	
-	get_user_aiming(id,victim,bodypart,550) 
-
-	if( victim > 0 && victim <= maxplayers ){
-		if( get_user_team(victim)!=get_user_team(id) )
-			burn_victim(victim,id,bodypart)
-	}
-    
-	new burnvec1[3],burnvec2[3],length1 
-
-	burnvec1[0]=aimvec[0]-vec[0] 
-	burnvec1[1]=aimvec[1]-vec[1] 
-	burnvec1[2]=aimvec[2]-vec[2] 
-
-	length1=sqroot(burnvec1[0]*burnvec1[0]+burnvec1[1]*burnvec1[1]+burnvec1[2]*burnvec1[2]) 
-	burnvec2[0]=burnvec1[0]*speed2/length1 
-	burnvec2[1]=burnvec1[1]*speed2/length1 
-	burnvec2[2]=burnvec1[2]*speed2/length1 
-	burnvec1[0]=burnvec1[0]*speed1/length1 
-	burnvec1[1]=burnvec1[1]*speed1/length1 
-	burnvec1[2]=burnvec1[2]*speed1/length1 
-	burnvec1[0] += vec[0] 
-	burnvec1[1] += vec[1] 
-	burnvec1[2] += vec[2] 
-	burnvec2[0] += vec[0] 
-	burnvec2[1] += vec[1] 
-	burnvec2[2] += vec[2] 
-
-	new origin[3], players[32], numberofplayers
-	get_players(players, numberofplayers)
-
-	for (new i=0; i < numberofplayers; i++){
-		victim = players[i]
-		if( is_user_alive(victim) && get_user_team(victim)!=get_user_team(id) ){ 
-			get_user_origin(victim,origin) 
-			if(get_distance(origin, burnvec1) < radius) 
-				burn_victim(victim,id,bodypart) 
-			else if(get_distance(origin, burnvec2) < radius) 
-				burn_victim(victim,id,bodypart) 
-		} 
-	} 
-	return PLUGIN_CONTINUE       
-} 
-
-burn_victim(victim,attacker,bodypart){ 
-
-	if(p_data_b[victim][PB_ISBURNING]) 
-		return PLUGIN_CONTINUE 
-
-	if (p_data[victim][P_ITEM]==ITEM_NECKLACE || p_data_b[victim][PB_WARDENBLINK])
-		return PLUGIN_CONTINUE
-
-	p_data_b[victim][PB_ISBURNING] = true
-
-	new hp,args[3] 
-	hp = get_user_actualhealth(victim) 
-
-	args[0] = victim 
-	args[1] = attacker  
-	args[2] = bodypart
-	set_task(0.3,"on_fire",TASK_ONFIRE,args,3,"a",hp / 10) 
-
-	return PLUGIN_CONTINUE 
-} 
-
-public on_fire(args[]){ 
-
-	new victim = args[0]
-	new attacker = args[1] 
-	new bodypart = args[2]
-
-	if (!bodypart)
-		bodypart = random_num(1,8)
-
-	if(!p_data_b[victim][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-
-	if(!p_data_b[victim][PB_ISBURNING]) 
-		return PLUGIN_CONTINUE 
-
-	new rx,ry,rz, origin[3], position[3]
-
-	rx = random_num(-30,30) 
-	ry = random_num(-30,30) 
-	rz = random_num(-30,30) 
-
-	get_user_origin(victim,origin) 
-
-	position[0] = origin[0] + rx
-	position[1] = origin[1] + ry
-	position[2] = origin[2] + 10 + rz
-
-	Create_TE_SPRITE(position, g_sBurning, 30, 200)
-
-	position[0] = origin[0]+(rx*2)
-	position[1] = origin[1]+(ry*2)
-	position[2] = origin[2]+100+(rz*2)
-
-#if MOD == 0
-	Create_TE_Smoke(position, position, g_sSmoke, 60, 15)
-#endif
-
-	if( !is_user_alive(victim) && p_data[victim][P_ITEM] == ITEM_NECKLACE ) 
-		return PLUGIN_CONTINUE 
-
-	WAR3_damage(victim, attacker, 10, CSW_FLAME, bodypart)
-
-	return PLUGIN_CONTINUE 
-}
-
 
 // ****************************************
 // Shadow Hunter's Big Bad Voodoo
@@ -1322,20 +759,25 @@ public _ULT_FindTarget( parm[2] )
 	if ( 0 < iEnemy < MAXPLAYERS && iCasterTeam != get_user_team( iEnemy ) && !ULT_IsImmune( iEnemy ) )
 	{
 		
-		//p_data_b[id][PB_ULTIMATEUSED]=true
-		//Ultimate_Icon(id,ICON_HIDE)
-
 		switch ( p_data[id][P_RACE] )
 		{
-
-
-
-
+			case RACE_ORC:		OR_ULT_ChainLightning( id, iEnemy, iBodyPart );
+			case NIGHT_ELF:		NE_ULT_Entangle( id, iEnemy );
+			case RACE_BLOOD:	SH_ULT_Immolate( id, iEnemy );
 		}
+		
+		// No longer searching since we found a target
+		p_data_b[id][PB_ISSEARCHING]	= false;
 
+		// Ultimate has been used
+		p_data_b[id][PB_ULTIMATEUSED]	= true;
+		
+		// Hide the ultimate icon
+		Ultimate_Icon( id, ICON_HIDE );
 
-		//p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		//_ULT_Delay( id )
+		// Set up the user's ultimate delay
+		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
+		_ULT_Delay( id );
 
 	}
 	else
@@ -1350,8 +792,6 @@ public _ULT_FindTarget( parm[2] )
 		new iCounter = parm[1];
 		
 		// Every second we need to execute the "ping" sound
-	
-		if ( ( iCounter -= 10 ) % 10 == 0 )
 		while ( iCounter >= 0 )
 		{
 			iCounter -= 10;
@@ -1363,24 +803,31 @@ public _ULT_FindTarget( parm[2] )
 				//	iStatsShots[id][WEAPON]++;
 				//#endif
 
-				emit_sound( id, CHAN_STATIC, "turret/tu_ping.wav", 1.0, ATTN_NORM, 0, PITCH_NORM );
+				emit_sound( id, CHAN_STATIC, SOUND_ULTIMATESCAN, 1.0, ATTN_NORM, 0, PITCH_NORM );
 			}
 		}
 
 		// Decrement the overall counter
-		--parm[1]	
-		if(!p_data_b[id][PB_ULTIMATEUSED]){
-			if (parm[1]>0 && get_user_health(id)>=0){
-				set_task(0.1,"_ULT_FindTarget",TASK_LIGHTSEARCH+id,parm,2)
-			}else{
-				p_data_b[id][PB_ISSEARCHING]=false
-				Ultimate_Icon(id,ICON_SHOW)
+		--parm[1];
+		
+		// Make sure the user's ultimate hasn't been used
+		if ( !p_data_b[id][PB_ULTIMATEUSED] )
+		{
+
+			// Counter has not been completed and no target is found - search again
+			if ( parm[1] > 0 )
+			{
+				set_task( 0.1, "_ULT_FindTarget", TASK_FINDTARGET + id, parm, 2 );
 			}
-		}
-		else{
-			Ultimate_Icon(id,ICON_HIDE)
+			
+			// Searching complete and no target found
+			else
+			{
+				p_data_b[id][PB_ISSEARCHING] = false;
+				Ultimate_Icon( id, ICON_SHOW );
+			}
 		}
 	}
 
-	return PLUGIN_CONTINUE
+	return;
 }

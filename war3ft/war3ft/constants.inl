@@ -57,6 +57,7 @@
 #define TASK_UDELAY			1620	// Ultimate Delay Function
 #define TASK_BURN           1652
 #define TASK_BURNING		1684	// Used for Blood Mage Ultimate
+#define TASK_FINDTARGET		1706	// Used for finding a target
 
 #define TASK_BUYTIME		2000	// Checks for buytime
 #define	TASK_CHECKVOTES		2002	// Used for checking the votes
@@ -121,7 +122,6 @@
 #define SHORT_ITEM_NAME_LENGTH_F 31
 
 #define MAXGLOW					150
-#define ULTIMATESEARCHTIME		50			// Translates to 5 seconds
 #define TELEPORT_RADIUS			50
 #define LIGHTNING_RANGE			500
 #define EXPLOSION_MAX_DAMAGE	50
@@ -343,7 +343,7 @@
 	#define P_TELEMENU				19		// Used by teleport
 	#define P_CARRIONCOUNT			20		// Number of carrion beetles the player has left
 	#define P_SHADOWCOUNT			21		// Number of shadow strikes the player has left
-	#define P_FLAMECOUNT			22		// Number of flame shots the player has left
+//	#define P_FLAMECOUNT			22		// Number of flame shots the player has left
 	#define P_SERPENTCOUNT			23		// Number of serpent wards the player has left
 	#define P_RINGS					24
 	#define P_LASTITEM				25		// Holds the item that the user had during the previous round
@@ -388,7 +388,7 @@
 	#define PB_PHOENIXCASTER		17		// Did this player use his/her ability to give the team pheonix? (reviving)
 	#define PB_WARDENBLINK			18		// Does this player have blink enabled?
 	#define PB_SUICIDEATTEMPT		19		// Has this player made a suicide attempt for undead's ultimate?
-	#define PB_ISBURNING			20		// Is the player burning from the immolate ultimate?
+//	#define PB_ISBURNING			20		// Is the player burning from the immolate ultimate?
 	#define PB_EVADENEXTSHOT		21
 	#define PB_STUNNED				22
 	#define PB_SLOWED				23
@@ -478,6 +478,7 @@ new SOUND_TOME[64]
 new SOUND_ULTIMATESCAN[64]
 new SOUND_ULTIMATEREADY[64]
 new SOUND_HEX[64]
+new SOUND_IMMOLATE[64];
 
 new SOUND_REINCARNATION[64]
 new SOUND_ANTEND[64];
@@ -585,6 +586,7 @@ new g_sWave
 new g_sRace[10]
 new g_sLevel[11]
 new g_sSmoke
+new SPR_IMMOLATE;
 
 new szNotLoadedModules[10][32];
 new iTotalNotLoadedModules = 0;
