@@ -240,8 +240,8 @@ public _SH_DrawSerpentWard( parm[5] )
 				// Make the sound when they're attacked
 				client_cmd( targetid, "speak ambience/thunder_clap.wav" );
 
-				// Create screen fade on the user's screen
-				Create_ScreenFade( targetid, (1<<10), (1<<10), (1<<12), red, green, blue, 255 );
+				// Create screen fade on the owners screen
+				Create_ScreenFade( id, (1<<10), (1<<10), (1<<12), red, green, blue, 55 );
 			}
 		}
 	}

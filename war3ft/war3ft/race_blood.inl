@@ -16,7 +16,8 @@ public SH_ULT_Immolate( iCaster, iTarget )
 	new vTargetOrigin[3];
 	get_user_origin( iTarget, vTargetOrigin );
 
-	Create_TE_EXPLOSION( vTargetOrigin, vTargetOrigin, g_sImmolate, 40, 24, 4 );
+	Create_TE_EXPLOSION( vTargetOrigin, vTargetOrigin, g_sImmolate, 20, 24, 4 );
+	Create_TE_EXPLOSION( vTargetOrigin, vTargetOrigin, g_sBurning, 30, 24, 4 );
 
 	Create_ScreenShake( iTarget, (10<<12), (2<<12), (5<<12) );
 
@@ -56,7 +57,7 @@ public SH_ULT_Immolate_DoT( parm_DoT[3] )
     new vTargetOrigin[3];
     get_user_origin( iTarget, vTargetOrigin );
 
-	emit_sound( iTarget, CHAN_STATIC, SOUND_IMMOLATE, 0.5, ATTN_NORM, 0, PITCH_NORM );
+	emit_sound( iTarget, CHAN_STATIC, SOUND_IMMOLATE_BURNING, 0.5, ATTN_NORM, 0, PITCH_NORM );
 
 	Create_TE_SPRITE( vTargetOrigin, g_sFire, 5, 200 );
 
