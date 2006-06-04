@@ -279,34 +279,6 @@ public ITEM_Ring( id )
 	return;
 }
 
-// Called when a user looks/shoots somewhere
-public traceline(Float:v1[3], Float:v2[3], noMonsters, pentToSkip)
-{
-	new iAttacker = pentToSkip;
-	new iVictim = get_tr(TR_pHit);
-	new iHitZone = (1 << get_tr(TR_iHitgroup));
-
-	if ( iVictim >= 1 && iVictim <= MAXPLAYERS && p_data[iVictim][P_ITEM2] == ITEM_HELM )
-	{
-		// If its a headshot then we want to block it
-		if ( iHitZone & (1 << 1) )
-		{
-			set_tr(TR_flFraction, 1.0);
-			
-			// Do the check to see if we should flash the screen orange
-			new Float:time = halflife_time();
-			if ( (iAttacker >= 1) && (iAttacker <= MAXPLAYERS) && time - fLastShotFired[iAttacker] < 0.1 )
-			{
-				Create_ScreenFade(iVictim, (1<<10), (1<<10), (1<<12), 250, 164, 20, 150);
-			}
-			
-			return FMRES_SUPERCEDE;
-		}
-	}
-	
-	return FMRES_IGNORED;
-}
-
 public ITEM_Set( id, iItemID, iShopmenuID )
 {
 

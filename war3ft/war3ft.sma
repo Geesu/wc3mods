@@ -58,7 +58,7 @@ new const WC3DATE[] =		__DATE__
 #include <dodx>
 
 // Compiling Options
-#define MOD						1				// 0 = cstrike or czero, 1 = dod
+#define MOD						0				// 0 = cstrike or czero, 1 = dod
 #define ADVANCED_STATS			1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define SHOW_SPECTATE_INFO		1				// Show spectating information on users
 
@@ -150,7 +150,7 @@ public plugin_init()
 	register_srvcmd( "changexp"			, "changeXP"		);
 	
 	// Register forwards (from fakemeta)
-	register_forward( FM_TraceLine		, "traceline"		);
+	register_forward( FM_TraceLine		, "TRIGGER_TraceLine"	);
 
 	register_event( "DeathMsg"			, "on_DeathMsg"		,"a"								);
 	register_event( "CurWeapon"			, "on_CurWeapon"	,"be"	, "1=1"						);

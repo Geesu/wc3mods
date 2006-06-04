@@ -18,7 +18,7 @@
 #define	TASK_WAVE			352		// Healing Wave
 #define	TASK_REINCARNATION	384		// Weapon Reincarnation
 #define	TASK_GLOW			416		// Calls glow_change
-#define	TASK_RESETPOS		448		// Resets the user's position (1.5)
+//#define	TASK_RESETPOS		448		// Resets the user's position (1.5)
 #define	TASK_HEX			480		// Jumper task (goomba)
 #define	TASK_RESETSPEED		512		// Reset maxspeed (bash)
 #define	TASK_ITEM_GLOVES	544		// Nade timer (gloves)
@@ -26,22 +26,22 @@
 #define	TASK_RESETGOD		608		// Reset god mode
 #define	TASK_CEILING		640		// Ceiling Check function (blink)
 #define	TASK_BLINKCONT		672		// Calls Blink Controller function
-#define	TASK_TELEMENU		704		// Telemenu function
-#define	TASK_TELEWAITSTOP	736		// Calls telewaitstop function
-#define	TASK_TELEPORT		768		// Teleports the player
-#define	TASK_TELEFADEIN		800		// Calls telefadein function
-#define	TASK_UNSTICK		832		// "Unsticks" a stuck teleported player
+//#define	TASK_TELEMENU		704		// Telemenu function
+//#define	TASK_TELEWAITSTOP	736		// Calls telewaitstop function
+//#define	TASK_TELEPORT		768		// Teleports the player
+//#define	TASK_TELEFADEIN		800		// Calls telefadein function
+//#define	TASK_UNSTICK		832		// "Unsticks" a stuck teleported player
 #define	TASK_SEARCHTARGET	864		// Used by some ultimates
 //#define TASK_WALKER			896		// Walker process
 #define	TASK_ENTANGLEWAIT	928		// Used for entangling roots
 #define	TASK_LIGHTNING		960		// Used for chain lightning
-#define	TASK_LIGHTSEARCH	992		// Used for chain lightning
+//#define	TASK_LIGHTSEARCH	992		// Used for chain lightning
 #define	TASK_LIGHTNINGNEXT	1024	// Used for chain lightning
 #define TASK_SPAWNPLAYER	1056	// Used to spawn a player (final spawn call)
 #define TASK_GIVEITEMS		1088	// Used to give a player his items after spawning
 #define	TASK_ITEM_RING	1120	// Used with rings of regeneration
-#define	TASK_TESPRAY		1152	// Used with flamethrower
-#define	TASK_ONFIRE			1184	// Used with flamethrower
+//#define	TASK_TESPRAY		1152	// Used with flamethrower
+//#define	TASK_ONFIRE			1184	// Used with flamethrower
 //#define	TASK_HEALNOW		1226	// Used with Healing Waves
 #define	TASK_HEALNEXT		1258	// Used with Healing Waves
 #define	TASK_LIGHT			1290	// Used with serpant wards
@@ -55,9 +55,11 @@
 #define	TASK_REINCCHECK		1556
 #define TASK_SAVE_ALL		1588	// Used for saving XP
 #define TASK_UDELAY			1620	// Ultimate Delay Function
-#define TASK_BURN           1652
+//#define TASK_BURN           1652
 #define TASK_BURNING		1684	// Used for Blood Mage Ultimate
 #define TASK_FINDTARGET		1706	// Used for finding a target
+#define TASK_ULTPING		1738	// Used to play the "ping" sound every second
+
 
 #define TASK_BUYTIME		2000	// Checks for buytime
 #define	TASK_CHECKVOTES		2002	// Used for checking the votes

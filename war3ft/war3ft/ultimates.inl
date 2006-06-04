@@ -16,13 +16,7 @@ public ULT_Reset()
 		task_exists( TASK_EXPLOSION + id )		? remove_task( TASK_EXPLOSION + id ) : 0;
 		task_exists( TASK_BEAMCYLINDER + id)	? remove_task( TASK_BEAMCYLINDER + id ) : 0;
 
-		// Stop the user from searching (chain lightning)
-		task_exists( TASK_LIGHTSEARCH + id )	? remove_task( TASK_LIGHTSEARCH + id ) : 0;
-
-		// Stop the user from searching (entangling roots)
-		task_exists( TASK_SEARCHTARGET + id )	? remove_task( TASK_SEARCHTARGET + id ) : 0;
-
-		// Set this to false just to be safe (used by NE and ORC ultimates)
+		// Set this to false just to be safe (used by NE + ORC + BM ultimates)
 		p_data_b[id][PB_ISSEARCHING] = false;
 
 		// Need to add big bad voodoo check here...
@@ -730,101 +724,36 @@ public ULT_IsImmune( id )
 	return ( p_data[id][P_ITEM] == ITEM_NECKLACE || p_data_b[id][PB_WARDENBLINK] )
 }
 
-// Function will search for a target (where player is looking)
-public _ULT_FindTarget( parm[2] )
+public _ULT_Ping( parm[] )
 {
 	
-	// This is the caster
-	new id = parm[0]
+	new id = parm[0];
+	new iTimeLeft = parm[1];
+	
+	// Decrement our timer
+	parm[1]--;
 
-	// Stop searching if user died or isn't connected anymore
 	if ( !p_data_b[id][PB_ISCONNECTED] || !is_user_alive( id ) )
 	{
 		p_data_b[id][PB_ISSEARCHING] = false;
-
-		return;
 	}
-
-	// Find out where the user is aiming at...
-
-	new iEnemy, iBodyPart
-	get_user_aiming( id, iEnemy, iBodyPart );
-
-	new iCasterTeam = get_user_team( id )
 	
-	// Make sure we have a valid enemy and the enemy is not immune
-	if ( 0 < iEnemy < MAXPLAYERS && iCasterTeam != get_user_team( iEnemy ) && !ULT_IsImmune( iEnemy ) )
+	// This is the last "playing" of the sound, no target was found :/
+	if ( iTimeLeft == 0 )
 	{
-		
-		switch ( p_data[id][P_RACE] )
-		{
-			case RACE_ORC:		OR_ULT_ChainLightning( id, iEnemy, iBodyPart );
-			case RACE_ELF:		NE_ULT_Entangle( id, iEnemy );
-			case RACE_BLOOD:	SH_ULT_Immolate( id, iEnemy );
-		}
-		
-		// No longer searching since we found a target
-		p_data_b[id][PB_ISSEARCHING]	= false;
-
-		// Ultimate has been used
-		p_data_b[id][PB_ULTIMATEUSED]	= true;
-		
-		// Hide the ultimate icon
-		Ultimate_Icon( id, ICON_HIDE );
-
-		// Set up the user's ultimate delay
-		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
-		_ULT_Delay( id );
-
+		p_data_b[id][PB_ISSEARCHING] = false;
+		Ultimate_Icon( id, ICON_SHOW );
 	}
-	else
+	
+	// Then we need to play the sound + flash their icon!
+	if ( p_data_b[id][PB_ISSEARCHING] )
 	{
-		// User is searching for a target
-		p_data_b[id][PB_ISSEARCHING] = true;
-
 		// Flash their ultimate icon
 		Ultimate_Icon( id, ICON_FLASH );
-		
-		// This is the number of seconds we should search
-		new iCounter = parm[1];
-		
-		// Every second we need to execute the "ping" sound
-		while ( iCounter >= 0 )
-		{
-			iCounter -= 10;
 
-			if ( iCounter == 0 )
-			{
-				//#if ADVANCED_STATS
-				//	new WEAPON = CSW_LIGHTNING - CSW_WAR3_MIN;
-				//	iStatsShots[id][WEAPON]++;
-				//#endif
+		// Play the ping sound
+		emit_sound( id, CHAN_STATIC, SOUND_ULTIMATESCAN, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-				emit_sound( id, CHAN_STATIC, SOUND_ULTIMATESCAN, 1.0, ATTN_NORM, 0, PITCH_NORM );
-			}
-		}
-
-		// Decrement the overall counter
-		--parm[1];
-		
-		// Make sure the user's ultimate hasn't been used
-		if ( !p_data_b[id][PB_ULTIMATEUSED] )
-		{
-
-			// Counter has not been completed and no target is found - search again
-			if ( parm[1] > 0 )
-			{
-				set_task( 0.1, "_ULT_FindTarget", TASK_FINDTARGET + id, parm, 2 );
-			}
-			
-			// Searching complete and no target found
-			else
-			{
-				p_data_b[id][PB_ISSEARCHING] = false;
-				Ultimate_Icon( id, ICON_SHOW );
-			}
-		}
+		set_task( 1.0, "_ULT_Ping", TASK_ULTPING, parm, 2 );
 	}
-
-	return;
 }

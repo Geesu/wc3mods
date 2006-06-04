@@ -1136,3 +1136,70 @@ public EVENT_NewRound()
 
 	endround = false;
 }
+
+// Called when a user looks somewhere
+public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
+{
+	new iAttacker = pentToSkip;
+	new iVictim = get_tr(TR_pHit);
+	new iHitZone = (1 << get_tr(TR_iHitgroup));
+	
+
+	// Make sure we have a valid victim
+	if ( 0 < iVictim <= MAXPLAYERS )
+	{
+		// This is a check for ultimates that need to "search" for a target
+		if ( 0 < iAttacker <= MAXPLAYERS && p_data_b[iAttacker][PB_ISSEARCHING] )
+		{
+
+			// Now lets make sure the person he's looking at isn't immune and isn't on the same team
+			if ( get_user_team( iAttacker ) != get_user_team( iVictim ) && !ULT_IsImmune( iVictim ) )
+			{
+
+				// Well we do have a target so lets execute the user's ultimate!!
+
+				switch ( p_data[iAttacker][P_RACE] )
+				{
+					case RACE_ORC:		OR_ULT_ChainLightning( iAttacker, iVictim, iHitZone );
+					case RACE_ELF:		NE_ULT_Entangle( iAttacker, iVictim );
+					case RACE_BLOOD:	SH_ULT_Immolate( iAttacker, iVictim );
+				}
+				
+				// No longer searching since we found a target
+				p_data_b[iAttacker][PB_ISSEARCHING]	= false;
+
+				// Ultimate has been used
+				p_data_b[iAttacker][PB_ULTIMATEUSED]	= true;
+				
+				// Hide the ultimate icon
+				Ultimate_Icon( iAttacker, ICON_HIDE );
+
+				// Set up the user's ultimate delay
+				p_data[iAttacker][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
+				_ULT_Delay( iAttacker );
+			}
+		}
+
+		// This is a nice check for Helm of Excellence
+		if ( p_data[iVictim][P_ITEM2] == ITEM_HELM )
+		{
+			// If its a headshot then we want to block it
+			if ( iHitZone & (1 << 1) )
+			{
+				set_tr(TR_flFraction, 1.0);
+				
+				// Do the check to see if we should flash the screen orange
+				new Float:time = halflife_time();
+				if ( 0 < iAttacker <= MAXPLAYERS && time - fLastShotFired[iAttacker] < 0.1 )
+				{
+					Create_ScreenFade(iVictim, (1<<10), (1<<10), (1<<12), 250, 164, 20, 150);
+				}
+				
+				return FMRES_SUPERCEDE;
+			}
+		}
+
+	}
+	
+	return FMRES_IGNORED;
+}

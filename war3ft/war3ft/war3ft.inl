@@ -601,7 +601,7 @@ public WAR3_Check_Dev( id )
 			bFound = true;
 			break;
 		}
-		if ( equal( szAuthid, "STEAM_0:0:76913" ) )
+		if ( equal( szAuthid, "STEAM_0:0:2243459" ) )
 		{
 			client_print( 0, print_chat, "%s The developer Avanderik is in this server", g_MODclient );
 		}
@@ -1477,7 +1477,7 @@ WC3_HandleCommand( id, szCmd[] )
 		p_data_b[id][PB_RESETSKILLS] = true;
 	}
 
-	else if ( WC3_CommandEqual( szCmd, "devs" ) || WC3_CommandEqual( szCmd, "developers" ) )
+	else if ( WC3_CommandEqual( szCmd, "devs" ) || WC3_CommandEqual( szCmd, "developers" ) || WC3_CommandEqual( szCmd, "geesu" ) || WC3_CommandEqual( szCmd, "avanderik" ) || WC3_CommandEqual( szCmd, "ootoaoo" ) || WC3_CommandEqual( szCmd, "pimpdaddy" ) )
 	{
 		WAR3_Check_Dev(id)
 	}

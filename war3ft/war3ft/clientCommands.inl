@@ -146,26 +146,31 @@ public cmd_Ultimate(id)
 
 	// Chain Lightning
 	else if ( Verify_Skill(id, RACE_ORC, SKILL4) && !p_data_b[id][PB_ISSEARCHING] ){
+		p_data_b[id][PB_ISSEARCHING] = true;
+
 		new parm[2]
-		parm[0]=id
-		parm[1]=ULT_SEARCHTIME
-		_ULT_FindTarget( parm );
+		parm[0] = id
+		parm[1] = 5
+		_ULT_Ping( parm );
 	}
 
 	// Entangling Roots
 	else if ( Verify_Skill(id, RACE_ELF, SKILL4) && !p_data_b[id][PB_ISSEARCHING] ){
+		p_data_b[id][PB_ISSEARCHING] = true;
+
 		new parm[2]
 		parm[0]=id
-		parm[1]=ULT_SEARCHTIME
-		_ULT_FindTarget( parm );
+		parm[1]=5
+		_ULT_Ping( parm );
 	}
 
 	// Immolate
 	else if ( Verify_Skill(id, RACE_BLOOD, SKILL4) ){
+		p_data_b[id][PB_ISSEARCHING] = true;
 		new parm[2]
 		parm[0]=id
-		parm[1]=ULT_SEARCHTIME
-		_ULT_FindTarget( parm );
+		parm[1]=5
+		_ULT_Ping( parm );
 	}
 
 	// Big Bad Voodoo

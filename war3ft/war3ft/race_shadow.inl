@@ -276,7 +276,7 @@ bool:SH_CanPlaceWard( id )
 	
 	iEnt = -1;
 	
-	while( iEnt = find_ent_by_class( iEnt, "hostage_entity" ) )
+	while( ( iEnt = find_ent_by_class( iEnt, "hostage_entity" ) ) > 0 )
 	{
     	entity_get_vector( iEnt, EV_VEC_origin, vEntOrigin )
     

@@ -2,13 +2,17 @@ v3.0
  - Addition: Start/Stop command: amx_wc3 <on|off>
  - Addition: If a needed module isn't loaded, the plugin will modify the modules.ini + reload the map
  - Addition: NVault now used instead of vault (will improve lag when there are NUMEROUS users and saving XP is on)
+ - Addition: Check for serpent wards to prevent them from being planted on the bomb or on hostages
  - Bug Fix: cl_minmodels task was not repeating
  - Change: Using Vengeance will ALWAYS set your health to 50
  - Change: Cloak stacks with invisibility
  - Change: Config file location moved
- - Change: When weapon reincarnation's weapons are saved
+ - Change: When weapon reincarnation's weapons are saved - fixed weapons not reincarnating when you're killed by the bomb
  - Change: When a user spawns their money is not longer set to mp_startmoney (for CS/CZ)
  - Change: All DB functions re-written (Now uses MySQL X, NVault, SQLite)
+ - Change: Blood Mage has a new ultimate! - thanks Avanderik
+ - Change: Avanderik added to developer check
+ - Change: Traceline is used when searching for a target for certain ultimates (instead of get_user_aiming every .1 seconds)
  - Removed: FT_impale_intensity cvar (edit this constant at the top of skills.inl)
  - Removed: FT_blink_radius cvar (replaced with NECKLACE_RADIUS define)
  - Removed: FT_healing_range cvar (defined at top of skills.inl)
@@ -31,6 +35,7 @@ Fix bug with doing autoselect w/FT_Races 8 then changeracve and CENTER_CHANGED_N
 //bug: gain money when 0 players in DOD
 //bug: mole on top of each other
 //remove option to enable suicide warning (just always have the warning)
+//necklace of immunity = charges
 
 v2.3.2
  - Addition: Admin flag added to war3FT.cfg file as a cvar
