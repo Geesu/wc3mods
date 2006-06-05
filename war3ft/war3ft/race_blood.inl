@@ -2,7 +2,7 @@
 *	Race: Blood Mage Functions
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
-#define IMMOLATE_DAMAGE     40  // Initial damage done to target players
+#define IMMOLATE_DAMAGE     35  // Initial damage done to target players
 #define IMMOLATE_DOT_DAMAGE  5  // Damage done on each tick of the ultimate
 #define IMMOLATE_DOT         4  // Number of times ultimate ticks
 

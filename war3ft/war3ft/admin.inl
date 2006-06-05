@@ -1,90 +1,110 @@
 
 // Advanced Swear Filter and Punishment plugin uses this function
-public Admin_TakeXP(){
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
+public Admin_TakeXP()
+{
+	if ( !warcraft3 )
+		return PLUGIN_HANDLED;
 
-	new argID[3], argXP[32]
-	read_argv(1,argID,2)
-	read_argv(2,argXP,31)
+	new szIndex[3], szXp[32];
+	read_argv( 1, szIndex, 2 );
+	read_argv( 2, szXp, 31 );
 
-	new id = str_to_num(argID)
+	new id = str_to_num( szIndex );
 
-	p_data[id][P_XP] -= str_to_num(argXP)
+	p_data[id][P_XP] -= str_to_num( szXp );
 
 	XP_Check( id );
 
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
-public Admin_GiveMole(id, level, cid){
+public Admin_GiveMole( id )
+{
+	if ( !warcraft3 )
+		return PLUGIN_HANDLED;
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-    if ( id && !( get_user_flags( id ) & XP_get_admin_flag() ) )
+    if ( !( get_user_flags( id ) & XP_get_admin_flag() ) )
 	{
-		client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MODclient)
-		return PLUGIN_HANDLED
+		client_print( id,print_console, "%L", id, "YOU_HAVE_NO_ACCESS", g_MODclient );
+		return PLUGIN_HANDLED;
 	}
 
-	new arg[32] 
-	read_argv(1,arg,31)  
-	if(equali(arg,"@ALL")){
-		new players[32], inum
-		get_players(players,inum) 
-		for(new a=0;a<inum;++a){
-			p_data[players[a]][P_ITEM2]=ITEM_MOLE
-			WC3_ShowBar( players[a] );
-		} 
-		return PLUGIN_HANDLED
-	}
-	else if (arg[0]=='@'){ 
-		new players[32], inum
-		get_players(players,inum,"e",arg[1]) 
-		if (inum==0){ 
-			console_print(id,"%L",id,"NO_CLIENTS_IN_TEAM") 
-			return PLUGIN_HANDLED 
-		} 
-		for(new a=0;a<inum;++a){
-			p_data[players[a]][P_ITEM2]=ITEM_MOLE
-			WC3_ShowBar( players[a] );
+	new szArg[32] ;
+
+	read_argv( 1, szArg, 31 );
+
+	if( equali( szArg, "@ALL" ) )
+	{
+		new iPlayers[32], iTotalPlayers, i;
+		get_players( iPlayers, iTotalPlayers ); 
+
+		for( i = 1; i <= iTotalPlayers; i++ )
+		{
+			p_data[iPlayers[i]][P_ITEM2] = ITEM_MOLE;
+			WC3_ShowBar( iPlayers[i] );
 		} 
 	}
-	else { 
-		new player = find_target(id,arg) 
-		if (!player) return PLUGIN_HANDLED 
-		p_data[player][P_ITEM2]=ITEM_MOLE
-		WC3_ShowBar( player );
+	else if ( szArg[0] == '@' )
+	{ 
+		new iPlayers[32], iTotalPlayers, i;
+		get_players( iPlayers, iTotalPlayers, "e", szArg[1] );
+
+		if ( iTotalPlayers < 1 )
+		{ 
+			console_print( id, "%L", id, "NO_CLIENTS_IN_TEAM" );
+			return PLUGIN_HANDLED ;
+		}
+
+		for( i = 1; i <= iTotalPlayers; i++ )
+		{
+			p_data[iPlayers[i]][P_ITEM2]=ITEM_MOLE
+			WC3_ShowBar( iPlayers[i] );
+		} 
+	}
+	else
+	{ 
+		new iPlayer = find_target( id, szArg );
+
+		if ( !iPlayer ) 
+			return PLUGIN_HANDLED;
+
+		p_data[iPlayer][P_ITEM2] = ITEM_MOLE;
+		WC3_ShowBar( iPlayer );
 	} 
 
-	return PLUGIN_HANDLED 
+	return PLUGIN_HANDLED;
 }
 
-public changeXP(){ 
+public changeXP()
+{
+	if ( !warcraft3 )
+		return PLUGIN_HANDLED;
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new arg1[4]
-	new arg2[8]
-	read_argv(1,arg1,3)
-	read_argv(2,arg2,7)
+	new szId[4], szXp[8];
+	
+	read_argv( 1, szId, 3 );
+	read_argv( 2, szXp, 7 );
 		
-	new id=str_to_num(arg1)
-	new xp=str_to_num(arg2)
+	new id = str_to_num( szId );
+	new iXp = str_to_num( szXp );
 
-	if((p_data[id][P_XP] + xp)< 0)
-		p_data[id][P_XP] = 0
+	if(  (p_data[id][P_XP] + iXp ) < 0 )
+	{
+		p_data[id][P_XP] = 0;
+	}
 	else
-		p_data[id][P_XP] += xp
+	{
+		p_data[id][P_XP] += iXp;
+	}
 
 	XP_Check( id );
 	
-	return PLUGIN_CONTINUE
+	return PLUGIN_HANDLED;
 }
 
-public Admin_SaveXP(id, level, cid){
+// Is this really needed?
+
+/*public Admin_SaveXP(id, level, cid){
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
@@ -137,81 +157,153 @@ _Admin_SaveXP(id, target[]){
 		DB_SaveXP(player)
 	} 
 	return PLUGIN_CONTINUE 
-} 
+}*/
 
-public Admin_GiveXP(id, level, cid){
+public Admin_GiveXP( id )
+{
+	if (!warcraft3 )
+		return PLUGIN_HANDLED;
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-    if ( id && !( get_user_flags( id ) & XP_get_admin_flag() ) )
+    if ( !( get_user_flags( id ) & XP_get_admin_flag() ) )
 	{
-			client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MODclient)
-			return PLUGIN_HANDLED
+			client_print( id, print_console, "%L", id, "YOU_HAVE_NO_ACCESS", g_MODclient );
+			return PLUGIN_HANDLED;
 	}
 
-	new target[32], xp[10] 
-	read_argv(1,target,31) 
-	read_argv(2,xp,9) 
+	new szTarget[32], szXp[10];
 
-	_Admin_GiveXP(id, target, str_to_num(xp))
+	read_argv( 1, szTarget, 31 );
+	read_argv( 2, szXp, 9 );
 
-	return PLUGIN_HANDLED
+	_Admin_GiveXP( id, szTarget, str_to_num( szXp ) );
+
+	return PLUGIN_HANDLED;
 }
 
-public _Admin_GiveXP(id, target[], iXP){
+public _Admin_GiveXP( id, szTarget[], iXp )
+{
+	if( equali( szTarget, "@ALL" ) )
+	{
+		new iPlayers[32], iTotalPlayers, i;
+		get_players( iPlayers, iTotalPlayers );
 
-	if(equali(target,"@ALL")){
-		new players[32], inum
-		get_players(players,inum)
+		for( i = 1; i <= iTotalPlayers; i++ )
+		{
+			client_print( iPlayers[i], print_chat, "%s %L", g_MODclient, id, "THE_ADMIN_GAVE_YOU_EXPERIENCE", iXp );
 
-		for(new a=0;a<inum;++a){
-			client_print(players[a],print_chat,"%s %L",g_MODclient, id,"THE_ADMIN_GAVE_YOU_EXPERIENCE", iXP)
+			p_data[iPlayers[i]][P_XP] += iXp;
 
-			p_data[players[a]][P_XP] += iXP
-
-			XP_Check( players[a] );
+			XP_Check( iPlayers[i] );
 		}
-
-		return PLUGIN_CONTINUE
 	}
-	else if (target[0]=='@'){ 
-		new players[32], inum
-		get_players(players,inum,"e",target[1]) 
+	else if ( szTarget[0] == '@' )
+	{ 
+		new iPlayers[32], iTotalPlayers, i;
+		get_players( iPlayers, iTotalPlayers, "e", szTarget[1] );
 
-		if (inum==0){ 
-			console_print(id,"%L",id,"NO_CLIENTS_IN_TEAM") 
-
-			return PLUGIN_CONTINUE 
+		if ( iTotalPlayers < 1 )
+		{ 
+			console_print( id, "%L", id, "NO_CLIENTS_IN_TEAM" ); 
+			return PLUGIN_HANDLED;
 		} 
 
-		for(new a=0;a<inum;++a){
-			client_print(players[a],print_chat,"%s %L",g_MODclient, id,"THE_ADMIN_GAVE_YOU_EXPERIENCE", iXP)
+		for( i = 1; i <= iTotalPlayers; i++ )
+		{
+			client_print( iPlayers[i], print_chat, "%s %L", g_MODclient, id, "THE_ADMIN_GAVE_YOU_EXPERIENCE", iXp );
 
-			p_data[players[a]][P_XP] += iXP
+			p_data[iPlayers[i]][P_XP] += iXp;
 
-			XP_Check( players[a] );
+			XP_Check( iPlayers[i] );
 		}
 	}
-	else { 
-		new player = find_target(id,target) 
+	else
+	{ 
+		new iPlayer = find_target( id, szTarget );
 
-		if (!player)
-			return PLUGIN_CONTINUE 
+		if ( !iPlayer )
+			return PLUGIN_HANDLED;
 
-		client_print(player,print_chat,"%s %L",g_MODclient, id,"THE_ADMIN_GAVE_YOU_EXPERIENCE", iXP)
+		client_print( iPlayer, print_chat, "%s %L", g_MODclient, id, "THE_ADMIN_GAVE_YOU_EXPERIENCE", iXp );
 
-		p_data[player][P_XP] += iXP
+		p_data[iPlayer][P_XP] += iXp;
 
-		XP_Check( player );
+		XP_Check( iPlayer );
 	}
-	return PLUGIN_CONTINUE 
-} 
 
-public ADMIN_wc3(id, level, cid)
+	return PLUGIN_HANDLED;
+}
+
+public Admin_SetLevel( id )
+{
+	if ( !( get_user_flags( id ) & XP_get_admin_flag() ) )
+	{
+			client_print( id, print_console, "%L", id, "YOU_HAVE_NO_ACCESS", g_MODclient );
+			return PLUGIN_HANDLED;
+	}
+
+	new szTarget[32], szLevel[3];
+
+	read_argv( 1, szTarget, 31 );
+	read_argv( 2, szLevel, 2 );
+
+	new iLevel = str_to_num( szLevel );
+	new iXp = xplevel[iLevel];
+
+	if( equali( szTarget, "@ALL" ) )
+	{
+		new iPlayers[32], iTotalPlayers, i;
+		get_players( iPlayers, iTotalPlayers );
+
+		for( i = 1; i <= iTotalPlayers; i++ )
+		{
+			//client_print( iPlayers[i], print_chat, "%s %L", g_MODclient, id, "THE_ADMIN_GAVE_YOU_EXPERIENCE", iXp );
+
+			p_data[iPlayers[i]][P_XP] = iXp;
+
+			XP_Check( iPlayers[i] );
+		}
+	}
+	else if ( szTarget[0] == '@' )
+	{ 
+		new iPlayers[32], iTotalPlayers, i;
+		get_players( iPlayers, iTotalPlayers, "e", szTarget[1] );
+
+		if ( iTotalPlayers < 1 )
+		{ 
+			console_print( id, "%L", id, "NO_CLIENTS_IN_TEAM" ); 
+			return PLUGIN_HANDLED;
+		} 
+
+		for( i = 1; i <= iTotalPlayers; i++ )
+		{
+			//client_print( iPlayers[i], print_chat, "%s %L", g_MODclient, id, "THE_ADMIN_GAVE_YOU_EXPERIENCE", iXp );
+
+			p_data[iPlayers[i]][P_XP] = iXp;
+
+			XP_Check( iPlayers[i] );
+		}
+	}
+	else
+	{ 
+		new iPlayer = find_target( id, szTarget );
+
+		if ( !iPlayer )
+			return PLUGIN_HANDLED;
+
+		//client_print( iPlayer, print_chat, "%s %L", g_MODclient, id, "THE_ADMIN_GAVE_YOU_EXPERIENCE", iXp );
+
+		p_data[iPlayer][P_XP] = iXp;
+
+		XP_Check( iPlayer );
+	}
+
+	return PLUGIN_HANDLED;
+}
+
+public Admin_wc3( id )
 {
 
-    if ( id && !( get_user_flags( id ) & XP_get_admin_flag() ) )
+    if ( !( get_user_flags( id ) & XP_get_admin_flag() ) )
 	{
 			client_print( id, print_console, "%L", id, "YOU_HAVE_NO_ACCESS", g_MODclient );
 			return PLUGIN_HANDLED;
@@ -222,7 +314,7 @@ public ADMIN_wc3(id, level, cid)
 
 	if ( read_argc() < 2 )
 	{
-		ADMIN_Print( id, "Format: %s <on|off>", szArgCmd );
+		Admin_Print( id, "Format: %s <on|off>", szArgCmd );
 		return PLUGIN_HANDLED;
 	}
 
@@ -232,12 +324,12 @@ public ADMIN_wc3(id, level, cid)
 	if ( equal( szArg, "on" ) || equal( szArg, "1" ) )
 	{
 		warcraft3 = true;
-		ADMIN_Print( id, "War3ft plugin enabled" );
+		Admin_Print( id, "War3ft plugin enabled" );
 	}
 	else if ( equal( szArg, "off" ) || equal( szArg, "0" ) )
 	{
 		warcraft3 = false;
-		ADMIN_Print( id, "War3ft plugin disabled" );
+		Admin_Print( id, "War3ft plugin disabled" );
 
 		// Save everyone's XP since we're not going to be saving it later
 		if ( get_pcvar_num( CVAR_wc3_save_xp ) )
@@ -247,15 +339,14 @@ public ADMIN_wc3(id, level, cid)
 	}
 	else
 	{
-		ADMIN_Print( id, "Format: %s <on|off>", szArgCmd );
-		return PLUGIN_HANDLED;
+		Admin_Print( id, "Format: %s <on|off>", szArgCmd );
 	}
 
 	return PLUGIN_HANDLED;
 }
 
 // Function will print to server console or client console based on the ID number
-ADMIN_Print( id, text[], {Float,_}:...)
+Admin_Print( id, text[], {Float,_}:...)
 {    
 	// format the text as needed
 
