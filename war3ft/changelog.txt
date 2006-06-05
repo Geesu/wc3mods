@@ -27,6 +27,7 @@ v3.0
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
+//change evasion/voodoo to work off of traceline ( if possible )
 //change orc nades so it CANNOT kill anyone w max health
 //Add a start/stop option
 //Need to give 2 flashbangs, not one
