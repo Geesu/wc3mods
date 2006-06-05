@@ -421,7 +421,7 @@ public _SHARED_DOD_Reincarnation_Check( id )
 
 public _SHARED_DOD_Reincarnation_Loc( id )
 {
-	if ( !warcraft3 )
+	if ( !WAR3_Check() )
 	{
 		return;
 	}
@@ -444,7 +444,7 @@ public _SHARED_DOD_Reincarnation_Loc( id )
 public SHARED_CS_Reincarnation( id )
 {
 
-	if( !p_data_b[id][PB_ISCONNECTED] || !warcraft3 )
+	if ( !p_data_b[id][PB_ISCONNECTED] || !warcraft3 )
 	{
 		return PLUGIN_CONTINUE;
 	}
@@ -452,15 +452,16 @@ public SHARED_CS_Reincarnation( id )
 	new bool:bGiveWeapons = false;
 	
 	// If the give items flag is true
-	if( p_data_b[id][PB_GIVEITEMS] )
+	if ( p_data_b[id][PB_GIVEITEMS] )
 	{
 		bGiveWeapons = true;
 		p_data_b[id][PB_GIVEITEMS] = false;
 	}
 	
 	// Check based on skill or if the user has an item
-	if (p_data_b[id][PB_DIEDLASTROUND])
+	if ( p_data_b[id][PB_DIEDLASTROUND] )
 	{
+		client_print( id, print_console, "Died last round w/item: %d", p_data[id][P_LASTITEM] );
 		// Orc's Reincarnation
 		if ( Verify_Skill(id, RACE_ORC, SKILL3) )
 		{
@@ -481,7 +482,7 @@ public SHARED_CS_Reincarnation( id )
 	{
 		client_cmd( id, "speak %s", SOUND_REINCARNATION );
 
-		if (iglow[id][1] < 1)
+		if ( iglow[id][1] < 1 )
 		{
 			new parm[2];
 			parm[0] = id;
@@ -506,7 +507,7 @@ public SHARED_CS_Reincarnation( id )
 	}
 	else
 	{
-		if( !cs_get_user_nvg( id ) )
+		if ( !cs_get_user_nvg( id ) )
 		{
 			p_data_b[id][PB_NIGHTVISION] = false;
 		}

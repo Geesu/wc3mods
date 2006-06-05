@@ -521,4 +521,6 @@ public ITEM_Reset( id )
 	// Reset shopmenu 2 items
 	ITEM_Set( id, -1, SHOPMENU_TWO );
 
+	client_print( id, print_console, "[DEBUG] Reset your items!" );
+
 }
