@@ -271,7 +271,12 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 		#if MOD == 1
 			if ((wpnindex == DODW_HANDGRENADE || wpnindex == DODW_STICKGRENADE) && allow){
 		#endif
+				new iMaxHealth = get_user_maxhealth( victim );
+
 				tempdamage = floatround(float(damage) * p_grenade[p_data[attacker][P_SKILL2]-1])
+
+				if ( tempdamage >= iMaxHealth )
+					tempdamage = iMaxHealth - 1;
 
 				WAR3_damage(victim, attacker, tempdamage, wpnindex, hitplace)
 				new name[32]
@@ -629,7 +634,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 			if (iglow[attacker][0]>MAXGLOW)
 				iglow[attacker][0]=MAXGLOW
 
-			Create_ScreenFade(attacker, (1<<10), (1<<10), (1<<12), 255, 0, 0, iglow[attacker][0])
+			Create_ScreenFade(attacker, (1<<10), (1<<10), (1<<12), 0, 0, 255, iglow[attacker][0])
 		}
 	}
 
@@ -1192,7 +1197,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				new Float:time = halflife_time();
 				if ( 0 < iAttacker <= MAXPLAYERS && time - fLastShotFired[iAttacker] < 0.1 )
 				{
-					Create_ScreenFade(iVictim, (1<<10), (1<<10), (1<<12), 250, 164, 20, 150);
+					Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 0, 0, 255, 150 );
 				}
 				
 				return FMRES_SUPERCEDE;

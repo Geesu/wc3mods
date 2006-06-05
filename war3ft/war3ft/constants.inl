@@ -131,7 +131,7 @@
 #define EXPLOSION_BLAST_RADIUS	250
 #define BLINK_COOLDOWN			2.0
 #define ORB_DAMAGE				20			// Damage done by Orb of Annihilation
-#define CONCOCTION_DAMAGE		15			// Damage done by Unstable Concoction
+#define CONCOCTION_DAMAGE		20			// Damage done by Unstable Concoction
 #define CONCOCTION_RADIUS		300
 #define CRITICAL_STRIKE_CHANCE	0.15		// 15% chance of Critical Strike working
 #define SKILL_EVASION_ADJ		1024		// The amount of health that is given/taken for evasion
@@ -620,7 +620,7 @@ new const Float:p_levitation[3] =		{0.8,0.6,0.4}			// Levitation				(skill 3)
 
 new const p_invisibility[3] =			{200,150,100}			// Invisibility				(skill 1)
 new const p_devotion[3] =				{115,130,145}			// Devotion Aura			(skill 2)
-new const Float:p_bash[3] =				{0.15,0.30,0.45}		// Bash						(skill 3)
+new const Float:p_bash[3] =				{0.10,0.20,0.30}		// Bash						(skill 3)
 
 new const Float:p_critical[3] =			{0.25,0.50,0.75}		// Critical Strike			(skill 1)
 new const Float:p_grenade[3] =			{2.0,3.0,4.0}			// Critical Grenade			(skill 2)

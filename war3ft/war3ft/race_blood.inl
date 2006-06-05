@@ -59,7 +59,7 @@ public SH_ULT_Immolate_DoT( parm_DoT[3] )
 
 	emit_sound( iTarget, CHAN_STATIC, SOUND_IMMOLATE_BURNING, 0.5, ATTN_NORM, 0, PITCH_NORM );
 
-	Create_TE_SPRITE( vTargetOrigin, g_sFire, 5, 200 );
+	Create_TE_SPRITE( vTargetOrigin, g_sFire, 3, 200 );
 
 	// Do the DoT damage
 
@@ -71,7 +71,7 @@ public SH_ULT_Immolate_DoT( parm_DoT[3] )
     {
 		p_data[iTarget][PB_ISBURNING] = true;
 
-        Create_ScreenFade( iTarget, (1<<10), (1<<10), 0, 255, 108, 0, 160 );
+        Create_ScreenFade( iTarget, (1<<10), (1<<10), (1<<12), 255, 108, 0, 160 );
 
 		parm_DoT[2]++;
 

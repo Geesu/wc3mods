@@ -30,7 +30,7 @@ public WAR3_precache()
 	copy( SOUND_CONCOCTION_HIT	, 63, "warcraft3/PossessionMissileHit1.wav"			);	// Unstable Concoction Hit
 	copy( SOUND_HEX				, 63, "warcraft3/PolymorphDone.wav"					);	// Hex
 	copy( SOUND_IMMOLATE		, 63, "warcraft3/immolate.wav"						);	// Immolate
-	copy( SOUND_IMMOLATE_BURNING, 63, "warcraft3/immolate.wav"					    );	// Immolate Burning
+	copy( SOUND_IMMOLATE_BURNING, 63, "ambience/flameburst1.wav"				    );	// Immolate Burning
 
 	copy( SOUND_REINCARNATION	, 63, "warcraft3/soundpack/reincarnation.wav"		);	// Weapon Reincarnation/Ankh
 	copy( SOUND_ANTEND			, 63, "warcraft3/antend.wav"						);	// Sound played when you try to shoot a chameleoned teammate 

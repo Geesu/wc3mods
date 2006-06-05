@@ -3,6 +3,7 @@ v3.0
  - Addition: If a needed module isn't loaded, the plugin will modify the modules.ini + reload the map
  - Addition: NVault now used instead of vault (will improve lag when there are NUMEROUS users and saving XP is on)
  - Addition: Check for serpent wards to prevent them from being planted on the bomb or on hostages
+ - Addition: amx_setlevel has been added
  - Bug Fix: cl_minmodels task was not repeating
  - Change: Using Vengeance will ALWAYS set your health to 50
  - Change: Cloak stacks with invisibility
@@ -13,7 +14,9 @@ v3.0
  - Change: Blood Mage has a new ultimate! - thanks Avanderik
  - Change: Avanderik added to developer check
  - Change: Traceline is used when searching for a target for certain ultimates (instead of get_user_aiming every .1 seconds)
- - Change: amx_setlevel has been added
+ - Change: Bash chance has been reduced to 10%/20%/30%
+ - Change: Evasion and Helm will now flash your screen blue instead of previous colors
+ - Change: Orc critical nades will now have a max damage of 99 or 144 depending on victim's race
  - Removed: FT_impale_intensity cvar (edit this constant at the top of skills.inl)
  - Removed: FT_blink_radius cvar (replaced with NECKLACE_RADIUS define)
  - Removed: FT_healing_range cvar (defined at top of skills.inl)
