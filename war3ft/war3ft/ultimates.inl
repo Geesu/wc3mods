@@ -754,6 +754,8 @@ public _ULT_Ping( parm[] )
 		// Play the ping sound
 		emit_sound( id, CHAN_STATIC, SOUND_ULTIMATESCAN, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-		set_task( 1.0, "_ULT_Ping", TASK_ULTPING, parm, 2 );
+		set_task( 1.0, "_ULT_Ping", TASK_ULTPING + id, parm, 2 );
 	}
+
+	return;
 }

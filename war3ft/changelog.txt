@@ -39,6 +39,7 @@ v3.0
 //necklace of immunity = charges
 //spec hudmsg needs to not carry over when you spawn
 //don't depend on client_damage from csx/dodx - catch damage event
+//round restart = race reset... don't do this..
 
 v2.3.2
  - Addition: Admin flag added to war3FT.cfg file as a cvar

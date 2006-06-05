@@ -148,29 +148,43 @@ public cmd_Ultimate(id)
 	else if ( Verify_Skill(id, RACE_ORC, SKILL4) && !p_data_b[id][PB_ISSEARCHING] ){
 		p_data_b[id][PB_ISSEARCHING] = true;
 
-		new parm[2]
-		parm[0] = id
-		parm[1] = 5
-		_ULT_Ping( parm );
+		// Don't continue if task already exists...
+		if ( !task_exists( TASK_ULTPING + id ) )
+		{
+
+			new parm[2]
+			parm[0] = id
+			parm[1] = 5
+			_ULT_Ping( parm );
+		}
 	}
 
 	// Entangling Roots
 	else if ( Verify_Skill(id, RACE_ELF, SKILL4) && !p_data_b[id][PB_ISSEARCHING] ){
 		p_data_b[id][PB_ISSEARCHING] = true;
 
-		new parm[2]
-		parm[0]=id
-		parm[1]=5
-		_ULT_Ping( parm );
+		// Don't continue if task already exists...
+		if ( !task_exists( TASK_ULTPING + id ) )
+		{
+			new parm[2]
+			parm[0] = id
+			parm[1] = 5
+			_ULT_Ping( parm );
+		}
 	}
 
 	// Immolate
 	else if ( Verify_Skill(id, RACE_BLOOD, SKILL4) ){
 		p_data_b[id][PB_ISSEARCHING] = true;
-		new parm[2]
-		parm[0]=id
-		parm[1]=5
-		_ULT_Ping( parm );
+
+		// Don't continue if task already exists...
+		if ( !task_exists( TASK_ULTPING + id ) )
+		{
+			new parm[2]
+			parm[0] = id
+			parm[1] = 5
+			_ULT_Ping( parm );
+		}
 	}
 
 	// Big Bad Voodoo
