@@ -35,7 +35,7 @@ XP_Check( id, bShowGained = true )
 	}
 
 	// Determine what the user's level should be
-	for ( new i = 0; i < MAX_LEVELS; i++ )
+	for ( new i = 0; i <= MAX_LEVELS; i++ )
 	{
 		// User has enough XP to advance to the next level
 		if ( p_data[id][P_XP] >= xplevel[i] )
