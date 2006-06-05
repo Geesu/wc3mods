@@ -73,7 +73,7 @@ public SH_ULT_Immolate_DoT( parm_DoT[3] )
 
         Create_ScreenFade( iTarget, (1<<10), (1<<10), 0, 255, 108, 0, 160 );
 
-		parm_DoT[2] = iCounter++;
+		parm_DoT[2]++;
 
 		new TaskId = TASK_BURNING + iTarget;
 		set_task( 1.0, "SH_ULT_Immolate_DoT", TaskId, parm_DoT, 3 );
