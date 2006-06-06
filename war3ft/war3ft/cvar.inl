@@ -224,7 +224,10 @@ public CVAR_Configure()
 		g_ChamSkills[3] = get_pcvar_num( CVAR_wc3_cham_skill3 );
 		g_ChamSkills[4] = get_pcvar_num( CVAR_wc3_cham_ultimate );
 	}
+}
 
+public plugin_cfg()
+{
 	// Get Half-Life CVAR Pointers
 	CVAR_mp_friendlyfire = get_cvar_pointer( "mp_friendlyfire" );
 }

@@ -12,7 +12,7 @@ public NE_ULT_Entangle( iCaster, iEnemy )
 	Create_TE_BEAMFOLLOW( iEnemy, g_siTrail, 10, 5, 10, 108, 23, 255 );
 	
 	// User is now stunned so we can't do any other stun abilities
-	p_data[iEnemy][PB_STUNNED] = true;
+	p_data_b[iEnemy][PB_STUNNED] = true;
 	
 	// Set the speed of the enemy (this will auto-stun them)
 	SHARED_SetSpeed( iEnemy );
@@ -58,6 +58,8 @@ public _NE_ULT_EntangleWait( parm[4] )
 	// Checking to see if the user has actually stopped yet?
 	if ( vOrigin[0] == parm[1] && vOrigin[1] == parm[2] && vOrigin[2] == parm[3] )
 	{
+		SHARED_SetSpeed( id );
+
 		// Reset the user's speed in ENTANGLE_TIME amount of time
 		set_task( ENTANGLE_TIME, "SHARED_ResetMaxSpeed", TASK_RESETSPEED + id );
 		
@@ -140,7 +142,7 @@ public NE_ULT_EntangleEffect( id )
 			iEnd[1]		= vOrigin[1] + y2;
 			iEnd[2]		= vOrigin[2] + iHeight + 2;
 			
-			Create_TE_BEAMPOINTS( iStart, iEnd, g_siBeam4, 0, 0, floatround( ENTANGLE_TIME ), 10, 5, 10, 108, 23, 255, 0 );
+			Create_TE_BEAMPOINTS( iStart, iEnd, g_siBeam4, 0, 0, ( floatround( ENTANGLE_TIME ) * 10.0 ), 10, 5, 10, 108, 23, 255, 0 );
 
 			iHeight -= 16;
 		}

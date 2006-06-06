@@ -633,6 +633,7 @@ public SHARED_CopySavedWeapons( id )
 // Sets the user's speed, should be called after freezetime, on weapon change and after a speed modifying skill has been called
 public SHARED_SetSpeed( id )
 {
+
 	if ( id > TASK_UNHOLYSPEED )
 	{
 		id -= TASK_UNHOLYSPEED;
@@ -744,7 +745,7 @@ public SHARED_ResetMaxSpeed( id )
 	}
 
 
-	if( !p_data_b[id][PB_ISCONNECTED] )
+	if ( !p_data_b[id][PB_ISCONNECTED] )
 	{
 		return;
 	}

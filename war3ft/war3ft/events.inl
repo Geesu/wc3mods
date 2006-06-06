@@ -1174,15 +1174,14 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 		{
 			// Do the check to see if we should "evade" this shot
 			new Float:time = halflife_time();
-			if ( 0 < iAttacker <= MAXPLAYERS && time - fLastShotFired[iAttacker] < 0.1 )
+			if ( 0 < iAttacker <= MAXPLAYERS && time - fLastShotFired[iAttacker] < 0.2 )
 			{
 
 				// Basically if friendly fire is on, we want to block ALL shots, otherwise we only block shots from enemies
 				if ( !get_pcvar_num( CVAR_mp_friendlyfire ) )
 				{
-					new iTeam = get_user_team( iAttacker );
 
-					if ( iTeam == get_user_team( iVictim ) )
+					if ( get_user_team( iAttacker ) == get_user_team( iVictim ) )
 					{
 						return FMRES_IGNORED;
 					}
