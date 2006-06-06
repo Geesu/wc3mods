@@ -261,10 +261,10 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 		#endif
 				new iMaxHealth = get_user_maxhealth( victim );
 
-				tempdamage = floatround(float(damage) * p_grenade[p_data[attacker][P_SKILL2]-1])
+				tempdamage = floatround( damage * p_grenade[p_data[attacker][P_SKILL2]-1] )
 
-				if ( tempdamage >= iMaxHealth )
-					tempdamage = iMaxHealth - 1;
+				if ( tempdamage + damage >= iMaxHealth )
+					tempdamage = iMaxHealth - ( damage + 1 );
 
 				WAR3_damage(victim, attacker, tempdamage, wpnindex, hitplace)
 				new name[32]
