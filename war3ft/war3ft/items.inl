@@ -511,16 +511,25 @@ public ITEM_Reset( id )
 	p_data[id][P_LASTITEM]			= p_data[id][P_ITEM];
 	p_data[id][P_LASTITEM2]			= p_data[id][P_ITEM2];
 
-	// Reset the user's items
-	p_data[id][P_ITEM]		= 0;
-	p_data[id][P_ITEM2]		= 0;
-
 	// Reset shopmenu 1 items
 	ITEM_Set( id, -1, SHOPMENU_ONE );
 
 	// Reset shopmenu 2 items
 	ITEM_Set( id, -1, SHOPMENU_TWO );
+}
 
-	client_print( id, print_console, "[DEBUG] Reset your items!" );
+// Save the user's items!!
+public ITEM_Save( id )
+{
+	// Lets save the user's items from when they died
+	p_data[id][P_LASTITEM]			= p_data[id][P_ITEM];
+	p_data[id][P_LASTITEM2]			= p_data[id][P_ITEM2];
+}
+
+public ITEM_DeleteAll( id )
+{
+	// Reset the user's items
+	p_data[id][P_ITEM]		= 0;
+	p_data[id][P_ITEM2]		= 0;
 
 }

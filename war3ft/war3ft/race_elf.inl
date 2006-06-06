@@ -148,3 +148,67 @@ public NE_ULT_EntangleEffect( id )
 
 	return;
 }
+
+NE_Evasion( id, iHitZone )
+{
+	if ( iglow[id][2] < 1 )
+	{
+		new parm[2];
+		parm[0] = id;
+		set_task( 0.01, "glow_change", TASK_GLOW + id, parm, 2 );
+	}
+	
+	// Head shot
+	if ( iHitZone & (1 << HITGROUP_HEAD) )
+	{
+		iglow[id][2] += 250;
+	}
+
+	// Chest
+	else if ( iHitZone & (1 << HITGROUP_CHEST) )
+	{
+		iglow[id][2] += 75;
+	}
+
+	// All other Hit places
+	else
+	{
+		iglow[id][2] += random_num( 20, 50 );
+	}
+
+	iglow[id][0] = 0;
+	iglow[id][1] = 0;
+	iglow[id][3] = 0;
+
+	if ( iglow[id][2] > MAXGLOW )
+	{
+		iglow[id][2] = MAXGLOW;
+	}
+
+	Create_ScreenFade( id, (1<<10), (1<<10), (1<<12), 0, 0, 255, iglow[id][2] );
+
+	p_data_b[id][PB_EVADENEXTSHOT] = false;
+}
+
+// Called when a user is shot and when a user spawns
+NE_EvasionCheck( id )
+{
+	// Only check to see if the user can evade if they have the skill
+	if ( Verify_Skill( id, RACE_ELF, SKILL1 ) )
+	{
+		
+		// Check to see if they should evade the next shot?
+		if ( random_float( 0.0, 1.0 ) <= p_evasion[p_data[id][P_SKILL1]-1] )
+		{
+			p_data_b[id][PB_EVADENEXTSHOT] = true;
+
+			client_print( id, print_chat, "[DEBUG] You will evade the next shot" );
+		}
+	}
+
+	// The user shouldn't be able to evade then right ?
+	else
+	{
+		p_data_b[id][PB_EVADENEXTSHOT] = false;
+	}
+}

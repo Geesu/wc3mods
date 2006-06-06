@@ -5,6 +5,7 @@ v3.0
  - Addition: Check for serpent wards to prevent them from being planted on the bomb or on hostages
  - Addition: amx_setlevel has been added
  - Bug Fix: cl_minmodels task was not repeating
+ - Change: Unstable Concoction now originates from the attacker and damages nearby teammates
  - Change: Using Vengeance will ALWAYS set your health to 50
  - Change: Cloak stacks with invisibility
  - Change: Config file location moved

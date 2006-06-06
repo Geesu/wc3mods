@@ -143,18 +143,6 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 		}
 	}
 
-
-	// **************************************************
-	// Single Victim Ability (Evasion)
-	// This is here b/c we do not want war3 damage being done before we take the health away
-	// **************************************************
-
-	if ( Verify_Race(victim, RACE_ELF) )
-	{
-		// Evasion
-		Skill_Evasion_Reset( victim, damage );
-	}
-
 	// **************************************************
 	// Attacker Abilities
 	// **************************************************
@@ -550,13 +538,13 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 		tempdamage = floatround(float(damage) * get_pcvar_num( CVAR_wc3_mask ))
 
 		if ( iHealth + tempdamage > get_user_maxhealth(attacker) ){
-			new iTotalHealth = get_user_health(attacker)
+			//new iTotalHealth = get_user_health(attacker)
 
-			if( iTotalHealth > 1500 && p_data_b[attacker][PB_GODMODE] )		// God Mode
+			/*if( iTotalHealth > 1500 && p_data_b[attacker][PB_GODMODE] )		// God Mode
 				set_user_health(attacker, 2148)
 			else if( iTotalHealth > 500 && p_data_b[attacker][PB_EVADENEXTSHOT] )	// Evasion
 				set_user_health(attacker, (100 + SKILL_EVASION_ADJ))
-			else
+			else*/
 				set_user_health(attacker, get_user_maxhealth(attacker))
 		}
 		else
@@ -611,10 +599,11 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	// **************************************************
 
 	// Night Elf
-	if ( Verify_Race(victim, RACE_ELF) ){
+	if ( Verify_Race(victim, RACE_ELF) )
+	{
 
 		// Evasion
-		Skill_Evasion_Set( victim );
+		NE_EvasionCheck( victim );
 		
 		// Thorns Aura
 		if ( Verify_Skill(victim, RACE_ELF, SKILL2) && attacker > 0 && !p_data_b[victim][PB_HEXED] ) {
@@ -649,53 +638,10 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	}
 
 	// Shadow Hunter
-	else if ( Verify_Race(victim, RACE_SHADOW) ){
-		
-		if ( !p_data_b[victim][PB_HEXED] )
-		{
-			// Unstable Concoction
-			new Float:randomnumber = random_float(0.0,1.0)
-
-			if (randomnumber <= p_concoction[p_data[victim][P_LEVEL]]){
-				new origin[3], k, initorigin[3], axisorigin[3]
-					
-				get_user_origin(victim, origin)
-
-				emit_sound(victim,CHAN_STATIC, SOUND_CONCOCTION_CAST, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-				initorigin[0] = origin[0]
-				initorigin[1] = origin[1]
-				initorigin[2] = origin[2] - 16
-
-				axisorigin[0] = origin[0]
-				axisorigin[1] = origin[1]
-				axisorigin[2] = origin[2] + CONCOCTION_RADIUS
-
-				for (k=0;k<200;k=k+25){
-					Create_TE_BEAMCYLINDER(origin, initorigin, axisorigin, g_sSpriteTexture, 0, 0, 9, 20, 0, 188, 220, 255, 255, 0)
-
-					initorigin[2] += 25
-				}
-
-				new players[32], numberofplayers, targetorigin[3], i
-				get_players(players, numberofplayers, "a")
-				new team = get_user_team(victim)
-				
-				for(i=0;i<numberofplayers;i++){
-					get_user_origin(players[i], targetorigin)
-					if( get_distance(origin, targetorigin) <= CONCOCTION_RADIUS && get_user_team(players[i]) != team ){
-						WAR3_damage(players[i], victim, CONCOCTION_DAMAGE, CSW_CONCOCTION, hitplace)
-						emit_sound(victim,CHAN_STATIC, SOUND_CONCOCTION_HIT, 1.0, ATTN_NORM, 0, PITCH_NORM)
-					}
-				}
-			}
-		#if ADVANCED_STATS
-			else{
-				new WEAPON = CSW_CONCOCTION - CSW_WAR3_MIN
-				iStatsShots[victim][WEAPON]++
-			}
-		#endif
-		}
+	else if ( Verify_Race(victim, RACE_SHADOW) )
+	{
+		// Unstable Concoction Check
+		SH_Concoction( victim, attacker );
 	}
 
 
@@ -919,6 +865,14 @@ public _EVENT_Before_ResetHUD()
 		task_exists( TASK_RESETSPEED + id ) ? remove_task( TASK_RESETSPEED + id ) : 0;
 
 		SHARED_CopySavedWeapons( id );
+
+		ITEM_Save( id );
+		
+		// They died, so lets remove their items
+		if ( p_data_b[id][PB_DIEDLASTROUND] )
+		{
+			ITEM_DeleteAll( id );
+		}
 	}
 	
 	// We don't want ultimates to continue into the next round
@@ -1042,6 +996,9 @@ public EVENT_PlayerSpawned( id )
 
 	// The user should not be frozen when they spawn
 	SHARED_ResetMaxSpeed( id );
+
+	// Reset the user's skin
+	SHARED_ChangeSkin( id, SKIN_RESET );
 
 	// Check for Counter-Strike or Condition Zero
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
@@ -1191,7 +1148,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 			// If its a headshot then we want to block it
 			if ( iHitZone & (1 << 1) )
 			{
-				set_tr(TR_flFraction, 1.0);
+				set_tr( TR_flFraction, 1.0 );
 				
 				// Do the check to see if we should flash the screen orange
 				new Float:time = halflife_time();
@@ -1204,6 +1161,42 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 			}
 		}
 
+		// This is a check for the big bad voodoo ultimate -
+		if ( p_data_b[iVictim][PB_GODMODE] )
+		{
+			set_tr( TR_flFraction, 1.0 );
+
+			return FMRES_SUPERCEDE;
+		}
+		
+		// Should we evade the next shot ?
+		if ( p_data_b[iVictim][PB_EVADENEXTSHOT] )
+		{
+			// Do the check to see if we should "evade" this shot
+			new Float:time = halflife_time();
+			if ( 0 < iAttacker <= MAXPLAYERS && time - fLastShotFired[iAttacker] < 0.1 )
+			{
+
+				// Basically if friendly fire is on, we want to block ALL shots, otherwise we only block shots from enemies
+				if ( !get_pcvar_num( CVAR_mp_friendlyfire ) )
+				{
+					new iTeam = get_user_team( iAttacker );
+
+					if ( iTeam == get_user_team( iVictim ) )
+					{
+						return FMRES_IGNORED;
+					}
+				}
+
+				set_tr( TR_flFraction, 1.0 );
+
+				NE_Evasion( iVictim, iHitZone );
+
+				client_print( iVictim, print_chat, "[DEBUG] Shot blocked by evasion!!!" );
+
+				return FMRES_SUPERCEDE;
+			}
+		}
 	}
 	
 	return FMRES_IGNORED;

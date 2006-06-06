@@ -131,8 +131,6 @@
 #define EXPLOSION_BLAST_RADIUS	250
 #define BLINK_COOLDOWN			2.0
 #define ORB_DAMAGE				20			// Damage done by Orb of Annihilation
-#define CONCOCTION_DAMAGE		20			// Damage done by Unstable Concoction
-#define CONCOCTION_RADIUS		300
 #define CRITICAL_STRIKE_CHANCE	0.15		// 15% chance of Critical Strike working
 #define SKILL_EVASION_ADJ		1024		// The amount of health that is given/taken for evasion
 
@@ -150,6 +148,16 @@
 #define AMMOX_FLASHBANG			11     // Flashbang
 #define AMMOX_HEGRENADE			12     // HE Grenade
 #define AMMOX_SMOKEGRENADE		13     // Smoke Grenade
+
+
+#define HITGROUP_GENERIC		0 // none
+#define HITGROUP_HEAD			1 // 1 << 1 = 2
+#define HITGROUP_CHEST			2 // 1 << 2 = 4
+#define HITGROUP_STOMACH		3 // 8
+#define HITGROUP_LEFTARM		4 // 16
+#define HITGROUP_RIGHTARM		5 // 32
+#define HITGROUP_LEFTLEG		6 // 64
+#define HITGROUP_RIGHTLEG		7 // 128
 
 /*	 Weapon IDs	 */
 #define CSW_WORLDSPAWN			0 

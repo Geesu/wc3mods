@@ -442,8 +442,6 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 		/* Do not allow other renderings to take place, like switching to invis, etc... */
 		p_data_b[id][PB_CAN_RENDER] = false
 
-		set_user_health(id, get_user_health(id) + 2048)
-
 		#if MOD == 0
 			Create_BarTime(id, 2, 0)
 		#endif
@@ -464,9 +462,6 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 		set_user_rendering(id)
 
 		p_data_b[id][PB_GODMODE] = false
-		
-		if( is_user_alive(id) )
-			set_user_health(id, get_user_health(id) - 2048)
 	
 		Ultimate_Icon(id,ICON_HIDE)
 

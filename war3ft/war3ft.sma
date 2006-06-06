@@ -140,10 +140,8 @@ public plugin_init()
 
 
 	// Admin Commands
-	register_concmd( "amx_setxp"		, "Admin_GiveXP"		, 0 , " -- Gives XP to players"				);
+	register_concmd( "amx_givexp"		, "Admin_GiveXP"		, 0 , " -- Gives XP to players"				);
 	register_concmd( "amx_setlevel"	    , "Admin_SetLevel"		, 0 , " -- Sets a players level"			);
-	
-	//register_concmd( "amx_savexp"		, "Admin_SaveXP"		, 0 , " -- Saves XP for players"			);
 	register_concmd( "amx_givemole"	    , "Admin_GiveMole"		, 0 , " -- Gives the mole item to a player"	);
 	register_concmd( "amx_wc3"			, "Admin_wc3"			, 0 , " -- Enables/disables war3ft"			);
 	
@@ -154,11 +152,11 @@ public plugin_init()
 	// Register forwards (from fakemeta)
 	register_forward( FM_TraceLine		, "TRIGGER_TraceLine"	);
 
-	register_event( "DeathMsg"			, "on_DeathMsg"		,"a"								);
-	register_event( "CurWeapon"			, "on_CurWeapon"	,"be"	, "1=1"						);
+	register_event( "DeathMsg"			, "on_DeathMsg"		, "a"								);
+	register_event( "CurWeapon"			, "on_CurWeapon"	, "be"	, "1=1"						);
 	register_event( "HideWeapon"		, "on_CurWeapon"	, "b"								);
 	register_event( "ResetHUD"			, "on_ResetHud"		, "b"								);
-	register_event( "TextMsg"			, "on_GameRestart"	,"a"	, "2&#Game_will_restart_in" );
+	register_event( "TextMsg"			, "on_GameRestart"	, "a"	, "2&#Game_will_restart_in" );
 
 	register_dictionary( "war3FT.txt")
 

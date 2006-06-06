@@ -8,6 +8,9 @@
 
 #define VENGEANCE_HEALTH		50			// Health the user should have after using his ult
 
+#define CONCOCTION_DAMAGE		15			// Damage done by Unstable Concoction
+#define CONCOCTION_RADIUS		300
+
 // ****************************************
 // Shadow Hunter's Healing Wave
 // ****************************************
@@ -288,4 +291,79 @@ bool:SH_CanPlaceWard( id )
     		return false;
 	}	 	
 	return true;
+}
+
+// Unstable Concoction
+public SH_Concoction( iVictim, iAttacker )
+{
+	
+	// We can't do anything if the user is hexed :/
+	if ( p_data_b[iVictim][PB_HEXED] )
+	{
+		return;
+	}
+
+	// Check to see if we should "concoction"
+	if ( random_float( 0.0, 1.0 ) <= p_concoction[p_data[iVictim][P_LEVEL]] )
+	{
+		new vOrigin[3], vInitOrigin[3], vAxisOrigin[3], i;
+		
+		// Get origin of attacker
+		get_user_origin( iAttacker, vOrigin );
+		
+		// Play sound on attacker
+		emit_sound( iAttacker, CHAN_STATIC, SOUND_CONCOCTION_CAST, 1.0, ATTN_NORM, 0, PITCH_NORM );
+		
+		// Set up the origins for the effect
+		vInitOrigin[0] = vOrigin[0];
+		vInitOrigin[1] = vOrigin[1];
+		vInitOrigin[2] = vOrigin[2] - 16;
+
+		vAxisOrigin[0] = vOrigin[0];
+		vAxisOrigin[1] = vOrigin[1];
+		vAxisOrigin[2] = vOrigin[2] + CONCOCTION_RADIUS;
+		
+		// Display the effect on the attacker
+		for ( i = 0; i < 200; i += 25 )
+		{
+			Create_TE_BEAMCYLINDER( vOrigin, vInitOrigin, vAxisOrigin, g_sSpriteTexture, 0, 0, 9, 20, 0, 188, 220, 255, 255, 0 );
+
+			vInitOrigin[2] += 25;
+		}
+
+		new team = get_user_team( iVictim );
+		new players[32], numberofplayers, vTargetOrigin[3];
+		get_players(players, numberofplayers, "a");
+
+		
+		// Loop through all players and see if anyone nearby needs to be damaged
+		for( i = 0; i < numberofplayers; i++ )
+		{
+			
+			// Then we have a target on the other team!!
+			if ( get_user_team( players[i] ) != team )
+			{
+				get_user_origin( players[i], vTargetOrigin );
+
+				// Make sure they are close enough
+				if ( get_distance( vOrigin, vTargetOrigin ) <= CONCOCTION_RADIUS )
+				{
+					// Damage
+					WAR3_damage( players[i], iVictim, CONCOCTION_DAMAGE, CSW_CONCOCTION, 0 );
+				
+					// Let the victim know he hit someone
+					emit_sound( iVictim, CHAN_STATIC, SOUND_CONCOCTION_HIT, 1.0, ATTN_NORM, 0, PITCH_NORM );
+				}
+			}
+		}
+	}
+	#if ADVANCED_STATS
+	else
+	{
+		new WEAPON = CSW_CONCOCTION - CSW_WAR3_MIN;
+		iStatsShots[iVictim][WEAPON]++;
+	}
+	#endif
+
+	return;
 }

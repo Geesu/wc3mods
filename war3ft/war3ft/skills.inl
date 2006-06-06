@@ -43,7 +43,7 @@ public Skill_Check(id)
 	}
 
 	// Night Elf's Evasion
-	Skill_Evasion_Set( id );
+	NE_EvasionCheck( id );
 
 	// Human's Devotion Aura
 	if ( Verify_Skill(id, RACE_HUMAN, SKILL2) ){
@@ -124,107 +124,6 @@ public Skill_Pheonix(id){
 			}
 		}
 	}
-}
-
-
-// ****************************************
-// Night Elf's Evasion
-// ****************************************
-
-// Called when a user is shot and when a user spawns
-public Skill_Evasion_Set( id )
-{
-	// Only check to see if the user can evade if they have the skill
-	if ( Verify_Skill( id, RACE_ELF, SKILL1 ) )
-	{
-		new Float:randomnumber = random_float(0.0, 1.0);
-		
-		// Only set next shot as being evaded if if they aren't already evading the next shot
-		if ( randomnumber <= p_evasion[p_data[id][P_SKILL1]-1] && !p_data_b[id][PB_EVADENEXTSHOT] )
-		{
-			p_data_b[id][PB_EVADENEXTSHOT] = true;
-		}
-	}
-	
-	// Actually do the health changes in this function
-	Skill_Evasion_Check( id );
-}
-
-// Called on Skill_Evasion_Set
-Skill_Evasion_Check( id )
-{
-	new iHealth = get_user_health( id );
-	
-	// Make sure the user has the skill
-	if ( Verify_Skill( id, RACE_ELF, SKILL1 ) )
-	{
-		// Give the user enough health so they can evade
-		if ( p_data_b[id][PB_EVADENEXTSHOT] && iHealth < 500 && is_user_alive(id) )
-		{
-			set_user_health( id, iHealth + SKILL_EVASION_ADJ );
-		}
-	}
-	// User doesn't have the skill
-	else
-	{
-		// This shouldn't be true if the user doesn't have the skill right?
-		if ( p_data_b[id][PB_EVADENEXTSHOT] )
-		{
-			p_data_b[id][PB_EVADENEXTSHOT] = false;
-		}
-	}
-
-	// Check if the user has too much health when they shouldn't evade the next shot
-	if ( !p_data_b[id][PB_EVADENEXTSHOT] && iHealth > 500 && !p_data_b[id][PB_GODMODE] )
-	{
-		// Hopefully this will never kill them
-		set_user_health(id, iHealth - SKILL_EVASION_ADJ);
-	}
-
-	// This should technically never occur ...
-	if ( p_data_b[id][PB_EVADENEXTSHOT] && iHealth > 1500 && !p_data_b[id][PB_GODMODE] )
-	{
-		// Just set back to default
-		set_user_health( id, 100 + SKILL_EVASION_ADJ );
-
-	}
-}
-
-stock Skill_Evasion_Reset( id, damage )
-{
-	if ( !Verify_Skill( id, RACE_ELF, SKILL1 ) )
-	{
-		return;
-	}
-
-	new iHealth = get_user_health( id );
-	
-	if ( p_data_b[id][PB_EVADENEXTSHOT] )
-	{
-		set_user_health(id, iHealth + damage + (-1 * SKILL_EVASION_ADJ));
-
-		if (iglow[id][2] < 1)
-		{
-			new parm[2];
-			parm[0] = id;
-			set_task(0.01, "glow_change", TASK_GLOW + id, parm, 2);
-		}
-		iglow[id][2] += damage;
-		iglow[id][0] = 0;
-		iglow[id][1] = 0;
-		iglow[id][3] = 0;
-		if (iglow[id][2]>MAXGLOW)
-		{
-			iglow[id][2]=MAXGLOW;
-		}
-
-		Create_ScreenFade(id, (1<<10), (1<<10), (1<<12), 0, 0, 255, iglow[id][2]);
-
-		p_data_b[id][PB_EVADENEXTSHOT] = false;
-
-	}
-
-	return;
 }
 
 #if MOD == 0

@@ -1,4 +1,6 @@
 
+// Half-Life CVARs
+new CVAR_mp_friendlyfire;
 
 // Miscellaneous Configuration CVARs
 new CVAR_wc3_query_client;
@@ -222,4 +224,7 @@ public CVAR_Configure()
 		g_ChamSkills[3] = get_pcvar_num( CVAR_wc3_cham_skill3 );
 		g_ChamSkills[4] = get_pcvar_num( CVAR_wc3_cham_ultimate );
 	}
+
+	// Get Half-Life CVAR Pointers
+	CVAR_mp_friendlyfire = get_cvar_pointer( "mp_friendlyfire" );
 }

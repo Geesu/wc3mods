@@ -638,7 +638,7 @@ public SHARED_SetSpeed( id )
 		id -= TASK_UNHOLYSPEED;
 	}
 
-	if( !p_data_b[id][PB_ISCONNECTED] )
+	if ( !p_data_b[id][PB_ISCONNECTED] )
 	{
 		return;
 	}

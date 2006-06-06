@@ -102,63 +102,6 @@ public changeXP()
 	return PLUGIN_HANDLED;
 }
 
-// Is this really needed?
-
-/*public Admin_SaveXP(id, level, cid){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-    if ( id && !( get_user_flags( id ) & XP_get_admin_flag() ) )
-	{
-		client_print(id,print_console,"%L",id,"YOU_HAVE_NO_ACCESS", g_MODclient)
-		return PLUGIN_HANDLED
-	}
-
-	new target[32]
-	read_argv(1,target,31) 
-
-	_Admin_SaveXP(id, target)
-
-	return PLUGIN_HANDLED
-}
-
-_Admin_SaveXP(id, target[]){
-
-	if(equali(target,"@ALL")){
-		new players[32], inum
-		get_players(players,inum,"c") 
-
-		for(new a=0;a<inum;++a){
-			DB_SaveXP(players[a])
-		} 
-
-		return PLUGIN_CONTINUE
-	}
-	else if (target[0]=='@'){ 
-		new players[32], inum
-		get_players(players,inum,"ce",target) 
-
-		if (inum==0){ 
-			console_print(id,"%L",id,"NO_CLIENTS_IN_TEAM") 
-			return PLUGIN_CONTINUE 
-		} 
-
-		for(new a=0;a<inum;++a){
-			DB_SaveXP(players[a])
-		} 
-	}
-	else { 
-		new player = find_target(id,target)
-
-		if (!player)
-			return PLUGIN_CONTINUE 
-
-		DB_SaveXP(player)
-	} 
-	return PLUGIN_CONTINUE 
-}*/
-
 public Admin_GiveXP( id )
 {
 	if (!warcraft3 )
@@ -194,6 +137,8 @@ public _Admin_GiveXP( id, szTarget[], iXp )
 			p_data[iPlayers[i]][P_XP] += iXp;
 
 			XP_Check( iPlayers[i] );
+
+			set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + iPlayers[i] );
 		}
 	}
 	else if ( szTarget[0] == '@' )
@@ -214,6 +159,8 @@ public _Admin_GiveXP( id, szTarget[], iXp )
 			p_data[iPlayers[i]][P_XP] += iXp;
 
 			XP_Check( iPlayers[i] );
+
+			set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + iPlayers[i] );
 		}
 	}
 	else
@@ -228,6 +175,8 @@ public _Admin_GiveXP( id, szTarget[], iXp )
 		p_data[iPlayer][P_XP] += iXp;
 
 		XP_Check( iPlayer );
+
+		set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + iPlayer );
 	}
 
 	return PLUGIN_HANDLED;
@@ -261,6 +210,8 @@ public Admin_SetLevel( id )
 			p_data[iPlayers[i]][P_XP] = iXp;
 
 			XP_Check( iPlayers[i] );
+
+			set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + iPlayers[i] );
 		}
 	}
 	else if ( szTarget[0] == '@' )
@@ -281,6 +232,8 @@ public Admin_SetLevel( id )
 			p_data[iPlayers[i]][P_XP] = iXp;
 
 			XP_Check( iPlayers[i] );
+
+			set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + iPlayers[i] );
 		}
 	}
 	else
@@ -295,6 +248,8 @@ public Admin_SetLevel( id )
 		p_data[iPlayer][P_XP] = iXp;
 
 		XP_Check( iPlayer );
+
+		set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + iPlayer );
 	}
 
 	return PLUGIN_HANDLED;
