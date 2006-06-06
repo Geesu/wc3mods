@@ -32,8 +32,6 @@ v3.0
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
-//change evasion/voodoo to work off of traceline ( if possible )
-//change orc nades so it CANNOT kill anyone w max health
 //Add a start/stop option
 //Need to give 2 flashbangs, not one
 //Fix bug with doing autoselect w/FT_Races 8 then changeracve and CENTER_CHANGED_NEXT displaying
@@ -48,6 +46,7 @@ v3.0
 //undead explodes when you change team; fix it
 //look over admin.inl and setlevel function ( so tired! )
 //ping contiues after map ends
+//reset skills/ultimates when user dies or right before the round starts
 
 v2.3.2
  - Addition: Admin flag added to war3FT.cfg file as a cvar

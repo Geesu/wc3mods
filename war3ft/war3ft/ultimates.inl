@@ -722,6 +722,12 @@ public ULT_IsImmune( id )
 public _ULT_Ping( parm[] )
 {
 	
+	// Shouldn't be searching for a target if the round is over right ?
+	if ( endround )
+	{
+		return;
+	}
+
 	new id = parm[0];
 	new iTimeLeft = parm[1];
 	
