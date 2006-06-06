@@ -142,7 +142,7 @@ public NE_ULT_EntangleEffect( id )
 			iEnd[1]		= vOrigin[1] + y2;
 			iEnd[2]		= vOrigin[2] + iHeight + 2;
 			
-			Create_TE_BEAMPOINTS( iStart, iEnd, g_siBeam4, 0, 0, ( floatround( ENTANGLE_TIME ) * 10.0 ), 10, 5, 10, 108, 23, 255, 0 );
+			Create_TE_BEAMPOINTS( iStart, iEnd, g_siBeam4, 0, 0, ( floatround( ENTANGLE_TIME ) * 10 ), 10, 5, 10, 108, 23, 255, 0 );
 
 			iHeight -= 16;
 		}
