@@ -344,3 +344,36 @@ SQLITE_Error( Result:res, query[], id )
 		dbi_free_result( res );
 	}
 }
+
+SQLITE_Prune()
+{
+	new szQuery[256];
+	format( szQuery, 255, "DELETE FROM `%s` WHERE ((julianday(`time`) + %d) < julianday('now'))", g_DBTableName, get_pcvar_num( CVAR_wc3_days_before_delete ) );
+
+	new Result:ret = dbi_query( g_DB, szQuery );
+
+	if ( ret < RESULT_NONE )
+	{
+		SQLITE_Error( ret, szQuery, 7 );
+
+		return;
+	}
+}
+
+SQLITE_UpdateTimestamp( id )
+{
+	new szKey[66];
+	DB_GetKey( id, szKey, 65 );
+
+	new szQuery[256];
+	format( szQuery, 255, "UPDATE `%s` SET time = NOW() WHERE (`%s` = '%s')", g_DBTableName, g_szDBKey, szKey );
+
+	new Result:ret = dbi_query( g_DB, szQuery );
+
+	if ( ret < RESULT_NONE )
+	{
+		SQLITE_Error( ret, szQuery, 8 );
+
+		return;
+	}
+}

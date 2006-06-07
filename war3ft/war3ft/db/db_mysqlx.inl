@@ -233,7 +233,7 @@ MYSQLX_SetData( id )
 
 	data[0] = id;
 
-	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_SetData", szQuery, data, 1 )	
+	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_SetData", szQuery, data, 1 );
 
 	return;
 }
@@ -324,4 +324,64 @@ MYSQLX_ThreadError( Handle:query, szQuery[], szError[], iErrNum, failstate, id )
 
 	// Free the handle
 	SQL_FreeHandle( query );
+}
+
+// Prune the MySQL database
+MYSQLX_Prune()
+{
+	new szQuery[256];
+	format( szQuery, 255, "DELETE FROM `%s` WHERE DATE_SUB(CURDATE(), INTERVAL %d DAY) > time;", g_DBTableName, get_pcvar_num( CVAR_wc3_days_before_delete ) );
+
+	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Prune", szQuery );	
+}
+
+public _MYSQLX_Prune( failstate, Handle:query, error[], errnum, data[], size )
+{
+	// Error during the query
+	if ( failstate )
+	{
+		new szQuery[256];
+		
+		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 4 );
+	}
+
+	// Query successful, we can do stuff!
+	else
+	{
+		// Free the handle
+		SQL_FreeHandle( query );
+	}
+
+	return;
+}
+
+MYSQLX_UpdateTimestamp( id )
+{
+	new szKey[66];
+	DB_GetKey( id, szKey, 65 );
+
+	new szQuery[256];
+	format( szQuery, 255, "UPDATE `%s` SET time = NOW() WHERE (`%s` = '%s')", g_DBTableName, g_szDBKey, szKey );
+
+	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_UpdateTimestamp", szQuery );	
+}
+
+public _MYSQLX_UpdateTimestamp( failstate, Handle:query, error[], errnum, data[], size )
+{
+	// Error during the query
+	if ( failstate )
+	{
+		new szQuery[256];
+		
+		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 5 );
+	}
+
+	// Query successful, we can do stuff!
+	else
+	{
+		// Free the handle
+		SQL_FreeHandle( query );
+	}
+
+	return;
 }

@@ -138,3 +138,13 @@ NVAULT_SetData( id )
 
 	return;
 }
+
+NVAULT_Prune()
+{
+
+}
+
+NVAULT_UpdateTimestamp( id )
+{
+
+}

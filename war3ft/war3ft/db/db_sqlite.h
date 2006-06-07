@@ -10,3 +10,5 @@ forward SQLITE_GetAllXP( id );
 forward SQLITE_SetData( id );
 forward SQLITE_Check_Connection();
 forward SQLITE_Error( Result:res, query[], id );
+forward SQLITE_Prune();
+forward SQLITE_UpdateTimestamp( id );

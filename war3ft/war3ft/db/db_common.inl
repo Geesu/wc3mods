@@ -120,14 +120,6 @@ public DB_Close()
 	return;
 }
 
-// Prune the database of old records
-public DB_Prune()
-{
-
-
-	return;
-}
-
 // Save the user's XP
 public DB_SaveXP( id )
 {
@@ -215,4 +207,44 @@ public DB_SetDataForRace( id )
 public DB_FormatString( text[], len )
 {
 	replace_all( text, len, "'", "\'" );
+}
+
+DB_UpdateTimestamp( id )
+{
+
+	// If we're not saving XP, why do this?
+	if ( !get_pcvar_num( CVAR_wc3_save_xp ) || !id )
+	{
+		return;
+	}
+
+	// Update the user's timestamp for each race
+	switch( g_DBType )
+	{
+		case DB_MYSQLX:	MYSQLX_UpdateTimestamp( id );
+		case DB_SQLITE:	SQLITE_UpdateTimestamp( id );
+		case DB_VAULT:	NVAULT_UpdateTimestamp( id );
+	}
+
+	return;
+}
+
+DB_Prune()
+{
+	
+	// If we're not saving or pruning is disabled, we don't want to be here
+	if ( !get_pcvar_num( CVAR_wc3_save_pruning ) || !get_pcvar_num( CVAR_wc3_save_xp ) )
+	{
+		return;
+	}
+
+	// Prune the DB
+	switch( g_DBType )
+	{
+		case DB_MYSQLX:	MYSQLX_Prune();
+		case DB_SQLITE:	SQLITE_Prune();
+		case DB_VAULT:	NVAULT_Prune();
+	}
+
+	return;
 }

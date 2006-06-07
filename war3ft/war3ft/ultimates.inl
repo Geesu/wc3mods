@@ -487,16 +487,17 @@ public _ULT_Delay()
 
 	
 	// Now we need to loop through all players and decrement their ultimate delay
-	new players[32], numplayers, i;
+	new players[32], numplayers, i, id;
 	get_players( players, numplayers, "a" );
 
 	for ( i = 0; i < numplayers; i++ )
 	{
+		id = players[i];
 
 		// Reduce the user's ultimate delay
 		p_data[id][P_ULTIMATEDELAY]--;
 
-		
+
 		// Then the user's ultimate is ready
 		if ( p_data[id][P_ULTIMATEDELAY] == 0 && g_iUltimateDelay <= 0 )
 		{

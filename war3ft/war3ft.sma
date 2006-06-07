@@ -309,6 +309,9 @@ public client_connect( id )
 	p_data_b[id][PB_JUSTJOINED]			= true;
 	p_data_b[id][PB_CAN_RENDER]			= true;
 	p_data[id][P_RESPAWNBY]				= 0;
+	
+	// Update the user's timestamps for each race if we're saving XP
+	DB_UpdateTimestamp( id );
 
 	// Automatically set their XP if it's enabled
 	if ( get_pcvar_num( CVAR_wc3_xp_auto_average ) && !get_pcvar_num( CVAR_wc3_save_xp ) )
