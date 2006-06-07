@@ -50,8 +50,6 @@ public on_EndRound(){
 
 	for (y = 0; y < numberofplayers; ++y){
 		id = players[y]
-		p_data_b[id][PB_SPAWNEDFROMITEM]=false
-		p_data_b[id][PB_PLAYERSPAWNED]=false
 
 		p_data_b[id][PB_MOLE] = false
 		p_data[id][P_DEFUSERINDEX] = 0
@@ -62,8 +60,6 @@ public on_EndRound(){
 		spawnPointsused[y]=false
 
 	g_freezeCalled = false
-	PhoenixFound[0]=0
-	PhoenixFound[1]=0
 
 	if( task_exists(TASK_BUYTIME) )
 		remove_task(TASK_BUYTIME)

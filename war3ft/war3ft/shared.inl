@@ -299,14 +299,11 @@ public _SHARED_Spawn_Final( id )
 	}
 
 	// Vengeance Check
-	if ( p_data_b[id][PB_VENGEANCE_SPAWN] )
+	if ( p_data[id][P_RESPAWNBY] == RESPAWN_VENGEANCE )
 	{
 		set_user_health( id, VENGEANCE_HEALTH );
-
-		p_data_b[id][PB_VENGEANCE_SPAWN] = false;
 	}
-
-
+	
 	return;
 }
 

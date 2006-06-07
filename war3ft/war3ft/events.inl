@@ -947,9 +947,6 @@ public EVENT_PlayerSpawned( id )
 	// Find out if they need to choose a race or select a skill
 	set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + id );
 
-	// Player has spawned, so they shouldn't be ready to be revived
-	p_data_b[id][PB_TOBEREVIVED]	= false;
-
 	// User isn't changing a team if they just spawned
 	p_data_b[id][PB_CHANGINGTEAM]	= false;
 	
@@ -1114,7 +1111,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				{
 					case RACE_ORC:		OR_ULT_ChainLightning( iAttacker, iVictim, iHitZone );
 					case RACE_ELF:		NE_ULT_Entangle( iAttacker, iVictim );
-					case RACE_BLOOD:	SH_ULT_Immolate( iAttacker, iVictim );
+					case RACE_BLOOD:	BM_ULT_Immolate( iAttacker, iVictim );
 				}
 				
 				// No longer searching since we found a target

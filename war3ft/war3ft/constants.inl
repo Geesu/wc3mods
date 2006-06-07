@@ -360,7 +360,7 @@
 	#define P_LASTITEM2				26
 	#define P_SKINCHANGED			27		// Did the user's skin change?
 	#define P_ULTIMATEDELAY			30
-//	#define P_SIPHONMONEY			31
+	#define P_RESPAWNBY				31		// Stores how the user is going to respawn
 
 	// Used for DOD
 	#define P_MONEY					28		// Amount of money the player has
@@ -390,12 +390,12 @@
 	// Used by various ultimates/abilities
 	#define PB_GIVEITEMS			10		// Tells weapon controller function to give the player his items after respawning
 	#define PB_PLAYERSPAWNED		11		// Did the player respawn from a skill/item?
-	#define PB_SPAWNEDFROMITEM		12		// Did the player spawn from an item/teammate ability? (used to determine the health to give the player after they spawn)
+//	#define PB_SPAWNEDFROMITEM		12		// Did the player spawn from an item/teammate ability? (used to determine the health to give the player after they spawn)
 	#define PB_NADEJUSTRECEIVED		13		// Used with flaming gloves... (removable?)
 //	#define PB_BLINKDELAYED			14		// Used to determine if the blink ability should be delayed (change this so its not [33])
 	#define PB_MOLE					15		// Is the player a mole?
-	#define PB_TOBEREVIVED			16		// Will this player be revived?
-	#define PB_PHOENIXCASTER		17		// Did this player use his/her ability to give the team pheonix? (reviving)
+//	#define PB_TOBEREVIVED			16		// Will this player be revived?
+	#define PB_PHOENIX				17		// Will this player have phoenix?
 	#define PB_WARDENBLINK			18		// Does this player have blink enabled?
 	#define PB_SUICIDEATTEMPT		19		// Has this player made a suicide attempt for undead's ultimate?
 	#define PB_ISBURNING			20		// Is the player burning from the immolate ultimate?
@@ -416,10 +416,12 @@
 	#define PB_HAS_SPAWNED			33		// Has the player previously spawned this round?
 	#define PB_CAN_RENDER			34
 	
-	#define PB_VENGEANCE_SPAWN		35		// Player spawned from vengeance?
+//	#define PB_VENGEANCE_SPAWN		35		// Player spawned from vengeance?
 
 	#define PB_REINCARNATION_DELAY	36
 	#define PB_REINCARNATION_SKIP	37
+
+//	#define PB_ABOUT_TO_RESPAWN		39		// User is going to respawn b/c of something
 
 	#define PB_LAST					38
 	// ***************************
@@ -429,6 +431,11 @@
 //	End player array information
 // ***************************************************************************
 
+
+// What is the user going to respawn by?
+#define RESPAWN_ITEM			1
+#define RESPAWN_PHOENIX			2
+#define RESPAWN_VENGEANCE		3
 
 // Enemies who have immunity w/in this radius will cause blink to fail 
 #define NECKLACE_RADIUS		500
@@ -544,7 +551,6 @@ new bool:g_freezeTime	= false;
 new bool:g_freezeCalled = false;
 new bool:g_buyTime
 
-new PhoenixFound[2]
 new CTSkins[5][]={"sas","gsg9","urban","gign","spetsnaz"}
 new TSkins[5][]={"arctic","leet","guerilla","terror","militia"}
 

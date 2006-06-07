@@ -258,6 +258,9 @@ public WAR3_death_victim(victim_id, killer_id)
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
+	// Reset the "about to spawn" variable
+	p_data[victim_id][P_RESPAWNBY] = 0;
+
 #if MOD == 1
 	if ( killer_id == 0 || get_user_team(victim_id) != get_user_team(killer_id) && killer_id != victim_id )
 		SHARED_SetUserMoney(victim_id, SHARED_GetUserMoney(victim_id)+300, 1)
@@ -342,34 +345,35 @@ public WAR3_death_victim(victim_id, killer_id)
 		_ULT_Delay( victim_id )
 	}
 	
+
+	// Check to see if player should respawn
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-	{	
+	{
+
+		// Check to see if a player should be revived
+		BM_PhoenixSpawn( victim_id );
+
+		// Make sure the user isn't about to respawn when we do these checks
+		if ( !p_data[victim_id][P_RESPAWNBY] )
+		{
+
+			// Does the user have a scroll?
+			if ( p_data[victim_id][P_ITEM2] == ITEM_SCROLL )
+			{
+				p_data[victim_id][P_RESPAWNBY] = RESPAWN_ITEM;
+
+				p_data[victim_id][P_ITEM] = 0;
+
+				set_task( 1.2, "_SHARED_Spawn", TASK_SPAWN + victim_id );
+			}
+		}
+
 		// Should we respawn for Vengeance?
 		if ( Verify_Skill( victim_id, RACE_WARDEN, SKILL4 ) && killer_id != victim_id && !p_data_b[killer_id][PB_WARDENBLINK] )
 		{
 			WA_ULT_Vengeance( victim_id );
 		}
 	}
-
-
-	// Check to see if player should respawn from an item
-#if MOD == 0
-	if(p_data[victim_id][P_ITEM2]==ITEM_SCROLL && !endround){
-		new parm[2]
-		parm[0]=victim_id
-		parm[1]=6
-		if(p_data[victim_id][P_ITEM2]!=ITEM_MOLE){
-			p_data[victim_id][P_ITEM2]=0
-			p_data[victim_id][P_RINGS]=0
-		}
-		p_data[victim_id][P_ITEM]=0
-		set_task( 1.2, "_SHARED_Spawn", TASK_SPAWN + victim_id );
-		p_data_b[victim_id][PB_SPAWNEDFROMITEM] = true
-	}
-
-	// Check to see if a player should be revived
-	Skill_Phoenix(victim_id)
-#endif
 
 	// The user just died, remove all items
 	ITEM_Reset( victim_id );
@@ -851,14 +855,17 @@ public WC3_ResetGame()
 		p_data[id][P_ITEM2]					= 0;
 		p_data[id][P_RINGS]					= 0;
 
-		// Reset user's XP
-		p_data[id][P_LEVEL]					= 0;
-		p_data[id][P_RACE]					= 0;
-		p_data[id][P_SKILL1]				= 0;
-		p_data[id][P_SKILL2]				= 0;
-		p_data[id][P_SKILL3]				= 0;
-		p_data[id][P_ULTIMATE]				= 0;
-		p_data[id][P_XP]					= 0;
+		// Reset user's XP if we're not saving XP
+		if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
+		{
+			p_data[id][P_LEVEL]					= 0;
+			p_data[id][P_RACE]					= 0;
+			p_data[id][P_SKILL1]				= 0;
+			p_data[id][P_SKILL2]				= 0;
+			p_data[id][P_SKILL3]				= 0;
+			p_data[id][P_ULTIMATE]				= 0;
+			p_data[id][P_XP]					= 0;
+		}
 
 		// Check for Counter-Strike or Condition Zero
 		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
@@ -1107,7 +1114,6 @@ WC3_SetRace( id, race )
 	p_data[id][P_SKILL2] = 0
 	p_data[id][P_SKILL3] = 0
 	p_data[id][P_ULTIMATE] = 0
-	p_data_b[id][PB_PHOENIXCASTER] = false
 	p_data[id][P_CHANGERACE] = 0
 
 //	if ( get_user_health(id) > 100 )

@@ -18,7 +18,7 @@ WA_ULT_Vengeance( id )
 	{
 
 		// Make sure the user isn't changing teams and we're not at the end of the round
-		if ( !p_data_b[id][PB_CHANGINGTEAM] && !endround )
+		if ( !p_data_b[id][PB_CHANGINGTEAM] && !endround && !p_data[id][P_RESPAWNBY] )
 		{
 			
 			// Ultimate is now used
@@ -34,11 +34,11 @@ WA_ULT_Vengeance( id )
 			p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
 			_ULT_Delay( id );
 
-			// We need to make sure spawn knows that it's b/c of Vengeance
-			p_data_b[id][PB_VENGEANCE_SPAWN] = true;
-
 			// Set up the respawn task
 			set_task( 1.2, "_SHARED_Spawn", TASK_SPAWN + id );
+
+			// We need to set that we're about to respawn
+			p_data[id][P_RESPAWNBY] = RESPAWN_VENGEANCE;
 		}
 	}
 	

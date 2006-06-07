@@ -38,16 +38,14 @@ v3.0
 //don't allow vip's to tele
 //bug: gain money when 0 players in DOD
 //bug: mole on top of each other; moles on respawn which sucks
-//remove option to enable suicide warning (just always have the warning)
 //necklace of immunity = charges
 //spec hudmsg needs to not carry over when you spawn
 //don't depend on client_damage from csx/dodx - catch damage event
-//round restart = race reset... don't do this..
 //undead explodes when you change team; fix it
 //look over admin.inl and setlevel function ( so tired! )
 //ping contiues after map ends
 //reset skills/ultimates when user dies or right before the round starts
-// let /level show the user's XP if they're dead!
+//let /level show the user's XP if they're dead!
 //display message when wardens will be immune
 //you lose your items if someone respawns you...
 //if revived by friend u lose warden's ult!!!

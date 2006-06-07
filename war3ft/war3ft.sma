@@ -307,7 +307,7 @@ public client_connect( id )
 	p_data[id][P_SPECMODE]				= 0;
 	p_data_b[id][PB_JUSTJOINED]			= true;
 	p_data_b[id][PB_CAN_RENDER]			= true;
-	p_data_b[id][PB_VENGEANCE_SPAWN]	= false;
+	p_data[id][P_RESPAWNBY]				= 0;
 
 	// Automatically set their XP if it's enabled
 	if ( get_pcvar_num( CVAR_wc3_xp_auto_average ) && !get_pcvar_num( CVAR_wc3_save_xp ) )
