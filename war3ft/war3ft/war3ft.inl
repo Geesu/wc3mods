@@ -236,17 +236,9 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 
 	new health = get_user_health(victim)
 
-	if ( health - damage <= 2048 &&  p_data_b[victim][PB_GODMODE] && (p_data_b[attacker][PB_WARDENBLINK]))
-		userkilled = true
 	if ( health - damage <= 0 )
 		userkilled = true
 
-	// Evasion Kill
-	else if ( health - damage <= 1024 && health > 500 )
-	{
-		userkilled = true;
-		p_data_b[victim][PB_EVADENEXTSHOT] = false;
-	}
 
 #if MOD == 1
 	if (userkilled && !p_data_b[victim][PB_DIEDLASTROUND])

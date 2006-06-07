@@ -4,13 +4,13 @@
 
 #define VENGEANCE_HEALTH		50			// Health the user should have after using his ult
 
-public WA_ULT_Vengeance( id )
+WA_ULT_Vengeance( id )
 {
 	
 	// If the user's ultimate is used or we're still in the ultimate delay, then why are we here?
 	if ( p_data_b[id][PB_ULTIMATEUSED] || g_ultimateDelay )
 	{
-		return PLUGIN_HANDLED;
+		return;
 	}
 
 	// We need to respawn the user!!
@@ -100,5 +100,32 @@ public WA_ULT_Vengeance( id )
 			_ULT_Delay( id );
 		}
 	}
-	return PLUGIN_HANDLED;
+
+	return;
+}
+
+// User's Blink Ability
+WA_Blink( id )
+{
+	
+	// User has the ability, lets initiate a "check"
+	if ( Verify_Skill(id, RACE_WARDEN, SKILL2) )
+	{
+
+		if ( random_float( 0.0, 1.0 ) <= p_blink[p_data[id][P_SKILL2]-1] )
+		{
+			p_data_b[id][PB_WARDENBLINK] = true;
+			client_print( id, print_chat, "%s You will now be immune to all ultimates.", g_MODclient );
+		}
+		else
+		{
+			p_data_b[id][PB_WARDENBLINK] = false;
+		}
+	}
+
+	// User doesn't have the ability so why give them blink?  duh!
+	else
+	{
+		p_data_b[id][PB_WARDENBLINK] = false;
+	}
 }

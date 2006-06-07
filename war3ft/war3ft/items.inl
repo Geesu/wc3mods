@@ -452,6 +452,14 @@ public ITEM_CanBuyItem( id, iItemID, iShopmenuID )
 
 			return false;
 		}
+
+		// They don't need a necklace when they have warden's blink!!
+		else if ( iItemID == ITEM_NECKLACE && p_data_b[id][PB_WARDENBLINK] )
+		{
+			client_print( id, print_center, "You are already immune to ultimates through one of your skills!" );
+
+			return false;
+		}
 	}
 
 	// Shopmenu 2 Checks

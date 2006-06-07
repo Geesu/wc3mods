@@ -42,9 +42,6 @@ public Skill_Check(id)
 		p_data[id][P_SHADOWCOUNT]=2
 	}
 
-	// Night Elf's Evasion
-	NE_EvasionCheck( id );
-
 	// Human's Devotion Aura
 	if ( Verify_Skill(id, RACE_HUMAN, SKILL2) ){
 		set_user_health(id,p_devotion[p_data[id][P_SKILL2]-1])
@@ -72,7 +69,7 @@ public Skill_Check(id)
 	else
 		p_data[id][P_SERPENTCOUNT]=0
 
-	Skills_Blink(id)
+	WA_Blink( id );
 
 #if MOD == 0
 	// Blood Mage's Pheonix
@@ -175,29 +172,6 @@ public Skill_Pheonix(id){
 		}
 	}
 #endif
-
-
-// ****************************************
-// Warden's Blink
-// ****************************************
-
-public Skills_Blink(id){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if ( Verify_Skill(id, RACE_WARDEN, SKILL2) ){			// Blink
-		new Float:randomnumber = random_float(0.0,1.0)
-		if (randomnumber <= p_blink[p_data[id][P_SKILL2]-1])
-			p_data_b[id][PB_WARDENBLINK]=true	
-		else
-			p_data_b[id][PB_WARDENBLINK]=false
-	}
-	else
-		p_data_b[id][PB_WARDENBLINK]=false
-
-	return PLUGIN_CONTINUE
-}
 
 
 // ****************************************

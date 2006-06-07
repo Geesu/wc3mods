@@ -399,7 +399,7 @@
 	#define PB_WARDENBLINK			18		// Does this player have blink enabled?
 	#define PB_SUICIDEATTEMPT		19		// Has this player made a suicide attempt for undead's ultimate?
 	#define PB_ISBURNING			20		// Is the player burning from the immolate ultimate?
-	#define PB_EVADENEXTSHOT		21
+//	#define PB_EVADENEXTSHOT		21
 	#define PB_STUNNED				22
 	#define PB_SLOWED				23
 	#define PB_ISSEARCHING			24

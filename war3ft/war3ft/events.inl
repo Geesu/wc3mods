@@ -538,14 +538,7 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 		tempdamage = floatround(float(damage) * get_pcvar_num( CVAR_wc3_mask ))
 
 		if ( iHealth + tempdamage > get_user_maxhealth(attacker) ){
-			//new iTotalHealth = get_user_health(attacker)
-
-			/*if( iTotalHealth > 1500 && p_data_b[attacker][PB_GODMODE] )		// God Mode
-				set_user_health(attacker, 2148)
-			else if( iTotalHealth > 500 && p_data_b[attacker][PB_EVADENEXTSHOT] )	// Evasion
-				set_user_health(attacker, (100 + SKILL_EVASION_ADJ))
-			else*/
-				set_user_health(attacker, get_user_maxhealth(attacker))
+			set_user_health(attacker, get_user_maxhealth(attacker))
 		}
 		else
 			set_user_health(attacker, get_user_health(attacker) + tempdamage)
@@ -601,9 +594,6 @@ public call_damage(victim, attacker, damage, wpnindex, hitplace){
 	// Night Elf
 	if ( Verify_Race(victim, RACE_ELF) )
 	{
-
-		// Evasion
-		NE_EvasionCheck( victim );
 		
 		// Thorns Aura
 		if ( Verify_Skill(victim, RACE_ELF, SKILL2) && attacker > 0 && !p_data_b[victim][PB_HEXED] ) {
@@ -1169,31 +1159,32 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 			return FMRES_SUPERCEDE;
 		}
 		
-		// Should we evade the next shot ?
-		if ( p_data_b[iVictim][PB_EVADENEXTSHOT] )
+		// Check to see if this user has night elf's evasion
+		if ( Verify_Skill( iVictim, RACE_ELF, SKILL1 ) )
 		{
 			// Do the check to see if we should "evade" this shot
 			new Float:time = halflife_time();
-			if ( 0 < iAttacker <= MAXPLAYERS && time - fLastShotFired[iAttacker] < 0.2 )
+			if ( 0 < iAttacker <= MAXPLAYERS && time - fLastShotFired[iAttacker] < 0.1 )
 			{
 
 				// Basically if friendly fire is on, we want to block ALL shots, otherwise we only block shots from enemies
 				if ( !get_pcvar_num( CVAR_mp_friendlyfire ) )
 				{
-
 					if ( get_user_team( iAttacker ) == get_user_team( iVictim ) )
 					{
 						return FMRES_IGNORED;
 					}
 				}
+				
+				// Then we should evade this shot!
+				if ( NE_Evasion( iVictim, iHitZone ) )
+				{
+					set_tr( TR_flFraction, 1.0 );
 
-				set_tr( TR_flFraction, 1.0 );
+					client_print( iVictim, print_chat, "[DEBUG] Shot blocked by evasion!!!" );
 
-				NE_Evasion( iVictim, iHitZone );
-
-				client_print( iVictim, print_chat, "[DEBUG] Shot blocked by evasion!!!" );
-
-				return FMRES_SUPERCEDE;
+					return FMRES_SUPERCEDE;
+				}
 			}
 		}
 	}
