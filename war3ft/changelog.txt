@@ -35,7 +35,7 @@ v3.0
 
 //Add a start/stop option
 //Need to give 2 flashbangs, not one
-//Fix bug with doing autoselect w/FT_Races 8 then changeracve and CENTER_CHANGED_NEXT displaying
+//Fix bug with doing autoselect w/FT_Races 8 then changerace and CENTER_CHANGED_NEXT displaying
 //don't allow vip's to tele
 //bug: gain money when 0 players in DOD
 //bug: mole on top of each other; moles on respawn which sucks
@@ -44,7 +44,6 @@ v3.0
 //don't depend on client_damage from csx/dodx - catch damage event
 //undead explodes when you change team; fix it
 //look over admin.inl and setlevel function ( so tired! )
-//ping contiues after map ends
 //reset skills/ultimates when user dies or right before the round starts
 //let /level show the user's XP if they're dead!
 //display message when wardens will be immune
