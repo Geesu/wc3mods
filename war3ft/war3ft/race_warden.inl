@@ -32,7 +32,6 @@ WA_ULT_Vengeance( id )
 
 			// Set up a new ultimate delay
 			p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
-			_ULT_Delay( id );
 
 			// Set up the respawn task
 			set_task( 1.2, "_SHARED_Spawn", TASK_SPAWN + id );
@@ -99,7 +98,7 @@ WA_ULT_Vengeance( id )
 			ULT_Icon( id, ICON_HIDE );
 
 			// Reset the user's ultimate delay
-			ULT_ResetDelay( id );
+			p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 		}
 	}
 

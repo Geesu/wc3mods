@@ -286,14 +286,10 @@ public _menu_Select_Skill(id,key){
 	else
 		WC3_ShowBar( id );
 
-	// Initiate cooldown for player's ultimate, or give them they're ultimate
-
-	if( !task_exists(TASK_UDELAY+id) && key == KEY_4 ){
-		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_ULT_Delay( id )
-	}
-	else if ( key == KEY_4 && !p_data[id][P_ULTIMATEDELAY] && !p_data_b[id][PB_ULTIMATEUSED]){
-		Ultimate_Ready(id)
+	// Give the user an ult if it's ready
+	if ( key == KEY_4 && !ULT_Available( id ) )
+	{
+		Ultimate_Ready( id );
 	}
 
 	// Serpent Ward Chosen

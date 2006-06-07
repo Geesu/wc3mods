@@ -288,13 +288,6 @@ public WAR3_death_victim(victim_id, killer_id)
 		}
 	}
 
-	// In case they respawn, continue ultimate delay check
-	if(!task_exists(TASK_UDELAY+victim_id)){
-
-		p_data[victim_id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_ULT_Delay( victim_id )
-	}
-
 #if MOD == 0
 	// Remove the bar time if the user dies during god mode
 	if( p_data_b[victim_id][PB_GODMODE] )
@@ -767,6 +760,9 @@ public WC3_Init()
 		copy( szSpawnEnt[0], 31, "info_player_axis" );
 		copy( szSpawnEnt[1], 31, "info_player_allies" );
 	}
+
+	// Run the ultimate delay task
+	set_task( 1.0, "_ULT_Delay", TASK_UDELAY, "", 0, "b" );
 }
 
 public WC3_DetermineGame()

@@ -56,8 +56,6 @@ Ultimate_Blink(id){
 
 		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 
-		_ULT_Delay( id )
-
 		emit_sound(id,CHAN_STATIC, SOUND_BLINK, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
 		return PLUGIN_HANDLED
@@ -153,13 +151,10 @@ public _Ultimate_Blink_Controller(parm[]){
 
 		p_data[id][P_ULTIMATEDELAY] = floatround(BLINK_COOLDOWN + 1.0)
 
-		_ULT_Delay( id )
-
 	}
 	else{
 		
 		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_ULT_Delay( id )
 
 		// Sprays white bubbles everywhere
 		new origin2[3]
@@ -369,7 +364,6 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 		ULT_Icon( id, ICON_HIDE );
 
 		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		_ULT_Delay( id )
 	}
 
 	return PLUGIN_CONTINUE
@@ -479,62 +473,38 @@ public drawfunnels(parm[]){
 			ULT_Icon( caster, ICON_HIDE );
 			
 			p_data[caster][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-			_ULT_Delay( caster )
 		}
 	}
 	return PLUGIN_HANDLED
 }
 
-public _ULT_Delay( id )
+// This is ran every second...
+public _ULT_Delay()
 {
-	// If the function is called from a task, modify the id
-	if ( id >= TASK_UDELAY )
-	{
-		id -= TASK_UDELAY;
-	}
 	
-	// Player call
-	if ( id != 0 )
-	{
-		if ( !p_data_b[id][PB_ISCONNECTED] )
-		{
-			return;
-		}
+	// Decrement the global counter
+	g_iUltimateDelay--;
 
+	
+	// Now we need to loop through all players and decrement their ultimate delay
+	new players[32], numplayers, i;
+	get_players( players, numplayers, "a" );
+
+	for ( i = 0; i < numplayers; i++ )
+	{
+
+		// Reduce the user's ultimate delay
 		p_data[id][P_ULTIMATEDELAY]--;
 
-		if ( p_data[id][P_ULTIMATEDELAY] > 0 )
-		{
-			// If this exists then the user is getting his ult back quicker than he should
-			if ( task_exists( TASK_UDELAY + id ) )
-			{
-				remove_task( TASK_UDELAY + id );
-			}
-
-			set_task( 1.0, "_ULT_Delay", TASK_UDELAY + id );
-		}
-		else
+		
+		// Then the user's ultimate is ready
+		if ( p_data[id][P_ULTIMATEDELAY] == 0 && g_iUltimateDelay <= 0 )
 		{
 			Ultimate_Ready( id );
 		}
 	}
 
-	// Server check
-	else
-	{
-		g_iUltimateDelay--;
-
-		if ( g_iUltimateDelay > 0 )
-		{
-			set_task( 1.0, "_ULT_Delay", TASK_UDELAY + id );
-		}
-		else
-		{
-			g_iUltimateDelay = 0;
-		}
-	}
-
-	return;
+	log_amx( "[DEBUG] Timer Decremented: %d", g_iUltimateDelay );
 }
 
 Ultimate_Ready( id )
@@ -705,18 +675,4 @@ ULT_Reset( id )
 
 	// Hide their ultimate icon
 	ULT_Icon( id, ICON_HIDE );
-}
-
-// Function will reset a user's ultimate delay and start a new countdown
-ULT_ResetDelay( id )
-{
-	
-	// New ultimate cooldown delay
-	p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
-
-	// In theory the task should be running, but if not, lets call it
-	if ( !task_exists( TASK_UDELAY + id ) )
-	{
-		_ULT_Delay( id );
-	}
 }

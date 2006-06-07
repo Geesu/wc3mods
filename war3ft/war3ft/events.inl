@@ -869,20 +869,9 @@ public EVENT_PlayerInitialSpawn( id )
 		}
 	}
 
-	// Start a new cooldown
-	new iUltDelay = get_pcvar_num( CVAR_wc3_ult_delay );
-	if ( iUltDelay > 0)
-	{
-		p_data_b[id][PB_ULTIMATEUSED]	= true;
-		p_data[id][P_ULTIMATEDELAY]		= iUltDelay;
-	}
-	else if ( p_data[id][P_ULTIMATE] )
-	{
-		p_data[id][P_ULTIMATEDELAY]		= 0;
-		p_data_b[id][PB_ULTIMATEUSED]	= false;
-	}
-	_ULT_Delay( id );
-	
+	// New ultimate cooldown delay
+	p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
+
 	// We only want to do this here for CS/CZ... in DOD it should be done on every spawn
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
@@ -1008,6 +997,10 @@ public EVENT_PlayerSpawned( id )
 public EVENT_NewRound()
 {
 	
+	// Reset the global ultimate delay
+	g_iUltimateDelay = get_pcvar_num( CVAR_wc3_ult_delay );
+
+
 	// User's have not spawned yet, so lets do some pre-spawn things
 	new players[32], numplayers, i;
 	get_players( players, numplayers, "a" );
@@ -1024,10 +1017,6 @@ public EVENT_NewRound()
 	
 	// Randomize Chameleon if we need to
 	CHAM_Randomize();
-
-	// have "fake" ultimate delay
-	g_iUltimateDelay = get_pcvar_num( CVAR_wc3_ult_delay );
-	_ULT_Delay( 0 );
 
 	// We need to determine when the buytime is up
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
@@ -1090,7 +1079,6 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 
 				// Set up the user's ultimate delay
 				p_data[iAttacker][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
-				_ULT_Delay( iAttacker );
 			}
 		}
 

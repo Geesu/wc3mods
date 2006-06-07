@@ -54,7 +54,7 @@
 #define TASK_HELM			1524
 #define	TASK_REINCCHECK		1556
 #define TASK_SAVE_ALL		1588	// Used for saving XP
-#define TASK_UDELAY			1620	// Ultimate Delay Function
+//#define TASK_UDELAY			1620	// Ultimate Delay Function
 //#define TASK_BURN           1652
 #define TASK_BURNING		1684	// Used for Blood Mage Ultimate
 #define TASK_FINDTARGET		1706	// Used for finding a target
@@ -81,6 +81,7 @@
 //#define TASK_BEFORE_ROUND_START		2018
 #define TASK_MOLEFIX		3000
 //#define TASK_CHECKMODULES	3001
+#define TASK_UDELAY			3002		// Ultimate delay function
 
 // From ../multiplayer source/dlls/player.cpp
 #define ARMOR_RATIO	 0.7	// Armor Takes 30% of the damage (was .2 in the SDK)
