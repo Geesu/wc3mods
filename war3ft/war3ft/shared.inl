@@ -458,7 +458,6 @@ public SHARED_CS_Reincarnation( id )
 	// Check based on skill or if the user has an item
 	if ( p_data_b[id][PB_DIEDLASTROUND] )
 	{
-		client_print( id, print_console, "Died last round w/item: %d", p_data[id][P_LASTITEM] );
 		// Orc's Reincarnation
 		if ( Verify_Skill(id, RACE_ORC, SKILL3) )
 		{
@@ -469,7 +468,7 @@ public SHARED_CS_Reincarnation( id )
 		}
 		
 		// Ankh
-		if ( p_data[id][P_LASTITEM] == ITEM_ANKH )
+		if ( g_ItemLastOwned[0][id] == ITEM_ANKH )
 		{
 			bGiveWeapons = true;
 		}	
@@ -1008,26 +1007,17 @@ public _SHARED_Mole( id )
 		
 		// User is a mole
 		p_data_b[id][PB_MOLE] = true;
-
-		// If it's b/c of an item, we need to remove that item
-		if ( p_data[id][P_LASTITEM2] == ITEM_MOLE )
-		{
-			p_data[id][P_LASTITEM2] = 0;
-		}
-
 	}
 
 	// No spawn found
 	else
 	{
 		// Moving b/c of item
-		if ( p_data[id][P_LASTITEM2] == ITEM_MOLE )
+		if ( g_ItemLastOwned[0][id] == ITEM_MOLE )
 		{
 			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + itemcost2[8], 1 );
 
 			client_print( id, print_chat, "%s %L", g_MODclient, id, "NO_SPOT_MOLE_MONEY" );
-
-			p_data[id][P_LASTITEM2] = 0;
 		}
 
 		// Moving b/c of skill

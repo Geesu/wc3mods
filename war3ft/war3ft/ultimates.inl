@@ -1,28 +1,3 @@
-
-// Function will stop all ultimates from functioning
-public ULT_Reset()
-{
-	new players[32], num, id, i;
-	get_players( players, num );
-	
-	for( i = 0; i < num; i++ )
-	{
-		id = players[i];
-		
-		// Set this to true so that ultimates cannot be used
-		p_data_b[id][PB_ULTIMATEUSED] = true
-
-		// Remove any explosions that are occuring, we don't want them carried over to the next round
-		task_exists( TASK_EXPLOSION + id )		? remove_task( TASK_EXPLOSION + id ) : 0;
-		task_exists( TASK_BEAMCYLINDER + id)	? remove_task( TASK_BEAMCYLINDER + id ) : 0;
-
-		// Set this to false just to be safe (used by NE + ORC + BM ultimates)
-		p_data_b[id][PB_ISSEARCHING] = false;
-
-		// Need to add big bad voodoo check here...
-	}
-}
-
 // ****************************************
 // Undead's Suicide Bomber
 // ****************************************
@@ -584,11 +559,6 @@ public drawfunnels(parm[]){
 
 public _ULT_Delay( id )
 {
-	if ( !warcraft3 )
-	{
-		return PLUGIN_CONTINUE;
-	}
-	
 	// If the function is called from a task, modify the id
 	if ( id >= TASK_UDELAY )
 	{
@@ -598,9 +568,9 @@ public _ULT_Delay( id )
 	// Player call
 	if ( id != 0 )
 	{
-		if( !p_data_b[id][PB_ISCONNECTED] )
+		if ( !p_data_b[id][PB_ISCONNECTED] )
 		{
-			return PLUGIN_CONTINUE;
+			return;
 		}
 
 		p_data[id][P_ULTIMATEDELAY]--;
@@ -636,11 +606,17 @@ public _ULT_Delay( id )
 		}
 	}
 
-	return PLUGIN_CONTINUE;
+	return;
 }
 
 public Ultimate_Ready(id)
 {
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+	
+
 	p_data_b[id][PB_ULTIMATEUSED] = false;
 
 	if ( is_user_alive( id ) && p_data_b[id][PB_ISCONNECTED] && p_data[id][P_ULTIMATE] )
@@ -721,19 +697,13 @@ public ULT_IsImmune( id )
 
 public _ULT_Ping( parm[] )
 {
-	
-	// Shouldn't be searching for a target if the round is over right ?
-	if ( endround )
-	{
-		return;
-	}
-
 	new id = parm[0];
 	new iTimeLeft = parm[1];
 	
 	// Decrement our timer
 	parm[1]--;
-
+	
+	// User died or diconnected
 	if ( !p_data_b[id][PB_ISCONNECTED] || !is_user_alive( id ) )
 	{
 		p_data_b[id][PB_ISSEARCHING] = false;
@@ -743,6 +713,7 @@ public _ULT_Ping( parm[] )
 	if ( iTimeLeft == 0 )
 	{
 		p_data_b[id][PB_ISSEARCHING] = false;
+
 		Ultimate_Icon( id, ICON_SHOW );
 	}
 	
@@ -759,4 +730,36 @@ public _ULT_Ping( parm[] )
 	}
 
 	return;
+}
+
+// Function called before user's spawn
+ULT_Reset( id )
+{
+	// Remove any explosions that are occuring, we don't want them carried over to the next round
+	task_exists( TASK_EXPLOSION + id )		? remove_task( TASK_EXPLOSION + id ) : 0;
+	task_exists( TASK_BEAMCYLINDER + id )	? remove_task( TASK_BEAMCYLINDER + id ) : 0;
+
+	// Stop Crypt Lord's Ultimate
+	task_exists( TASK_FUNNELS + id )		? remove_task( TASK_FUNNELS + id ) : 0;
+
+	// Stop the ultimate cooldowns since they will reset at round start
+	task_exists( TASK_UDELAY + id )			? remove_task( TASK_UDELAY + id ) : 0;
+	
+	// Reset Big Bad Voodoo
+	if ( task_exists( TASK_RESETGOD + id ) )
+	{
+		remove_task( TASK_RESETGOD + id );
+
+		new parm[2];
+		parm[0] = id;
+		parm[1] = 0;
+
+		_Ultimate_BigBadVoodoo( parm );
+	}
+
+	// Set this to false to stop searching ultimates (used by NE + ORC + BM ultimates)
+	p_data_b[id][PB_ISSEARCHING] = false;
+
+	// Hide their ultimate icon
+	Ultimate_Icon( id, ICON_HIDE );
 }

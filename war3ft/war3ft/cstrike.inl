@@ -42,7 +42,7 @@ public on_EndRound(){
 
 	endround = true;
 
-	set_task( 4.9, "_EVENT_Before_ResetHUD", TASK_BEFORE_ROUND_START );
+	//set_task( 4.9, "_EVENT_Before_ResetHUD", TASK_BEFORE_ROUND_START );
 
 	new players[32], numberofplayers
 	new y, id

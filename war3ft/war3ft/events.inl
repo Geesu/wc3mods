@@ -814,13 +814,13 @@ public on_ResetHud(id)
 	{
 		return PLUGIN_CONTINUE;
 	}
-
+	
 	// Then this is the first call of the new round
 	if ( endround )
 	{
 		EVENT_NewRound();
 	}
-	
+
 	// ResetHUD can be called when the user is not alive, lets ignore those calls
 	if ( !is_user_alive( id ) )
 	{
@@ -838,35 +838,6 @@ public on_ResetHud(id)
 	EVENT_PlayerSpawned( id );
 
 	return PLUGIN_CONTINUE;
-}
-
-// Function called 0.1 seconds before ResetHUD is called (before a user spawns after a round has ended) - untested with DOD
-public _EVENT_Before_ResetHUD()
-{
-	new players[32], num, i, id;
-	get_players( players, num );
-	for ( i = 0; i < num; i++ )
-	{
-		id = players[i];
-
-		p_data_b[id][PB_HAS_SPAWNED] = false;
-
-		// Remove any reset_maxspeeds occuring (could cause a person to move during freezetime)
-		task_exists( TASK_RESETSPEED + id ) ? remove_task( TASK_RESETSPEED + id ) : 0;
-
-		SHARED_CopySavedWeapons( id );
-
-		ITEM_Save( id );
-		
-		// They died, so lets remove their items
-		if ( p_data_b[id][PB_DIEDLASTROUND] )
-		{
-			ITEM_DeleteAll( id );
-		}
-	}
-	
-	// We don't want ultimates to continue into the next round
-	ULT_Reset();
 }
 
 // Function is called when the user is spawned at the START of each round (called before EVENT_PlayerSpawned)
@@ -888,16 +859,6 @@ public EVENT_PlayerInitialSpawn( id )
 		}
 	}
 
-
-	// User didn't just join
-	p_data_b[id][PB_JUSTJOINED] = false;
-
-	// Stop any cooldowns in effect	
-	task_exists( TASK_UDELAY + id ) ? remove_task( TASK_UDELAY + id ) : 0;
-	
-	// Hide their ultimate icon
-	Ultimate_Icon( id, ICON_HIDE );
-	
 	// We only want to do this here for CS/CZ... in DOD it should be done on every spawn
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
@@ -915,7 +876,7 @@ public EVENT_PlayerInitialSpawn( id )
 		p_data_b[id][PB_ULTIMATEUSED]	= true;
 		p_data[id][P_ULTIMATEDELAY]		= iUltDelay;
 	}
-	else if( p_data[id][P_ULTIMATE] )
+	else if ( p_data[id][P_ULTIMATE] )
 	{
 		p_data[id][P_ULTIMATEDELAY]		= 0;
 		p_data_b[id][PB_ULTIMATEUSED]	= false;
@@ -946,6 +907,9 @@ public EVENT_PlayerSpawned( id )
 {
 	// Find out if they need to choose a race or select a skill
 	set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + id );
+	
+	// Check to see if they should still have some items that they lost b/c of respawning (i.e. ankh + respawn scroll)
+	ITEM_GiveItemBackFromDeath( id );
 
 	// User isn't changing a team if they just spawned
 	p_data_b[id][PB_CHANGINGTEAM]	= false;
@@ -1002,7 +966,7 @@ public EVENT_PlayerSpawned( id )
 	{
 
 		// Should the user be reincarnated ??
-		if ( p_data[id][P_LASTITEM] == ITEM_ANKH )
+		if ( g_ItemLastOwned[0][id] == ITEM_ANKH )
 		{
 			// We don't want to skip since the user has this item
 			p_data_b[id][PB_REINCARNATION_SKIP] = false;
@@ -1023,7 +987,7 @@ public EVENT_PlayerSpawned( id )
 	//ITEM_Check( id );
 	
 	// Should the user mole from fan of knives or an item?
-	if ( p_data[id][P_LASTITEM2] == ITEM_MOLE || ( Verify_Skill(id, RACE_WARDEN, SKILL1) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
+	if ( g_ItemLastOwned[1][id] == ITEM_MOLE || ( Verify_Skill(id, RACE_WARDEN, SKILL1) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
 	{
 		set_task( 0.1, "_SHARED_Mole", TASK_MOLE + id );
 	}
@@ -1041,22 +1005,24 @@ public EVENT_PlayerSpawned( id )
 	p_data_b[id][PB_DIEDLASTROUND]	= false;
 }
 
-// Function is called ONCE at the start of a new round
+// Function is called ONCE at the start of a new round BEFORE user's spawn
 public EVENT_NewRound()
 {
 	
+	// User's have not spawned yet, so lets do some pre-spawn things
+	new players[32], numplayers, i;
+	get_players( players, numplayers, "a" );
+	for ( i = 0; i < numplayers; i++ )
+	{
+		EVENT_JustBeforeSpawn( players[i] );
+	}
+
 	// If someone restarted the game, then lets reset war3
 	if ( g_GameRestarting )
 	{
 		WC3_ResetGame();
 	}
 	
-	// This shouldn't exist unless the game is starting or there is a round restart, so lets remove it
-	if ( task_exists( TASK_BEFORE_ROUND_START ) )
-	{
-		remove_task( TASK_BEFORE_ROUND_START );
-	}
-
 	// Randomize Chameleon if we need to
 	CHAM_Randomize();
 
@@ -1187,4 +1153,29 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 	}
 	
 	return FMRES_IGNORED;
+}
+
+// Function called right before the user's spawn
+EVENT_JustBeforeSpawn( id )
+{
+	
+	// Save the items the user had from the previous round
+	ITEM_Save( id );
+
+	// Remove the user's items
+	ITEM_ResetCurrent( id );
+
+	// Reset all ultimates
+	ULT_Reset( id );
+
+	// Reset certain player variables
+	p_data_b[id][PB_HAS_SPAWNED]		= false;
+	p_data[id][P_RESPAWNBY]				= 0;
+	p_data_b[id][PB_JUSTJOINED]			= false;
+
+	// Remove any reset_maxspeeds occuring (could cause a person to move during freezetime)
+	task_exists( TASK_RESETSPEED + id ) ? remove_task( TASK_RESETSPEED + id ) : 0;
+	
+	// Save a copy of what weapons the user had the previous round (for weapon reincarnation)
+	SHARED_CopySavedWeapons( id );
 }

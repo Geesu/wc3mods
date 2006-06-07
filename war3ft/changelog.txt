@@ -18,6 +18,7 @@ v3.0
  - Change: Bash chance has been reduced to 10%/20%/30%
  - Change: Evasion and Helm will now flash your screen blue instead of previous colors
  - Change: Orc critical nades will now have a max damage of 99 or 144 depending on victim's race
+ - Change: You will no longer lose your ankj/scroll of respawning if someone respawns you by Phoenix or warden's ultimate
  - Removed: FT_impale_intensity cvar (edit this constant at the top of skills.inl)
  - Removed: FT_blink_radius cvar (replaced with NECKLACE_RADIUS define)
  - Removed: FT_healing_range cvar (defined at top of skills.inl)
@@ -47,7 +48,6 @@ v3.0
 //reset skills/ultimates when user dies or right before the round starts
 //let /level show the user's XP if they're dead!
 //display message when wardens will be immune
-//you lose your items if someone respawns you...
 
 v2.3.2
  - Addition: Admin flag added to war3FT.cfg file as a cvar

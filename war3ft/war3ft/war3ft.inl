@@ -257,6 +257,9 @@ public WAR3_death_victim(victim_id, killer_id)
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
+	
+	// Save the user's items (stored in items on death variable)
+	ITEM_SaveOnDeath( victim_id );
 
 	// Reset the "about to spawn" variable
 	p_data[victim_id][P_RESPAWNBY] = 0;
@@ -376,7 +379,7 @@ public WAR3_death_victim(victim_id, killer_id)
 	}
 
 	// The user just died, remove all items
-	ITEM_Reset( victim_id );
+	ITEM_RemoveEffects( victim_id );
 
 	set_task( 1.0, "WC3_GetUserInput", TASK_GETINPUT + victim_id );
 

@@ -513,12 +513,8 @@ public ITEM_CanBuyItem( id, iItemID, iShopmenuID )
 }
 
 // Called when the user dies so we can remove the abilities
-public ITEM_Reset( id )
+ITEM_RemoveEffects( id )
 {
-	// Lets save the user's items from when they died
-	p_data[id][P_LASTITEM]			= p_data[id][P_ITEM];
-	p_data[id][P_LASTITEM2]			= p_data[id][P_ITEM2];
-
 	// Reset shopmenu 1 items
 	ITEM_Set( id, -1, SHOPMENU_ONE );
 
@@ -526,18 +522,52 @@ public ITEM_Reset( id )
 	ITEM_Set( id, -1, SHOPMENU_TWO );
 }
 
-// Save the user's items!!
-public ITEM_Save( id )
+// Reset the user's items (should be called right before the user spawns)
+ITEM_ResetCurrent( id )
 {
 	// Lets save the user's items from when they died
-	p_data[id][P_LASTITEM]			= p_data[id][P_ITEM];
-	p_data[id][P_LASTITEM2]			= p_data[id][P_ITEM2];
+	p_data[id][P_ITEM]	= 0;
+	p_data[id][P_ITEM2]	= 0;
 }
 
-public ITEM_DeleteAll( id )
+// Save the user's items (should be done RIGHT before they spawn, since the items will then be reset)!!
+ITEM_Save( id )
 {
-	// Reset the user's items
-	p_data[id][P_ITEM]		= 0;
-	p_data[id][P_ITEM2]		= 0;
+	// Lets save the user's items from when they died
+	g_ItemLastOwned[0][id] = p_data[id][P_ITEM];
+	g_ItemLastOwned[1][id] = p_data[id][P_ITEM2];
+}
 
+// Save the user's items when they die
+ITEM_SaveOnDeath( id )
+{
+	g_ItemOnDeath[0][id] = p_data[id][P_ITEM];
+	g_ItemOnDeath[1][id] = p_data[id][P_ITEM2];
+}
+
+// Give the user his/her items back if need be
+ITEM_GiveItemBackFromDeath( id )
+{
+
+	// Make sure the user respawned and this isn't just a start of a round
+	if ( p_data[id][P_RESPAWNBY] )
+	{
+		if ( g_ItemOnDeath[0][id] == ITEM_ANKH )
+		{
+			p_data[id][P_ITEM] = ITEM_ANKH;
+		}
+		
+		// Only give the scroll back if they didn't spawn from a scroll (infinite respawn loop anyone?)
+		if ( g_ItemOnDeath[1][id] == ITEM_SCROLL && p_data[id][P_RESPAWNBY] != RESPAWN_ITEM )
+		{
+			p_data[id][P_ITEM2] = ITEM_SCROLL;
+		}
+
+		// Display the new item on the user's HUD
+		WC3_ShowBar( id );
+	}
+	
+	// We don't need to save these anymore
+	g_ItemOnDeath[0][id] = 0;
+	g_ItemOnDeath[1][id] = 0;
 }

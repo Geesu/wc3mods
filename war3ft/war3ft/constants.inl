@@ -78,7 +78,7 @@
 //#define TASK_WAR3CHECK		2015	// Checks the value of sv_warcraft3 every 5 seconds (better than checking it on every function call)
 #define TASK_SIPHON			2016
 #define TASK_ENDULTIMATE	2017
-#define TASK_BEFORE_ROUND_START		2018
+//#define TASK_BEFORE_ROUND_START		2018
 #define TASK_MOLEFIX		3000
 #define TASK_CHECKMODULES	3001
 
@@ -356,8 +356,8 @@
 //	#define P_FLAMECOUNT			22		// Number of flame shots the player has left
 	#define P_SERPENTCOUNT			23		// Number of serpent wards the player has left
 	#define P_RINGS					24
-	#define P_LASTITEM				25		// Holds the item that the user had during the previous round
-	#define P_LASTITEM2				26
+//	#define P_LASTITEM				25		// Holds the item that the user had during the previous round
+//	#define P_LASTITEM2				26
 	#define P_SKINCHANGED			27		// Did the user's skin change?
 	#define P_ULTIMATEDELAY			30
 	#define P_RESPAWNBY				31		// Stores how the user is going to respawn
@@ -475,7 +475,6 @@ new iSQLAttempts			= 0;
 new SOUND_ANNIHILATION[64]
 new SOUND_CONCOCTION_CAST[64]
 new SOUND_CONCOCTION_HIT[64]
-
 new SOUND_VENGEANCE[64]
 new SOUND_SUICIDE[64]
 new SOUND_BANISH[64]
@@ -497,7 +496,6 @@ new SOUND_ULTIMATEREADY[64]
 new SOUND_HEX[64]
 new SOUND_IMMOLATE[64];
 new SOUND_IMMOLATE_BURNING[64];
-
 new SOUND_REINCARNATION[64]
 new SOUND_ANTEND[64];
 new SOUND_ERROR[64];
@@ -509,6 +507,11 @@ new g_ChamSkills[5] = {0,1,1,1,1}		// the value is what race that skill should b
 
 new p_data[33][P_LAST]					// Contains player data
 new bool:p_data_b[33][PB_LAST]			// Contains player data of type boolean
+
+// Variables for items
+new g_ItemOnDeath[2][33];
+new g_ItemLastOwned[2][33];
+
 
 #if ADVANCED_STATS
 	new iStatsHead[33][MAX_CSW_S]

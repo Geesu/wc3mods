@@ -157,6 +157,7 @@ public plugin_init()
 	register_event( "HideWeapon"		, "on_CurWeapon"	, "b"								);
 	register_event( "ResetHUD"			, "on_ResetHud"		, "b"								);
 	register_event( "TextMsg"			, "on_GameRestart"	, "a"	, "2&#Game_will_restart_in" );
+	register_event( "HLTV"				, "EVENT_NewRound"	, "a"	, "1=0"	,			"2=0"	);
 
 	register_dictionary( "war3FT.txt")
 
@@ -219,8 +220,6 @@ public plugin_init()
 		register_event( "StatusValue"	, "on_StatusValue"	, "b"					);
 	}
 	
-	//register_event("HLTV", "event_new_round", "a", "1=0", "2=0")   
-
 	// Plugin initialization procedures
 	WC3_Init();
 }
