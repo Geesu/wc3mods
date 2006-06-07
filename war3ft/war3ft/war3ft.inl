@@ -263,18 +263,30 @@ public WAR3_death_victim(victim_id, killer_id)
 
 	// Reset the "about to spawn" variable
 	p_data[victim_id][P_RESPAWNBY] = 0;
-
-#if MOD == 1
-	if ( killer_id == 0 || get_user_team(victim_id) != get_user_team(killer_id) && killer_id != victim_id )
-		SHARED_SetUserMoney(victim_id, SHARED_GetUserMoney(victim_id)+300, 1)
-
-	if( victim_id != killer_id )
-		SHARED_SetUserMoney(killer_id, SHARED_GetUserMoney(killer_id) + 600,1)
-
-	if ( Verify_Skill(killer_id, RACE_BLOOD, SKILL1) && killer_id != victim_id ){
-		Skill_Pheonix(killer_id)
+	
+	// Day of Defeat Specific functions
+	if ( g_MOD == GAME_DOD )
+	{
+		
+		// Ignore if they killed themself
+		if ( killer_id != victim_id )
+		{
+			// Award them money for dying b/c i'm nice
+			if ( get_user_team( victim_id ) != get_user_team( killer_id ) )
+			{
+				SHARED_SetUserMoney( victim_id, SHARED_GetUserMoney( victim_id ) + 300, 1 );
+			}
+			
+			// Award the killer some money
+			SHARED_SetUserMoney( killer_id, SHARED_GetUserMoney( killer_id ) + 600, 1 );
+			
+			// Give more money for Phoenix skill if it exists
+			if ( Verify_Skill( killer_id, RACE_BLOOD, SKILL1 ) )
+			{
+				BM_PheonixDOD( killer_id );
+			}
+		}
 	}
-#endif
 
 	// In case they respawn, continue ultimate delay check
 	if(!task_exists(TASK_UDELAY+victim_id)){
@@ -308,7 +320,7 @@ public WAR3_death_victim(victim_id, killer_id)
 	}
 
 	// Remove icon because you don't have an ultimate when you're dead
-	Ultimate_Icon(victim_id,ICON_HIDE)	
+	ULT_Icon( victim_id, ICON_HIDE );	
 
 	// Player is no longer a mole after they die, right?
 	p_data_b[victim_id][PB_MOLE] = false
@@ -322,30 +334,10 @@ public WAR3_death_victim(victim_id, killer_id)
 		SHARED_ChangeSkin( victim_id, SKIN_RESET );
 	}
 	
-	// Check for Ultimate abilities
-	if (Verify_Skill(victim_id, RACE_UNDEAD, SKILL4) && !p_data_b[victim_id][PB_CHANGINGTEAM] && !g_ultimateDelay && !p_data_b[victim_id][PB_ULTIMATEUSED] )	// Suicide Bomber
+	// Suicide Bomber should go off
+	if ( Verify_Skill( victim_id, RACE_UNDEAD, SKILL4) )
 	{	
-		emit_sound(victim_id, CHAN_STATIC, SOUND_SUICIDE, 1.0, ATTN_NORM, 0, PITCH_NORM)
-		new parm[5], origin[3]
-		get_user_origin(victim_id,origin)
-
-		parm[0]=victim_id
-		parm[1]=6
-		parm[2]=origin[0]
-		parm[3]=origin[1]
-		parm[4]=origin[2]
-
-		set_task(0.5,"apacheexplode",TASK_EXPLOSION+victim_id,parm,5)
-		set_task(0.5,"blastcircles",TASK_BEAMCYLINDER+victim_id,parm,5)
-
-		Create_TE_IMPLOSION(origin, 100, 20, 5)
-
-		p_data[victim_id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-
-		if(task_exists(TASK_UDELAY+victim_id))
-			remove_task(TASK_UDELAY+victim_id)
-
-		_ULT_Delay( victim_id )
+		UD_Suicide( victim_id );
 	}
 	
 
@@ -411,7 +403,7 @@ public WAR3_death(victim_id, killer_id, weapon, headshot) {
 	}
 #endif
 
-	Ultimate_Clear_Icons(victim_id)
+	ULT_ClearIcons( victim_id );
 	
  	WAR3_death_victim(victim_id, killer_id)
 
@@ -881,230 +873,11 @@ public WC3_ResetGame()
 	g_GameRestarting = false;
 }
 
-// Called .3 seconds after the modules have been "loaded"
-public _WC3_CheckModules()
-{
-	new bool:bReloadMap = false;	
-	
-	// Loop through all the modules and determine what we need to do
-	for ( new i = 0; i < iTotalNotLoadedModules; i++ )
-	{
-
-		// Enable cstrike module
-		if ( equal( szNotLoadedModules[i], "cstrike" ) )
-		{
-			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-			{
-				WC3_EnableModule( "cstrike_amxx" );
-				bReloadMap = true;
-			}
-		}
-
-		// Enable cstrike module
-		else if ( equal( szNotLoadedModules[i], "csx" ) )
-		{
-			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-			{
-				WC3_EnableModule( "csx_amxx" );
-				bReloadMap = true;
-			}
-		}
-
-		// Enable DOD Fun module
-		else if ( equal( szNotLoadedModules[i], "dod" ) )
-		{
-			if ( g_MOD == GAME_DOD )
-			{
-				WC3_EnableModule( "dodfun_amxx" );
-				bReloadMap = true;
-			}
-		}
-
-		// Enable DOD X module
-		else if ( equal( szNotLoadedModules[i], "dodx" ) )
-		{
-			if ( g_MOD == GAME_DOD )
-			{
-				WC3_EnableModule( "dodx_amxx" );
-				bReloadMap = true;
-			}
-		}
-
-		// Enable SQL Module - I'm pretty sure we can safely enable this, since in theory no other plugins need mysql (DBI isn't running after all)
-		else if ( equal( szNotLoadedModules[i], "dbi" ) )
-		{
-			// Make sure the module exists - only need to check this since we didn't in WC3_MissingModules
-			if ( WC3_ModuleExists( "sqlite_amxx" ) )
-			{
-				WC3_EnableModule( "sqlite_amxx" );
-				bReloadMap = true;
-			}
-		}
-		
-		// Enable nvault module
-		else if ( equal( szNotLoadedModules[i], "nvault" ) )
-		{
-			// Make sure the module exists - only need to check this since we didn't in WC3_MissingModules
-			if ( WC3_ModuleExists( "nvault_amxx" ) )
-			{
-				WC3_EnableModule( "nvault_amxx" );
-				bReloadMap = true;
-			}
-		}
-
-		// Enable Engine module
-		else if ( equal( szNotLoadedModules[i], "engine" ) )
-		{
-			WC3_EnableModule( "engine_amxx" );
-			bReloadMap = true;
-		}
-
-		// Enable Fakemeta module
-		else if ( equal( szNotLoadedModules[i], "fakemeta" ) )
-		{
-			WC3_EnableModule( "fakemeta_amxx" );
-			bReloadMap = true;
-		}
-
-		// Enable Fun module
-		else if ( equal( szNotLoadedModules[i], "fun" ) )
-		{
-			WC3_EnableModule( "fun_amxx" );
-			bReloadMap = true;
-		}
-	}
-
-	if ( bReloadMap )
-	{
-		set_task( 2.0, "WC3_ReloadMap" );
-	}
-}
-
-public WC3_EnableModule( module_name[] )
-{
-	new szModulesINI[256];
-
-	get_configsdir( szModulesINI, 255 );
-	add( szModulesINI, 255, "/modules.ini" );
-
-    if ( file_exists( szModulesINI ) )
-    {
-        new line = 0, oldline = 0, len = 0;
-        new szLine[256];
-        
-        // Check out every line in the file
-        while ( ((line = read_file( szModulesINI, line, szLine, 255, len)) != 0) )
-        {
-            // Module Name Found
-            if ( contain( szLine, module_name ) != -1 )
-            {
-                // Semicolon found in line
-                if ( contain( szLine, ";" ) != -1 )
-                {
-                    write_file( szModulesINI, szLine[1], oldline );
-                }
-            }
-
-            oldline = line;
-        }
-    }
-}  
-public WC3_ReloadMap()
-{
-	new szMapName[32];
-	get_mapname( szMapName, 31 );
-	
-	server_cmd( "changelevel %s", szMapName );
-}
-
-// Checks to see if the module exists
-public WC3_MissingModules( const module_name[] )
-{
-	new bool:bMissing = false;
-
-	// Check cstrike module
-	if ( equal( module_name, "cstrike" ) )
-	{
-		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-		{
-			bMissing = !WC3_ModuleExists( "cstrike_amxx" );
-		}
-	}
-
-	// Check csx module
-	else if ( equal( module_name, "csx" ) )
-	{
-		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-		{
-			bMissing = !WC3_ModuleExists( "csx_amxx" );
-		}
-	}
-
-	// Check DOD Fun module
-	else if ( equal( module_name, "dod" ) )
-	{
-		if ( g_MOD == GAME_DOD )
-		{
-			bMissing = !WC3_ModuleExists( "dodfun_amxx" );
-		}
-	}
-
-	// Check DOD X module
-	else if ( equal( module_name, "dodx" ) )
-	{
-		if ( g_MOD == GAME_DOD )
-		{
-			bMissing = !WC3_ModuleExists( "dodx_amxx" );
-		}
-	}
-
-	// Check Engine module
-	else if ( equal( module_name, "engine" ) )
-	{
-		bMissing = !WC3_ModuleExists( "engine_amxx" );
-	}
-
-	// Check Fakemeta module
-	else if ( equal( module_name, "fakemeta" ) )
-	{
-		bMissing = !WC3_ModuleExists( "fakemeta_amxx" );
-	}
-
-	// Check Fun module
-	else if ( equal( module_name, "fun" ) )
-	{
-		bMissing = !WC3_ModuleExists( "fun_amxx" );
-	}
-
-	return bMissing;
-}
-
-
-public WC3_ModuleExists( module_name[] )
-{
-	new szExt[16] = ".dll";
-
-	if ( is_linux_server() )
-	{
-		copy( szExt, 15, "_i386.so" );
-	}
-	else if ( is_amd64_server() )
-	{
-		copy( szExt, 15, "_amd64.so" );
-	}
-
-	new szFullPath[128];
-
-	format( szFullPath, 127, "addons/amxmodx/modules/%s%s", module_name, szExt );
-
-	return file_exists( szFullPath );
-}
-
 WC3_SetRace( id, race )
 {
 
 	// Clear any ultimate icons that might exist
-	Ultimate_Clear_Icons( id );
+	ULT_ClearIcons( id );
 	
 	// Play level up sound
 	emit_sound( id, CHAN_STATIC, SOUND_LEVELUP, 1.0, ATTN_NORM, 0, PITCH_NORM );
@@ -1118,9 +891,6 @@ WC3_SetRace( id, race )
 	p_data[id][P_SKILL3] = 0
 	p_data[id][P_ULTIMATE] = 0
 	p_data[id][P_CHANGERACE] = 0
-
-//	if ( get_user_health(id) > 100 )
-//		set_user_health( id, 100 )
 	
 	// Set up the fuses if we're in DOD
 	if ( g_MOD == GAME_DOD )
@@ -1143,14 +913,14 @@ WC3_SetRace( id, race )
 }
 
 // Function called right after the user's race information is set
-public WC3_SetRaceUp( id )
+WC3_SetRaceUp( id )
 {
 	Skill_Check( id );
 
 	// Set up the user's ultimate if it's ready
-	if ( !p_data_b[id][PB_ULTIMATEUSED] )
+	if ( ULT_Available( id ) )
 	{
-		Ultimate_Icon( id, ICON_SHOW );
+		ULT_Icon( id, ICON_SHOW );
 	}
 	
 	// See if there are any skills available
@@ -1166,9 +936,10 @@ public WC3_SetRaceUp( id )
 }
 
 // Function will grab XP for the user
-public WC3_ChangeRaceStart( id )
+WC3_ChangeRaceStart( id )
 {
-
+	
+	// Make sure the user is on a team!
 	if ( SHARED_IsOnTeam( id ) )
 	{
 		// Get the XP if we're saving XP
@@ -1182,7 +953,7 @@ public WC3_ChangeRaceStart( id )
 }
 
 // Function will show the "select a race" menu to the user
-public WC3_ChangeRaceEnd( id, iRaceXP[MAX_RACES] )
+WC3_ChangeRaceEnd( id, iRaceXP[MAX_RACES] )
 {
 
 	// We don't want to replace the player's current XP with whats in the database now do we ?
@@ -1538,7 +1309,7 @@ WC3_IsImmunePlayerNear( id, vOrigin[3] )
 		if ( get_user_team( players[i] ) != iTeam )
 		{	
 			// Does this player have a necklace or warden's blink?  If not we don't need to check the radius
-			if ( p_data[players[i]][P_ITEM] == ITEM_NECKLACE || p_data_b[players[i]][PB_WARDENBLINK] )
+			if ( ULT_IsImmune( players[i]) )
 			{
 				get_user_origin( players[i], vTargetOrigin );
 				

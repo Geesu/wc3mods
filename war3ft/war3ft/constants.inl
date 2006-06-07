@@ -80,7 +80,7 @@
 #define TASK_ENDULTIMATE	2017
 //#define TASK_BEFORE_ROUND_START		2018
 #define TASK_MOLEFIX		3000
-#define TASK_CHECKMODULES	3001
+//#define TASK_CHECKMODULES	3001
 
 // From ../multiplayer source/dlls/player.cpp
 #define ARMOR_RATIO	 0.7	// Armor Takes 30% of the damage (was .2 in the SDK)
@@ -126,9 +126,6 @@
 #define MAXGLOW					150
 #define TELEPORT_RADIUS			50
 #define LIGHTNING_RANGE			500
-#define EXPLOSION_MAX_DAMAGE	50
-#define EXPLOSION_RANGE			300
-#define EXPLOSION_BLAST_RADIUS	250
 #define BLINK_COOLDOWN			2.0
 #define ORB_DAMAGE				20			// Damage done by Orb of Annihilation
 #define CRITICAL_STRIKE_CHANCE	0.15		// 15% chance of Critical Strike working
@@ -607,9 +604,6 @@ new g_sRace[10]
 new g_sLevel[11]
 new g_sSmoke
 new g_sImmolate;
-
-new szNotLoadedModules[10][32];
-new iTotalNotLoadedModules = 0;
 
 new g_DBTableName[64]
 

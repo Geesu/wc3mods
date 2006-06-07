@@ -125,7 +125,10 @@ public cmd_Ultimate(id)
 		else{
 			new parm[1]
 			parm[0]=id
-			Ultimate_Icon(id,ICON_FLASH)
+
+			// Flash the user's ultimate icon
+			ULT_Icon( id, ICON_FLASH );
+
 			p_data_b[id][PB_SUICIDEATTEMPT] = true
 		#if MOD == 0
 			set_hudmessage(178, 14, 41, -1.0, -0.4, 1, 0.5, 1.7, 0.2, 0.2,5)

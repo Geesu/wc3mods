@@ -1,88 +1,16 @@
-// ****************************************
-// Undead's Suicide Bomber
-// ****************************************
 
-public apacheexplode(parm[5]){		// Suicide Bomber
-	new id = parm[0]
-	// random explosions
+new g_UltimateIcons[8][32] = 
+					{
+						"dmg_rad",				// Undead
+						"item_longjump",		// Human Alliance
+						"dmg_shock",			// Orcish Horde
+						"item_healthkit",		// Night Elf
+						"dmg_heat",				// Blood Mage
+						"suit_full",			// Shadow Hunter
+						"cross",				// Warden
+						"dmg_gas"				// Crypt Lord
+					};
 
-#if ADVANCED_STATS
-	new WEAPON = CSW_SUICIDE - CSW_WAR3_MIN
-	iStatsShots[id][WEAPON]++
-#endif
-
-	new origin[3], origin2[3]
-	origin[0] = parm[2]
-	origin[1] = parm[3]
-	origin[2] = parm[4]
-
-	origin2[0] = origin[0] + random_num( -100, 100 )
-	origin2[1] = origin[1] + random_num( -100, 100 )
-	origin2[2] = origin[2] + random_num( -50, 50 )
-	
-	Create_TE_EXPLOSION(origin, origin2, g_sFireball, (random_num(0,20) + 20), 12, TE_EXPLFLAG_NONE)
-
-#if MOD == 0
-	Create_TE_Smoke(origin, origin2, g_sSmoke, 60, 10)
-#endif
-
-	new players[32]
-	new numberofplayers
-	get_players(players, numberofplayers)
-	new i
-	new targetid
-	new distancebetween
-	new targetorigin[3]
-	new damage
-	new multiplier
-
-	for (i = 0; i < numberofplayers; ++i){
-		targetid=players[i]
-		get_user_origin(targetid,targetorigin)
-		distancebetween=get_distance(origin,targetorigin)
-		if (distancebetween < EXPLOSION_RANGE && get_user_team(id)!=get_user_team(targetid) && p_data[targetid][P_ITEM]!=ITEM_NECKLACE && !p_data_b[targetid][PB_WARDENBLINK]){
-			multiplier=(EXPLOSION_MAX_DAMAGE*EXPLOSION_MAX_DAMAGE)/EXPLOSION_RANGE
-			damage=(EXPLOSION_RANGE-distancebetween)*multiplier
-			damage=sqroot(damage)
-			if(is_user_alive(targetid))
-				WAR3_damage(targetid, id, damage, CSW_SUICIDE, -1)
-
-		}
-		if (distancebetween < EXPLOSION_RANGE){
-			Create_ScreenShake(targetid, (1<<14), (1<<13), (1<<14))
-		}
-	}
-
-	--parm[1]
-	if (parm[1]>0)
-		set_task(0.1,"apacheexplode",TASK_EXPLOSION+id,parm,5)
-	
-	return PLUGIN_CONTINUE
-}
-
-public blastcircles(parm[5]){
-
-	if ( endround )
-		return 0
-
-	new origin[3], origin2[3]
-
-	origin[0] = parm[2]
-	origin[1] = parm[3]
-	origin[2] = parm[4] - 16
-
-	origin2[0] = origin[0]
-	origin2[1] = origin[1]
-	origin2[2] = origin[2] + EXPLOSION_BLAST_RADIUS
-
-	Create_TE_BEAMCYLINDER(origin, origin, origin2, g_sSpriteTexture, 0, 0, 6, 16, 0, 188, 220, 255, 255, 0)
-
-	origin2[2] = (origin[2] - EXPLOSION_BLAST_RADIUS) + (EXPLOSION_BLAST_RADIUS / 2 )
-
-	Create_TE_BEAMCYLINDER(origin, origin, origin2, g_sSpriteTexture, 0, 0, 6, 16, 0, 188, 220, 255, 255, 0)
-
-	return PLUGIN_CONTINUE
-}
 
 
 // ****************************************
@@ -182,7 +110,7 @@ Ultimate_Blink(id){
 	set_task(0.1, "_Ultimate_Blink_Controller", TASK_BLINKCONT+id, teleparm, 6)
 					
 	p_data_b[id][PB_ULTIMATEUSED]=true
-	Ultimate_Icon(id,ICON_HIDE)
+	ULT_Icon(id,ICON_HIDE)
 
 	emit_sound(id, CHAN_STATIC, SOUND_BLINK, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
@@ -425,7 +353,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 
 		p_data_b[id][PB_ULTIMATEUSED]=true
 		
-		Ultimate_Icon(id,ICON_FLASH)
+		ULT_Icon( id, ICON_FLASH );
 
 		parm[1] = 0
 		set_task(2.0,"_Ultimate_BigBadVoodoo",TASK_RESETGOD+id,parm,2)
@@ -438,7 +366,7 @@ public _Ultimate_BigBadVoodoo(parm[2]){
 
 		p_data_b[id][PB_GODMODE] = false
 	
-		Ultimate_Icon(id,ICON_HIDE)
+		ULT_Icon( id, ICON_HIDE );
 
 		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 		_ULT_Delay( id )
@@ -480,7 +408,7 @@ Ultimate_LocustSwarm(id){
 	parm[1]=origin[1]
 	parm[2]=origin[2]
 
-	Ultimate_Icon(id,ICON_FLASH)
+	ULT_Icon( id, ICON_FLASH );
 
 	p_data_b[id][PB_ULTIMATEUSED]=true
 
@@ -495,7 +423,7 @@ public drawfunnels(parm[]){
 
 	if(p_data[id][P_ITEM]==ITEM_NECKLACE || p_data_b[id][PB_WARDENBLINK] || !is_user_alive(id) || !p_data_b[id][PB_ISCONNECTED]){
 		p_data_b[caster][PB_ULTIMATEUSED]=false
-		Ultimate_Icon(caster,ICON_SHOW)	
+		ULT_Icon( caster, ICON_SHOW )	
 		return PLUGIN_HANDLED
 	}
 
@@ -548,7 +476,7 @@ public drawfunnels(parm[]){
 
 			emit_sound(id,CHAN_STATIC, SOUND_LOCUSTSWARM, 1.0, ATTN_NORM, 0, PITCH_NORM)
 
-			Ultimate_Icon(caster,ICON_HIDE)
+			ULT_Icon( caster, ICON_HIDE );
 			
 			p_data[caster][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 			_ULT_Delay( caster )
@@ -609,16 +537,16 @@ public _ULT_Delay( id )
 	return;
 }
 
-public Ultimate_Ready(id)
+Ultimate_Ready( id )
 {
+	// Need to set this before the war3_check in case they want to restart war3ft
+	p_data_b[id][PB_ULTIMATEUSED] = false;
+
 	if ( !WAR3_Check() )
 	{
 		return;
 	}
 	
-
-	p_data_b[id][PB_ULTIMATEUSED] = false;
-
 	if ( is_user_alive( id ) && p_data_b[id][PB_ISCONNECTED] && p_data[id][P_ULTIMATE] )
 	{
 		// Play the ultimate ready sound
@@ -628,69 +556,84 @@ public Ultimate_Ready(id)
 		WC3_Status_Text( id, 2.0, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_READY" );
 		
 		// Show their ultimate icon
-		Ultimate_Icon( id, ICON_SHOW );
+		ULT_Icon( id, ICON_SHOW );
 	}
 	
 	return;
 }
 
-public Ultimate_Icon(id, value){
+// This function will display/flash/hide the race's ultimate icon on the screen
+ULT_Icon( id, flag )
+{
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-	if(!p_data[id][P_ULTIMATE])
-		return PLUGIN_HANDLED
-	if (g_ultimateDelay > 0.0)
-		return PLUGIN_HANDLED
-	if(p_data_b[id][PB_ULTIMATEUSED] && value!=ICON_HIDE)
-		return PLUGIN_HANDLED
-	if(id==0)
-		return PLUGIN_HANDLED
-#if MOD == 0
-	new string[32], r, g, b, switchValue
-	if(p_data[id][P_RACE] == 9)
-		switchValue = g_ChamSkills[4]
-	else
-		switchValue = p_data[id][P_RACE]
-
-	switch(switchValue){
-		case 1:format(string,31,"dmg_rad"),			r=255,	g=0,	b=0			// Undead
-		case 2:format(string,31,"item_longjump"),	r=0,	g=120,	b=120		// Human
-		case 3:format(string,31,"dmg_shock"),		r=255,	g=255,	b=255		// Orc
-		case 4:format(string,31,"item_healthkit"),	r=0,	g=0,	b=255		// Night Elf
-		case 5:format(string,31,"dmg_heat"),		r=255,	g=0,	b=0			// Blood Mage
-		case 6:format(string,31,"suit_full"),		r=0,	g=200,	b=200		// Shadow Hunter
-		case 7:format(string,31,"cross"),			r=255,	g=0,	b=0			// Warden
-		case 8:format(string,31,"dmg_gas"),			r=0,	g=255,	b=0			// Crypt Lord
+	new iRaceID = p_data[id][P_RACE];
+	
+	// If we're chameleon we need to display the icon of the ultimate we have
+	if ( p_data[id][P_RACE] == RACE_CHAMELEON )
+	{
+		iRaceID = g_ChamSkills[4];
 	}
+	
+	new r, g, b;
 
-	if(!is_user_alive(id))			// If the user is dead then hide the icon
-		value = ICON_HIDE
-
-	if(value==ICON_FLASH){
-		if( Verify_Skill(id, RACE_UNDEAD, SKILL4) )
-			r=255,g=255,b=255
+	// Each race has its on color for its icon...
+	switch ( iRaceID )
+	{
+		case 1: r=255,	g=0,	b=0;		// Undead
+		case 2: r=0,	g=120,	b=120;		// Human
+		case 3: r=255,	g=255,	b=255;		// Orc
+		case 4: r=0,	g=0,	b=255;		// Night Elf
+		case 5: r=255,	g=0,	b=0;		// Blood Mage
+		case 6: r=0,	g=200,	b=200;		// Shadow Hunter
+		case 7: r=255,	g=0,	b=0;		// Warden
+		case 8: r=0,	g=255,	b=0;		// Crypt Lord
 	}
-
-	Create_StatusIcon(id, value, string, r, g, b)
-#endif
-	return PLUGIN_CONTINUE
-}
-
-public Ultimate_Clear_Icons(id){
-	#if MOD == 0
-		if(id==0)
-			return PLUGIN_CONTINUE
-
-		new string[8][32] = {"dmg_rad","item_longjump","dmg_shock","item_healthkit","dmg_heat","suit_full","cross","dmg_gas"}
-		for(new i=0;i<8;i++){
-			Create_StatusIcon(id, ICON_HIDE, string[i], 0, 0, 0)
+		
+	// Special circumstances should be done here
+	switch ( flag )
+	{
+		case ICON_FLASH:
+		{
+			// Change colors for Ultimate
+			if ( Verify_Skill(id, RACE_UNDEAD, SKILL4) )
+			{
+				r=255, g=255, b=255;
+			}
 		}
-	#endif
-	return PLUGIN_CONTINUE
+	}
+
+	
+	// Create the status icon
+	Create_StatusIcon( id, flag, g_UltimateIcons[iRaceID - 1], r, g, b );
 }
 
-public ULT_IsImmune( id )
+ULT_ClearIcons( id )
+{
+	// Only have icons for CS/CZ
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		new i;
+		
+		// Loop through all possible icons and remove them
+		for ( i = 0; i < MAX_RACES - 1; i++ )
+		{
+			Create_StatusIcon( id, ICON_HIDE, g_UltimateIcons[i], 0, 0, 0 )
+		}
+	}
+}
+
+ULT_Available( id )
+{
+	// User needs ult + can't have it used + can't have a delay + can't have a global delay
+	if ( p_data[id][P_ULTIMATE] && !p_data_b[id][PB_ULTIMATEUSED] && !p_data[id][P_ULTIMATEDELAY] && !g_ultimateDelay )
+	{
+		return true;
+	}
+
+	return false;
+}
+
+ULT_IsImmune( id )
 {
 	return ( p_data[id][P_ITEM] == ITEM_NECKLACE || p_data_b[id][PB_WARDENBLINK] )
 }
@@ -714,14 +657,14 @@ public _ULT_Ping( parm[] )
 	{
 		p_data_b[id][PB_ISSEARCHING] = false;
 
-		Ultimate_Icon( id, ICON_SHOW );
+		ULT_Icon( id, ICON_SHOW );
 	}
 	
 	// Then we need to play the sound + flash their icon!
 	if ( p_data_b[id][PB_ISSEARCHING] )
 	{
 		// Flash their ultimate icon
-		Ultimate_Icon( id, ICON_FLASH );
+		ULT_Icon( id, ICON_FLASH );
 
 		// Play the ping sound
 		emit_sound( id, CHAN_STATIC, SOUND_ULTIMATESCAN, 1.0, ATTN_NORM, 0, PITCH_NORM );
@@ -761,5 +704,19 @@ ULT_Reset( id )
 	p_data_b[id][PB_ISSEARCHING] = false;
 
 	// Hide their ultimate icon
-	Ultimate_Icon( id, ICON_HIDE );
+	ULT_Icon( id, ICON_HIDE );
+}
+
+// Function will reset a user's ultimate delay and start a new countdown
+ULT_ResetDelay( id )
+{
+	
+	// New ultimate cooldown delay
+	p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
+
+	// In theory the task should be running, but if not, lets call it
+	if ( !task_exists( TASK_UDELAY + id ) )
+	{
+		_ULT_Delay( id );
+	}
 }

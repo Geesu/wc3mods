@@ -73,44 +73,7 @@ public Skill_Check(id)
 
 	BM_PheonixCheck( id );
 
-	Ultimate_Icon(id,ICON_SHOW)
-
 	return PLUGIN_CONTINUE
-}
-
-// ****************************************
-// Blood Mage's Pheonix Ability in DOD
-// ****************************************
-
-#define BM_PHEONIX_RANGE		750
-
-public Skill_Pheonix(id){
-	SHARED_SetUserMoney(id, SHARED_GetUserMoney(id) + p_pheonix_dod[p_data[id][P_SKILL1]-1])
-
-	new name[32], team
-	get_user_name(id, name, 31)
-	team = get_user_team(id)
-
-	new players[32], numberofplayers
-	new i, targetid, distancebetween, targetorigin[3], origin[3]
-
-	get_user_origin(id, origin)
-	get_players(players, numberofplayers,"a")
-
-	new money = p_pheonix_dod[p_data[id][P_SKILL1]-1] / 2
-	for (i = 0; i < numberofplayers; ++i){
-		targetid=players[i]
-
-		if ( targetid != id && p_data_b[targetid][PB_ISCONNECTED] && get_user_team(targetid) == team){
-			get_user_origin(targetid, targetorigin)
-			distancebetween = get_distance(origin, targetorigin)
-
-			if (distancebetween < BM_PHEONIX_RANGE){
-				SHARED_SetUserMoney(targetid, SHARED_GetUserMoney(targetid) + money)
-				client_print(targetid, print_chat, "%s %L", g_MODclient, targetid, "DOD_PHOENIX", money, name)
-			}
-		}
-	}
 }
 
 // ****************************************

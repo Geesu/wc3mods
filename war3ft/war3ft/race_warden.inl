@@ -94,10 +94,12 @@ WA_ULT_Vengeance( id )
 			
 			// User's ultimate is used, so set up delay + hide icon
 			p_data_b[id][PB_ULTIMATEUSED]	= true;
-			p_data[id][P_ULTIMATEDELAY]		= get_pcvar_num( CVAR_wc3_ult_cooldown );
+			
+			// Hide the user's ultimate icon b/c we just used it!
+			ULT_Icon( id, ICON_HIDE );
 
-			Ultimate_Icon( id, ICON_HIDE );
-			_ULT_Delay( id );
+			// Reset the user's ultimate delay
+			ULT_ResetDelay( id );
 		}
 	}
 

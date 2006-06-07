@@ -2,9 +2,11 @@
 *	Race: Blood Mage Functions
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
-#define IMMOLATE_DAMAGE     35  // Initial damage done to target players
-#define IMMOLATE_DOT_DAMAGE  5  // Damage done on each tick of the ultimate
-#define IMMOLATE_DOT         4  // Number of times ultimate ticks
+#define IMMOLATE_DAMAGE			35		// Initial damage done to target players
+#define IMMOLATE_DOT_DAMAGE		5		// Damage done on each tick of the ultimate
+#define IMMOLATE_DOT			4		// Number of times ultimate ticks
+
+#define BM_PHEONIX_RANGE		750		// Range to award money
 
 
 public BM_ULT_Immolate( iCaster, iTarget )
@@ -174,4 +176,51 @@ BM_PhoenixExists( iTeam )
 	}
 
 	return -1;
+}
+
+BM_PheonixDOD( id )
+{
+
+	// Award the player money for having Phoenix
+	SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + p_pheonix_dod[p_data[id][P_SKILL1]-1] );
+
+	new szUserName[32], iTeam, iTargetID;
+	new i, vTargetOrigin[3], vOrigin[3];
+
+	// Get the "caster's" name
+	get_user_name( id, szUserName, 31 );
+
+	// Determine the caster's team
+	iTeam = get_user_team( id );
+
+	// Get the caster's origin
+	get_user_origin( id, vOrigin );
+	
+	// Get a list of the current alive players
+	new players[32], numberofplayers;
+	get_players( players, numberofplayers, "a" );
+
+	new iMoney = p_pheonix_dod[p_data[id][P_SKILL1]-1] / 2;
+
+	for ( i = 0; i < numberofplayers; i++ )
+	{
+		iTargetID = players[i];
+		
+		// Make sure player is on the same team
+		if ( iTargetID != id && get_user_team( iTargetID ) == iTeam )
+		{
+			
+			// Get the target's origin
+			get_user_origin( iTargetID, vTargetOrigin );
+			
+			// See if they're close enough
+			if ( get_distance( vOrigin, vTargetOrigin ) <= BM_PHEONIX_RANGE )
+			{
+				// Give them some money
+				SHARED_SetUserMoney( iTargetID, SHARED_GetUserMoney( iTargetID ) + iMoney );
+
+				client_print( iTargetID, print_chat, "%s %L", g_MODclient, iTargetID, "DOD_PHOENIX", iMoney, szUserName )
+			}
+		}
+	}
 }

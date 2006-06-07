@@ -33,7 +33,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu"
-new const WC3VERSION[] =	"3.0 RC1"
+new const WC3VERSION[] =	"3.0 Alpha"
 new const WC3DATE[] =		__DATE__
 
 // Let AMX X know that we NEED these modules (as of amx x 1.75)
@@ -71,6 +71,8 @@ new const WC3DATE[] =		__DATE__
 // Source Code
 #include "war3ft/constants.inl"
 #include "war3ft/cvar.inl"
+
+#include "war3ft/race_undead.inl"           // Warden           - 1
 
 #include "war3ft/race_orc.inl"				// Orcish Horde		- 3
 #include "war3ft/race_elf.inl"				// Night Elf		- 4
@@ -508,23 +510,7 @@ public plugin_natives()
 
 public module_filter( const module[] )
 {
-	WC3_DetermineGame();
-
-	copy( szNotLoadedModules[iTotalNotLoadedModules++], 31, module );
-	
-	// The required module doesn't even exist!!!
-	if ( WC3_MissingModules( module ) )
-	{
-		log_amx( "Please verify the module '%s' exists in your modules folder, otherwise war3ft will not start.", ( equal( module, "dod" ) ) ? "sqlite" : module );
-		
-		return PLUGIN_CONTINUE;
-	}
-
-	// Check to make sure the modules are enabled
-	if ( !task_exists( TASK_CHECKMODULES ) )
-	{
-		set_task( 0.3, "_WC3_CheckModules", TASK_CHECKMODULES );
-	}
+	log_amx( "Please enable the '%s' module in your modules.ini file", module );
 
 	return PLUGIN_HANDLED;
 }

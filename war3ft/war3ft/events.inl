@@ -979,7 +979,6 @@ public EVENT_PlayerSpawned( id )
 			{
 				SHARED_DOD_Reincarnation( id );
 			}
-
 		}
 	}
 
@@ -1087,7 +1086,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				p_data_b[iAttacker][PB_ULTIMATEUSED]	= true;
 				
 				// Hide the ultimate icon
-				Ultimate_Icon( iAttacker, ICON_HIDE );
+				ULT_Icon( iAttacker, ICON_HIDE );
 
 				// Set up the user's ultimate delay
 				p_data[iAttacker][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
