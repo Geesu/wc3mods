@@ -117,7 +117,7 @@ public SH_PlaceSerpentWard( id )
 	}
 
 	// User is alive we can place a ward!
-	else if ( is_user_alive( id ) && Verify_Skill( id, RACE_SHADOW, SKILL3 ) && p_data[id][P_SERPENTCOUNT] > 0 && !endround )
+	else if ( is_user_alive( id ) && Verify_Skill( id, RACE_SHADOW, SKILL3 ) && p_data[id][P_SERPENTCOUNT] > 0 )
 	{
 
 		// Serpent Ward
@@ -148,7 +148,7 @@ public SH_PlaceSerpentWard( id )
 public _SH_DrawSerpentWard( parm[5] )
 {
 
-	if ( !WAR3_Check() || endround )
+	if ( !WAR3_Check() )
 	{
 		return PLUGIN_HANDLED;
 	}
@@ -188,7 +188,6 @@ public _SH_DrawSerpentWard( parm[5] )
 	{
 		if ( parm[4] == TS )
 		{
-		
 			red		= 255;
 			blue	= 0;
 			green	= 0;
@@ -306,7 +305,7 @@ public SH_Ult_BigBadVoodoo( id )
 
 	p_data_b[id][PB_CAN_RENDER] = false;
 
-	p_data_b[id][PB_ULTIMATEUSED] = true;
+	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) + SH_BIGBADVOODOO_DURATION );
 
 	ULT_Icon( id, ICON_FLASH );
 
@@ -348,8 +347,6 @@ public SH_Ult_Remove( iParm[1] )
 	ULT_Icon( id, ICON_HIDE );
 
 	set_user_rendering( id );	
-
-	p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
 
 	set_user_godmode( id, 0 );
 

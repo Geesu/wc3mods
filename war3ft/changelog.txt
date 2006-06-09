@@ -4,6 +4,7 @@ v3.0
  - Addition: NVault now used instead of vault (will improve lag when there are NUMEROUS users and saving XP is on)
  - Addition: Check for serpent wards to prevent them from being planted on the bomb or on hostages
  - Addition: amx_setlevel has been added
+ - Addition: /level10 command - gives level 10 when you type it (if sv_cheats is on, don't worry, this XP doesn't save into the database...)
  - Bug Fix: cl_minmodels task was not repeating
  - Change: Unstable Concoction now originates from the attacker and damages nearby teammates
  - Change: Using Vengeance will ALWAYS set your health to 50

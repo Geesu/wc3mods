@@ -11,6 +11,7 @@ new CVAR_wc3_buy_zone;
 new CVAR_wc3_races;
 new CVAR_wc3_spec_position;
 new CVAR_wc3_grenade_protection;
+new CVAR_wc3_cheats;
 
 // Icon CVARs
 new CVAR_wc3_race_icon;
@@ -113,6 +114,7 @@ public CVAR_Init()
 	CVAR_wc3_races					= register_cvar( "wc3_races"				, "8"		, FCVAR_SERVER		);
 	CVAR_wc3_spec_position			= register_cvar( "wc3_spec_position"		, "0"							);
 	CVAR_wc3_grenade_protection		= register_cvar( "wc3_grenade_protection"	, "0"							);
+	CVAR_wc3_cheats					= register_cvar( "wc3_cheats"				, "0"		, FCVAR_SERVER		);
 
 	// Icon CVARs
 
@@ -229,5 +231,5 @@ public CVAR_Configure()
 public plugin_cfg()
 {
 	// Get Half-Life CVAR Pointers
-	CVAR_mp_friendlyfire = get_cvar_pointer( "mp_friendlyfire" );
+	CVAR_mp_friendlyfire	= get_cvar_pointer( "mp_friendlyfire" );
 }

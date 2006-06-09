@@ -104,7 +104,7 @@ public cmd_Ultimate(id)
 	}
 
 	// Ultimate is used
-	if ( p_data_b[id][PB_ULTIMATEUSED] )
+	if ( p_data_b[id][PB_ULTIMATEUSED] || p_data[id][P_ULTIMATEDELAY] > 0 )
 	{
 		WC3_Status_Text( id, 0.5, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_NOT_READY", p_data[id][P_ULTIMATEDELAY] );
 
@@ -207,7 +207,7 @@ public cmd_Ultimate(id)
 			new WEAPON = CSW_LOCUSTS - CSW_WAR3_MIN
 			iStatsShots[id][WEAPON]++
 		#endif
-		Ultimate_LocustSwarm(id)
+		CL_ULT_LocustSwarm( id );
 	}
 
 	return PLUGIN_HANDLED

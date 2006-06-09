@@ -72,6 +72,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/constants.inl"
 #include "war3ft/cvar.inl"
 
+
 #include "war3ft/race_undead.inl"           // Undead Scourge   - 1
 #include "war3ft/race_human.inl"			// Human Alliance	- 2
 #include "war3ft/race_orc.inl"				// Orcish Horde		- 3
@@ -79,7 +80,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/race_blood.inl"			// Blood Mage		- 5
 #include "war3ft/race_shadow.inl"			// Shadow Hunter	- 6
 #include "war3ft/race_warden.inl"           // Warden           - 7
-
+#include "war3ft/race_crypt.inl"			// Crypt Lord       - 8
 #include "war3ft/race_chameleon.inl"		// Chameleon		- 9
 
 #include "war3ft/effects.inl"
@@ -93,7 +94,6 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/clientCommands.inl"
 #include "war3ft/items.inl"
 #include "war3ft/stocks.inl"
-#include "war3ft/ultimates.inl"
 #include "war3ft/skills.inl"
 #include "war3ft/shared.inl"
 #include "war3ft/menus.inl"
@@ -101,6 +101,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/language.inl"
 #include "war3ft/other.inl"
 #include "war3ft/admin.inl"
+#include "war3ft/ultimates.inl"
 
 #include "war3ft/cstrike.inl"
 #include "war3ft/dod.inl"
@@ -304,11 +305,13 @@ public client_connect( id )
 	p_data[id][P_XP]					= 0;
 	p_data[id][P_ITEM]					= 0;
 	p_data[id][P_ITEM2]					= 0;
-	p_data_b[id][PB_ISBURNING]			= false;
+	p_data[id][P_RESPAWNBY]				= 0;
 	p_data[id][P_SPECMODE]				= 0;
+
+	p_data_b[id][PB_ISBURNING]			= false;
 	p_data_b[id][PB_JUSTJOINED]			= true;
 	p_data_b[id][PB_CAN_RENDER]			= true;
-	p_data[id][P_RESPAWNBY]				= 0;
+	p_data_b[id][PB_HAS_SPAWNED]		= false;
 	
 	// Update the user's timestamps for each race if we're saving XP
 	DB_UpdateTimestamp( id );
@@ -343,6 +346,13 @@ public client_connect( id )
 		p_data_b[id][PB_REINCARNATION_SKIP] = true;
 
 		p_data[id][P_MONEY] = 0;
+	}
+
+	// Reset the "cheat" variables
+	new j;
+	for ( j = 0; j < MAX_RACES; j++ )
+	{
+		g_bGivenLevel10[id][j]	= false;
 	}
 	
 	return;

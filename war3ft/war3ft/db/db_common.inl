@@ -129,7 +129,15 @@ public DB_SaveXP( id )
 		return;
 	}
 
-	if ( p_data[id][P_RACE] == 0 || is_user_bot(id) || !get_pcvar_num( CVAR_wc3_save_xp ) || p_data[id][P_XP] == 0 )
+	new iRaceID = p_data[id][P_RACE];
+
+	if ( iRaceID == 0 || is_user_bot(id) || !get_pcvar_num( CVAR_wc3_save_xp ) || p_data[id][P_XP] == 0 )
+	{
+		return;
+	}
+
+	// We don't want to save their XP if they cheated and got level 10!!!
+	if ( g_bGivenLevel10[id][iRaceID] )
 	{
 		return;
 	}

@@ -868,9 +868,9 @@ public EVENT_PlayerInitialSpawn( id )
 			return;
 		}
 	}
-
+	
 	// New ultimate cooldown delay
-	p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
+	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_delay ) );
 
 	// We only want to do this here for CS/CZ... in DOD it should be done on every spawn
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
@@ -996,14 +996,12 @@ public EVENT_PlayerSpawned( id )
 // Function is called ONCE at the start of a new round BEFORE user's spawn
 public EVENT_NewRound()
 {
-	
 	// Reset the global ultimate delay
 	g_iUltimateDelay = get_pcvar_num( CVAR_wc3_ult_delay );
 
-
 	// User's have not spawned yet, so lets do some pre-spawn things
 	new players[32], numplayers, i;
-	get_players( players, numplayers, "a" );
+	get_players( players, numplayers );
 	for ( i = 0; i < numplayers; i++ )
 	{
 		EVENT_JustBeforeSpawn( players[i] );
@@ -1071,14 +1069,11 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				// No longer searching since we found a target
 				p_data_b[iAttacker][PB_ISSEARCHING]	= false;
 
-				// Ultimate has been used
-				p_data_b[iAttacker][PB_ULTIMATEUSED]	= true;
-				
 				// Hide the ultimate icon
 				ULT_Icon( iAttacker, ICON_HIDE );
 
 				// Set up the user's ultimate delay
-				p_data[iAttacker][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
+				ULT_ResetCooldown( iAttacker, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 			}
 		}
 
@@ -1134,7 +1129,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 	return FMRES_IGNORED;
 }
 
-// Function called right before the user's spawn
+// Function called right before the user spawns
 EVENT_JustBeforeSpawn( id )
 {
 	
@@ -1157,4 +1152,7 @@ EVENT_JustBeforeSpawn( id )
 	
 	// Save a copy of what weapons the user had the previous round (for weapon reincarnation)
 	SHARED_CopySavedWeapons( id );
+
+	// Remove any serpant wards
+	( task_exists( TASK_LIGHT + id ) ) ? remove_task( TASK_LIGHT + id ) ? 0;
 }

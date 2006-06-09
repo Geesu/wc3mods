@@ -24,8 +24,8 @@
 #define	TASK_ITEM_GLOVES	544		// Nade timer (gloves)
 #define	TASK_UNHOLYSPEED	576		// Unholyspeed timer
 #define	TASK_RESETGOD		608		// Reset god mode
-#define	TASK_CEILING		640		// Ceiling Check function (blink)
-#define	TASK_BLINKCONT		672		// Calls Blink Controller function
+#define	TASK_BLINKCHECK		640		// Check to see if the player teleported into an invalid location
+#define	TASK_BLINKSTUCK		672		// Checks to see if a user is stuck after blinking
 //#define	TASK_TELEMENU		704		// Telemenu function
 //#define	TASK_TELEWAITSTOP	736		// Calls telewaitstop function
 //#define	TASK_TELEPORT		768		// Teleports the player
@@ -127,7 +127,6 @@
 #define MAXGLOW					150
 #define TELEPORT_RADIUS			50
 #define LIGHTNING_RANGE			500
-#define BLINK_COOLDOWN			2.0
 #define ORB_DAMAGE				20			// Damage done by Orb of Annihilation
 #define CRITICAL_STRIKE_CHANCE	0.15		// 15% chance of Critical Strike working
 #define SKILL_EVASION_ADJ		1024		// The amount of health that is given/taken for evasion
@@ -453,6 +452,9 @@
 //  Start of variables
 // ***************************************************************************
 
+// This keeps track of which races were given "free" XP - we don't want to save this XP to the database
+new bool:g_bGivenLevel10[33][MAX_RACES];	// Stores if we gave them level 10
+
 // Database variables
 
 new g_Vault[MAX_RACES+1];
@@ -581,7 +583,6 @@ new gmsgScoreInfo
 new gmsgStatusIcon
 
 new bool:g_spritesEnabled = false
-new Float:g_ultimateDelay = 0.0
 
 // Used for Mole
 new bool:spawnPointsused[33] = false

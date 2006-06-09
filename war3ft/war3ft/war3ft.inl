@@ -713,7 +713,7 @@ WC3_Status_Text( id, Float:fDuration, Float:iYPos, const fmt[], ... )
 	// Check for Counter-Strike or Condition Zero
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		set_hudmessage( 255, 208, 0, HUDMESSAGE_POS_CENTER, iYPos, 0, 6.0, fDuration, 0.1, 0.5, -1 );
+		set_hudmessage( 255, 208, 0, HUDMESSAGE_POS_CENTER, iYPos, 0, 6.0, fDuration, 0.1, 0.5, 1 );
 		show_hudmessage( id, szFormattedText );
 	}
 
@@ -879,6 +879,38 @@ public WC3_ResetGame()
 	g_GameRestarting = false;
 }
 
+// Function will grab XP for the user
+WC3_ChangeRaceStart( id )
+{
+	
+	// Make sure the user is on a team!
+	if ( SHARED_IsOnTeam( id ) )
+	{
+		// Get the XP if we're saving XP
+		if ( get_pcvar_num( CVAR_wc3_save_xp ) )
+		{
+
+			// This function will also display the changerace menu
+			DB_GetAllXP( id );
+		}
+	}
+}
+
+// Function will show the "select a race" menu to the user
+WC3_ChangeRaceEnd( id, iRaceXP[MAX_RACES] )
+{
+
+	// We don't want to replace the player's current XP with whats in the database now do we ?
+	if ( p_data[id][P_RACE] )
+	{
+		iRaceXP[p_data[id][P_RACE]-1] = p_data[id][P_XP];
+	}
+
+	// Need to call this here
+	MENU_SelectRace( id, iRaceXP );
+}
+
+// This will actually give the user a given race
 WC3_SetRace( id, race )
 {
 
@@ -922,12 +954,20 @@ WC3_SetRace( id, race )
 WC3_SetRaceUp( id )
 {
 	Skill_Check( id );
+	
+	// Copy the global ULT timeout over to just this user...
+	p_data[id][P_ULTIMATEDELAY] = g_iUltimateDelay;
 
 	// Set up the user's ultimate if it's ready
 	if ( ULT_Available( id ) )
 	{
 		ULT_Icon( id, ICON_SHOW );
 	}
+
+	client_print( id, print_chat, "[DEBUG] Ult Available: %d", ULT_Available( id ) );
+
+	// 1 0 33 0
+	client_print( id, print_chat, "[DEBUG] %d:%d:%d:%d", p_data[id][P_ULTIMATE], p_data_b[id][PB_ULTIMATEUSED], p_data[id][P_ULTIMATEDELAY], g_iUltimateDelay );
 	
 	// See if there are any skills available
 	new iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3];
@@ -939,37 +979,6 @@ WC3_SetRaceUp( id )
 	XP_Check( id, false );
 	WC3_ShowBar( id );
 	WC3_ShowRaceInfo( id );
-}
-
-// Function will grab XP for the user
-WC3_ChangeRaceStart( id )
-{
-	
-	// Make sure the user is on a team!
-	if ( SHARED_IsOnTeam( id ) )
-	{
-		// Get the XP if we're saving XP
-		if ( get_pcvar_num( CVAR_wc3_save_xp ) )
-		{
-
-			// This function will also display the changerace menu
-			DB_GetAllXP( id );
-		}
-	}
-}
-
-// Function will show the "select a race" menu to the user
-WC3_ChangeRaceEnd( id, iRaceXP[MAX_RACES] )
-{
-
-	// We don't want to replace the player's current XP with whats in the database now do we ?
-	if ( p_data[id][P_RACE] )
-	{
-		iRaceXP[p_data[id][P_RACE]-1] = p_data[id][P_XP];
-	}
-
-	// Need to call this here
-	MENU_SelectRace( id, iRaceXP );
 }
 
 WC3_ShowBar( id )
@@ -1258,6 +1267,35 @@ WC3_HandleCommand( id, szCmd[] )
 	else if ( WC3_CommandEqual( szCmd, "devs" ) || WC3_CommandEqual( szCmd, "developers" ) || WC3_CommandEqual( szCmd, "geesu" ) || WC3_CommandEqual( szCmd, "avanderik" ) || WC3_CommandEqual( szCmd, "ootoaoo" ) || WC3_CommandEqual( szCmd, "pimpdaddy" ) )
 	{
 		WAR3_Check_Dev(id)
+	}
+
+	// Cheat command if it's enabled
+	else if ( get_pcvar_num( CVAR_wc3_cheats ) && WC3_CommandEqual( szCmd, "level10" ) )
+	{
+		new iRaceID = p_data[id][P_RACE];
+
+		// They haven't been given free XP for this race yet
+		if ( !g_bGivenLevel10[id][iRaceID] )
+		{
+			
+			// Save their XP now, b/c we're not going to later
+			DB_SaveXP( id );
+	
+			// OK give them level 10
+			p_data[id][P_XP] = xplevel[10];
+
+			XP_Check( id );
+			
+			// Make sure we set that we've given them XP already!
+			g_bGivenLevel10[id][iRaceID] = true;
+
+			client_print( id, print_chat, "%s You damn cheater, ok fine have level 10 :) - Ur welcome!!!", g_MODclient );
+		}
+		// We've already given them XP!!!
+		else
+		{
+			client_print( id, print_chat, "%s Hey I've already given you level 10 for this race!!", g_MODclient );
+		}
 	}
 
 	if ( get_pcvar_num( CVAR_wc3_races ) > 4 )

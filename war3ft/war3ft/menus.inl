@@ -275,7 +275,6 @@ public _menu_Select_Skill(id,key){
 		++p_data[id][P_SKILL3]
 	else if (key == KEY_4 && p_data[id][P_ULTIMATE]==0 && p_data[id][P_LEVEL]>=6 && skillsused<p_data[id][P_LEVEL]){
 		p_data[id][P_ULTIMATE]=1
-		p_data_b[id][PB_ULTIMATEUSED]=false
 	}
 	else if (key == KEY_0)
 		return PLUGIN_HANDLED
@@ -285,12 +284,6 @@ public _menu_Select_Skill(id,key){
 		menu_Select_Skill(id,0)
 	else
 		WC3_ShowBar( id );
-
-	// Give the user an ult if it's ready
-	if ( key == KEY_4 && !ULT_Available( id ) )
-	{
-		Ultimate_Ready( id );
-	}
 
 	// Serpent Ward Chosen
 	if ( Verify_Skill(id, RACE_SHADOW, SKILL3) && key == KEY_3 ){

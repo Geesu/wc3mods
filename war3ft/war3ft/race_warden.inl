@@ -7,8 +7,8 @@
 WA_ULT_Vengeance( id )
 {
 	
-	// If the user's ultimate is used or we're still in the ultimate delay, then why are we here?
-	if ( p_data_b[id][PB_ULTIMATEUSED] || g_ultimateDelay )
+	// If the user's ultimate isnot available, then why are we here?
+	if ( !ULT_Available( id ) )
 	{
 		return;
 	}
@@ -20,9 +20,6 @@ WA_ULT_Vengeance( id )
 		// Make sure the user isn't changing teams and we're not at the end of the round
 		if ( !p_data_b[id][PB_CHANGINGTEAM] && !endround && !p_data[id][P_RESPAWNBY] )
 		{
-			
-			// Ultimate is now used
-			p_data_b[id][PB_ULTIMATEUSED]	= true;
 
 			// Remove the ultimate delay if it existed (in theory it shouldn't)
 			if ( task_exists( TASK_UDELAY + id ) )
@@ -31,7 +28,7 @@ WA_ULT_Vengeance( id )
 			}
 
 			// Set up a new ultimate delay
-			p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
+			ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 
 			// Set up the respawn task
 			set_task( 1.2, "_SHARED_Spawn", TASK_SPAWN + id );
@@ -90,15 +87,12 @@ WA_ULT_Vengeance( id )
 
 			// Play the Vengeance sound		
 			emit_sound( id, CHAN_STATIC, SOUND_VENGEANCE, 1.0, ATTN_NORM, 0, PITCH_NORM );
-			
-			// User's ultimate is used, so set up delay + hide icon
-			p_data_b[id][PB_ULTIMATEUSED]	= true;
-			
+						
 			// Hide the user's ultimate icon b/c we just used it!
 			ULT_Icon( id, ICON_HIDE );
 
-			// Reset the user's ultimate delay
-			p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
+			// Set up a new ultimate delay
+			ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 		}
 	}
 

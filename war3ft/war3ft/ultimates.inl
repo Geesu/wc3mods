@@ -11,115 +11,6 @@ new g_UltimateIcons[8][32] =
 						"dmg_gas"				// Crypt Lord
 					};
 
-// ****************************************
-// Crypt Lord's Locust Swarm
-// ****************************************
-
-Ultimate_LocustSwarm(id){
-
-	new parm[11]
-	parm[7]=id
-	new players[32], numberofplayers, i, player, possibility[33], count = 0
-	get_players(players, numberofplayers)
-	for (i = 0; i < numberofplayers; ++i){
-		player=players[i]
-		if(get_user_team(player)!=get_user_team(id) && is_user_alive(player) && !p_data_b[player][PB_WARDENBLINK] && p_data[player][P_ITEM]!=ITEM_NECKLACE){
-			possibility[count]=player
-			count++
-		}
-	}
-	if(count==0){
-		set_hudmessage(178, 14, 41, -1.0, 0.3, 0, 1.0, 5.0, 0.1, 0.2, 5)
-		show_hudmessage(id,"%L",id,"NO_VALID_TARGETS_FOUND")
-		return PLUGIN_CONTINUE
-	}
-
-	while(parm[6]==0)								// Prevents target from being the server
-		parm[6]=possibility[random_num(0,count)]
-
-	new origin[3], origin2[3]
-	get_user_origin(id,origin)
-	get_user_origin(parm[6],origin2)
-	parm[0]=origin[0]
-	parm[1]=origin[1]
-	parm[2]=origin[2]
-
-	ULT_Icon( id, ICON_FLASH );
-
-	p_data_b[id][PB_ULTIMATEUSED]=true
-
-	drawfunnels(parm)
-	return PLUGIN_CONTINUE
-}
-
-public drawfunnels(parm[]){
-	new MULTIPLIER = 150 // the lower the number the faster it reaches the target
-	new id = parm[6]
-	new caster = parm[7]
-
-	if(p_data[id][P_ITEM]==ITEM_NECKLACE || p_data_b[id][PB_WARDENBLINK] || !is_user_alive(id) || !p_data_b[id][PB_ISCONNECTED]){
-		p_data_b[caster][PB_ULTIMATEUSED]=false
-		ULT_Icon( caster, ICON_SHOW )	
-		return PLUGIN_HANDLED
-	}
-
-	new origin[3], funnel[3], name[32], name2[32]
-	get_user_name(id,name,31)
-	get_user_name(caster,name2,31)
-	get_user_origin(id,origin)
-
-	funnel[0]=parm[0]			// Origin of the funnel
-	funnel[1]=parm[1]
-	funnel[2]=parm[2]
-	
-	Create_TE_LARGEFUNNEL(funnel, g_sSnow, 0)
-	
-	new xdist = diff(origin[0],funnel[0])
-	new ydist = diff(origin[1],funnel[1])
-	new zdist = diff(origin[2],funnel[2])	
-
-	if(diff(origin[0],(funnel[0]-MULTIPLIER))<xdist)
-		parm[0]=funnel[0]-MULTIPLIER
-	else if(diff(origin[0],(funnel[0]+MULTIPLIER))<xdist)
-		parm[0]=funnel[0]+MULTIPLIER
-	else
-		parm[0]=origin[0]
-
-	if(diff(origin[1],(funnel[1]-MULTIPLIER))<ydist)
-		parm[1]=funnel[1]-MULTIPLIER
-	else if(diff(origin[1],(funnel[1]+MULTIPLIER))<ydist)
-		parm[1]=funnel[1]+MULTIPLIER
-	else
-		parm[1]=origin[1]
-
-	if(diff(origin[2],(funnel[2]-MULTIPLIER))<zdist)
-		parm[2]=funnel[2]-MULTIPLIER
-	else if(diff(origin[2],(funnel[2]+MULTIPLIER))<zdist)
-		parm[2]=funnel[2]+MULTIPLIER
-	else
-		parm[2]=origin[2]
-
-	if(!endround){
-		if(!(xdist<50 && ydist<50 && zdist<50)){
-			#if MOD == 1
-				set_task(0.5,"drawfunnels",caster+TASK_FUNNELS,parm,11)
-			#else
-				set_task(0.1,"drawfunnels",caster+TASK_FUNNELS,parm,11)
-			#endif
-		}
-		else{
-			WAR3_damage(id, caster, 45, CSW_LOCUSTS, -1)
-
-			emit_sound(id,CHAN_STATIC, SOUND_LOCUSTSWARM, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-			ULT_Icon( caster, ICON_HIDE );
-			
-			p_data[caster][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-		}
-	}
-	return PLUGIN_HANDLED
-}
-
 // This is ran every second...
 public _ULT_Delay()
 {
@@ -130,7 +21,7 @@ public _ULT_Delay()
 	
 	// Now we need to loop through all players and decrement their ultimate delay
 	new players[32], numplayers, i, id;
-	get_players( players, numplayers, "a" );
+	get_players( players, numplayers );
 
 	for ( i = 0; i < numplayers; i++ )
 	{
@@ -139,15 +30,29 @@ public _ULT_Delay()
 		// Reduce the user's ultimate delay
 		p_data[id][P_ULTIMATEDELAY]--;
 
+		client_print( id, print_console, "[DEBUG] Timer Decremented: %d (%d)", p_data[id][P_ULTIMATEDELAY], g_iUltimateDelay );
 
 		// Then the user's ultimate is ready
-		if ( p_data[id][P_ULTIMATEDELAY] == 0 && g_iUltimateDelay <= 0 )
+		if ( p_data[id][P_ULTIMATEDELAY] <= 0 && p_data_b[id][PB_ULTIMATEUSED] )
 		{
 			Ultimate_Ready( id );
 		}
 	}
 
-	log_amx( "[DEBUG] Timer Decremented: %d", g_iUltimateDelay );
+}
+
+ULT_ResetCooldown( id, iTime, iHideIcon = true )
+{
+	p_data_b[id][PB_ULTIMATEUSED]	= true;
+	p_data[id][P_ULTIMATEDELAY]		= iTime;
+	
+	// Hide the user's ultimate icon
+	if ( iHideIcon )
+	{
+		ULT_Icon( id, ICON_HIDE );
+	}
+
+	client_print( id, print_chat, "[DEBUG] Your ultimate will be ready in %d second(s)", iTime );
 }
 
 Ultimate_Ready( id )
@@ -187,37 +92,47 @@ ULT_Icon( id, flag )
 		iRaceID = g_ChamSkills[4];
 	}
 	
-	new r, g, b;
+	// We should only do this if we have a valid race ID
+	if ( iRaceID )
+	{
+		new r, g, b;
 
-	// Each race has its on color for its icon...
-	switch ( iRaceID )
-	{
-		case 1: r=255,	g=0,	b=0;		// Undead
-		case 2: r=0,	g=120,	b=120;		// Human
-		case 3: r=255,	g=255,	b=255;		// Orc
-		case 4: r=0,	g=0,	b=255;		// Night Elf
-		case 5: r=255,	g=0,	b=0;		// Blood Mage
-		case 6: r=0,	g=200,	b=200;		// Shadow Hunter
-		case 7: r=255,	g=0,	b=0;		// Warden
-		case 8: r=0,	g=255,	b=0;		// Crypt Lord
-	}
-		
-	// Special circumstances should be done here
-	switch ( flag )
-	{
-		case ICON_FLASH:
+		// Each race has its on color for its icon...
+		switch ( iRaceID )
 		{
-			// Change colors for Ultimate
-			if ( Verify_Skill(id, RACE_UNDEAD, SKILL4) )
+			case 1: r=255,	g=0,	b=0;		// Undead
+			case 2: r=0,	g=120,	b=120;		// Human
+			case 3: r=255,	g=255,	b=255;		// Orc
+			case 4: r=0,	g=0,	b=255;		// Night Elf
+			case 5: r=255,	g=0,	b=0;		// Blood Mage
+			case 6: r=0,	g=200,	b=200;		// Shadow Hunter
+			case 7: r=255,	g=0,	b=0;		// Warden
+			case 8: r=0,	g=255,	b=0;		// Crypt Lord
+		}
+			
+		// Special circumstances should be done here
+		switch ( flag )
+		{
+			case ICON_FLASH:
 			{
-				r=255, g=255, b=255;
+				// Change colors for Ultimate
+				if ( Verify_Skill( id, RACE_UNDEAD, SKILL4 ) )
+				{
+					r=255, g=255, b=255;
+				}
+				
+				// Change colors for blood mage
+				else if ( Verify_Skill( id, RACE_BLOOD, SKILL4 ) )
+				{
+					r=255, g=255, b=255;
+				}
 			}
 		}
-	}
 
-	
-	// Create the status icon
-	Create_StatusIcon( id, flag, g_UltimateIcons[iRaceID - 1], r, g, b );
+			
+		// Create the status icon
+		Create_StatusIcon( id, flag, g_UltimateIcons[iRaceID - 1], r, g, b );
+	}
 }
 
 ULT_ClearIcons( id )
@@ -237,8 +152,14 @@ ULT_ClearIcons( id )
 
 ULT_Available( id )
 {
+	// Well this shouldn't really be true now should it ?
+	//if ( p_data[id][P_ULTIMATEDELAY] <= 0 && p_data_b[id][PB_ULTIMATEUSED] )
+	//{
+	//	p_data_b[id][PB_ULTIMATEUSED] = false;
+	//}
+
 	// User needs ult + can't have it used + can't have a delay + can't have a global delay
-	if ( p_data[id][P_ULTIMATE] && !p_data_b[id][PB_ULTIMATEUSED] && !p_data[id][P_ULTIMATEDELAY] && !g_ultimateDelay )
+	if ( p_data[id][P_ULTIMATE] && !p_data_b[id][PB_ULTIMATEUSED] && p_data[id][P_ULTIMATEDELAY] <= 0 && g_iUltimateDelay <= 0 )
 	{
 		return true;
 	}

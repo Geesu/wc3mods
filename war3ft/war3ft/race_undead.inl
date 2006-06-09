@@ -1,3 +1,6 @@
+/*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
+*	Race: Undead Scourge Functions
+´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
 #define EXPLOSION_MAX_DAMAGE	50
 #define EXPLOSION_RANGE			300
@@ -8,13 +11,7 @@ UD_Suicide( id )
 {
 	
 	// Ultimate has been used, so we can't use it again!
-	if ( p_data_b[id][PB_ULTIMATEUSED] )
-	{
-		return;
-	}
-
-	// Ultimates are not ready yet
-	if ( g_ultimateDelay )
+	if ( !ULT_Available( id ) )
 	{
 		return;
 	}
