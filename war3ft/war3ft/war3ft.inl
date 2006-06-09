@@ -357,9 +357,19 @@ public WAR3_death_victim(victim_id, killer_id)
 		}
 
 		// Should we respawn for Vengeance?
-		if ( Verify_Skill( victim_id, RACE_WARDEN, SKILL4 ) && killer_id != victim_id && !p_data_b[killer_id][PB_WARDENBLINK] )
+		if ( Verify_Skill( victim_id, RACE_WARDEN, SKILL4 ) && killer_id != victim_id )
 		{
-			WA_ULT_Vengeance( victim_id );
+			// Killer has immunity, user shouldn't respawn :/
+			if ( ULT_IsImmune( killer_id ) )
+			{
+				client_print( id, print_chat, "%s You will not respawn because your killer has immunity.", g_MODclient );
+			}
+
+			// Otherwise lets spawn them!!!
+			else
+			{
+				WA_ULT_Vengeance( victim_id );
+			}
 		}
 	}
 

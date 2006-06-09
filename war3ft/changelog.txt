@@ -48,6 +48,13 @@ v3.0
 //let /level show the user's XP if they're dead!
 //database pruning
 //remove reconnect timer on sql
+//save icon info
+//serpent continue at round end
+
+//shopmenu 3 ideas:
+// immune to some magic
+// immune to physical damage
+// show invis peeps...
 
 v2.3.2
  - Addition: Admin flag added to war3FT.cfg file as a cvar

@@ -72,8 +72,8 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/constants.inl"
 #include "war3ft/cvar.inl"
 
-#include "war3ft/race_undead.inl"           // Warden           - 1
-
+#include "war3ft/race_undead.inl"           // Undead Scourge   - 1
+#include "war3ft/race_human.inl"			// Human Alliance	- 2
 #include "war3ft/race_orc.inl"				// Orcish Horde		- 3
 #include "war3ft/race_elf.inl"				// Night Elf		- 4
 #include "war3ft/race_blood.inl"			// Blood Mage		- 5
