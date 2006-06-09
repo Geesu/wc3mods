@@ -22,7 +22,7 @@ public _SH_HealingWave( id )
 
 	if ( !p_data_b[id][PB_ISCONNECTED] )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	// Continue healing...
@@ -34,7 +34,7 @@ public _SH_HealingWave( id )
 	// Prevent healing if this player is hexed
 	if ( p_data_b[id][PB_HEXED] )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 
@@ -70,7 +70,7 @@ public _SH_HealingWave( id )
 		}
 	}
 
-	return;
+	return PLUGIN_HANDLED;
 }
 
 
@@ -85,7 +85,7 @@ public _SH_RemoveHex( id )
 
 	if( !p_data_b[id][PB_ISCONNECTED] )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 	
 	p_data_b[id][PB_CAN_RENDER] = true;
@@ -99,7 +99,7 @@ public _SH_RemoveHex( id )
 
 	emit_sound( id, CHAN_STATIC, SOUND_HEX, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-	return;
+	return PLUGIN_HANDLED;
 }
 
 
@@ -150,7 +150,7 @@ public _SH_DrawSerpentWard( parm[5] )
 
 	if ( !WAR3_Check() || endround )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	new id = parm[3];
@@ -158,14 +158,14 @@ public _SH_DrawSerpentWard( parm[5] )
 	// User is no longer connected, stop drawing wards
 	if( !p_data_b[id][PB_ISCONNECTED] )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 
 	// User is no longer alive, don't draw wards
 	if ( !is_user_alive( id ) )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	new origin[3], start[3], end[3], red, blue, green
@@ -251,7 +251,7 @@ public _SH_DrawSerpentWard( parm[5] )
 
 	set_task( 0.5, "_SH_DrawSerpentWard", TASK_LIGHT + id, parm, 5 );
 
-	return;
+	return PLUGIN_HANDLED;
 }
 
 bool:SH_CanPlaceWard( id )
@@ -318,13 +318,13 @@ public SH_Ult_BigBadVoodoo( id )
 		
 	emit_sound( id, CHAN_STATIC, SOUND_VOODOO, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-	set_user_rendering( id, kRenderFxGlowShell, 255, 255, 0, kRenderNormal, 16 );
+	set_user_rendering( id, kRenderFxGlowShell, 255, 245, 50, kRenderNormal, 16 );
 
 	new vOrigin[3];
 	get_user_origin( id, vOrigin );
 	vOrigin[2] += 75;
 
-	Create_TE_ELIGHT( id, vOrigin, 100, 255, 255, 0, SH_BIGBADVOODOO_DURATION, 0 );
+	Create_TE_ELIGHT( id, vOrigin, 100, 255, 245, 200, SH_BIGBADVOODOO_DURATION, 0 );
 
 	set_user_godmode( id, 1 );
 
@@ -363,7 +363,7 @@ public SH_Concoction( iVictim, iAttacker )
 	// We can't do anything if the user is hexed :/
 	if ( p_data_b[iVictim][PB_HEXED] )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	// Check to see if we should "concoction"
@@ -428,5 +428,5 @@ public SH_Concoction( iVictim, iAttacker )
 	}
 	#endif
 
-	return;
+	return PLUGIN_HANDLED;
 }

@@ -652,7 +652,7 @@ new const Float:p_resistant[11] =		{0.0, 0.04, 0.08, 0.12, 0.16, 0.20, 0.24, 0.2
 new const Float:p_heal[3] =				{6.0,4.0,2.0}			// Healing Wave				(skill 1)
 new const Float:p_hex[3] =				{0.05,0.10,0.15}		// Hex						(skill 2)
 new const p_serpent[3] =				{1,2,3}					// Serpent Ward				(skill 3)
-new const Float:p_concoction[11] =		{0.0, 0.01, 0.02, 0.04, 0.06, 0.08, 0.10, 0.13, 0.15, 0.17, 0.20}	// Unstable Concoction	(Skill 4)
+new const Float:p_concoction[11] =		{0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.15}	// Unstable Concoction	(Skill 4)
 
 new const Float:p_fan[3] =				{0.05,0.10,0.15}		// Fan of Knives			(skill 1)
 new const Float:p_blink[3] =			{0.333,0.666,1.0}		// Blink					(skill 2)
