@@ -1101,14 +1101,6 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 			}
 		}
 
-		// This is a check for the big bad voodoo ultimate -
-		if ( p_data_b[iVictim][PB_GODMODE] )
-		{
-			set_tr( TR_flFraction, 1.0 );
-
-			return FMRES_SUPERCEDE;
-		}
-		
 		// Check to see if this user has night elf's evasion
 		if ( Verify_Skill( iVictim, RACE_ELF, SKILL1 ) )
 		{

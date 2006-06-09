@@ -2,14 +2,14 @@
 *	Race: Shadow Hunter Functions
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
-#define SH_HEX_LENGTH			5.0			// Length that hex lasts in seconds
-#define SH_HEX_SPEED			175.0		// Speed hexed player will move at
-#define SH_HEALING_WAVE_RANGE	750			// Range to heal teammates
+#define SH_HEX_LENGTH			  5.0		// Length that hex lasts in seconds
+#define SH_HEX_SPEED			  175.0		// Speed hexed player will move at
+#define SH_HEALING_WAVE_RANGE	  750		// Range to heal teammates
 
-#define VENGEANCE_HEALTH		50			// Health the user should have after using his ult
+#define SH_BIGBADVOODOO_DURATION  2
 
-#define CONCOCTION_DAMAGE		15			// Damage done by Unstable Concoction
-#define CONCOCTION_RADIUS		300
+#define SH_CONCOCTION_DAMAGE	  15		// Damage done by Unstable Concoction
+#define SH_CONCOCTION_RADIUS	  300
 
 // ****************************************
 // Shadow Hunter's Healing Wave
@@ -293,6 +293,69 @@ bool:SH_CanPlaceWard( id )
 	return true;
 }
 
+// ****************************************
+// Shadow Hunter's Big Bad Voodoo
+// ****************************************
+
+public SH_Ult_BigBadVoodoo( id )
+{
+	if( !p_data_b[id][PB_ISCONNECTED] )
+		return PLUGIN_HANDLED;
+
+	p_data_b[id][PB_GODMODE] = true;
+
+	p_data_b[id][PB_CAN_RENDER] = false;
+
+	p_data_b[id][PB_ULTIMATEUSED] = true;
+
+	ULT_Icon( id, ICON_FLASH );
+
+	#if MOD == 0
+
+		Create_BarTime( id, SH_BIGBADVOODOO_DURATION, 0 );
+
+	#endif
+		
+	emit_sound( id, CHAN_STATIC, SOUND_VOODOO, 1.0, ATTN_NORM, 0, PITCH_NORM );
+
+	set_user_rendering( id, kRenderFxGlowShell, 255, 255, 0, kRenderNormal, 16 );
+
+	new vOrigin[3];
+	get_user_origin( id, vOrigin );
+	vOrigin[2] += 75;
+
+	Create_TE_ELIGHT( id, vOrigin, 100, 255, 255, 0, SH_BIGBADVOODOO_DURATION, 0 );
+
+	set_user_godmode( id, 1 );
+
+	new iParm[1];
+	iParm[0] = id;
+
+	new iTaskId = TASK_RESETGOD + id;
+	set_task( float( SH_BIGBADVOODOO_DURATION ), "SH_Ult_Remove", iTaskId, iParm, 2 );
+
+	return PLUGIN_HANDLED;
+}
+
+public SH_Ult_Remove( iParm[1] )
+{
+	new id = iParm[0];
+
+	p_data_b[id][PB_CAN_RENDER] = true;
+
+	p_data_b[id][PB_GODMODE] = false;
+
+	ULT_Icon( id, ICON_HIDE );
+
+	set_user_rendering( id );	
+
+	p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown );
+
+	set_user_godmode( id, 0 );
+
+	return PLUGIN_HANDLED;
+}
+
 // Unstable Concoction
 public SH_Concoction( iVictim, iAttacker )
 {
@@ -321,7 +384,7 @@ public SH_Concoction( iVictim, iAttacker )
 
 		vAxisOrigin[0] = vOrigin[0];
 		vAxisOrigin[1] = vOrigin[1];
-		vAxisOrigin[2] = vOrigin[2] + CONCOCTION_RADIUS;
+		vAxisOrigin[2] = vOrigin[2] + SH_CONCOCTION_RADIUS;
 		
 		// Display the effect on the attacker
 		for ( i = 0; i < 200; i += 25 )
@@ -346,10 +409,10 @@ public SH_Concoction( iVictim, iAttacker )
 				get_user_origin( players[i], vTargetOrigin );
 
 				// Make sure they are close enough
-				if ( get_distance( vOrigin, vTargetOrigin ) <= CONCOCTION_RADIUS )
+				if ( get_distance( vOrigin, vTargetOrigin ) <= SH_CONCOCTION_RADIUS )
 				{
 					// Damage
-					WAR3_damage( players[i], iVictim, CONCOCTION_DAMAGE, CSW_CONCOCTION, 0 );
+					WAR3_damage( players[i], iVictim, SH_CONCOCTION_DAMAGE, CSW_CONCOCTION, 0 );
 				
 					// Let the victim know he hit someone
 					emit_sound( iVictim, CHAN_STATIC, SOUND_CONCOCTION_HIT, 1.0, ATTN_NORM, 0, PITCH_NORM );

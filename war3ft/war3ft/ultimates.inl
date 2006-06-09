@@ -11,66 +11,6 @@ new g_UltimateIcons[8][32] =
 						"dmg_gas"				// Crypt Lord
 					};
 
-
-
-// ****************************************
-// Shadow Hunter's Big Bad Voodoo
-// ****************************************
-
-public _Ultimate_BigBadVoodoo(parm[2]){
-
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	if(parm[1] == 1){
-	#if MOD == 0
-		if ( get_user_team(id) == TS )
-			set_user_rendering( id, kRenderFxGlowShell, 255, 0, 0,  kRenderNormal, 255 )
-		else
-			set_user_rendering( id, kRenderFxGlowShell, 0, 0, 255,  kRenderNormal, 255 )
-	#endif
-	#if MOD == 1
-		if ( get_user_team(id) == ALLIES )
-			set_user_rendering( id, kRenderFxGlowShell, 255, 63, 63,  kRenderNormal, 255 )
-		else
-			set_user_rendering( id, kRenderFxGlowShell, 76, 102, 76,  kRenderNormal, 255 )
-	#endif
-		p_data_b[id][PB_GODMODE] = true
-
-		/* Do not allow other renderings to take place, like switching to invis, etc... */
-		p_data_b[id][PB_CAN_RENDER] = false
-
-		#if MOD == 0
-			Create_BarTime(id, 2, 0)
-		#endif
-		
-		emit_sound(id,CHAN_STATIC, SOUND_VOODOO, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-		p_data_b[id][PB_ULTIMATEUSED]=true
-		
-		ULT_Icon( id, ICON_FLASH );
-
-		parm[1] = 0
-		set_task(2.0,"_Ultimate_BigBadVoodoo",TASK_RESETGOD+id,parm,2)
-	}
-	else{
-		/* Allow other renderings to take place now */
-		p_data_b[id][PB_CAN_RENDER] = true
-
-		set_user_rendering(id)
-
-		p_data_b[id][PB_GODMODE] = false
-	
-		ULT_Icon( id, ICON_HIDE );
-
-		p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
-	}
-
-	return PLUGIN_CONTINUE
-}
-
 // ****************************************
 // Crypt Lord's Locust Swarm
 // ****************************************
@@ -362,17 +302,8 @@ ULT_Reset( id )
 	task_exists( TASK_UDELAY + id )			? remove_task( TASK_UDELAY + id ) : 0;
 	
 	// Reset Big Bad Voodoo
-	if ( task_exists( TASK_RESETGOD + id ) )
-	{
-		remove_task( TASK_RESETGOD + id );
-
-		new parm[2];
-		parm[0] = id;
-		parm[1] = 0;
-
-		_Ultimate_BigBadVoodoo( parm );
-	}
-
+	task_exists( TASK_RESETGOD + id )		? remove_task( TASK_RESETGOD + id ) : 0;
+	
 	// Set this to false to stop searching ultimates (used by NE + ORC + BM ultimates)
 	p_data_b[id][PB_ISSEARCHING] = false;
 

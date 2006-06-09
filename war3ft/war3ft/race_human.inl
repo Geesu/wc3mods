@@ -7,7 +7,7 @@ HA_ULT_Blink( id )
 	if ( p_data_b[id][PB_STUNNED] )
 	{
 		client_print( id, print_center, "You can't blink when you're stunned!" );
-		return;
+		return PLUGIN_HANDLED;
 	}
 	
 	new oldLocation[3], newLocation[3]

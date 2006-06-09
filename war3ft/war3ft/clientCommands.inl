@@ -144,7 +144,7 @@ public cmd_Ultimate(id)
 
 	// Blink
 	else if ( Verify_Skill(id, RACE_HUMAN, SKILL4) ){
-		Ultimate_Blink(id)
+		HA_ULT_Blink( id );
 	}
 
 	// Chain Lightning
@@ -192,10 +192,7 @@ public cmd_Ultimate(id)
 
 	// Big Bad Voodoo
 	else if ( Verify_Skill(id, RACE_SHADOW, SKILL4) ){
-		new parm[2]
-		parm[0] = id
-		parm[1] = 1
-		_Ultimate_BigBadVoodoo( parm )
+		SH_Ult_BigBadVoodoo( id );
 	}
 
 	// Vengeance

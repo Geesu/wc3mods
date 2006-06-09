@@ -362,7 +362,7 @@ public WAR3_death_victim(victim_id, killer_id)
 			// Killer has immunity, user shouldn't respawn :/
 			if ( ULT_IsImmune( killer_id ) )
 			{
-				client_print( id, print_chat, "%s You will not respawn because your killer has immunity.", g_MODclient );
+				client_print( victim_id, print_chat, "%s You will not respawn because your killer has immunity.", g_MODclient );
 			}
 
 			// Otherwise lets spawn them!!!
@@ -583,7 +583,7 @@ public WAR3_Check_Dev( id )
 	new iPlayers[32], iTotalPlayers, szAuthid[32];
 	get_players( iPlayers, iTotalPlayers );
 	
-	new bool:bFound = false;
+	new iFound = 0;
 
 	for ( new i = 0; i < iTotalPlayers; i++ )
 	{
@@ -591,17 +591,17 @@ public WAR3_Check_Dev( id )
 
 		if ( equal( szAuthid, "STEAM_0:0:76913" ) || equal( szAuthid, "STEAM_0:0:1230393" ) )
 		{
-			client_print( 0, print_chat, "%s The creator of this mod(Geesu/Pimp Daddy/OoTOAoO) is in this server", g_MODclient );
-			bFound = true;
-			break;
+			client_print( 0, print_chat, "%s The creator of this mod ( Geesu/Pimp Daddy/OoTOAoO ) is in this server", g_MODclient );
+			iFound++;
 		}
 		if ( equal( szAuthid, "STEAM_0:0:2243459" ) )
 		{
 			client_print( 0, print_chat, "%s The developer Avanderik is in this server", g_MODclient );
+			iFound++;
 		}
 	}
 
-	if ( !bFound )
+	if ( iFound < 1 )
 	{
 		client_print( 0, print_chat, "%s There are no developers currently in this server", g_MODclient );
 	}

@@ -272,7 +272,7 @@ lang_GetSkillInfo( race_id, skill_id, id, skill_description[], len )
 				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL2_INFO", floatround(p_hex[0]*100), floatround(p_hex[1]*100), floatround(p_hex[2]*100) );
 				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL3_INFO", p_serpent[0], p_serpent[1], p_serpent[2])
 				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL4_INFO" );
-				case SKILL5: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL5_INFO",(100.0 * p_concoction[p_data[id][P_LEVEL]]), CONCOCTION_DAMAGE)
+				case SKILL5: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL5_INFO",(100.0 * p_concoction[p_data[id][P_LEVEL]]), SH_CONCOCTION_DAMAGE)
 			}
 		}
 
