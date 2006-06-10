@@ -5,8 +5,6 @@
 // Initiate the connection to the SQLite database
 SQLITE_Init()
 {
-	iSQLAttempts++;
-
 	new szDB[] = "addons/amxmodx/data/war3ft.db";
 	new szError[256];
 
@@ -301,26 +299,6 @@ SQLITE_Check_Connection()
 	
 	if ( g_DB < SQL_OK )
 	{
-		// Lets try to re-connect in a certain amount of time
-		if ( iSQLAttempts < SQL_ATTEMPTS )
-		{
-			if ( !task_exists( TASK_SETSQL ) )
-			{
-				log_amx( "[SQLITE] Database connection failed, attempting to reconnect in %0.0f seconds", SQL_ATTEMPT_DELAY );
-
-				set_task( SQL_ATTEMPT_DELAY, "SQLITE_Init", TASK_SETSQL );
-			}
-		}
-
-		// We have reached the maximum amount of attempts, lets default to short-term XP
-		else if( iSQLAttempts >= SQL_ATTEMPTS )
-		{
-			set_pcvar_num( CVAR_wc3_save_xp, 0 );
-			set_pcvar_num( CVAR_wc3_save_xp_sql, 0 );
-
-			log_amx( "[SQLITE] Unable to connect to the %s database after %d attempts, switching to short-term mode", g_szDBType, iSQLAttempts )
-		}
-
 		return false;
 	}
 

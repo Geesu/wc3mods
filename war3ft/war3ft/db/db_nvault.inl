@@ -50,7 +50,7 @@ NVAULT_Close()
 NVAULT_Save( id )
 {
 	new szPlayerIP[20], szPlayerName[66], szPlayerID[32];
-	new szKey[128], szData[512];
+	new szKey[128], szData[256];
 	new iRaceID = p_data[id][P_RACE];
 
 	get_user_name(		id, szPlayerName	, 65 );
@@ -58,7 +58,7 @@ NVAULT_Save( id )
 	get_user_authid(	id, szPlayerID		, 31 );
 
 	// Format the data for entry
-	format( szData, 511, "%s %d %d %d %d %d %d %s %d %s", szPlayerID, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE], szPlayerIP, get_systime(), szPlayerName );
+	format( szData, 255, "%s %d %d %d %d %d %d %s %d %s", szPlayerID, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE], szPlayerIP, get_systime(), szPlayerName );
 	
 	// Format the vault key
 	format( szKey, 127, "%s", ( ( get_pcvar_num( CVAR_wc3_save_by ) == DB_SAVEBY_NAME ) ? szPlayerName : ( ( get_pcvar_num( CVAR_wc3_save_by ) == DB_SAVEBY_IP ) ? szPlayerIP : szPlayerID ) ) );
@@ -141,10 +141,50 @@ NVAULT_SetData( id )
 
 NVAULT_Prune()
 {
+	
+	// This time is really "irrelevant", ideally it would be the time the FIRST entry was inserted into the vault, but this works too, since this date is before this was released
+	new iStartTime	= 1149977691;
+	new iEndTime	= get_systime() - ( get_pcvar_num( CVAR_wc3_days_before_delete ) * 86400 );
+	
+	// 86400 = 24 hours * 60 minutes * 60 seconds
+	// so iEndTime = system time in seconds - ( days * hours * minutes * seconds )
 
+	// Cycle through each vault and see if there is a record
+	for ( new i = 1; i <= MAX_RACES; i++ )
+	{
+		// Make sure we have a valid handle
+		if ( g_Vault[i] )
+		{
+			nvault_prune( g_Vault[i], iStartTime, iEndTime );
+		}
+	}
 }
 
 NVAULT_UpdateTimestamp( id )
 {
 
+	new szKey[128], szData[256], iTimestamp;
+	new szPlayerIP[20], szPlayerName[66], szPlayerID[32];
+
+	get_user_name(		id, szPlayerName	, 65 );
+	get_user_ip(		id, szPlayerIP		, 19 );
+	get_user_authid(	id, szPlayerID		, 31 );
+	
+	// Format the vault key
+	format( szKey, 127, "%s", ( ( get_pcvar_num( CVAR_wc3_save_by ) == DB_SAVEBY_NAME ) ? szPlayerName : ( ( get_pcvar_num( CVAR_wc3_save_by ) == DB_SAVEBY_IP ) ? szPlayerIP : szPlayerID ) ) );
+
+	// Cycle through each vault and see if there is a record
+	for ( new i = 1; i <= MAX_RACES; i++ )
+	{
+		// Make sure we have a valid handle
+		if ( g_Vault[i] )
+		{
+			// Get the value
+			if ( nvault_lookup( g_Vault[i], szKey, szData, 255, iTimestamp ) )
+			{
+				// Set it again - this will update the timestamp
+				nvault_set( g_Vault[i], szKey, szData );
+			}
+		}
+	}
 }

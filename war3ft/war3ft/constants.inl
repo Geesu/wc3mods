@@ -445,9 +445,6 @@
 #define DB_MYSQLX			2
 #define DB_SQLITE			3
 
-#define SQL_ATTEMPT_DELAY	15.0
-#define SQL_ATTEMPTS		5
-
 // ***************************************************************************
 //  Start of variables
 // ***************************************************************************
@@ -471,7 +468,6 @@ new Handle:g_DBConn;
 // Generic Database
 new Sql:g_DB;
 new g_DBType				= -1;
-new iSQLAttempts			= 0;
 
 /* Variables for precaching sounds */
 

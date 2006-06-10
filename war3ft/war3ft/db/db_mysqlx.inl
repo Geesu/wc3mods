@@ -5,8 +5,6 @@
 // Initiate the connection to the MySQL database
 MYSQLX_Init()
 {
-	iSQLAttempts++;
-
 	// Determine the database information
 	new szHost[64], szUser[32], szPass[32], szDB[128], szError[256], iErrNum;
 
