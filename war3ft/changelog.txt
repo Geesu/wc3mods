@@ -53,6 +53,7 @@ v3.0
 //remove all task_exists
 //give them some invulnerability when they spawn
 //fix hex playing after ur dead...
+//user can't buy ankh w/reincarnation
 
 //shopmenu 3 ideas:
 // immune to some magic
