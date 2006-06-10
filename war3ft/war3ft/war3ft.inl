@@ -963,11 +963,6 @@ WC3_SetRaceUp( id )
 	{
 		ULT_Icon( id, ICON_SHOW );
 	}
-
-	client_print( id, print_chat, "[DEBUG] Ult Available: %d", ULT_Available( id ) );
-
-	// 1 0 33 0
-	client_print( id, print_chat, "[DEBUG] %d:%d:%d:%d", p_data[id][P_ULTIMATE], p_data_b[id][PB_ULTIMATEUSED], p_data[id][P_ULTIMATEDELAY], g_iUltimateDelay );
 	
 	// See if there are any skills available
 	new iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3];

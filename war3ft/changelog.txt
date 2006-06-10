@@ -50,7 +50,7 @@ v3.0
 //database pruning
 //remove reconnect timer on sql
 //save icon info
-//serpent continue at round end
+//remove all task_exists
 
 //shopmenu 3 ideas:
 // immune to some magic

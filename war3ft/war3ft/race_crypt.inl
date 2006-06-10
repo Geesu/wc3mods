@@ -2,7 +2,9 @@
 *	Race: Crypt Lord Functions
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
-#define ULT_LOCUSTSWARM_DAMAGE			45
+#define LOCUSTSWARM_DMG_MIN				30
+#define LOCUSTSWARM_DMG_MAX				60
+
 
 CL_ULT_LocustSwarm( id )
 {
@@ -96,19 +98,19 @@ public _CL_ULT_LocustEffect( parm[] )
 	
 	// Now we need to calculate where the next funnel will be drawn
 	new vDist[3];
-	vDist[XPOS] = diff( vVictimOrigin[0], vFunnel[0] );
-	vDist[YPOS] = diff( vVictimOrigin[1], vFunnel[1] );
-	vDist[ZPOS] = diff( vVictimOrigin[2], vFunnel[2] );	
+	vDist[XPOS] = CL_HLP_Diff( vVictimOrigin[0], vFunnel[0] );
+	vDist[YPOS] = CL_HLP_Diff( vVictimOrigin[1], vFunnel[1] );
+	vDist[ZPOS] = CL_HLP_Diff( vVictimOrigin[2], vFunnel[2] );	
 	
 	new i;
 	for ( i = 0; i < 3; i++ )
 	{
 		
-		if ( diff( vVictimOrigin[i], vFunnel[i] - MULTIPLIER ) < vDist[i] )
+		if ( CL_HLP_Diff( vVictimOrigin[i], vFunnel[i] - MULTIPLIER ) < vDist[i] )
 		{
 			vFunnel[i] -= MULTIPLIER;
 		}
-		else if ( diff( vVictimOrigin[i], vFunnel[0] + MULTIPLIER ) < vDist[i] )
+		else if ( CL_HLP_Diff( vVictimOrigin[i], vFunnel[0] + MULTIPLIER ) < vDist[i] )
 		{
 			vFunnel[i] += MULTIPLIER;
 		}
@@ -141,12 +143,30 @@ public _CL_ULT_LocustEffect( parm[] )
 	// We're close enough, we can damage them!
 	else
 	{
-		WAR3_damage( iVictim, iAttacker, ULT_LOCUSTSWARM_DAMAGE, CSW_LOCUSTS, -1 );
+		new iDamage = random_num( LOCUSTSWARM_DMG_MIN, LOCUSTSWARM_DMG_MAX );
+
+		WAR3_damage( iVictim, iAttacker, iDamage, CSW_LOCUSTS, -1 );
 
 		emit_sound( iVictim, CHAN_STATIC, SOUND_LOCUSTSWARM, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-		ULT_ResetCooldown( iVictim, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
+		ULT_ResetCooldown( iAttacker, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
+
+		client_print( iAttacker, print_chat, "%s You ulted the enemy for %d damage!", g_MODclient, iDamage );
 	}
 
 	return;
+}
+
+CL_HLP_Diff( iNum, iNum2 )
+{
+	if ( iNum > iNum2 )
+	{
+		return (iNum-iNum2);
+	}
+	else
+	{
+		return (iNum2-iNum);
+	}
+
+	return 0;
 }

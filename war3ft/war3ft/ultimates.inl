@@ -152,11 +152,6 @@ ULT_ClearIcons( id )
 
 ULT_Available( id )
 {
-	// Well this shouldn't really be true now should it ?
-	//if ( p_data[id][P_ULTIMATEDELAY] <= 0 && p_data_b[id][PB_ULTIMATEUSED] )
-	//{
-	//	p_data_b[id][PB_ULTIMATEUSED] = false;
-	//}
 
 	// User needs ult + can't have it used + can't have a delay + can't have a global delay
 	if ( p_data[id][P_ULTIMATE] && !p_data_b[id][PB_ULTIMATEUSED] && p_data[id][P_ULTIMATEDELAY] <= 0 && g_iUltimateDelay <= 0 )

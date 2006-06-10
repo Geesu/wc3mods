@@ -452,6 +452,9 @@
 //  Start of variables
 // ***************************************************************************
 
+// Use this everywhere instead of declaring it in each function (compiles faster)
+new szTmpMsg[2048];
+
 // This keeps track of which races were given "free" XP - we don't want to save this XP to the database
 new bool:g_bGivenLevel10[33][MAX_RACES];	// Stores if we gave them level 10
 

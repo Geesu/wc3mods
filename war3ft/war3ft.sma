@@ -73,6 +73,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/cvar.inl"
 
 
+
 #include "war3ft/race_undead.inl"           // Undead Scourge   - 1
 #include "war3ft/race_human.inl"			// Human Alliance	- 2
 #include "war3ft/race_orc.inl"				// Orcish Horde		- 3
@@ -82,6 +83,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/race_warden.inl"           // Warden           - 7
 #include "war3ft/race_crypt.inl"			// Crypt Lord       - 8
 #include "war3ft/race_chameleon.inl"		// Chameleon		- 9
+
 
 #include "war3ft/effects.inl"
 #include "war3ft/XP.inl"

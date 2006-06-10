@@ -1,11 +1,3 @@
-stock diff(num,num2){
-	if(num>num2)
-		return (num-num2)
-	else
-		return (num2-num)
-	return 0
-}
-
 stock find_target(id,const arg[]) {
 new player = find_player("bl",arg)
 if(player){

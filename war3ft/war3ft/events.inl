@@ -1154,5 +1154,5 @@ EVENT_JustBeforeSpawn( id )
 	SHARED_CopySavedWeapons( id );
 
 	// Remove any serpant wards
-	( task_exists( TASK_LIGHT + id ) ) ? remove_task( TASK_LIGHT + id ) ? 0;
+	( task_exists( TASK_LIGHT + id ) ) ? remove_task( TASK_LIGHT + id ) : 0;
 }
