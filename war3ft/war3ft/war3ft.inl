@@ -169,8 +169,9 @@ public WAR3_damage(victim,attacker,damage, weapon, bodypart){	// one who is atta
 	if(!is_user_alive(victim))
 		return PLUGIN_CONTINUE
 	
-	if( p_data_b[victim][PB_WARDENBLINK] && (weapon == CSW_LIGHTNING || weapon == CSW_SUICIDE || weapon == CSW_IMMOLATE || weapon == CSW_LOCUSTS))
-		return PLUGIN_CONTINUE
+	// In theory this isn't necessary b/c the checks before this function are called shouldn't allow it
+	//if( p_data_b[victim][PB_WARDENBLINK] && (weapon == CSW_LIGHTNING || weapon == CSW_SUICIDE || weapon == CSW_IMMOLATE || weapon == CSW_LOCUSTS))
+	//	return PLUGIN_CONTINUE
 
 	// Warden's Hardened Skin
 	if( Verify_Race(victim, RACE_WARDEN) ){

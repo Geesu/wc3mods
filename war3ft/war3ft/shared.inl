@@ -252,15 +252,29 @@ public _SHARED_Spawn( id )
 {
 
 	id -= TASK_SPAWN;
-
+	
 	// Spawning doesn't work in DOD
 	if ( g_MOD == GAME_DOD )
 	{
 		return;
 	}
 
-	if( !p_data_b[id][PB_ISCONNECTED] || !SHARED_IsOnTeam( id ) )
+	// User is no longer connected or is not on a team
+	if ( !p_data_b[id][PB_ISCONNECTED] || !SHARED_IsOnTeam( id ) )
 	{
+		return;
+	}
+
+	// Round has ended, lets give money back if they bought a scroll
+	if ( g_EndRound )
+	{
+		if ( p_data[id][P_RESPAWNBY] == RESPAWN_ITEM )
+		{
+			client_print( id, print_chat, "%s Unable to respawn, the round is over, here is your money back", g_MODclient );
+
+			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + itemcost[ITEM_SCROLL] );
+		}
+
 		return;
 	}
 
@@ -271,8 +285,6 @@ public _SHARED_Spawn( id )
 	{
 		return;
 	}
-
-	p_data_b[id][PB_PLAYERSPAWNED] = true;
 
 	// Spawn the player
 	spawn( id );

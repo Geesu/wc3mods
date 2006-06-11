@@ -79,6 +79,8 @@ public _CL_ULT_LocustEffect( parm[] )
 	{
 		client_print( iAttacker, print_chat, "%s Target is no longer targetable, try casting again!", g_MODclient );
 
+		p_data[iAttacker][P_ULTIMATEDELAY] = 0;
+
 		Ultimate_Ready( iAttacker );
 
 		return;

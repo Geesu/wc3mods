@@ -466,7 +466,7 @@ public ITEM_CanBuyItem( id, iItemID, iShopmenuID )
 	else if ( iShopmenuID == SHOPMENU_TWO )
 	{
 		// Cannot only purchase mole when dead
-		if ( !is_user_alive(id) && iItemID != ITEM_MOLE )
+		if ( !is_user_alive(id) && ( iItemID != ITEM_MOLE && iItemID != ITEM_SCROLL ) )
 		{
 			client_print( id, print_center, "%L", id, "NOT_PURCHASE_WHEN_DEAD" );
 
@@ -500,7 +500,7 @@ public ITEM_CanBuyItem( id, iItemID, iShopmenuID )
 		// Counter-Strike and Condition Zero only check
 		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 		{
-			if ( iItemID == ITEM_SCROLL && endround )
+			if ( iItemID == ITEM_SCROLL && g_EndRound )
 			{
 				client_print( id, print_center, "%L", id, "NOT_PURCHASE_AFTER_ENDROUND" );
 

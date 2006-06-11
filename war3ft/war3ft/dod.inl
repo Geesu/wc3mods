@@ -66,7 +66,7 @@ public EVENT_DOD_EndRound(){
 		return PLUGIN_CONTINUE;
 	
 	// The round has ended
-	endround = true;
+	g_EndRound = true;
 
 	// Allies = 3, Axis = 4
 	new winner = read_data(1);

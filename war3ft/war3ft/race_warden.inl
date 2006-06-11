@@ -19,7 +19,7 @@ WA_ULT_Vengeance( id )
 	{
 
 		// Make sure the user isn't changing teams and we're not at the end of the round
-		if ( !p_data_b[id][PB_CHANGINGTEAM] && !endround && !p_data[id][P_RESPAWNBY] )
+		if ( !p_data[id][P_RESPAWNBY] )
 		{
 
 			// Remove the ultimate delay if it existed (in theory it shouldn't)
@@ -104,6 +104,8 @@ WA_ULT_Vengeance( id )
 WA_Blink( id )
 {
 	
+	p_data_b[id][PB_WARDENBLINK] = false;
+
 	// User has the ability, lets initiate a "check"
 	if ( Verify_Skill( id, RACE_WARDEN, SKILL2 ) )
 	{
@@ -113,16 +115,6 @@ WA_Blink( id )
 			p_data_b[id][PB_WARDENBLINK] = true;
 			client_print( id, print_chat, "%s You will now be immune to all ultimates.", g_MODclient );
 		}
-		else
-		{
-			p_data_b[id][PB_WARDENBLINK] = false;
-		}
-	}
-
-	// User doesn't have the ability so why give them blink?  duh!
-	else
-	{
-		p_data_b[id][PB_WARDENBLINK] = false;
 	}
 }
 

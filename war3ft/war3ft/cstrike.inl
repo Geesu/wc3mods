@@ -40,7 +40,7 @@ public on_EndRound(){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-	endround = true;
+	g_EndRound = true;
 
 	//set_task( 4.9, "_EVENT_Before_ResetHUD", TASK_BEFORE_ROUND_START );
 

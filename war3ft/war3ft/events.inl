@@ -304,7 +304,7 @@ public on_ResetHud(id)
 	}
 	
 	// Then this is the first call of the new round
-	if ( endround )
+	if ( g_EndRound )
 	{
 		EVENT_NewRound();
 	}
@@ -391,6 +391,16 @@ public EVENT_PlayerInitialSpawn( id )
 	// Warden's Blink
 	WA_Blink( id );
 
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		// Should the user mole from fan of knives or an item?
+		if ( g_ItemLastOwned[1][id] == ITEM_MOLE || ( Verify_Skill(id, RACE_WARDEN, SKILL1) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
+		{
+			set_task( 0.1, "_SHARED_Mole", TASK_MOLE + id );
+		}
+	}
+
+
 	return;
 }
 
@@ -411,9 +421,6 @@ public EVENT_PlayerSpawned( id )
 	
 	// User should not be burning
 	p_data_b[id][PB_ISBURNING]		= false;
-
-	// Reset Blink
-	p_data_b[id][PB_WARDENBLINK]	= false;
 
 	// We only want to do this here for DOD
 	if ( g_MOD == GAME_DOD )
@@ -472,17 +479,17 @@ public EVENT_PlayerSpawned( id )
 				SHARED_DOD_Reincarnation( id );
 			}
 		}
+
+		// Should the user mole from fan of knives or an item?
+		if ( g_ItemLastOwned[1][id] == ITEM_MOLE || ( Verify_Skill(id, RACE_WARDEN, SKILL1) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
+		{
+			set_task( 0.1, "_SHARED_Mole", TASK_MOLE + id );
+		}
 	}
 
 	// Check the user's items to see if something should be done
 	//ITEM_Check( id );
 	
-	// Should the user mole from fan of knives or an item?
-	if ( g_ItemLastOwned[1][id] == ITEM_MOLE || ( Verify_Skill(id, RACE_WARDEN, SKILL1) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
-	{
-		set_task( 0.1, "_SHARED_Mole", TASK_MOLE + id );
-	}
-
 
 	// If the user is a bot they should have a chance to buy an item
 	if ( is_user_bot( id ) )
@@ -538,7 +545,7 @@ public EVENT_NewRound()
 		g_bombDefuser		= 0;
 	}
 
-	endround = false;
+	g_EndRound = false;
 }
 
 // Called when a user looks somewhere

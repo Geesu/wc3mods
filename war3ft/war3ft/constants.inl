@@ -383,7 +383,7 @@
 
 	// Used by various ultimates/abilities
 	#define PB_GIVEITEMS			10		// Tells weapon controller function to give the player his items after respawning
-	#define PB_PLAYERSPAWNED		11		// Did the player respawn from a skill/item?
+//	#define PB_PLAYERSPAWNED		11		// Did the player respawn from a skill/item?
 //	#define PB_SPAWNEDFROMITEM		12		// Did the player spawn from an item/teammate ability? (used to determine the health to give the player after they spawn)
 	#define PB_NADEJUSTRECEIVED		13		// Used with flaming gloves... (removable?)
 //	#define PB_BLINKDELAYED			14		// Used to determine if the blink ability should be delayed (change this so its not [33])
@@ -610,7 +610,7 @@ new g_DBTableName[64]
 new g_MODclient[15] = "* [WAR3FT]"
 
 new bool:warcraft3 = true
-new bool:endround
+new bool:g_EndRound
 
 
 new g_PlayerWeapons[33][32];			// Stores player weapons after they have been purchased
