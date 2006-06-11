@@ -458,6 +458,12 @@ public EVENT_PlayerSpawned( id )
 		
 		// If we need to give the user their weapons back, then lets
 		SHARED_CS_Reincarnation( id );
+
+		// If the user's ultimate is ready, lets show their icon!
+		if ( ULT_Available( id ) )
+		{
+			Ultimate_Ready( id );
+		}
 	}
 
 	// Check for Day of Defeat
