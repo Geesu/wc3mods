@@ -5,10 +5,8 @@
 public menu_Shopmenu_One( id )
 {
 
-	if ( !warcraft3 || !ITEM_CanBuy( id ) )
-	{
-		return;
-	}
+	if ( !WAR3_Check() || !ITEM_CanBuy( id ) )
+		return PLUGIN_HANDLED;
 
 	new pos = 0;
 	new keys = (1<<9);
@@ -17,11 +15,11 @@ public menu_Shopmenu_One( id )
 
 	pos += format( menu_body[pos], 511-pos, "%L", id, "MENU_BUY_ITEM" );
 	
-	for( new i = 0; i < 9; i++ )
+	for( new i = 0; i < MAX_PAGE_ITEMS; i++ )
 	{
 		lang_GetItemName( i + 1, id, item_name[i], 63, 1 );
 
-		pos += format( menu_body[pos], 511-pos, "\w%d. %s\y\R%d^n", i+1, item_name[i], itemcost[i] );
+		pos += format( menu_body[pos], 511-pos, "\w%d. %s\y\R%d^n", i+1, item_name[i], ITEM_COST[i] );
 		keys |= (1<<i);
 	}
 
@@ -29,56 +27,21 @@ public menu_Shopmenu_One( id )
 
 	show_menu( id, keys, menu_body, -1 );
 
-	return;
+	return PLUGIN_HANDLED;
 }
 
-public _menu_Shopmenu_One(id, key){
+public _menu_Shopmenu_One( id, iKey )
+{
+	if ( !WAR3_Check() || iKey == 9 )
+		return PLUGIN_HANDLED;
 
-	if ( !warcraft3 || key == 9 )
-	{
-		return;
-	}
+	if ( iKey == ITEM_TOME )
+		ITEM_Tome( id );
 
-	new iShopItem = key + 1;
-	
-	// Check if the user is permitted to buy the item
-	if ( !ITEM_CanBuyItem( id, iShopItem, SHOPMENU_ONE ) )
-	{
-		return;
-	}
-	
-	// This needs to be in here since we don't actually SET the item to a tome
-	if ( iShopItem == ITEM_TOME )
-	{
-		new iXP = get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]];
-	
-		// Give extra XP if its Day of Defeat
-		if ( g_MOD == GAME_DOD )
-		{
-			iXP *= 2;
-		}
-
-		XP_give( id, iXP );
-
-		emit_sound( id, CHAN_STATIC, "warcraft3/Tomes.wav", 1.0, ATTN_NORM, 0, PITCH_NORM );
-	}
-
-	// We only want to set the item and play the pickup sound if its not a tome
 	else
-	{
-		emit_sound( id, CHAN_STATIC, SOUND_PICKUPITEM, 1.0, ATTN_NORM, 0, PITCH_NORM );
+		ITEM_Buy( id, iKey );
 
-		// Give the item bonuses
-		ITEM_Set( id, iShopItem, SHOPMENU_ONE );
-	}
-
-	// Display a message regarding what the item does
-	Item_Message( id, iShopItem, SHOPMENU_ONE )
-	
-	// Remove the money for the item
-	SHARED_SetUserMoney( id, SHARED_GetUserMoney(id) - itemcost[key], 1 );
-
-	return;
+	return PLUGIN_HANDLED;
 }
 
 
@@ -86,13 +49,11 @@ public _menu_Shopmenu_One(id, key){
 // Shopmenu Two
 // **************************************************
 
-public menu_Shopmenu_Two(id)
+public menu_Shopmenu_Two( id )
 {
 
-	if ( !warcraft3 || get_pcvar_num( CVAR_wc3_races ) < 5 || !ITEM_CanBuy( id ) )
-	{
-		return;
-	}
+	if ( !WAR3_Check() || get_pcvar_num( CVAR_wc3_races ) < 5 || !ITEM_CanBuy( id ) )
+		return PLUGIN_HANDLED;
 
 	new pos = 0;
 	new keys = (1<<9);
@@ -101,17 +62,19 @@ public menu_Shopmenu_Two(id)
 
 	pos += format( menu_body[pos], 511-pos, "%L", id, "MENU_BUY_ITEM2" );
 
-	for( new i = 0; i < 9; i++ )
+	for( new i = 0; i < MAX_PAGE_ITEMS; i++ )
 	{
 		lang_GetItemName( i+1, id, item_name2[i], ITEM_NAME_LENGTH_F, 2 );
+
+		new iItem = MAX_PAGE_ITEMS + i;
 	
-		if ( g_MOD == GAME_DOD && ( i == ITEM_CHAMELEON - 1 || i == ITEM_SCROLL - 1 ) )
+		if ( g_MOD == GAME_DOD && ( iItem == ITEM_CHAMELEON  || iItem == ITEM_SCROLL ) )
 		{
-			pos += format( menu_body[pos], 511-pos, "\d%d. %s\y\R%d^n", i+1, item_name2[i], itemcost2[i] );
+			pos += format( menu_body[pos], 511-pos, "\d%d. %s\y\R%d^n", i+1, item_name2[i], ITEM_COST[iItem] );
 		}
 		else
 		{
-			pos += format( menu_body[pos], 511-pos, "\w%d. %s\y\R%d^n", i+1, item_name2[i], itemcost2[i] );
+			pos += format( menu_body[pos], 511-pos, "\w%d. %s\y\R%d^n", i+1, item_name2[i], ITEM_COST[iItem] );
 			keys |= (1<<i);
 		}
 	}
@@ -120,38 +83,17 @@ public menu_Shopmenu_Two(id)
 
 	show_menu( id, keys, menu_body, -1 );
 	
-	return;
+	return PLUGIN_HANDLED;
 }
 
-public _menu_Shopmenu_Two(id, key)
+public _menu_Shopmenu_Two( id, iKey )
 {
+	if ( !WAR3_Check() || iKey == 9 )
+		return PLUGIN_HANDLED;
 
-	if ( !warcraft3 || key == 9 )
-	{
-		return;
-	}
+	ITEM_Buy( id, iKey );
 
-	new iShopItem = key + 1;
-	
-	// Check if the user is permitted to buy the item
-	if ( !ITEM_CanBuyItem( id, iShopItem, SHOPMENU_TWO ) )
-	{
-		return;
-	}
-
-	// Give the item bonuses
-	ITEM_Set( id, iShopItem, SHOPMENU_TWO );
-	
-	// Display a message regarding what the item does
-	Item_Message( id, iShopItem, SHOPMENU_TWO );
-
-	// Remove the money for the item
-	SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) - itemcost2[key], 1 );
-
-	// Play the item pickup sound
-	emit_sound( id, CHAN_STATIC, SOUND_PICKUPITEM, 1.0, ATTN_NORM, 0, PITCH_NORM );
-
-	return;
+	return PLUGIN_HANDLED;
 }
 
 public menu_Select_Skill(id,saychat){

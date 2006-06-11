@@ -193,25 +193,32 @@
 #define RACE_CRYPT				8
 #define RACE_CHAMELEON			9
 
-#define ITEM_ANKH		1
-#define ITEM_BOOTS		2
-#define ITEM_CLAWS		3
-#define ITEM_CLOAK		4
-#define ITEM_MASK		5
-#define ITEM_NECKLACE	6
-#define ITEM_FROST		7
-#define ITEM_HEALTH		8
-#define ITEM_TOME		9
+// Item Defines
+#define MAX_SHOPMENU_ITEMS  18
+#define MAX_PLAYER_ITEMS    2
+#define MAX_PAGE_ITEMS      9
+#define ITEM_SLOT_ONE       0
+#define ITEM_SLOT_TWO       1
 
-#define ITEM_SCROLL		1
-#define ITEM_PROTECTANT 2
-#define ITEM_HELM		3
-#define ITEM_AMULET		4
-#define ITEM_SOCK		5
-#define ITEM_GLOVES		6
-#define ITEM_RING		7
-#define ITEM_CHAMELEON	8
-#define ITEM_MOLE		9
+#define ITEM_NONE          -1
+#define ITEM_ANKH		    0
+#define ITEM_BOOTS		    1
+#define ITEM_CLAWS		    2
+#define ITEM_CLOAK		    3
+#define ITEM_MASK		    4
+#define ITEM_NECKLACE	    5
+#define ITEM_FROST		    6
+#define ITEM_HEALTH		    7
+#define ITEM_TOME		    8
+#define ITEM_SCROLL		    9
+#define ITEM_PROTECTANT     10
+#define ITEM_HELM		    11
+#define ITEM_AMULET		    12
+#define ITEM_SOCK		    13
+#define ITEM_GLOVES		    14
+#define ITEM_RING		    15
+#define ITEM_CHAMELEON	    16
+#define ITEM_MOLE		    17
 
 // team ids 
 #define UNASSIGNED 0 
@@ -506,10 +513,6 @@ new g_ChamSkills[5] = {0,1,1,1,1}		// the value is what race that skill should b
 new p_data[33][P_LAST]					// Contains player data
 new bool:p_data_b[33][PB_LAST]			// Contains player data of type boolean
 
-// Variables for items
-new g_ItemOnDeath[2][33];
-new g_ItemLastOwned[2][33];
-
 
 #if ADVANCED_STATS
 	new iStatsHead[33][MAX_CSW_S]
@@ -618,6 +621,20 @@ new g_PlayerLastWeapons[33][32];		// Stores player weapons after they have been 
 
 new g_MOD = 0;
 
+// Variables for items
+new g_iShopMenuItems[33][MAX_PLAYER_ITEMS];
+new g_iMultipleItems[33][2];
+new g_ItemOnDeath[2][33];
+new g_ItemLastOwned[2][33];
+
+#if MOD == 0
+	new const ITEM_COST[MAX_SHOPMENU_ITEMS] = {1500,2500,1000,800,2000,800,2000,1000,4000,7500,1500,1500,1500,1500,1750,1000,9000,16000};
+#endif
+
+#if MOD == 1
+	new const ITEM_COST[MAX_SHOPMENU_ITEMS] = {1500,2500,1000,800,2000,800,2000,1000,4000,800,1500,550,1500,1500,1750,1000,9000,16000};
+#endif
+
 // Constants for Abilities
 new const Float:p_vampiric[3] =			{0.10,0.20,0.30}		// Vampiric Aura			(skill 1)
 #if MOD == 0
@@ -667,13 +684,5 @@ new xplevel[11] =						{0,150,300,600,1000,1500,2100,2800,3400,4500,5500}
 new xpgiven[11] =						{10,15,25,35,40,50,60,70,80,90,95}
 
 new Float:weaponxpmultiplier[62] =		{1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0}
-
-new const itemcost[9] =					{1500,2500,1000,800,2000,800,2000,1000,4000}
-#if MOD == 0
-	new const itemcost2[9] =				{7500,1500,1500,1500,1500,1750,1000,9000,16000}
-#endif
-#if MOD == 1
-	new const itemcost2[9] =				{800,1500,550,1500,1500,1750,1000,9000,16000}
-#endif
 
 new MOTD_header[] = "<html><head><LINK REL=^"StyleSheet^" HREF=^"wc3.css^" TYPE=^"text/css^"></head><body>";

@@ -7,6 +7,16 @@ public grenade_throw( index, greindex, wId )
 		return;
 	}
 
+	if ( ITEM_Has( index, ITEM_GLOVES ) )
+	{
+		new iParm[1];
+		iParm[0] = index;
+
+		new iTimer = get_pcvar_num( CVAR_wc3_glove_timer );
+
+		set_task( float( iTimer ), "ITEM_Glove_Give", TASK_ITEM_GLOVES + index, iParm, 1 );
+	}
+
 	// Make sure the user has the skill and we actually have a grenade index
 	if ( greindex && Verify_Skill( index, RACE_ORC, SKILL2 ) )
 	{
@@ -232,8 +242,6 @@ public on_CurWeapon(id) {
 	
 	SHARED_SaveWeapons( id );
 
-	ITEM_Glove_Check( id );
-
 	#if MOD == 1
 		new clipamount = 0, ammoamount = 0, weaponnum = 0
 		weaponnum = get_user_weapon(id,clipamount,ammoamount)
@@ -409,9 +417,6 @@ public EVENT_PlayerSpawned( id )
 {
 	// Find out if they need to choose a race or select a skill
 	set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + id );
-	
-	// Check to see if they should still have some items that they lost b/c of respawning (i.e. ankh + respawn scroll)
-	ITEM_GiveItemBackFromDeath( id );
 
 	// User isn't changing a team if they just spawned
 	p_data_b[id][PB_CHANGINGTEAM]	= false;
@@ -661,13 +666,6 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 // Function called right before the user spawns
 EVENT_JustBeforeSpawn( id )
 {
-	
-	// Save the items the user had from the previous round
-	ITEM_Save( id );
-
-	// Remove the user's items
-	ITEM_ResetCurrent( id );
-
 	// Reset all ultimates
 	ULT_Reset( id );
 

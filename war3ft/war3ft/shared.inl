@@ -272,7 +272,7 @@ public _SHARED_Spawn( id )
 		{
 			client_print( id, print_chat, "%s Unable to respawn, the round is over, here is your money back", g_MODclient );
 
-			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + itemcost[ITEM_SCROLL] );
+			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + ITEM_COST[ITEM_SCROLL] );
 		}
 
 		return;
@@ -995,7 +995,7 @@ public _SHARED_Mole( id )
 		// Moving b/c of item
 		if ( g_ItemLastOwned[0][id] == ITEM_MOLE )
 		{
-			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + itemcost2[8], 1 );
+			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + ITEM_COST[ITEM_MOLE], 1 );
 
 			client_print( id, print_chat, "%s %L", g_MODclient, id, "NO_SPOT_MOLE_MONEY" );
 		}

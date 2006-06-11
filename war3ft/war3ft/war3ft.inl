@@ -259,8 +259,6 @@ public WAR3_death_victim(victim_id, killer_id)
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 	
-	// Save the user's items (stored in items on death variable)
-	ITEM_SaveOnDeath( victim_id );
 
 	// Reset the "about to spawn" variable
 	p_data[victim_id][P_RESPAWNBY] = 0;
@@ -375,7 +373,11 @@ public WAR3_death_victim(victim_id, killer_id)
 	}
 
 	// The user just died, remove all items
-	ITEM_RemoveEffects( victim_id );
+	if ( g_iShopMenuItems[victim_id][ITEM_SLOT_ONE] > ITEM_NONE )
+		ITEM_Remove( victim_id, g_iShopMenuItems[victim_id][ITEM_SLOT_ONE], ITEM_SLOT_ONE );
+
+	if ( g_iShopMenuItems[victim_id][ITEM_SLOT_TWO] > ITEM_NONE )
+		ITEM_Remove( victim_id, g_iShopMenuItems[victim_id][ITEM_SLOT_TWO], ITEM_SLOT_TWO );
 
 	set_task( 1.0, "WC3_GetUserInput", TASK_GETINPUT + victim_id );
 
@@ -991,8 +993,8 @@ WC3_ShowBar( id )
 	new szRaceName[64], szShortRaceName[32], szItemName[32], szItemName2[32];
 
 	// Get the item and race names
-	lang_GetItemName( p_data[id][P_ITEM]	, id, szItemName	, 31, 1, true );
-	lang_GetItemName( p_data[id][P_ITEM2]	, id, szItemName2	, 31, 2, true );
+	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_ONE], id, szItemName, 31, 1, true );
+	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_TWO], id, szItemName2, 31, 2, true );
 	lang_GetRaceName( p_data[id][P_RACE], id, szRaceName, 63 );
 	lang_GetRaceName( p_data[id][P_RACE], id, szShortRaceName, 31, true );
 	
