@@ -602,3 +602,25 @@ public check_cvars(id, const cvar[], const value[])
 		server_cmd("kick #%d ^"cl_minmodels 1 is not allowed on this server^"", get_user_userid(id));
 	} 
 } 
+
+public on_Damage( iVictim )
+{
+
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+	
+	if ( !SHARED_ValidPlayer( iVictim ) )
+	{
+		return;
+	}
+	
+	new iWeapon, iHitPlace, iAttacker;
+	new iDamage = read_data( 2 );
+	iAttacker = get_user_attacker( iVictim, iWeapon, iHitPlace );
+
+	EVENT_Damage( iVictim, iAttacker, iDamage, iWeapon, iHitPlace );
+
+	return;
+}

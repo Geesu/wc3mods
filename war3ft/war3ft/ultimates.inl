@@ -30,8 +30,6 @@ public _ULT_Delay()
 		// Reduce the user's ultimate delay
 		p_data[id][P_ULTIMATEDELAY]--;
 
-		client_print( id, print_console, "[DEBUG] Timer Decremented: %d (%d)", p_data[id][P_ULTIMATEDELAY], g_iUltimateDelay );
-
 		// Then the user's ultimate is ready
 		if ( p_data[id][P_ULTIMATEDELAY] <= 0 && p_data_b[id][PB_ULTIMATEUSED] )
 		{
@@ -51,8 +49,6 @@ ULT_ResetCooldown( id, iTime, iHideIcon = true )
 	{
 		ULT_Icon( id, ICON_HIDE );
 	}
-
-	client_print( id, print_chat, "[DEBUG] Your ultimate will be ready in %d second(s)", iTime );
 }
 
 Ultimate_Ready( id )
@@ -83,6 +79,12 @@ Ultimate_Ready( id )
 // This function will display/flash/hide the race's ultimate icon on the screen
 ULT_Icon( id, flag )
 {
+	
+	// DOD does not support ultimate icons :/
+	if ( g_MOD == GAME_DOD )
+	{
+		return;
+	}
 
 	new iRaceID = p_data[id][P_RACE];
 	
@@ -129,7 +131,6 @@ ULT_Icon( id, flag )
 			}
 		}
 
-			
 		// Create the status icon
 		Create_StatusIcon( id, flag, g_UltimateIcons[iRaceID - 1], r, g, b );
 	}

@@ -157,44 +157,65 @@ NE_Evasion( id, iHitZone )
 	// Check to see if they should evade the next shot?
 	if ( random_float( 0.0, 1.0 ) <= p_evasion[p_data[id][P_SKILL1]-1] )
 	{
-		if ( iglow[id][2] < 1 )
-		{
-			new parm[2];
-			parm[0] = id;
-			set_task( 0.01, "glow_change", TASK_GLOW + id, parm, 2 );
-		}
+
+		new iGlowIntensity = random_num( 20, 50 );
 		
 		// Head shot
 		if ( iHitZone & (1 << HITGROUP_HEAD) )
 		{
-			iglow[id][2] += 250;
+			iGlowIntensity += 250;
 		}
 
 		// Chest
 		else if ( iHitZone & (1 << HITGROUP_CHEST) )
 		{
-			iglow[id][2] += 75;
+			iGlowIntensity += 75;
 		}
+		
+		// Make the user glow!
+		SHARED_Glow( id, 0, 0, iGlowIntensity, 0 );
 
-		// All other Hit places
-		else
-		{
-			iglow[id][2] += random_num( 20, 50 );
-		}
-
-		iglow[id][0] = 0;
-		iglow[id][1] = 0;
-		iglow[id][3] = 0;
-
-		if ( iglow[id][2] > MAXGLOW )
-		{
-			iglow[id][2] = MAXGLOW;
-		}
-
-		Create_ScreenFade( id, (1<<10), (1<<10), (1<<12), 0, 0, 255, iglow[id][2] );
+		Create_ScreenFade( id, (1<<10), (1<<10), (1<<12), 0, 0, 255, g_GlowLevel[id][2] );
 
 		return 1;
 	}
 
 	return 0;
+}
+
+NE_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
+{
+
+	// Trueshot Aura
+	if ( Verify_Skill( iAttacker, RACE_ELF, SKILL3 ) )
+	{
+		new iTempDamage = floatround( float( iDamage ) * p_trueshot[p_data[iAttacker][P_SKILL3]-1] );
+		
+		// Damage the user
+		WAR3_damage( iVictim, iAttacker, iTempDamage, iWeapon, iHitPlace );
+
+		// Make the user glow!
+		SHARED_Glow( iVictim, ( 2 * iTempDamage ), 0, 0, 0 );
+
+		// Create a screen fade
+		Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 255, 0, 0, iTempDamage );
+	}
+}
+
+NE_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace )
+{
+	// Thorns Aura ( attacker could be dead... i.e. nade )
+	if ( Verify_Skill( iVictim, RACE_ELF, SKILL2 ) && is_user_alive( iAttacker ) )
+	{
+		new iAdditionalDamage = floatround( float( iDamage ) * p_thorns[p_data[iVictim][P_SKILL2]-1] );
+		
+		// Damage the user
+		WAR3_damage( iAttacker, iVictim, iAdditionalDamage, CSW_THORNS, iHitPlace );
+
+		// Make the user glow!
+		SHARED_Glow( iAttacker, ( 3 * iAdditionalDamage ), 0, 0, 0 );
+		
+		// Create a screen fade
+		Create_ScreenFade( iAttacker, (1<<10), (1<<10), (1<<12), 0, 0, 255, iAdditionalDamage )
+	}
 }

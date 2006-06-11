@@ -6,7 +6,7 @@
 
 #define TASK_ITEMS			0		// Showing items in the HUD
 #define TASK_SPAWN			32		// Respawning from revive
-//#define TASK_ITEM_SCROLL	64		// Respawning after death from an item
+#define TASK_IMPALE			64		// Crypt Lord's Impale
 //#define TASK_VENGEANCE		96		// Respawning from having vengeance (warden ultimate)
 //#define TASK_SETXP			128		// Sets the XP
 #define TASK_EXPLOSION		160		// From Suicide Bomber
@@ -124,12 +124,9 @@
 #define SHORT_ITEM_NAME_LENGTH 32
 #define SHORT_ITEM_NAME_LENGTH_F 31
 
-#define MAXGLOW					150
 #define TELEPORT_RADIUS			50
 #define LIGHTNING_RANGE			500
 #define ORB_DAMAGE				20			// Damage done by Orb of Annihilation
-#define CRITICAL_STRIKE_CHANCE	0.15		// 15% chance of Critical Strike working
-#define SKILL_EVASION_ADJ		1024		// The amount of health that is given/taken for evasion
 
 // CS AmmoX Types
 #define AMMOX_338MAGNUM			1     // AWP
@@ -455,6 +452,8 @@ new szTmpMsg[2048];
 // This keeps track of which races were given "free" XP - we don't want to save this XP to the database
 new bool:g_bGivenLevel10[33][MAX_RACES];	// Stores if we gave them level 10
 
+new g_GlowLevel[33][4];
+
 // Database variables
 
 new g_Vault[MAX_RACES+1];
@@ -610,7 +609,6 @@ new g_DBTableName[64]
 
 new g_MODclient[15] = "* [WAR3FT]"
 
-new iglow[33][4]
 new bool:warcraft3 = true
 new bool:endround
 

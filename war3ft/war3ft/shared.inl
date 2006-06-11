@@ -89,32 +89,43 @@ public SHARED_IsHoldingKnife( id )
 }
 
 // Function returns true if the user has a grenade in his inventory
-public SHARED_HasGrenade( id )
+SHARED_HasGrenade( id )
 {
 	new i, bool:bNadeFound = false;
 	
 	// Loop through all weapons and search for a grenade
 	while ( g_PlayerWeapons[id][i] && !bNadeFound )
 	{
-		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		if ( SHARED_IsGrenade( g_PlayerWeapons[id][i] ) )
 		{
-			if ( g_PlayerWeapons[id][i] == CSW_HEGRENADE )
-			{
-				bNadeFound = true;
-			}
-		}
-		else if ( g_MOD == GAME_DOD )
-		{
-			if ( g_PlayerWeapons[id][i] == DODW_HANDGRENADE || g_PlayerWeapons[id][i] == DODW_STICKGRENADE )
-			{
-				bNadeFound = true;
-			}
+			bNadeFound = true;
+			break;
 		}
 
 		i++;
 	}
 
 	return bNadeFound;
+}
+
+bool:SHARED_IsGrenade( iWeapon )
+{
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		if ( iWeapon == CSW_HEGRENADE )
+		{
+			return true;
+		}
+	}
+	else if ( g_MOD == GAME_DOD )
+	{
+		if ( iWeapon == DODW_HANDGRENADE || iWeapon == DODW_STICKGRENADE )
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 // Function checks to see if the weapon id is a primary weapon (used with Night Elf's Entangle)
@@ -292,12 +303,6 @@ public _SHARED_Spawn_Final( id )
 	// If we don't give them a suit then they won't have a HUD
 	give_item( id, "item_suit" );
 	
-	// Check for Counter-Strike or Condition Zero
-	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-	{
-		give_item( id, "weapon_knife" );
-	}
-
 	// Vengeance Check
 	if ( p_data[id][P_RESPAWNBY] == RESPAWN_VENGEANCE )
 	{
@@ -336,23 +341,11 @@ public SHARED_DOD_Reincarnation( id )
 
 		client_cmd( id, "speak %s", SOUND_REINCARNATION );
 
-		if ( iglow[id][1] < 1 )
-		{
-			new parm[2];
-			parm[0] = id;
-			set_task( 0.1, "glow_change", TASK_GLOW + id, parm, 2 );
-		} 
-		iglow[id][1] += 100;
-		iglow[id][0] = 0;
-		iglow[id][2] = 0;
-		iglow[id][3] = 0;
-		if ( iglow[id][1] > MAXGLOW )
-		{
-			iglow[id][1] = MAXGLOW;
-		}
+		// Make the user glow!
+		SHARED_Glow( id, 0, 100, 0, 0 );
 
 		// Screen fade green
-		Create_ScreenFade( id, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[id][1] );
+		Create_ScreenFade( id, (1<<10), (1<<10), (1<<12), 0, 255, 0, g_GlowLevel[id][1] );
 
 		iReincarnation[id][ZPOS] += 30;
 
@@ -477,23 +470,9 @@ public SHARED_CS_Reincarnation( id )
 	if ( bGiveWeapons )
 	{
 		client_cmd( id, "speak %s", SOUND_REINCARNATION );
-
-		if ( iglow[id][1] < 1 )
-		{
-			new parm[2];
-			parm[0] = id;
-			set_task( 0.1, "glow_change", TASK_GLOW + id, parm, 2 );
-		}
-
-		iglow[id][1] += 100;
-		iglow[id][0] = 0;
-		iglow[id][2] = 0;
-		iglow[id][3] = 0;
-
-		if (iglow[id][1]>MAXGLOW)
-		{
-			iglow[id][1]=MAXGLOW;
-		}
+		
+		// Make the user glow!
+		SHARED_Glow( id, 0, 100, 0, 0 );
 
 		// Screen fade green
 		Create_ScreenFade( id, (1<<10), (1<<10), (1<<12), 0, 255, 0, 255 );
@@ -528,8 +507,6 @@ public _SHARED_CS_GiveWeapons(id)
 	// Remove all weapons
 	strip_user_weapons( id );
 
-	give_item( id, "weapon_knife" );
-
 	// Give armor
 	if ( p_data[id][P_LASTARMOR] )
 	{
@@ -560,7 +537,7 @@ public _SHARED_CS_GiveWeapons(id)
 
 		if ( iWeapID )
 		{
-			if ( iWeapID != CSW_C4 && iWeapID != CSW_KNIFE )
+			if ( iWeapID != CSW_C4 )
 			{
 				new szWeaponName[32], szAmmoName[32];
 				get_weaponname( iWeapID, szWeaponName, 31 );
@@ -602,15 +579,6 @@ public SHARED_SaveWeapons( id )
 	new num = 0;
 	get_user_weapons( id, g_PlayerWeapons[id], num );
 	
-	new szWeaponName[32];
-	for( new i = 0; i < 32; i++ )
-	{
-		if ( g_PlayerWeapons[id][i] )
-		{
-			get_weaponname( g_PlayerWeapons[id][i], szWeaponName, 31 );
-		}
-	}
-
 	return;
 }
 
@@ -1029,3 +997,132 @@ public _SHARED_Mole( id )
 
 	return; 
 } 
+
+bool:SHARED_ValidPlayer( id )
+{
+	if ( id < 1 || id > MAXPLAYERS )
+	{
+		return false;
+	}
+
+	return true;
+}
+
+#define MAXGLOW					150
+
+SHARED_Glow( id, iRed, iGreen, iBlue, iAll )
+{
+	
+	// Not allowed to glow right now...
+	if ( !p_data_b[id][PB_CAN_RENDER] )
+	{
+		return;
+	}
+		
+	// Don't glow if invisible
+	else if ( Verify_Skill( id, RACE_HUMAN, SKILL1 ) || p_data[id][P_ITEM] == ITEM_CLOAK )
+	{
+		return;
+	}
+
+	// Only glow if the task doesn't exist!
+	else if ( task_exists( TASK_GLOW + id ) )
+	{
+		return;
+	}
+	
+	if ( iAll )
+	{
+		g_GlowLevel[id][0]	= 0;
+		g_GlowLevel[id][1]	= 0;
+		g_GlowLevel[id][2]	= 0;
+		g_GlowLevel[id][3]	+= iAll;
+	}
+	else if ( iRed )
+	{
+		g_GlowLevel[id][0]	+= iRed;
+		g_GlowLevel[id][1]	= 0;
+		g_GlowLevel[id][2]	= 0;
+		g_GlowLevel[id][3]	= 0;
+	}
+	else if ( iGreen )
+	{
+		g_GlowLevel[id][0]	= 0;
+		g_GlowLevel[id][1]	+= iGreen;
+		g_GlowLevel[id][2]	= 0;
+		g_GlowLevel[id][3]	= 0;
+	}
+	else if ( iBlue )
+	{
+		g_GlowLevel[id][0]	= 0;
+		g_GlowLevel[id][1]	= 0;
+		g_GlowLevel[id][2]	+= iBlue;
+		g_GlowLevel[id][3]	= 0;
+	}
+
+	// Lets make sure its not over the max!
+	g_GlowLevel[id][0] = ( ( g_GlowLevel[id][0] > MAXGLOW ) ? MAXGLOW : g_GlowLevel[id][0] );
+	g_GlowLevel[id][1] = ( ( g_GlowLevel[id][1] > MAXGLOW ) ? MAXGLOW : g_GlowLevel[id][1] );
+	g_GlowLevel[id][2] = ( ( g_GlowLevel[id][2] > MAXGLOW ) ? MAXGLOW : g_GlowLevel[id][2] );
+	g_GlowLevel[id][3] = ( ( g_GlowLevel[id][3] > MAXGLOW ) ? MAXGLOW : g_GlowLevel[id][3] );
+	
+
+	_SHARED_Glow( id );
+}
+
+public _SHARED_Glow( id )
+{
+	
+	if ( id >= TASK_GLOW )
+	{
+		id -= TASK_GLOW;
+	}
+
+	// User is no longer connected, so lets not continue this!
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
+	
+	new iRed	= g_GlowLevel[id][0];
+	new iGreen	= g_GlowLevel[id][1];
+	new iBlue	= g_GlowLevel[id][2];
+	new iAll	= g_GlowLevel[id][3];
+
+	// Then we want to glow
+	if ( iRed || iGreen || iBlue )
+	{
+
+		g_GlowLevel[id][0] = ( ( iRed > 5 )		? iRed - 5		: 0 );
+		g_GlowLevel[id][1] = ( ( iGreen > 5 )	? iGreen - 5	: 0 );
+		g_GlowLevel[id][2] = ( ( iBlue > 5 )	? iBlue - 5		: 0 );
+
+		set_user_rendering( id, kRenderFxGlowShell, iRed, iGreen, iBlue, kRenderNormal, 16 );
+	}
+
+	else if ( iAll )
+	{
+		g_GlowLevel[id][3] = ( ( iAll > 5 )		? iAll - 5		: 0 );
+		
+		set_user_rendering( id, kRenderFxGlowShell, iAll, iAll, iAll, kRenderNormal, 16 );
+	}
+
+	// No more glowing!
+	else
+	{
+		set_user_rendering( id );
+
+		return;
+	}
+
+	set_task( 0.2, "_SHARED_Glow", TASK_GLOW + id );
+
+	return;
+}
+
+SHARED_GetMaxArmor( id )
+{
+	id--;	// Need this or a dumb compiler warning :/
+
+	return 100;
+}

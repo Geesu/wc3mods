@@ -1,6 +1,3 @@
-#define IMPALE_INTENSITY		10.0		// Intensity of impale
-
-
 // Gives skill abilities at beginning of round and when skills are selected
 public Skill_Check(id)
 {
@@ -69,51 +66,7 @@ public Skill_Check(id)
 	else
 		p_data[id][P_SERPENTCOUNT]=0
 
-	WA_Blink( id );
-
 	BM_PheonixCheck( id );
-
-	return PLUGIN_CONTINUE
-}
-
-// ****************************************
-// Crypt Lord's Impale
-// ****************************************
-
-public _Skill_Impale(parm[2]){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new id = parm[0]
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	if(parm[1]<4){
-		new Float:iMin = -1.0 * IMPALE_INTENSITY
-		new Float:iMax = IMPALE_INTENSITY
-
-		new Float:vec_angle[3], Float:vec_v_angle[3]
-		new i
-
-		entity_get_vector(id, EV_VEC_angles, vec_angle)
-		entity_get_vector(id, EV_VEC_v_angle, vec_v_angle)
-
-		for(i=0;i<2;i++){ // Don't modify z axis (causes a roll)
-			vec_angle[i] = vec_angle[i] + random_float(iMin, iMax)
-			vec_v_angle[i] = vec_v_angle[i] + random_float(iMin, iMax)
-		}
-
-		entity_set_int(id, EV_INT_fixangle, 1)
-		entity_set_vector(id, EV_VEC_angles, vec_angle)
-		entity_set_vector(id, EV_VEC_v_angle, vec_v_angle)
-		parm[1]++
-		set_task(0.1, "_Skill_Impale", 0, parm, 2)
-	}
-	else{
-		entity_set_int(id, EV_INT_fixangle, 1)
-	}
 
 	return PLUGIN_CONTINUE
 }

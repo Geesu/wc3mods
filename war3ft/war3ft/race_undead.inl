@@ -136,3 +136,40 @@ public _UD_SuicideBlastCircles( parm[5] )
 
 	Create_TE_BEAMCYLINDER( vOrigin, vOrigin, vPosition, g_sSpriteTexture, 0, 0, 6, 16, 0, 188, 220, 255, 255, 0 );
 }
+
+
+UD_SkillsOffensive( iAttacker, iDamage )
+{
+
+	// Vampiric Aura
+	if ( Verify_Skill( iAttacker, RACE_UNDEAD, SKILL1 ) )
+	{
+		new iHealth		= get_user_health( iAttacker );
+		new iMaxHealth	= get_user_maxhealth( iAttacker );
+
+		new iBonusHealth = floatround( float( iDamage ) * p_vampiric[p_data[iAttacker][P_SKILL1]-1] );
+		
+		// Give the user health!
+		if ( iHealth < iMaxHealth )
+		{
+
+			// Then give the user his maximum health
+			if ( iHealth + iBonusHealth > iMaxHealth )
+			{
+				set_user_health( iAttacker, iMaxHealth );
+			}
+
+			// Otherwise just give iMaxHealth
+			else
+			{
+				set_user_health( iAttacker, iHealth + iBonusHealth );
+			}
+		}
+		
+		// Make the attacker glow
+		SHARED_Glow( iAttacker, 0, ( 2 * iBonusHealth ), 0, 0 );
+		
+		// Give the attacker a nice screen fade
+		Create_ScreenFade( iAttacker, (1<<10), (1<<10), (1<<12), 0, 255, 0, iBonusHealth );
+	}
+}

@@ -143,7 +143,6 @@ NVAULT_Prune()
 {
 	
 	// This time is really "irrelevant", ideally it would be the time the FIRST entry was inserted into the vault, but this works too, since this date is before this was released
-	new iStartTime	= 1149977691;
 	new iEndTime	= get_systime() - ( get_pcvar_num( CVAR_wc3_days_before_delete ) * 86400 );
 	
 	// 86400 = 24 hours * 60 minutes * 60 seconds
@@ -155,7 +154,7 @@ NVAULT_Prune()
 		// Make sure we have a valid handle
 		if ( g_Vault[i] )
 		{
-			nvault_prune( g_Vault[i], iStartTime, iEndTime );
+			nvault_prune( g_Vault[i], 0, iEndTime );
 		}
 	}
 }

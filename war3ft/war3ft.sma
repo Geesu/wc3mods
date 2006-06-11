@@ -72,8 +72,6 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/constants.inl"
 #include "war3ft/cvar.inl"
 
-
-
 #include "war3ft/race_undead.inl"           // Undead Scourge   - 1
 #include "war3ft/race_human.inl"			// Human Alliance	- 2
 #include "war3ft/race_orc.inl"				// Orcish Horde		- 3
@@ -101,7 +99,6 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/menus.inl"
 #include "war3ft/motd.inl"
 #include "war3ft/language.inl"
-#include "war3ft/other.inl"
 #include "war3ft/admin.inl"
 #include "war3ft/ultimates.inl"
 
@@ -139,10 +136,9 @@ public plugin_init()
 	register_clcmd( "say_team"			, "cmd_Say"			, -1 );
 	register_clcmd( "war3help"			, "MOTD_War3help"	, -1 );
 	register_clcmd( "ultimate"			, "cmd_Ultimate"	, -1 );
-	register_clcmd( "jointeam"			, "cmd_Jointeam"	, -1 );
 	register_clcmd( "fullupdate"		, "cmd_fullupdate"	, -1 );
 	register_clcmd( "drop"				, "on_Drop"			, -1 );
-
+	register_clcmd( "jointeam"			, "cmd_Jointeam"	, -1 );
 
 	// Admin Commands
 	register_concmd( "amx_givexp"		, "Admin_GiveXP"		, 0 , " -- Gives XP to players"				);
@@ -186,8 +182,8 @@ public plugin_init()
 		register_event( "StatusValue"	, "on_ShowStatus"	, "be"	, "1=2"		,"2!0"					);
 		register_event( "StatusValue"	, "on_HideStatus"	, "be"	, "1=1"		,"2=0"					);
 		register_event( "TextMsg"		, "on_SetSpecMode"	, "bd"	, "2&ec_Mod"						);
-		register_event( "Damage"		, "on_Damage"		, "b"	, "2!0"								);
 		register_event( "StatusValue"	, "on_Spectate"		, "bd"	, "1=2"								);
+		register_event( "Damage"		, "on_Damage"		, "b"	, "2!0"								);
 
 		// Old Style
 		register_menucmd( register_menuid( "BuyItem" )	, (1<<2)	, "cmd_flash"	);
@@ -200,7 +196,8 @@ public plugin_init()
 		// Steam
 		register_clcmd( "flash"		, "cmd_flash"	);
 		register_clcmd( "hegren"	, "cmd_hegren"	);
-
+		
+		// Old style menu (now its jointeam client command)
 		register_menucmd( register_menuid( "Team_Select" , 1 )	, (1<<0)|(1<<1)|(1<<4)	, "cmd_Teamselect" );
 
 		// Condition Zero
@@ -222,7 +219,7 @@ public plugin_init()
 		register_statsfwd( XMF_DAMAGE	);
 
 		register_event( "RoundState"	, "EVENT_DOD_EndRound"		, "a"	, "1=3"	, "1=4"	);
-		register_event( "StatusValue"	, "on_StatusValue"	, "b"					);
+		register_event( "StatusValue"	, "on_StatusValue"			, "b"					);
 	}
 	
 	// Plugin initialization procedures
@@ -472,7 +469,7 @@ public client_PreThink( id )
 			{
 
 				// This is used so we can't hear the undead's footsteps at level 3
-				if ( Verify_Skill( id, RACE_UNDEAD, SKILL3 ) && !p_data_b[id][PB_STUNNED] && !p_data_b[id][PB_SLOWED] )
+				if ( Verify_Skill( id, RACE_UNDEAD, SKILL2 ) && !p_data_b[id][PB_STUNNED] && !p_data_b[id][PB_SLOWED] )
 				{
 					new Float:vel[3];
 					entity_get_vector( id, EV_VEC_velocity, vel );
@@ -498,6 +495,16 @@ public client_PreThink( id )
 				// Set the user's speed
 				SHARED_SetSpeed( id );
 				
+				// Give the user more stamina
+				if ( Verify_Skill( id, RACE_UNDEAD, SKILL2 ) )
+				{
+					if ( entity_get_float( id, EV_FL_fuser4 ) < p_unholy[p_data[id][P_SKILL2]-1] )
+					{
+						entity_set_float( id, EV_FL_fuser4, p_unholy[p_data[id][P_SKILL2]-1] );
+					}
+
+				}
+
 				// Give the user more stamina
 				if( p_data[id][P_ITEM] == ITEM_BOOTS && entity_get_float( id, EV_FL_fuser4 ) < DOD_BOOT_SPEED )
 				{

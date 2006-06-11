@@ -60,7 +60,7 @@ public _SH_HealingWave( id )
 				get_user_origin( targetid, origin )
 				
 				// User needs health
-				if ( get_user_actualhealth( targetid ) + 1 <= get_user_maxhealth( targetid ) )
+				if ( get_user_health( targetid ) + 1 <= get_user_maxhealth( targetid ) )
 				{
 					set_user_health( targetid, get_user_health( targetid ) + 1 );
 
@@ -353,77 +353,104 @@ public SH_Ult_Remove( iParm[1] )
 	return PLUGIN_HANDLED;
 }
 
-// Unstable Concoction
-public SH_Concoction( iVictim, iAttacker )
+SH_SkillsOffensive( iAttacker, iVictim )
 {
-	
-	// We can't do anything if the user is hexed :/
-	if ( p_data_b[iVictim][PB_HEXED] )
+
+	// Hex
+	if ( Verify_Skill( iAttacker, RACE_SHADOW, SKILL2 ) )
 	{
-		return PLUGIN_HANDLED;
-	}
 
-	// Check to see if we should "concoction"
-	if ( random_float( 0.0, 1.0 ) <= p_concoction[p_data[iVictim][P_LEVEL]] )
-	{
-		new vOrigin[3], vInitOrigin[3], vAxisOrigin[3], i;
-		
-		// Get origin of attacker
-		get_user_origin( iAttacker, vOrigin );
-		
-		// Play sound on attacker
-		emit_sound( iAttacker, CHAN_STATIC, SOUND_CONCOCTION_CAST, 1.0, ATTN_NORM, 0, PITCH_NORM );
-		
-		// Set up the origins for the effect
-		vInitOrigin[0] = vOrigin[0];
-		vInitOrigin[1] = vOrigin[1];
-		vInitOrigin[2] = vOrigin[2] - 16;
-
-		vAxisOrigin[0] = vOrigin[0];
-		vAxisOrigin[1] = vOrigin[1];
-		vAxisOrigin[2] = vOrigin[2] + SH_CONCOCTION_RADIUS;
-		
-		// Display the effect on the attacker
-		for ( i = 0; i < 200; i += 25 )
+		if ( random_float( 0.0, 1.0 ) <= p_hex[p_data[iAttacker][P_SKILL2]-1] )
 		{
-			Create_TE_BEAMCYLINDER( vOrigin, vInitOrigin, vAxisOrigin, g_sSpriteTexture, 0, 0, 9, 20, 0, 188, 220, 255, 255, 0 );
-
-			vInitOrigin[2] += 25;
-		}
-
-		new team = get_user_team( iVictim );
-		new players[32], numberofplayers, vTargetOrigin[3];
-		get_players(players, numberofplayers, "a");
-
-		
-		// Loop through all players and see if anyone nearby needs to be damaged
-		for( i = 0; i < numberofplayers; i++ )
-		{
-			
-			// Then we have a target on the other team!!
-			if ( get_user_team( players[i] ) != team )
-			{
-				get_user_origin( players[i], vTargetOrigin );
-
-				// Make sure they are close enough
-				if ( get_distance( vOrigin, vTargetOrigin ) <= SH_CONCOCTION_RADIUS )
-				{
-					// Damage
-					WAR3_damage( players[i], iVictim, SH_CONCOCTION_DAMAGE, CSW_CONCOCTION, 0 );
+						
+			// We need to identify the victim as slowed + hexed			
+			p_data_b[iVictim][PB_HEXED] = true
+			p_data_b[iVictim][PB_SLOWED] = true;
 				
-					// Let the victim know he hit someone
-					emit_sound( iVictim, CHAN_STATIC, SOUND_CONCOCTION_HIT, 1.0, ATTN_NORM, 0, PITCH_NORM );
+			// Slow the user's speed
+			SHARED_SetSpeed( iVictim );
+
+			// Create the "remove hex" task
+			set_task( SH_HEX_LENGTH ,"_SH_RemoveHex", TASK_HEX + iVictim );
+
+			// Play the hex sound
+			emit_sound( iVictim, CHAN_STATIC, SOUND_HEX, 1.0, ATTN_NORM, 0, PITCH_NORM );
+
+			// Make the user glow!
+			SHARED_Glow( iVictim, 150, 150, 150, 0 );
+
+			// Lets create a screen fade
+			Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 255, 255, 255, 75 )
+		}
+	}
+}
+
+SH_SkillsDefensive( iAttacker, iVictim )
+{
+
+	// Unstable Concoction
+	if ( Verify_Race(iVictim, RACE_SHADOW) )
+	{
+		// Check to see if we should "concoction"
+		if ( random_float( 0.0, 1.0 ) <= p_concoction[p_data[iVictim][P_LEVEL]] )
+		{
+			new vOrigin[3], vInitOrigin[3], vAxisOrigin[3], i;
+			
+			// Get origin of attacker
+			get_user_origin( iAttacker, vOrigin );
+			
+			// Play sound on attacker
+			emit_sound( iAttacker, CHAN_STATIC, SOUND_CONCOCTION_CAST, 1.0, ATTN_NORM, 0, PITCH_NORM );
+			
+			// Set up the origins for the effect
+			vInitOrigin[0] = vOrigin[0];
+			vInitOrigin[1] = vOrigin[1];
+			vInitOrigin[2] = vOrigin[2] - 16;
+
+			vAxisOrigin[0] = vOrigin[0];
+			vAxisOrigin[1] = vOrigin[1];
+			vAxisOrigin[2] = vOrigin[2] + SH_CONCOCTION_RADIUS;
+			
+			// Display the effect on the attacker
+			for ( i = 0; i < 200; i += 25 )
+			{
+				Create_TE_BEAMCYLINDER( vOrigin, vInitOrigin, vAxisOrigin, g_sSpriteTexture, 0, 0, 9, 20, 0, 188, 220, 255, 255, 0 );
+
+				vInitOrigin[2] += 25;
+			}
+
+			new team = get_user_team( iVictim );
+			new players[32], numberofplayers, vTargetOrigin[3];
+			get_players(players, numberofplayers, "a");
+
+			
+			// Loop through all players and see if anyone nearby needs to be damaged
+			for( i = 0; i < numberofplayers; i++ )
+			{
+				
+				// Then we have a target on the other team!!
+				if ( get_user_team( players[i] ) != team )
+				{
+					get_user_origin( players[i], vTargetOrigin );
+
+					// Make sure they are close enough
+					if ( get_distance( vOrigin, vTargetOrigin ) <= SH_CONCOCTION_RADIUS )
+					{
+						// Damage
+						WAR3_damage( players[i], iVictim, SH_CONCOCTION_DAMAGE, CSW_CONCOCTION, 0 );
+					
+						// Let the victim know he hit someone
+						emit_sound( iVictim, CHAN_STATIC, SOUND_CONCOCTION_HIT, 1.0, ATTN_NORM, 0, PITCH_NORM );
+					}
 				}
 			}
 		}
+		#if ADVANCED_STATS
+		else
+		{
+			new WEAPON = CSW_CONCOCTION - CSW_WAR3_MIN;
+			iStatsShots[iVictim][WEAPON]++;
+		}
+		#endif
 	}
-	#if ADVANCED_STATS
-	else
-	{
-		new WEAPON = CSW_CONCOCTION - CSW_WAR3_MIN;
-		iStatsShots[iVictim][WEAPON]++;
-	}
-	#endif
-
-	return PLUGIN_HANDLED;
 }

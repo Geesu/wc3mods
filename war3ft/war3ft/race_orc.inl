@@ -4,6 +4,7 @@
 
 #define CHAINLIGHTNING_DAMAGE			50		// Initial ultimate damage
 #define CHAINLIGHTNING_LINEWIDTH		80		// Width of the lightning sprite
+#define CRITICAL_STRIKE_CHANCE			0.15	// 15% chance of Critical Strike working
 
 // Initial Ultimate call
 public OR_ULT_ChainLightning( iCaster, iTarget, iBodyPart )
@@ -141,4 +142,76 @@ public OR_ULT_ChainEffect( iCaster, iTarget, iLineWidth, iDamage, iBodyPart )
 	emit_sound( iCaster, CHAN_STATIC, SOUND_LIGHTNING, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 	return;
+}
+
+
+OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
+{
+	// Critical Strike
+	if ( Verify_Skill( iAttacker, RACE_ORC, SKILL1 ) )
+	{
+
+		if ( random_float( 0.0, 1.0 ) <= CRITICAL_STRIKE_CHANCE )
+		{
+			new iTempDamage = floatround( float( iDamage ) * p_data[iAttacker][P_SKILL1] );
+			
+			// Damage our victim
+			WAR3_damage( iVictim, iAttacker, iTempDamage, iWeapon, iHitPlace );
+			
+			// Make the user glow
+			SHARED_Glow( iVictim, iTempDamage, 0, 0, 0 );
+			
+			// Lets make a screenfade
+			Create_ScreenFade(iVictim, (1<<10), (1<<10), (1<<12), 255, 0, 0, g_GlowLevel[iVictim][0] );
+		}
+	}
+
+	// Critical Grenade
+	if ( Verify_Skill( iAttacker, RACE_ORC, SKILL2 ) )
+	{		
+		
+		// Can only do this if the user has a grenade
+		if ( SHARED_IsGrenade( iWeapon ) )
+		{
+
+			
+			// Then we're clear!!
+			if ( OR_CriticalGrenadeAllowed( iAttacker ) )
+			{
+		
+				new iMaxHealth = get_user_maxhealth( iVictim );
+
+				new iTempDamage = floatround( iDamage * p_grenade[p_data[iAttacker][P_SKILL2]-1] );
+				
+				// We don't want to do more damage than the user's maximum health
+				if ( iTempDamage + iDamage >= iMaxHealth )
+				{
+					iTempDamage = iMaxHealth - ( iDamage + 1 );
+				}
+				
+				// Damage the user!
+				WAR3_damage( iVictim, iAttacker, iTempDamage, iWeapon, iHitPlace );
+
+
+				// Make the user glow
+				SHARED_Glow( iVictim, iTempDamage, 0, 0, 0 );
+
+				// Lets make a screenfade
+				Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 255, 0, 0, g_GlowLevel[iVictim][0] );
+			}
+		}
+	}
+}
+
+// Function checks to see if critical grenades are allowed
+bool:OR_CriticalGrenadeAllowed( id )
+{
+
+	// Need to do the glove check
+	if ( p_data[id][P_ITEM2] == ITEM_GLOVES && !get_pcvar_num( CVAR_wc3_glove_orc_damage ) )
+	{
+		return false;
+	}
+
+	return true;
 }

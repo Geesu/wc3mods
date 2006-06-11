@@ -266,7 +266,7 @@ public ITEM_Ring( id )
 
 	while( iBonusHealth > 0 )
 	{
-		if ( get_user_actualhealth( id ) + 1 <= get_user_maxhealth( id ) )
+		if ( get_user_health( id ) + 1 <= get_user_maxhealth( id ) )
 		{
 			set_user_health( id, get_user_health( id ) + 1 );
 		}

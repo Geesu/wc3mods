@@ -101,6 +101,14 @@ XP_Check( id, bShowGained = true )
 
 		iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
 	}
+	
+	// OK lets check the total skills the user has, and maybe show them the selectskills menu
+	new iTotalSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+	if ( iTotalSkillsUsed < p_data[id][P_LEVEL] )
+	{
+		menu_Select_Skill( id, 0 );
+	}
+
 
 	WC3_ShowBar( id );
 }

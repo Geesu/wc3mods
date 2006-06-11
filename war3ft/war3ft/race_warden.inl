@@ -3,6 +3,7 @@
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
 #define VENGEANCE_HEALTH		50			// Health the user should have after using his ult
+#define SHADOWSTRIKE_DAMAGE		10			// Amount of damage dealt with shadow strike
 
 WA_ULT_Vengeance( id )
 {
@@ -104,7 +105,7 @@ WA_Blink( id )
 {
 	
 	// User has the ability, lets initiate a "check"
-	if ( Verify_Skill(id, RACE_WARDEN, SKILL2) )
+	if ( Verify_Skill( id, RACE_WARDEN, SKILL2 ) )
 	{
 
 		if ( random_float( 0.0, 1.0 ) <= p_blink[p_data[id][P_SKILL2]-1] )
@@ -122,5 +123,43 @@ WA_Blink( id )
 	else
 	{
 		p_data_b[id][PB_WARDENBLINK] = false;
+	}
+}
+
+WA_SkillsOffensive( iAttacker, iVictim, iHitPlace )
+{
+
+	// Shadow Strike
+	if ( Verify_Skill( iAttacker, RACE_WARDEN, SKILL3 ) )
+	{
+
+		if ( random_float( 0.0, 1.0 ) <= p_shadow[p_data[iAttacker][P_SKILL3]-1] )
+		{
+			if ( p_data[iAttacker][P_SHADOWCOUNT] > 0 )
+			{
+				new vVictimOrigin[3], vAttackerOrigin[3]
+				get_user_origin( iVictim, vVictimOrigin );
+				get_user_origin( iAttacker, vAttackerOrigin );
+				
+				// Create the shadow strike effect
+				Create_TE_SPRITETRAIL( vAttackerOrigin, vVictimOrigin, g_sShadow, 50, 15, 1, 2, 6 );
+				
+				// Emit the shadow strike sound
+				emit_sound( iVictim, CHAN_STATIC, SOUND_SHADOWSTRIKE, 1.0, ATTN_NORM, 0, PITCH_NORM );
+				
+				// User only has so many per round...
+				p_data[iAttacker][P_SHADOWCOUNT]--;
+
+				// Damage the user
+				WAR3_damage( iVictim, iAttacker, SHADOWSTRIKE_DAMAGE, CSW_SHADOW, iHitPlace );
+			}
+		}
+
+	#if ADVANCED_STATS
+		else{
+			new WEAPON = CSW_SHADOW - CSW_WAR3_MIN
+			iStatsShots[iAttacker][WEAPON]++
+		}
+	#endif
 	}
 }

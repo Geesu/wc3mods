@@ -1172,7 +1172,7 @@ WC3_HandleCommand( id, szCmd[] )
 	}
 	
 	// Display select skill menu
-	else if ( WC3_CommandEqual( szCmd, "selectskills" ) )
+	else if ( WC3_CommandEqual( szCmd, "selectskills" ) || WC3_CommandEqual( szCmd, "selectskill" ) )
 	{
 		menu_Select_Skill( id, 1 );
 	}
@@ -1265,7 +1265,7 @@ WC3_HandleCommand( id, szCmd[] )
 	}
 
 	// Cheat command if it's enabled
-	else if ( get_pcvar_num( CVAR_wc3_cheats ) && WC3_CommandEqual( szCmd, "level10" ) )
+	else if ( get_pcvar_num( CVAR_wc3_cheats ) && ( WC3_CommandEqual( szCmd, "level10" ) || WC3_CommandEqual( szCmd, "lvl10" ) ) )
 	{
 		new iRaceID = p_data[id][P_RACE];
 

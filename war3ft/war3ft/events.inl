@@ -10,670 +10,158 @@ public grenade_throw( index, greindex, wId )
 	// Make sure the user has the skill and we actually have a grenade index
 	if ( greindex && Verify_Skill( index, RACE_ORC, SKILL2 ) )
 	{
-
-		// Don't do extra damage if they have gloves
-		if ( !get_pcvar_num( CVAR_wc3_glove_orc_damage ) && p_data[index][P_ITEM2] == ITEM_GLOVES )
+		
+		// Then Critical Grenades are allowed
+		if ( OR_CriticalGrenadeAllowed( index ) )
 		{
-			return;
-		}
 
-		new bool:bShow = false;
+			// Then draw it!
+			if ( SHARED_IsGrenade( wId ) )
+			{
+				new iWidth = 3 *  p_data[index][SKILL2];
 
-		// Check for a Counter-Strike grenade
-		if ( (g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO) && wId == CSW_HEGRENADE )
-		{
-			bShow = true;
-		}
-
-		// Check for a Day of Defeat grenade
-		else if ( g_MOD == GAME_DOD && ( wId == DODW_HANDGRENADE || wId == DODW_STICKGRENADE ) )
-		{
-			bShow = true;
-		}
-
-		// Then draw it!
-		if ( bShow )
-		{
-			Create_TE_BEAMFOLLOW( greindex, g_siTrail, 20, 10, 255, 32, 32, 196 );
+				Create_TE_BEAMFOLLOW( greindex, g_siTrail, 20, iWidth, 255, 32, 32, 196 );
+			}
 		}
 	}
 	return;
 }
 
-#if MOD == 1
-public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){
+public EVENT_Damage( iVictim, iAttacker, iDamage, iWeapon, iHitPlace )
+{
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-
-	call_damage(victim, attacker, damage, wpnindex, hitplace)
-
-	return PLUGIN_CONTINUE
-}
-#endif
-
-#if MOD == 0
-public on_Damage(victim){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
+	// If they damage themself we don't care now do we ?
+	if ( iVictim == iAttacker )
+	{
+		return;
+	}
 	
-	if ( victim < 1 || victim > MAXPLAYERS )
-		return PLUGIN_CONTINUE
+	// Counter-Strike and Condition Zero check only - Bomb Explosion
 
-	new wpnindex = 0, hitplace = 0, attacker = get_user_attacker(victim,wpnindex,hitplace)
-	new damage = read_data(2)
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		// Check out who the inflictor was
+		new iInflictor = entity_get_edict( iVictim, EV_ENT_dmg_inflictor );
 
-	call_damage(victim, attacker, damage, wpnindex, hitplace)
-
-	return PLUGIN_CONTINUE
-}
-#endif
-
-public call_damage(victim, attacker, damage, wpnindex, hitplace){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if(!p_data_b[victim][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	if( attacker <= 0 || attacker > MAXPLAYERS || !p_data_b[attacker][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-#if MOD == 0
-	new inflictor = entity_get_edict(victim, EV_ENT_dmg_inflictor)
-
-	// Check to see if the damage was from the bomb
-	if( attacker != inflictor && wpnindex != 4 && attacker != victim && inflictor > 0 ){
-		
-		if ( is_valid_ent ( inflictor ) )
+		// Check to see if the iDamage was from the bomb
+		if ( !SHARED_ValidPlayer( iInflictor ) && iWeapon != CSW_HEGRENADE && iAttacker != iVictim && iInflictor )
 		{
-			new szClassName[64]
-			entity_get_string(inflictor, EV_SZ_classname, szClassName, 63)
-				
-			// Technically I don't think we need to check the classname, but just in case
-			if ( equali(szClassName, "grenade") || equali(szClassName, "env_explosion") ){
-				wpnindex = CSW_C4
-				attacker = 0
-
-				// We need to call the death function manually b/c DeathMsg isn't broadcasted when the bomb explodes and kills someone
-				if (get_user_health(victim) - damage < 0 ){
-					on_Death(victim, attacker, wpnindex, 0)
-				}
-
-				/*#if DEBUG
-					client_print(victim, print_chat, "### You were just attacked by the bomb for %d damage (%s)", damage, szClassName)
-				#endif*/
-			}
-		}
-	}
-#endif
-
-	if(p_data_b[attacker][PB_MOLE] && p_data[victim][P_ITEM2]==ITEM_PROTECTANT){	
-		set_user_health(victim,get_user_health(victim)+damage)
-		client_print(victim,print_chat,"%s %L",g_MODclient,victim,"SHOT_DEFLECTED")
-		return PLUGIN_HANDLED
-	}
-
-	if( p_data_b[victim][PB_GODMODE] ){
-		if( ( p_data_b[attacker][PB_WARDENBLINK] ) && attacker != victim ){
-			if( get_user_health(victim) - damage <= 2048 ){
-				WAR3_damage(victim, attacker, 3000, wpnindex, hitplace)
-			}
-		}
-		else{
-			set_user_health(victim, get_user_health(victim) + damage)
-		}
-
-		return PLUGIN_CONTINUE
-	}
-
-	if (victim==attacker)
-		return PLUGIN_HANDLED
-
-	new tempdamage = 0
-
-	// Bot should "auto" cast his/her ultimate when attacking
-	
-	if( attacker > 0 ){
-		if (is_user_bot(attacker) && p_data[attacker][P_ULTIMATE]){
-			cmd_Ultimate(attacker)
-		}
-	}
-
-	// **************************************************
-	// Attacker Abilities
-	// **************************************************
-
-	// Undead Scourge
-
-	if ( Verify_Race(attacker, RACE_UNDEAD) ){
-
-		// Vampiric Aura
-		if ( Verify_Skill(attacker, RACE_UNDEAD, SKILL1) && !p_data_b[attacker][PB_HEXED] ) {
-			new health = get_user_health(attacker)
-			new maxHealth = get_user_maxhealth(attacker)
-
-			tempdamage = floatround(float(damage) * p_vampiric[p_data[attacker][P_SKILL1]-1])
 			
-			if(health < maxHealth){
-				if( health + tempdamage > maxHealth )
-					set_user_health(attacker, maxHealth)
-				else
-					set_user_health(attacker, health + tempdamage)
-			}
-			
-			if (iglow[attacker][1] < 1){
-				new parm[2]
-				parm[0] = attacker
-				set_task(0.01,"glow_change",TASK_GLOW+attacker,parm,2)
-			}
-			iglow[attacker][1] += tempdamage
-			iglow[attacker][0] = 0
-			iglow[attacker][2] = 0
-			iglow[attacker][3] = 0
-			if (iglow[attacker][1]>MAXGLOW)
-				iglow[attacker][1]=MAXGLOW
+			if ( is_valid_ent ( iInflictor ) )
+			{
+				new szClassName[64];
+				entity_get_string( iInflictor, EV_SZ_classname, szClassName, 63 );
+					
+				// Technically I don't think we need to check the classname, but just in case
+				if ( equali( szClassName, "grenade" ) || equali( szClassName, "env_explosion" ) )
+				{
+					iWeapon = CSW_C4;
+					iAttacker = 0;
 
-			Create_ScreenFade(attacker, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[attacker][1])
-		}
-	}
+					// We need to call the death function manually b/c DeathMsg isn't broadcasted when the bomb explodes and kills someone
+					if ( get_user_health( iVictim ) - iDamage < 0 )
+					{
+						on_Death( iVictim, iAttacker, iWeapon, 0 );
+					}
 
-	// Human Alliance
-	else if ( Verify_Race(attacker, RACE_HUMAN) ){
-
-		// Bash - cannot occur if caster is hexed (hex disables abilities)
-		if ( Verify_Skill(attacker, RACE_HUMAN, SKILL3) && !p_data_b[attacker][PB_HEXED] )
-		{
-			new Float:randomnumber = random_float( 0.0, 1.0 );
-
-			// Cannot bash if already bashed or user is slowed
-			if ( randomnumber <= p_bash[p_data[attacker][P_SKILL3]-1] && !SHARED_IsPlayerSlowed( victim ) )
-			{		
-
-				p_data_b[victim][PB_STUNNED] = true;
-				SHARED_SetSpeed( victim );
-				
-				set_task( 1.0, "SHARED_ResetMaxSpeed", TASK_RESETSPEED + victim );
-				
-				if (iglow[victim][3] < 1){
-					new parm[2];
-					parm[0] = victim
-					parm[1] = 0
-					set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
+					client_print( iVictim, print_chat, "[DEBUG] You were just attacked by the bomb for %d iDamage (%s) Alive? %d", iDamage, szClassName, is_user_alive( iVictim ) );
 				}
-				iglow[victim][3] += 100
-				iglow[victim][0] = 0
-				iglow[victim][1] = 0
-				iglow[victim][2] = 0
-				if (iglow[victim][3]>MAXGLOW)
-					iglow[victim][3]=MAXGLOW
-
-				Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 255, 255, 255, iglow[victim][3])
 			}
 		}
 	}
 
-	// Orcish Horde
-	else if ( Verify_Race(attacker, RACE_ORC) ){
 
-		// Critical Strike
-		if ( Verify_Skill(attacker, RACE_ORC, SKILL1) && !p_data_b[attacker][PB_HEXED]) {
-			new Float:randomnumber = random_float(0.0,1.0)
-			if (randomnumber <= CRITICAL_STRIKE_CHANCE){
-				tempdamage = floatround(float(damage) * p_data[attacker][P_SKILL1])
-
-				WAR3_damage(victim, attacker, tempdamage, wpnindex, hitplace)
-				if (iglow[victim][0] < 1){
-					new parm[2]
-					parm[0] = victim
-					set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
-				}
-				iglow[victim][0] += tempdamage
-				iglow[victim][1] = 0
-				iglow[victim][2] = 0
-				iglow[victim][3] = 0
-				if (iglow[victim][0]>MAXGLOW)
-					iglow[victim][0]=MAXGLOW
-
-				Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 255, 0, 0, iglow[victim][0])
-			}
-		}
-
-		// Critical Grenade
-		if ( Verify_Skill(attacker, RACE_ORC, SKILL2) && !p_data_b[attacker][PB_HEXED] ){		
-			new bool:allow=true
-
-			if(p_data[attacker][P_ITEM2]==ITEM_GLOVES){
-				if(get_pcvar_num( CVAR_wc3_glove_orc_damage ))
-					allow=true
-				else
-					allow=false
-			}
-
-		#if MOD == 0
-			if (wpnindex == CSW_HEGRENADE && allow){
-		#endif
-		#if MOD == 1
-			if ((wpnindex == DODW_HANDGRENADE || wpnindex == DODW_STICKGRENADE) && allow){
-		#endif
-				new iMaxHealth = get_user_maxhealth( victim );
-
-				tempdamage = floatround( damage * p_grenade[p_data[attacker][P_SKILL2]-1] )
-
-				if ( tempdamage + damage >= iMaxHealth )
-					tempdamage = iMaxHealth - ( damage + 1 );
-
-				WAR3_damage(victim, attacker, tempdamage, wpnindex, hitplace)
-				new name[32]
-				get_user_name(victim,name,31)
-				if (iglow[victim][0] < 1){
-					new parm[2]
-					parm[0] = victim
-					set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
-				}
-				iglow[victim][0] += tempdamage
-				iglow[victim][1] = 0
-				iglow[victim][2] = 0
-				iglow[victim][3] = 0
-				if (iglow[victim][0]>MAXGLOW)
-					iglow[victim][0]=MAXGLOW
-
-				Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 255, 0, 0, iglow[victim][0])
-			}
-
-		}
-	}
-
-	// Night Elf
-	else if ( Verify_Race(attacker, RACE_ELF) ){
-
-		// Trueshot
-		if ( Verify_Skill(attacker, RACE_ELF, SKILL3) && !p_data_b[attacker][PB_HEXED] ){
-			tempdamage = floatround(float(damage) * p_trueshot[p_data[attacker][P_SKILL3]-1])
-
-			WAR3_damage(victim, attacker,tempdamage,wpnindex, hitplace)
-			if (iglow[victim][0] < 1){
-				new parm[2]
-				parm[0] = victim
-				set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
-			}
-			iglow[victim][0] += 2*tempdamage
-			iglow[victim][1] = 0
-			iglow[victim][2] = 0
-			iglow[victim][3] = 0
-			if (iglow[victim][0]>MAXGLOW)
-				iglow[victim][0]=MAXGLOW
-
-			Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 255, 0, 0, iglow[victim][0])
-		}
+	// Bot should "auto" cast his/her ultimate on random
+	if ( SHARED_ValidPlayer( iAttacker) && is_user_bot( iAttacker ) && p_data[iAttacker][P_ULTIMATE] )
+	{
+		cmd_Ultimate( iAttacker );
 	}
 	
-	// Blood Mage
-	else if ( Verify_Race(attacker, RACE_BLOOD) ){
 
-		// Banish
-		if ( Verify_Skill(attacker, RACE_BLOOD, SKILL2) && !p_data_b[attacker][PB_HEXED] ){
-			new Float:randomnumber = random_float(0.0,1.0)
+	// We need to make sure that we have a valid attacker and the user isn't hexed
+	if ( SHARED_ValidPlayer( iAttacker ) && !p_data_b[iAttacker][PB_HEXED] )
+	{
 
-			if (randomnumber <= p_banish[p_data[attacker][P_SKILL2]-1]){
-				if(p_data[attacker][P_SKILL2] > 2){
-					user_slap(victim,0)
-					user_slap(victim,0)
-					user_slap(victim,0)
-					WAR3_damage(victim, attacker, 9, wpnindex, hitplace)
-				}
-				else{
-					user_slap(victim,0)
-					user_slap(victim,0)
-					user_slap(victim,0)
-					WAR3_damage(victim, attacker, 7, wpnindex, hitplace)
-				}
-
-				emit_sound(victim,CHAN_STATIC, SOUND_BANISH, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-				if (iglow[victim][3] < 1){
-					new parm[2]
-					parm[0] = victim
-					parm[1] = 0
-					set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
-				}
-				iglow[victim][3] += 100
-				iglow[victim][0] = 0
-				iglow[victim][1] = 0
-				iglow[victim][2] = 0
-				if (iglow[victim][3]>MAXGLOW)
-					iglow[victim][3]=MAXGLOW
-
-				Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 255, 255, 255, iglow[victim][3])
-			}
-		}
-
-		// Siphon Mana
-		if ( Verify_Skill(attacker, RACE_BLOOD, SKILL3) && !p_data_b[attacker][PB_HEXED] ){
-			new money = floatround( p_mana[p_data[attacker][P_SKILL3]-1] * SHARED_GetUserMoney(victim) )  
-
-			SHARED_SetUserMoney(attacker,SHARED_GetUserMoney(attacker)+money,1)
-			SHARED_SetUserMoney(victim,SHARED_GetUserMoney(victim)-money,1)
-
-			if (iglow[attacker][1] < 1){
-				new parm[2]
-				parm[0] = attacker
-				set_task(0.01,"glow_change",TASK_GLOW+attacker,parm,2)
-			}
-			iglow[attacker][1] += damage
-			iglow[attacker][0] = 0
-			iglow[attacker][2] = 0
-			iglow[attacker][3] = 0
-			if (iglow[attacker][1]>MAXGLOW)
-				iglow[attacker][1]=MAXGLOW
-
-			Create_ScreenFade(attacker, (1<<10), (1<<10), (1<<12), 144, 58, 255, iglow[attacker][1])	// Purplish color
-		}
+		// Run the offensive spells
+		Verify_Race( iAttacker, RACE_UNDEAD )	? UD_SkillsOffensive( iAttacker, iDamage ) : 0;
+		Verify_Race( iAttacker, RACE_HUMAN )	? HU_SkillsOffensive( iAttacker, iVictim ) : 0;
+		Verify_Race( iAttacker, RACE_ORC )		? OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		Verify_Race( iAttacker, RACE_ELF )		? NE_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		Verify_Race( iAttacker, RACE_BLOOD )	? BM_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		Verify_Race( iAttacker, RACE_SHADOW )	? SH_SkillsOffensive( iAttacker, iVictim ) : 0;
+		Verify_Race( iAttacker, RACE_WARDEN )	? WA_SkillsOffensive( iAttacker, iVictim, iHitPlace ) : 0;
+		Verify_Race( iAttacker, RACE_CRYPT )	? CL_SkillsOffensive( iAttacker, iVictim, iHitPlace ) : 0;
 	}
 
-	// Shadow Hunter
-	else if ( Verify_Race(attacker, RACE_SHADOW) ){
-
-		// Hex
-		if ( Verify_Skill(attacker, RACE_SHADOW, SKILL2) && !p_data_b[attacker][PB_HEXED] ) {
-			new Float:randomnumber = random_float(0.0,1.0)
-			if (randomnumber <= p_hex[p_data[attacker][P_SKILL2]-1] && !p_data_b[victim][PB_HEXED]){
-
-				/*  Set the rendering of the player */
-				set_user_rendering(victim, kRenderFxDistort, 0, 0, 0, kRenderTransTexture, 0)
-				
-				/* Do not allow other renderings to take place like invisibility */
-				p_data_b[victim][PB_CAN_RENDER] = false;
-				
-				p_data_b[victim][PB_HEXED] = true
-				p_data_b[victim][PB_SLOWED] = true;
-					
-				/* Set the user's speed */
-				SHARED_SetSpeed( victim );
-
-				/* Hex will only last for 10 seconds */
-				new parm[2]
-				parm[0]=victim
-				set_task( SH_HEX_LENGTH ,"_SH_RemoveHex", TASK_HEX + victim );
-
-				emit_sound(victim, CHAN_STATIC, SOUND_HEX, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-				Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 255, 255, 255, iglow[victim][3])
-			}
-		}
+	// Make sure we can run the defensive skills
+	if ( SHARED_ValidPlayer( iAttacker ) && !p_data_b[iVictim][PB_HEXED] )
+	{
+		//Verify_Race( iVictim, RACE_UNDEAD )		? UD_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		//Verify_Race( iVictim, RACE_HUMAN )		? HU_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		//Verify_Race( iVictim, RACE_ORC )		? OR_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		Verify_Race( iVictim, RACE_ELF )		? NE_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace ) : 0;
+		Verify_Race( iVictim, RACE_BLOOD )		? BM_SkillsDefensive( iVictim, iDamage ) : 0;
+		Verify_Race( iVictim, RACE_SHADOW )		? SH_SkillsDefensive( iAttacker, iVictim ) : 0;
+		//Verify_Race( iVictim, RACE_WARDEN )		? WA_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		Verify_Race( iVictim, RACE_CRYPT )		? CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace ) : 0;
 	}
 
-	// Warden
-	else if ( Verify_Race(attacker, RACE_WARDEN) ){
-		
-		// Shadow Strike
-		if ( Verify_Skill(attacker, RACE_WARDEN, SKILL3) && !p_data_b[attacker][PB_HEXED] ){
-			new Float:randomnumber = random_float(0.0,1.0)
-			if (randomnumber <= p_shadow[p_data[attacker][P_SKILL3]-1]){
-				if ( p_data[attacker][P_SHADOWCOUNT]>0 && is_user_alive(victim) ){
-					new origin[3], attackerorigin[3]
-					get_user_origin(victim,origin)
-					get_user_origin(attacker,attackerorigin)
-					
-					Create_TE_SPRITETRAIL(attackerorigin, origin, g_sShadow, 50, 15, 1, 2, 6 )
-
-					Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[victim][2])
-
-					emit_sound(victim,CHAN_STATIC, SOUND_SHADOWSTRIKE, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-					p_data[attacker][P_SHADOWCOUNT]--
-
-					tempdamage = 10
-					WAR3_damage(victim, attacker,tempdamage,CSW_SHADOW, hitplace)
-				}
-			}
-		#if ADVANCED_STATS
-			else{
-				new WEAPON = CSW_SHADOW - CSW_WAR3_MIN
-				iStatsShots[attacker][WEAPON]++
-			}
-		#endif
-		}
-	}
-
-	// Crypt Lord
-	else if ( Verify_Race(attacker, RACE_CRYPT) ){
-		
-		// Orb of Annihilation
-		if ( !p_data_b[attacker][PB_HEXED] )
-		{
-			new Float:randomnumber = random_float(0.0,1.0)
-			if (randomnumber <= p_orb[p_data[attacker][P_LEVEL]]){
-				new origin[3]
-				get_user_origin(victim, origin)
-				
-				origin[2] -= 20
-		
-				Create_TE_SPRITE(origin, g_sWave, 10, 200)
-
-				emit_sound(victim, CHAN_STATIC, SOUND_ANNIHILATION, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-				WAR3_damage(victim, attacker, ORB_DAMAGE, CSW_ORB, hitplace)
-			}
-		#if ADVANCED_STATS
-			else{
-				new WEAPON = CSW_ORB - CSW_WAR3_MIN
-				iStatsShots[attacker][WEAPON]++
-			}
-		#endif
-		}
-
-		// Carrion Beetle
-		if ( Verify_Skill(attacker, RACE_CRYPT, SKILL3) && !p_data_b[attacker][PB_HEXED] ){
-			if (random_float(0.0,1.0) <= p_carrion[p_data[attacker][P_SKILL3]-1]){
-				if ( p_data[attacker][P_CARRIONCOUNT]>0 && is_user_alive(victim) ){
-					new origin[3], attackerorigin[3]
-					get_user_origin(victim,origin)
-					get_user_origin(attacker,attackerorigin)
-
-					Create_TE_SPRITETRAIL(attackerorigin, origin, g_sBeetle, 15, 15, 1, 2, 6 )
-
-					emit_sound(victim,CHAN_STATIC, SOUND_CARRION, 1.0, ATTN_NORM, 0, PITCH_NORM)
-
-					p_data[attacker][P_CARRIONCOUNT]--
-
-					tempdamage = 10
-					WAR3_damage(victim, attacker,tempdamage, CSW_CARRION, hitplace)
-				}
-			}
-		#if ADVANCED_STATS
-			else{
-				new WEAPON = CSW_CARRION - CSW_WAR3_MIN
-				iStatsShots[attacker][WEAPON]++
-			}
-		#endif
-		}
-		
-		// Impale
-		if ( Verify_Skill(attacker, RACE_CRYPT, SKILL1) && !p_data_b[attacker][PB_HEXED] ){
-
-			if (random_float(0.0,1.0) <= p_impale[p_data[attacker][P_SKILL1]-1]){
-				emit_sound(victim,CHAN_STATIC, SOUND_IMPALE, 1.0, ATTN_NORM, 0, PITCH_NORM)
-				
-				new param[2]
-				param[0] = victim
-				param[1] = 0
-
-				_Skill_Impale(param)
-
-				Create_ScreenShake(victim, (255<< 14), (10 << 14), (255<< 14))
-			}
-		}
-	}
+	new iTempDamage;
 
 	// Item abilities
 
 	// Claws of Attack
-	if ( p_data[attacker][P_ITEM] == ITEM_CLAWS && !p_data_b[attacker][PB_HEXED] ){	
-		WAR3_damage(victim, attacker, get_pcvar_num( CVAR_wc3_claw ), wpnindex, hitplace)
+	if ( p_data[iAttacker][P_ITEM] == ITEM_CLAWS ){	
+		WAR3_damage(iVictim, iAttacker, get_pcvar_num( CVAR_wc3_claw ), iWeapon, iHitPlace)
+		
+		SHARED_Glow( iAttacker, (2 * get_pcvar_num( CVAR_wc3_claw ) ), 0, 0, 0 );
 
-		if (iglow[victim][0] < 1){
-			new parm[2]
-			parm[0] = victim
-			set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
-		}
-		iglow[victim][0] += 2*tempdamage
-		iglow[victim][1] = 0
-		iglow[victim][2] = 0
-		iglow[victim][3] = 0
-		if (iglow[victim][0]>MAXGLOW)
-
-		iglow[victim][0]=MAXGLOW
-
-		Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 255, 0, 0, iglow[victim][0])
+		Create_ScreenFade(iVictim, (1<<10), (1<<10), (1<<12), 255, 0, 0, g_GlowLevel[iVictim][0])
 	}
 
 	// Mask of Death
-	else if ( p_data[attacker][P_ITEM] == ITEM_MASK && !Verify_Skill(attacker, RACE_UNDEAD, SKILL1) && !p_data_b[attacker][PB_HEXED] ){
-		new iHealth = get_user_actualhealth(attacker)
+	else if ( p_data[iAttacker][P_ITEM] == ITEM_MASK && !Verify_Skill(iAttacker, RACE_UNDEAD, SKILL1) ){
+		new iHealth = get_user_health(iAttacker)
 
-		tempdamage = floatround(float(damage) * get_pcvar_num( CVAR_wc3_mask ))
+		iTempDamage = floatround(float(iDamage) * get_pcvar_num( CVAR_wc3_mask ))
 
-		if ( iHealth + tempdamage > get_user_maxhealth(attacker) ){
-			set_user_health(attacker, get_user_maxhealth(attacker))
+		if ( iHealth + iTempDamage > get_user_maxhealth(iAttacker) ){
+			set_user_health(iAttacker, get_user_maxhealth(iAttacker))
 		}
 		else
-			set_user_health(attacker, get_user_health(attacker) + tempdamage)
+			set_user_health(iAttacker, get_user_health(iAttacker) + iTempDamage)
 
-		if (iglow[attacker][1] < 1){
-			new parm[2]
-			parm[0] = attacker
-			set_task(0.01,"glow_change",TASK_GLOW+attacker,parm,2)
-		}
-		iglow[attacker][1] += tempdamage
-		iglow[attacker][0] = 0
-		iglow[attacker][2] = 0
-		iglow[attacker][3] = 0
-		if (iglow[attacker][1]>MAXGLOW)
-			iglow[attacker][1]=MAXGLOW
+		SHARED_Glow( iAttacker, 0, iTempDamage, 0, 0 );
 
-		Create_ScreenFade(attacker, (1<<10), (1<<10), (1<<12), 0, 255, 0, iglow[attacker][1])
+		Create_ScreenFade(iAttacker, (1<<10), (1<<10), (1<<12), 0, 255, 0, g_GlowLevel[iAttacker][1])
 	}
 
 	// Orb of Frost
-	else if ( p_data[attacker][P_ITEM] == ITEM_FROST && !p_data_b[attacker][PB_HEXED] )
+	else if ( p_data[iAttacker][P_ITEM] == ITEM_FROST )
 	{
 		// Only slow them if they aren't slowed/stunned already
-		if ( !SHARED_IsPlayerSlowed( victim ) )
+		if ( !SHARED_IsPlayerSlowed( iVictim ) )
 		{
 
-			p_data_b[victim][PB_SLOWED]	= true;
-			SHARED_SetSpeed( victim );
+			p_data_b[iVictim][PB_SLOWED]	= true;
+			SHARED_SetSpeed( iVictim );
 
-			set_task( 1.0, "SHARED_ResetMaxSpeed", TASK_RESETSPEED + victim );
+			set_task( 1.0, "SHARED_ResetMaxSpeed", TASK_RESETSPEED + iVictim );
 
-			if (iglow[victim][3] < 1){
-				new parm[2];
-				parm[0] = victim
-				parm[1] = 0
-				set_task(0.01,"glow_change",TASK_GLOW+victim,parm,2)
-			}
-			iglow[victim][3] += 100
-			iglow[victim][0] = 0
-			iglow[victim][1] = 0
-			iglow[victim][2] = 0
-			if (iglow[victim][3]>MAXGLOW)
-				iglow[victim][3]=MAXGLOW
+			SHARED_Glow( iAttacker, 0, 0, 0, 100 );
 
-			Create_ScreenFade(victim, (1<<10), (1<<10), (1<<12), 255, 255, 255, iglow[victim][3])
+			Create_ScreenFade(iVictim, (1<<10), (1<<10), (1<<12), 255, 255, 255, g_GlowLevel[iVictim][3])
 		}
 	}
 
-	// **************************************************
-	// Victim Abilities
-	// **************************************************
-
-	// Night Elf
-	if ( Verify_Race(victim, RACE_ELF) )
-	{
-		
-		// Thorns Aura
-		if ( Verify_Skill(victim, RACE_ELF, SKILL2) && attacker > 0 && !p_data_b[victim][PB_HEXED] ) {
-			tempdamage = floatround(float(damage) * p_thorns[p_data[victim][P_SKILL2]-1])
-			
-			WAR3_damage(attacker, victim,tempdamage,CSW_THORNS, hitplace)
-
-			if (iglow[attacker][0] < 1){
-				new parm[2]
-				parm[0] = attacker
-				set_task(0.01,"glow_change",TASK_GLOW+attacker,parm,2)
-			}
-			iglow[attacker][0] += 3*tempdamage
-			iglow[attacker][1] = 0
-			iglow[attacker][2] = 0
-			iglow[attacker][3] = 0
-			if (iglow[attacker][0]>MAXGLOW)
-				iglow[attacker][0]=MAXGLOW
-
-			Create_ScreenFade(attacker, (1<<10), (1<<10), (1<<12), 0, 0, 255, iglow[attacker][0])
-		}
-	}
-
-	// Blood Mage
-	else if ( Verify_Race(victim, RACE_BLOOD) ){
-		
-		if ( !p_data_b[victim][PB_HEXED] )
-		{
-			// Resistant Skin
-			set_user_health(victim, get_user_health(victim) + floatround(float(damage) * p_resistant[p_data[victim][P_LEVEL]]))
-		}
-	}
-
-	// Shadow Hunter
-	else if ( Verify_Race(victim, RACE_SHADOW) )
-	{
-		// Unstable Concoction Check
-		SH_Concoction( victim, attacker );
-	}
-
-
-	// Crypt Lord
-	else if ( Verify_Race(victim, RACE_CRYPT) ){
-
-		// Spiked Carapace
-		if ( Verify_Skill(victim, RACE_CRYPT, SKILL2) && attacker > 0 && !p_data_b[victim][PB_HEXED] ){						
-			tempdamage = floatround(float(damage) * p_spiked[p_data[victim][P_SKILL2]-1])
-
-			WAR3_damage(attacker, victim, tempdamage, CSW_CARAPACE, hitplace)
-
-		#if MOD == 0
-			if(get_user_armor(victim)<101)
-				set_user_armor(victim,get_user_armor(victim)+damage)
-		#endif
-
-			if (iglow[attacker][0] < 1){
-				new parm[2]
-				parm[0] = attacker
-				set_task(0.01,"glow_change",TASK_GLOW+attacker,parm,2)
-			}
-			iglow[attacker][0] += 3*tempdamage
-			iglow[attacker][1] = 0
-			iglow[attacker][2] = 0
-			iglow[attacker][3] = 0
-			if (iglow[attacker][0]>MAXGLOW)
-				iglow[attacker][0]=MAXGLOW
-
-			Create_ScreenFade(attacker, (1<<10), (1<<10), (1<<12), 255, 0, 0, iglow[attacker][0])
-		}
-	}
-
-
-	return PLUGIN_CONTINUE
+	return;
 }
 
 public on_Death(victim, killer, wpnindex, headshot){
 
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
-
+	
 #if MOD == 0
 	/* For some reason the damage passed by explosions is not actually correct
 		(perhaps armor adjustments weren't done yet), so lets check */
@@ -843,6 +331,14 @@ public on_ResetHud(id)
 // Function is called when the user is spawned at the START of each round (called before EVENT_PlayerSpawned)
 public EVENT_PlayerInitialSpawn( id )
 {
+	
+	// Display the cheat message ONLY if they just joined!
+	if ( p_data_b[id][PB_JUSTJOINED] && get_pcvar_num( CVAR_wc3_cheats ) )
+	{
+		client_print( id, print_chat, "%s WC3 Cheats are enabled on this server! Try typing /level10", g_MODclient );
+
+		p_data_b[id][PB_JUSTJOINED]			= false;
+	}
 
 	// Bot options
 	if ( is_user_bot(id) )
@@ -887,6 +383,13 @@ public EVENT_PlayerInitialSpawn( id )
 	{
 		WC3_ShowRaceInfo( id );
 	}
+	
+	// ***************
+	// Set up some skillzzz
+	// ***************
+
+	// Warden's Blink
+	WA_Blink( id );
 
 	return;
 }
@@ -1047,10 +550,10 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 	
 
 	// Make sure we have a valid victim
-	if ( 0 < iVictim <= MAXPLAYERS )
+	if ( SHARED_ValidPlayer( iVictim ) )
 	{
 		// This is a check for ultimates that need to "search" for a target
-		if ( 0 < iAttacker <= MAXPLAYERS && p_data_b[iAttacker][PB_ISSEARCHING] )
+		if ( SHARED_ValidPlayer( iAttacker ) && p_data_b[iAttacker][PB_ISSEARCHING] )
 		{
 
 			// Now lets make sure the person he's looking at isn't immune and isn't on the same team
@@ -1097,11 +600,11 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 		}
 
 		// Check to see if this user has night elf's evasion
-		if ( Verify_Skill( iVictim, RACE_ELF, SKILL1 ) )
+		if ( Verify_Skill( iVictim, RACE_ELF, SKILL1 ) && SHARED_ValidPlayer( iAttacker ) )
 		{
 			// Do the check to see if we should "evade" this shot
-			new Float:time = halflife_time();
-			if ( 0 < iAttacker <= MAXPLAYERS && time - fLastShotFired[iAttacker] < 0.1 )
+			new Float:fTime = halflife_time();
+			if ( 0 < iAttacker <= MAXPLAYERS && fTime - fLastShotFired[iAttacker] < 0.1 )
 			{
 
 				// Basically if friendly fire is on, we want to block ALL shots, otherwise we only block shots from enemies
@@ -1122,6 +625,19 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 
 					return FMRES_SUPERCEDE;
 				}
+			}
+		}
+		
+		// Mole protectant
+		if ( SHARED_ValidPlayer( iAttacker ) && p_data_b[iAttacker][PB_MOLE] && p_data[iVictim][P_ITEM2] == ITEM_PROTECTANT )
+		{	
+			new Float:fTime = halflife_time();
+
+			if ( fTime - fLastShotFired[iAttacker] < 0.1  )
+			{
+				client_print( iVictim, print_chat, "%s %L", g_MODclient, iVictim, "SHOT_DEFLECTED" );
+
+				set_tr( TR_flFraction, 1.0 );
 			}
 		}
 	}
@@ -1145,7 +661,6 @@ EVENT_JustBeforeSpawn( id )
 	// Reset certain player variables
 	p_data_b[id][PB_HAS_SPAWNED]		= false;
 	p_data[id][P_RESPAWNBY]				= 0;
-	p_data_b[id][PB_JUSTJOINED]			= false;
 
 	// Remove any reset_maxspeeds occuring (could cause a person to move during freezetime)
 	task_exists( TASK_RESETSPEED + id ) ? remove_task( TASK_RESETSPEED + id ) : 0;

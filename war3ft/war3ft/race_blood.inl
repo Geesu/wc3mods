@@ -224,3 +224,65 @@ BM_PheonixDOD( id )
 		}
 	}
 }
+
+BM_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
+{
+	// Banish
+	if ( Verify_Skill( iAttacker, RACE_BLOOD, SKILL2 ) )
+	{
+
+		if ( random_float( 0.0, 1.0 ) <= p_banish[p_data[iAttacker][P_SKILL2]-1] )
+		{
+			
+			// Do 9 damage then....
+			new iAdditionalDamage = ( ( p_data[iAttacker][P_SKILL2] > 2 ) ?  9 : 7 );
+
+			// Slap the user
+			user_slap( iVictim, 0 );
+			user_slap( iVictim, 0 );
+			user_slap( iVictim, 0 );
+
+			// Deal some damage
+			WAR3_damage( iVictim, iAttacker, iAdditionalDamage, iWeapon, iHitPlace );
+			
+			// Play the Banish sound
+			emit_sound( iVictim, CHAN_STATIC, SOUND_BANISH, 1.0, ATTN_NORM, 0, PITCH_NORM );
+
+			// Make the user glow!
+			SHARED_Glow( iVictim, 0, 0, 0, 100 );
+			
+			// Create a screen fade
+			Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 255, 255, 255, g_GlowLevel[iVictim][3] );
+		}
+	}
+
+	// Siphon Mana
+	if ( Verify_Skill( iAttacker, RACE_BLOOD, SKILL3 ) )
+	{
+		new iMoney = floatround( p_mana[p_data[iAttacker][P_SKILL3]-1] * SHARED_GetUserMoney(iVictim) );
+		
+		// Remove the money from the victim
+		SHARED_SetUserMoney( iVictim, SHARED_GetUserMoney( iVictim ) - iMoney, 1 );
+		
+		// Give the money to the attacker
+		SHARED_SetUserMoney( iAttacker, SHARED_GetUserMoney( iAttacker ) + iMoney, 1 );
+
+		// Make the user glow!
+		SHARED_Glow( iVictim, 0, iDamage, 0, 0 );
+		
+		// Create a screen fade (purplish)
+		Create_ScreenFade( iAttacker, (1<<10), (1<<10), (1<<12), 144, 58, 255, g_GlowLevel[iAttacker][1] );
+	}
+}
+
+BM_SkillsDefensive( iVictim, iDamage )
+{
+
+	// Resistant Skin
+	if ( Verify_Race( iVictim, RACE_BLOOD ) )
+	{
+		new iBonusHealth = floatround( float( iDamage ) * p_resistant[p_data[iVictim][P_LEVEL]] );
+
+		set_user_health( iVictim, get_user_health( iVictim ) + iBonusHealth );
+	}
+}

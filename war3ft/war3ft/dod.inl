@@ -118,3 +118,22 @@ public on_StatusValue(id)
 
 	return PLUGIN_CONTINUE;
 }
+
+public client_damage( attacker, victim, damage, wpnindex, hitplace, TA )
+{
+
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
+	if ( g_MOD != GAME_DOD )
+	{
+		return;
+	}
+
+
+	EVENT_Damage( victim, attacker, damage, wpnindex, hitplace );
+
+	return;
+}

@@ -2,9 +2,11 @@
 *	Race: Human Alliance Functions
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
-#define BLINK_COOLDOWN			2.0
+#define BLINK_COOLDOWN				2.0
+#define BASH_GLOW_INTENSITY			100
+#define BASH_HOLD_TIME				0.7
 
-HA_ULT_Blink( id )
+HU_ULT_Blink( id )
 {
 	
 	// User can't Blink when he/she's stunned
@@ -70,7 +72,7 @@ HA_ULT_Blink( id )
 	{
 
 		// Lets go ahead and make this check before they teleport...
-		if ( HA_ULT_BlinkProtection( id, vNewLocation ) )
+		if ( HU_ULT_BlinkProtection( id, vNewLocation ) )
 		{
 
 			ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
@@ -89,7 +91,7 @@ HA_ULT_Blink( id )
 	parm[2] = vOldLocation[1];
 	parm[3] = vOldLocation[2];
 	
-	set_task( 0.1, "_HA_ULT_BlinkStuck", TASK_BLINKSTUCK + id, parm, 4 );
+	set_task( 0.1, "_HU_ULT_BlinkStuck", TASK_BLINKSTUCK + id, parm, 4 );
 	
 	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 
@@ -101,7 +103,7 @@ HA_ULT_Blink( id )
 }
 
 // Function will check to see if a user is stuck in a wall
-public _HA_ULT_BlinkStuck( parm[] )
+public _HU_ULT_BlinkStuck( parm[] )
 {
 
 	new id = parm[0]	 
@@ -161,7 +163,7 @@ public _HA_ULT_BlinkStuck( parm[] )
 
 
 // Function will make sure the user isn't in an invalid location in a map
-HA_ULT_BlinkProtection( id, vOrigin[3] )
+HU_ULT_BlinkProtection( id, vOrigin[3] )
 {
 
 	new bool:bSlay = false;
@@ -352,4 +354,29 @@ HA_ULT_BlinkProtection( id, vOrigin[3] )
 	}
 
 	return bSlay;
+}
+
+HU_SkillsOffensive( iAttacker, iVictim )
+{
+
+	// Bash
+	if ( Verify_Skill( iAttacker, RACE_HUMAN, SKILL3 ) )
+	{
+
+		// Cannot bash if already bashed or user is slowed
+		if ( random_float( 0.0, 1.0 ) <= p_bash[p_data[iAttacker][P_SKILL3]-1] && !SHARED_IsPlayerSlowed( iVictim ) )
+		{		
+
+			p_data_b[iVictim][PB_STUNNED] = true;
+			SHARED_SetSpeed( iVictim );
+			
+			set_task( BASH_HOLD_TIME, "SHARED_ResetMaxSpeed", TASK_RESETSPEED + iVictim );
+
+			// Make the user glow!
+			SHARED_Glow( iVictim, 0, 0, 0, BASH_GLOW_INTENSITY );
+			
+			// Create a screen fade
+			Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 255, 255, 255, g_GlowLevel[iVictim][3] )
+		}
+	}
 }

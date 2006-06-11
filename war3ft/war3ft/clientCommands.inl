@@ -1,27 +1,14 @@
 #define ULT_SEARCHTIME		50			// Translates to 5 seconds
 
-public cmd_Teamselect(id,key) {
-
-	// key+1 is the team they choose
-	p_data_b[id][PB_CHANGINGTEAM] = true
-
-	if(!p_data_b[id][PB_JUSTJOINED] && !is_user_alive(id))
-		p_data_b[id][PB_DIEDLASTROUND] = true
-
+// This isn't actually called when they join spectator :/
+public cmd_Teamselect( id, key )
+{
+	p_data_b[id][PB_CHANGINGTEAM] = true;
 }
 
-public cmd_Jointeam(id){
-
-/*	new szTeam[4]
-	read_argv(1,szTeam,3)
-
-	if ( str_to_num(szTeam) == 1 || str_to_num(szTeam) == 2 || str_to_num(szTeam) == 5 )
-		p_data_b[id][PB_CHANGINGTEAM] = true*/
-
-	if(!p_data_b[id][PB_JUSTJOINED] && !is_user_alive(id))
-		p_data_b[id][PB_DIEDLASTROUND] = true
-
-	return PLUGIN_CONTINUE
+public cmd_Jointeam(id)
+{
+	p_data_b[id][PB_CHANGINGTEAM] = true;
 }
 
 public cmd_fullupdate()
@@ -144,7 +131,7 @@ public cmd_Ultimate(id)
 
 	// Blink
 	else if ( Verify_Skill(id, RACE_HUMAN, SKILL4) ){
-		HA_ULT_Blink( id );
+		HU_ULT_Blink( id );
 	}
 
 	// Chain Lightning

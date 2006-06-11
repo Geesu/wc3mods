@@ -20,6 +20,7 @@ v3.0
  - Change: Evasion and Helm will now flash your screen blue instead of previous colors
  - Change: Orc critical nades will now have a max damage of 99 or 144 depending on victim's race
  - Change: You will no longer lose your ankj/scroll of respawning if someone respawns you by Phoenix or warden's ultimate
+ - Change: Bash now holds for 0.7 seconds instead of 1.0
  - Removed: FT_impale_intensity cvar (edit this constant at the top of skills.inl)
  - Removed: FT_blink_radius cvar (replaced with NECKLACE_RADIUS define)
  - Removed: FT_healing_range cvar (defined at top of skills.inl)
@@ -43,12 +44,9 @@ v3.0
 //necklace of immunity = charges
 //spec hudmsg needs to not carry over when you spawn
 //don't depend on client_damage from csx/dodx - catch damage event
-//undead explodes when you change team; fix it
 //look over admin.inl and setlevel function ( so tired! )
 //reset skills/ultimates when user dies or right before the round starts
 //let /level show the user's XP if they're dead!
-//database pruning
-//remove reconnect timer on sql
 //save icon info
 //remove all task_exists
 //give them some invulnerability when they spawn

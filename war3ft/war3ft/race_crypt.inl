@@ -4,7 +4,8 @@
 
 #define LOCUSTSWARM_DMG_MIN				30
 #define LOCUSTSWARM_DMG_MAX				60
-
+#define CARRIONBEETLE_DAMAGE			10
+#define IMPALE_INTENSITY				10.0		// Intensity of impale
 
 CL_ULT_LocustSwarm( id )
 {
@@ -32,7 +33,7 @@ CL_ULT_LocustSwarm( id )
 	{
 
 		set_hudmessage( 178, 14, 41, -1.0, 0.3, 0, 1.0, 5.0, 0.1, 0.2, -1 );
-		show_hudmessage( id, "%L", id, "NO_VALID_TARGETS_FOUND" );
+		show_hudmessage( id, "No valid targets found" );
 
 		return;
 	}
@@ -76,7 +77,7 @@ public _CL_ULT_LocustEffect( parm[] )
 
 	if ( ULT_IsImmune( iVictim ) || !is_user_alive( iVictim ) || !p_data_b[iVictim][PB_ISCONNECTED] )
 	{
-		client_print( iAttacker, print_chat, "%s Target is no longer targetable, try casting again!" );
+		client_print( iAttacker, print_chat, "%s Target is no longer targetable, try casting again!", g_MODclient );
 
 		Ultimate_Ready( iAttacker );
 
@@ -150,8 +151,11 @@ public _CL_ULT_LocustEffect( parm[] )
 		emit_sound( iVictim, CHAN_STATIC, SOUND_LOCUSTSWARM, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 		ULT_ResetCooldown( iAttacker, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
+		
+		new szName[32];
+		get_user_name( iVictim, szName, 31 );
 
-		client_print( iAttacker, print_chat, "%s You ulted the enemy for %d damage!", g_MODclient, iDamage );
+		client_print( iAttacker, print_chat, "%s Locust Swarm hit %s for %d damage!", g_MODclient, szName, iDamage );
 	}
 
 	return;
@@ -169,4 +173,180 @@ CL_HLP_Diff( iNum, iNum2 )
 	}
 
 	return 0;
+}
+
+CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
+{
+
+	// Orb of Annihilation
+	if ( Verify_Race( iAttacker, RACE_CRYPT ) )
+	{
+
+		if ( random_float( 0.0, 1.0 ) <= p_orb[p_data[iAttacker][P_LEVEL]] )
+		{
+			new vVictimOrigin[3];
+			get_user_origin( iVictim, vVictimOrigin );
+			
+			vVictimOrigin[2] -= 20;
+			
+			// Create the orb effect
+			Create_TE_SPRITE( vVictimOrigin, g_sWave, 10, 200 );
+			
+			// Play the orb sound
+			emit_sound( iVictim, CHAN_STATIC, SOUND_ANNIHILATION, 1.0, ATTN_NORM, 0, PITCH_NORM );
+
+			// Damage the user
+			WAR3_damage( iVictim, iAttacker, ORB_DAMAGE, CSW_ORB, iHitPlace );
+		}
+	#if ADVANCED_STATS
+		else{
+			new WEAPON = CSW_ORB - CSW_WAR3_MIN
+			iStatsShots[iAttacker][WEAPON]++
+		}
+	#endif
+	}
+
+	// Carrion Beetle
+	if ( Verify_Skill( iAttacker, RACE_CRYPT, SKILL3 ) )
+	{
+		if ( random_float( 0.0, 1.0 ) <= p_carrion[p_data[iAttacker][P_SKILL3]-1] )
+		{
+			if ( p_data[iAttacker][P_CARRIONCOUNT] > 0 && is_user_alive( iVictim ) )
+			{
+				new vVictimOrigin[3], vAttackerorigin[3];
+				get_user_origin( iVictim, vVictimOrigin );
+				get_user_origin( iAttacker, vAttackerorigin );
+				
+				// Create the Carrion Beetle effect
+				Create_TE_SPRITETRAIL( vAttackerorigin, vVictimOrigin, g_sBeetle, 15, 15, 1, 2, 6 );
+				
+				// Play the carrion beetle sound
+				emit_sound( iVictim, CHAN_STATIC, SOUND_CARRION, 1.0, ATTN_NORM, 0, PITCH_NORM );
+
+				p_data[iAttacker][P_CARRIONCOUNT]--;
+
+				WAR3_damage( iVictim, iAttacker, CARRIONBEETLE_DAMAGE, CSW_CARRION, iHitPlace );
+			}
+		}
+	#if ADVANCED_STATS
+		else{
+			new WEAPON = CSW_CARRION - CSW_WAR3_MIN
+			iStatsShots[iAttacker][WEAPON]++
+		}
+	#endif
+	}
+	
+	// Impale
+	if ( Verify_Skill( iAttacker, RACE_CRYPT, SKILL1 ) )
+	{
+
+		if ( random_float( 0.0, 1.0 ) <= p_impale[p_data[iAttacker][P_SKILL1]-1] )
+		{
+
+			// Play the impale sound
+			emit_sound( iVictim, CHAN_STATIC, SOUND_IMPALE, 1.0, ATTN_NORM, 0, PITCH_NORM );
+			
+			new parm[2];
+			parm[0] = iVictim;
+			parm[1] = 0;
+			
+			// Impale them!!
+			_CL_Impale( parm );
+			
+			// Lets get a little screenshake going :)
+			Create_ScreenShake( iVictim, (255<< 14), (10 << 14), (255<< 14) );
+		}
+	}
+}
+
+CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace )
+{
+	// Spiked Carapace
+	if ( Verify_Skill( iVictim, RACE_CRYPT, SKILL2 ) )
+	{						
+		new iTemp = floatround( float( iDamage ) * p_spiked[p_data[iVictim][P_SKILL2]-1] );
+		
+		// Give the victim some armor...
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			new CsArmorType:ArmorType;
+			new iCurArmor = cs_get_user_armor( iVictim, ArmorType );
+			new iMaxArmor = SHARED_GetMaxArmor( iVictim );
+			
+			// Then set their armor to be the max
+			if ( iCurArmor + iTemp > iMaxArmor )
+			{
+				cs_set_user_armor( iVictim, iMaxArmor, ArmorType );
+			}
+			
+			// Just give them some bonus armor
+			else
+			{
+				cs_set_user_armor( iVictim, iCurArmor + iTemp, ArmorType );
+			}
+		}
+		
+		if ( is_user_alive( iAttacker ) )
+		{
+			// Damage our attacker!
+			WAR3_damage( iAttacker, iVictim, iTemp, CSW_CARAPACE, iHitPlace );
+
+			// Make the user glow!
+			SHARED_Glow( iAttacker, ( 3 * iTemp ), 0, 0, 0 );
+			
+			// Create a screen fade
+			Create_ScreenFade( iAttacker, (1<<10), (1<<10), (1<<12), 255, 0, 0, iTemp );
+		}
+	}
+}
+
+
+public _CL_Impale( parm[] )
+{
+
+	new id = parm[0]
+
+	// Victim disconnected :/
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
+
+	// Lets mess with their angles!!
+	if ( parm[1] < 3 )
+	{
+		new Float:iMin = -1.0 * IMPALE_INTENSITY;
+		new Float:iMax = IMPALE_INTENSITY;
+
+		new Float:vAngle[3], Float:vVAngle[3], i;
+		
+		// Get the user's current angles
+		entity_get_vector( id, EV_VEC_angles, vAngle );
+		entity_get_vector( id, EV_VEC_v_angle, vVAngle );
+		
+		// If we modify the Z-Axis then the user will roll
+		for ( i = 0; i < 2; i++ )
+		{
+			vAngle[i] = vAngle[i] + random_float( iMin, iMax );
+			vVAngle[i] = vVAngle[i] + random_float( iMin, iMax );
+		}
+
+		entity_set_int( id, EV_INT_fixangle, 1 );
+		entity_set_vector( id, EV_VEC_angles, vAngle );
+		entity_set_vector( id, EV_VEC_v_angle, vVAngle );
+
+		// Increment pls
+		parm[1]++;
+
+		// Lets do it again!
+		set_task( 0.1, "_CL_Impale", TASK_IMPALE + id, parm, 2 );
+	}
+	
+	// OK we're done :P
+	else
+	{
+		entity_set_int( id, EV_INT_fixangle, 1 );
+	}
+
+	return;
 }
