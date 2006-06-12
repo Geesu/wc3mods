@@ -2,44 +2,53 @@
 
 public ITEM_Buy( id, iItem )
 {
+
+	// User doesn't have the money
 	if ( SHARED_GetUserMoney( id ) < ITEM_COST[iItem] )
 	{
 		client_print( id, print_center, "%L", id, "INSUFFICIENT_FUNDS" );
-		return PLUGIN_HANDLED;
+
+		return;
 	}
 	
+	// User already owns the item!
 	else if ( ITEM_Has( id, iItem ) && iItem != ITEM_RING )
 	{
 		client_print( id, print_center, "%L", id, "ALREADY_OWN_THAT_ITEM" );
-		return PLUGIN_HANDLED;
-	}
 
+		return;
+	}
+	
+	// Only MOLE + ANKH can be bought when dead
 	else if ( !is_user_alive( id ) && ( iItem != ITEM_ANKH || iItem != ITEM_MOLE ) ) 
 	{
 		client_print( id, print_center, "%L", id, "NOT_PURCHASE_WHEN_DEAD" );
 
-		return PLUGIN_HANDLED;
+		return;
 	}
-
+	
+	// User has necklace + blink, they don't need a necklace
 	else if ( iItem == ITEM_NECKLACE && p_data_b[id][PB_WARDENBLINK] )
 	{
 		client_print( id, print_center, "You are already immune to ultimates through one of your skills!" );
 
-		return PLUGIN_HANDLED;
+		return;
 	}
 
+	// User doesn't need an ankh if they're going to reincarnate
 	else if ( iItem == ITEM_ANKH && Verify_Skill( id, RACE_ORC, SKILL3 ) == 3 )
 	{
 		client_print( id, print_center, "You will already reincarnate your weapons through one of your skills!" );
 
-		return PLUGIN_HANDLED;
+		return;
 	}
-
+	
+	// User has purchased the maximum allowed rings
 	else if ( g_iMultipleItems[id][0] >= 5 && iItem == ITEM_RING )
 	{
 		client_print( id, print_center, "%L", id, "NOT_PURCHASE_MORE_THAN_FIVE_RINGS" );
 
-		return PLUGIN_HANDLED;
+		return;
 	}
 
 	if ( ITEM_Set( id, iItem ) )
@@ -50,7 +59,7 @@ public ITEM_Buy( id, iItem )
 		SHARED_SetUserMoney( id, iNewMoney );
 	}
 
-	return PLUGIN_HANDLED;
+	return;
 }
 
 bool:ITEM_CanBuy( id )
@@ -85,47 +94,44 @@ bool:ITEM_CanBuy( id )
 
 public ITEM_Set( id, iItem )
 {
-	new iItemSlot = ITEM_GetSlot( id );
 
+	new iItemSlot = ITEM_GetSlot( id );
+	
 	new iOldItem = g_iShopMenuItems[id][iItemSlot];
 
+	// Remove the user's old item if necessary
 	if ( iOldItem > ITEM_NONE )
-		ITEM_Remove( id, iOldItem, iItemSlot );
-
-	g_iShopMenuItems[id][iItemSlot] = iItem;
-
-	switch( iItem )
 	{
-		#if MOD == 0
+		ITEM_Remove( id, iOldItem, iItemSlot );
+	}
+	
+	// Set their new item
+	g_iShopMenuItems[id][iItemSlot] = iItem;
+	
+	// Display a message regarding the item they just purchased
+	switch ( iItem )
+	{
+		case ITEM_ANKH:
+		{
+			(g_MOD == GAME_DOD)								? client_print( id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_1" ) : 0;
+			(g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO)	? client_print( id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_1" ) : 0;
+		}
 
-			case ITEM_ANKH:
-			{
-				client_print( id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_1" );
-			}
-
-			case ITEM_BOOTS:
+		case ITEM_BOOTS:
+		{
+			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 			{
 				new Float:fSpeed =  100.0 * ( 1.0-( 260.0 / get_pcvar_float( CVAR_wc3_boots ) ) );
 				client_print( id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_2", fSpeed );
-				SHARED_SetSpeed( id );
 			}
 
-		#endif
-
-		#if MOD == 1
-
-			case ITEM_ANKH:
-			{
-				client_print( id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_1" );
-			}
-
-			case ITEM_BOOTS:
+			else if ( g_MOD == GAME_DOD )
 			{
 				client_print( id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_2" );
-				SHARED_SetSpeed( id );
 			}
 
-		#endif
+			SHARED_SetSpeed( id );
+		}
 
 		case ITEM_CLAWS:
 		{
@@ -168,10 +174,16 @@ public ITEM_Set( id, iItem )
 		case ITEM_SCROLL:
 		{
 			if ( is_user_alive( id ) )
+			{
 				client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_1" );
+			}
 
 			else
+			{
 				client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_1_DEAD" );
+
+				ITEM_Scroll( id );
+			}
 		}
 
 		case ITEM_PROTECTANT:
@@ -208,21 +220,21 @@ public ITEM_Set( id, iItem )
 
 			g_iMultipleItems[id][0]++;
 
-			if( !task_exists( TASK_ITEM_RING + id ) )
+			if ( !task_exists( TASK_ITEM_RING + id ) )
 			{
-				ITEM_Ring( id );
+				_ITEM_Ring( id );
 			}
 		}
 
 		case ITEM_CHAMELEON:
 		{
-			#if MOD == 1
+			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+			{
 
 				client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_8" );
 
-			#endif
-
-			SHARED_ChangeSkin( id, SKIN_SWITCH );
+				SHARED_ChangeSkin( id, SKIN_SWITCH );
+			}
 		}
 
 		case ITEM_MOLE:
@@ -231,6 +243,7 @@ public ITEM_Set( id, iItem )
 		}
 
 	}
+
 	WC3_ShowBar( id );
 
 	return 1;
@@ -256,6 +269,10 @@ public ITEM_Remove( id, iItem, iItemSlot )
 		case ITEM_HEALTH:
 		{
 			new iNewHealth = get_user_health( id ) - get_pcvar_num( CVAR_wc3_health );
+			
+			// Lets not kill the user, give them 1 health
+			iNewHealth = ( ( iNewHealth <= 0 ) ? 1 : iNewHealth );
+
 			set_user_health( id, iNewHealth );
 		}
 
@@ -309,15 +326,26 @@ bool:ITEM_Has( id, iItem )
 	return false;
 }
 
-public ITEM_Tome( id )
+bool:ITEM_Had( id, iItem )
+{
+	if ( g_iItemOnDeath[id][ITEM_SLOT_ONE] == iItem || g_iItemOnDeath[id][ITEM_SLOT_TWO] == iItem )
+		return true;
+
+	return false;
+}
+
+
+ITEM_Tome( id )
 {
 	if ( !WAR3_Check() || !p_data_b[id][PB_ISCONNECTED] )
-		return PLUGIN_HANDLED;
+		return;
 
 	new iXp = get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]];
 		
 	if ( g_MOD == GAME_DOD )
+	{
 		iXp *= 2;
+	}
 
 	client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU_9", iXp );
 
@@ -325,58 +353,51 @@ public ITEM_Tome( id )
 
 	emit_sound( id, CHAN_STATIC, "warcraft3/Tomes.wav", 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-	return PLUGIN_HANDLED;
+	return;
 }
 
-public ITEM_Gloves( id )
+ITEM_Gloves( id )
 {
 	if ( !WAR3_Check() )
-		return PLUGIN_HANDLED;
-
-	if ( !p_data_b[id][PB_ISCONNECTED] || !is_user_alive( id ) )
-		return PLUGIN_HANDLED;
+	{
+		return;
+	}
 
 	if ( !SHARED_HasGrenade( id ) )
 	{
-		new iParm[1];
-		iParm[0] = id;
-		ITEM_Glove_Give( iParm );
+		_ITEM_Glove_Give( id );
 	}
 
-	return PLUGIN_HANDLED;
+	return;
 }
 
-public ITEM_Glove_Give( iParm[1] )
+public _ITEM_Glove_Give( id )
 {
 	if ( !WAR3_Check() )
 	{
-		return PLUGIN_HANDLED;
+		return;
 	}
 
-	new id = iParm[0];
+	if ( id >= TASK_ITEM_GLOVES )
+	{
+		id -= TASK_ITEM_GLOVES;
+	}
 
 	if ( !p_data_b[id][PB_ISCONNECTED] || !is_user_alive( id ) )
 	{
-		return PLUGIN_HANDLED;
+		return;
 	}
 
-	
-	#if MOD == 0
-
-		set_hudmessage( 0, 100, 0, 0.05, 0.65, 2, 0.02, 10.0, 0.01, 0.1, 2 );
-		show_hudmessage( id, "%L", id, "ENJOY_A_GRENADE" );
-
+	// Counter-Strike or Condition Zero grenade
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
 		give_item( id, "weapon_hegrenade" );
+	}
 
-	#endif
-
-	#if MOD == 1
-
-		new szMessage[128];
-		format( szMessage, 127, "%L", id, "ENJOY_A_GRENADE" );
-		Create_HudText( id, szMessage, 1 );
-		
-		if( get_user_team( id ) == ALLIES )
+	// Day of Defeat
+	else if ( g_MOD == GAME_DOD )
+	{
+		if ( get_user_team( id ) == ALLIES )
 		{
 			give_item( id, "weapon_handgrenade" );
 		}
@@ -384,13 +405,15 @@ public ITEM_Glove_Give( iParm[1] )
 		{
 			give_item( id, "weapon_stickgrenade" );
 		}
+	}
+	
+	// Display a message to the user
+	WC3_Status_Text( id, 10.0, 0.65, "%L", id, "ENJOY_A_GRENADE" )
 
-	#endif
-
-	return PLUGIN_HANDLED;
+	return;
 }		
 
-public ITEM_BuyRings( id )
+ITEM_BuyRings( id )
 {
 	new iMoney;
 	
@@ -409,29 +432,29 @@ public ITEM_BuyRings( id )
 		ITEM_Set( id, ITEM_RING );
 	}
 
-	return PLUGIN_HANDLED;
+	return;
 }
 
-public ITEM_Ring( id )
+public _ITEM_Ring( id )
 {
 	if ( !WAR3_Check() )
 	{
-		return PLUGIN_HANDLED;
+		return;
 	}
 
-	if ( id > TASK_ITEM_RING )
+	if ( id >= TASK_ITEM_RING )
 	{
 		id -= TASK_ITEM_RING;
 	}
 
-	if( !p_data_b[id][PB_ISCONNECTED] || !ITEM_Has( id, ITEM_RING ) )
+	if ( !p_data_b[id][PB_ISCONNECTED] || !ITEM_Has( id, ITEM_RING ) )
 	{
-		return PLUGIN_HANDLED;
+		return;
 	}
 
 	new iBonusHealth = g_iMultipleItems[id][0];
 
-	while( iBonusHealth > 0 )
+	while ( iBonusHealth > 0 )
 	{
 		new iHealth =  get_user_health( id ) + 1;
 
@@ -443,7 +466,101 @@ public ITEM_Ring( id )
 		iBonusHealth--;
 	}
 
-	set_task( 2.0, "ITEM_Ring", TASK_ITEM_RING + id );
+	set_task( 2.0, "_ITEM_Ring", TASK_ITEM_RING + id );
 
-	return PLUGIN_HANDLED;
+	return;
+}
+
+ITEM_Scroll( id )
+{
+	// Make sure the user isn't about to respawn when we do these checks
+	if ( !p_data[id][P_RESPAWNBY] )
+	{
+		
+		p_data[id][P_RESPAWNBY] = RESPAWN_ITEM;
+
+		set_task( 1.2, "_SHARED_Spawn", TASK_SPAWN + id );
+	}
+}
+
+ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
+{
+	// Claws of Attack
+	if ( ITEM_Has( iAttacker, ITEM_CLAWS ) )
+	{	
+		WAR3_damage( iVictim, iAttacker, get_pcvar_num( CVAR_wc3_claw ), iWeapon, iHitPlace );
+		
+		SHARED_Glow( iAttacker, (2 * get_pcvar_num( CVAR_wc3_claw ) ), 0, 0, 0 );
+
+		Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 255, 0, 0, g_GlowLevel[iVictim][0] );
+	}
+
+	// Mask of Death
+	else if ( ITEM_Has( iAttacker, ITEM_MASK ) )
+	{
+		new iHealth = get_user_health( iAttacker );
+		new iBonusHealth = floatround( float( iDamage ) * get_pcvar_num( CVAR_wc3_mask ) );
+		
+		new iVampiricBonus = Verify_Skill( iAttacker, RACE_UNDEAD, SKILL1 );
+		
+		// Then the user already gets a bonus, lets lower the total amount the user is going to get
+		if ( iVampiricBonus )
+		{
+			iBonusHealth /= iVampiricBonus;
+		}
+		
+		// User needs to be set to max health
+		if ( iHealth + iBonusHealth > get_user_maxhealth( iAttacker ) )
+		{
+			set_user_health( iAttacker, get_user_maxhealth( iAttacker ) );
+		}
+		
+		// Give them bonus
+		else
+		{
+			set_user_health( iAttacker, iHealth + iBonusHealth );
+		}
+
+		SHARED_Glow( iAttacker, 0, iBonusHealth, 0, 0 );
+
+		Create_ScreenFade( iAttacker, (1<<10), (1<<10), (1<<12), 0, 255, 0, g_GlowLevel[iAttacker][1] );
+	}
+
+	// Orb of Frost
+	else if ( ITEM_Has( iAttacker, ITEM_FROST ) )
+	{
+		// Only slow them if they aren't slowed/stunned already
+		if ( !SHARED_IsPlayerSlowed( iVictim ) )
+		{
+
+			p_data_b[iVictim][PB_SLOWED]	= true;
+
+			SHARED_SetSpeed( iVictim );
+
+			set_task( 1.0, "SHARED_ResetMaxSpeed", TASK_RESETSPEED + iVictim );
+
+			SHARED_Glow( iAttacker, 0, 0, 0, 100 );
+
+			Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 255, 255, 255, g_GlowLevel[iVictim][3] );
+		}
+	}
+}
+
+// Called last after a user dies
+ITEM_UserDied( id )
+{
+	// Save the user's items on death...
+	g_iItemOnDeath[id][ITEM_SLOT_ONE] = g_iShopMenuItems[id][ITEM_SLOT_ONE];
+	g_iItemOnDeath[id][ITEM_SLOT_TWO] = g_iShopMenuItems[id][ITEM_SLOT_TWO];
+
+	// The user just died, remove all items
+	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE )
+	{
+		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_ONE], ITEM_SLOT_ONE );
+	}
+
+	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE )
+	{
+		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_TWO], ITEM_SLOT_TWO );
+	}
 }

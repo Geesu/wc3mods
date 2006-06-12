@@ -340,19 +340,10 @@ public WAR3_death_victim(victim_id, killer_id)
 		// Check to see if a player should be revived
 		BM_PhoenixSpawn( victim_id );
 
-		// Make sure the user isn't about to respawn when we do these checks
-		if ( !p_data[victim_id][P_RESPAWNBY] )
+		// Does the user have a scroll?
+		if ( ITEM_Has( victim_id, ITEM_SCROLL ) )
 		{
-
-			// Does the user have a scroll?
-			if ( p_data[victim_id][P_ITEM2] == ITEM_SCROLL )
-			{
-				p_data[victim_id][P_RESPAWNBY] = RESPAWN_ITEM;
-
-				p_data[victim_id][P_ITEM] = 0;
-
-				set_task( 1.2, "_SHARED_Spawn", TASK_SPAWN + victim_id );
-			}
+			ITEM_Scroll( victim_id );
 		}
 
 		// Should we respawn for Vengeance?
@@ -372,12 +363,7 @@ public WAR3_death_victim(victim_id, killer_id)
 		}
 	}
 
-	// The user just died, remove all items
-	if ( g_iShopMenuItems[victim_id][ITEM_SLOT_ONE] > ITEM_NONE )
-		ITEM_Remove( victim_id, g_iShopMenuItems[victim_id][ITEM_SLOT_ONE], ITEM_SLOT_ONE );
-
-	if ( g_iShopMenuItems[victim_id][ITEM_SLOT_TWO] > ITEM_NONE )
-		ITEM_Remove( victim_id, g_iShopMenuItems[victim_id][ITEM_SLOT_TWO], ITEM_SLOT_TWO );
+	ITEM_UserDied( victim_id );
 
 	set_task( 1.0, "WC3_GetUserInput", TASK_GETINPUT + victim_id );
 
@@ -608,71 +594,6 @@ public WAR3_Check_Dev( id )
 	{
 		client_print( 0, print_chat, "%s There are no developers currently in this server", g_MODclient );
 	}
-}
-
-WAR3_Show_Spectator_Info(id, targetid){
-
-	new name[32]
-	get_user_name(targetid ,name,31) 
-	new temp[512]
-	new message[1048]
-
-	new short_race_name[SHORT_RACE_NAME_LENGTH]
-	lang_GetRaceName(p_data[targetid][0],id,short_race_name,SHORT_RACE_NAME_LENGTH_F, true)
-
-	if (p_data[targetid][P_LEVEL]==0)
-		format(temp,511,"%s   XP: %d/%d",short_race_name,p_data[targetid][P_XP],xplevel[p_data[targetid][P_LEVEL]+1])
-	else if (p_data[targetid][P_LEVEL]<10)
-		format(temp,511,"%s %L: %d   XP: %d/%d",short_race_name,id,"WORD_LEVEL",p_data[targetid][P_LEVEL],p_data[targetid][P_XP],xplevel[p_data[targetid][P_LEVEL]+1])
-	else
-		format(temp,511,"%s %L: %d   XP: %d ",short_race_name,id,"WORD_LEVEL",p_data[targetid][P_LEVEL],xplevel[p_data[targetid][P_LEVEL]])
-
-	add(message,1047,temp)
-
-	if (p_data[targetid][P_ITEM]!=0 && (p_data[targetid][P_ITEM2]!=0 && p_data[targetid][P_ITEM2]!=ITEM_MOLE)){
-		new item_name[ITEM_NAME_LENGTH], item_name2[ITEM_NAME_LENGTH]
-		lang_GetItemName(p_data[targetid][P_ITEM],id,item_name,ITEM_NAME_LENGTH_F, 1)
-		lang_GetItemName(p_data[targetid][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F, 2)
-
-		if (p_data[targetid][P_ITEM2]==ITEM_RING)
-			format(temp,511,"%L",id,"SHOWRANK_PLAYERITEM",item_name,item_name2,p_data[targetid][P_RINGS])
-		else
-			format(temp,511,"%L",id,"SHOWRANK_PLAYERITEM2",item_name,item_name2)
-	}
-	else if (p_data[targetid][P_ITEM]==0 && (p_data[targetid][P_ITEM2]!=0 && p_data[targetid][P_ITEM2]!=ITEM_MOLE)){
-		new item_name2[ITEM_NAME_LENGTH]
-		
-		lang_GetItemName(p_data[targetid][P_ITEM2],id,item_name2,ITEM_NAME_LENGTH_F, 2)
-
-		if (p_data[targetid][P_ITEM2]==ITEM_RING)
-			format(temp,511,"^n%s x%d",item_name2,p_data[targetid][P_RINGS])
-		else
-			format(temp,511,"^n%s",item_name2)
-	}
-	else
-		format(temp,511,"")
-
-	add(message,1047,temp)
-
-	new thehealth = get_user_health(targetid)
-	
-	if ( thehealth > 1500 )
-		thehealth -= 2048
-	else if ( thehealth > 500 )
-		thehealth -= 1024
-
-	#if MOD == 0
-		format(temp,511,"%L",id,"CURRENT_HEALTH",thehealth,get_user_armor(targetid))
-	#else
-		format(temp,511,"%L",id,"CURRENT_HEALTH",thehealth,0)
-	#endif
-	add(message,1047,temp)
-	if(get_pcvar_num( CVAR_wc3_spec_position )==0)
-		set_hudmessage(255,255,255,0.018,0.9,2, 1.5, 12.0, 0.02, 5.0, 1) 
-	else
-		set_hudmessage(255,255,255,0.65,0.9,2, 1.5, 12.0, 0.02, 5.0, 1) 
-
-	show_hudmessage(id,message) 
 }
 
 public WAR3_Kill( id, weapon )
@@ -994,8 +915,8 @@ WC3_ShowBar( id )
 	new szRaceName[64], szShortRaceName[32], szItemName[32], szItemName2[32];
 
 	// Get the item and race names
-	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_ONE], id, szItemName, 31, 1, true );
-	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_TWO], id, szItemName2, 31, 2, true );
+	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_ONE], id, szItemName, 31, true );
+	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_TWO], id, szItemName2, 31, true );
 	lang_GetRaceName( p_data[id][P_RACE], id, szRaceName, 63 );
 	lang_GetRaceName( p_data[id][P_RACE], id, szShortRaceName, 31, true );
 	
@@ -1019,7 +940,7 @@ WC3_ShowBar( id )
 			}
 
 			// User is under level 10
-			else if(p_data[id][P_LEVEL]<10)
+			else if ( p_data[id][P_LEVEL] < 10 )
 			{
 				pos += formatex( szRaceInfo[pos], 255, "%s %L: %d   XP: %d/%d ", szShortRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
 			}			
@@ -1067,13 +988,13 @@ WC3_ShowBar( id )
 	// Reset our position since we're using a new array
 	pos = 0;
 
-	// User has an item from shopmenu 1	
+	// User has one item
 	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE )
 	{
 		pos += formatex( szItemInfo[pos], 256-pos, "%s", szItemName );
 	}
 
-	// User has an item from shopmenu 2
+	// User has another item
 	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE )
 	{
 		// Then the string isn't empty and we have information in it (so we have a first item)
@@ -1235,17 +1156,17 @@ WC3_HandleCommand( id, szCmd[] )
 
 	else if ( WC3_CommandEqual( szCmd, "shopmenu" ) )
 	{
-		menu_Shopmenu_One(id)
+		MENU_Shopmenu( id, 0 );
 	}
 
 	else if ( WC3_CommandEqual( szCmd, "resetxp" ) )
 	{
-		menu_ResetXP(id)
+		menu_ResetXP( id );
 	}
 
 	else if ( WC3_CommandEqual( szCmd, "itemsinfo" ) )
 	{
-		MOTD_Itemsinfo(id)
+		MOTD_ItemsInfo( id, 0 )
 	}
 	else if ( WC3_CommandEqual( szCmd, "war3menu" ) )
 	{
@@ -1302,7 +1223,7 @@ WC3_HandleCommand( id, szCmd[] )
 
 		if ( WC3_CommandEqual( szCmd, "itemsinfo2" ) )
 		{
-			MOTD_Itemsinfo2( id );
+			MOTD_ItemsInfo( id, 9 );
 		}
 
 		else if ( WC3_CommandEqual( szCmd, "rings" ) )
@@ -1317,7 +1238,7 @@ WC3_HandleCommand( id, szCmd[] )
 
 		else if ( WC3_CommandEqual( szCmd, "shopmenu2" ) )
 		{
-			menu_Shopmenu_Two( id );
+			MENU_Shopmenu( id, 9 );
 		}
 
 	}
@@ -1386,4 +1307,101 @@ WC3_ResetSkills( id )
 	}
 
 	return 0;
+}
+
+WC3_ShowSpecInfo( id, iTargetID )
+{
+	// Get the target's name
+	new szTargetName[32];
+	get_user_name( iTargetID, szTargetName, 31 ); 
+	
+	// Get the target's race name
+	new szRaceName[64];
+	lang_GetRaceName( p_data[iTargetID][P_RACE], id, szRaceName, 63, true );
+	
+	new szMsg[512], iMsgPos = 0;
+
+	// User is level 0
+	if ( p_data[iTargetID][P_LEVEL] == 0 )
+	{
+		iMsgPos += formatex( szMsg, 511, "%s  XP: %d/%d", szRaceName, p_data[iTargetID][P_XP], xplevel[p_data[iTargetID][P_LEVEL]+1] );
+	}
+
+	// User is under level 10
+	else if ( p_data[iTargetID][P_LEVEL] < 10 )
+	{
+		iMsgPos += formatex( szMsg, 511, "%s %L: %d   XP: %d/%d", szRaceName, id, "WORD_LEVEL", p_data[iTargetID][P_LEVEL], p_data[iTargetID][P_XP], xplevel[p_data[iTargetID][P_LEVEL]+1] );
+	}			
+		
+	// User is level 10
+	else
+	{
+		iMsgPos += formatex( szMsg, 511, "%s %L: %d   XP: %d", szRaceName, id, "WORD_LEVEL", p_data[iTargetID][P_LEVEL], p_data[iTargetID][P_XP] );
+	}
+	
+	// Reset our position counter
+	new pos = 0;
+
+	new szItemInfo[256], szItemName[32], szItemName2[32];
+
+	// Get the item and race names
+	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_ONE], id, szItemName, 31, true );
+	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_TWO], id, szItemName2, 31, true );
+
+	// User has one item
+	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE && g_iShopMenuItems[id][ITEM_SLOT_ONE] != ITEM_MOLE )
+	{
+		pos += formatex( szItemInfo[pos], 256-pos, "^n%s", szItemName );
+	}
+
+	// User has another item
+	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE && g_iShopMenuItems[id][ITEM_SLOT_ONE] != ITEM_MOLE )
+	{
+		// Then the string isn't empty and we have information in it (so we have a first item)
+		if ( szItemInfo[0] )
+		{
+			pos += formatex( szItemInfo[pos], 256-pos, " %L %s", id, "WORD_AND", szItemName2 );
+		}
+
+		// We don't need the word "and"
+		else
+		{
+			pos += formatex( szItemInfo[pos], 256-pos, "^n%s", szItemName2 );
+		}
+		
+		// Then they have rings, lets print how many there are
+		if ( ITEM_Has( id, ITEM_RING ) && p_data[id][P_RINGS] > 1 )
+		{
+			pos += formatex( szItemInfo[pos], 256-pos, " x%d", p_data[id][P_RINGS] );
+		}
+	}
+
+	add( szMsg, 511, szItemInfo );
+
+
+	// Add the Health + Armor to the message
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		iMsgPos += formatex( szMsg[iMsgPos], 512-iMsgPos, "^n%L: %d^n%L: %d", id, "CURRENT_HEALTH", get_user_health( iTargetID ), id, "WORD_ARMOR", get_user_armor( iTargetID ) );
+	}
+	
+	// No armor in DOD
+	else if ( g_MOD == GAME_DOD )
+	{
+		iMsgPos += formatex( szMsg[iMsgPos], 512-iMsgPos, "^n%L: %d", id, "CURRENT_HEALTH", get_user_health( iTargetID ) );
+	}
+	
+	
+	// Format the message
+	if ( get_pcvar_num( CVAR_wc3_spec_position ) == 0 )
+	{
+		set_hudmessage( 255, 255, 255, 0.018, 0.9, 2, 1.5, 12.0, 0.02, 5.0, 1 );
+	}
+	else
+	{
+		set_hudmessage( 255, 255, 255, 0.65, 0.9, 2, 1.5, 12.0, 0.02, 5.0, 1 );
+	}
+	
+	// Show the message
+	show_hudmessage( id, szMsg );
 }

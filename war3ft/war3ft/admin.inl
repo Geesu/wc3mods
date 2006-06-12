@@ -18,63 +18,6 @@ public Admin_TakeXP()
 	return PLUGIN_HANDLED;
 }
 
-public Admin_GiveMole( id )
-{
-	if ( !warcraft3 )
-		return PLUGIN_HANDLED;
-
-    if ( !( get_user_flags( id ) & XP_get_admin_flag() ) )
-	{
-		client_print( id,print_console, "%L", id, "YOU_HAVE_NO_ACCESS", g_MODclient );
-		return PLUGIN_HANDLED;
-	}
-
-	new szArg[32] ;
-
-	read_argv( 1, szArg, 31 );
-
-	if( equali( szArg, "@ALL" ) )
-	{
-		new iPlayers[32], iTotalPlayers, i;
-		get_players( iPlayers, iTotalPlayers ); 
-
-		for( i = 1; i <= iTotalPlayers; i++ )
-		{
-			p_data[iPlayers[i]][P_ITEM2] = ITEM_MOLE;
-			WC3_ShowBar( iPlayers[i] );
-		} 
-	}
-	else if ( szArg[0] == '@' )
-	{ 
-		new iPlayers[32], iTotalPlayers, i;
-		get_players( iPlayers, iTotalPlayers, "e", szArg[1] );
-
-		if ( iTotalPlayers < 1 )
-		{ 
-			console_print( id, "%L", id, "NO_CLIENTS_IN_TEAM" );
-			return PLUGIN_HANDLED ;
-		}
-
-		for( i = 1; i <= iTotalPlayers; i++ )
-		{
-			p_data[iPlayers[i]][P_ITEM2]=ITEM_MOLE
-			WC3_ShowBar( iPlayers[i] );
-		} 
-	}
-	else
-	{ 
-		new iPlayer = find_target( id, szArg );
-
-		if ( !iPlayer ) 
-			return PLUGIN_HANDLED;
-
-		p_data[iPlayer][P_ITEM2] = ITEM_MOLE;
-		WC3_ShowBar( iPlayer );
-	} 
-
-	return PLUGIN_HANDLED;
-}
-
 public changeXP()
 {
 	if ( !warcraft3 )

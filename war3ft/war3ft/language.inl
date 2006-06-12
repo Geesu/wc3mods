@@ -97,10 +97,10 @@ lang_GetRaceName ( race_id, id, race_name[], len, bool:shortLookup = false )
 /*
 	Description: Function will return the shopmenu item name based on the item id and the language of the user
 */
-lang_GetItemName ( item_id, id, item_name[], len, shop_id, bool:shortLookup = false )
+lang_GetItemName ( item_id, id, item_name[], len, bool:shortLookup = false )
 {
 	
-	if ( item_id == 0 )
+	if ( item_id < 0 )
 	{
 		return;
 	}
@@ -109,30 +109,16 @@ lang_GetItemName ( item_id, id, item_name[], len, shop_id, bool:shortLookup = fa
 
 	if ( shortLookup == true )
 	{
-		if ( shop_id == 1 )
-		{
-			formatex( szItemHelper, 63, "SHORT_ITEMNAME_%d", item_id );
-		}
-		else
-		{
-			formatex( szItemHelper, 63, "SHORT_ITEMNAME%d_%d", shop_id, item_id );
-		}
+		formatex( szItemHelper, 63, "ITEM_S_%d", item_id );
 	}
 	else
 	{
-		if ( shop_id == 1 )
-		{
-			formatex( szItemHelper, 63, "ITEMNAME_%d", item_id );
-		}
-		else
-		{
-			formatex( szItemHelper, 63, "ITEMNAME%d_%d", shop_id, item_id );
-		}
+		formatex( szItemHelper, 63, "ITEM_%d", item_id );
 	}
 
-	// Lookup the race name
+	// Lookup the item name
 
-	formatex( item_name, len-1, "%L", id, szItemHelper );
+	formatex( item_name, len, "%L", id, szItemHelper );
 }
 
 /*

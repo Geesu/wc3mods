@@ -9,12 +9,9 @@ public grenade_throw( index, greindex, wId )
 
 	if ( ITEM_Has( index, ITEM_GLOVES ) )
 	{
-		new iParm[1];
-		iParm[0] = index;
+		new Float:fTimer = get_pcvar_float( CVAR_wc3_glove_timer );
 
-		new iTimer = get_pcvar_num( CVAR_wc3_glove_timer );
-
-		set_task( float( iTimer ), "ITEM_Glove_Give", TASK_ITEM_GLOVES + index, iParm, 1 );
+		set_task( fTimer, "_ITEM_Glove_Give", TASK_ITEM_GLOVES + index );
 	}
 
 	// Make sure the user has the skill and we actually have a grenade index
@@ -116,53 +113,8 @@ public EVENT_Damage( iVictim, iAttacker, iDamage, iWeapon, iHitPlace )
 		Verify_Race( iVictim, RACE_CRYPT )		? CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace ) : 0;
 	}
 
-	new iTempDamage;
-
 	// Item abilities
-
-	// Claws of Attack
-	if ( p_data[iAttacker][P_ITEM] == ITEM_CLAWS ){	
-		WAR3_damage(iVictim, iAttacker, get_pcvar_num( CVAR_wc3_claw ), iWeapon, iHitPlace)
-		
-		SHARED_Glow( iAttacker, (2 * get_pcvar_num( CVAR_wc3_claw ) ), 0, 0, 0 );
-
-		Create_ScreenFade(iVictim, (1<<10), (1<<10), (1<<12), 255, 0, 0, g_GlowLevel[iVictim][0])
-	}
-
-	// Mask of Death
-	else if ( p_data[iAttacker][P_ITEM] == ITEM_MASK && !Verify_Skill(iAttacker, RACE_UNDEAD, SKILL1) ){
-		new iHealth = get_user_health(iAttacker)
-
-		iTempDamage = floatround(float(iDamage) * get_pcvar_num( CVAR_wc3_mask ))
-
-		if ( iHealth + iTempDamage > get_user_maxhealth(iAttacker) ){
-			set_user_health(iAttacker, get_user_maxhealth(iAttacker))
-		}
-		else
-			set_user_health(iAttacker, get_user_health(iAttacker) + iTempDamage)
-
-		SHARED_Glow( iAttacker, 0, iTempDamage, 0, 0 );
-
-		Create_ScreenFade(iAttacker, (1<<10), (1<<10), (1<<12), 0, 255, 0, g_GlowLevel[iAttacker][1])
-	}
-
-	// Orb of Frost
-	else if ( p_data[iAttacker][P_ITEM] == ITEM_FROST )
-	{
-		// Only slow them if they aren't slowed/stunned already
-		if ( !SHARED_IsPlayerSlowed( iVictim ) )
-		{
-
-			p_data_b[iVictim][PB_SLOWED]	= true;
-			SHARED_SetSpeed( iVictim );
-
-			set_task( 1.0, "SHARED_ResetMaxSpeed", TASK_RESETSPEED + iVictim );
-
-			SHARED_Glow( iAttacker, 0, 0, 0, 100 );
-
-			Create_ScreenFade(iVictim, (1<<10), (1<<10), (1<<12), 255, 255, 255, g_GlowLevel[iVictim][3])
-		}
-	}
+	ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace );
 
 	return;
 }
@@ -402,7 +354,7 @@ public EVENT_PlayerInitialSpawn( id )
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
 		// Should the user mole from fan of knives or an item?
-		if ( g_ItemLastOwned[1][id] == ITEM_MOLE || ( Verify_Skill(id, RACE_WARDEN, SKILL1) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
+		if ( ITEM_Has( id, ITEM_MOLE ) || ITEM_Had( id, ITEM_MOLE ) || ( Verify_Skill( id, RACE_WARDEN, SKILL1 ) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
 		{
 			set_task( 0.1, "_SHARED_Mole", TASK_MOLE + id );
 		}
@@ -476,7 +428,7 @@ public EVENT_PlayerSpawned( id )
 	{
 
 		// Should the user be reincarnated ??
-		if ( g_ItemLastOwned[0][id] == ITEM_ANKH )
+		if ( ITEM_Has( id, ITEM_ANKH ) || ITEM_Had( id, ITEM_ANKH ) )
 		{
 			// We don't want to skip since the user has this item
 			p_data_b[id][PB_REINCARNATION_SKIP] = false;
@@ -492,7 +444,7 @@ public EVENT_PlayerSpawned( id )
 		}
 
 		// Should the user mole from fan of knives or an item?
-		if ( g_ItemLastOwned[1][id] == ITEM_MOLE || ( Verify_Skill(id, RACE_WARDEN, SKILL1) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
+		if ( ITEM_Has( id, ITEM_MOLE ) || ITEM_Had( id, ITEM_MOLE ) || ( Verify_Skill(id, RACE_WARDEN, SKILL1) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
 		{
 			set_task( 0.1, "_SHARED_Mole", TASK_MOLE + id );
 		}
@@ -599,7 +551,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 		}
 
 		// This is a nice check for Helm of Excellence
-		if ( p_data[iVictim][P_ITEM2] == ITEM_HELM )
+		if ( ITEM_Has( iVictim, ITEM_HELM ) )
 		{
 			// If its a headshot then we want to block it
 			if ( iHitZone & (1 << 1) )
@@ -647,7 +599,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 		}
 		
 		// Mole protectant
-		if ( SHARED_ValidPlayer( iAttacker ) && p_data_b[iAttacker][PB_MOLE] && p_data[iVictim][P_ITEM2] == ITEM_PROTECTANT )
+		if ( SHARED_ValidPlayer( iAttacker ) && p_data_b[iAttacker][PB_MOLE] && ITEM_Has( iVictim, ITEM_PROTECTANT ) )
 		{	
 			new Float:fTime = halflife_time();
 

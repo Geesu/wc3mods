@@ -2,32 +2,53 @@
 // Shopmenu One
 // **************************************************
 
-public menu_Shopmenu_One( id )
+public MENU_Shopmenu( id, iStart )
 {
-
-	if ( !WAR3_Check() || !ITEM_CanBuy( id ) )
-		return PLUGIN_HANDLED;
-
-	new pos = 0;
-	new keys = (1<<9);
-	new menu_body[512];
-	new item_name[9][64];
-
-	pos += format( menu_body[pos], 511-pos, "%L", id, "MENU_BUY_ITEM" );
-	
-	for( new i = 0; i < MAX_PAGE_ITEMS; i++ )
+	if ( !WAR3_Check( id ) || !ITEM_CanBuy( id ) )
 	{
-		lang_GetItemName( i + 1, id, item_name[i], 63, 1 );
-
-		pos += format( menu_body[pos], 511-pos, "\w%d. %s\y\R%d^n", i+1, item_name[i], ITEM_COST[i] );
-		keys |= (1<<i);
+		return;
 	}
 
-	pos += format( menu_body[pos], 511-pos, "^n\w0. %L", id, "EXIT_STRING" );
+	new szMenu[512], szItemName[64], pos = 0, i, iItemID;
+	new iKeys = (1<<9);
 
-	show_menu( id, keys, menu_body, -1 );
+	// Add the header
+	if ( iStart == 0 )
+	{
+		pos += format( szMenu[pos], 511-pos, "%L", id, "MENU_BUY_ITEM" );
+	}
 
-	return PLUGIN_HANDLED;
+	// "Shopmenu 2"
+	else if ( iStart == 9 )
+	{
+		pos += format( szMenu[pos], 511-pos, "%L", id, "MENU_BUY_ITEM2" );
+	}
+
+	// Lets add the items to the menu!
+	for ( i = 0; i < 9; i++ )
+	{
+		iItemID = iStart + i;
+
+		lang_GetItemName( iItemID, id, szItemName, 63 );
+
+		// These items don't exist in DOD
+		if ( g_MOD == GAME_DOD && ( iItemID == ITEM_CHAMELEON  || iItemID == ITEM_SCROLL ) )
+		{
+			pos += format( szMenu[pos], 511-pos, "\d%d. %s\y\R%d^n", i + 1, szItemName, ITEM_COST[iItemID] );
+		}
+
+		// Everything else is allowed!
+		else
+		{
+			pos += format( szMenu[pos], 511-pos, "\w%d. %s\y\R%d^n", i + 1, szItemName, ITEM_COST[iItemID] );
+			iKeys |= (1<<i);
+		}
+
+	}
+
+	pos += format( szMenu[pos], 511-pos, "^n\w0. %L", id, "EXIT_STRING" );
+
+	show_menu( id, iKeys, szMenu, -1 );
 }
 
 public _menu_Shopmenu_One( id, iKey )
@@ -41,48 +62,6 @@ public _menu_Shopmenu_One( id, iKey )
 	else
 		ITEM_Buy( id, iKey );
 
-	return PLUGIN_HANDLED;
-}
-
-
-// **************************************************
-// Shopmenu Two
-// **************************************************
-
-public menu_Shopmenu_Two( id )
-{
-
-	if ( !WAR3_Check() || get_pcvar_num( CVAR_wc3_races ) < 5 || !ITEM_CanBuy( id ) )
-		return PLUGIN_HANDLED;
-
-	new pos = 0;
-	new keys = (1<<9);
-	new menu_body[512];
-	new item_name2[9][64];
-
-	pos += format( menu_body[pos], 511-pos, "%L", id, "MENU_BUY_ITEM2" );
-
-	for( new i = 0; i < MAX_PAGE_ITEMS; i++ )
-	{
-		lang_GetItemName( i+1, id, item_name2[i], ITEM_NAME_LENGTH_F, 2 );
-
-		new iItem = MAX_PAGE_ITEMS + i;
-	
-		if ( g_MOD == GAME_DOD && ( iItem == ITEM_CHAMELEON  || iItem == ITEM_SCROLL ) )
-		{
-			pos += format( menu_body[pos], 511-pos, "\d%d. %s\y\R%d^n", i+1, item_name2[i], ITEM_COST[iItem] );
-		}
-		else
-		{
-			pos += format( menu_body[pos], 511-pos, "\w%d. %s\y\R%d^n", i+1, item_name2[i], ITEM_COST[iItem] );
-			keys |= (1<<i);
-		}
-	}
-
-	pos += format( menu_body[pos], 511-pos, "^n\w0. %L", id, "EXIT_STRING" );
-
-	show_menu( id, keys, menu_body, -1 );
-	
 	return PLUGIN_HANDLED;
 }
 
@@ -397,10 +376,10 @@ public menu_Item_Options(id){
 public _menu_Item_Options(id,key){
 
 	switch (key){
-		case 0:	menu_Shopmenu_One(id)
-		case 1:	menu_Shopmenu_Two(id)
-		case 2:	MOTD_Itemsinfo(id)
-		case 3:	MOTD_Itemsinfo2(id)
+		case 0:	MENU_Shopmenu( id, 0 );
+		case 1:	MENU_Shopmenu( id, 9 );
+		case 2:	MOTD_ItemsInfo( id, 0 );
+		case 3:	MOTD_ItemsInfo( id, 9 );
 		case 8: menu_War3menu(id)
 		default: return PLUGIN_HANDLED
 	}

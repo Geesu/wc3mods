@@ -114,7 +114,7 @@ public on_StatusValue(id)
 		return PLUGIN_CONTINUE;
 	}
 
-	WAR3_Show_Spectator_Info(id, targetid);
+	WC3_ShowSpecInfo(id, targetid);
 
 	return PLUGIN_CONTINUE;
 }

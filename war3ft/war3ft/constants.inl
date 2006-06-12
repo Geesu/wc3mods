@@ -330,8 +330,8 @@
 	#define P_ULTIMATE              4		// Ultimate level
 	#define P_LEVEL					5		// Player Level
 	#define P_XP                    6		// Current XP
-	#define P_ITEM                  7		// Item from shopmenu 1
-	#define P_ITEM2                 8		// Item from shopmenu 2
+//	#define P_ITEM                  7		// Item from shopmenu 1
+//	#define P_ITEM2                 8		// Item from shopmenu 2
 
 	// Miscellaneous options
 	#define P_DEFUSERINDEX			9		// Player is the defuse
@@ -441,8 +441,8 @@
 // Enemies who have immunity w/in this radius will cause blink to fail 
 #define NECKLACE_RADIUS		500
 
-#define SHOPMENU_ONE			P_ITEM
-#define SHOPMENU_TWO			P_ITEM2
+//#define SHOPMENU_ONE			P_ITEM
+//#define SHOPMENU_TWO			P_ITEM2
 
 // Used with g_DBType
 #define DB_VAULT			1
@@ -622,10 +622,10 @@ new g_PlayerLastWeapons[33][32];		// Stores player weapons after they have been 
 new g_MOD = 0;
 
 // Variables for items
-new g_iShopMenuItems[33][MAX_PLAYER_ITEMS];
-new g_iMultipleItems[33][2];
-new g_ItemOnDeath[2][33];
-new g_ItemLastOwned[2][33];
+new g_iShopMenuItems[33][MAX_PLAYER_ITEMS];			// Holds the player's current items
+new g_iItemOnDeath[33][MAX_PLAYER_ITEMS];			// Holds the items the user had when he/she died
+
+new g_iMultipleItems[33][2];						// Holds the number of the same item - i.e. rings
 
 #if MOD == 0
 	new const ITEM_COST[MAX_SHOPMENU_ITEMS] = {1500,2500,1000,800,2000,800,2000,1000,4000,7500,1500,1500,1500,1500,1750,1000,9000,16000};

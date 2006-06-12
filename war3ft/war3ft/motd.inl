@@ -1,78 +1,75 @@
-public MOTD_Itemsinfo(id){
+
+
+public MOTD_ItemsInfo( id, iStart )
+{
 
 	if ( !WAR3_Check( id ) )
-		return PLUGIN_CONTINUE
+	{
+		return;
+	}
 
-	new title[128], pos = 0
-	new item_name[9][ITEM_NAME_LENGTH]
+	new szTitle[128], szMsg[2048], pos = 0, i;
+	new szItemName[9][64], iItemID;
 
-	for(new i=0;i<9;i++){
-		lang_GetItemName ( i+1, id, item_name[i], ITEM_NAME_LENGTH_F, 1 );
+	// Build the list of items
+	for ( i = 0; i < 9; i++ )
+	{
+		iItemID = iStart + i;
+
+		lang_GetItemName ( iItemID, id, szItemName[i], 63 );
 	}
 
 	// Add header
+	pos += formatex( szMsg[pos], 2048-pos, "%s", MOTD_header );
 
-	pos += formatex(szTmpMsg[pos], 2048-pos, "%s", MOTD_header)
+	// Add the item information
+	
+	// "Shopmenu 1"
+	if ( iStart == 0 )
+	{
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[0], id, "SHOPMENU_1" );
+			pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[1], id, "SHOPMENU_2" );
+		}
+		else if ( g_MOD == GAME_DOD )
+		{
+			pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[0], id, "DOD_SHOPMENU_1" );
+			pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[1], id, "DOD_SHOPMENU_2" );
+		}
 
-	// Add Item Informatexion
-
-	#if MOD == 0
-		pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[0],id,"SHOPMENU_1")
-		pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[1],id,"SHOPMENU_2")
-	#endif
-	#if MOD == 1
-		pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[0],id,"DOD_SHOPMENU_1")
-		pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[1],id,"DOD_SHOPMENU_2")
-	#endif
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[2],id,"SHOPMENU_3", get_pcvar_num( CVAR_wc3_claw ), get_pcvar_num( CVAR_wc3_claw ))
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[3],id,"SHOPMENU_4")
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[4],id,"SHOPMENU_5")
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[5],id,"SHOPMENU_6")
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[6],id,"SHOPMENU_7")
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[7],id,"SHOPMENU_8")
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name[8],id,"SHOPMENU_9")
-
-	formatex(title, 127, "%L",id,"SHOPMENU_TITLE")
-	show_motd(id,szTmpMsg,title)
-
-	return PLUGIN_HANDLED
-}
-
-public MOTD_Itemsinfo2(id){
-
-	if ( !WAR3_Check( id ) )
-		return PLUGIN_CONTINUE
-
-	if(get_pcvar_num( CVAR_wc3_races ) < 5)
-		return PLUGIN_CONTINUE
-
-	new title[128], pos = 0
-	new item_name2[9][64]
-
-	for(new i=0;i<9;i++){
-		lang_GetItemName ( i+1, id, item_name2[i], 64, 2)
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[2], id, "SHOPMENU_3", get_pcvar_num( CVAR_wc3_claw ), get_pcvar_num( CVAR_wc3_claw ) );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[3], id, "SHOPMENU_4" );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[4], id, "SHOPMENU_5" );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[5], id, "SHOPMENU_6" );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[6], id, "SHOPMENU_7" );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[7], id, "SHOPMENU_8" );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[8], id, "SHOPMENU_9" );
+	
+		formatex( szTitle, 127, "%L", id, "SHOPMENU_TITLE" );
 	}
 
-	// Add header
+	// "Shopmenu 2"
+	else if ( iStart == 9 )
+	{
 
-	pos += formatex(szTmpMsg[pos], 2048-pos, "%s", MOTD_header)
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[0], id, "SHOPMENU2_1" );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[1], id, "SHOPMENU2_2" );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[2], id, "SHOPMENU2_3" );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[3], id, "SHOPMENU2_4" );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[4], id, "SHOPMENU2_5" );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[5], id, "SHOPMENU2_6", get_pcvar_num( CVAR_wc3_glove_timer ) );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[6], id, "SHOPMENU2_7" );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[7], id, "SHOPMENU2_8" );
+		pos += formatex( szMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[8], id, "SHOPMENU2_9" );
 
-	// Add Item Informatexion
+		formatex( szTitle, 127, "%L", id, "SHOPMENU2_TITLE" );
 
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[0],id,"SHOPMENU2_1")
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[1],id,"SHOPMENU2_2")
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[2],id,"SHOPMENU2_3")
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[3],id,"SHOPMENU2_4")
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[4],id,"SHOPMENU2_5")
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[5],id,"SHOPMENU2_6",get_pcvar_num( CVAR_wc3_glove_timer ))
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[6],id,"SHOPMENU2_7")
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[7],id,"SHOPMENU2_8")
-	pos += formatex(szTmpMsg[pos], 2048-pos, "<li>%s</li><div id='s'>%L</div><br>",item_name2[8],id,"SHOPMENU2_9")
+	}
 
-	formatex(title, 127, "%L",id,"SHOPMENU2_TITLE")
-	show_motd(id,szTmpMsg,title)
 
-	return PLUGIN_HANDLED
+	show_motd( id, szMsg, szTitle );
+
 }
 
 public MOTD_War3help(id){

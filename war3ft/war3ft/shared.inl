@@ -473,7 +473,7 @@ public SHARED_CS_Reincarnation( id )
 		}
 		
 		// Ankh
-		if ( g_ItemLastOwned[0][id] == ITEM_ANKH )
+		if ( ITEM_Has( id, ITEM_ANKH ) || ITEM_Had( id, ITEM_ANKH ) )
 		{
 			bGiveWeapons = true;
 		}	
@@ -610,7 +610,7 @@ public SHARED_CopySavedWeapons( id )
 public SHARED_SetSpeed( id )
 {
 
-	if ( id > TASK_UNHOLYSPEED )
+	if ( id >= TASK_UNHOLYSPEED )
 	{
 		id -= TASK_UNHOLYSPEED;
 	}
@@ -993,7 +993,7 @@ public _SHARED_Mole( id )
 	else
 	{
 		// Moving b/c of item
-		if ( g_ItemLastOwned[0][id] == ITEM_MOLE )
+		if ( ITEM_Has( id, ITEM_MOLE ) || ITEM_Had( id, ITEM_MOLE ) )
 		{
 			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + ITEM_COST[ITEM_MOLE], 1 );
 

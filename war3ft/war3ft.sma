@@ -143,7 +143,6 @@ public plugin_init()
 	// Admin Commands
 	register_concmd( "amx_givexp"		, "Admin_GiveXP"		, 0 , " -- Gives XP to players"				);
 	register_concmd( "amx_setlevel"	    , "Admin_SetLevel"		, 0 , " -- Sets a players level"			);
-	register_concmd( "amx_givemole"	    , "Admin_GiveMole"		, 0 , " -- Gives the mole item to a player"	);
 	register_concmd( "amx_wc3"			, "Admin_wc3"			, 0 , " -- Enables/disables war3ft"			);
 	
 	// Server Admin Commands (used by external plugins)
@@ -302,8 +301,7 @@ public client_connect( id )
 	p_data[id][P_ULTIMATE]				= 0;
 	p_data[id][P_LEVEL]					= 0;
 	p_data[id][P_XP]					= 0;
-	p_data[id][P_ITEM]					= 0;
-	p_data[id][P_ITEM2]					= 0;
+
 	p_data[id][P_RESPAWNBY]				= 0;
 	p_data[id][P_SPECMODE]				= 0;
 
@@ -312,6 +310,10 @@ public client_connect( id )
 	p_data_b[id][PB_CAN_RENDER]			= true;
 	p_data_b[id][PB_HAS_SPAWNED]		= false;
 	
+	// User should have no items on connect...
+	g_iShopMenuItems[id][0] = -1;
+	g_iShopMenuItems[id][1] = -1;
+
 	// Update the user's timestamps for each race if we're saving XP
 	DB_UpdateTimestamp( id );
 
@@ -506,14 +508,14 @@ public client_PreThink( id )
 				}
 
 				// Give the user more stamina
-				if( p_data[id][P_ITEM] == ITEM_BOOTS && entity_get_float( id, EV_FL_fuser4 ) < DOD_BOOT_SPEED )
+				if ( ITEM_Has( id, ITEM_BOOTS ) && entity_get_float( id, EV_FL_fuser4 ) < DOD_BOOT_SPEED )
 				{
 					entity_set_float( id, EV_FL_fuser4, DOD_BOOT_SPEED );
 				}
 			}
 
 			// Amulet of the Cat
-			if( p_data[id][P_ITEM2] == ITEM_AMULET )
+			if ( ITEM_Has( id, ITEM_AMULET ) )
 			{
 				entity_set_int( id, EV_INT_flTimeStepSound, 999 );
 			}

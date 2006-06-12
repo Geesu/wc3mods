@@ -30,7 +30,7 @@ public on_Spectate(id){
 	if (!p_data_b[a][PB_ISCONNECTED])
 		return PLUGIN_CONTINUE
 
-	WAR3_Show_Spectator_Info(id, a)
+	WC3_ShowSpecInfo(id, a)
 	
 	return PLUGIN_CONTINUE
 }
