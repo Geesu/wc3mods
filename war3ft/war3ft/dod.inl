@@ -79,7 +79,7 @@ public EVENT_DOD_EndRound(){
 		p_data_b[id][PB_REINCARNATION_SKIP] = false;
 
 		// Skip reincarnation for the start of the next round
-		if( Verify_Skill(id, RACE_ORC, SKILL3) || p_data[id][P_ITEM] == ITEM_ANKH )
+		if( Verify_Skill(id, RACE_ORC, SKILL3) || ITEM_Has( id, ITEM_ANKH ) )
 		{
 			p_data_b[id][PB_REINCARNATION_SKIP] = true;
 		}

@@ -24,7 +24,7 @@ public SHARED_INVIS_Set( id )
 	}
 
 	// User has a Cloak of Invisibility
-	if ( p_data[id][P_ITEM] == ITEM_CLOAK )
+	if ( ITEM_Has( id, ITEM_CLOAK ) )
 	{
 		// Then we are already a little invis, lets give them a little bonus for purchasing the item
 		if ( iInvisLevel > 0 )
@@ -278,8 +278,8 @@ public _SHARED_Spawn( id )
 		return;
 	}
 
-	p_data[id][P_ITEM]	= 0;
-	p_data[id][P_ITEM2]	= 0;
+	g_iShopMenuItems[id][ITEM_SLOT_ONE]	= ITEM_NONE;
+	g_iShopMenuItems[id][ITEM_SLOT_TWO] = ITEM_NONE;
 	
 	if ( is_user_alive( id ) )
 	{
@@ -667,7 +667,7 @@ public SHARED_SetSpeed( id )
 		}
 
 		// User has a rocket launcher "mounted", we let users w/unholy aura + boots of speed run faster with it
-		else if ( get_user_maxspeed( id ) == 50.0 && ( p_data[id][P_ITEM] == ITEM_BOOTS || Verify_Skill( id, RACE_UNDEAD, SKILL2 ) ) )
+		else if ( get_user_maxspeed( id ) == 50.0 && ( ITEM_Has( id, ITEM_BOOTS ) || Verify_Skill( id, RACE_UNDEAD, SKILL2 ) ) )
 		{
 			set_user_maxspeed( id, 600.0 );
 
@@ -689,7 +689,7 @@ public SHARED_SetSpeed( id )
 		}
 
 		// Boots of Speed bonus
-		else if ( p_data[id][P_ITEM] == ITEM_BOOTS )
+		else if ( ITEM_Has( id, ITEM_BOOTS ) )
 		{
 
 			// Give them the bonus
@@ -802,7 +802,7 @@ public SHARED_SetGravity( id )
 	if ( get_cvar_num("sv_gravity") > 650 )
 	{
 		// Set the user's gravity based on the item
-		if ( p_data[id][P_ITEM2] == ITEM_SOCK )
+		if ( ITEM_Has( id, ITEM_SOCK ) )
 		{
 			set_user_gravity( id, get_pcvar_float( CVAR_wc3_sock ) );
 		}
@@ -1032,7 +1032,7 @@ SHARED_Glow( id, iRed, iGreen, iBlue, iAll )
 	}
 		
 	// Don't glow if invisible
-	else if ( Verify_Skill( id, RACE_HUMAN, SKILL1 ) || p_data[id][P_ITEM] == ITEM_CLOAK )
+	else if ( Verify_Skill( id, RACE_HUMAN, SKILL1 ) || ITEM_Has( id, ITEM_CLOAK ) )
 	{
 		return;
 	}

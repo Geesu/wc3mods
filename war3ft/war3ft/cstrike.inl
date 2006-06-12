@@ -508,7 +508,7 @@ public on_ShowStatus(id){
 
 	new pid = read_data(2)
 
-	if(get_user_team(id)==get_user_team(pid) && (p_data[pid][P_ITEM2]==ITEM_CHAMELEON || p_data[pid][P_SKINCHANGED]==SKIN_SWITCH) && is_user_alive(pid)){
+	if(get_user_team(id)==get_user_team(pid) && (ITEM_Has( id, ITEM_CHAMELEON ) || p_data[pid][P_SKINCHANGED]==SKIN_SWITCH) && is_user_alive(pid)){
 		client_print(id,print_center,"%L",id,"HES_ON_YOUR_TEAM_DONT_SHOOT")
 		client_cmd(id,"speak %s", SOUND_ANTEND)
 	}
@@ -534,13 +534,13 @@ public on_ShowStatus(id){
 		get_user_name(pid,name,31)
 		
 		if ( team == TS ){
-			if ( (p_data_b[pid][PB_MOLE] && team != idteam) && p_data[id][P_ITEM2] != ITEM_PROTECTANT )
+			if ( (p_data_b[pid][PB_MOLE] && team != idteam) && !ITEM_Has( id, ITEM_PROTECTANT ) )
 				blue = 255
 			else
 				red = 255
 		}
 		else if ( team == CTS ){
-			if ( (p_data_b[pid][PB_MOLE] && team != idteam) && p_data[id][P_ITEM2] != ITEM_PROTECTANT )
+			if ( (p_data_b[pid][PB_MOLE] && team != idteam) && !ITEM_Has( id, ITEM_PROTECTANT ) )
 				red = 255
 			else
 				blue = 255

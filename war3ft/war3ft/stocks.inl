@@ -22,15 +22,14 @@ stock get_user_maxhealth(id){
 
 	// Human Devotion Skill
 
-	if ( Verify_Skill(id, RACE_HUMAN, SKILL2) ){
+	if ( Verify_Skill(id, RACE_HUMAN, SKILL2) )
 		maxHealth += (p_devotion[p_data[id][P_SKILL2]-1] - 100)
-	}
+
 
 	// Player has a health bonus from the Periapt of Health
 
-	if ( p_data[id][P_ITEM]==ITEM_HEALTH ){
+	if ( ITEM_Has( id, ITEM_HEALTH ) )
 		maxHealth += get_pcvar_num( CVAR_wc3_health );
-	}
 
 	return maxHealth
 }

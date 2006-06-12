@@ -165,7 +165,7 @@ ULT_Available( id )
 
 ULT_IsImmune( id )
 {
-	return ( p_data[id][P_ITEM] == ITEM_NECKLACE || p_data_b[id][PB_WARDENBLINK] )
+	return ( ITEM_Has( id, ITEM_NECKLACE ) || p_data_b[id][PB_WARDENBLINK] )
 }
 
 public _ULT_Ping( parm[] )

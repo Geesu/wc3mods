@@ -208,7 +208,7 @@ bool:OR_CriticalGrenadeAllowed( id )
 {
 
 	// Need to do the glove check
-	if ( p_data[id][P_ITEM2] == ITEM_GLOVES && !get_pcvar_num( CVAR_wc3_glove_orc_damage ) )
+	if ( ITEM_Has( id, ITEM_GLOVES ) && !get_pcvar_num( CVAR_wc3_glove_orc_damage ) )
 	{
 		return false;
 	}

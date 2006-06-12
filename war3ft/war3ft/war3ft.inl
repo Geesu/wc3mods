@@ -855,9 +855,10 @@ public WC3_ResetGame()
 		p_data_b[id][PB_DIEDLASTROUND]		= false;
 		
 		// Remove player's items
-		p_data[id][P_ITEM]					= 0;
-		p_data[id][P_ITEM2]					= 0;
-		p_data[id][P_RINGS]					= 0;
+		g_iShopMenuItems[id][ITEM_SLOT_ONE]	= ITEM_NONE;
+		g_iShopMenuItems[id][ITEM_SLOT_TWO]	= ITEM_NONE;
+		g_iMultipleItems[id][ITEM_SLOT_ONE]	= ITEM_NONE;
+		g_iMultipleItems[id][ITEM_SLOT_TWO]	= ITEM_NONE;
 
 		// Reset user's XP if we're not saving XP
 		if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
@@ -1067,13 +1068,13 @@ WC3_ShowBar( id )
 	pos = 0;
 
 	// User has an item from shopmenu 1	
-	if ( p_data[id][P_ITEM] != 0 )
+	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE )
 	{
 		pos += formatex( szItemInfo[pos], 256-pos, "%s", szItemName );
 	}
 
 	// User has an item from shopmenu 2
-	if ( p_data[id][P_ITEM2] != 0 )
+	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE )
 	{
 		// Then the string isn't empty and we have information in it (so we have a first item)
 		if ( szItemInfo[0] )
@@ -1088,7 +1089,7 @@ WC3_ShowBar( id )
 		}
 		
 		// Then they have rings, lets print how many there are
-		if ( p_data[id][P_ITEM2] == ITEM_RING && p_data[id][P_RINGS] > 1 )
+		if ( ITEM_Has( id, ITEM_RING ) && p_data[id][P_RINGS] > 1 )
 		{
 			pos += formatex( szItemInfo[pos], 256-pos, " x%d", p_data[id][P_RINGS] );
 		}
