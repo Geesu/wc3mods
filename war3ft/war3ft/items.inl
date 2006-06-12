@@ -8,7 +8,7 @@ public ITEM_Buy( id, iItem )
 		return PLUGIN_HANDLED;
 	}
 	
-	else if( ITEM_Has( id, iItem ) && iItem != ITEM_RING )
+	else if ( ITEM_Has( id, iItem ) && iItem != ITEM_RING )
 	{
 		client_print( id, print_center, "%L", id, "ALREADY_OWN_THAT_ITEM" );
 		return PLUGIN_HANDLED;
@@ -28,7 +28,14 @@ public ITEM_Buy( id, iItem )
 		return PLUGIN_HANDLED;
 	}
 
-	else if( g_iMultipleItems[id][0] >= 5 && iItem == ITEM_RING )
+	else if ( iItem == ITEM_ANKH && Verify_Skill( id, RACE_ORC, SKILL3 ) == 3 )
+	{
+		client_print( id, print_center, "You will already reincarnate your weapons through one of your skills!" );
+
+		return PLUGIN_HANDLED;
+	}
+
+	else if ( g_iMultipleItems[id][0] >= 5 && iItem == ITEM_RING )
 	{
 		client_print( id, print_center, "%L", id, "NOT_PURCHASE_MORE_THAN_FIVE_RINGS" );
 
@@ -48,7 +55,7 @@ public ITEM_Buy( id, iItem )
 
 bool:ITEM_CanBuy( id )
 {
-	if( !get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive( id ) )
+	if ( !get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive( id ) )
 	{
 		client_print( id, print_center, "%L", id, "NOT_BUY_ITEMS_WHEN_DEAD" );
 		
@@ -58,14 +65,14 @@ bool:ITEM_CanBuy( id )
 	else if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
 		
-		if( get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime )
+		if ( get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime )
 		{
 			client_print( id, print_center, "%L", id, "SECONDS_HAVE_PASSED_CANT_BUY", ( get_cvar_float( "mp_buytime" ) * 60.0 ) );
 
 			return false;
 		}
 		
-		else if( get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone( id ) && is_user_alive( id ) )
+		else if ( get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone( id ) && is_user_alive( id ) )
 		{
 			client_print( id, print_center, "%L", id, "MUST_BE_IN_BUYZONE" );
 			

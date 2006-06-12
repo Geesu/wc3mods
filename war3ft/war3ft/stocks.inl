@@ -59,12 +59,12 @@ stock Verify_Race(id, race){
 stock Verify_Skill(id, race, skill){
 
 	if( id == 0 )
-		return false
+		return 0
 
 	if( ((p_data[id][P_RACE] == 9 && g_ChamSkills[skill] == race) || p_data[id][P_RACE] == race) && p_data[id][skill] )
-		return true
+		return p_data[id][skill]
 
-	return false
+	return 0
 }
 
 // Function checks to see if the weapon is a pistol
