@@ -101,7 +101,7 @@ stock SHARED_IsEntInView( id, iEnt )
 
 	new iHitEnt = trace_line( id, vPlayerOrigin, vEntOrigin, vReturn );
 
-	if ( iHitEnt = iEnt )
+	if ( iHitEnt == iEnt )
 		return 1;
 	
 	return 0;
