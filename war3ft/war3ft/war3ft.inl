@@ -801,6 +801,8 @@ public WC3_ResetGame()
 		}
 	}
 
+	WC3_ShowBar( id );
+
 	g_GameRestarting = false;
 }
 

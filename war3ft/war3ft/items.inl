@@ -96,7 +96,7 @@ public ITEM_Set( id, iItem )
 {
 
 	new iItemSlot = ITEM_GetSlot( id );
-	
+
 	new iOldItem = g_iShopMenuItems[id][iItemSlot];
 
 	// Remove the user's old item if necessary
@@ -315,7 +315,7 @@ ITEM_GetSlot( id )
 	else if ( p_data[id][ITEM_SLOT_ONE] > ITEM_NONE )
 		return ITEM_SLOT_TWO;
 
-	return ITEM_SLOT_ONE;
+	return -1;
 }
 
 bool:ITEM_Has( id, iItem )
@@ -479,7 +479,7 @@ ITEM_Scroll( id )
 		
 		p_data[id][P_RESPAWNBY] = RESPAWN_ITEM;
 
-		set_task( 1.2, "_SHARED_Spawn", TASK_SPAWN + id );
+		set_task( SPAWN_DELAY, "_SHARED_Spawn", TASK_SPAWN + id );
 	}
 }
 

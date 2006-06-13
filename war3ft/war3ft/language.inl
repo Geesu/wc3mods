@@ -1,5 +1,5 @@
 
-#define TOTAL_MENUS 12
+#define TOTAL_MENUS 13
 
 
 // This is the list of menu titles that are in war3ft.txt
@@ -16,7 +16,8 @@ new const MENU_NAMES[TOTAL_MENUS][] =
 	"MENU_ADMIN_MENU",
 	"MENU_GIVE_PLAYERS_XP",
 	"MENU_TEAM_XP",
-	"MENU_RESET_XP"
+	"MENU_RESET_XP",
+	"MENU_REPLACE_ITEM"
 };
 
 // Callback functions for the above menu names
@@ -33,7 +34,8 @@ new const MENU_CALLBACK[TOTAL_MENUS][] =
 	"_menu_Admin_Options",
 	"_menu_PlayerXP_Options",
 	"_menu_TeamXP_Options",
-	"_menu_ResetXP"
+	"_menu_ResetXP",
+	"_menu_ReplaceItem"
 };
 
 /*

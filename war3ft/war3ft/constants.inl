@@ -449,6 +449,8 @@
 #define DB_MYSQLX			2
 #define DB_SQLITE			3
 
+#define SPAWN_DELAY			0.3
+
 // ***************************************************************************
 //  Start of variables
 // ***************************************************************************
@@ -624,8 +626,8 @@ new g_MOD = 0;
 // Variables for items
 new g_iShopMenuItems[33][MAX_PLAYER_ITEMS];			// Holds the player's current items
 new g_iItemOnDeath[33][MAX_PLAYER_ITEMS];			// Holds the items the user had when he/she died
-
 new g_iMultipleItems[33][2];						// Holds the number of the same item - i.e. rings
+new g_iFutureShopMenu[33];							// This will hold which shopmenu we should display after the user has selected an item to remove
 
 #if MOD == 0
 	new const ITEM_COST[MAX_SHOPMENU_ITEMS] = {1500,2500,1000,800,2000,800,2000,1000,4000,7500,1500,1500,1500,1500,1750,1000,9000,16000};

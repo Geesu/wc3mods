@@ -270,7 +270,7 @@ public _SHARED_Spawn( id )
 	{
 		if ( p_data[id][P_RESPAWNBY] == RESPAWN_ITEM )
 		{
-			client_print( id, print_chat, "%s Unable to respawn, the round is over, here is your money back", g_MODclient );
+			client_print( id, print_chat, "%s Unable to respawn because the round is over, here is your money back", g_MODclient );
 
 			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + ITEM_COST[ITEM_SCROLL] );
 		}

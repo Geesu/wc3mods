@@ -139,8 +139,8 @@ BM_PhoenixSpawn( id )
 			// The user is about to respawn
 			p_data[id][P_RESPAWNBY] = RESPAWN_PHOENIX;
 			
-			// Respawn the user in 0.7 seconds
-			set_task( 0.7, "_SHARED_Spawn", TASK_SPAWN + id );
+			// Respawn the user
+			set_task( SPAWN_DELAY, "_SHARED_Spawn", TASK_SPAWN + id );
 
 			new szCastername[32], szSpawnerName[32];
 

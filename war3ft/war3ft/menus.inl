@@ -2,10 +2,75 @@
 // Shopmenu One
 // **************************************************
 
+public MENU_ReplaceItem( id )
+{
+	if ( !WAR3_Check( id ) )
+	{
+		return;
+	}
+
+	new szMenu[512] = "", pos = 0;
+	new iKeys = (1<<9)||(1<<0)||(1<<1);
+
+	// Add the menu header
+	pos += format( szMenu[pos], 511-pos, "%L^n^n", id, "MENU_REPLACE_ITEM" );
+
+	new szItemName[64], szItemName2[64];
+	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_ONE], id, szItemName, 63 );
+	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_TWO], id, szItemName2, 63 );
+
+	// Add the items
+	pos += format( szMenu[pos], 511-pos, "1. %s^n", szItemName );
+	pos += format( szMenu[pos], 511-pos, "2. %s^n", szItemName2 );
+
+	// Add the exit option
+	pos += format( szMenu[pos], 511-pos, "^n0. %L", id, "EXIT_STRING" );
+
+	// Show the menu
+	show_menu( id, iKeys, szMenu, -1 );
+
+	return;
+}
+
+public _menu_ReplaceItem( id, iKey )
+{
+	if ( !WAR3_Check() || iKey == 9 )
+	{
+		return;
+	}
+
+	// Remove item from item slot one
+	if ( iKey == 0 )
+	{
+		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_ONE], ITEM_SLOT_ONE )
+	}
+
+	// Remove item from itemslot two
+	else if ( iKey == 1 )
+	{
+		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_TWO], ITEM_SLOT_TWO )
+	}
+
+	// Display the shopmenu now
+	MENU_Shopmenu( id, g_iFutureShopMenu[id] );
+
+	return;
+}
+
 public MENU_Shopmenu( id, iStart )
 {
 	if ( !WAR3_Check( id ) || !ITEM_CanBuy( id ) )
 	{
+		return;
+	}
+
+	// If the user has 2 items, we need to determine which item to remove before they can buy another
+	if ( ITEM_GetSlot( id ) == -1 )
+	{
+		g_iFutureShopMenu[id] = iStart;
+
+		MENU_ReplaceItem( id );
+
 		return;
 	}
 
@@ -46,7 +111,7 @@ public MENU_Shopmenu( id, iStart )
 
 	}
 
-	pos += format( szMenu[pos], 511-pos, "^n\w0. %L", id, "EXIT_STRING" );
+	pos += format( szMenu[pos], 511-pos, "^n\w0. %L", id, "WORD_EXIT" );
 
 	show_menu( id, iKeys, szMenu, -1 );
 }
@@ -54,7 +119,9 @@ public MENU_Shopmenu( id, iStart )
 public _menu_Shopmenu_One( id, iKey )
 {
 	if ( !WAR3_Check() || iKey == 9 )
-		return PLUGIN_HANDLED;
+	{
+		return;
+	}
 
 	if ( iKey == ITEM_TOME )
 		ITEM_Tome( id );
@@ -62,17 +129,22 @@ public _menu_Shopmenu_One( id, iKey )
 	else
 		ITEM_Buy( id, iKey );
 
-	return PLUGIN_HANDLED;
+	return;
 }
 
 public _menu_Shopmenu_Two( id, iKey )
 {
 	if ( !WAR3_Check() || iKey == 9 )
-		return PLUGIN_HANDLED;
+	{
+		return;
+	}
+	
+	// Since it's shopmenu 2, we need to add 9 to the selection
+	iKey += 9;
 
 	ITEM_Buy( id, iKey );
 
-	return PLUGIN_HANDLED;
+	return;
 }
 
 public menu_Select_Skill(id,saychat){
@@ -256,7 +328,7 @@ public menu_War3menu(id){
 	for (i = 0; i<5; i++){
 		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menuitems[i])
 	}
-	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
+	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"WORD_EXIT")
 	show_menu(id,keys,menu_body,-1)
 
 	return PLUGIN_HANDLED
@@ -294,7 +366,7 @@ public menu_Skill_Options(id){
 		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menuitems[i])
 	}
 	pos += format(menu_body[pos], 511-pos, "^n^n\w9. %L",id,"BACK_STRING")
-	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
+	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"WORD_EXIT")
 	show_menu(id,keys,menu_body,-1)
 
 	return PLUGIN_CONTINUE
@@ -330,7 +402,7 @@ public menu_Race_Options(id){
 		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menuitems[i])
 	}
 	pos += format(menu_body[pos], 511-pos, "^n^n\w9. %L",id,"BACK_STRING")
-	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
+	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"WORD_EXIT")
 	show_menu(id,keys,menu_body,-1)
 
 	return PLUGIN_CONTINUE
@@ -367,7 +439,7 @@ public menu_Item_Options(id){
 		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menuitems[i])
 	}
 	pos += format(menu_body[pos], 511-pos, "^n^n\w9. %L",id,"BACK_STRING")
-	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
+	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"WORD_EXIT")
 	show_menu(id,keys,menu_body,-1)
 
 	return PLUGIN_CONTINUE
@@ -409,7 +481,7 @@ public menu_Admin_Options(id){
 		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menuitems[i])
 	}
 	pos += format(menu_body[pos], 511-pos, "^n^n\w9. %L",id,"BACK_STRING")
-	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
+	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"WORD_EXIT")
 	show_menu(id,keys,menu_body,-1)
 
 	return PLUGIN_CONTINUE
@@ -479,7 +551,7 @@ public menu_PlayerXP_Options(id,pos){
 		keys |= (1<<8)
 	}
 	else{
-		format(exitstring,15,"%L",id,"EXIT_STRING")
+		format(exitstring,15,"%L",id,"WORD_EXIT")
 		format(menuBody[len],511-len,"^n0. %s", pos ? back : exitstring)
 	}
 
@@ -541,7 +613,7 @@ public menu_TeamXP_Options(id){
 	format(give,15,"%L",id,"GIVE")
 	pos += format(menu_body[pos], 511-pos,"^n8. %s  %d XP^n",give,g_menuSettings[id])
 	pos += format(menu_body[pos], 511-pos, "^n^n\w9. %L",id,"BACK_STRING")
-	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"EXIT_STRING")
+	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"WORD_EXIT")
 	show_menu(id,keys,menu_body,-1)
 
 	return PLUGIN_CONTINUE

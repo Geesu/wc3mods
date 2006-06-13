@@ -32,7 +32,7 @@ WA_ULT_Vengeance( id )
 			ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 
 			// Set up the respawn task
-			set_task( 1.2, "_SHARED_Spawn", TASK_SPAWN + id );
+			set_task( SPAWN_DELAY, "_SHARED_Spawn", TASK_SPAWN + id );
 
 			// We need to set that we're about to respawn
 			p_data[id][P_RESPAWNBY] = RESPAWN_VENGEANCE;
