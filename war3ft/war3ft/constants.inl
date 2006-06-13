@@ -618,6 +618,9 @@ new bool:warcraft3 = true
 new bool:g_EndRound
 
 
+new g_PlayerSkills[33][4];				// Stores what skills the player has
+new g_PlayerSkillLevel[33][4];			// Stores what level each skill is
+
 new g_PlayerWeapons[33][32];			// Stores player weapons after they have been purchased
 new g_PlayerLastWeapons[33][32];		// Stores player weapons after they have been purchased
 
@@ -647,7 +650,7 @@ new const Float:p_vampiric[3] =			{0.10,0.20,0.30}		// Vampiric Aura			(skill 1)
 #endif
 new const Float:p_levitation[3] =		{0.8,0.6,0.4}			// Levitation				(skill 3)
 
-new const p_invisibility[3] =			{200,150,100}			// Invisibility				(skill 1)
+new const p_invisibility[3] =			{200,165,125}			// Invisibility				(skill 1)
 new const p_devotion[3] =				{115,130,145}			// Devotion Aura			(skill 2)
 new const Float:p_bash[3] =				{0.10,0.20,0.30}		// Bash						(skill 3)
 
