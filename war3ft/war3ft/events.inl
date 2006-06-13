@@ -341,12 +341,6 @@ public EVENT_PlayerSpawned( id )
 	// User should not be burning
 	p_data_b[id][PB_ISBURNING]		= false;
 
-	// Set the user's Invisibility
-	SHARED_INVIS_Set( id );
-
-	// User's need their skillz
-	Skill_Check( id );
-
 	// The user should not be frozen when they spawn
 	SHARED_ResetMaxSpeed( id );
 

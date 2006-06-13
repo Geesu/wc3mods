@@ -94,7 +94,6 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/clientCommands.inl"
 #include "war3ft/items.inl"
 #include "war3ft/stocks.inl"
-#include "war3ft/skills.inl"
 #include "war3ft/shared.inl"
 #include "war3ft/menus.inl"
 #include "war3ft/motd.inl"

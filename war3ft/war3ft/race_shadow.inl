@@ -322,12 +322,11 @@ public SH_Ult_BigBadVoodoo( id )
 	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) + SH_BIGBADVOODOO_DURATION );
 
 	ULT_Icon( id, ICON_FLASH );
-
-	#if MOD == 0
-
+	
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
 		Create_BarTime( id, SH_BIGBADVOODOO_DURATION, 0 );
-
-	#endif
+	}
 		
 	emit_sound( id, CHAN_STATIC, SOUND_VOODOO, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
@@ -341,18 +340,17 @@ public SH_Ult_BigBadVoodoo( id )
 
 	set_user_godmode( id, 1 );
 
-	new iParm[1];
-	iParm[0] = id;
-
-	new iTaskId = TASK_RESETGOD + id;
-	set_task( float( SH_BIGBADVOODOO_DURATION ), "SH_Ult_Remove", iTaskId, iParm, 2 );
+	set_task( float( SH_BIGBADVOODOO_DURATION ), "SH_Ult_Remove", TASK_RESETGOD + id );
 
 	return PLUGIN_HANDLED;
 }
 
-public SH_Ult_Remove( iParm[1] )
+public SH_Ult_Remove( id )
 {
-	new id = iParm[0];
+	if ( id >= TASK_RESETGOD )
+	{
+		id -= TASK_RESETGOD;
+	}
 
 	p_data_b[id][PB_CAN_RENDER] = true;
 

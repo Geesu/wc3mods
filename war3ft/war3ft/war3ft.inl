@@ -880,8 +880,8 @@ WC3_SetRace( id, race )
 // Function called right after the user's race information is set
 WC3_SetRaceUp( id )
 {
-	Skill_Check( id );
-	
+	WC3_SetSkills( id );
+
 	// Copy the global ULT timeout over to just this user...
 	p_data[id][P_ULTIMATEDELAY] = g_iUltimateDelay;
 
@@ -1434,7 +1434,12 @@ WC3_CommonSpawn( id )
 	{
 		set_task( 0.1, "_SHARED_Mole", TASK_MOLE + id );
 	}
-	
+
+	WC3_SetSkills( id );
+}
+
+WC3_SetSkills( id )
+{
 	// Undead's Unholy Aura
 	SHARED_SetGravity(id);
 
@@ -1452,6 +1457,9 @@ WC3_CommonSpawn( id )
 	
 	// Shadow Hunter's Healing Ward
 	_SH_HealingWave( id );
+
+	// Set the user's Invisibility
+	SHARED_INVIS_Set( id );
 
 	// Crypt Lord's Carrion Beetles
 	p_data[id][P_CARRIONCOUNT] = 2;
