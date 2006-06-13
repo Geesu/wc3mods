@@ -315,51 +315,13 @@ public EVENT_PlayerInitialSpawn( id )
 		}
 	}
 
-	// We only want to do this here for CS/CZ... in DOD it should be done on every spawn
-	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-	{
-		// Reset user skills if we need to (returns 1 if skills were reset)
-		if ( WC3_ResetSkills( id ) )
-		{
-			return;
-		}
-	}
-	
-	// New ultimate cooldown delay
-	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_delay ) );
-
-	// We only want to do this here for CS/CZ... in DOD it should be done on every spawn
-	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-	{
-		// User has a race selection pending, set it
-		if ( p_data[id][P_CHANGERACE] )
-		{
-			WC3_SetRace( id, p_data[id][P_CHANGERACE] );
-		}
-	}
-
 	// Display the new Chameleon skills for the round
 	if ( p_data[id][P_RACE] == 9 && get_pcvar_num( CVAR_wc3_cham_random ) )
 	{
 		WC3_ShowRaceInfo( id );
 	}
-	
-	// ***************
-	// Set up some skillzzz
-	// ***************
 
-	// Warden's Blink
-	WA_Blink( id );
-
-	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-	{
-		// Should the user mole from fan of knives or an item?
-		if ( ITEM_Has( id, ITEM_MOLE ) || ITEM_Had( id, ITEM_MOLE ) || ( Verify_Skill( id, RACE_WARDEN, SKILL1 ) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
-		{
-			set_task( 0.1, "_SHARED_Mole", TASK_MOLE + id );
-		}
-	}
-
+	WC3_CommonSpawn();
 
 	return;
 }
@@ -378,22 +340,6 @@ public EVENT_PlayerSpawned( id )
 	
 	// User should not be burning
 	p_data_b[id][PB_ISBURNING]		= false;
-
-	// We only want to do this here for DOD
-	if ( g_MOD == GAME_DOD )
-	{
-		// Reset user skills if we need to (returns 1 if skills were reset)
-		if ( WC3_ResetSkills( id ) )
-		{
-			return;
-		}
-
-		// User has a race selection pending, set it
-		if ( p_data[id][P_CHANGERACE] )
-		{
-			WC3_SetRace( id, p_data[id][P_CHANGERACE] );
-		}
-	}
 
 	// Set the user's Invisibility
 	SHARED_INVIS_Set( id );
@@ -442,26 +388,18 @@ public EVENT_PlayerSpawned( id )
 				SHARED_DOD_Reincarnation( id );
 			}
 		}
-
-		// Should the user mole from fan of knives or an item?
-		if ( ITEM_Has( id, ITEM_MOLE ) || ITEM_Had( id, ITEM_MOLE ) || ( Verify_Skill(id, RACE_WARDEN, SKILL1) && random_float(0.0,1.0) <= p_fan[p_data[id][P_SKILL1]-1] ) )
-		{
-			set_task( 0.1, "_SHARED_Mole", TASK_MOLE + id );
-		}
-	}
-
-	// Check the user's items to see if something should be done
-	//ITEM_Check( id );
-	
+	}	
 
 	// If the user is a bot they should have a chance to buy an item
 	if ( is_user_bot( id ) )
 	{
-		if ( random_float(0.0,1.0) <= get_pcvar_num( CVAR_wc3_bot_buy_item ) )
+		if ( random_float( 0.0, 1.0 ) <= get_pcvar_num( CVAR_wc3_bot_buy_item ) )
 		{
 			( random_num( 1, 2 ) == 1 ) ? _menu_Shopmenu_One( id, random_num( 0, 8 ) ) : _menu_Shopmenu_Two( id, random_num( 0, 8 ) );
 		}
 	}
+
+	WC3_CommonSpawn();
 
 	p_data_b[id][PB_DIEDLASTROUND]	= false;
 }

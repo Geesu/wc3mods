@@ -380,3 +380,11 @@ HU_SkillsOffensive( iAttacker, iVictim )
 		}
 	}
 }
+
+HU_DevotionAura( id )
+{
+	if ( Verify_Skill( id, RACE_HUMAN, SKILL2 ) )
+	{
+		set_user_health( id, p_devotion[p_data[id][P_SKILL2]-1] );
+	}
+}

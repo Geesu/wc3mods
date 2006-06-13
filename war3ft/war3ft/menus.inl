@@ -10,7 +10,7 @@ public MENU_ReplaceItem( id )
 	}
 
 	new szMenu[512] = "", pos = 0;
-	new iKeys = (1<<9)||(1<<0)||(1<<1);
+	new iKeys = (1<<9);
 
 	// Add the menu header
 	pos += format( szMenu[pos], 511-pos, "%L^n^n", id, "MENU_REPLACE_ITEM" );
@@ -20,11 +20,13 @@ public MENU_ReplaceItem( id )
 	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_TWO], id, szItemName2, 63 );
 
 	// Add the items
-	pos += format( szMenu[pos], 511-pos, "1. %s^n", szItemName );
-	pos += format( szMenu[pos], 511-pos, "2. %s^n", szItemName2 );
+	pos += format( szMenu[pos], 511-pos, "\w1. %s^n", szItemName );
+	pos += format( szMenu[pos], 511-pos, "\w2. %s^n", szItemName2 );
+	iKeys |= (1<<0);
+	iKeys |= (1<<1);
 
 	// Add the exit option
-	pos += format( szMenu[pos], 511-pos, "^n0. %L", id, "EXIT_STRING" );
+	pos += format( szMenu[pos], 511-pos, "^n\w0. %L", id, "WORD_EXIT" );
 
 	// Show the menu
 	show_menu( id, iKeys, szMenu, -1 );
@@ -65,7 +67,7 @@ public MENU_Shopmenu( id, iStart )
 	}
 
 	// If the user has 2 items, we need to determine which item to remove before they can buy another
-	if ( ITEM_GetSlot( id ) == -1 )
+	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE && g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE )
 	{
 		g_iFutureShopMenu[id] = iStart;
 

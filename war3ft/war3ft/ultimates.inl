@@ -219,7 +219,12 @@ ULT_Reset( id )
 	task_exists( TASK_UDELAY + id )			? remove_task( TASK_UDELAY + id ) : 0;
 	
 	// Reset Big Bad Voodoo
-	task_exists( TASK_RESETGOD + id )		? remove_task( TASK_RESETGOD + id ) : 0;
+	if ( task_exists( TASK_RESETGOD + id ) )
+	{
+		remove_task( TASK_RESETGOD + id );
+
+		SH_Ult_Remove( id );
+	}
 	
 	// Set this to false to stop searching ultimates (used by NE + ORC + BM ultimates)
 	p_data_b[id][PB_ISSEARCHING] = false;

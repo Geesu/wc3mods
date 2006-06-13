@@ -265,7 +265,6 @@ public ITEM_Remove( id, iItem, iItemSlot )
 			SHARED_INVIS_Set( id );
 		}
 
-		
 		case ITEM_HEALTH:
 		{
 			new iNewHealth = get_user_health( id ) - get_pcvar_num( CVAR_wc3_health );
@@ -309,13 +308,13 @@ public ITEM_Remove( id, iItem, iItemSlot )
 
 ITEM_GetSlot( id )
 {
-	if ( p_data[id][ITEM_SLOT_TWO] > ITEM_NONE )
+	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE )
 		return ITEM_SLOT_ONE;
 
-	else if ( p_data[id][ITEM_SLOT_ONE] > ITEM_NONE )
+	else if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE )
 		return ITEM_SLOT_TWO;
 
-	return -1;
+	return ITEM_SLOT_ONE;
 }
 
 bool:ITEM_Has( id, iItem )

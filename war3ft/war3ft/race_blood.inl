@@ -112,7 +112,7 @@ BM_PheonixCheck( id )
 	}
 }
 
-// THis function is called when a user dies
+// This function is called when a user dies
 BM_PhoenixSpawn( id )
 {
 	

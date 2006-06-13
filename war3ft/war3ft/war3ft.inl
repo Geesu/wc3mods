@@ -1305,6 +1305,8 @@ WC3_ResetSkills( id )
 		WC3_ShowBar( id );
 		XP_Check( id, false );
 
+		p_data_b[id][PB_RESETSKILLS] = false;
+
 		return 1;
 	}
 
@@ -1406,4 +1408,54 @@ WC3_ShowSpecInfo( id, iTargetID )
 	
 	// Show the message
 	show_hudmessage( id, szMsg );
+}
+
+// Since things are set differently for DOD + CS, this is common to both
+// CS is called at the start of the round, for DOD it's whenever someone spawns
+WC3_CommonSpawn( id )
+{
+	// New ultimate cooldown delay
+	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_delay ) );
+
+	// Reset user skills if we need to (returns 1 if skills were reset)
+	if ( WC3_ResetSkills( id ) )
+	{
+		return;
+	}
+
+	// User has a race selection pending, set it
+	if ( p_data[id][P_CHANGERACE] )
+	{
+		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
+	}
+
+	// Should the user mole from fan of knives or an item?
+	if ( ITEM_Has( id, ITEM_MOLE ) || ITEM_Had( id, ITEM_MOLE ) || ( Verify_Skill( id, RACE_WARDEN, SKILL1 ) && random_float( 0.0, 1.0 ) <= p_fan[p_data[id][P_SKILL1]-1] ) )
+	{
+		set_task( 0.1, "_SHARED_Mole", TASK_MOLE + id );
+	}
+	
+	// Undead's Unholy Aura
+	SHARED_SetGravity(id);
+
+	// Warden's Blink
+	WA_Blink( id );
+
+	// Blood Mage's Pheonix
+	BM_PheonixCheck( id );
+	
+	// Set the number of serpent wards
+	SH_SerpentWardSet( id );
+
+	// Human's Devotion Aura
+	HU_DevotionAura( id );
+	
+	// Shadow Hunter's Healing Ward
+	_SH_HealingWave( id );
+
+	// Crypt Lord's Carrion Beetles
+	p_data[id][P_CARRIONCOUNT] = 2;
+	
+	// Warden's Shadow Strike
+	p_data[id][P_SHADOWCOUNT] = 2;
 }

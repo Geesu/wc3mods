@@ -22,7 +22,13 @@ public _SH_HealingWave( id )
 
 	if ( !p_data_b[id][PB_ISCONNECTED] )
 	{
-		return PLUGIN_HANDLED;
+		return;
+	}
+	
+	// User doesn't have this skill, so lets return
+	if ( !Verify_Skill( id, RACE_SHADOW, SKILL1 ) )
+	{
+		return;
 	}
 
 	// Continue healing...
@@ -34,7 +40,7 @@ public _SH_HealingWave( id )
 	// Prevent healing if this player is hexed
 	if ( p_data_b[id][PB_HEXED] )
 	{
-		return PLUGIN_HANDLED;
+		return;
 	}
 
 
@@ -70,7 +76,7 @@ public _SH_HealingWave( id )
 		}
 	}
 
-	return PLUGIN_HANDLED;
+	return;
 }
 
 
@@ -290,6 +296,14 @@ bool:SH_CanPlaceWard( id )
     		return false;
 	}	 	
 	return true;
+}
+
+SH_SerpentWardSet( id )
+{
+	if ( Verify_Skill(id, RACE_SHADOW, SKILL3) )
+	{
+		p_data[id][P_SERPENTCOUNT]		= p_serpent[p_data[id][P_SKILL3]-1];
+	}
 }
 
 // ****************************************
