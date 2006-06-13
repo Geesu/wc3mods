@@ -459,7 +459,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 		{
 
 			// Now lets make sure the person he's looking at isn't immune and isn't on the same team
-			if ( get_user_team( iAttacker ) != get_user_team( iVictim ) && !ULT_IsImmune( iVictim ) )
+			if ( get_user_team( iAttacker ) != get_user_team( iVictim ) && !ULT_IsImmune( iVictim ) && SHARED_IsEntInView( iAttacker, iVictim ) )
 			{
 
 				// Well we do have a target so lets execute the user's ultimate!!
@@ -492,7 +492,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				
 				// Do the check to see if we should flash the screen orange
 				new Float:time = halflife_time();
-				if ( 0 < iAttacker <= MAXPLAYERS && time - fLastShotFired[iAttacker] < 0.1 )
+				if ( 0 < iAttacker <= MAXPLAYERS && time - fLastShotFired[iAttacker] < 0.1 && !fLastShotFired[iAttacker] )
 				{
 					Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 0, 0, 255, 150 );
 				}
@@ -506,7 +506,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 		{
 			// Do the check to see if we should "evade" this shot
 			new Float:fTime = halflife_time();
-			if ( 0 < iAttacker <= MAXPLAYERS && fTime - fLastShotFired[iAttacker] < 0.1 )
+			if ( 0 < iAttacker <= MAXPLAYERS && fTime - fLastShotFired[iAttacker] < 0.1 && !fLastShotFired[iAttacker] )
 			{
 
 				// Basically if friendly fire is on, we want to block ALL shots, otherwise we only block shots from enemies
