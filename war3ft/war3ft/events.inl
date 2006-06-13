@@ -321,7 +321,7 @@ public EVENT_PlayerInitialSpawn( id )
 		WC3_ShowRaceInfo( id );
 	}
 
-	WC3_CommonSpawn();
+	WC3_CommonSpawn( id );
 
 	return;
 }
@@ -393,7 +393,7 @@ public EVENT_PlayerSpawned( id )
 		}
 	}
 
-	WC3_CommonSpawn();
+	WC3_CommonSpawn( id );
 
 	p_data_b[id][PB_DIEDLASTROUND]	= false;
 }

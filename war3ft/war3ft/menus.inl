@@ -10,7 +10,7 @@ public MENU_ReplaceItem( id )
 	}
 
 	new szMenu[512] = "", pos = 0;
-	new iKeys = (1<<9);
+	new iKeys = (1<<9)|(1<<0)|(1<<1);
 
 	// Add the menu header
 	pos += format( szMenu[pos], 511-pos, "%L^n^n", id, "MENU_REPLACE_ITEM" );
@@ -22,8 +22,6 @@ public MENU_ReplaceItem( id )
 	// Add the items
 	pos += format( szMenu[pos], 511-pos, "\w1. %s^n", szItemName );
 	pos += format( szMenu[pos], 511-pos, "\w2. %s^n", szItemName2 );
-	iKeys |= (1<<0);
-	iKeys |= (1<<1);
 
 	// Add the exit option
 	pos += format( szMenu[pos], 511-pos, "^n\w0. %L", id, "WORD_EXIT" );
