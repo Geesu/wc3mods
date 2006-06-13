@@ -632,13 +632,7 @@ new g_iItemOnDeath[33][MAX_PLAYER_ITEMS];			// Holds the items the user had when
 new g_iMultipleItems[33][2];						// Holds the number of the same item - i.e. rings
 new g_iFutureShopMenu[33];							// This will hold which shopmenu we should display after the user has selected an item to remove
 
-#if MOD == 0
-	new const ITEM_COST[MAX_SHOPMENU_ITEMS] = {1500,2500,1000,800,2000,800,2000,1000,4000,7500,1500,1500,1500,1500,1750,1000,9000,16000};
-#endif
-
-#if MOD == 1
-	new const ITEM_COST[MAX_SHOPMENU_ITEMS] = {1500,2500,1000,800,2000,800,2000,1000,4000,800,1500,550,1500,1500,1750,1000,9000,16000};
-#endif
+new const ITEM_COST[MAX_SHOPMENU_ITEMS] = {0};
 
 // Constants for Abilities
 new const Float:p_vampiric[3] =			{0.10,0.20,0.30}		// Vampiric Aura			(skill 1)

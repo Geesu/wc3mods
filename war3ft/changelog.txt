@@ -6,6 +6,7 @@ v3.0
  - Addition: amx_setlevel has been added
  - Addition: /level10 command - gives level 10 when you type it (if sv_cheats is on, don't worry, this XP doesn't save into the database...)
  - Bug Fix: cl_minmodels task was not repeating
+ - Change: Scroll of Respawning cost lowered
  - Change: You can now hold 2 items from either shopmenu!!!
  - Change: Unstable Concoction now originates from the attacker and damages nearby teammates
  - Change: Using Vengeance will ALWAYS set your health to 50

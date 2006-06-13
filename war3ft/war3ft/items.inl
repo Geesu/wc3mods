@@ -563,3 +563,34 @@ ITEM_UserDied( id )
 		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_TWO], ITEM_SLOT_TWO );
 	}
 }
+
+// Initialize the ITEM costs
+ITEM_Init()
+{
+	
+	ITEM_COST[0]	= 1500;			// Ankh of Reincarnation
+	ITEM_COST[1]	= 2500;			// Boots of Speed
+	ITEM_COST[2]	= 1000;			// Claws of Attack
+	ITEM_COST[3]	= 800;			// Cloak of Shadows
+	ITEM_COST[4]	= 2000;			// Mask of Death
+	ITEM_COST[5]	= 800;			// Necklace of Immunity
+	ITEM_COST[6]	= 2000;			// Orb of Frost
+	ITEM_COST[7]	= 1000;			// Periapt of Health
+	ITEM_COST[8]	= 4000;			// Tome of Experience
+	ITEM_COST[9]	= 6000;			// Scroll of Respawning
+	ITEM_COST[10]	= 1500;			// Mole Protectant
+	ITEM_COST[11]	= 1500;			// Helm of Excellence
+	ITEM_COST[12]	= 1500;			// Amulet of the Cat
+	ITEM_COST[13]	= 1500;			// Sock of the Feather
+	ITEM_COST[14]	= 1750;			// Flaming Gloves of Warmth
+	ITEM_COST[15]	= 1000;			// Ring of Regeneration + 1
+	ITEM_COST[16]	= 9000;			// Chameleon
+	ITEM_COST[17]	= 16000;		// Mole
+
+	// Item costs are a little different for DOD
+	if ( g_MOD == GAME_DOD )
+	{
+		ITEM_COST[9]	= 800;
+		ITEM_COST[11]	= 550;
+	}
+}

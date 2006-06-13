@@ -648,6 +648,7 @@ WC3_Status_Text( id, Float:fDuration, Float:iYPos, const fmt[], ... )
 	}
 }
 
+// Function called when the plugin loads
 public WC3_Init()
 {
 	// Store this now so we don't need to make a native call everytime we use it
@@ -656,6 +657,9 @@ public WC3_Init()
 	// Register the CVARs
 	CVAR_Init();
 	
+	// Initialize our items
+	ITEM_Init();
+
 	// Execute the config file to get the CVAR values
 	new configsDir[64];
 	get_configsdir( configsDir, 63 );
