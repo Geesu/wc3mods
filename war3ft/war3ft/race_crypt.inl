@@ -248,15 +248,14 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 			// Play the impale sound
 			emit_sound( iVictim, CHAN_STATIC, SOUND_IMPALE, 1.0, ATTN_NORM, 0, PITCH_NORM );
 			
-			new parm[2];
-			parm[0] = iVictim;
-			parm[1] = 0;
-			
-			// Impale them!!
-			_CL_Impale( parm );
-			
-			// Lets get a little screenshake going :)
-			Create_ScreenShake( iVictim, (255<< 14), (10 << 14), (255<< 14) );
+			new Float:vVelocity[3];
+			entity_get_vector( iVictim, EV_VEC_velocity, vVelocity );
+
+			vVelocity[0] = random_float( 100.0, 400.0 );
+			vVelocity[1] = random_float( 100.0, 400.0 );
+			vVelocity[2] = random_float( 400.0, 700.0 );
+
+			entity_set_vector( iVictim, EV_VEC_velocity, vVelocity );
 		}
 	}
 }
@@ -300,55 +299,4 @@ CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace )
 			Create_ScreenFade( iAttacker, (1<<10), (1<<10), (1<<12), 255, 0, 0, iTemp );
 		}
 	}
-}
-
-
-public _CL_Impale( parm[] )
-{
-
-	new id = parm[0]
-
-	// Victim disconnected :/
-	if ( !p_data_b[id][PB_ISCONNECTED] )
-	{
-		return;
-	}
-
-	// Lets mess with their angles!!
-	if ( parm[1] < 3 )
-	{
-		new Float:iMin = -1.0 * IMPALE_INTENSITY;
-		new Float:iMax = IMPALE_INTENSITY;
-
-		new Float:vAngle[3], Float:vVAngle[3], i;
-		
-		// Get the user's current angles
-		entity_get_vector( id, EV_VEC_angles, vAngle );
-		entity_get_vector( id, EV_VEC_v_angle, vVAngle );
-		
-		// If we modify the Z-Axis then the user will roll
-		for ( i = 0; i < 2; i++ )
-		{
-			vAngle[i] = vAngle[i] + random_float( iMin, iMax );
-			vVAngle[i] = vVAngle[i] + random_float( iMin, iMax );
-		}
-
-		entity_set_int( id, EV_INT_fixangle, 1 );
-		entity_set_vector( id, EV_VEC_angles, vAngle );
-		entity_set_vector( id, EV_VEC_v_angle, vVAngle );
-
-		// Increment pls
-		parm[1]++;
-
-		// Lets do it again!
-		set_task( 0.1, "_CL_Impale", TASK_IMPALE + id, parm, 2 );
-	}
-	
-	// OK we're done :P
-	else
-	{
-		entity_set_int( id, EV_INT_fixangle, 1 );
-	}
-
-	return;
 }

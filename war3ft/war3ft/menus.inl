@@ -84,13 +84,13 @@ public MENU_Shopmenu( id, iStart )
 	}
 
 	// "Shopmenu 2"
-	else if ( iStart == 9 )
+	else if ( iStart == MAX_PAGE_ITEMS )
 	{
 		pos += format( szMenu[pos], 511-pos, "%L", id, "MENU_BUY_ITEM2" );
 	}
 
 	// Lets add the items to the menu!
-	for ( i = 0; i < 9; i++ )
+	for ( i = 0; i < MAX_PAGE_ITEMS; i++ )
 	{
 		iItemID = iStart + i;
 
@@ -122,12 +122,8 @@ public _menu_Shopmenu_One( id, iKey )
 	{
 		return;
 	}
-
-	if ( iKey == ITEM_TOME )
-		ITEM_Tome( id );
-
-	else
-		ITEM_Buy( id, iKey );
+	
+	ITEM_Buy( id, iKey );
 
 	return;
 }
@@ -140,7 +136,7 @@ public _menu_Shopmenu_Two( id, iKey )
 	}
 	
 	// Since it's shopmenu 2, we need to add 9 to the selection
-	iKey += 9;
+	iKey += MAX_PAGE_ITEMS;
 
 	ITEM_Buy( id, iKey );
 

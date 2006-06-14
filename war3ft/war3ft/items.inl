@@ -51,10 +51,15 @@ public ITEM_Buy( id, iItem )
 		return;
 	}
 
-	if ( ITEM_Set( id, iItem ) )
+	if ( iItem == ITEM_TOME )
 	{
-		emit_sound( id, CHAN_STATIC, SOUND_PICKUPITEM, 1.0, ATTN_NORM, 0, PITCH_NORM );
+		ITEM_Tome( id );
+		new iNewMoney = SHARED_GetUserMoney( id ) - ITEM_COST[iItem];
+		SHARED_SetUserMoney( id, iNewMoney );
+	}
 
+	else if ( ITEM_Set( id, iItem ) )
+	{
 		new iNewMoney = SHARED_GetUserMoney( id ) - ITEM_COST[iItem];
 		SHARED_SetUserMoney( id, iNewMoney );
 	}
@@ -243,7 +248,7 @@ public ITEM_Set( id, iItem )
 		}
 
 	}
-
+	emit_sound( id, CHAN_STATIC, SOUND_PICKUPITEM, 1.0, ATTN_NORM, 0, PITCH_NORM );
 	WC3_ShowBar( id );
 
 	return 1;
