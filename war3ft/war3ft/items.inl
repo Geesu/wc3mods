@@ -120,6 +120,8 @@ public ITEM_Set( id, iItem )
 		{
 			(g_MOD == GAME_DOD)								? client_print( id, print_chat,"%s %L", g_MODclient, id, "DOD_INFO_SHOPMENU_1" ) : 0;
 			(g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO)	? client_print( id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_1" ) : 0;
+
+			g_bPlayerBoughtAnkh[id] = true;
 		}
 
 		case ITEM_BOOTS:
@@ -245,6 +247,8 @@ public ITEM_Set( id, iItem )
 		case ITEM_MOLE:
 		{
 			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_9" );
+			
+			g_bPlayerBoughtMole[id] = true;
 		}
 
 	}
@@ -347,6 +351,12 @@ ITEM_Tome( id )
 	new iXp = get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]];
 		
 	if ( g_MOD == GAME_DOD )
+	{
+		iXp *= 2;
+	}
+
+	// Give more if saving XP
+	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
 	{
 		iXp *= 2;
 	}

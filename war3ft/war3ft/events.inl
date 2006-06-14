@@ -367,14 +367,18 @@ public EVENT_PlayerSpawned( id )
 	else if ( g_MOD == GAME_DOD )
 	{
 
-		// Should the user be reincarnated ??
-		if ( ITEM_Has( id, ITEM_ANKH ) || ITEM_Had( id, ITEM_ANKH ) )
+		// Should the user be reincarnated from an item?
+		if ( g_bPlayerBoughtAnkh[id] )
 		{
 			// We don't want to skip since the user has this item
 			p_data_b[id][PB_REINCARNATION_SKIP] = false;
 
 			SHARED_DOD_Reincarnation( id );
+
+			g_bPlayerBoughtAnkh[id] = false;
 		}
+
+		// or from a skill?
 		else if ( Verify_Skill(id, RACE_ORC, SKILL3) )
 		{
 			if ( random_float( 0.0, 1.0 ) <= p_ankh[p_data[id][P_SKILL3]-1] )

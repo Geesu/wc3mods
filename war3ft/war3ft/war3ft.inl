@@ -698,6 +698,18 @@ public WC3_Init()
 
 	// Run the ultimate delay task
 	set_task( 1.0, "_ULT_Delay", TASK_UDELAY, "", 0, "b" );
+
+	// Some skills need to be changed for DOD
+	if ( g_MOD == GAME_DOD )
+	{
+		// Unholy Aura - Works off of Stamina in DOD, not speed
+		p_unholy[0] = 25.0;
+		p_unholy[0] = 50.0;
+		p_unholy[0] = 100.0;
+
+
+
+	}
 }
 
 public WC3_DetermineGame()
@@ -1430,17 +1442,14 @@ WC3_CommonSpawn( id )
 		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
 	}
 
-	// Should the user mole from fan of knives or an item?
-	if ( ITEM_Has( id, ITEM_MOLE ) || ITEM_Had( id, ITEM_MOLE ) || ( Verify_Skill( id, RACE_WARDEN, SKILL1 ) && random_float( 0.0, 1.0 ) <= p_fan[p_data[id][P_SKILL1]-1] ) )
-	{
-		set_task( 0.1, "_SHARED_Mole", TASK_MOLE + id );
-	}
-
 	WC3_SetSkills( id );
 }
 
 WC3_SetSkills( id )
 {
+	// Should the user mole?
+	SHARED_MoleCheck( id );
+
 	// Undead's Unholy Aura
 	SHARED_SetGravity(id);
 

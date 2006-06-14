@@ -473,9 +473,11 @@ public SHARED_CS_Reincarnation( id )
 		}
 		
 		// Ankh
-		if ( ITEM_Has( id, ITEM_ANKH ) || ITEM_Had( id, ITEM_ANKH ) )
+		if ( g_bPlayerBoughtAnkh[id] )
 		{
 			bGiveWeapons = true;
+
+			g_bPlayerBoughtAnkh[id] = false;
 		}	
 	}
 
@@ -946,8 +948,43 @@ SHARED_FindFreeSpawn( id, bImmunityCheck = false, bReverseTeam = false )
 	return ent;
 }
 
+public SHARED_MoleCheck( id )
+{
+	new parm[2];
+	parm[1] = 0;
 
-public _SHARED_Mole( id )
+	// Mole from Fan of Knives?
+	if ( Verify_Skill( id, RACE_WARDEN, SKILL1 ) )
+	{
+		if ( random_float( 0.0, 1.0 ) <= p_fan[p_data[id][P_SKILL1]-1] )
+		{
+			parm[1] = 1;
+		}
+	}
+	
+	// Mole from an item?
+	if ( parm[1] == 0 )
+	{
+		if ( g_bPlayerBoughtMole[id] )
+		{
+			bMole = true;
+
+			parm[1] = 2;
+
+			g_bPlayerBoughtMole[id] = false;
+		}
+	}
+
+	// OK then lets mole!!
+	if ( parm[1] )
+	{
+		parm[0] = id;
+		
+		set_task( 0.1, "_SHARED_Mole", TASK_MOLE + id, parm, 2 );
+	}
+}
+
+public _SHARED_Mole( parm[2] )
 {
 	
 	if ( !WAR3_Check() )
@@ -955,7 +992,7 @@ public _SHARED_Mole( id )
 		return;
 	}
 
-	id -= TASK_MOLE;
+	new id = parm[0];
 
 	if ( !p_data_b[id][PB_ISCONNECTED] )
 	{
@@ -992,8 +1029,8 @@ public _SHARED_Mole( id )
 	// No spawn found
 	else
 	{
-		// Moving b/c of item
-		if ( ITEM_Has( id, ITEM_MOLE ) || ITEM_Had( id, ITEM_MOLE ) )
+		// Moving b/c of item - if no spot then give the user his/her money back!
+		if ( parm[1] == 2 )
 		{
 			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + ITEM_COST[ITEM_MOLE], 1 );
 
