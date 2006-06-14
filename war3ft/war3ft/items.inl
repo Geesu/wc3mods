@@ -20,7 +20,7 @@ public ITEM_Buy( id, iItem )
 	}
 	
 	// Only MOLE + ANKH can be bought when dead
-	else if ( !is_user_alive( id ) && ( iItem != ITEM_ANKH || iItem != ITEM_MOLE ) ) 
+	else if ( !is_user_alive( id ) && ( iItem != ITEM_ANKH && iItem != ITEM_MOLE ) ) 
 	{
 		client_print( id, print_center, "%L", id, "NOT_PURCHASE_WHEN_DEAD" );
 

@@ -219,7 +219,7 @@ public plugin_init()
 		register_event( "RoundState"	, "EVENT_DOD_EndRound"		, "a"	, "1=3"	, "1=4"	);
 		register_event( "StatusValue"	, "on_StatusValue"			, "b"					);
 	}
-	
+
 	// Plugin initialization procedures
 	WC3_Init();
 }

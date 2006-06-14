@@ -6,6 +6,8 @@ v3.0
  - Addition: amx_setlevel has been added
  - Addition: /level10 command - gives level 10 when you type it (if sv_cheats is on, don't worry, this XP doesn't save into the database...)
  - Bug Fix: cl_minmodels task was not repeating
+ - Change: Impale now hits the user up from the ground
+ - Change: Banish will now move an attacker into an atral prison
  - Change: Scroll of Respawning cost lowered
  - Change: You can now hold 2 items from either shopmenu!!!
  - Change: Unstable Concoction now originates from the attacker and damages nearby teammates
@@ -54,6 +56,9 @@ v3.0
 //fix hex playing after ur dead...
 //allow moles to buy items after they mole - research how to do this!!
 //add DOD model changing to chameleon/mole
+//bug: spec info isn't showing items...
+//bug: phoenix will try to respawn users when changing team
+//bug: strip_user_weapons will remove bomb + not give it back
 
 //shopmenu 3 ideas:
 // immune to some magic

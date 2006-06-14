@@ -7,7 +7,10 @@
 #define IMMOLATE_DOT			4		// Number of times ultimate ticks
 
 #define BM_PHEONIX_RANGE		750		// Range to award money
+#define BANISH_DAMAGE			1
+#define BANISH_HOLDTIME			0.7
 
+new bool:g_bPlayerBanished[33];
 
 public BM_ULT_Immolate( iCaster, iTarget )
 {
@@ -77,8 +80,7 @@ public BM_ULT_Immolate_DoT( parm_DoT[3] )
 
 		parm_DoT[2]++;
 
-		new TaskId = TASK_BURNING + iTarget;
-		set_task( 1.0, "BM_ULT_Immolate_DoT", TaskId, parm_DoT, 3 );
+		set_task( 1.0, "BM_ULT_Immolate_DoT", TASK_BURNING + iTarget, parm_DoT, 3 );
 
 	}
 
@@ -225,36 +227,8 @@ BM_PheonixDOD( id )
 	}
 }
 
-BM_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
+BM_SkillsOffensive( iAttacker, iVictim, iDamage )
 {
-	// Banish
-	if ( Verify_Skill( iAttacker, RACE_BLOOD, SKILL2 ) )
-	{
-
-		if ( random_float( 0.0, 1.0 ) <= p_banish[p_data[iAttacker][P_SKILL2]-1] )
-		{
-			
-			// Do 9 damage then....
-			new iAdditionalDamage = ( ( p_data[iAttacker][P_SKILL2] > 2 ) ?  9 : 7 );
-
-			// Slap the user
-			user_slap( iVictim, 0 );
-			user_slap( iVictim, 0 );
-			user_slap( iVictim, 0 );
-
-			// Deal some damage
-			WAR3_damage( iVictim, iAttacker, iAdditionalDamage, iWeapon, iHitPlace );
-			
-			// Play the Banish sound
-			emit_sound( iVictim, CHAN_STATIC, SOUND_BANISH, 1.0, ATTN_NORM, 0, PITCH_NORM );
-
-			// Make the user glow!
-			SHARED_Glow( iVictim, 0, 0, 0, 100 );
-			
-			// Create a screen fade
-			Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 255, 255, 255, g_GlowLevel[iVictim][3] );
-		}
-	}
 
 	// Siphon Mana
 	if ( Verify_Skill( iAttacker, RACE_BLOOD, SKILL3 ) )
@@ -275,7 +249,7 @@ BM_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 	}
 }
 
-BM_SkillsDefensive( iVictim, iDamage )
+BM_SkillsDefensive( iAttacker, iVictim, iDamage )
 {
 
 	// Resistant Skin
@@ -284,5 +258,81 @@ BM_SkillsDefensive( iVictim, iDamage )
 		new iBonusHealth = floatround( float( iDamage ) * p_resistant[p_data[iVictim][P_LEVEL]] );
 
 		set_user_health( iVictim, get_user_health( iVictim ) + iBonusHealth );
+	}
+
+	// Banish
+	if ( Verify_Skill( iVictim, RACE_BLOOD, SKILL2 ) )
+	{
+
+		if ( random_float( 0.0, 1.0 ) <= p_banish[p_data[iVictim][P_SKILL2]-1] )
+		{
+						
+			if ( !g_bPlayerBanished[iAttacker] )
+			{
+				// Deal some damage
+				WAR3_damage( iAttacker, iVictim, BANISH_DAMAGE, CSW_BANISH, 0 );
+				
+				// Play the Banish sound
+				emit_sound( iAttacker, CHAN_STATIC, SOUND_BANISH, 1.0, ATTN_NORM, 0, PITCH_NORM );
+
+				// Black screen the user!
+				Create_ScreenFade( iAttacker, 2, (1<<10), (1<<12), 0, 0, 0, 255 );
+
+				new vOrigin[3];
+				get_user_origin( iAttacker, vOrigin );
+
+				new parm[5];
+				parm[0] = iAttacker;
+				parm[1] = floatround( BANISH_HOLDTIME * 10.0 );
+				parm[2] = vOrigin[0];
+				parm[3] = vOrigin[1];
+				parm[4] = vOrigin[2];
+
+				// Create the "banish" sprite
+				Create_TE_SPRITE( vOrigin, SPR_BANISH, 10, 255 );
+
+				vOrigin[2] -= 2000;
+
+				set_user_origin( iAttacker, vOrigin );
+
+				set_task( 0.1, "_BM_BanishReturn", TASK_BANISH + iAttacker, parm, 5 );
+			}
+		}
+	}
+}
+
+public _BM_BanishReturn( parm[] )
+{
+	new id = parm[0];
+
+	// If the round is over we want to move the player back - otherwise they might be moved after they have respawned - that'd be bad
+	if ( parm[1] > 0 && !g_EndRound )
+	{
+		parm[1]--;
+		
+		// Black screen the user!
+		Create_ScreenFade( id, 2, (1<<10), (1<<12), 0, 0, 0, 255 );
+
+		set_task( 0.1, "_BM_BanishReturn", TASK_BANISH + id, parm, 5 );
+	}
+	else
+	{
+
+		new vOrigin[3];
+		vOrigin[0] = parm[2];
+		vOrigin[1] = parm[3];
+		vOrigin[2] = parm[4] + 10;
+
+		// Move the user back!
+		set_user_origin( id, vOrigin );
+
+		// Make the user glow!
+		SHARED_Glow( id, 0, 0, 0, 100 );
+
+		// Create a screen fade
+		Create_ScreenFade( id, 0, 0, 0, 0, 0, 0, 0 );
+
+		// User is no longer banished
+		g_bPlayerBanished[id] = false;
 	}
 }

@@ -7,7 +7,7 @@
 #define TASK_ITEMS			0		// Showing items in the HUD
 #define TASK_SPAWN			32		// Respawning from revive
 #define TASK_IMPALE			64		// Crypt Lord's Impale
-//#define TASK_VENGEANCE		96		// Respawning from having vengeance (warden ultimate)
+#define TASK_BANISH			96		// Used to set the user's origin back to normal
 //#define TASK_SETXP			128		// Sets the XP
 #define TASK_EXPLOSION		160		// From Suicide Bomber
 #define TASK_BEAMCYLINDER	192		// From Suicide Bomber
@@ -176,11 +176,12 @@
 #define CSW_CARRION				59
 #define CSW_ORB					60
 #define CSW_CONCOCTION			61
+#define CSW_BANISH				62
 
-#define CSW_WAR3_MAX			61
+#define CSW_WAR3_MAX			62
 
 // Should be equal to (CSW_WAR3_MIN - CSW_WAR3_MAX) + 1
-#define MAX_CSW_S				11
+#define MAX_CSW_S				12
 
 // Race numbers
 #define RACE_UNDEAD				1
@@ -593,6 +594,7 @@ new bool:spawnPointsused[33] = false
 new bool:g_GameRestarting = false;
 
 // Sprites
+new SPR_BANISH;
 new g_sShadow
 new g_sSnow
 new g_sFire 

@@ -17,8 +17,11 @@
 
 public _SH_HealingWave( id )
 {
-
-	id -= TASK_WAVE;
+	
+	if ( id >= TASK_WAVE )
+	{
+		id -= TASK_WAVE;
+	}
 
 	if ( !p_data_b[id][PB_ISCONNECTED] )
 	{

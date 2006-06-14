@@ -71,7 +71,7 @@ public EVENT_Damage( iVictim, iAttacker, iDamage, iWeapon, iHitPlace )
 						on_Death( iVictim, iAttacker, iWeapon, 0 );
 					}
 
-					client_print( iVictim, print_chat, "[DEBUG] You were just attacked by the bomb for %d iDamage (%s) Alive? %d", iDamage, szClassName, is_user_alive( iVictim ) );
+					client_print( iVictim, print_chat, "[DEBUG] You were just attacked by the bomb for %d damage (%s) Alive? %d", iDamage, szClassName, is_user_alive( iVictim ) );
 				}
 			}
 		}
@@ -94,7 +94,7 @@ public EVENT_Damage( iVictim, iAttacker, iDamage, iWeapon, iHitPlace )
 		Verify_Race( iAttacker, RACE_HUMAN )	? HU_SkillsOffensive( iAttacker, iVictim ) : 0;
 		Verify_Race( iAttacker, RACE_ORC )		? OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
 		Verify_Race( iAttacker, RACE_ELF )		? NE_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
-		Verify_Race( iAttacker, RACE_BLOOD )	? BM_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		Verify_Race( iAttacker, RACE_BLOOD )	? BM_SkillsOffensive( iAttacker, iVictim, iDamage ) : 0;
 		Verify_Race( iAttacker, RACE_SHADOW )	? SH_SkillsOffensive( iAttacker, iVictim ) : 0;
 		Verify_Race( iAttacker, RACE_WARDEN )	? WA_SkillsOffensive( iAttacker, iVictim, iHitPlace ) : 0;
 		Verify_Race( iAttacker, RACE_CRYPT )	? CL_SkillsOffensive( iAttacker, iVictim, iHitPlace ) : 0;
@@ -107,7 +107,7 @@ public EVENT_Damage( iVictim, iAttacker, iDamage, iWeapon, iHitPlace )
 		//Verify_Race( iVictim, RACE_HUMAN )		? HU_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
 		//Verify_Race( iVictim, RACE_ORC )		? OR_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
 		Verify_Race( iVictim, RACE_ELF )		? NE_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace ) : 0;
-		Verify_Race( iVictim, RACE_BLOOD )		? BM_SkillsDefensive( iVictim, iDamage ) : 0;
+		Verify_Race( iVictim, RACE_BLOOD )		? BM_SkillsDefensive( iAttacker, iVictim, iDamage ) : 0;
 		Verify_Race( iVictim, RACE_SHADOW )		? SH_SkillsDefensive( iAttacker, iVictim ) : 0;
 		//Verify_Race( iVictim, RACE_WARDEN )		? WA_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
 		Verify_Race( iVictim, RACE_CRYPT )		? CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace ) : 0;

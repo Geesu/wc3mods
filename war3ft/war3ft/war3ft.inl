@@ -67,9 +67,9 @@ public WAR3_precache()
 	precache_sound( SOUND_ANTEND			);
 	precache_sound( SOUND_ERROR				);
 
-
-
 	// Precache objects/sprites used
+	SPR_BANISH		= precache_model( "sprites/nhth1.spr" );
+
 	g_sFireball = precache_model("sprites/zerogxplode.spr")
 	g_sSpriteTexture = precache_model( "sprites/shockwave.spr")
 	g_siBeam4 = precache_model("sprites/zbeam4.spr")
@@ -77,16 +77,13 @@ public WAR3_precache()
 	g_sFire = precache_model("sprites/explode1.spr") 
 	g_sBurning = precache_model("sprites/xfire.spr") 
 	g_sImmolate = precache_model( "sprites/warcraft3/fireball.spr" );
-	
+
 	g_sShadow = precache_model("sprites/animglow01.spr") 
 	g_sBeetle = precache_model("sprites/agrunt1.spr") 
 	g_siTrail = precache_model("sprites/smoke.spr") 
 	g_sSnow = precache_model("sprites/snow.spr")  
 	g_sFlare = precache_model( "sprites/blueflare2.spr") 
 	g_sWave = precache_model("sprites/gwave1.spr")
-
-	//SPR_IMMOLATE = precache_model("");
-
 
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
