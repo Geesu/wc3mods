@@ -266,3 +266,181 @@ Admin_Print( id, text[], {Float,_}:...)
 		return;
 	}
 }  
+
+public ADMIN_GiveItem( id )
+{
+
+    if ( !( get_user_flags( id ) & XP_get_admin_flag() ) )
+	{
+			client_print( id, print_console, "%L", id, "YOU_HAVE_NO_ACCESS", g_MODclient );
+			return PLUGIN_HANDLED;
+	}
+	
+	if ( read_argc() < 3 )
+	{
+		new szArgCmd[16];
+		read_argv( 0, szArgCmd, 15 );
+
+		Admin_Print( id, "Format: %s <player|team|@ALL> <item id>", szArgCmd );
+		return PLUGIN_HANDLED;
+	}
+
+	new szTarget[32], szItemID[6];
+	read_argv( 1, szTarget, 31 );
+	read_argv( 2, szItemID, 5 );
+
+	
+	new iTarget = 0, bool:bTargetFound = false;
+
+	// Do this while we continue having a target!
+	while ( ( iTarget = FindTarget( iTarget, szTarget ) ) > 0 )
+	{
+		server_print( "Target Found: %d team: %d", iTarget, get_user_team( iTarget ) );
+
+		bTargetFound = true;
+	}
+
+	if ( !bTargetFound )
+	{
+		Admin_Print( id, "%s Unable to find target(s) '%s'", g_MODclient, szTarget );
+
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			Admin_Print( id, "%s Available targets are: @ALL, @CT, @T or the player's name", g_MODclient );
+		}
+
+		else if ( g_MOD == GAME_DOD )
+		{
+			Admin_Print( id, "%s Available targets are: @ALL, @ALLIES, @AXIS or the player's name", g_MODclient );
+		}
+	}
+
+	
+	return PLUGIN_HANDLED;
+}
+
+FindTarget( iLastID, szTarget[] )
+{
+	
+	new iTarget = -1;
+
+	// Then we want to basically return everyone!
+	if ( equali( szTarget, "@ALL" ) )
+	{
+		new players[32], iTotalPlayers, i;
+		get_players( players, iTotalPlayers );
+		
+		// Loop through and search for the next target
+		for ( i = 0; i < iTotalPlayers; i++ )
+		{
+			// Target found, so lets return the next one (if possible)!!
+			if ( players[i] == iLastID && i + 1 != iTotalPlayers )
+			{
+				iTarget = players[i+1];
+			}
+		}
+
+		// No target was found so return the first one
+		if ( iTotalPlayers > 0 && iLastID == 0 )
+		{
+			iTarget = players[0];
+		}
+	}
+
+	// Find a target based on the team
+	else if ( szTarget[0] == '@' )
+	{
+		new iTeam = -1;
+		
+		// Counter-Strike and Condition Zero Checks
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			if ( equali( szTarget, "@T" ) )
+			{
+				iTeam = TEAM_T;
+			}
+			else if ( equali( szTarget, "@CT" ) )
+			{
+				iTeam = TEAM_CT;
+			}
+		}
+		
+		// Day of Defeat check
+		else if ( g_MOD == GAME_DOD )
+		{
+			if ( equali( szTarget, "@ALLIES" ) )
+			{
+				iTeam = ALLIES;
+			}
+			else if ( equali( szTarget, "@AXIS" ) )
+			{
+				iTeam = AXIS;
+			}
+		}
+
+		if ( iTeam == -1 )
+		{
+			return -1;
+		}
+
+
+		new players[32], iTotalPlayers, i, iFirstPlayer = -1, bool:bSaveNext = false;
+		get_players( players, iTotalPlayers );
+
+		// Loop through and search for the next target
+		for ( i = 0; i < iTotalPlayers; i++ )
+		{			
+			// Make sure they're on the same team
+			if ( iTeam == get_user_team( players[i] ) )
+			{
+				
+				// This is the next available player
+				if ( bSaveNext )
+				{
+					iTarget = players[i];
+					break;
+				}
+
+				// If this is the previous target, we need to get the next one!
+				if ( players[i] == iLastID )
+				{
+					bSaveNext = true;
+				}
+				
+				// Save the FIRST player on this team
+				if ( iFirstPlayer == -1 )
+				{
+					iFirstPlayer = players[i];
+				}
+			}
+		}
+
+		// No target was found so return the first one that matches the team (the target could still be -1 if iFirstPlayer wasn't found)
+		if ( iLastID == 0 )
+		{
+			iTarget = iFirstPlayer;
+		}
+	}
+
+	// Otherwise search for a player
+	/*
+	else
+	{ 
+		new iPlayer = find_target( id, szTarget );
+
+		if ( !iPlayer )
+			return PLUGIN_HANDLED;
+
+		//client_print( iPlayer, print_chat, "%s %L", g_MODclient, id, "THE_ADMIN_GAVE_YOU_EXPERIENCE", iXp );
+
+		p_data[iPlayer][P_XP] = iXp;
+
+		XP_Check( iPlayer );
+
+		set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + iPlayer );
+	}
+	*/
+
+
+	return iTarget;
+}

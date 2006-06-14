@@ -143,7 +143,8 @@ public plugin_init()
 	register_concmd( "amx_givexp"		, "Admin_GiveXP"		, 0 , " -- Gives XP to players"				);
 	register_concmd( "amx_setlevel"	    , "Admin_SetLevel"		, 0 , " -- Sets a players level"			);
 	register_concmd( "amx_wc3"			, "Admin_wc3"			, 0 , " -- Enables/disables war3ft"			);
-	
+	register_concmd( "wc3_giveitem"		, "ADMIN_GiveItem"		, 0 , " -- Gives an item to a player"		);
+
 	// Server Admin Commands (used by external plugins)
 	register_srvcmd( "amx_takexp"		, "Admin_TakeXP"	);
 	register_srvcmd( "changexp"			, "changeXP"		);

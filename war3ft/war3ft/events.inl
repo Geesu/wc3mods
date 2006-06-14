@@ -415,6 +415,9 @@ public EVENT_NewRound()
 	{
 		EVENT_JustBeforeSpawn( players[i] );
 	}
+	
+	// Reset which spawn points are reserved....
+	SHARED_SpawnReset();
 
 	// If someone restarted the game, then lets reset war3
 	if ( g_GameRestarting )

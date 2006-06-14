@@ -97,7 +97,7 @@ public MENU_Shopmenu( id, iStart )
 		lang_GetItemName( iItemID, id, szItemName, 63 );
 
 		// These items don't exist in DOD
-		if ( g_MOD == GAME_DOD && ( iItemID == ITEM_CHAMELEON  || iItemID == ITEM_SCROLL ) )
+		if ( g_MOD == GAME_DOD && ( iItemID == ITEM_SCROLL ) )
 		{
 			pos += format( szMenu[pos], 511-pos, "\d%d. %s\y\R%d^n", i + 1, szItemName, ITEM_COST[iItemID] );
 		}

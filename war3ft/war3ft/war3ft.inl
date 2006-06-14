@@ -706,9 +706,6 @@ public WC3_Init()
 		p_unholy[0] = 25.0;
 		p_unholy[0] = 50.0;
 		p_unholy[0] = 100.0;
-
-
-
 	}
 }
 
@@ -1362,17 +1359,17 @@ WC3_ShowSpecInfo( id, iTargetID )
 	new szItemInfo[256], szItemName[32], szItemName2[32];
 
 	// Get the item and race names
-	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_ONE], id, szItemName, 31, true );
-	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_TWO], id, szItemName2, 31, true );
+	lang_GetItemName( g_iShopMenuItems[iTargetID][ITEM_SLOT_ONE], id, szItemName, 31, true );
+	lang_GetItemName( g_iShopMenuItems[iTargetID][ITEM_SLOT_TWO], id, szItemName2, 31, true );
 
 	// User has one item
-	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE && g_iShopMenuItems[id][ITEM_SLOT_ONE] != ITEM_MOLE )
+	if ( g_iShopMenuItems[iTargetID][ITEM_SLOT_ONE] > ITEM_NONE && g_iShopMenuItems[iTargetID][ITEM_SLOT_ONE] != ITEM_MOLE )
 	{
 		pos += formatex( szItemInfo[pos], 256-pos, "^n%s", szItemName );
 	}
 
 	// User has another item
-	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE && g_iShopMenuItems[id][ITEM_SLOT_ONE] != ITEM_MOLE )
+	if ( g_iShopMenuItems[iTargetID][ITEM_SLOT_TWO] > ITEM_NONE && g_iShopMenuItems[iTargetID][ITEM_SLOT_ONE] != ITEM_MOLE )
 	{
 		// Then the string isn't empty and we have information in it (so we have a first item)
 		if ( szItemInfo[0] )
@@ -1387,7 +1384,7 @@ WC3_ShowSpecInfo( id, iTargetID )
 		}
 		
 		// Then they have rings, lets print how many there are
-		if ( ITEM_Has( id, ITEM_RING ) && p_data[id][P_RINGS] > 1 )
+		if ( ITEM_Has( iTargetID, ITEM_RING ) && p_data[iTargetID][P_RINGS] > 1 )
 		{
 			pos += formatex( szItemInfo[pos], 256-pos, " x%d", p_data[id][P_RINGS] );
 		}

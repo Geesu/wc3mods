@@ -464,7 +464,7 @@ public SHARED_CS_Reincarnation( id )
 	if ( p_data_b[id][PB_DIEDLASTROUND] )
 	{
 		// Orc's Reincarnation
-		if ( Verify_Skill(id, RACE_ORC, SKILL3) )
+		if ( Verify_Skill( id, RACE_ORC, SKILL3 ) )
 		{
 			if( random_float( 0.0, 1.0 ) <= p_ankh[p_data[id][P_SKILL3]-1] )
 			{
@@ -513,9 +513,16 @@ public _SHARED_CS_GiveWeapons(id)
 		id -= TASK_GIVEITEMS;
 	}
 
-	if ( !warcraft3 || !p_data_b[id][PB_ISCONNECTED] )
+	if ( !WAR3_Check() || !p_data_b[id][PB_ISCONNECTED] )
 	{
 		return PLUGIN_CONTINUE;
+	}
+
+	// Check to see if the user should have the bomb
+	new bool:bGiveBomb = false;
+	if ( cs_get_user_plant( id ) )
+	{
+		bGiveBomb = true;
 	}
 
 	// Remove all weapons
@@ -542,6 +549,12 @@ public _SHARED_CS_GiveWeapons(id)
 	if ( p_data_b[id][PB_SHIELD] )
 	{
 		give_item(id, "weapon_shield");
+	}
+
+	// Give the user a bomb
+	if ( bGiveBomb )
+	{
+		give_item(id, "weapon_c4");
 	}
 	
 	new iWeapID = 0, i = 0;
@@ -755,7 +768,7 @@ SHARED_IsPlayerSlowed( id )
 public SHARED_ChangeSkin( id, reset )
 {
 
-	if ( !warcraft3 || g_MOD == GAME_DOD )
+	if ( !warcraft3 )
 	{
 		return;
 	}
@@ -765,30 +778,77 @@ public SHARED_ChangeSkin( id, reset )
 	// Reset the user's model
 	if ( reset == SKIN_RESET && p_data[id][P_SKINCHANGED] == SKIN_SWITCH )
 	{
-		cs_reset_user_model( id );
+
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			cs_reset_user_model( id );
+		}
+		else if ( g_MOD == GAME_DOD )
+		{
+			dod_clear_model( id );
+		}
+
 		p_data[id][P_SKINCHANGED] = SKIN_RESET;
 	}
 	
 	// Switch the user's skin to the opposing team
 	else if ( reset == SKIN_SWITCH )
 	{
-		new iModelNum = random_num( 0, 3 );
-
-		if ( g_MOD == GAME_CZERO )
+		new iTeam = get_user_team( id );
+		
+		// For Counter-Strike or Condition Zero
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 		{
-			iModelNum = random_num( 0, 4 );
+			new iModelNum = random_num( 0, 3 );
+			
+			// Condition Zero has one more model!
+			if ( g_MOD == GAME_CZERO )
+			{
+				iModelNum = random_num( 0, 4 );
+			}
+			
+			// Save which skin we're going to use
+			if ( iTeam == TEAM_CT )
+			{
+				add( szSkin, 31, SKIN_T[iModelNum] );
+			}
+			else
+			{
+				add( szSkin, 31, SKIN_CT[iModelNum] );
+			}
+
+			cs_set_user_model( id, szSkin );
+
 		}
 
-		if ( get_user_team( id ) == TS )
+		// For Day of Defeat
+		else if ( g_MOD == GAME_DOD )
 		{
-			add( szSkin, 31, CTSkins[iModelNum] );
-		}
-		else
-		{
-			add( szSkin, 31, TSkins[iModelNum] );
+			new iModelNum = random_num( 0, 1 );
+
+			if ( iTeam == ALLIES )
+			{
+				add( szSkin, 31, SKIN_AXIS[iModelNum] );
+			}
+			else
+			{
+				
+				// Then we should use a British model
+				if ( dod_get_map_info( MI_ALLIES_TEAM ) == 1 )
+				{
+					add( szSkin, 31, SKIN_BRIT[0] );
+				}
+				
+				// Otherwise use American model
+				else
+				{
+					add( szSkin, 31, SKIN_ALLIES[iModelNum] );
+				}
+			}
+			
+			dod_set_model( id, szSkin );
 		}
 
-		cs_set_user_model( id, szSkin );
 
 		p_data[id][P_SKINCHANGED] = SKIN_SWITCH;
 	}
@@ -851,6 +911,34 @@ public SHARED_IsOnTeam( id )
 	return false;
 }
 
+// Reset our reserved spawn points
+SHARED_SpawnReset()
+{
+	new i;
+
+	for ( i = 0; i < TOTAL_SPAWNS; i++ )
+	{
+		g_iSpawnReserved[i] = 0;
+	}
+}
+
+// Determine if this entity is reserved for another player
+bool:SHARED_SpawnReserved( ent )
+{
+	new i;
+
+	for ( i = 0; i < g_iSpawnInc; i++ )
+	{
+		if ( g_iSpawnReserved[i] == ent )
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// Find a free spawn!
 SHARED_FindFreeSpawn( id, bImmunityCheck = false, bReverseTeam = false )
 {
 
@@ -904,28 +992,36 @@ SHARED_FindFreeSpawn( id, bImmunityCheck = false, bReverseTeam = false )
 			// We have a free spawn!!
 			if ( iPlayersInVicinity == 0 )
 			{
-				
-				// We need to make sure there isn't anyone nearby that is immune
-				if ( bImmunityCheck )
-				{
-					// Immune found
-					if ( WC3_IsImmunePlayerNear( id, vOrigin ) )
-					{
-						bImmunityNear = true;
-					}
 
-					// We're clear!
+				// Make sure it isn't reserved
+				if ( !SHARED_SpawnReserved( ent ) )
+				{
+
+					// Then we need to reserve it :)
+					g_iSpawnReserved[g_iSpawnInc++] = ent;
+
+					// We need to make sure there isn't anyone nearby that is immune
+					if ( bImmunityCheck )
+					{
+						// Immune found
+						if ( WC3_IsImmunePlayerNear( id, vOrigin ) )
+						{
+							bImmunityNear = true;
+						}
+
+						// We're clear!
+						else
+						{
+							bImmunityNear = false;
+							bFound = true;
+						}
+					}
+					
+					// We have a free spawn we can quit!
 					else
 					{
-						bImmunityNear = false;
 						bFound = true;
 					}
-				}
-				
-				// We have a free spawn we can quit!
-				else
-				{
-					bFound = true;
 				}
 			}
 		}
@@ -967,8 +1063,6 @@ public SHARED_MoleCheck( id )
 	{
 		if ( g_bPlayerBoughtMole[id] )
 		{
-			bMole = true;
-
 			parm[1] = 2;
 
 			g_bPlayerBoughtMole[id] = false;

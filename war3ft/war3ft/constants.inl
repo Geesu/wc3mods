@@ -558,8 +558,14 @@ new bool:g_freezeTime	= false;
 new bool:g_freezeCalled = false;
 new bool:g_buyTime
 
-new CTSkins[5][]={"sas","gsg9","urban","gign","spetsnaz"}
-new TSkins[5][]={"arctic","leet","guerilla","terror","militia"}
+// Counter-Strike/Condition Zero Skins
+new SKIN_CT[5][]		= { "sas"		, "gsg9"	, "urban"		, "gign"	, "spetsnaz" };
+new SKIN_T[5][]			= { "arctic"	, "leet"	, "guerilla"	, "terror"	, "militia" };
+	
+// Day of Defeat Player skins
+new SKIN_AXIS[2][]		= { "axis-inf"	, "axis-para" };
+new SKIN_ALLIES[2][]	= { "us-inf"	, "us-para" };
+new SKIN_BRIT[1][]		= { "brit-inf" };
 
 new CsArmorType:g_ArmorType[33];
 
@@ -619,6 +625,10 @@ new g_MODclient[15] = "* [WAR3FT]"
 new bool:warcraft3 = true
 new bool:g_EndRound
 
+// Used to make sure a spawn point isn't used for another player
+#define TOTAL_SPAWNS	32
+new g_iSpawnReserved[TOTAL_SPAWNS];
+new g_iSpawnInc = 0;
 
 new g_PlayerSkills[33][4];				// Stores what skills the player has
 new g_PlayerSkillLevel[33][4];			// Stores what level each skill is
@@ -683,6 +693,6 @@ new const Float:p_orb[11] =				{0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 
 new xplevel[11] =						{0,150,300,600,1000,1500,2100,2800,3400,4500,5500}
 new xpgiven[11] =						{10,15,25,35,40,50,60,70,80,90,95}
 
-new Float:weaponxpmultiplier[62] =		{1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0}
+new Float:weaponxpmultiplier[62] =		{1.0};
 
 new MOTD_header[] = "<html><head><LINK REL=^"StyleSheet^" HREF=^"wc3.css^" TYPE=^"text/css^"></head><body>";

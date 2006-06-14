@@ -5,7 +5,10 @@ v3.0
  - Addition: Check for serpent wards to prevent them from being planted on the bomb or on hostages
  - Addition: amx_setlevel has been added
  - Addition: /level10 command - gives level 10 when you type it (if sv_cheats is on, don't worry, this XP doesn't save into the database...)
+ - Addition: (DOD) Chameleon now works!
+ - Addition: (DOD) Mole's will change their model
  - Bug Fix: cl_minmodels task was not repeating
+ - Change: Chameleon price dropped to 4500
  - Change: Tome gives more XP when saving XP is on
  - Change: Impale now hits the user up from the ground
  - Change: Banish will now move an attacker into an atral prison
@@ -55,11 +58,10 @@ v3.0
 //remove all task_exists
 //give them some invulnerability when they spawn
 //fix hex playing after ur dead...
-//allow moles to buy items after they mole - research how to do this!!
-//add DOD model changing to chameleon/mole
-//bug: spec info isn't showing items...
+//allow moles to buy weapons after they mole - research how to do this!!
 //bug: phoenix will try to respawn users when changing team
 //bug: strip_user_weapons will remove bomb + not give it back
+//make it so user can keep ankh if orc skill is used
 
 //shopmenu 3 ideas:
 // immune to some magic

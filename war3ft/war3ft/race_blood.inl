@@ -119,7 +119,7 @@ BM_PhoenixSpawn( id )
 {
 	
 	// If this user is about to respawn, then we don't even want to check
-	if ( p_data[id][P_RESPAWNBY] )
+	if ( p_data[id][P_RESPAWNBY] || g_EndRound )
 	{
 		return;
 	}

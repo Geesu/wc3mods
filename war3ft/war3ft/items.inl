@@ -599,7 +599,7 @@ ITEM_Init()
 	ITEM_COST[13]	= 1500;			// Sock of the Feather
 	ITEM_COST[14]	= 1750;			// Flaming Gloves of Warmth
 	ITEM_COST[15]	= 1000;			// Ring of Regeneration + 1
-	ITEM_COST[16]	= 9000;			// Chameleon
+	ITEM_COST[16]	= 4500;			// Chameleon
 	ITEM_COST[17]	= 16000;		// Mole
 
 	// Item costs are a little different for DOD
