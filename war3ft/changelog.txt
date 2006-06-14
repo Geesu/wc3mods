@@ -59,6 +59,7 @@ v3.0
 //bug: spec info isn't showing items...
 //bug: phoenix will try to respawn users when changing team
 //bug: strip_user_weapons will remove bomb + not give it back
+//bug: mole forever
 
 //shopmenu 3 ideas:
 // immune to some magic
