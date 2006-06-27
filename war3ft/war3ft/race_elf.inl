@@ -187,12 +187,12 @@ NE_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 {
 
 	// Trueshot Aura
-	if ( Verify_Skill( iAttacker, RACE_ELF, SKILL3 ) )
+	if ( SM_VerifySkill( iAttacker, SKILL_TRUESHOT ) )
 	{
 		new iTempDamage = floatround( float( iDamage ) * p_trueshot[p_data[iAttacker][P_SKILL3]-1] );
 		
 		// Damage the user
-		WAR3_damage( iVictim, iAttacker, iTempDamage, iWeapon, iHitPlace );
+		WC3_Damage( iVictim, iAttacker, iTempDamage, iWeapon, iHitPlace );
 
 		// Make the user glow!
 		SHARED_Glow( iVictim, ( 2 * iTempDamage ), 0, 0, 0 );
@@ -205,12 +205,12 @@ NE_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 NE_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace )
 {
 	// Thorns Aura ( attacker could be dead... i.e. nade )
-	if ( Verify_Skill( iVictim, RACE_ELF, SKILL2 ) && is_user_alive( iAttacker ) )
+	if ( SM_VerifySkill( iVictim, SKILL_THORNS ) && is_user_alive( iAttacker ) )
 	{
 		new iAdditionalDamage = floatround( float( iDamage ) * p_thorns[p_data[iVictim][P_SKILL2]-1] );
 		
 		// Damage the user
-		WAR3_damage( iAttacker, iVictim, iAdditionalDamage, CSW_THORNS, iHitPlace );
+		WC3_Damage( iAttacker, iVictim, iAdditionalDamage, CSW_THORNS, iHitPlace );
 
 		// Make the user glow!
 		SHARED_Glow( iAttacker, ( 3 * iAdditionalDamage ), 0, 0, 0 );

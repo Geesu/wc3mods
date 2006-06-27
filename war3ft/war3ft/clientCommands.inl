@@ -3,193 +3,220 @@
 // This isn't actually called when they join spectator :/
 public cmd_Teamselect( id, key )
 {
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	p_data_b[id][PB_CHANGINGTEAM] = true;
 }
 
-public cmd_Jointeam(id)
+public cmd_Jointeam( id )
 {
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	p_data_b[id][PB_CHANGINGTEAM] = true;
 }
 
+// This is here to prevent the user from forcing a ResetHUD event
 public cmd_fullupdate()
 {
-	return PLUGIN_HANDLED
+	if ( !WAR3_Check() )
+	{
+		return PLUGIN_CONTINUE;
+	}
+
+	return PLUGIN_HANDLED;
 }
 
-#if MOD == 0
-	public cmd_hegren(id){ 
+// Called when the user buys a he grenade
+public cmd_hegren( id )
+{ 
+	if ( !WAR3_Check() )
+	{
+		return PLUGIN_CONTINUE;
+	}
 
-		if (!warcraft3)
-			return PLUGIN_CONTINUE
+	// Make sure we even have grenade protection on
+	if ( !get_pcvar_num( CVAR_wc3_grenade_protection ) )
+	{
+		return PLUGIN_CONTINUE;
+	}
 
-		if(get_pcvar_num( CVAR_wc3_grenade_protection )==0)
-			return PLUGIN_CONTINUE
+	// Then they shouldn't be buying a grenade anyway
+	if ( !cs_get_user_buyzone( id ) )
+	{
+		return PLUGIN_HANDLED;
+	}
 
-		if(!cs_get_user_buyzone(id))
-			return PLUGIN_HANDLED
 
-		if (p_data[id][P_HECOUNT]>0){ 
-			client_print(id,print_center,"%L",id,"ONLY_ONE_GRENADE_PER_ROUND") 
-			return PLUGIN_HANDLED
-		} 
-		else{
-			++p_data[id][P_HECOUNT]
-			return PLUGIN_CONTINUE
+	// User can only buy one grenade per round
+	if ( p_data[id][P_HECOUNT] > 0 )
+	{ 
+		client_print( id, print_center, "%L", id, "ONLY_ONE_GRENADE_PER_ROUND" );
 
-		}
+		return PLUGIN_HANDLED;
+	}
+	
+	// Increment since they bought their grenade
+	else
+	{
+		++p_data[id][P_HECOUNT];
 
-		return PLUGIN_HANDLED 
-	} 
+		return PLUGIN_CONTINUE;
+	}
 
-	public cmd_flash(id){
-
-		if (!warcraft3)
-			return PLUGIN_CONTINUE
-
-		if(!cs_get_user_buyzone(id))
-			return PLUGIN_HANDLED
-
-		return PLUGIN_CONTINUE
-	} 
-#endif
+	return PLUGIN_CONTINUE;
+} 
 
 public cmd_Ultimate(id)
 {
 
-	if ( !warcraft3 )
-		return PLUGIN_CONTINUE
+	if ( !WAR3_Check( id ) )
+	{
+		return PLUGIN_HANDLED;
+	}
 
-	if (!is_user_alive(id))
-		return PLUGIN_HANDLED
+	// User can't use ultimate when dead
+	if ( !is_user_alive( id ) )
+	{
+		return PLUGIN_HANDLED;
+	}
 
+	// User can't use their ultimate when they're hexed
 	if ( p_data_b[id][PB_HEXED] )
 	{
-		WC3_Status_Text( id, 3.0, HUDMESSAGE_POS_STATUS, "%L", id, "HEX_NO_ABILITY" );
+		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "HEX_NO_ABILITY" );
 
 		client_cmd(id, "speak %s", SOUND_ERROR)
 
-		return PLUGIN_HANDLED
-	}
-
-	if(!p_data[id][P_ULTIMATE])
-	{
-		WC3_Status_Text( id, 0.5, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_NOT_FOUND" );
-
-		client_cmd(id, "speak %s", SOUND_ERROR)
-
-		return PLUGIN_HANDLED
+		return PLUGIN_HANDLED;
 	}
 	
-	// Global ultimate delay > 0
-	if ( g_iUltimateDelay > 0 )
+	// User has no ultimate!
+	else if ( !p_data[id][P_ULTIMATE] )
 	{
-		WC3_Status_Text( id, 0.5, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_NOT_READY", g_iUltimateDelay );
+		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_NOT_FOUND" );
 
 		client_cmd(id, "speak %s", SOUND_ERROR)
 
-		return PLUGIN_HANDLED
+		return PLUGIN_HANDLED;
 	}
-
-	// Ultimate is used
-	if ( p_data_b[id][PB_ULTIMATEUSED] || p_data[id][P_ULTIMATEDELAY] > 0 )
+	
+	// We're still in the global delay :/
+	else if ( g_iUltimateDelay > 0 )
 	{
-		WC3_Status_Text( id, 0.5, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_NOT_READY", p_data[id][P_ULTIMATEDELAY] );
+		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_NOT_READY", g_iUltimateDelay );
 
 		client_cmd(id, "speak %s", SOUND_ERROR)
 
-		return PLUGIN_HANDLED
+		return PLUGIN_HANDLED;
+	}
+
+	// Ultimate is used or not ready yet
+	else if ( p_data_b[id][PB_ULTIMATEUSED] || p_data[id][P_ULTIMATEDELAY] > 0 )
+	{
+		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_NOT_READY", p_data[id][P_ULTIMATEDELAY] );
+
+		client_cmd(id, "speak %s", SOUND_ERROR)
+
+		return PLUGIN_HANDLED;
 	}
 
 
-	// Suicide Bomber
-	if ( Verify_Skill(id, RACE_UNDEAD, SKILL4) ){
-		if( p_data_b[id][PB_SUICIDEATTEMPT] ){
+	// UNDEAD - Suicide Bomber
+	if ( SM_VerifySkill( id, ULTIMATE_SUICIDE ) )
+	{
 
-			WAR3_Kill(id, 0)
+		// User has already had their warning - kill them!
+		if ( p_data_b[id][PB_SUICIDEATTEMPT] )
+		{
+			WC3_KillUser( id, 0, 0 );
 		
 			p_data_b[id][PB_SUICIDEATTEMPT] = false
 		}
-		else{
-			new parm[1]
-			parm[0]=id
 
+		// Give the user his/her warning
+		else
+		{
 			// Flash the user's ultimate icon
 			ULT_Icon( id, ICON_FLASH );
 
 			p_data_b[id][PB_SUICIDEATTEMPT] = true
-		#if MOD == 0
-			set_hudmessage(178, 14, 41, -1.0, -0.4, 1, 0.5, 1.7, 0.2, 0.2,5)
-			show_hudmessage(id,"%L",id,"SUICIDE_BOMB_ARMED")
-		#endif
-		#if MOD == 1
-			new szMessage[128]
-			format(szMessage, 127, "%L", id, "SUICIDE_BOMB_ARMED")
-			Create_HudText(id, szMessage, 1)
-		#endif
+
+			WC3_StatusText( id, TXT_BLINK_CENTER, "%L", id, "SUICIDE_BOMB_ARMED" );
 		}
 	}
 
-	// Blink
-	else if ( Verify_Skill(id, RACE_HUMAN, SKILL4) ){
+	// HUMAN ALLIANCE - Blink
+	else if ( SM_VerifySkill( id, ULTIMATE_BLINK ) )
+	{
 		HU_ULT_Blink( id );
 	}
 
-	// Chain Lightning
-	else if ( Verify_Skill(id, RACE_ORC, SKILL4) && !p_data_b[id][PB_ISSEARCHING] ){
+	// ORCISH HORDE - Chain Lightning
+	else if ( SM_VerifySkill( id, ULTIMATE_CHAINLIGHTNING ) && !p_data_b[id][PB_ISSEARCHING] )
+	{
 		p_data_b[id][PB_ISSEARCHING] = true;
 
 		// Don't continue if task already exists...
 		if ( !task_exists( TASK_ULTPING + id ) )
 		{
-
-			new parm[2]
-			parm[0] = id
-			parm[1] = 5
+			new parm[2];
+			parm[0] = id;
+			parm[1] = 5;
 			_ULT_Ping( parm );
 		}
 	}
 
-	// Entangling Roots
-	else if ( Verify_Skill(id, RACE_ELF, SKILL4) && !p_data_b[id][PB_ISSEARCHING] ){
+	// NIGHT ELF - Entangling Roots
+	else if ( SM_VerifySkill( id, ULTIMATE_ENTANGLE ) && !p_data_b[id][PB_ISSEARCHING] )
+	{
 		p_data_b[id][PB_ISSEARCHING] = true;
 
 		// Don't continue if task already exists...
 		if ( !task_exists( TASK_ULTPING + id ) )
 		{
-			new parm[2]
-			parm[0] = id
-			parm[1] = 5
+			new parm[2];
+			parm[0] = id;
+			parm[1] = 5;
 			_ULT_Ping( parm );
 		}
 	}
 
-	// Immolate
-	else if ( Verify_Skill(id, RACE_BLOOD, SKILL4) ){
+	// BLOOD MAGE - Immolate
+	else if ( SM_VerifySkill( id, ULTIMATE_IMMOLATE ) )
+	{
 		p_data_b[id][PB_ISSEARCHING] = true;
 
 		// Don't continue if task already exists...
 		if ( !task_exists( TASK_ULTPING + id ) )
 		{
-			new parm[2]
-			parm[0] = id
-			parm[1] = 5
+			new parm[2];
+			parm[0] = id;
+			parm[1] = 5;
 			_ULT_Ping( parm );
 		}
 	}
 
-	// Big Bad Voodoo
-	else if ( Verify_Skill(id, RACE_SHADOW, SKILL4) ){
+	// SHADOW HUNTER - Big Bad Voodoo
+	else if ( SM_VerifySkill( id, ULTIMATE_BIGBADVOODOO ) )
+	{
 		SH_Ult_BigBadVoodoo( id );
 	}
 
-	// Vengeance
-	else if ( Verify_Skill(id, RACE_WARDEN, SKILL4) )
+	// WARDEN - Vengeance
+	else if ( SM_VerifySkill( id, ULTIMATE_VENGEANCE ) )
 	{
 		WA_ULT_Vengeance( id );
 	}
 
-	// Locust Swarm
-	else if ( Verify_Skill(id, RACE_CRYPT, SKILL4) ){
+	// CRYPT LORD - Locust Swarm
+	else if ( SM_VerifySkill( id, ULTIMATE_LOCUSTSWARM ) )
+	{
 		#if ADVANCED_STATS
 			new WEAPON = CSW_LOCUSTS - CSW_WAR3_MIN
 			iStatsShots[id][WEAPON]++
@@ -197,7 +224,7 @@ public cmd_Ultimate(id)
 		CL_ULT_LocustSwarm( id );
 	}
 
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 
@@ -208,7 +235,7 @@ public CMD_Handler( id )
 
 	read_argv( 0, szCmd, 31 );
 
-	WC3_HandleCommand( id, szCmd );
+	CMD_Handle( id, szCmd );
 
 	return PLUGIN_HANDLED;
 }
@@ -216,17 +243,187 @@ public CMD_Handler( id )
 public cmd_Say( id )
 {
 	
-	if ( !WAR3_Check( id ) )
-	{
-		return;
-	}
-
 	new szSaid[32];
 	read_args( szSaid, 31 );
 
 	remove_quotes( szSaid );
 
-	WC3_HandleCommand( id, szSaid );
+	CMD_Handle( id, szSaid );
 
 	return;
+}
+
+// Command handler
+CMD_Handle( id, szCmd[] )
+{
+	
+	// Change the user's race
+	if ( CMD_Equal( id,  szCmd, "changerace" ) )
+	{
+		WC3_ChangeRaceStart( id );
+	}
+	
+	// Display select skill menu
+	else if ( CMD_Equal( id,  szCmd, "selectskills" ) || CMD_Equal( id,  szCmd, "selectskill" ) )
+	{
+		MENU_SelectSkill( id );
+	}
+
+	else if ( CMD_Equal( id,  szCmd, "playerskills" ) )
+	{
+		MOTD_Playerskills(id, 1)
+	}
+
+	else if ( CMD_Equal( id,  szCmd, "skillsinfo" ) )
+	{
+		MOTD_SkillsInfo( id );
+	}
+
+	else if ( CMD_Equal( id,  szCmd, "war3help" ) )
+	{
+		MOTD_War3help(id)
+	}
+
+	else if ( CMD_Equal( id,  szCmd, "icons" ) )
+	{
+
+		// Sprites not enabled or icons are disabled
+		if ( !g_spritesEnabled || ( !get_pcvar_num( CVAR_wc3_race_icon ) && !get_pcvar_num( CVAR_wc3_level_icon ) ) )
+		{
+			client_print( id, print_center, "%L", id, "ICONS_ARE_DISABLED" );
+		}
+		
+		// We at least have one of the icon options enabled (race or level)
+		else
+		{
+
+			// Allow user to see icons
+			if ( p_data[id][P_SHOWICONS] )
+			{
+				p_data[id][P_SHOWICONS] = false;
+
+				client_print( id, print_center, "%L", id, "NO_LONGER_SEE_ICONS" );
+			}
+
+			// User no longer wnats to see icons
+			else
+			{
+				p_data[id][P_SHOWICONS] = true;
+
+				client_print( id, print_center, "%L", id, "NOW_SEE_ICONS" );
+			}
+		}
+	}
+
+	else if ( CMD_Equal( id,  szCmd, "level" ) )
+	{
+		WC3_ShowRaceInfo( id );
+		WC3_ShowBar( id );
+	}
+
+	else if ( CMD_Equal( id,  szCmd, "shopmenu" ) )
+	{
+		MENU_Shopmenu( id, 0 );
+	}
+
+	else if ( CMD_Equal( id,  szCmd, "resetxp" ) )
+	{
+		menu_ResetXP( id );
+	}
+
+	else if ( CMD_Equal( id,  szCmd, "itemsinfo" ) )
+	{
+		MOTD_ItemsInfo( id, 0 )
+	}
+	else if ( CMD_Equal( id,  szCmd, "war3menu" ) )
+	{
+		menu_War3menu(id)
+	}
+	else if ( CMD_Equal( id,  szCmd, "savexp" ) )
+	{
+       client_print( id, print_chat, "%s XP is saved automatically, you do not need to type this command", g_MODclient );
+	}
+
+	else if ( CMD_Equal( id,  szCmd, "resetskills" ) )
+	{
+		client_print( id, print_center, "%L", id, "SKILLS_RESET_NEXT_ROUND" );
+
+		p_data_b[id][PB_RESETSKILLS] = true;
+	}
+
+	else if ( CMD_Equal( id,  szCmd, "devs" ) || CMD_Equal( id,  szCmd, "developers" ) || CMD_Equal( id,  szCmd, "geesu" ) || CMD_Equal( id,  szCmd, "avanderik" ) || CMD_Equal( id,  szCmd, "ootoaoo" ) || CMD_Equal( id,  szCmd, "pimpdaddy" ) )
+	{
+		WC3_CheckDev(id)
+	}
+
+	// Cheat command if it's enabled
+	else if ( get_pcvar_num( CVAR_wc3_cheats ) && ( CMD_Equal( id,  szCmd, "level10" ) || CMD_Equal( id,  szCmd, "lvl10" ) ) )
+	{
+		new iRaceID = p_data[id][P_RACE];
+
+		// They haven't been given free XP for this race yet
+		if ( !g_bGivenLevel10[id][iRaceID] )
+		{
+			
+			// Save their XP now, b/c we're not going to later
+			DB_SaveXP( id );
+	
+			// OK give them level 10
+			p_data[id][P_XP] = xplevel[10];
+
+			XP_Check( id );
+			
+			// Make sure we set that we've given them XP already!
+			g_bGivenLevel10[id][iRaceID] = true;
+
+			client_print( id, print_chat, "%s You damn cheater, ok fine have level 10 :) - Ur welcome!!!", g_MODclient );
+		}
+		// We've already given them XP!!!
+		else
+		{
+			client_print( id, print_chat, "%s Hey I've already given you level 10 for this race!!", g_MODclient );
+		}
+	}
+
+	if ( get_pcvar_num( CVAR_wc3_races ) > 4 )
+	{
+
+		if ( CMD_Equal( id,  szCmd, "itemsinfo2" ) )
+		{
+			MOTD_ItemsInfo( id, 9 );
+		}
+
+		else if ( CMD_Equal( id,  szCmd, "rings" ) )
+		{
+			ITEM_BuyRings( id );
+		}
+
+		else if ( CMD_Equal( id,  szCmd, "ability" ) )
+		{
+			SH_PlaceSerpentWard( id );
+		}
+
+		else if ( CMD_Equal( id,  szCmd, "shopmenu2" ) )
+		{
+			MENU_Shopmenu( id, 9 );
+		}
+
+	}
+	
+	return PLUGIN_HANDLED;
+}
+
+// Function will check if the first string is equal to the second (checks for NAME or /NAME)
+CMD_Equal( id,  szCmd[], szCorrectCmd[] )
+{
+
+	if ( !WAR3_Check( id ) )
+	{
+		return false;
+	}
+
+	new szTmp[64];
+	formatex( szTmp, 63, "/%s", szCorrectCmd );
+
+	return ( equali( szCmd, szTmp ) || equali( szCmd, szCorrectCmd ) );
 }

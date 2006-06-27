@@ -124,6 +124,11 @@ public DB_Close()
 public DB_SaveXP( id )
 {
 	
+	if ( id >= TASK_SAVE )
+	{
+		id -= TASK_SAVE;
+	}
+
 	if ( !WAR3_Check() )
 	{
 		return;

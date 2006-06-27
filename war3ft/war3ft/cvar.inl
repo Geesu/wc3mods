@@ -21,20 +21,8 @@ new CVAR_wc3_level_icon;
 new CVAR_wc3_admin_flag;
 
 // XP CVARs
-new CVAR_wc3_xp_radius;
-new CVAR_wc3_win_round;
-new CVAR_wc3_headshot;
-new CVAR_wc3_kill_defuser;
-new CVAR_wc3_vip_escape;
-new CVAR_wc3_kill_bomb_carrier;
-new CVAR_wc3_kill_bomb_planter;
-new CVAR_wc3_defuse_bomb;
-new CVAR_wc3_rescue_hostage;
-new CVAR_wc3_kill_rescuer;
-new CVAR_wc3_kill_vip;
 new CVAR_wc3_min_players;
 new CVAR_wc3_xp_multiplier;
-new CVAR_wc3_xp_weap_multiplier;
 new CVAR_wc3_xp_auto_average;
 new CVAR_wc3_show_kill_obj;
 new CVAR_wc3_show_objectives;
@@ -78,6 +66,7 @@ new CVAR_wc3_cham_skill1;
 new CVAR_wc3_cham_skill2;
 new CVAR_wc3_cham_skill3;
 new CVAR_wc3_cham_ultimate;
+new CVAR_wc3_cham_passive;
 
 // Bot CVARs
 new CVAR_wc3_bot_buy_item;
@@ -158,7 +147,8 @@ public CVAR_Init()
 	CVAR_wc3_cham_skill2			= register_cvar( "wc3_cham_skill2"			, "1"							);
 	CVAR_wc3_cham_skill3			= register_cvar( "wc3_cham_skill3"			, "1"							);
 	CVAR_wc3_cham_ultimate			= register_cvar( "wc3_cham_ultimate"		, "1"							);
-	
+	CVAR_wc3_cham_passive			= register_cvar( "wc3_cham_passive"			, "1"							);
+
 	// Database CVARs
 
 	CVAR_wc3_sql_tbname				= register_cvar( "wc3_sql_tbname"			, "war3users"					);
@@ -170,21 +160,9 @@ public CVAR_Init()
 	// XP Modifier CVARs
 
 	CVAR_wc3_min_players			= register_cvar( "wc3_min_players"			, "2"							);
-	CVAR_wc3_xp_radius 				= register_cvar( "wc3_xp_radius"			, "750"							);
-	CVAR_wc3_win_round				= register_cvar( "wc3_win_round"			, "35"							);
-	CVAR_wc3_headshot				= register_cvar( "wc3_headshot"				, "9"							);
-	CVAR_wc3_kill_defuser			= register_cvar( "wc3_kill_defuser"			, "25"							);
-	CVAR_wc3_vip_escape				= register_cvar( "wc3_vip_escape"			, "30"							);
-	CVAR_wc3_kill_bomb_carrier		= register_cvar( "wc3_kill_bomb_carrier"	, "25"							);
-	CVAR_wc3_kill_bomb_planter		= register_cvar( "wc3_kill_bomb_planter"	, "15"							);
-	CVAR_wc3_defuse_bomb			= register_cvar( "wc3_defuse_bomb"			, "30"							);
-	CVAR_wc3_rescue_hostage			= register_cvar( "wc3_rescue_hostage"		, "25"							);
-	CVAR_wc3_kill_rescuer			= register_cvar( "wc3_kill_rescuer"			, "25"							);
-	CVAR_wc3_kill_vip				= register_cvar( "wc3_kill_vip"				, "25"							);
 	CVAR_wc3_show_kill_obj			= register_cvar( "wc3_show_kill_obj"		, "0"							);
 	CVAR_wc3_show_objectives		= register_cvar( "wc3_show_objectives"		, "1"							);
 	CVAR_wc3_xp_multiplier			= register_cvar( "wc3_xp_multiplier"		, "1.0"		, FCVAR_SERVER		);
-	CVAR_wc3_xp_weap_multiplier		= register_cvar( "wc3_xp_weap_multiplier"	, "1"							);
 	CVAR_wc3_xp_auto_average		= register_cvar( "CVAR_wc3_xp_auto_average"	, "0"							);
 	
 	// Bot CVARs
@@ -205,27 +183,10 @@ public CVAR_Configure()
 	{
 		new iXPDivisor = 5;
 	
-		set_pcvar_num( CVAR_wc3_win_round			, (get_pcvar_num( CVAR_wc3_win_round ) / iXPDivisor)			);
-		set_pcvar_num( CVAR_wc3_headshot			, (get_pcvar_num( CVAR_wc3_headshot ) / iXPDivisor)				);
-		set_pcvar_num( CVAR_wc3_kill_defuser		, (get_pcvar_num( CVAR_wc3_kill_defuser ) / iXPDivisor)			);
-		set_pcvar_num( CVAR_wc3_vip_escape			, (get_pcvar_num( CVAR_wc3_vip_escape ) / iXPDivisor)			);
-		set_pcvar_num( CVAR_wc3_kill_bomb_carrier	, (get_pcvar_num( CVAR_wc3_kill_bomb_carrier ) / iXPDivisor)	);
-		set_pcvar_num( CVAR_wc3_kill_bomb_planter	, (get_pcvar_num( CVAR_wc3_kill_bomb_planter ) / iXPDivisor)	);
-		set_pcvar_num( CVAR_wc3_defuse_bomb			, (get_pcvar_num( CVAR_wc3_defuse_bomb ) / iXPDivisor)			);
-		set_pcvar_num( CVAR_wc3_rescue_hostage		, (get_pcvar_num( CVAR_wc3_rescue_hostage ) / iXPDivisor)		);
-		set_pcvar_num( CVAR_wc3_kill_rescuer		, (get_pcvar_num( CVAR_wc3_kill_rescuer ) / iXPDivisor)			);
-		set_pcvar_num( CVAR_wc3_kill_vip			, (get_pcvar_num( CVAR_wc3_kill_vip ) / iXPDivisor)				);
 		set_pcvar_num( CVAR_wc3_tome				, (get_pcvar_num( CVAR_wc3_tome ) / iXPDivisor)					);
 	}
 
-	// Configure the Chameleon Race
-	if ( !get_pcvar_num( CVAR_wc3_cham_random ) )
-	{
-		g_ChamSkills[1] = get_pcvar_num( CVAR_wc3_cham_skill1 );
-		g_ChamSkills[2] = get_pcvar_num( CVAR_wc3_cham_skill2 );
-		g_ChamSkills[3] = get_pcvar_num( CVAR_wc3_cham_skill3 );
-		g_ChamSkills[4] = get_pcvar_num( CVAR_wc3_cham_ultimate );
-	}
+	CHAM_Configure();
 }
 
 public plugin_cfg()

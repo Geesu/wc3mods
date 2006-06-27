@@ -31,9 +31,8 @@ CL_ULT_LocustSwarm( id )
 	// No target was found :/
 	if ( iTotalTargets == 0 )
 	{
-
-		set_hudmessage( 178, 14, 41, -1.0, 0.3, 0, 1.0, 5.0, 0.1, 0.2, -1 );
-		show_hudmessage( id, "No valid targets found" );
+		//set_hudmessage( 178, 14, 41, -1.0, 0.3, 0, 1.0, 5.0, 0.1, 0.2, -1 );
+		WC3_StatusText( id, TXT_BLINK_CENTER, "No valid targets found" );
 
 		return;
 	}
@@ -148,7 +147,7 @@ public _CL_ULT_LocustEffect( parm[] )
 	{
 		new iDamage = random_num( LOCUSTSWARM_DMG_MIN, LOCUSTSWARM_DMG_MAX );
 
-		WAR3_damage( iVictim, iAttacker, iDamage, CSW_LOCUSTS, -1 );
+		WC3_Damage( iVictim, iAttacker, iDamage, CSW_LOCUSTS, -1 );
 
 		emit_sound( iVictim, CHAN_STATIC, SOUND_LOCUSTSWARM, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
@@ -181,7 +180,7 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 {
 
 	// Orb of Annihilation
-	if ( Verify_Race( iAttacker, RACE_CRYPT ) )
+	if ( SM_VerifyRace( iAttacker, RACE_CRYPT ) )
 	{
 
 		if ( random_float( 0.0, 1.0 ) <= p_orb[p_data[iAttacker][P_LEVEL]] )
@@ -198,7 +197,7 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 			emit_sound( iVictim, CHAN_STATIC, SOUND_ANNIHILATION, 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 			// Damage the user
-			WAR3_damage( iVictim, iAttacker, ORB_DAMAGE, CSW_ORB, iHitPlace );
+			WC3_Damage( iVictim, iAttacker, ORB_DAMAGE, CSW_ORB, iHitPlace );
 		}
 	#if ADVANCED_STATS
 		else{
@@ -209,7 +208,7 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 	}
 
 	// Carrion Beetle
-	if ( Verify_Skill( iAttacker, RACE_CRYPT, SKILL3 ) )
+	if ( SM_VerifySkill( iAttacker, SKILL_CARRIONBEETLES ) )
 	{
 		if ( random_float( 0.0, 1.0 ) <= p_carrion[p_data[iAttacker][P_SKILL3]-1] )
 		{
@@ -227,7 +226,7 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 
 				p_data[iAttacker][P_CARRIONCOUNT]--;
 
-				WAR3_damage( iVictim, iAttacker, CARRIONBEETLE_DAMAGE, CSW_CARRION, iHitPlace );
+				WC3_Damage( iVictim, iAttacker, CARRIONBEETLE_DAMAGE, CSW_CARRION, iHitPlace );
 			}
 		}
 	#if ADVANCED_STATS
@@ -239,7 +238,7 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 	}
 	
 	// Impale
-	if ( Verify_Skill( iAttacker, RACE_CRYPT, SKILL1 ) )
+	if ( SM_VerifySkill( iAttacker, SKILL_IMPALE ) )
 	{
 
 		if ( random_float( 0.0, 1.0 ) <= p_impale[p_data[iAttacker][P_SKILL1]-1] )
@@ -263,7 +262,7 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace )
 {
 	// Spiked Carapace
-	if ( Verify_Skill( iVictim, RACE_CRYPT, SKILL2 ) )
+	if ( SM_VerifySkill( iVictim, SKILL_SPIKEDCARAPACE ) )
 	{						
 		new iTemp = floatround( float( iDamage ) * p_spiked[p_data[iVictim][P_SKILL2]-1] );
 		
@@ -290,7 +289,7 @@ CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace )
 		if ( is_user_alive( iAttacker ) )
 		{
 			// Damage our attacker!
-			WAR3_damage( iAttacker, iVictim, iTemp, CSW_CARAPACE, iHitPlace );
+			WC3_Damage( iAttacker, iVictim, iTemp, CSW_CARAPACE, iHitPlace );
 
 			// Make the user glow!
 			SHARED_Glow( iAttacker, ( 3 * iTemp ), 0, 0, 0 );

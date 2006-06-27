@@ -12,7 +12,9 @@ HU_ULT_Blink( id )
 	// User can't Blink when he/she's stunned
 	if ( p_data_b[id][PB_STUNNED] )
 	{
-		client_print( id, print_center, "You can't blink when you're stunned!" );
+
+		WC3_StatusText( id, 0, "You can't blink when you're stunned!" );
+
 		return;
 	}
 	
@@ -30,8 +32,9 @@ HU_ULT_Blink( id )
 	// Make sure a nearby enemy doesn't have immunity
 	if ( WC3_IsImmunePlayerNear( id, vOldLocation ) || WC3_IsImmunePlayerNear( id, vNewLocation ) )
 	{
-		set_hudmessage( 255, 255, 10, -1.0, -0.4, 1, 0.5, BLINK_COOLDOWN, 0.2, 0.2 ,-1 );
-		show_hudmessage( id, "%L", id, "TELEPORT_FAILED_ENEMY_IMMUNITY" );
+
+		//set_hudmessage( 255, 255, 10, -1.0, -0.4, 1, 0.5, BLINK_COOLDOWN, 0.2, 0.2 ,-1 );
+		WC3_StatusText( id, 0, "%L", id, "TELEPORT_FAILED_ENEMY_IMMUNITY" );
 		
 		return;
 	}
@@ -121,13 +124,15 @@ public _HU_ULT_BlinkStuck( parm[] )
 
 	get_user_origin( id, vOrigin );
 	
+	client_print( id, print_chat, "[DEBUG] %d:%d", vOldLocation[2], vOrigin[2] );
+
 	// Then the user is stuck :/
 	if ( vOldLocation[2] == vOrigin[2] )
 	{
 
-		set_hudmessage( 255, 255, 10, -1.0, -0.4, 1, 0.5, BLINK_COOLDOWN, 0.2, 0.2, 5 );
-		show_hudmessage( id, "%L", id, "TELEPORT_FAILED_BAD_DESTINATION" );
-		
+		//set_hudmessage( 255, 255, 10, -1.0, -0.4, 1, 0.5, BLINK_COOLDOWN, 0.2, 0.2, 5 );
+		WC3_StatusText( id, 0, "%L", id, "TELEPORT_FAILED_BAD_DESTINATION" );
+
 		set_user_origin( id, vOldLocation )	;
 
 		ULT_ResetCooldown( id, floatround(BLINK_COOLDOWN) );
@@ -360,7 +365,7 @@ HU_SkillsOffensive( iAttacker, iVictim )
 {
 
 	// Bash
-	if ( Verify_Skill( iAttacker, RACE_HUMAN, SKILL3 ) )
+	if ( SM_VerifySkill( iAttacker, SKILL_BASH ) )
 	{
 
 		// Cannot bash if already bashed or user is slowed
@@ -383,8 +388,12 @@ HU_SkillsOffensive( iAttacker, iVictim )
 
 HU_DevotionAura( id )
 {
-	if ( Verify_Skill( id, RACE_HUMAN, SKILL2 ) )
+	new iBonusMultiplier = SM_VerifySkill( id, SKILL_DEVOTION );
+
+	if ( iBonusMultiplier )
 	{
-		set_user_health( id, p_devotion[p_data[id][P_SKILL2]-1] );
+		new iNewHealth = 100 + ( iBonusMultiplier * p_devotion );
+
+		set_user_health( id, iNewHealth );
 	}
 }

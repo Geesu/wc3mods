@@ -16,7 +16,7 @@ public MOTD_ItemsInfo( id, iStart )
 	{
 		iItemID = iStart + i;
 
-		lang_GetItemName ( iItemID, id, szItemName[i], 63 );
+		LANG_GetItemName ( iItemID, id, szItemName[i], 63 );
 	}
 
 	// Add header
@@ -184,87 +184,81 @@ public MOTD_Playerskills(id, saychat){
 	return PLUGIN_HANDLED
 }
 
-public MOTD_Skillsinfo(id){
+public MOTD_SkillsInfo( id )
+{
 
 	if ( !WAR3_Check( id ) )
-		return PLUGIN_CONTINUE
+	{
+		return;
+	}
 
-	if (0 < p_data[id][P_RACE] <= get_pcvar_num( CVAR_wc3_races )){
-		new szGame[8]
-		new race_skill[4][64], skill_description[4][256], race_name[64]
-		new pos = 0, i
+	if ( 0 < p_data[id][P_RACE] <= get_pcvar_num( CVAR_wc3_races ) )
+	{
 
-		if (is_running("cstrike"))
-			szGame = "cstrike"
-		else if (is_running("czero"))
-			szGame = "czero"
-		else if (is_running("dod"))
-			szGame = "dod"
+		new szTmp[128], szTmpDesc[256], szRaceName[64];
+		new pos = 0, i, iSkillID;
 
 		// Get the Race Name
+		lang_GetRaceName( p_data[id][P_RACE], id, szRaceName, 63 );
 
-		lang_GetRaceName(p_data[id][P_RACE],id,race_name,RACE_NAME_LENGTH_F)
+		// format the title
+		pos += formatex( szTmpMsg[pos], 2048-pos, "%s", MOTD_header );
+		pos += formatex( szTmpMsg[pos], 2048-pos, "<div id=^"title^">%s</div><br><br>", szRaceName );
 
-		// formatex the Title
-
-		pos += formatex(szTmpMsg[pos],2048-pos, "%s", MOTD_header)
-		pos += formatex(szTmpMsg[pos],2048-pos,"<div id=^"title^">%s</div><br><br>",race_name)
-
-		for(i=0;i<4;i++){
-
-			// Get Skill Name
-			lang_GetSkillName(p_data[id][P_RACE],i+1,id,race_skill[i],64)
-
-			// Get Skill Description
-			if(p_data[id][P_RACE] == RACE_CHAMELEON)
-				lang_GetSkillInfo(g_ChamSkills[i+1], i+1, id, skill_description[i], 256)
+		// Lets add each skill to the msg!
+		for ( i = 0; i < 5; i++ )
+		{
+			if ( p_data[id][P_RACE] == RACE_CHAMELEON )
+			{
+				iSkillID = g_ChamSkills[i];
+			}
 			else
-				lang_GetSkillInfo(p_data[id][P_RACE], i+1, id, skill_description[i], 256)
-
-		}
-
-		for(i=0;i<5;i++){
+			{
+				iSkillID = SM_GetSkill( p_data[id][P_RACE], i );
+			}
+			
+			LANG_GetSkillName( iSkillID, id, szTmp, 127 )
+			LANG_GetSkillInfo( iSkillID, id, szTmpDesc, 255 );
 
 			// Add each skill
-			if(0 <= i < 3){
-				if( i == 0 )
-					pos += formatex(szTmpMsg[pos],2048-pos,"<h1>%L</h1>", id, "WORD_TRAINABLE_SKILLS")
+			if ( i < 3)
+			{
+				// Add the trainable skills header
+				if ( i == 0 )
+				{
+					pos += formatex( szTmpMsg[pos], 2048-pos, "<h1>%L</h1>", id, "WORD_TRAINABLE_SKILLS" );
+				}
 
-				pos += formatex(szTmpMsg[pos],2048-pos,"<li>%s</li><ul>%s</ul><br>", race_skill[i], skill_description[i])
-
+				pos += formatex( szTmpMsg[pos], 2048-pos, "<li>%s</li><ul>%s</ul><br>", szTmp, szTmpDesc );
 			}
 
 			// Add the ultimate
-			else if( i == 3 ){
-				pos += formatex(szTmpMsg[pos],2048-pos,"<h1>%L</h1>",id, "WORD_ULTIMATE")
-				pos += formatex(szTmpMsg[pos],2048-pos,"<li>%s</li><ul>%s</ul>", race_skill[i], skill_description[i])
+			else if ( i == 3 )
+			{
+				pos += formatex( szTmpMsg[pos], 2048-pos, "<h1>%L</h1>", id, "WORD_ULTIMATE" );
+				pos += formatex( szTmpMsg[pos], 2048-pos, "<li>%s</li><ul>%s</ul>", szTmp, szTmpDesc );
 
 			}
 
 			// Add the hero's passive ability
-			else if(4 < p_data[id][P_RACE] < 9 && i == 4){
-				pos += formatex(szTmpMsg[pos],2048-pos,"<br><h1>%L</h1>", id, "WORD_HERO_ABILITY")
-
-				new heroskillinfo[128]
-				new heroskillname[64]
-				lang_GetSkillName(p_data[id][P_RACE], SKILL_HERO, id, heroskillname, 63)
-				lang_GetSkillInfo(p_data[id][P_RACE], SKILL_HERO, id, heroskillinfo, 127)
-				pos += formatex(szTmpMsg[pos],2048-pos,"<li>%s</li><ul>%s</ul><br>", heroskillname, heroskillinfo)
+			else if ( i == 4 && p_data[id][P_RACE] > 4 )
+			{
+				pos += formatex( szTmpMsg[pos], 2048-pos, "<br><h1>%L</h1>", id, "WORD_HERO_ABILITY" );
+				pos += formatex( szTmpMsg[pos], 2048-pos, "<li>%s</li><ul>%s</ul><br>", szTmp, szTmpDesc );
 			}
 		}
 
-		pos += formatex(szTmpMsg[pos],1024-pos,"<br><div>%L</div>",id,"CLICK_HERE", szGame)
+		pos += formatex( szTmpMsg[pos], 2048-pos, "<br><div>%L</div>", id, "CLICK_HERE", g_MOD );
 
-		new race_info[128]
-		formatex(race_info,127,"%s %L",race_name, id,"WORD_INFORMATION")
-		show_motd(id,szTmpMsg,race_info)
-
+		formatex( szTmp, 127, "%s %L", szRaceName, id, "WORD_INFORMATION" );
+		show_motd( id, szTmpMsg, szTmp );
 	}
-	else{
-		client_print(id, print_chat,"%L",id,"SELECT_RACE_BEFORE_SKILLS")
-		console_print(id,"%L",id,"SELECT_RACE_BEFORE_SKILLS")
-		return PLUGIN_HANDLED
+	else
+	{
+		show_motd( id, "Select a race before trying to view skillsinfo", "No race selected" );
+
+		return;
 	}
 
-	return PLUGIN_HANDLED
+	return;
 }

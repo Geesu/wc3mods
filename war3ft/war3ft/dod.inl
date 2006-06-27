@@ -1,4 +1,37 @@
 
+public EVENT_DOD_EndRound()
+{
+	
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+	
+	// The round has ended
+	g_EndRound = true;
+
+	// Allies = 3, Axis = 4
+	new iWinner = read_data( 1 );
+	new iTeam = -1;
+
+	// Allies won
+	if ( iWinner == 3 )
+	{
+		iTeam = ALLIES;
+	}
+
+	// Axis won!
+	else if ( iWinner == 4 )
+	{
+		iTeam = AXIS;
+	}
+
+	XP_WinRound( iTeam );
+
+	return;
+}
+
+
 public client_score(index,score,total){
 
 	if (!warcraft3)
@@ -10,7 +43,7 @@ public client_score(index,score,total){
 	// Award the user XP
 	new iXP, iXPAwarded;
 	iXP = score * xpgiven[p_data[index][P_LEVEL]];
-	iXPAwarded = XP_give( index, iXP );
+	iXPAwarded = XP_Give( index, iXP );
 	if (get_pcvar_num( CVAR_wc3_show_objectives ))
 	{
 		client_print(index, print_chat, "%s %L", g_MODclient, index, "DOD_AWARDED_XP_OBJECTIVE", iXPAwarded);
@@ -56,46 +89,6 @@ public _DOD_showMoney(parm[3]){
 	parm[1] = 0
 	parm[2] = 0
 	set_task(timer, "_DOD_showMoney", TASK_MONEYLOOP+id, parm, 3)
-
-	return PLUGIN_CONTINUE
-}
-
-public EVENT_DOD_EndRound(){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE;
-	
-	// The round has ended
-	g_EndRound = true;
-
-	// Allies = 3, Axis = 4
-	new winner = read_data(1);
-	new players[32], numberofplayers, a, id, iXP, iXPAwarded;
-	get_players( players, numberofplayers );
-	
-	for ( a = 0; a < numberofplayers; ++a )
-	{
-		id = players[a];
-		p_data_b[id][PB_REINCARNATION_SKIP] = false;
-
-		// Skip reincarnation for the start of the next round
-		if( Verify_Skill(id, RACE_ORC, SKILL3) || ITEM_Has( id, ITEM_ANKH ) )
-		{
-			p_data_b[id][PB_REINCARNATION_SKIP] = true;
-		}
-
-		// Should we award XP ?
-		new iTeam = get_user_team( id );
-		if ( (iTeam == ALLIES && winner == 3) || (iTeam == AXIS && winner == 4) )
-		{
-			iXP = get_pcvar_num(CVAR_wc3_win_round) + xpgiven[p_data[id][P_LEVEL]];
-			iXPAwarded = XP_give(id, iXP);
-			if (get_pcvar_num( CVAR_wc3_show_objectives ))
-			{
-				client_print(id,print_chat, "%s %L", g_MODclient, id, "AWARD_FOR_WINNING_ROUND", iXPAwarded);
-			}
-		}
-	}
 
 	return PLUGIN_CONTINUE
 }

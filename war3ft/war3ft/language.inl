@@ -1,3 +1,6 @@
+/*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
+*	Language Functions
+´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
 #define TOTAL_MENUS 13
 
@@ -23,9 +26,9 @@ new const MENU_NAMES[TOTAL_MENUS][] =
 // Callback functions for the above menu names
 new const MENU_CALLBACK[TOTAL_MENUS][] = 
 {
-	"_menu_Shopmenu_One",
-	"_menu_Shopmenu_Two",
-	"_menu_Select_Skill",
+	"_MENU_Shopmenu1",
+	"_MENU_Shopmenu2",
+	"_MENU_SelectSkill",
 	"_MENU_SelectRace",
 	"_menu_War3menu",
 	"_menu_Skill_Options",
@@ -41,9 +44,9 @@ new const MENU_CALLBACK[TOTAL_MENUS][] =
 /*
 	Description: Function will register all menus for all languages
 */
-public lang_SetMenus(){
-
-	new total_languages = get_langsnum();
+public LANG_SetMenus()
+{
+	new iTotalLanguages = get_langsnum();
 	new lang[3], menu[128];
 	new curMenuId = -1, highestMenuId = -1;
 	new iLang, iMenu;
@@ -55,16 +58,16 @@ public lang_SetMenus(){
 	{
 		// Register the menu names for each language
 
-		for( iLang = 0; iLang < total_languages; iLang++ )
+		for ( iLang = 0; iLang < iTotalLanguages; iLang++ )
 		{
 			get_lang ( iLang, lang );
 
-			if( lang_exists( lang ) )
+			if ( lang_exists( lang ) )
 			{
 				formatex ( menu, 127, "%L", lang, MENU_NAMES[iMenu] );
 				curMenuId = register_menuid ( menu );
 
-				if( curMenuId > highestMenuId )
+				if ( curMenuId > highestMenuId )
 				{
 					register_menucmd ( curMenuId, 1023, MENU_CALLBACK[iMenu] );
 					highestMenuId = curMenuId;
@@ -74,9 +77,7 @@ public lang_SetMenus(){
 	}// End menu loop
 }
 
-/*
-	Description: Function will return the race name based on the race id and the language of the user
-*/
+//Function will return the race name based on the race id and the language of the user
 lang_GetRaceName ( race_id, id, race_name[], len, bool:shortLookup = false )
 {
 
@@ -84,22 +85,19 @@ lang_GetRaceName ( race_id, id, race_name[], len, bool:shortLookup = false )
 	
 	if ( shortLookup == true )
 	{
-		formatex( szRaceHelper, 63, "SHORT_RACENAME_%d", race_id );
+		formatex( szRaceHelper, 63, "RACE_S_%d", race_id );
 	}
 	else
 	{
-		formatex( szRaceHelper, 63, "RACENAME_%d", race_id );
+		formatex( szRaceHelper, 63, "RACE_%d", race_id );
 	}
 
 	// Lookup the race name
-
 	formatex( race_name, len-1, "%L", id, szRaceHelper );
 }
 
-/*
-	Description: Function will return the shopmenu item name based on the item id and the language of the user
-*/
-lang_GetItemName ( item_id, id, item_name[], len, bool:shortLookup = false )
+//Description: Function will return the shopmenu item name based on the item id and the language of the user
+LANG_GetItemName ( item_id, id, item_name[], len, bool:shortLookup = false )
 {
 	
 	if ( item_id < 0 )
@@ -119,177 +117,91 @@ lang_GetItemName ( item_id, id, item_name[], len, bool:shortLookup = false )
 	}
 
 	// Lookup the item name
-
 	formatex( item_name, len, "%L", id, szItemHelper );
 }
 
-/*
-	Description: Function will return the skill name based on the race id, skill id and the language of the user
-*/
-lang_GetSkillName( race_id, skill_id, id, skill_name[], len )
+//Description: Function will return the skill name based on the race id, skill id and the language of the user
+LANG_GetSkillName( skill_id, id, skill_name[], len )
 {	
 
 	// Handle any game-specific instructions first
-
-	if ( g_MOD == GAME_DOD && race_id == RACE_ORC && skill_id == SKILL3 )
+	if ( g_MOD == GAME_DOD )
 	{
-		formatex ( skill_name, len-1, "%L", id, "DOD_RACE3_SKILL3" );
+		// Reincarnation
+		if ( skill_id == SKILL_REINCARNATION )
+		{
+			formatex ( skill_name, len-1, "%L", id, "SKILL_10_DOD" );
+			return;
+		}
 	}
 
 	// Handle everything else
-
-	else if ( race_id > 0 && race_id < 9 )
+	if ( skill_id < 0 || skill_id >= MAX_SKILLS )
 	{
-		new szSkillHelper[64];
+		log_amx( "Invalid skill: %d", skill_id );
+		return;
+	}
 
-		formatex ( szSkillHelper, 63, "RACE%d_SKILL%d", race_id, skill_id );
-		formatex ( skill_name, len-1, "%L", id, szSkillHelper );
-	}
-	else if ( race_id == RACE_CHAMELEON )
-	{
-		new szSkillHelper[64];
+	new szSkillHelper[64];
 
-		formatex ( szSkillHelper, 63, "RACE%d_SKILL%d", g_ChamSkills[skill_id], skill_id );
-		formatex ( skill_name, len-1, "%L", id, szSkillHelper );
-	}
-	else if ( race_id != 0 )
-	{
-		log_amx ( "Race: %d, skill: %d not found", race_id, skill_id );
-		
-		formatex ( skill_name, len-1, "" );
-	}
+	formatex ( szSkillHelper, 63, "SKILL_%d", skill_id );
+	formatex ( skill_name, len-1, "%L", id, szSkillHelper );
 }
 
-// We really should just build an HTML file when the server starts then send that to the user (like war3x)
-
-lang_GetSkillInfo( race_id, skill_id, id, skill_description[], len )
+LANG_GetSkillInfo( skill_id, id, skill_description[], len )
 {
-
-	switch( race_id )
+	switch( skill_id )
 	{
-
 		// Undead Scourge
-
-		case RACE_UNDEAD:
-		{
-			switch( skill_id )
-			{
-				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE1_SKILL1_INFO",floatround(p_vampiric[0]*100), floatround(p_vampiric[1]*100), floatround(p_vampiric[2]*100) );
-			#if MOD == 1
-				case SKILL2: formatex ( skill_description, len-1, "%L", id, "DOD_RACE1_SKILL2_INFO" );
-			#endif
-			#if MOD == 0
-				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE1_SKILL2_INFO" );
-			#endif
-				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE1_SKILL3_INFO" );
-				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE1_SKILL4_INFO" );
-			}
-		}
+		case SKILL_VAMPIRICAURA:		formatex ( skill_description, len, "%L", id, "SKILL_I_0" );
+		case SKILL_UNHOLYAURA:			formatex ( skill_description, len, "%L", id, ( (g_MOD == GAME_DOD) ? "SKILL_I_1_DOD" : "SKILL_I_1" ) );
+		case SKILL_LEVITATION:			formatex ( skill_description, len, "%L", id, "SKILL_I_2" );
+		case ULTIMATE_SUICIDE:			formatex ( skill_description, len, "%L", id, "SKILL_I_3" );
 
 		// Human Alliance
-
-		case RACE_HUMAN:
-		{
-			switch(skill_id)
-			{
-				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL1_INFO" );
-				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL2_INFO", p_devotion[0], p_devotion[1], p_devotion[2] );
-				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL3_INFO", floatround(p_bash[0]*100), floatround(p_bash[1]*100), floatround(p_bash[2]*100) );
-				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE2_SKILL4_INFO");
-			}
-		}
+		case SKILL_INVISIBILITY:		formatex ( skill_description, len, "%L", id, "SKILL_I_4" );
+		case SKILL_DEVOTION:			formatex ( skill_description, len, "%L", id, "SKILL_I_5" );
+		case SKILL_BASH:				formatex ( skill_description, len, "%L", id, "SKILL_I_6" );
+		case ULTIMATE_BLINK:			formatex ( skill_description, len, "%L", id, "SKILL_I_7" );
 
 		// Orcish Horde
-
-		case RACE_ORC:
-		{
-			switch(skill_id)
-			{
-				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE3_SKILL1_INFO", floatround(p_critical[0]*100) );
-			#if MOD == 1
-				case SKILL2: formatex ( skill_description, len-1, "%L", id, "DOD_RACE3_SKILL2_INFO", floatround(p_grenade[0]), floatround(p_grenade[1]), floatround(p_grenade[2]) );
-				case SKILL3: formatex ( skill_description, len-1, "%L", id, "DOD_RACE3_SKILL3_INFO", floatround(p_ankh[0]*100), floatround(p_ankh[1]*100), floatround(p_ankh[2]*100) );
-			#endif
-			#if MOD == 0
-				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE3_SKILL2_INFO", floatround(p_grenade[0]), floatround(p_grenade[1]), floatround(p_grenade[2]) );
-				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE3_SKILL3_INFO", floatround(p_ankh[0]*100), floatround(p_ankh[1]*100), floatround(p_ankh[2]*100) );
-			#endif
-				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE3_SKILL4_INFO" );
-			}
-		}
+		case SKILL_CRITICALSTRIKE:		formatex ( skill_description, len, "%L", id, "SKILL_I_8" );
+		case SKILL_CRITICALGRENADE:		formatex ( skill_description, len, "%L", id, "SKILL_I_9" );
+		case SKILL_REINCARNATION:		formatex ( skill_description, len, "%L", id, "SKILL_I_10" );
+		case ULTIMATE_CHAINLIGHTNING:	formatex ( skill_description, len, "%L", id, "SKILL_I_11" );
 
 		// Night Elf
-
-		case RACE_ELF:
-		{
-			switch(skill_id)
-			{
-				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE4_SKILL1_INFO", floatround(p_evasion[0]*100), floatround(p_evasion[1]*100), floatround(p_evasion[2]*100) );
-				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE4_SKILL2_INFO", floatround(p_thorns[0]*100), floatround(p_thorns[1]*100), floatround(p_thorns[2]*100) );
-				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE4_SKILL3_INFO", floatround(p_trueshot[0]*100), floatround(p_trueshot[1]*100), floatround(p_trueshot[2]*100) );
-				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE4_SKILL4_INFO" );
-			}
-		}
+		case SKILL_EVASION:				formatex ( skill_description, len, "%L", id, "SKILL_I_12" );
+		case SKILL_THORNS:				formatex ( skill_description, len, "%L", id, "SKILL_I_13" );
+		case SKILL_TRUESHOT:			formatex ( skill_description, len, "%L", id, "SKILL_I_14" );
+		case ULTIMATE_ENTANGLE:			formatex ( skill_description, len, "%L", id, "SKILL_I_15" );
 
 		// Blood Mage
-
-		case RACE_BLOOD:
-		{
-			switch(skill_id)
-			{
-			#if MOD == 1
-				case SKILL1: formatex ( skill_description, len-1, "%L", id, "DOD_RACE5_SKILL1_INFO", p_pheonix_dod[0], p_pheonix_dod[1], p_pheonix_dod[2] );
-			#endif
-			#if MOD == 0
-				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE5_SKILL1_INFO", floatround(p_pheonix[0]*100), floatround(p_pheonix[1]*100), floatround(p_pheonix[2]*100) );
-			#endif
-				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE5_SKILL2_INFO", floatround(p_banish[0]*100), floatround(p_banish[1]*100), floatround(p_banish[2]*100) );
-				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE5_SKILL3_INFO", floatround(p_mana[0]*100), floatround(p_mana[1]*100), floatround(p_mana[2]*100) );
-				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE5_SKILL4_INFO" );
-				case SKILL5: formatex ( skill_description, len-1, "%L", id, "RACE5_SKILL5_INFO", (100.0 * p_resistant[p_data[id][P_LEVEL]]) );
-			}
-		}
+		case SKILL_PHOENIX:				formatex ( skill_description, len, "%L", id, ( (g_MOD == GAME_DOD) ? "SKILL_I_16_DOD" : "SKILL_I_16" ) );
+		case SKILL_BANISH:				formatex ( skill_description, len, "%L", id, "SKILL_I_17" );
+		case SKILL_SIPHONMANA:			formatex ( skill_description, len, "%L", id, "SKILL_I_18" );
+		case ULTIMATE_IMMOLATE:			formatex ( skill_description, len, "%L", id, "SKILL_I_19" );
+		case PASS_RESISTANTSKIN:		formatex ( skill_description, len, "%L", id, "SKILL_I_20" );
 
 		// Shadow Hunter
-
-		case RACE_SHADOW:
-		{
-			switch(skill_id)
-			{
-				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL1_INFO", floatround(p_heal[0]), floatround(p_heal[1]), floatround(p_heal[2]) );
-				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL2_INFO", floatround(p_hex[0]*100), floatround(p_hex[1]*100), floatround(p_hex[2]*100) );
-				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL3_INFO", p_serpent[0], p_serpent[1], p_serpent[2])
-				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL4_INFO" );
-				case SKILL5: formatex ( skill_description, len-1, "%L", id, "RACE6_SKILL5_INFO",(100.0 * p_concoction[p_data[id][P_LEVEL]]), SH_CONCOCTION_DAMAGE)
-			}
-		}
+		case SKILL_HEALINGWAVE:			formatex ( skill_description, len, "%L", id, "SKILL_I_21" );
+		case SKILL_HEX:					formatex ( skill_description, len, "%L", id, "SKILL_I_22" );
+		case SKILL_SERPENTWARD:			formatex ( skill_description, len, "%L", id, "SKILL_I_23" );
+		case ULTIMATE_BIGBADVOODOO:		formatex ( skill_description, len, "%L", id, "SKILL_I_24" );
+		case PASS_UNSTABLECONCOCTION:	formatex ( skill_description, len, "%L", id, "SKILL_I_25" );
 
 		// Warden
-
-		case RACE_WARDEN:
-		{
-			switch(skill_id)
-			{
-				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE7_SKILL1_INFO",  floatround(p_fan[0]*100), floatround(p_fan[1]*100), floatround(p_fan[2]*100) );
-				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE7_SKILL2_INFO", floatround(p_blink[0]*100), floatround(p_blink[1]*100), floatround(p_blink[2]*100) );
-				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE7_SKILL3_INFO", floatround(p_shadow[0]*100), floatround(p_shadow[1]*100), floatround(p_shadow[2]*100) );
-				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE7_SKILL4_INFO" );
-				case SKILL5: formatex ( skill_description, len-1, "%L", id, "RACE7_SKILL5_INFO", (100.0 * p_harden[p_data[id][P_LEVEL]]) );
-			}
-		}
+		case SKILL_FANOFKNIVES:			formatex ( skill_description, len, "%L", id, "SKILL_I_26" );
+		case SKILL_BLINK:				formatex ( skill_description, len, "%L", id, "SKILL_I_27" );
+		case SKILL_SHADOWSTRIKE:		formatex ( skill_description, len, "%L", id, "SKILL_I_28" );
+		case ULTIMATE_VENGEANCE:		formatex ( skill_description, len, "%L", id, "SKILL_I_29" );
+		case PASS_HARDENEDSKIN:			formatex ( skill_description, len, "%L", id, "SKILL_I_30" );
 
 		// Crypt Lord
-
-		case RACE_CRYPT:
-		{
-			switch(skill_id)
-			{
-				case SKILL1: formatex ( skill_description, len-1, "%L", id, "RACE8_SKILL1_INFO", floatround(p_impale[0]*100), floatround(p_impale[1]*100), floatround(p_impale[2]*100) );
-				case SKILL2: formatex ( skill_description, len-1, "%L", id, "RACE8_SKILL2_INFO", floatround(p_spiked[0]*100), floatround(p_spiked[1]*100), floatround(p_spiked[2]*100) );
-				case SKILL3: formatex ( skill_description, len-1, "%L", id, "RACE8_SKILL3_INFO", floatround(p_carrion[0]*100), floatround(p_carrion[1]*100), floatround(p_carrion[2]*100) );
-				case SKILL4: formatex ( skill_description, len-1, "%L", id, "RACE8_SKILL4_INFO" );
-				case SKILL5: formatex ( skill_description, len-1, "%L", id, "RACE8_SKILL5_INFO", (100.0 * p_orb[p_data[id][P_LEVEL]]), ORB_DAMAGE)
-			}
-		}
+		case SKILL_IMPALE:				formatex ( skill_description, len, "%L", id, "SKILL_I_31" );
+		case SKILL_SPIKEDCARAPACE:		formatex ( skill_description, len, "%L", id, "SKILL_I_32" );
+		case SKILL_CARRIONBEETLES:		formatex ( skill_description, len, "%L", id, "SKILL_I_33" );
+		case ULTIMATE_LOCUSTSWARM:		formatex ( skill_description, len, "%L", id, "SKILL_I_34" );
+		case PASS_ORB:					formatex ( skill_description, len, "%L", id, "SKILL_I_35" );
 	}
 }

@@ -6,7 +6,7 @@
 #define IMMOLATE_DOT_DAMAGE		5		// Damage done on each tick of the ultimate
 #define IMMOLATE_DOT			4		// Number of times ultimate ticks
 
-#define BM_PHEONIX_RANGE		750		// Range to award money
+#define BM_PHOENIX_RANGE		750		// Range to award money
 #define BANISH_DAMAGE			1
 #define BANISH_HOLDTIME			0.7
 
@@ -28,7 +28,7 @@ public BM_ULT_Immolate( iCaster, iTarget )
 
 	// Do initial immolate damage and make their screen shake a little
 
-	WAR3_damage( iTarget, iCaster, IMMOLATE_DAMAGE, CSW_IMMOLATE, -1 )
+	WC3_Damage( iTarget, iCaster, IMMOLATE_DAMAGE, CSW_IMMOLATE, -1 )
 
 	new parm_DoT[3];
 	parm_DoT[0] = iCaster;
@@ -68,7 +68,7 @@ public BM_ULT_Immolate_DoT( parm_DoT[3] )
 
 	// Do the DoT damage
 
-	WAR3_damage( iTarget, iCaster, IMMOLATE_DOT, CSW_IMMOLATE, -1 )
+	WC3_Damage( iTarget, iCaster, IMMOLATE_DOT, CSW_IMMOLATE, -1 )
 
 	// If the target is still alive after this, make their screen glow orange and start the task again
 
@@ -101,13 +101,13 @@ BM_ULT_Immolate_Remove( iTarget )
 }
 
 // Check to see if a player will become a Phoenix
-BM_PheonixCheck( id )
+BM_PhoenixCheck( id )
 {
-	if ( Verify_Skill(id, RACE_BLOOD, SKILL1) )
+	if ( SM_VerifySkill( id, SKILL_PHOENIX ) )
 	{
 		
 		// Should the user be a Phoenix
-		if ( random_float( 0.0, 1.0 ) <= p_pheonix[p_data[id][P_SKILL1]-1] ) 
+		if ( random_float( 0.0, 1.0 ) <= p_phoenix[p_data[id][P_SKILL1]-1] ) 
 		{
 			p_data_b[id][PB_PHOENIX] = true;
 		}
@@ -180,11 +180,11 @@ BM_PhoenixExists( iTeam )
 	return -1;
 }
 
-BM_PheonixDOD( id )
+BM_PhoenixDOD( id )
 {
 
 	// Award the player money for having Phoenix
-	SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + p_pheonix_dod[p_data[id][P_SKILL1]-1] );
+	SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + p_phoenix_dod[p_data[id][P_SKILL1]-1] );
 
 	new szUserName[32], iTeam, iTargetID;
 	new i, vTargetOrigin[3], vOrigin[3];
@@ -202,7 +202,7 @@ BM_PheonixDOD( id )
 	new players[32], numberofplayers;
 	get_players( players, numberofplayers, "a" );
 
-	new iMoney = p_pheonix_dod[p_data[id][P_SKILL1]-1] / 2;
+	new iMoney = p_phoenix_dod[p_data[id][P_SKILL1]-1] / 2;
 
 	for ( i = 0; i < numberofplayers; i++ )
 	{
@@ -216,7 +216,7 @@ BM_PheonixDOD( id )
 			get_user_origin( iTargetID, vTargetOrigin );
 			
 			// See if they're close enough
-			if ( get_distance( vOrigin, vTargetOrigin ) <= BM_PHEONIX_RANGE )
+			if ( get_distance( vOrigin, vTargetOrigin ) <= BM_PHOENIX_RANGE )
 			{
 				// Give them some money
 				SHARED_SetUserMoney( iTargetID, SHARED_GetUserMoney( iTargetID ) + iMoney );
@@ -231,7 +231,7 @@ BM_SkillsOffensive( iAttacker, iVictim, iDamage )
 {
 
 	// Siphon Mana
-	if ( Verify_Skill( iAttacker, RACE_BLOOD, SKILL3 ) )
+	if ( SM_VerifySkill( iAttacker, SKILL_SIPHONMANA ) )
 	{
 		new iMoney = floatround( p_mana[p_data[iAttacker][P_SKILL3]-1] * SHARED_GetUserMoney(iVictim) );
 		
@@ -253,7 +253,7 @@ BM_SkillsDefensive( iAttacker, iVictim, iDamage )
 {
 
 	// Resistant Skin
-	if ( Verify_Race( iVictim, RACE_BLOOD ) )
+	if ( SM_VerifyRace( iVictim, RACE_BLOOD ) )
 	{
 		new iBonusHealth = floatround( float( iDamage ) * p_resistant[p_data[iVictim][P_LEVEL]] );
 
@@ -261,7 +261,7 @@ BM_SkillsDefensive( iAttacker, iVictim, iDamage )
 	}
 
 	// Banish
-	if ( Verify_Skill( iVictim, RACE_BLOOD, SKILL2 ) )
+	if ( SM_VerifySkill( iVictim, SKILL_BANISH ) )
 	{
 
 		if ( random_float( 0.0, 1.0 ) <= p_banish[p_data[iVictim][P_SKILL2]-1] )
@@ -270,7 +270,7 @@ BM_SkillsDefensive( iAttacker, iVictim, iDamage )
 			if ( !g_bPlayerBanished[iAttacker] )
 			{
 				// Deal some damage
-				WAR3_damage( iAttacker, iVictim, BANISH_DAMAGE, CSW_BANISH, 0 );
+				WC3_Damage( iAttacker, iVictim, BANISH_DAMAGE, CSW_BANISH, 0 );
 				
 				// Play the Banish sound
 				emit_sound( iAttacker, CHAN_STATIC, SOUND_BANISH, 1.0, ATTN_NORM, 0, PITCH_NORM );

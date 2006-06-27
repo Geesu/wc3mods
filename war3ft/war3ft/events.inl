@@ -15,7 +15,7 @@ public grenade_throw( index, greindex, wId )
 	}
 
 	// Make sure the user has the skill and we actually have a grenade index
-	if ( greindex && Verify_Skill( index, RACE_ORC, SKILL2 ) )
+	if ( greindex && SM_VerifySkill( index, SKILL_CRITICALGRENADE ) )
 	{
 		
 		// Then Critical Grenades are allowed
@@ -90,27 +90,27 @@ public EVENT_Damage( iVictim, iAttacker, iDamage, iWeapon, iHitPlace )
 	{
 
 		// Run the offensive spells
-		Verify_Race( iAttacker, RACE_UNDEAD )	? UD_SkillsOffensive( iAttacker, iDamage ) : 0;
-		Verify_Race( iAttacker, RACE_HUMAN )	? HU_SkillsOffensive( iAttacker, iVictim ) : 0;
-		Verify_Race( iAttacker, RACE_ORC )		? OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
-		Verify_Race( iAttacker, RACE_ELF )		? NE_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
-		Verify_Race( iAttacker, RACE_BLOOD )	? BM_SkillsOffensive( iAttacker, iVictim, iDamage ) : 0;
-		Verify_Race( iAttacker, RACE_SHADOW )	? SH_SkillsOffensive( iAttacker, iVictim ) : 0;
-		Verify_Race( iAttacker, RACE_WARDEN )	? WA_SkillsOffensive( iAttacker, iVictim, iHitPlace ) : 0;
-		Verify_Race( iAttacker, RACE_CRYPT )	? CL_SkillsOffensive( iAttacker, iVictim, iHitPlace ) : 0;
+		SM_VerifyRace( iAttacker, RACE_UNDEAD )	? UD_SkillsOffensive( iAttacker, iDamage ) : 0;
+		SM_VerifyRace( iAttacker, RACE_HUMAN )	? HU_SkillsOffensive( iAttacker, iVictim ) : 0;
+		SM_VerifyRace( iAttacker, RACE_ORC )		? OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		SM_VerifyRace( iAttacker, RACE_ELF )		? NE_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		SM_VerifyRace( iAttacker, RACE_BLOOD )	? BM_SkillsOffensive( iAttacker, iVictim, iDamage ) : 0;
+		SM_VerifyRace( iAttacker, RACE_SHADOW )	? SH_SkillsOffensive( iAttacker, iVictim ) : 0;
+		SM_VerifyRace( iAttacker, RACE_WARDEN )	? WA_SkillsOffensive( iAttacker, iVictim, iHitPlace ) : 0;
+		SM_VerifyRace( iAttacker, RACE_CRYPT )	? CL_SkillsOffensive( iAttacker, iVictim, iHitPlace ) : 0;
 	}
 
 	// Make sure we can run the defensive skills
 	if ( SHARED_ValidPlayer( iAttacker ) && !p_data_b[iVictim][PB_HEXED] )
 	{
-		//Verify_Race( iVictim, RACE_UNDEAD )		? UD_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
-		//Verify_Race( iVictim, RACE_HUMAN )		? HU_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
-		//Verify_Race( iVictim, RACE_ORC )		? OR_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
-		Verify_Race( iVictim, RACE_ELF )		? NE_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace ) : 0;
-		Verify_Race( iVictim, RACE_BLOOD )		? BM_SkillsDefensive( iAttacker, iVictim, iDamage ) : 0;
-		Verify_Race( iVictim, RACE_SHADOW )		? SH_SkillsDefensive( iAttacker, iVictim ) : 0;
-		//Verify_Race( iVictim, RACE_WARDEN )		? WA_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
-		Verify_Race( iVictim, RACE_CRYPT )		? CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace ) : 0;
+		//SM_VerifyRace( iVictim, RACE_UNDEAD )		? UD_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		//SM_VerifyRace( iVictim, RACE_HUMAN )		? HU_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		//SM_VerifyRace( iVictim, RACE_ORC )		? OR_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		SM_VerifyRace( iVictim, RACE_ELF )		? NE_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace ) : 0;
+		SM_VerifyRace( iVictim, RACE_BLOOD )		? BM_SkillsDefensive( iAttacker, iVictim, iDamage ) : 0;
+		SM_VerifyRace( iVictim, RACE_SHADOW )		? SH_SkillsDefensive( iAttacker, iVictim ) : 0;
+		//SM_VerifyRace( iVictim, RACE_WARDEN )		? WA_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
+		SM_VerifyRace( iVictim, RACE_CRYPT )		? CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace ) : 0;
 	}
 
 	// Item abilities
@@ -119,92 +119,97 @@ public EVENT_Damage( iVictim, iAttacker, iDamage, iWeapon, iHitPlace )
 	return;
 }
 
-public on_Death(victim, killer, wpnindex, headshot){
+public on_Death( iVictim, iAttacker, iWeaponID, iHeadshot )
+{
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-	
-#if MOD == 0
-	/* For some reason the damage passed by explosions is not actually correct
-		(perhaps armor adjustments weren't done yet), so lets check */
-	if ( is_user_alive(victim) && wpnindex == CSW_C4 )
-		return PLUGIN_CONTINUE
-	
-	// Can't remember why this is here...
-	if(p_data_b[victim][PB_DIEDLASTROUND])
+	if ( !WAR3_Check() )
 	{
-		return PLUGIN_CONTINUE;
+		return;
 	}
-
-#endif
-
-	WAR3_death_victim(victim, killer)
 	
-	XP_onDeath(victim, killer, wpnindex, headshot)
+	// Counter-Strike and Condition Zero Checks
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		// For some reason the damage passed by explosions is not actually correct (perhaps armor adjustments weren't done yet), so lets check
+		if ( is_user_alive( iVictim ) && iWeaponID == CSW_C4 )
+		{
+			return;
+		}
 
-	// If we're playing DOD we need to get the user's origin when they die
-	#if MOD == 1
-		get_user_origin(victim, iReincarnation[victim]);
-	#endif
-
-	#if MOD == 0
 		// Check for NightVision
-		p_data_b[victim][PB_NIGHTVISION] = (cs_get_user_nvg( victim )) ? true : false;
+		p_data_b[iVictim][PB_NIGHTVISION]	= (cs_get_user_nvg( iVictim )) ? true : false;
 
 		// Check if a user had a shield on death
-		p_data_b[victim][PB_SHIELD] = (cs_get_user_shield( victim )) ? true : false;
+		p_data_b[iVictim][PB_SHIELD]		= (cs_get_user_shield( iVictim )) ? true : false;
 
 		// See if the user has a defuse kit
-		p_data_b[victim][PB_DEFUSE] = (cs_get_user_defuse( victim )) ? true : false;
-	#endif
+		p_data_b[iVictim][PB_DEFUSE]		= (cs_get_user_defuse( iVictim )) ? true : false;
+
+		// Save the number of flash grenades the user has
+		p_data[iVictim][P_FLASHCOUNT]		= cs_get_user_bpammo( iVictim, CSW_FLASHBANG );
+	}
 	
-	return PLUGIN_CONTINUE
+	// Day of Defeat Checks
+	else if ( g_MOD == GAME_DOD )
+	{
+
+		// Save the user's origin for reincarnation
+		get_user_origin( iVictim, iReincarnation[iVictim] );
+	}
+
+	WC3_Death( iVictim, iAttacker, iWeaponID, iHeadshot );
+	
+	return;
 }
 
-public on_DeathMsg(){
+// Hook for CS/CZ
+public on_DeathMsg()
+{
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
 
-	new killer = read_data(1)
-	new victim = read_data(2)
-	new headshot = read_data(3)
-	new wpnindex
-	get_user_attacker(victim, wpnindex)
+	new iAttacker	= read_data( 1 );
+	new iVictim		= read_data( 2 );
+	new iHeadshot	= read_data( 3 );
+	new iWeaponID;
+	get_user_attacker( iVictim, iWeaponID );
 
-	on_Death(victim, killer, wpnindex, headshot)
+	on_Death( iVictim, iAttacker, iWeaponID, iHeadshot );
 	
-	return PLUGIN_CONTINUE
+	return;
 }
 
-public on_CurWeapon(id) {
+public on_CurWeapon( id )
+{
 
 	// read_data(1) = isActive?
 	// read_data(2) = weapon index
 	// read_data(3) = ammo
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
 
 	// Record the last time a shot was fired
 	fLastShotFired[id] = halflife_time();
 	
+	// Save the user's weapons
 	SHARED_SaveWeapons( id );
+	
+	// Set the fuse for the weapon in DOD
+	if ( g_MOD == GAME_DOD )
+	{
 
-	#if MOD == 1
-		new clipamount = 0, ammoamount = 0, weaponnum = 0
-		weaponnum = get_user_weapon(id,clipamount,ammoamount)
-
-		if (weaponnum==DODW_HANDGRENADE || weaponnum==DODW_STICKGRENADE){
-			if( Verify_Skill(id, RACE_ORC, SKILL2) ){
-				dod_set_fuse(id,FUSE_SET,2.0,FT_NEW)
-			}
+		// Critical Grenade
+		if ( SM_VerifySkill( id, SKILL_CRITICALGRENADE ) && SHARED_HasGrenade( id ) )
+		{
+			dod_set_fuse( id, FUSE_SET, 2.0, FT_NEW );
 		}
-
-	#endif
+	}
 
 	// Check to see if we should set the player's invisibility
 	SHARED_INVIS_Set( id );
@@ -212,26 +217,28 @@ public on_CurWeapon(id) {
 	// Set the user's speed
 	SHARED_SetSpeed( id );
 
-	return PLUGIN_CONTINUE
+	return;
 }
 
 
-public on_GameRestart(){
+public on_GameRestart()
+{
 
-	if ( !warcraft3 )
+	if ( !WAR3_Check() )
 	{
-		return PLUGIN_CONTINUE;
+		return;
 	}
 
-	XP_SaveAll()
+	XP_SaveAll();
 
 	g_GameRestarting = true;
 
-	return PLUGIN_CONTINUE
+	return
 }
 
 
-public on_WeapPickup(id){ 
+public on_WeapPickup( id )
+{ 
 
 	if ( !WAR3_Check() )
 	{
@@ -243,7 +250,7 @@ public on_WeapPickup(id){
 	return;
 }
 
-public on_Drop(id)
+public on_Drop( id )
 {
 	if ( !WAR3_Check() )
 	{
@@ -379,7 +386,7 @@ public EVENT_PlayerSpawned( id )
 		}
 
 		// or from a skill?
-		else if ( Verify_Skill(id, RACE_ORC, SKILL3) )
+		else if ( SM_VerifySkill( id, SKILL_REINCARNATION ) )
 		{
 			if ( random_float( 0.0, 1.0 ) <= p_ankh[p_data[id][P_SKILL3]-1] )
 			{
@@ -393,7 +400,7 @@ public EVENT_PlayerSpawned( id )
 	{
 		if ( random_float( 0.0, 1.0 ) <= get_pcvar_num( CVAR_wc3_bot_buy_item ) )
 		{
-			( random_num( 1, 2 ) == 1 ) ? _menu_Shopmenu_One( id, random_num( 0, 8 ) ) : _menu_Shopmenu_Two( id, random_num( 0, 8 ) );
+			( random_num( 1, 2 ) == 1 ) ? _MENU_Shopmenu1( id, random_num( 0, 8 ) ) : _MENU_Shopmenu2( id, random_num( 0, 8 ) );
 		}
 	}
 
@@ -417,7 +424,7 @@ public EVENT_NewRound()
 	}
 	
 	// Reset which spawn points are reserved....
-	SHARED_SpawnReset();
+	_SHARED_SpawnReset();
 
 	// If someone restarted the game, then lets reset war3
 	if ( g_GameRestarting )
@@ -442,9 +449,6 @@ public EVENT_NewRound()
 			g_freezeTime	= true;
 			g_freezeCalled	= true;
 		}
-
-		g_hostageSaver		= 0;
-		g_bombDefuser		= 0;
 	}
 
 	g_EndRound = false;
@@ -470,12 +474,17 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 			{
 
 				// Well we do have a target so lets execute the user's ultimate!!
-
-				switch ( p_data[iAttacker][P_RACE] )
+				if ( SM_VerifySkill( iAttacker, ULTIMATE_CHAINLIGHTNING ) )
 				{
-					case RACE_ORC:		OR_ULT_ChainLightning( iAttacker, iVictim, iHitZone );
-					case RACE_ELF:		NE_ULT_Entangle( iAttacker, iVictim );
-					case RACE_BLOOD:	BM_ULT_Immolate( iAttacker, iVictim );
+					OR_ULT_ChainLightning( iAttacker, iVictim, iHitZone );
+				}
+				else if ( SM_VerifySkill( iAttacker, ULTIMATE_ENTANGLE ) )
+				{
+					NE_ULT_Entangle( iAttacker, iVictim );
+				}
+				else if ( SM_VerifySkill( iAttacker, ULTIMATE_IMMOLATE ) )
+				{
+					BM_ULT_Immolate( iAttacker, iVictim );
 				}
 				
 				// No longer searching since we found a target
@@ -509,7 +518,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 		}
 
 		// Check to see if this user has night elf's evasion
-		if ( Verify_Skill( iVictim, RACE_ELF, SKILL1 ) && SHARED_ValidPlayer( iAttacker ) )
+		if ( SM_VerifySkill( iVictim, SKILL_EVASION ) && SHARED_ValidPlayer( iAttacker ) )
 		{
 			// Do the check to see if we should "evade" this shot
 			new Float:fTime = halflife_time();
@@ -529,8 +538,8 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				if ( NE_Evasion( iVictim, iHitZone ) )
 				{
 					set_tr( TR_flFraction, 1.0 );
-
-					client_print( iVictim, print_chat, "[DEBUG] Shot blocked by evasion!!!" );
+					
+					WC3_StatusText( iVictim, TXT_SKILL, "You have evaded a shot!" );
 
 					return FMRES_SUPERCEDE;
 				}
@@ -557,6 +566,13 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 // Function called right before the user spawns
 EVENT_JustBeforeSpawn( id )
 {
+
+	// Reset the player's role
+	g_iPlayerRole[id] = 0;
+
+	// Reset the bomb/defusing check
+	bHasBegunPlantingOrDefusing[id] = false;
+
 	// Reset all ultimates
 	ULT_Reset( id );
 

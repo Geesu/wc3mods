@@ -8,7 +8,7 @@
 #define TASK_SPAWN			32		// Respawning from revive
 #define TASK_IMPALE			64		// Crypt Lord's Impale
 #define TASK_BANISH			96		// Used to set the user's origin back to normal
-//#define TASK_SETXP			128		// Sets the XP
+#define TASK_SPAWNREMOVEGOD	128		// Gives the user godmode for a brief period after they respawn
 #define TASK_EXPLOSION		160		// From Suicide Bomber
 #define TASK_BEAMCYLINDER	192		// From Suicide Bomber
 #define	TASK_GETINPUT		224		// Calls getuserinput function
@@ -53,7 +53,7 @@
 #define TASK_ANKHGIVEITEMS	1492
 #define TASK_HELM			1524
 #define	TASK_REINCCHECK		1556
-#define TASK_SAVE_ALL		1588	// Used for saving XP
+#define TASK_SAVE			1588	// Used for saving XP
 //#define TASK_UDELAY			1620	// Ultimate Delay Function
 //#define TASK_BURN           1652
 #define TASK_BURNING		1684	// Used for Blood Mage Ultimate
@@ -80,7 +80,7 @@
 #define TASK_ENDULTIMATE	2017
 //#define TASK_BEFORE_ROUND_START		2018
 #define TASK_MOLEFIX		3000
-//#define TASK_CHECKMODULES	3001
+#define TASK_RESETSPAWNS	3001
 #define TASK_UDELAY			3002		// Ultimate delay function
 
 // From ../multiplayer source/dlls/player.cpp
@@ -294,11 +294,6 @@
 #define SKILL4						4
 #define SKILL5						5
 
-#define SKILL_1						1
-#define SKILL_2						2
-#define SKILL_3						3
-#define SKILL_ULTIMATE				4
-#define SKILL_HERO					5
 
 #define MAX_RACES					9
 
@@ -460,7 +455,7 @@
 new szTmpMsg[2048];
 
 // This keeps track of which races were given "free" XP - we don't want to save this XP to the database
-new bool:g_bGivenLevel10[33][MAX_RACES];	// Stores if we gave them level 10
+new bool:g_bGivenLevel10[33][MAX_RACES+1];	// Stores if we gave them level 10
 
 new g_GlowLevel[33][4];
 
@@ -508,10 +503,8 @@ new SOUND_REINCARNATION[64]
 new SOUND_ANTEND[64];
 new SOUND_ERROR[64];
 
-// Race9 Setup 
-new g_ChamSkills[5] = {0,1,1,1,1}		// the value is what race that skill should be copied from so g_ChamSkills[1] = 1 means that skill1 is undead skill1 this means you can not have skill 1 form more than one race.
-										// this default setting of 0,1,1,1,1 will make the 9th race have all the undead skills 
-										// note that the first value does not do anything.
+// Used for Chameleon
+new g_ChamSkills[5];
 
 new p_data[33][P_LAST]					// Contains player data
 new bool:p_data_b[33][PB_LAST]			// Contains player data of type boolean
@@ -549,11 +542,6 @@ new gmsgBarTime
 new szSpawnEnt[2][32];
 
 /*  START - CSTRIKE VARIABLES */
-new Float:g_fBombTime
-new g_hostageSaver
-new g_bombCarrier
-new g_bombDefuser
-new g_vipID = 0
 new bool:g_freezeTime	= false;
 new bool:g_freezeCalled = false;
 new bool:g_buyTime
@@ -630,15 +618,14 @@ new bool:g_EndRound
 new g_iSpawnReserved[TOTAL_SPAWNS];
 new g_iSpawnInc = 0;
 
-new g_PlayerSkills[33][4];				// Stores what skills the player has
-new g_PlayerSkillLevel[33][4];			// Stores what level each skill is
-
 new g_PlayerWeapons[33][32];			// Stores player weapons after they have been purchased
 new g_PlayerLastWeapons[33][32];		// Stores player weapons after they have been purchased
 
 new g_MOD = 0;
 
-// Variables for items
+// ***************************
+// Item Information
+// ***************************
 new g_iShopMenuItems[33][MAX_PLAYER_ITEMS];			// Holds the player's current items
 new g_iItemOnDeath[33][MAX_PLAYER_ITEMS];			// Holds the items the user had when he/she died
 new g_iMultipleItems[33][2];						// Holds the number of the same item - i.e. rings
@@ -650,13 +637,82 @@ new bool:g_bPlayerBoughtMole[33];							// Set to true when a user buys a mole
 new ITEM_COST[MAX_SHOPMENU_ITEMS] = {0};
 
 
+// ***************************
+// Skill Information
+// ***************************
+
+#define SKILL_1						1
+#define SKILL_2						2
+#define SKILL_3						3
+#define SKILL_ULTIMATE				4
+#define SKILL_PASSIVE				5
+
+new g_PlayerSkills[33][5];				// Stores what skills the player has
+new g_PlayerSkillLevel[33][4];			// Stores what level each skill is
+
+// SKILL DEFINES
+#define SKILL_NONE				-1
+
+#define SKILL_VAMPIRICAURA		0
+#define SKILL_UNHOLYAURA		1
+#define SKILL_LEVITATION		2
+#define ULTIMATE_SUICIDE		3
+
+#define SKILL_INVISIBILITY		4
+#define SKILL_DEVOTION			5
+#define SKILL_BASH				6
+#define ULTIMATE_BLINK			7
+
+#define SKILL_CRITICALSTRIKE	8
+#define SKILL_CRITICALGRENADE	9
+#define SKILL_REINCARNATION		10
+#define ULTIMATE_CHAINLIGHTNING	11
+
+#define SKILL_EVASION			12
+#define SKILL_THORNS			13
+#define SKILL_TRUESHOT			14
+#define ULTIMATE_ENTANGLE		15
+
+#define SKILL_PHOENIX			16
+#define SKILL_BANISH			17
+#define SKILL_SIPHONMANA		18
+#define ULTIMATE_IMMOLATE		19
+#define PASS_RESISTANTSKIN		20
+
+#define SKILL_HEALINGWAVE		21
+#define SKILL_HEX				22
+#define SKILL_SERPENTWARD		23
+#define ULTIMATE_BIGBADVOODOO	24
+#define PASS_UNSTABLECONCOCTION	25
+
+#define SKILL_FANOFKNIVES		26
+#define SKILL_BLINK				27
+#define SKILL_SHADOWSTRIKE		28
+#define ULTIMATE_VENGEANCE		29
+#define PASS_HARDENEDSKIN		30
+
+#define SKILL_IMPALE			31
+#define SKILL_SPIKEDCARAPACE	32
+#define SKILL_CARRIONBEETLES	33
+#define ULTIMATE_LOCUSTSWARM	34
+#define PASS_ORB				35
+
+#define MAX_SKILLS				36
+
+#define SKILL_TYPE_TRAINABLE	1
+#define SKILL_TYPE_PASSIVE		2
+#define SKILL_TYPE_ULTIMATE		3
+
+new g_SkillOwner[MAX_SKILLS	];	// For each skill, says who the owning race is
+new g_SkillType[MAX_SKILLS	];	// For each skill, says what type of skill it is (trainable/ultimate/passive)
+
 // Constants for Abilities
 new const Float:p_vampiric[3] =			{0.10,0.20,0.30}		// Vampiric Aura			(skill 1)
 new Float:p_unholy[3] =					{265.0,285.0,300.0}		// Unholy Aura				(skill 2)
 new const Float:p_levitation[3] =		{0.8,0.6,0.4}			// Levitation				(skill 3)
 
 new const p_invisibility[3] =			{200,165,125}			// Invisibility				(skill 1)
-new const p_devotion[3] =				{115,130,145}			// Devotion Aura			(skill 2)
+new const p_devotion =					15						// Devotion Aura			(skill 2)
 new const Float:p_bash[3] =				{0.10,0.20,0.30}		// Bash						(skill 3)
 
 new const Float:p_critical[3] =			{0.25,0.50,0.75}		// Critical Strike			(skill 1)
@@ -668,8 +724,8 @@ new const Float:p_thorns[3] =			{0.05,0.1,0.15}			// Thorns Aura				(skill 2)
 new const Float:p_trueshot[3] =			{0.1,0.2,0.35}			// Trueshot Aura			(skill 3)
 
 
-new const Float:p_pheonix[3] =			{0.333,0.666,1.0}		// Pheonix					(skill 1)
-new const p_pheonix_dod[3] =			{300,600,900}			// Pheonix - DOD			(skill 1)
+new const Float:p_phoenix[3] =			{0.333,0.666,1.0}		// Phoenix					(skill 1)
+new const p_phoenix_dod[3] =			{300,600,900}			// Phoenix - DOD			(skill 1)
 new const Float:p_banish[3] =			{0.07,0.13,0.20}		// Banish					(skill 2)
 new const Float:p_mana[3] =				{0.02,0.04,0.08}		// Siphon Mana				(skill 3)
 new const Float:p_resistant[11] =		{0.02, 0.04, 0.08, 0.12, 0.16, 0.20, 0.24, 0.28, 0.32, 0.36, 0.40}	// Resistant Skin		(Skill 4)
@@ -688,11 +744,5 @@ new const Float:p_impale[3] =			{0.05,0.1,0.15}		    // Impale					(skill 1)
 new const Float:p_spiked[3] =			{0.05,0.1,0.15}			// Spiked Carapace			(skill 2)
 new const Float:p_carrion[3] =			{0.15,0.25,0.45}		// Carrion Beetle			(skill 3)
 new const Float:p_orb[11] =				{0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.15}	// Orb of Annihilation	(Skill 4)
-
-
-new xplevel[11] =						{0,150,300,600,1000,1500,2100,2800,3400,4500,5500}
-new xpgiven[11] =						{10,15,25,35,40,50,60,70,80,90,95}
-
-new Float:weaponxpmultiplier[62] =		{1.0};
 
 new MOTD_header[] = "<html><head><LINK REL=^"StyleSheet^" HREF=^"wc3.css^" TYPE=^"text/css^"></head><body>";

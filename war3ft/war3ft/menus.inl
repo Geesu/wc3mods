@@ -1,311 +1,3 @@
-// **************************************************
-// Shopmenu One
-// **************************************************
-
-public MENU_ReplaceItem( id )
-{
-	if ( !WAR3_Check( id ) )
-	{
-		return;
-	}
-
-	new szMenu[512] = "", pos = 0;
-	new iKeys = (1<<9)|(1<<0)|(1<<1);
-
-	// Add the menu header
-	pos += format( szMenu[pos], 511-pos, "%L^n^n", id, "MENU_REPLACE_ITEM" );
-
-	new szItemName[64], szItemName2[64];
-	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_ONE], id, szItemName, 63 );
-	lang_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_TWO], id, szItemName2, 63 );
-
-	// Add the items
-	pos += format( szMenu[pos], 511-pos, "\w1. %s^n", szItemName );
-	pos += format( szMenu[pos], 511-pos, "\w2. %s^n", szItemName2 );
-
-	// Add the exit option
-	pos += format( szMenu[pos], 511-pos, "^n\w0. %L", id, "WORD_EXIT" );
-
-	// Show the menu
-	show_menu( id, iKeys, szMenu, -1 );
-
-	return;
-}
-
-public _menu_ReplaceItem( id, iKey )
-{
-	if ( !WAR3_Check() || iKey == 9 )
-	{
-		return;
-	}
-
-	// Remove item from item slot one
-	if ( iKey == 0 )
-	{
-		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_ONE], ITEM_SLOT_ONE )
-	}
-
-	// Remove item from itemslot two
-	else if ( iKey == 1 )
-	{
-		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_TWO], ITEM_SLOT_TWO )
-	}
-
-	// Display the shopmenu now
-	MENU_Shopmenu( id, g_iFutureShopMenu[id] );
-
-	return;
-}
-
-public MENU_Shopmenu( id, iStart )
-{
-	if ( !WAR3_Check( id ) || !ITEM_CanBuy( id ) )
-	{
-		return;
-	}
-
-	// If the user has 2 items, we need to determine which item to remove before they can buy another
-	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE && g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE )
-	{
-		g_iFutureShopMenu[id] = iStart;
-
-		MENU_ReplaceItem( id );
-
-		return;
-	}
-
-	new szMenu[512], szItemName[64], pos = 0, i, iItemID;
-	new iKeys = (1<<9);
-
-	// Add the header
-	if ( iStart == 0 )
-	{
-		pos += format( szMenu[pos], 511-pos, "%L", id, "MENU_BUY_ITEM" );
-	}
-
-	// "Shopmenu 2"
-	else if ( iStart == MAX_PAGE_ITEMS )
-	{
-		pos += format( szMenu[pos], 511-pos, "%L", id, "MENU_BUY_ITEM2" );
-	}
-
-	// Lets add the items to the menu!
-	for ( i = 0; i < MAX_PAGE_ITEMS; i++ )
-	{
-		iItemID = iStart + i;
-
-		lang_GetItemName( iItemID, id, szItemName, 63 );
-
-		// These items don't exist in DOD
-		if ( g_MOD == GAME_DOD && ( iItemID == ITEM_SCROLL ) )
-		{
-			pos += format( szMenu[pos], 511-pos, "\d%d. %s\y\R%d^n", i + 1, szItemName, ITEM_COST[iItemID] );
-		}
-
-		// Everything else is allowed!
-		else
-		{
-			pos += format( szMenu[pos], 511-pos, "\w%d. %s\y\R%d^n", i + 1, szItemName, ITEM_COST[iItemID] );
-			iKeys |= (1<<i);
-		}
-
-	}
-
-	pos += format( szMenu[pos], 511-pos, "^n\w0. %L", id, "WORD_EXIT" );
-
-	show_menu( id, iKeys, szMenu, -1 );
-}
-
-public _menu_Shopmenu_One( id, iKey )
-{
-	if ( !WAR3_Check() || iKey == 9 )
-	{
-		return;
-	}
-	
-	ITEM_Buy( id, iKey );
-
-	return;
-}
-
-public _menu_Shopmenu_Two( id, iKey )
-{
-	if ( !WAR3_Check() || iKey == 9 )
-	{
-		return;
-	}
-	
-	// Since it's shopmenu 2, we need to add 9 to the selection
-	iKey += MAX_PAGE_ITEMS;
-
-	ITEM_Buy( id, iKey );
-
-	return;
-}
-
-public menu_Select_Skill(id,saychat){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if (p_data[id][P_RACE] == 0){
-		if (saychat==1){
-			set_hudmessage(200, 100, 0, -1.0, 0.3, 0, 1.0, 5.0, 0.1, 0.2, 2)
-			show_hudmessage(id,"%L",id,"SELECT_RACE_BEFORE_SKILLS")
-		}
-		else{
-			console_print(id,"%L",id,"SELECT_RACE_BEFORE_SKILLS")
-		}
-		return PLUGIN_HANDLED
-	}
-
-	new message[256]
-	new temp[128]
-
-	new skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]+p_data[id][P_ULTIMATE]
-
-	if (skillsused>=p_data[id][P_LEVEL]){
-		if (saychat==1){
-			set_hudmessage(200, 100, 0, -1.0, 0.3, 0, 1.0, 5.0, 0.1, 0.2, 2)
-			show_hudmessage(id,"%L",id,"ALREADY_SELECTED_SKILL_POINTS")
-		}
-		else{
-			console_print(id,"%L",id,"ALREADY_SELECTED_SKILL_POINTS")
-		}
-		return PLUGIN_HANDLED
-	}
-
-	if (is_user_bot(id)){
-		new randomskill
-		while (skillsused < p_data[id][P_LEVEL]){
-			randomskill = random_num(1,3)
-			if (p_data[id][P_ULTIMATE]==0 && p_data[id][P_LEVEL]>=6)
-				p_data[id][P_ULTIMATE]=1
-			else if (p_data[id][randomskill]!=3 && p_data[id][P_LEVEL]>2*p_data[id][randomskill]){
-				++p_data[id][randomskill]
-			}
-			skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]+p_data[id][P_ULTIMATE]
-		}
-		return PLUGIN_HANDLED
-	}
-
-	format(message,255,"%L",id,"MENU_SELECT_SKILL")
-
-
-	new skillcounter = 0
-	new skillcurrentrace[4][64]
-
-	while (skillcounter < 4){
-		new race_skill[RACE_SKILL_LENGTH]
-		lang_GetSkillName(p_data[id][P_RACE],skillcounter,id,race_skill,RACE_SKILL_LENGTH_F)
-		copy(skillcurrentrace[skillcounter],63,race_skill)
-
-		++skillcounter
-	}
-
-	skillcounter = 1
-	while (skillcounter< 4){
-		if (p_data[id][skillcounter]!=3){
-			if (p_data[id][P_LEVEL]<=2*p_data[id][skillcounter]){
-				format(temp,127,"\d")
-				add(message,255,temp)
-			}
-			new race_skill[RACE_SKILL_LENGTH]
-			lang_GetSkillName(p_data[id][P_RACE],skillcounter,id,race_skill,RACE_SKILL_LENGTH_F)
-
-			format(temp,127,"%L",id,"LEVEL_SELECT_SKILL_FUNC",skillcounter,race_skill,p_data[id][skillcounter]+1)
-			add(message,255,temp)
-		}
-		++skillcounter
-	}
-	if (p_data[id][P_ULTIMATE]==0){
-		if (p_data[id][P_LEVEL]<=5){
-			format(temp,127,"\d")
-			add(message,255,temp)
-		}
-		new race_skill[RACE_SKILL_LENGTH]
-		lang_GetSkillName(p_data[id][P_RACE],4,id,race_skill,RACE_SKILL_LENGTH_F)
-
-		format(temp,127,"%L",id,"ULTIMATE_SELECT_SKILL_FUNC",race_skill)
-		add(message,255,temp)
-	}
-
-	new keys = (1<<9)
-
-	if (p_data[id][P_SKILL1]!=3 && p_data[id][P_LEVEL]>2*p_data[id][P_SKILL1] && skillsused<p_data[id][P_LEVEL])
-		keys |= (1<<0)
-	if (p_data[id][P_SKILL2]!=3 && p_data[id][P_LEVEL]>2*p_data[id][P_SKILL2] && skillsused<p_data[id][P_LEVEL])
-		keys |= (1<<1)
-	if (p_data[id][P_SKILL3]!=3 && p_data[id][P_LEVEL]>2*p_data[id][P_SKILL3] && skillsused<p_data[id][P_LEVEL])
-		keys |= (1<<2)
-	if (p_data[id][P_ULTIMATE]==0 && p_data[id][P_LEVEL]>=6 && skillsused<p_data[id][P_LEVEL])
-		keys |= (1<<3)
-
-	format(temp,127,"%L",id,"CANCEL_SELECT_SKILL_FUNC")
-	add(message,255,temp)
-	show_menu(id,keys,message,-1)
-	if (saychat==1)
-		return PLUGIN_CONTINUE
-	return PLUGIN_HANDLED
-}
-
-public _menu_Select_Skill(id,key){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	new skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]+p_data[id][P_ULTIMATE]
-
-	if (key == KEY_1 && p_data[id][P_SKILL1]!=3 && p_data[id][P_LEVEL]>2*p_data[id][P_SKILL1] && skillsused<p_data[id][P_LEVEL])
-		++p_data[id][P_SKILL1]
-	else if (key == KEY_2 && p_data[id][P_SKILL2]!=3 && p_data[id][P_LEVEL]>2*p_data[id][P_SKILL2] && skillsused<p_data[id][P_LEVEL])
-		++p_data[id][P_SKILL2]
-	else if (key == KEY_3 && p_data[id][P_SKILL3]!=3 && p_data[id][P_LEVEL]>2*p_data[id][P_SKILL3] && skillsused<p_data[id][P_LEVEL])
-		++p_data[id][P_SKILL3]
-	else if (key == KEY_4 && p_data[id][P_ULTIMATE]==0 && p_data[id][P_LEVEL]>=6 && skillsused<p_data[id][P_LEVEL]){
-		p_data[id][P_ULTIMATE]=1
-	}
-	else if (key == KEY_0)
-		return PLUGIN_HANDLED
-
-	skillsused = p_data[id][P_SKILL1]+p_data[id][P_SKILL2]+p_data[id][P_SKILL3]+p_data[id][P_ULTIMATE]
-	if (skillsused < p_data[id][P_LEVEL])
-		menu_Select_Skill(id,0)
-	else
-		WC3_ShowBar( id );
-
-	// Serpent Ward Chosen
-	if ( Verify_Skill(id, RACE_SHADOW, SKILL3) && key == KEY_3 ){
-		p_data[id][P_SERPENTCOUNT]++
-	}
-	// Carrion Beetle Chosen
-	if ( Verify_Skill(id, RACE_CRYPT, SKILL3) &&  key == KEY_3 ){
-		if( p_data[id][P_CARRIONCOUNT] < 3 ){
-			p_data[id][P_CARRIONCOUNT]++
-		}
-	}
-	// Shadow Strike Chosen
-	if ( Verify_Skill(id, RACE_WARDEN, SKILL3) && key == KEY_3 ){
-		if (p_data[id][P_SHADOWCOUNT] < 3 ){
-			p_data[id][P_SHADOWCOUNT] = 2
-		}
-	}
-	// Devotion Aura Chosen
-	if ( Verify_Skill(id, RACE_HUMAN, SKILL2) && key == KEY_2 && is_user_alive(id)){
-		if(p_data[id][P_SKILL2]==1)
-			set_user_health(id,get_user_health(id) + (p_devotion[0] - 100))
-		else if(p_data[id][P_SKILL2]==2)
-			set_user_health(id,get_user_health(id) + (p_devotion[1] - p_devotion[0]))
-		else if(p_data[id][P_SKILL2]==3)
-			set_user_health(id,get_user_health(id) + (p_devotion[2] - p_devotion[1]))
-	}
-
-	// Check to see if they should be more invisible
-	SHARED_INVIS_Set( id );
-
-	return PLUGIN_HANDLED
-}
-
 public menu_War3menu(id){
 
 	if (!warcraft3)
@@ -371,9 +63,9 @@ public menu_Skill_Options(id){
 public _menu_Skill_Options(id,key){
 
 	switch (key){
-		case 0:	menu_Select_Skill(id,1)
-		case 1:	MOTD_Skillsinfo(id)
-		case 2:	WC3_HandleCommand( id, "resetskills" );
+		case 0:	MENU_SelectSkill( id );
+		case 1:	MOTD_SkillsInfo( id );
+		case 2:	CMD_Handle( id, "resetskills" );
 		case 8: menu_War3menu(id)
 		default: return PLUGIN_HANDLED
 	}
@@ -459,7 +151,7 @@ public menu_Admin_Options(id){
 	if (!warcraft3)
 		return PLUGIN_CONTINUE
 
-    if ( id && !( get_user_flags( id ) & XP_get_admin_flag() ) )
+    if ( id && !( get_user_flags( id ) & XP_GetAdminFlag() ) )
 	{
 			client_print(id,print_center,"%s %L",g_MODclient, id,"YOU_HAVE_NO_ACCESS")
 			return PLUGIN_HANDLED
@@ -618,16 +310,17 @@ public menu_TeamXP_Options(id){
 public _menu_TeamXP_Options(id,key){
 
 	switch(key){
-		case 0:{
-			_Admin_GiveXP(id, "@TERRORIST", g_menuSettings[id])
+		case 0:
+		{
+			ADMIN_GiveXP( id, "@TERRORIST", g_menuSettings[id] );
 			menu_TeamXP_Options(id)
 		}
 		case 1:{
-			_Admin_GiveXP(id, "@CT", g_menuSettings[id])
+			ADMIN_GiveXP( id, "@CT", g_menuSettings[id] );
 			menu_TeamXP_Options(id)
 		}
 		case 2:{
-			_Admin_GiveXP(id, "@ALL", g_menuSettings[id])
+			ADMIN_GiveXP( id, "@ALL", g_menuSettings[id] );
 			menu_TeamXP_Options(id)
 		}
 		case 7:{
@@ -816,6 +509,365 @@ public _MENU_SelectRace( id, key )
 	{
 		WC3_SetRace( id, iRace );
 	}
+
+	return;
+}
+
+public MENU_ReplaceItem( id )
+{
+	if ( !WAR3_Check( id ) )
+	{
+		return;
+	}
+
+	new szMenu[512] = "", pos = 0;
+	new iKeys = (1<<9)|(1<<0)|(1<<1);
+
+	// Add the menu header
+	pos += format( szMenu[pos], 511-pos, "%L^n^n", id, "MENU_REPLACE_ITEM" );
+
+	new szItemName[64], szItemName2[64];
+	LANG_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_ONE], id, szItemName, 63 );
+	LANG_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_TWO], id, szItemName2, 63 );
+
+	// Add the items
+	pos += format( szMenu[pos], 511-pos, "\w1. %s^n", szItemName );
+	pos += format( szMenu[pos], 511-pos, "\w2. %s^n", szItemName2 );
+
+	// Add the exit option
+	pos += format( szMenu[pos], 511-pos, "^n\w0. %L", id, "WORD_EXIT" );
+
+	// Show the menu
+	show_menu( id, iKeys, szMenu, -1 );
+
+	return;
+}
+
+public _menu_ReplaceItem( id, iKey )
+{
+	if ( !WAR3_Check() || iKey == 9 )
+	{
+		return;
+	}
+
+	// Remove item from item slot one
+	if ( iKey == 0 )
+	{
+		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_ONE], ITEM_SLOT_ONE )
+	}
+
+	// Remove item from itemslot two
+	else if ( iKey == 1 )
+	{
+		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_TWO], ITEM_SLOT_TWO )
+	}
+
+	// Display the shopmenu now
+	MENU_Shopmenu( id, g_iFutureShopMenu[id] );
+
+	return;
+}
+
+public MENU_Shopmenu( id, iStart )
+{
+	if ( !WAR3_Check( id ) || !ITEM_CanBuy( id ) )
+	{
+		return;
+	}
+
+	// If the user has 2 items, we need to determine which item to remove before they can buy another
+	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE && g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE )
+	{
+		g_iFutureShopMenu[id] = iStart;
+
+		MENU_ReplaceItem( id );
+
+		return;
+	}
+
+	new szMenu[512], szItemName[64], pos = 0, i, iItemID;
+	new iKeys = (1<<9);
+
+	// Add the header
+	if ( iStart == 0 )
+	{
+		pos += format( szMenu[pos], 511-pos, "%L", id, "MENU_BUY_ITEM" );
+	}
+
+	// "Shopmenu 2"
+	else if ( iStart == MAX_PAGE_ITEMS )
+	{
+		pos += format( szMenu[pos], 511-pos, "%L", id, "MENU_BUY_ITEM2" );
+	}
+
+	// Lets add the items to the menu!
+	for ( i = 0; i < MAX_PAGE_ITEMS; i++ )
+	{
+		iItemID = iStart + i;
+
+		LANG_GetItemName( iItemID, id, szItemName, 63 );
+
+		// These items don't exist in DOD
+		if ( g_MOD == GAME_DOD && ( iItemID == ITEM_SCROLL ) )
+		{
+			pos += format( szMenu[pos], 511-pos, "\d%d. %s\y\R%d^n", i + 1, szItemName, ITEM_COST[iItemID] );
+		}
+
+		// Everything else is allowed!
+		else
+		{
+			pos += format( szMenu[pos], 511-pos, "\w%d. %s\y\R%d^n", i + 1, szItemName, ITEM_COST[iItemID] );
+			iKeys |= (1<<i);
+		}
+
+	}
+
+	pos += format( szMenu[pos], 511-pos, "^n\w0. %L", id, "WORD_EXIT" );
+
+	show_menu( id, iKeys, szMenu, -1 );
+}
+
+public _MENU_Shopmenu1( id, iKey )
+{
+	if ( !WAR3_Check() || iKey == 9 )
+	{
+		return;
+	}
+	
+	ITEM_Buy( id, iKey );
+
+	return;
+}
+
+public _MENU_Shopmenu2( id, iKey )
+{
+	if ( !WAR3_Check() || iKey == 9 )
+	{
+		return;
+	}
+	
+	// Since it's shopmenu 2, we need to add 9 to the selection
+	iKey += MAX_PAGE_ITEMS;
+
+	ITEM_Buy( id, iKey );
+
+	return;
+}
+
+public MENU_SelectSkill( id )
+{
+
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
+	// User has no race, how can we select skills?!?
+	if ( p_data[id][P_RACE] == 0 )
+	{
+		//set_hudmessage(200, 100, 0, -1.0, 0.3, 0, 1.0, 5.0, 0.1, 0.2, 2)
+		WC3_StatusText( id, TXT_TOP_CENTER, "%L", id, "SELECT_RACE_BEFORE_SKILLS" );
+
+		return;
+	}
+
+	// Lets make sure the user has some available skill points
+	new iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+	if ( iSkillsUsed >= p_data[id][P_LEVEL] )
+	{
+
+		//set_hudmessage(200, 100, 0, -1.0, 0.3, 0, 1.0, 5.0, 0.1, 0.2, 2)
+		WC3_StatusText( id, TXT_TOP_CENTER, "%L", id, "ALREADY_SELECTED_SKILL_POINTS" );
+
+		return;
+	}
+
+	// Bots don't need a menu now do they??
+	if ( is_user_bot( id ) )
+	{
+		new iRandomSkill;
+		
+		// Loop while we have skills available
+		while ( iSkillsUsed < p_data[id][P_LEVEL] )
+		{
+			iRandomSkill = random_num( 1, 3 );
+			
+			// Give them their ultimate if we can
+			if ( p_data[id][P_ULTIMATE] == 0 && p_data[id][P_LEVEL] >= 6 )
+			{
+				p_data[id][P_ULTIMATE] = 1;
+			}
+
+			// Give them a skill if we can
+			else if ( p_data[id][iRandomSkill] != 3 && p_data[id][P_LEVEL] > 2 * p_data[id][iRandomSkill] )
+			{
+				++p_data[id][iRandomSkill];
+			}
+
+			iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+		}
+
+		return;
+	}
+
+	// OK set up a menu!!!
+
+	new szMsg[512], pos = 0, szSkillName[64];
+	
+	// Add the menu header
+	pos += formatex( szMsg[pos], 512-pos, "%L", id, "MENU_SELECT_SKILL" );
+
+	// Lets get the names of all the skills	+ add them to the menu
+	new iSkillCounter = 0, iSkillID, iKeys = (1<<9);
+
+	while ( iSkillCounter < 4 )
+	{
+		iSkillID = SM_GetSkill( p_data[id][P_RACE], iSkillCounter );
+
+		LANG_GetSkillName( iSkillID , id, szSkillName, 63 );
+		
+
+		// Add the trainable skills to the menu
+		if ( iSkillCounter < 3 )
+		{
+
+			// Only add it to the menu if they don't have level 3 already!
+			if ( p_data[id][iSkillCounter + 1] != 3 )
+			{
+
+				// User isn't high enough of a level to select this skill yet
+				if ( p_data[id][P_LEVEL] <= 2 * p_data[id][iSkillCounter + 1] )
+				{
+					pos += formatex( szMsg[pos], 512-pos, "\d" );
+				}
+				
+				// Then the user can choose it!
+				else
+				{
+					iKeys |= (1<<iSkillCounter);
+				}
+
+				pos += formatex( szMsg[pos], 512-pos, "^n%d. %s %L %d\w", iSkillCounter + 1, szSkillName, id, "WORD_LEVEL", p_data[id][iSkillCounter + 1] + 1 );
+			}
+		}
+		
+		// Add the ultimate to the menu
+		else
+		{
+			if ( p_data[id][P_ULTIMATE] == 0 )
+			{
+				// User can't choose ultimate yet :/
+				if ( p_data[id][P_LEVEL] <= 5 )
+				{
+					pos += formatex( szMsg[pos], 512-pos, "\d" );
+				}
+
+				// Then the user is level 6 or above and can select their ultimate!
+				else
+				{
+					iKeys |= (1<<3);
+				}
+
+				pos += formatex( szMsg[pos], 512-pos, "^n4. %L: %s\w", id, "WORD_ULTIMATE", szSkillName );
+			}
+		}
+
+		++iSkillCounter;
+	}
+
+	// Add the cancel button to the menu
+	pos += formatex( szMsg[pos], 512-pos, "^n^n0. %L", id, "WORD_CANCEL" );
+
+	// Show the menu!
+	show_menu( id, iKeys, szMsg, -1 );
+
+	return;
+}
+
+public _MENU_SelectSkill( id, iKey )
+{
+
+	if ( !WAR3_Check() || iKey == 9 )
+	{
+		return;
+	}
+
+	// Determine the skill position
+	new iSkillPos = iKey + 1;
+
+	// Increment the skill!
+	++p_data[id][iSkillPos];
+
+
+	new iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+	
+	// Then they have another skill to select!!
+	if ( iSkillsUsed < p_data[id][P_LEVEL] )
+	{
+		MENU_SelectSkill( id );
+	}
+
+	// No more, lets show them their latest level/XP
+	else
+	{
+		WC3_ShowBar( id );
+	}
+
+	//*****************************
+	// Skill Checks
+	//*****************************
+	
+	// User selected skill number 2
+	if ( iKey == 1 )
+	{
+
+		// Devotion Aura Chosen
+		if ( SM_VerifyRace( id, RACE_HUMAN ) && is_user_alive( id ) )
+		{
+			set_user_health( id, get_user_health( id ) + 15 );
+		}
+	}
+
+	// User selected skill number 3
+	else if ( iKey == 2 )
+	{
+
+		// Serpent Ward Chosen
+		if ( SM_VerifyRace( id, RACE_SHADOW ) )
+		{
+			p_data[id][P_SERPENTCOUNT]++;
+		}
+
+		// Carrion Beetle Chosen
+		else if ( SM_VerifyRace( id, RACE_CRYPT ) )
+		{
+			if ( p_data[id][P_CARRIONCOUNT] < 3 )
+			{
+				p_data[id][P_CARRIONCOUNT]++;
+			}
+		}
+
+		// Shadow Strike Chosen
+		else if ( SM_VerifyRace( id, RACE_WARDEN ) )
+		{
+			if ( p_data[id][P_SHADOWCOUNT] < 3 )
+			{
+				p_data[id][P_SHADOWCOUNT] = 2;
+			}
+		}
+	}
+
+	// User selected skill number 4 - Ultimate
+	else if ( iKey == 3 )
+	{
+		Ultimate_Ready( id );
+	}
+
+	// Check to see if they should be more invisible
+	SHARED_INVIS_Set( id );
+
+	// Undead's Unholy Aura
+	SHARED_SetGravity(id);
 
 	return;
 }

@@ -29,13 +29,13 @@ public _SH_HealingWave( id )
 	}
 	
 	// User doesn't have this skill, so lets return
-	if ( !Verify_Skill( id, RACE_SHADOW, SKILL1 ) )
+	if ( !SM_VerifySkill( id, SKILL_HEALINGWAVE ) )
 	{
 		return;
 	}
 
 	// Continue healing...
-	if ( Verify_Skill( id, RACE_SHADOW, SKILL1 ) && is_user_alive( id ) )
+	if ( is_user_alive( id ) )
 	{
 		set_task( p_heal[p_data[id][P_SKILL1]-1], "_SH_HealingWave", TASK_WAVE + id );
 	}
@@ -122,11 +122,11 @@ public SH_PlaceSerpentWard( id )
 	// User is hexed, can't use any skills
 	if ( p_data_b[id][PB_HEXED] )
 	{
-		WC3_Status_Text( id, 4.0, HUDMESSAGE_POS_INFO, "%L", id, "HEX_NO_ABILITY" );
+		WC3_StatusText( id, 0, "%L", id, "HEX_NO_ABILITY" );
 	}
 
 	// User is alive we can place a ward!
-	else if ( is_user_alive( id ) && Verify_Skill( id, RACE_SHADOW, SKILL3 ) && p_data[id][P_SERPENTCOUNT] > 0 )
+	else if ( is_user_alive( id ) && SM_VerifySkill( id, SKILL_SERPENTWARD ) && p_data[id][P_SERPENTCOUNT] > 0 )
 	{
 
 		// Serpent Ward
@@ -144,12 +144,11 @@ public SH_PlaceSerpentWard( id )
 			_SH_DrawSerpentWard( parm );
 			p_data[id][P_SERPENTCOUNT]--;
 
-			WC3_Status_Text( id, 3.5, HUDMESSAGE_POS_INFO, "%L", id, "SERPENT_WARD", p_data[id][P_SERPENTCOUNT] );
+			WC3_StatusText( id, 0, "%L", id, "SERPENT_WARD", p_data[id][P_SERPENTCOUNT] );
 		}
 		else
 		{
-			// Geesu needs to add language support for this message
-			WC3_Status_Text( id, 3.5, HUDMESSAGE_POS_INFO, "You cannot place a serpent ward here." );
+			WC3_StatusText( id, 0, "You cannot place a serpent ward here" );
 		}
 	}
 }
@@ -246,7 +245,7 @@ public _SH_DrawSerpentWard( parm[5] )
 			{
 
 				// Damage the user
-				WAR3_damage( targetid, id, 10, CSW_SERPENTWARD, -1 );
+				WC3_Damage( targetid, id, 10, CSW_SERPENTWARD, -1 );
 
 				// Make the sound when they're attacked
 				client_cmd( targetid, "speak ambience/thunder_clap.wav" );
@@ -303,7 +302,7 @@ bool:SH_CanPlaceWard( id )
 
 SH_SerpentWardSet( id )
 {
-	if ( Verify_Skill(id, RACE_SHADOW, SKILL3) )
+	if ( SM_VerifySkill( id, SKILL_SERPENTWARD ) )
 	{
 		p_data[id][P_SERPENTCOUNT]		= p_serpent[p_data[id][P_SKILL3]-1];
 	}
@@ -372,7 +371,7 @@ SH_SkillsOffensive( iAttacker, iVictim )
 {
 
 	// Hex
-	if ( Verify_Skill( iAttacker, RACE_SHADOW, SKILL2 ) )
+	if ( SM_VerifySkill( iAttacker, SKILL_HEX ) )
 	{
 
 		if ( random_float( 0.0, 1.0 ) <= p_hex[p_data[iAttacker][P_SKILL2]-1] )
@@ -404,7 +403,7 @@ SH_SkillsDefensive( iAttacker, iVictim )
 {
 
 	// Unstable Concoction
-	if ( Verify_Race(iVictim, RACE_SHADOW) )
+	if ( SM_VerifyRace(iVictim, RACE_SHADOW) )
 	{
 		// Check to see if we should "concoction"
 		if ( random_float( 0.0, 1.0 ) <= p_concoction[p_data[iVictim][P_LEVEL]] )
@@ -452,7 +451,7 @@ SH_SkillsDefensive( iAttacker, iVictim )
 					if ( get_distance( vOrigin, vTargetOrigin ) <= SH_CONCOCTION_RADIUS )
 					{
 						// Damage
-						WAR3_damage( players[i], iVictim, SH_CONCOCTION_DAMAGE, CSW_CONCOCTION, 0 );
+						WC3_Damage( players[i], iVictim, SH_CONCOCTION_DAMAGE, CSW_CONCOCTION, 0 );
 					
 						// Let the victim know he hit someone
 						emit_sound( iVictim, CHAN_STATIC, SOUND_CONCOCTION_HIT, 1.0, ATTN_NORM, 0, PITCH_NORM );

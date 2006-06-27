@@ -59,7 +59,7 @@ new const WC3DATE[] =		__DATE__
 
 // Compiling Options
 #define MOD						0				// 0 = cstrike or czero, 1 = dod
-#define ADVANCED_STATS			1				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
+#define ADVANCED_STATS			0				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define SHOW_SPECTATE_INFO		1				// Show spectating information on users
 
 // Header files that contain function declarations
@@ -67,6 +67,8 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/db/db_mysqlx.h"
 #include "war3ft/db/db_sqlite.h"
 #include "war3ft/db/db_nvault.h"
+#include "war3ft/XP.h"
+#include "war3ft/war3ft.h"
 
 // Source Code
 #include "war3ft/constants.inl"
@@ -100,6 +102,8 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/language.inl"
 #include "war3ft/admin.inl"
 #include "war3ft/ultimates.inl"
+#include "war3ft/util.inl"
+#include "war3ft/skill_manager.inl"
 
 #include "war3ft/cstrike.inl"
 #include "war3ft/dod.inl"
@@ -140,15 +144,19 @@ public plugin_init()
 	register_clcmd( "jointeam"			, "cmd_Jointeam"	, -1 );
 
 	// Admin Commands
-	register_concmd( "amx_givexp"		, "Admin_GiveXP"		, 0 , " -- Gives XP to players"				);
-	register_concmd( "amx_setlevel"	    , "Admin_SetLevel"		, 0 , " -- Sets a players level"			);
-	register_concmd( "amx_wc3"			, "Admin_wc3"			, 0 , " -- Enables/disables war3ft"			);
-	register_concmd( "wc3_giveitem"		, "ADMIN_GiveItem"		, 0 , " -- Gives an item to a player"		);
+	register_concmd( "wc3_givexp"		, "ADMIN_Handler"		, 0 , " -- Gives XP to players"				);
+	register_concmd( "wc3_setlevel"	    , "ADMIN_Handler"		, 0 , " -- Sets a players level"			);
+	register_concmd( "wc3_giveitem"		, "ADMIN_Handler"		, 0 , " -- Gives an item to a player"		);
+	register_concmd( "wc3_enable"		, "ADMIN_Handler"		, 0 , " -- Enables war3ft"					);
+	register_concmd( "wc3_disable"		, "ADMIN_Handler"		, 0 , " -- Disables war3ft"					);
+
+	// Depreciated Admin Commands
+	register_concmd( "amx_givexp"		, "ADMIN_Handler"		, 0 , " -- Gives XP to players"				);
 
 	// Server Admin Commands (used by external plugins)
-	register_srvcmd( "amx_takexp"		, "Admin_TakeXP"	);
-	register_srvcmd( "changexp"			, "changeXP"		);
-	
+	register_srvcmd( "amx_takexp"		, "ADMIN_ServerHandler"	);
+	register_srvcmd( "changexp"			, "ADMIN_ServerHandler"	);
+
 	// Register forwards (from fakemeta)
 	register_forward( FM_TraceLine		, "TRIGGER_TraceLine"	);
 
@@ -174,7 +182,6 @@ public plugin_init()
 
 		register_event( "SendAudio"		, "on_TerroristWin"	, "a"	, "2=%!MRAD_terwin"					);
 		register_event( "SendAudio"		, "on_CTWin"		, "a"	, "2=%!MRAD_ctwin"					);
-		register_event( "23"			, "on_TargetBombed"	, "a"	, "1=17"	, "6=-105"	, "7=17"	);
 		register_event( "ArmorType"		, "on_ArmorType"	, "be"										);
 		register_event( "Battery"		, "on_Battery"		, "be"										);
 		register_event( "WeapPickup"	, "on_WeapPickup"	, "b"										); 
@@ -185,15 +192,12 @@ public plugin_init()
 		register_event( "Damage"		, "on_Damage"		, "b"	, "2!0"								);
 
 		// Old Style
-		register_menucmd( register_menuid( "BuyItem" )	, (1<<2)	, "cmd_flash"	);
 		register_menucmd( register_menuid( "BuyItem" )	, (1<<3)	, "cmd_hegren"	);
 
 		// VGUI
-		register_menucmd( -34	, (1<<2)	, "cmd_flash"	);
 		register_menucmd( -34	, (1<<3)	, "cmd_hegren"	);
 
 		// Steam
-		register_clcmd( "flash"		, "cmd_flash"	);
 		register_clcmd( "hegren"	, "cmd_hegren"	);
 		
 		// Old style menu (now its jointeam client command)
@@ -223,6 +227,13 @@ public plugin_init()
 
 	// Plugin initialization procedures
 	WC3_Init();
+
+	register_concmd( "test", "test" );
+}
+
+public test( id )
+{
+	WC3_StatusText( id, TXT_SKILL, "You have evaded a shot!" );
 }
 
 public plugin_end()
@@ -471,7 +482,7 @@ public client_PreThink( id )
 			{
 
 				// This is used so we can't hear the undead's footsteps at level 3
-				if ( Verify_Skill( id, RACE_UNDEAD, SKILL2 ) && !p_data_b[id][PB_STUNNED] && !p_data_b[id][PB_SLOWED] )
+				if ( SM_VerifySkill( id, SKILL_UNHOLYAURA ) && !p_data_b[id][PB_STUNNED] && !p_data_b[id][PB_SLOWED] )
 				{
 					new Float:vel[3];
 					entity_get_vector( id, EV_VEC_velocity, vel );
@@ -498,7 +509,7 @@ public client_PreThink( id )
 				SHARED_SetSpeed( id );
 				
 				// Give the user more stamina
-				if ( Verify_Skill( id, RACE_UNDEAD, SKILL2 ) )
+				if ( SM_VerifySkill( id, SKILL_UNHOLYAURA ) )
 				{
 					if ( entity_get_float( id, EV_FL_fuser4 ) < p_unholy[p_data[id][P_SKILL2]-1] )
 					{

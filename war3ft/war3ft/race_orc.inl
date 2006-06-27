@@ -126,7 +126,7 @@ public OR_ULT_ChainEffect( iCaster, iTarget, iLineWidth, iDamage, iBodyPart )
 	p_data_b[iTarget][PB_LIGHTNINGHIT] = true;
 	
 	// Damage the user
-	WAR3_damage( iTarget, iCaster, iDamage, CSW_LIGHTNING, iBodyPart );
+	WC3_Damage( iTarget, iCaster, iDamage, CSW_LIGHTNING, iBodyPart );
 	
 	// Create the lightning
 	Create_TE_BEAMENTS( iCaster, iTarget, g_sLightning, 0, 15, 10, iLineWidth, 10, 255, 255, 255, 255, 0 );
@@ -148,7 +148,7 @@ public OR_ULT_ChainEffect( iCaster, iTarget, iLineWidth, iDamage, iBodyPart )
 OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 {
 	// Critical Strike
-	if ( Verify_Skill( iAttacker, RACE_ORC, SKILL1 ) )
+	if ( SM_VerifySkill( iAttacker, SKILL_CRITICALSTRIKE ) )
 	{
 
 		if ( random_float( 0.0, 1.0 ) <= CRITICAL_STRIKE_CHANCE )
@@ -156,7 +156,7 @@ OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 			new iTempDamage = floatround( float( iDamage ) * p_data[iAttacker][P_SKILL1] );
 			
 			// Damage our victim
-			WAR3_damage( iVictim, iAttacker, iTempDamage, iWeapon, iHitPlace );
+			WC3_Damage( iVictim, iAttacker, iTempDamage, iWeapon, iHitPlace );
 			
 			// Make the user glow
 			SHARED_Glow( iVictim, iTempDamage, 0, 0, 0 );
@@ -167,7 +167,7 @@ OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 	}
 
 	// Critical Grenade
-	if ( Verify_Skill( iAttacker, RACE_ORC, SKILL2 ) )
+	if ( SM_VerifySkill( iAttacker, SKILL_CRITICALGRENADE ) )
 	{		
 		
 		// Can only do this if the user has a grenade
@@ -190,7 +190,7 @@ OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 				}
 				
 				// Damage the user!
-				WAR3_damage( iVictim, iAttacker, iTempDamage, iWeapon, iHitPlace );
+				WC3_Damage( iVictim, iAttacker, iTempDamage, iWeapon, iHitPlace );
 
 
 				// Make the user glow

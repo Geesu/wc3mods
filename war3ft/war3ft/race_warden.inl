@@ -8,9 +8,9 @@
 WA_ULT_Vengeance( id )
 {
 	
-	// If the user's ultimate isnot available, then why are we here?
+	// If the user's ultimate is not available, then why are we here?
 	if ( !ULT_Available( id ) )
-	{
+	{		
 		return;
 	}
 
@@ -48,18 +48,18 @@ WA_ULT_Vengeance( id )
 		// No spawn found
 		if ( ent < 0 )
 		{
-			set_hudmessage( 255, 255, 10, -1.0, -0.4, 1, 0.5, 1.5, 0.2, 0.2 ,5 );
+			//set_hudmessage( 255, 255, 10, -1.0, -0.4, 1, 0.5, 1.5, 0.2, 0.2 ,5 );
 			
 			// Immune person nearby
 			if ( ent == -2 )
 			{
-				show_hudmessage( id, "%L", id, "VENGEANCE_FAILED_ENEMY_IMMUNITY" );
+				WC3_StatusText( id, 0, "%L", id, "VENGEANCE_FAILED_ENEMY_IMMUNITY" );
 			}
 
 			// No spawn found
 			else
 			{
-				show_hudmessage( id, "%L", id, "NO_FREE_SPAWN_FOUND" );
+				WC3_StatusText( id, 0, "%L", id, "NO_FREE_SPAWN_FOUND" );
 			}
 		}
 
@@ -107,7 +107,7 @@ WA_Blink( id )
 	p_data_b[id][PB_WARDENBLINK] = false;
 
 	// User has the ability, lets initiate a "check"
-	if ( Verify_Skill( id, RACE_WARDEN, SKILL2 ) )
+	if ( SM_VerifySkill( id, SKILL_BLINK ) )
 	{
 
 		if ( random_float( 0.0, 1.0 ) <= p_blink[p_data[id][P_SKILL2]-1] )
@@ -122,7 +122,7 @@ WA_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 {
 
 	// Shadow Strike
-	if ( Verify_Skill( iAttacker, RACE_WARDEN, SKILL3 ) )
+	if ( SM_VerifySkill( iAttacker, SKILL_SHADOWSTRIKE ) )
 	{
 
 		if ( random_float( 0.0, 1.0 ) <= p_shadow[p_data[iAttacker][P_SKILL3]-1] )
@@ -143,7 +143,7 @@ WA_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 				p_data[iAttacker][P_SHADOWCOUNT]--;
 
 				// Damage the user
-				WAR3_damage( iVictim, iAttacker, SHADOWSTRIKE_DAMAGE, CSW_SHADOW, iHitPlace );
+				WC3_Damage( iVictim, iAttacker, SHADOWSTRIKE_DAMAGE, CSW_SHADOW, iHitPlace );
 			}
 		}
 
@@ -154,4 +154,16 @@ WA_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 		}
 	#endif
 	}
+}
+
+WA_HardenedSkin( iVictim, iDamage )
+{
+	if ( SM_VerifyRace( iVictim, RACE_WARDEN ) )
+	{
+		new iLevel = p_data[iVictim][P_LEVEL];
+
+		return ( floatround( float( iDamage ) * p_harden[iLevel] ) );
+	}
+
+	return iDamage;	
 }

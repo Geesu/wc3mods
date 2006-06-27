@@ -67,7 +67,7 @@ Ultimate_Ready( id )
 		client_cmd( id, "speak %s", SOUND_ULTIMATEREADY )
 		
 		// Give the user a graphical message that their ultimate is ready
-		WC3_Status_Text( id, 2.0, HUDMESSAGE_POS_STATUS, "%L", id, "ULTIMATE_READY" );
+		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_READY" );
 		
 		// Show their ultimate icon
 		ULT_Icon( id, ICON_SHOW );
@@ -91,7 +91,9 @@ ULT_Icon( id, flag )
 	// If we're chameleon we need to display the icon of the ultimate we have
 	if ( p_data[id][P_RACE] == RACE_CHAMELEON )
 	{
-		iRaceID = g_ChamSkills[4];
+		new iChamUltimate = g_ChamSkills[3];
+
+		iRaceID = g_SkillOwner[iChamUltimate];
 	}
 	
 	// We should only do this if we have a valid race ID
@@ -117,14 +119,9 @@ ULT_Icon( id, flag )
 		{
 			case ICON_FLASH:
 			{
-				// Change colors for Ultimate
-				if ( Verify_Skill( id, RACE_UNDEAD, SKILL4 ) )
-				{
-					r=255, g=255, b=255;
-				}
-				
-				// Change colors for blood mage
-				else if ( Verify_Skill( id, RACE_BLOOD, SKILL4 ) )
+
+				// Change colors for Suicide Bomber or Immolate
+				if ( SM_VerifySkill( id, ULTIMATE_SUICIDE ) || SM_VerifySkill( id, ULTIMATE_IMMOLATE ) )
 				{
 					r=255, g=255, b=255;
 				}

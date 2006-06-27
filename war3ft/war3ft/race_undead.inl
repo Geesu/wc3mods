@@ -101,7 +101,7 @@ public _UD_SuicideExplode( parm[5] )
 			iDamage = sqroot( iDamage );
 			
 			// Damage them!!!!
-			WAR3_damage( iTargetID, id, iDamage, CSW_SUICIDE, -1 );
+			WC3_Damage( iTargetID, id, iDamage, CSW_SUICIDE, -1 );
 			
 			// Lets shake up their screen a bit
 			Create_ScreenShake( iTargetID, (1<<14), (1<<13), (1<<14) );
@@ -142,7 +142,7 @@ UD_SkillsOffensive( iAttacker, iDamage )
 {
 
 	// Vampiric Aura
-	if ( Verify_Skill( iAttacker, RACE_UNDEAD, SKILL1 ) )
+	if ( SM_VerifySkill( iAttacker, SKILL_VAMPIRICAURA ) )
 	{
 		new iHealth		= get_user_health( iAttacker );
 		new iMaxHealth	= get_user_maxhealth( iAttacker );

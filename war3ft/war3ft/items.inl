@@ -1,3 +1,8 @@
+/*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
+*	Race: Item Functions
+´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
+
+
 #define DOD_BOOT_SPEED 45.0
 
 public ITEM_Buy( id, iItem )
@@ -20,7 +25,7 @@ public ITEM_Buy( id, iItem )
 	}
 	
 	// Only MOLE + ANKH can be bought when dead
-	else if ( !is_user_alive( id ) && ( iItem != ITEM_ANKH && iItem != ITEM_MOLE ) ) 
+	else if ( !is_user_alive( id ) && ( iItem != ITEM_ANKH && iItem != ITEM_MOLE && iItem != ITEM_SCROLL ) ) 
 	{
 		client_print( id, print_center, "%L", id, "NOT_PURCHASE_WHEN_DEAD" );
 
@@ -36,7 +41,7 @@ public ITEM_Buy( id, iItem )
 	}
 
 	// User doesn't need an ankh if they're going to reincarnate
-	else if ( iItem == ITEM_ANKH && Verify_Skill( id, RACE_ORC, SKILL3 ) == 3 )
+	else if ( iItem == ITEM_ANKH && SM_VerifySkill( id, SKILL_REINCARNATION ) == 3 )
 	{
 		client_print( id, print_center, "You will already reincarnate your weapons through one of your skills!" );
 
@@ -258,6 +263,17 @@ public ITEM_Set( id, iItem )
 	return 1;
 }
 
+ITEM_RemoveSlot( id, iItemSlot )
+{
+	new iOldItem = g_iShopMenuItems[id][iItemSlot];
+
+	// Remove the user's old item if necessary
+	if ( iOldItem > ITEM_NONE )
+	{
+		ITEM_Remove( id, iOldItem, iItemSlot );
+	}
+}
+
 public ITEM_Remove( id, iItem, iItemSlot )
 {
 	g_iShopMenuItems[id][iItemSlot] = ITEM_NONE;
@@ -302,6 +318,8 @@ public ITEM_Remove( id, iItem, iItemSlot )
 		{
 			if ( task_exists( TASK_ITEM_RING + id ) )
 			{
+				g_iMultipleItems[id][0] = 0;
+
 				remove_task( TASK_ITEM_RING + id );
 			}
 		}
@@ -355,15 +373,9 @@ ITEM_Tome( id )
 		iXp *= 2;
 	}
 
-	// Give more if saving XP
-	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
-	{
-		iXp *= 2;
-	}
-
 	client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU_9", iXp );
 
-	XP_give( id, iXp );
+	XP_Give( id, iXp );
 
 	emit_sound( id, CHAN_STATIC, "warcraft3/Tomes.wav", 1.0, ATTN_NORM, 0, PITCH_NORM );
 
@@ -422,7 +434,7 @@ public _ITEM_Glove_Give( id )
 	}
 	
 	// Display a message to the user
-	WC3_Status_Text( id, 10.0, 0.65, "%L", id, "ENJOY_A_GRENADE" )
+	WC3_StatusText( id, TXT_TOP_CENTER, "%L", id, "ENJOY_A_GRENADE" )
 
 	return;
 }		
@@ -502,7 +514,7 @@ ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 	// Claws of Attack
 	if ( ITEM_Has( iAttacker, ITEM_CLAWS ) )
 	{	
-		WAR3_damage( iVictim, iAttacker, get_pcvar_num( CVAR_wc3_claw ), iWeapon, iHitPlace );
+		WC3_Damage( iVictim, iAttacker, get_pcvar_num( CVAR_wc3_claw ), iWeapon, iHitPlace );
 		
 		SHARED_Glow( iAttacker, (2 * get_pcvar_num( CVAR_wc3_claw ) ), 0, 0, 0 );
 
@@ -515,7 +527,7 @@ ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 		new iHealth = get_user_health( iAttacker );
 		new iBonusHealth = floatround( float( iDamage ) * get_pcvar_num( CVAR_wc3_mask ) );
 		
-		new iVampiricBonus = Verify_Skill( iAttacker, RACE_UNDEAD, SKILL1 );
+		new iVampiricBonus = SM_VerifySkill( iAttacker, SKILL_VAMPIRICAURA );
 		
 		// Then the user already gets a bonus, lets lower the total amount the user is going to get
 		if ( iVampiricBonus )

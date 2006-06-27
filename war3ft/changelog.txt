@@ -8,6 +8,8 @@ v3.0
  - Addition: (DOD) Chameleon now works!
  - Addition: (DOD) Mole's will change their model
  - Bug Fix: cl_minmodels task was not repeating
+ - Change: Chameleon race can now have ANY skills (not just a subset of that skill number like before)
+ - Change: User cannot be given money to have more than $16000
  - Change: Chameleon price dropped to 4500
  - Change: Tome gives more XP when saving XP is on
  - Change: Impale now hits the user up from the ground
@@ -26,8 +28,8 @@ v3.0
  - Change: Traceline is used when searching for a target for certain ultimates (instead of get_user_aiming every .1 seconds)
  - Change: Bash chance has been reduced to 10%/20%/30%
  - Change: Evasion and Helm will now flash your screen blue instead of previous colors
- - Change: Orc critical nades will now have a max damage of 99 or 144 depending on victim's race
- - Change: You will no longer lose your ankj/scroll of respawning if someone respawns you by Phoenix or warden's ultimate
+ - Change: Orc critical nades will now have a max damage of the user's maximum possible health - 1
+ - Change: You will no longer lose your ankh/scroll of respawning if someone respawns you by Phoenix or warden's ultimate
  - Change: Bash now holds for 0.7 seconds instead of 1.0
  - Removed: FT_impale_intensity cvar (edit this constant at the top of skills.inl)
  - Removed: FT_blink_radius cvar (replaced with NECKLACE_RADIUS define)
@@ -43,15 +45,18 @@ v3.0
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
-//Add a start/stop option
+//short term broken
+//playerskills through HLSW
+//human ult = getting stuck
+//orc nade map config file
+//verify all skills given with selectskill
+//allow user to changerace when in spec?
+//g_buyTime
 //Need to give 2 flashbangs, not one
 //Fix bug with doing autoselect w/FT_Races 8 then changerace and CENTER_CHANGED_NEXT displaying
 //don't allow vip's to tele
-//bug: gain money when 0 players in DOD
-//bug: mole on top of each other; moles on respawn which sucks
 //necklace of immunity = charges
 //spec hudmsg needs to not carry over when you spawn
-//look over admin.inl and setlevel function ( so tired! )
 //reset skills/ultimates when user dies or right before the round starts
 //let /level show the user's XP if they're dead!
 //save icon info
@@ -61,7 +66,7 @@ v3.0
 //allow moles to buy weapons after they mole - research how to do this!!
 //bug: phoenix will try to respawn users when changing team
 //bug: strip_user_weapons will remove bomb + not give it back
-//make it so user can keep ankh if orc skill is used
+//ADVANCED_STATS
 
 //shopmenu 3 ideas:
 // immune to some magic

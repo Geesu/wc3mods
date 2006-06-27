@@ -16,7 +16,7 @@ public SHARED_INVIS_Set( id )
 	new iInvisLevel = 0;
 	
 	// If they are Human Alliance with Invisibility lets set the level
-	if ( Verify_Skill( id, RACE_HUMAN, SKILL1 ) )
+	if ( SM_VerifySkill( id, SKILL_INVISIBILITY ) )
 	{
 		new iSkillLevel = p_data[id][P_SKILL1]-1;
 
@@ -175,12 +175,24 @@ SHARED_SetUserMoney( id, money, show = 1 )
 	// Check for Counter-Strike or Condition Zero
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
+		// Don't allow the user to have more than 16000
+		if ( money > 16000 )
+		{
+			money = 16000;
+		}
+
 		cs_set_user_money( id, money, show );
 	}
 
 	// Check for Day of Defeat
 	else if ( g_MOD == GAME_DOD )
 	{
+
+		if ( !XP_MinPlayers() )
+		{
+			return;
+		}
+
 		new parm[3];
 		parm[0] = id;
 		parm[1] = 1;
@@ -189,6 +201,8 @@ SHARED_SetUserMoney( id, money, show = 1 )
 		p_data[id][P_MONEY] = money;
 		_DOD_showMoney( parm );
 	}
+
+	return;
 }
 
 // Function will return an ammo name given a weapon ID
@@ -293,11 +307,22 @@ public _SHARED_Spawn( id )
 	p_data_b[id][PB_SLOWED]		= false;
 	p_data_b[id][PB_STUNNED]	= false;
 	p_data_b[id][PB_GIVEITEMS]	= true;
+	
+	// Give the user godmode for a little
+	set_user_godmode( id, 1 );
 
 	set_task( 0.2, "_SHARED_Spawn_Final", TASK_SPAWNPLAYER + id );
 	set_task( 0.4, "_SHARED_CS_GiveWeapons", TASK_GIVEITEMS + id );
+	set_task( 1.0, "_SHARED_SpawnRemoveGod", TASK_SPAWNREMOVEGOD + id );
 
 	return;
+}
+
+public _SHARED_SpawnRemoveGod( id )
+{
+	id -= TASK_SPAWNREMOVEGOD;
+
+	set_user_godmode( id, 0 );
 }
 
 // Function will just spawn a player again
@@ -305,7 +330,7 @@ public _SHARED_Spawn_Final( id )
 {
 	id -= TASK_SPAWNPLAYER;
 
-	if( !p_data_b[id][PB_ISCONNECTED] )
+	if ( !p_data_b[id][PB_ISCONNECTED] )
 	{
 		return;
 	}
@@ -464,7 +489,7 @@ public SHARED_CS_Reincarnation( id )
 	if ( p_data_b[id][PB_DIEDLASTROUND] )
 	{
 		// Orc's Reincarnation
-		if ( Verify_Skill( id, RACE_ORC, SKILL3 ) )
+		if ( SM_VerifySkill( id, SKILL_REINCARNATION ) )
 		{
 			if( random_float( 0.0, 1.0 ) <= p_ankh[p_data[id][P_SKILL3]-1] )
 			{
@@ -515,7 +540,7 @@ public _SHARED_CS_GiveWeapons(id)
 
 	if ( !WAR3_Check() || !p_data_b[id][PB_ISCONNECTED] )
 	{
-		return PLUGIN_CONTINUE;
+		return;
 	}
 
 	// Check to see if the user should have the bomb
@@ -564,7 +589,7 @@ public _SHARED_CS_GiveWeapons(id)
 
 		if ( iWeapID )
 		{
-			if ( iWeapID != CSW_C4 )
+			if ( iWeapID != CSW_C4 && iWeapID != CSW_FLASHBANG )
 			{
 				new szWeaponName[32], szAmmoName[32];
 				get_weaponname( iWeapID, szWeaponName, 31 );
@@ -587,7 +612,15 @@ public _SHARED_CS_GiveWeapons(id)
 		}
 	}
 
-	return PLUGIN_CONTINUE;
+	// GIve them their flash bangs back
+	while ( p_data[id][P_FLASHCOUNT] > 0 )
+	{
+		give_item( id, "weapon_flash" );
+
+		p_data[id][P_FLASHCOUNT]--;
+	}
+
+	return;
 }
 
 public SHARED_SaveWeapons( id )
@@ -682,7 +715,7 @@ public SHARED_SetSpeed( id )
 		}
 
 		// User has a rocket launcher "mounted", we let users w/unholy aura + boots of speed run faster with it
-		else if ( get_user_maxspeed( id ) == 50.0 && ( ITEM_Has( id, ITEM_BOOTS ) || Verify_Skill( id, RACE_UNDEAD, SKILL2 ) ) )
+		else if ( get_user_maxspeed( id ) == 50.0 && ( ITEM_Has( id, ITEM_BOOTS ) || SM_VerifySkill( id, SKILL_UNHOLYAURA ) ) )
 		{
 			set_user_maxspeed( id, 600.0 );
 
@@ -695,7 +728,7 @@ public SHARED_SetSpeed( id )
 	{
 
 		// Unholy Aura bonus
-		if ( Verify_Skill( id, RACE_UNDEAD, SKILL2 ) )
+		if ( SM_VerifySkill( id, SKILL_UNHOLYAURA ) )
 		{
 			// Give them the bonus
 			set_user_maxspeed( id, p_unholy[p_data[id][P_SKILL2]-1] );
@@ -767,8 +800,9 @@ SHARED_IsPlayerSlowed( id )
 // Function changes your skin for ITEM_MOLE and Chameleon
 public SHARED_ChangeSkin( id, reset )
 {
-
-	if ( !warcraft3 )
+	
+	// Don't change a bots model - it just confuses the bots!
+	if ( !warcraft3 || is_user_bot( id ) )
 	{
 		return;
 	}
@@ -870,7 +904,7 @@ public SHARED_SetGravity( id )
 		}
 
 		// Set the user's gravity based on undead's levitation
-		else if ( Verify_Skill( id, RACE_UNDEAD, P_SKILL3 ) )
+		else if ( SM_VerifySkill( id, SKILL_LEVITATION ) )
 		{
 			if ( get_user_gravity( id ) != p_levitation[p_data[id][P_SKILL3]-1] )
 			{
@@ -912,7 +946,7 @@ public SHARED_IsOnTeam( id )
 }
 
 // Reset our reserved spawn points
-SHARED_SpawnReset()
+public _SHARED_SpawnReset()
 {
 	new i;
 
@@ -1028,6 +1062,12 @@ SHARED_FindFreeSpawn( id, bImmunityCheck = false, bReverseTeam = false )
 	}
 	while ( ent && !bFound )
 	
+	// Reset the spawn points...
+	if ( !task_exists( TASK_RESETSPAWNS ) )
+	{
+		set_task( 0.3, "_SHARED_SpawnReset", TASK_RESETSPAWNS );
+	}
+
 	// Failed, nothing found
 	if ( !bFound )
 	{
@@ -1050,7 +1090,7 @@ public SHARED_MoleCheck( id )
 	parm[1] = 0;
 
 	// Mole from Fan of Knives?
-	if ( Verify_Skill( id, RACE_WARDEN, SKILL1 ) )
+	if ( SM_VerifySkill( id, SKILL_FANOFKNIVES ) )
 	{
 		if ( random_float( 0.0, 1.0 ) <= p_fan[p_data[id][P_SKILL1]-1] )
 		{
@@ -1163,7 +1203,7 @@ SHARED_Glow( id, iRed, iGreen, iBlue, iAll )
 	}
 		
 	// Don't glow if invisible
-	else if ( Verify_Skill( id, RACE_HUMAN, SKILL1 ) || ITEM_Has( id, ITEM_CLOAK ) )
+	else if ( SM_VerifySkill( id, SKILL_INVISIBILITY ) || ITEM_Has( id, ITEM_CLOAK ) )
 	{
 		return;
 	}
