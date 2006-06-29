@@ -18,7 +18,7 @@
 #define	TASK_WAVE			352		// Healing Wave
 #define	TASK_REINCARNATION	384		// Weapon Reincarnation
 #define	TASK_GLOW			416		// Calls glow_change
-//#define	TASK_RESETPOS		448		// Resets the user's position (1.5)
+#define	TASK_REMOVEBUYZONE	448		// This will remove a buyzone
 #define	TASK_HEX			480		// Jumper task (goomba)
 #define	TASK_RESETSPEED		512		// Reset maxspeed (bash)
 #define	TASK_ITEM_GLOVES	544		// Nade timer (gloves)
@@ -193,33 +193,6 @@
 #define RACE_WARDEN				7
 #define RACE_CRYPT				8
 #define RACE_CHAMELEON			9
-
-// Item Defines
-#define MAX_SHOPMENU_ITEMS  18
-#define MAX_PLAYER_ITEMS    2
-#define MAX_PAGE_ITEMS      9
-#define ITEM_SLOT_ONE       0
-#define ITEM_SLOT_TWO       1
-
-#define ITEM_NONE          -1
-#define ITEM_ANKH		    0
-#define ITEM_BOOTS		    1
-#define ITEM_CLAWS		    2
-#define ITEM_CLOAK		    3
-#define ITEM_MASK		    4
-#define ITEM_NECKLACE	    5
-#define ITEM_FROST		    6
-#define ITEM_HEALTH		    7
-#define ITEM_TOME		    8
-#define ITEM_SCROLL		    9
-#define ITEM_PROTECTANT     10
-#define ITEM_HELM		    11
-#define ITEM_AMULET		    12
-#define ITEM_SOCK		    13
-#define ITEM_GLOVES		    14
-#define ITEM_RING		    15
-#define ITEM_CHAMELEON	    16
-#define ITEM_MOLE		    17
 
 // team ids 
 #define UNASSIGNED 0 
@@ -435,10 +408,7 @@
 #define RESPAWN_VENGEANCE		3
 
 // Enemies who have immunity w/in this radius will cause blink to fail 
-#define NECKLACE_RADIUS		500
-
-//#define SHOPMENU_ONE			P_ITEM
-//#define SHOPMENU_TWO			P_ITEM2
+#define IMMUNITY_RADIUS		500
 
 // Used with g_DBType
 #define DB_VAULT			1
@@ -623,19 +593,17 @@ new g_PlayerLastWeapons[33][32];		// Stores player weapons after they have been 
 
 new g_MOD = 0;
 
-// ***************************
-// Item Information
-// ***************************
-new g_iShopMenuItems[33][MAX_PLAYER_ITEMS];			// Holds the player's current items
-new g_iItemOnDeath[33][MAX_PLAYER_ITEMS];			// Holds the items the user had when he/she died
-new g_iMultipleItems[33][2];						// Holds the number of the same item - i.e. rings
-new g_iFutureShopMenu[33];							// This will hold which shopmenu we should display after the user has selected an item to remove
+// thanks twistedeuphoria - from objective proximity warning
+#define MAX_OBJECTIVES			11
+#define OBJENT_VIP_ESCAPE		0
+#define OBJENT_HOSTAGE			1
+#define OBJENT_BOMBSITE			2
+#define OBJENT_HOSTAGE_ESCAPE	3
 
-new bool:g_bPlayerBoughtAnkh[33];							// Set to true when a user buys an ankh
-new bool:g_bPlayerBoughtMole[33];							// Set to true when a user buys a mole
-
-new ITEM_COST[MAX_SHOPMENU_ITEMS] = {0};
-
+new g_iObjectiveEnt[MAX_OBJECTIVES];
+new g_iObjectiveEntType[MAX_OBJECTIVES];
+new Float:g_fObjectiveOrigin[MAX_OBJECTIVES][3]
+new g_iTotalObjectiveEnts = 0;
 
 // ***************************
 // Skill Information
@@ -647,8 +615,8 @@ new ITEM_COST[MAX_SHOPMENU_ITEMS] = {0};
 #define SKILL_ULTIMATE				4
 #define SKILL_PASSIVE				5
 
-new g_PlayerSkills[33][5];				// Stores what skills the player has
-new g_PlayerSkillLevel[33][4];			// Stores what level each skill is
+new g_PlayerSkills[33][6];				// Stores what skills the player has
+new g_PlayerSkillLevel[33][6];			// Stores what level each skill is
 
 // SKILL DEFINES
 #define SKILL_NONE				-1

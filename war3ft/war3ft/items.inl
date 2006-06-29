@@ -24,7 +24,7 @@ public ITEM_Buy( id, iItem )
 		return;
 	}
 	
-	// Only MOLE + ANKH can be bought when dead
+	// Only MOLE + ANKH + SCROLL can be bought when dead
 	else if ( !is_user_alive( id ) && ( iItem != ITEM_ANKH && iItem != ITEM_MOLE && iItem != ITEM_SCROLL ) ) 
 	{
 		client_print( id, print_center, "%L", id, "NOT_PURCHASE_WHEN_DEAD" );
@@ -352,15 +352,6 @@ bool:ITEM_Has( id, iItem )
 	return false;
 }
 
-bool:ITEM_Had( id, iItem )
-{
-	if ( g_iItemOnDeath[id][ITEM_SLOT_ONE] == iItem || g_iItemOnDeath[id][ITEM_SLOT_TWO] == iItem )
-		return true;
-
-	return false;
-}
-
-
 ITEM_Tome( id )
 {
 	if ( !WAR3_Check() || !p_data_b[id][PB_ISCONNECTED] )
@@ -575,9 +566,6 @@ ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 // Called last after a user dies
 ITEM_UserDied( id )
 {
-	// Save the user's items on death...
-	g_iItemOnDeath[id][ITEM_SLOT_ONE] = g_iShopMenuItems[id][ITEM_SLOT_ONE];
-	g_iItemOnDeath[id][ITEM_SLOT_TWO] = g_iShopMenuItems[id][ITEM_SLOT_TWO];
 
 	// The user just died, remove all items
 	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE )
@@ -606,7 +594,7 @@ ITEM_Init()
 	ITEM_COST[8]	= 4000;			// Tome of Experience
 	ITEM_COST[9]	= 6000;			// Scroll of Respawning
 	ITEM_COST[10]	= 1500;			// Mole Protectant
-	ITEM_COST[11]	= 1500;			// Helm of Excellence
+	ITEM_COST[11]	= 3000;			// Helm of Excellence
 	ITEM_COST[12]	= 1500;			// Amulet of the Cat
 	ITEM_COST[13]	= 1500;			// Sock of the Feather
 	ITEM_COST[14]	= 1750;			// Flaming Gloves of Warmth
@@ -618,6 +606,5 @@ ITEM_Init()
 	if ( g_MOD == GAME_DOD )
 	{
 		ITEM_COST[9]	= 800;
-		ITEM_COST[11]	= 550;
 	}
 }

@@ -39,6 +39,14 @@ HU_ULT_Blink( id )
 		return;
 	}
 
+	// Check to see if the user is teleporting where they shouldn't
+	if ( SHARED_NearObjective( vNewLocation ) == OBJENT_VIP_ESCAPE )
+	{
+		WC3_StatusText( id, 0, "Blink failed, you cannot teleport so close to the escape zone!" );
+		
+		return;
+	}
+
 	// If we teleport them back, make sure they don't get teleported into the ground
 	vOldLocation[ZPOS] += 15;
 

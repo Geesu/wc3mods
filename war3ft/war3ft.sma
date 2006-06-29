@@ -58,11 +58,11 @@ new const WC3DATE[] =		__DATE__
 #include <dodx>
 
 // Compiling Options
-#define MOD						0				// 0 = cstrike or czero, 1 = dod
 #define ADVANCED_STATS			0				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define SHOW_SPECTATE_INFO		1				// Show spectating information on users
 
 // Header files that contain function declarations
+#include "war3ft/items.h"
 #include "war3ft/dod_h.inl"
 #include "war3ft/db/db_mysqlx.h"
 #include "war3ft/db/db_sqlite.h"
@@ -545,6 +545,25 @@ public plugin_natives()
 
 public module_filter( const module[] )
 {
+	WC3_DetermineGame();
+
+	// Lets do some checks so we don't print a message when we don't need to!
+	if ( g_MOD == GAME_DOD )
+	{
+		if ( equal( module, "cstrike" ) )
+		{
+			return PLUGIN_HANDLED;
+		}
+	}
+
+	else if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		if ( equal( module, "dodfun" ) )
+		{
+			return PLUGIN_HANDLED;
+		}
+	}
+
 	log_amx( "Please enable the '%s' module in your modules.ini file", module );
 
 	return PLUGIN_HANDLED;

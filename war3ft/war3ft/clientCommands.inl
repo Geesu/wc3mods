@@ -271,7 +271,7 @@ CMD_Handle( id, szCmd[] )
 
 	else if ( CMD_Equal( id,  szCmd, "playerskills" ) )
 	{
-		MOTD_Playerskills(id, 1)
+		MOTD_PlayerSkills( id );
 	}
 
 	else if ( CMD_Equal( id,  szCmd, "skillsinfo" ) )
@@ -410,7 +410,7 @@ CMD_Handle( id, szCmd[] )
 
 	}
 	
-	return PLUGIN_HANDLED;
+	return;
 }
 
 // Function will check if the first string is equal to the second (checks for NAME or /NAME)

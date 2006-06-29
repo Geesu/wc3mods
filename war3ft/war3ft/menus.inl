@@ -102,7 +102,7 @@ public _menu_Race_Options(id,key){
 		case 0:	WC3_ChangeRaceStart( id );
 		case 1:	WC3_ShowRaceInfo( id );
 		case 2:	menu_ResetXP(id)
-		case 3:	MOTD_Playerskills(id, 1)
+		case 3:	MOTD_PlayerSkills( id );
 		case 8: menu_War3menu(id)
 		default: return PLUGIN_HANDLED
 	}

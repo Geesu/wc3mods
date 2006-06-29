@@ -270,6 +270,68 @@ public WC3_Init()
 		p_unholy[0] = 50.0;
 		p_unholy[0] = 100.0;
 	}
+
+	// We need to determine the objective entities (if they exist)
+	new i, bool:bFound;
+	for ( i = 0; i <= get_global_int( GL_maxEntities ); i++ )
+	{
+		if ( !is_valid_ent( i ) )
+		{
+			continue;
+		}
+		
+		// More than were necessary was found
+		if ( g_iTotalObjectiveEnts >= MAX_OBJECTIVES )
+		{
+			log_amx( "Woa we found more than 11" );
+			break;
+		}
+
+		bFound = false;
+
+		new szClassName[64];
+		entity_get_string( i, EV_SZ_classname, szClassName, 63 );
+		
+		// VIP Escape zone!!
+		if ( equal( szClassName, "func_vip_safetyzone") )	
+		{
+			g_iObjectiveEntType[g_iTotalObjectiveEnts] = OBJENT_VIP_ESCAPE;
+			bFound = true;
+		}
+
+		// Hostage zone
+		else if ( equal( szClassName, "hostage_entity") )
+		{
+			g_iObjectiveEntType[g_iTotalObjectiveEnts] = OBJENT_HOSTAGE;
+			bFound = true;
+		}
+
+		// Bomb zone
+		else if ( equal( szClassName, "func_bomb_target") )
+		{
+			g_iObjectiveEntType[g_iTotalObjectiveEnts] = OBJENT_BOMBSITE;
+			bFound = true;
+		}
+
+		// Hostage escape zone
+		else if ( equal( szClassName, "func_escapezone") )
+		{
+			g_iObjectiveEntType[g_iTotalObjectiveEnts] = OBJENT_HOSTAGE_ESCAPE;
+			bFound = true;
+		}
+
+		// We found an objective entity!!!
+		if ( bFound )
+		{
+			g_iObjectiveEnt[g_iTotalObjectiveEnts] = i;
+
+			get_brush_entity_origin( i, g_fObjectiveOrigin[g_iTotalObjectiveEnts] );
+
+			// Increment the total number
+			g_iTotalObjectiveEnts++;
+		}
+	}
+
 }
 
 public WC3_DetermineGame()
@@ -343,6 +405,10 @@ public WC3_ResetGame()
 		// Remove player's items
 		ITEM_RemoveSlot( id, ITEM_SLOT_ONE );
 		ITEM_RemoveSlot( id, ITEM_SLOT_TWO );
+		
+		// Reset item info
+		g_bPlayerBoughtAnkh[id]		= false;
+		g_bPlayerBoughtMole[id]		= false;
 
 		// Reset user's XP if we're not saving XP
 		if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
@@ -383,11 +449,22 @@ WC3_ChangeRaceStart( id )
 			// This function will also display the changerace menu
 			DB_GetAllXP( id );
 		}
+		
+		// We're not saving XP, so lets just change the user's race
+		else
+		{
+			WC3_ChangeRaceEnd( id );
+		}
+	}
+
+	else
+	{
+		client_print( id, print_center, "Please join a team before selecting a race!" );
 	}
 }
 
 // Function will show the "select a race" menu to the user
-WC3_ChangeRaceEnd( id, iRaceXP[MAX_RACES] )
+WC3_ChangeRaceEnd( id, iRaceXP[MAX_RACES] = {0} )
 {
 
 	// We don't want to replace the player's current XP with whats in the database now do we ?
@@ -672,7 +749,7 @@ WC3_IsImmunePlayerNear( id, vOrigin[3] )
 				get_user_origin( players[i], vTargetOrigin );
 				
 				// Then immunity is near
-				if ( get_distance( vOrigin, vTargetOrigin ) <= NECKLACE_RADIUS )
+				if ( get_distance( vOrigin, vTargetOrigin ) <= IMMUNITY_RADIUS )
 				{
 					return true;
 				}

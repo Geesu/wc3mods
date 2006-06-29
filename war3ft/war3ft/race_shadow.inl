@@ -265,7 +265,14 @@ bool:SH_CanPlaceWard( id )
 {
 	new vPlayerOrigin[3];
  	get_user_origin( id, vPlayerOrigin );
- 	
+
+	// Make sure the user isn't trying to place a ward near a hostage
+	if ( SHARED_NearObjective( vPlayerOrigin ) == OBJENT_HOSTAGE )
+	{
+		return false;
+	}
+
+	// Make sure the user isn't trying to place a ward near the bomb
  	new Float:vEntOrigin[3];
  	new vEntityOrigin[3];
  	
@@ -281,22 +288,11 @@ bool:SH_CanPlaceWard( id )
     	vEntityOrigin[2] = floatround( vEntOrigin[2] );
     	
     	if ( get_distance( vPlayerOrigin, vEntityOrigin ) < 250 )
+		{
     		return false;
+		}
 	}
 	
-	iEnt = -1;
-	
-	while( ( iEnt = find_ent_by_class( iEnt, "hostage_entity" ) ) > 0 )
-	{
-    	entity_get_vector( iEnt, EV_VEC_origin, vEntOrigin )
-    
-    	vEntityOrigin[0] = floatround( vEntOrigin[0] );
-    	vEntityOrigin[1] = floatround( vEntOrigin[1] );
-    	vEntityOrigin[2] = floatround( vEntOrigin[2] );
-    	
-    	if ( get_distance( vPlayerOrigin, vEntityOrigin ) < 200 )
-    		return false;
-	}	 	
 	return true;
 }
 

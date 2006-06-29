@@ -237,3 +237,20 @@ SM_VerifyRace( id, race_id )
 
 	return false;
 }
+
+
+// This function will return the level of a user's skill
+SM_GetSkillLevel( id, skill_id )
+{
+	new i;
+
+	for ( i = 0; i < 5; i++ )
+	{
+		if ( g_PlayerSkills[id][i] == skill_id )
+		{
+			return g_PlayerSkillLevel[id][i];
+		}
+	}
+
+	return -1;
+}

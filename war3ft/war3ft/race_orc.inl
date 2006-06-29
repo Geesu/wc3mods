@@ -153,16 +153,16 @@ OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 
 		if ( random_float( 0.0, 1.0 ) <= CRITICAL_STRIKE_CHANCE )
 		{
-			new iTempDamage = floatround( float( iDamage ) * p_data[iAttacker][P_SKILL1] );
+			new iBonusDamage = floatround( float( iDamage ) * p_critical[p_data[iAttacker][P_SKILL1]-1] );
 			
 			// Damage our victim
-			WC3_Damage( iVictim, iAttacker, iTempDamage, iWeapon, iHitPlace );
+			WC3_Damage( iVictim, iAttacker, iBonusDamage, iWeapon, iHitPlace );
 			
 			// Make the user glow
-			SHARED_Glow( iVictim, iTempDamage, 0, 0, 0 );
+			SHARED_Glow( iVictim, iBonusDamage, 0, 0, 0 );
 			
 			// Lets make a screenfade
-			Create_ScreenFade(iVictim, (1<<10), (1<<10), (1<<12), 255, 0, 0, g_GlowLevel[iVictim][0] );
+			Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 255, 0, 0, g_GlowLevel[iVictim][0] );
 		}
 	}
 
@@ -181,20 +181,20 @@ OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 		
 				new iMaxHealth = get_user_maxhealth( iVictim );
 
-				new iTempDamage = floatround( iDamage * p_grenade[p_data[iAttacker][P_SKILL2]-1] );
+				new iBonusDamage = floatround( float( iDamage ) * p_grenade[p_data[iAttacker][P_SKILL2]-1] );
 				
 				// We don't want to do more damage than the user's maximum health
-				if ( iTempDamage + iDamage >= iMaxHealth )
+				if ( iBonusDamage + iDamage >= iMaxHealth )
 				{
-					iTempDamage = iMaxHealth - ( iDamage + 1 );
+					iBonusDamage = iMaxHealth - ( iDamage + 1 );
 				}
 				
 				// Damage the user!
-				WC3_Damage( iVictim, iAttacker, iTempDamage, iWeapon, iHitPlace );
+				WC3_Damage( iVictim, iAttacker, iBonusDamage, iWeapon, iHitPlace );
 
 
 				// Make the user glow
-				SHARED_Glow( iVictim, iTempDamage, 0, 0, 0 );
+				SHARED_Glow( iVictim, iBonusDamage, 0, 0, 0 );
 
 				// Lets make a screenfade
 				Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 255, 0, 0, g_GlowLevel[iVictim][0] );

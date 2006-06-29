@@ -291,7 +291,8 @@ public _SHARED_Spawn( id )
 
 		return;
 	}
-
+	
+	// Reset items when the user spawns!
 	g_iShopMenuItems[id][ITEM_SLOT_ONE]	= ITEM_NONE;
 	g_iShopMenuItems[id][ITEM_SLOT_TWO] = ITEM_NONE;
 	
@@ -349,9 +350,7 @@ public _SHARED_Spawn_Final( id )
 	return;
 }
 
-/*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
-*	Reincarnation for Day of Defeat
-´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
+// Reincarnation for Day of Defeat
 public SHARED_DOD_Reincarnation( id )
 {
 
@@ -465,9 +464,7 @@ public _SHARED_DOD_Reincarnation_Loc( id )
 	return;
 }
 
-/*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
-*	Reincarnation for Counter-Strike and Condition Zero
-´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
+// Reincarnation for Counter-Strike and Condition Zero
 public SHARED_CS_Reincarnation( id )
 {
 
@@ -573,13 +570,13 @@ public _SHARED_CS_GiveWeapons(id)
 
 	if ( p_data_b[id][PB_SHIELD] )
 	{
-		give_item(id, "weapon_shield");
+		give_item( id, "weapon_shield" );
 	}
 
 	// Give the user a bomb
 	if ( bGiveBomb )
 	{
-		give_item(id, "weapon_c4");
+		give_item( id, "weapon_c4" );
 	}
 	
 	new iWeapID = 0, i = 0;
@@ -1158,6 +1155,9 @@ public _SHARED_Mole( parm[2] )
 		
 		// User is a mole
 		p_data_b[id][PB_MOLE] = true;
+
+		// Give the user a buyzone!
+		SHARED_CreateBuyZone( id );
 	}
 
 	// No spawn found
@@ -1308,4 +1308,66 @@ SHARED_GetMaxArmor( id )
 	id--;	// Need this or a dumb compiler warning :/
 
 	return 100;
+}
+
+// Returns if an origin is near an objective (returns which objective)
+SHARED_NearObjective( vOrigin[3] )
+{
+
+	new i, Float:fOrigin[3];
+	
+	// Convert vector to float
+	IVecFVec( vOrigin, fOrigin );
+
+	// Check the distances
+	for ( i = 0; i < g_iTotalObjectiveEnts; i++ )
+	{
+		new Float:fDistance = vector_distance( fOrigin, g_fObjectiveOrigin[i] );
+
+		if ( fDistance < 200.0 )
+		{
+			return g_iObjectiveEntType[i];
+		}
+	}
+
+	return -1;
+}
+
+// This will create a buyzone on a target and remove it when buytime is complete
+SHARED_CreateBuyZone( id )  
+{       
+	new iEnt = create_entity( "func_buyzone" );  
+
+	new Float:vPlayerOrigin[3];  
+	entity_get_vector( id, EV_VEC_origin, vPlayerOrigin );  
+	entity_set_vector( iEnt, EV_VEC_origin, vPlayerOrigin );  
+
+	DispatchSpawn( iEnt );  
+
+
+	new Float:fDuration = get_pcvar_float( CVAR_mp_buytime );  
+
+	set_task( fDuration, "_SHARED_RemoveBuyZone", TASK_REMOVEBUYZONE + id );  
+
+	// Display to target they can buy
+	client_print( id, print_center, "Quick buy some items!" );
+
+	return;       
+}  
+
+// This will remove the buyzone if it exists
+public _SHARED_RemoveBuyZone( iEnt )  
+{
+	if ( iEnt >= TASK_REMOVEBUYZONE )
+	{
+		iEnt -= TASK_REMOVEBUYZONE;
+	}
+
+	// Make sure we're removing a valid entity!
+	if ( is_valid_ent( iEnt ) )
+	{
+		remove_entity( iEnt );  
+	}
+
+	return;  
 }

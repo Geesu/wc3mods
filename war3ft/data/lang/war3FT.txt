@@ -252,8 +252,11 @@ EVERYONE = Everyone
 WORD_SKILLS = Skills
 RACE_INFORMATION = Race Information
 WAS_KILLED_BY = %s was killed by %s's %s
-THIS_MOD_WAS_DEVELOPED = This mod was developed by Geesu (Pimp Daddy), visit wc3mods.net (forums) for more details
-CLICK_HERE_FOR_LATEST = Click <a href="http://www.war3ft.com">here</a> for the latest updates to Warcraft 3 Frozen Throne
+
+MOTD_DEVELOPED_BY = Warcraft 3 Frozen Throne was developed by Geesu (also known as Pimp Daddy and OoTOAoO)
+MOTD_CLICK_FOR_LATEST = Click <a href="http://www.war3ft.com">here</a> for the latest information and updates
+MOTD_MORE_INFO = Click <a href="http://war3ft.com/online/war3info.php?game=%s">here</a> for more information regarding the races
+
 ICONS_ARE_DISABLED = Race Icons are disabled
 INCORRECT_NUM_RACES = ERROR, INCORRECT NUMBER OF RACES ARE SELECTED
 MENU_BUY_ITEM = \yShopmenu 1\R$  Cost^n^n
@@ -269,7 +272,6 @@ MENU_GIVE_PLAYERS_XP = \yGive Players XP
 MENU_TEAM_XP = \yTeam XP Menu
 MENU_RESET_XP = \yAre you sure you want to Reset your XP to 0?
 MENU_REPLACE_ITEM = \yWhich item would you like to replace?
-CLICK_HERE = Click <a href="http://wc3mods.net/war3ft/online/war3info.php?game=%d">here</a> for more information regarding the new races
 WAR3HELP_TITLE = Warcraft 3 Frozen Throne Help
 
 WAR3HELP :
