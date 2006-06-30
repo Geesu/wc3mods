@@ -8,6 +8,7 @@ v3.0
  - Addition: (DOD) Chameleon now works!
  - Addition: (DOD) Mole's will change their model
  - Addition: Users will be given god mode for 1 second after they respawn
+ - Addition: Plugin will now auto-load even if modules aren't enabled, thanks BAIL!
  - Bug Fix: cl_minmodels task was not repeating
  - Change: Mole's can now buy items when they have moled!!
  - Change: Helm of Excellence price increase to 3000
@@ -35,6 +36,7 @@ v3.0
  - Change: You will no longer lose your ankh/scroll of respawning if someone respawns you by Phoenix or warden's ultimate
  - Change: Bash now holds for 0.7 seconds instead of 1.0
  - Change: Humans can no longer teleport into the VIP Escape zone
+ - Change: A recompile is no longer required for a DOD/CS/CZ plugin
  - Removed: FT_impale_intensity cvar (edit this constant at the top of skills.inl)
  - Removed: FT_blink_radius cvar (replaced with NECKLACE_RADIUS define)
  - Removed: FT_healing_range cvar (defined at top of skills.inl)

@@ -42,6 +42,8 @@ new const WC3DATE[] =		__DATE__
 #pragma reqlib		fun
 #pragma reqlib		fakemeta
 #pragma reqlib		nvault
+#pragma reqlib		cstrike
+#pragma reqlib		dodfun
 
 #include <amxmodx>
 #include <amxmisc>
@@ -49,29 +51,30 @@ new const WC3DATE[] =		__DATE__
 #include <fun>
 #include <fakemeta>
 #include <nvault>
+#include <cstrike>
+#include <dodfun>
+#include <dodx>
 
 #define AMXMODX_NOAUTOLOAD
 #include <dbi>
 #include <sqlx>
-#include <cstrike>
-#include <dodfun>
-#include <dodx>
 
 // Compiling Options
 #define ADVANCED_STATS			0				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define SHOW_SPECTATE_INFO		1				// Show spectating information on users
 
-// Header files that contain function declarations
-#include "war3ft/items.h"
-#include "war3ft/dod_h.inl"
+// Header files that contain function declarations and variables
+#include "war3ft/constants.inl"
+#include "war3ft/db/db_common.h"
 #include "war3ft/db/db_mysqlx.h"
 #include "war3ft/db/db_sqlite.h"
 #include "war3ft/db/db_nvault.h"
+#include "war3ft/items.h"
+#include "war3ft/dod_h.inl"
 #include "war3ft/XP.h"
 #include "war3ft/war3ft.h"
 
 // Source Code
-#include "war3ft/constants.inl"
 #include "war3ft/cvar.inl"
 
 #include "war3ft/race_undead.inl"           // Undead Scourge   - 1
@@ -536,35 +539,41 @@ public client_PreThink( id )
 	return;
 }
 
-// This functionality allows us to no longer requires a DBI module to be loaded
 public plugin_natives()
 {
-	set_module_filter("module_filter");
-	set_native_filter("native_filter");
+	set_module_filter( "module_filter" );
+	set_native_filter( "native_filter" );
 }
 
 public module_filter( const module[] )
 {
 	WC3_DetermineGame();
 
-	// Lets do some checks so we don't print a message when we don't need to!
-	if ( g_MOD == GAME_DOD )
+	// We don't need the cstrike module when we're DOD
+	if ( g_MOD == GAME_DOD && equal( module, "cstrike" ) )
 	{
-		if ( equal( module, "cstrike" ) )
-		{
-			return PLUGIN_HANDLED;
-		}
+		return PLUGIN_HANDLED;
 	}
 
-	else if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	// And we don't need any dod modules when we're in CS/CZ!
+	else if ( ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO ) && equal( module, "dodfun" ) )
 	{
-		if ( equal( module, "dodfun" ) )
-		{
-			return PLUGIN_HANDLED;
-		}
+		return PLUGIN_HANDLED;
 	}
 
-	log_amx( "Please enable the '%s' module in your modules.ini file", module );
+	// We don't need to display a message, we'll display it later if we need to (when the DB is set up if XP Saving is on)
+	else if ( equal( module, "dbi" ) || equal( module, "sqlx" ) )
+	{
+		return PLUGIN_HANDLED;
+	}
+
+	// Dammit plugin can't load now :/ - technically we should never get here unless the module doesn't exist in the modules folder
+	else
+	{
+		log_amx( "Please enable the '%s' module in your modules.ini file", module );
+
+		return PLUGIN_CONTINUE;
+	}
 
 	return PLUGIN_HANDLED;
 }

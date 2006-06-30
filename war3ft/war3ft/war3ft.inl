@@ -37,7 +37,7 @@ public WAR3_precache()
 	copy( SOUND_CONCOCTION_CAST	, 63, "warcraft3/PossessionMissileLaunch1.wav"		);	// Unstable Concoction Cast
 	copy( SOUND_CONCOCTION_HIT	, 63, "warcraft3/PossessionMissileHit1.wav"			);	// Unstable Concoction Hit
 	copy( SOUND_HEX				, 63, "warcraft3/PolymorphDone.wav"					);	// Hex
-	copy( SOUND_IMMOLATE		, 63, "warcraft3/immolate.wav"						);	// Immolate
+	copy( SOUND_IMMOLATE		, 63, "warcraft3/ImmolationDecay1.wav"				);	// Immolate
 	copy( SOUND_IMMOLATE_BURNING, 63, "ambience/flameburst1.wav"				    );	// Immolate Burning
 
 	copy( SOUND_REINCARNATION	, 63, "warcraft3/soundpack/reincarnation.wav"		);	// Weapon Reincarnation/Ankh
@@ -85,11 +85,9 @@ public WAR3_precache()
 	g_sFire				= precache_model( "sprites/explode1.spr"			);
 	g_sBurning			= precache_model( "sprites/xfire.spr"				);
 	g_sImmolate			= precache_model( "sprites/warcraft3/fireball.spr"	);
-
 	g_sShadow			= precache_model( "sprites/animglow01.spr"			);
 	g_sBeetle			= precache_model( "sprites/agrunt1.spr"				);
 	g_siTrail			= precache_model( "sprites/smoke.spr"				);
-	g_sSnow				= precache_model( "sprites/snow.spr"				);
 	g_sFlare			= precache_model( "sprites/blueflare2.spr"			);
 	g_sWave				= precache_model( "sprites/gwave1.spr"				);
 
@@ -111,7 +109,8 @@ public WAR3_precache()
 		precache_model( "models/player/guerilla/guerilla.mdl"		);
 		precache_model( "models/player/terror/terror.mdl"			);
 
-		g_sSmoke = precache_model( "sprites/steam1.spr"				);
+		g_sSmoke	= precache_model( "sprites/steam1.spr"			);
+		g_sSnow		= precache_model( "sprites/snow.spr"			);
 	}
 	else if ( g_MOD == GAME_DOD )
 	{
@@ -121,6 +120,7 @@ public WAR3_precache()
 		precache_model( "models/player/us-inf/us-inf.mdl"			);
 		precache_model( "models/player/us-para/us-para.mdl"			);
 
+		g_sSnow		= precache_model( "sprites/warcraft3/snow.spr"	);
 	}
 
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )

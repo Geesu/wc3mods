@@ -5,10 +5,11 @@
 public DB_DetermineType()
 {
 	// If the DBI Module isn't loaded then we can't use SQL for saving XP
-	if ( ( !is_module_loaded( "dbi" ) && !is_module_loaded( "mysqlx" ) ) && get_pcvar_num( CVAR_wc3_save_xp_sql ) )
+	if ( ( !LibraryExists( "dbi", LibType_Class ) && !LibraryExists( "sqlx", LibType_Class ) ) && get_pcvar_num( CVAR_wc3_save_xp_sql ) )
 	{
 
-		log_amx( "Unable to saving using DBI, please enable a DBI module (SQLite or MySQL X) to save XP using DBI" );
+		log_amx( "[WARNING] Unable to saving using SQLite, please enable a sqlite_amxx to save XP using DBI" );
+		log_amx( "[WARNING] Saving will be done using NVault" );
 
 		set_pcvar_num( CVAR_wc3_save_xp_sql, 0 );
 	}
@@ -19,14 +20,14 @@ public DB_DetermineType()
 	{
 		
 		// Using MySQL X
-		if ( is_module_loaded( "mysqlx" ) )
+		if ( LibraryExists( "sqlx", LibType_Class ) )
 		{
 			g_DBType = DB_MYSQLX;
 			copy( g_szDBType, 15, "MySQLX" );
 		}
 
 		// Using SQLite (lets hope if we get here)
-		else if ( is_module_loaded( "dbi" ) )
+		else if ( LibraryExists( "dbi", LibType_Class ) )
 		{
 
 			// Get the DB Type
@@ -43,7 +44,7 @@ public DB_DetermineType()
 			// Using an unsupported DB Type - lets default to vault
 			else
 			{
-				log_amx( "Unsupported database type loaded: %s, the supported databases are MySQL X or SQLite.", szDBIType );
+				log_amx( "Unsupported database type loaded: %s, the supported databases are MySQL X or SQLite", szDBIType );
 			}
 		}
 	}
@@ -53,7 +54,7 @@ public DB_DetermineType()
 	{
 
 		// We can use the nvault if it's loaded
-		if ( is_module_loaded( "nvault" ) )
+		if ( LibraryExists( "nvault" , LibType_Library ) )
 		{
 			g_DBType = DB_VAULT;
 		}

@@ -272,16 +272,6 @@
 
 #define MAX_LEVELS					10
 
-// Type of SQlite database synchronization
-#define SQLITE_SYNC_OFF				0
-#define SQLITE_SYNC_NORMAL			1
-#define SQLITE_SYNC_FULL			2
-
-// Based on what we're saving by (FT_saveby)
-#define DB_SAVEBY_STEAMID			0
-#define DB_SAVEBY_IP				1
-#define DB_SAVEBY_NAME				2
-
 // ***************************************************************************
 // The following section contains defines for the player_data array, it pretty much
 // stores everything.  
@@ -410,11 +400,6 @@
 // Enemies who have immunity w/in this radius will cause blink to fail 
 #define IMMUNITY_RADIUS		500
 
-// Used with g_DBType
-#define DB_VAULT			1
-#define DB_MYSQLX			2
-#define DB_SQLITE			3
-
 #define SPAWN_DELAY			0.3
 
 // ***************************************************************************
@@ -429,19 +414,6 @@ new bool:g_bGivenLevel10[33][MAX_RACES+1];	// Stores if we gave them level 10
 
 new g_GlowLevel[33][4];
 
-// Database variables
-
-new g_Vault[MAX_RACES+1];
-new g_szDBType[16];
-new g_szDBKey[32];
-
-// MYSQL X
-new Handle:g_DBTuple;					// Used with MySQL X
-new Handle:g_DBConn;
-
-// Generic Database
-new Sql:g_DB;
-new g_DBType				= -1;
 
 /* Variables for precaching sounds */
 
@@ -575,8 +547,6 @@ new g_sRace[10]
 new g_sLevel[11]
 new g_sSmoke
 new g_sImmolate;
-
-new g_DBTableName[64]
 
 new g_MODclient[15] = "* [WAR3FT]"
 
