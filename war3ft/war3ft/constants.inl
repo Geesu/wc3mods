@@ -605,6 +605,10 @@ new g_iObjectiveEntType[MAX_OBJECTIVES];
 new Float:g_fObjectiveOrigin[MAX_OBJECTIVES][3]
 new g_iTotalObjectiveEnts = 0;
 
+
+new bool:g_bOrcNadesDisabled = false;
+new bool:g_bGlovesDisabled = false;
+
 // ***************************
 // Skill Information
 // ***************************

@@ -54,7 +54,6 @@ v3.0
 //add buyzones for moles
 //playerskills through HLSW
 //human ult = getting stuck
-//orc nade map config file
 //verify all skills given with selectskill
 //allow user to changerace when in spec?
 //g_buyTime - buytime check for shopmenu??

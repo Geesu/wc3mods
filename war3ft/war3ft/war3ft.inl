@@ -332,6 +332,10 @@ public WC3_Init()
 		}
 	}
 
+	// Lets find out if we should disable orc nades or gloves of warmth
+	g_bOrcNadesDisabled = WC3_MapDisableCheck( "skill_orc_nade.cfg" );
+	g_bGlovesDisabled	= WC3_MapDisableCheck( "item_gloves.cfg" );
+
 }
 
 public WC3_DetermineGame()
@@ -1329,4 +1333,32 @@ public WC3_KillUser( iVictim, iKiller, iWeapon )
 		// This isn't triggered for DOD, so lets call it
 		on_Death( iVictim, iKiller, iWeapon, 0 );
 	}
+}
+
+// Funtion will check a file to see if the mapname exists
+bool:WC3_MapDisableCheck( file_name[] )
+{
+
+	// Format the Orc Nade Disable File
+	new szOrcNadeFile[128];
+	get_configsdir( szOrcNadeFile, 127 );
+	formatex( szOrcNadeFile, 63, "%s/war3ft/disable/%s", szOrcNadeFile, file_name );
+
+	new iLineNum, szData[64], iTextLen, iLen;
+	new szMapName[64], szRestrictName[64];
+	get_mapname( szMapName, 63 );
+
+	while ( read_file( szOrcNadeFile, iLineNum, szData, 63, iTextLen ) )
+	{
+		iLen = copyc( szRestrictName, 63, szData, '*' );
+
+		if ( equali( szMapName, szRestrictName, iLen ) )
+		{
+			return true;
+		}
+
+		iLineNum++;
+	}
+
+	return false;
 }

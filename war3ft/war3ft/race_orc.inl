@@ -213,5 +213,11 @@ bool:OR_CriticalGrenadeAllowed( id )
 		return false;
 	}
 
+	// Check to see if we are on a disabled map
+	if ( g_bOrcNadesDisabled )
+	{
+		return false;
+	}
+
 	return true;
 }

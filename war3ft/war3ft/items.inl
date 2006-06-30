@@ -56,6 +56,14 @@ public ITEM_Buy( id, iItem )
 		return;
 	}
 
+	// User has purchased gloves when they're disabled on this map
+	else if ( iItem == ITEM_GLOVES && g_bGlovesDisabled )
+	{
+		client_print( id, print_chat, "Gloves are disabled on this map!" );
+
+		return;
+	}
+
 	if ( iItem == ITEM_TOME )
 	{
 		ITEM_Tome( id );
