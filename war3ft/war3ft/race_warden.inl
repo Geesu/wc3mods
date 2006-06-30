@@ -147,12 +147,12 @@ WA_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 			}
 		}
 
-	#if ADVANCED_STATS
-		else{
-			new WEAPON = CSW_SHADOW - CSW_WAR3_MIN
-			iStatsShots[iAttacker][WEAPON]++
+		else if ( get_pcvar_num( CVAR_wc3_psychostats ) )
+		{
+			new WEAPON = CSW_SHADOW - CSW_WAR3_MIN;
+
+			iStatsShots[iAttacker][WEAPON]++;
 		}
-	#endif
 	}
 }
 

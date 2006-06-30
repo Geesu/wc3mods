@@ -52,10 +52,12 @@ public _UD_SuicideExplode( parm[5] )
 {
 	new id = parm[0];
 
-#if ADVANCED_STATS
-	new WEAPON = CSW_SUICIDE - CSW_WAR3_MIN;
-	iStatsShots[id][WEAPON]++;
-#endif
+	if ( get_pcvar_num( CVAR_wc3_psychostats ) )
+	{
+		new WEAPON = CSW_SUICIDE - CSW_WAR3_MIN;
+
+		iStatsShots[id][WEAPON]++;
+	}
 
 	new vOrigin[3], vPosition[3];
 	vOrigin[0] = parm[2];

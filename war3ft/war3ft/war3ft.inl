@@ -1055,33 +1055,53 @@ public WC3_Damage( iVictim, iAttacker, iDamage, iWeapon, iBodyPart )
 		}
 	}
 
-#if ADVANCED_STATS
-	if ( CSW_WAR3_MIN <= weapon <= CSW_WAR3_MAX ) {
-		new WEAPON = weapon-CSW_WAR3_MIN
+	// Psychostats Statistics is turned on!
+	if ( get_pcvar_num( CVAR_wc3_psychostats ) )
+	{
+		if ( CSW_WAR3_MIN <= iWeapon <= CSW_WAR3_MAX )
+		{
+			new iSkillWeapon = iWeapon - CSW_WAR3_MIN;
+			
+			// Make the "generic" the stomach
+			if ( iBodyPart == -1 )
+			{
+				iBodyPart = HIT_STOMACH;
+			}
 		
-		if ( iBodyPart == -1 )
-			iBodyPart = HIT_STOMACH
-	
-		if ( iBodyPart == HIT_HEAD )
-			iStatsHead[attacker][WEAPON]++
-		else if ( iBodyPart == HIT_CHEST )
-			iStatsChest[attacker][WEAPON]++
-		else if ( iBodyPart == HIT_STOMACH )
-			iStatsStomach[attacker][WEAPON]++
-		else if ( iBodyPart == HIT_LEFTARM )
-			iStatsLeftArm[attacker][WEAPON]++
-		else if ( iBodyPart == HIT_RIGHTARM )
-			iStatsRightArm[attacker][WEAPON]++
-		else if ( iBodyPart == HIT_LEFTLEG )
-			iStatsLeftLeg[attacker][WEAPON]++
-		else if ( iBodyPart == HIT_RIGHTLEG )
-			iStatsRightLeg[attacker][WEAPON]++
+			if ( iBodyPart == HIT_HEAD )
+			{
+				iStatsHead[iAttacker][iSkillWeapon]++;
+			}
+			else if ( iBodyPart == HIT_CHEST )
+			{
+				iStatsChest[iAttacker][iSkillWeapon]++;
+			}
+			else if ( iBodyPart == HIT_STOMACH )
+			{
+				iStatsStomach[iAttacker][iSkillWeapon]++;
+			}
+			else if ( iBodyPart == HIT_LEFTARM )
+			{
+				iStatsLeftArm[iAttacker][iSkillWeapon]++;
+			}
+			else if ( iBodyPart == HIT_RIGHTARM )
+			{
+				iStatsRightArm[iAttacker][iSkillWeapon]++;
+			}
+			else if ( iBodyPart == HIT_LEFTLEG )
+			{
+				iStatsLeftLeg[iAttacker][iSkillWeapon]++;
+			}
+			else if ( iBodyPart == HIT_RIGHTLEG )
+			{
+				iStatsRightLeg[iAttacker][iSkillWeapon]++;
+			}
 
-		iStatsHits[attacker][WEAPON]++
-		iStatsShots[attacker][WEAPON]++
-		iStatsDamage[attacker][WEAPON] += damage
+			iStatsHits[iAttacker][iSkillWeapon]++;
+			iStatsShots[iAttacker][iSkillWeapon]++;
+			iStatsDamage[iAttacker][iSkillWeapon] += iDamage;
+		}
 	}
-#endif
 
 	new iHealth = get_user_health( iVictim );
 	
@@ -1218,23 +1238,34 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 {
 
-#if ADVANCED_STATS
-	if ( CSW_WAR3_MIN <= weapon <= CSW_WAR3_MAX ) {
-		new WEAPON = weapon-CSW_WAR3_MIN
-		
-		if ( 0 > killer_id < 33 ){
-			if ( get_user_team(victim_id) == get_user_team(killer_id) )
-				iStatsTKS[killer_id][WEAPON]++
+	if ( get_pcvar_num( CVAR_wc3_psychostats ) )
+	{
 
-			if ( ( headshot || random_num(0,100) < 30 ) )
-				iStatsHS[killer_id][WEAPON]++
+		if ( CSW_WAR3_MIN <= iWeapon <= CSW_WAR3_MAX )
+		{
+			new iSkillWeapon = iWeapon - CSW_WAR3_MIN;
+			
+			if ( SHARED_ValidPlayer( iKiller ) )
+			{
 
-			iStatsKills[killer_id][WEAPON]++
+				// Team kill
+				if ( get_user_team( iVictim ) == get_user_team( iKiller ) )
+				{
+					iStatsTKS[iKiller][iSkillWeapon]++;
+				}
+
+				// Random chance so some skills that aren't headshots have a chance
+				if ( ( iHeadshot || random_num( 0, 100 ) < 30 ) )
+				{
+					iStatsHS[iKiller][iSkillWeapon]++;
+				}
+
+				iStatsKills[iKiller][iSkillWeapon]++;
+			}
+
+			iStatsDeaths[iKiller][iSkillWeapon]++;
 		}
-
-		iStatsDeaths[victim_id][WEAPON]++
 	}
-#endif
 
 	// Remove all ultimate icons since the user is going to be killed...
 	ULT_ClearIcons( iVictim );

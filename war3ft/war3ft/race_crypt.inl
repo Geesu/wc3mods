@@ -199,12 +199,12 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 			// Damage the user
 			WC3_Damage( iVictim, iAttacker, ORB_DAMAGE, CSW_ORB, iHitPlace );
 		}
-	#if ADVANCED_STATS
-		else{
-			new WEAPON = CSW_ORB - CSW_WAR3_MIN
-			iStatsShots[iAttacker][WEAPON]++
+		else if ( get_pcvar_num( CVAR_wc3_psychostats ) )
+		{
+			new WEAPON = CSW_ORB - CSW_WAR3_MIN;
+
+			iStatsShots[iAttacker][WEAPON]++;
 		}
-	#endif
 	}
 
 	// Carrion Beetle
@@ -229,12 +229,13 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 				WC3_Damage( iVictim, iAttacker, CARRIONBEETLE_DAMAGE, CSW_CARRION, iHitPlace );
 			}
 		}
-	#if ADVANCED_STATS
-		else{
-			new WEAPON = CSW_CARRION - CSW_WAR3_MIN
-			iStatsShots[iAttacker][WEAPON]++
+
+		else if ( get_pcvar_num( CVAR_wc3_psychostats ) )
+		{
+			new WEAPON = CSW_CARRION - CSW_WAR3_MIN;
+
+			iStatsShots[iAttacker][WEAPON]++;
 		}
-	#endif
 	}
 	
 	// Impale

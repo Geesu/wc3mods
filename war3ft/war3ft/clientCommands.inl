@@ -217,10 +217,14 @@ public cmd_Ultimate(id)
 	// CRYPT LORD - Locust Swarm
 	else if ( SM_VerifySkill( id, ULTIMATE_LOCUSTSWARM ) )
 	{
-		#if ADVANCED_STATS
-			new WEAPON = CSW_LOCUSTS - CSW_WAR3_MIN
-			iStatsShots[id][WEAPON]++
-		#endif
+
+		if ( get_pcvar_num( CVAR_wc3_psychostats ) )
+		{
+			new WEAPON = CSW_LOCUSTS - CSW_WAR3_MIN;
+
+			iStatsShots[id][WEAPON]++;
+		}
+
 		CL_ULT_LocustSwarm( id );
 	}
 

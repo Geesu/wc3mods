@@ -13,6 +13,7 @@ new CVAR_wc3_races;
 new CVAR_wc3_spec_position;
 new CVAR_wc3_grenade_protection;
 new CVAR_wc3_cheats;
+new CVAR_wc3_psychostats;
 
 // Icon CVARs
 new CVAR_wc3_race_icon;
@@ -105,6 +106,7 @@ public CVAR_Init()
 	CVAR_wc3_spec_position			= register_cvar( "wc3_spec_position"		, "0"							);
 	CVAR_wc3_grenade_protection		= register_cvar( "wc3_grenade_protection"	, "0"							);
 	CVAR_wc3_cheats					= register_cvar( "wc3_cheats"				, "0"		, FCVAR_SERVER		);
+	CVAR_wc3_psychostats			= register_cvar( "wc3_psychostats"			, "1"							);
 
 	// Icon CVARs
 

@@ -53,8 +53,6 @@ v3.0
 
 //finish re-writing how skills are handled
 //disable human tele for VIP if VIP escape zone check doesn't work well
-//add buyzones for moles
-//playerskills through HLSW
 //human ult = getting stuck
 //verify all skills given with selectskill
 //allow user to changerace when in spec?
@@ -67,10 +65,8 @@ v3.0
 //save icon info
 //remove all task_exists
 //fix hex playing after ur dead...
-//allow moles to buy weapons after they mole - research how to do this!!
 //bug: phoenix will try to respawn users when changing team
 //bug: strip_user_weapons will remove bomb + not give it back
-//ADVANCED_STATS
 //block knife = http://forums.alliedmods.net/showthread.php?t=29836
 //make sure files exist... otherwise don't load plugin
 

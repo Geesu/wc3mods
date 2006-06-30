@@ -455,12 +455,12 @@ SH_SkillsDefensive( iAttacker, iVictim )
 				}
 			}
 		}
-		#if ADVANCED_STATS
-		else
+
+		else if ( get_pcvar_num( CVAR_wc3_psychostats ) )
 		{
 			new WEAPON = CSW_CONCOCTION - CSW_WAR3_MIN;
+
 			iStatsShots[iVictim][WEAPON]++;
 		}
-		#endif
 	}
 }

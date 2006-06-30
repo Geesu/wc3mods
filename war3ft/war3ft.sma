@@ -60,7 +60,6 @@ new const WC3DATE[] =		__DATE__
 #include <sqlx>
 
 // Compiling Options
-#define ADVANCED_STATS			0				// Setting this to 1 will give detailed information with psychostats (hits, damage, hitplace, etc..) for war3 abilities
 #define SHOW_SPECTATE_INFO		1				// Show spectating information on users
 
 // Header files that contain function declarations and variables
@@ -394,76 +393,77 @@ public client_disconnect(id)
 		DB_SaveXP( id );
 	}
 
-#if ADVANCED_STATS
-	new szWeapon[64]
-
-	new szTeam[16], szName[32], szAuthid[32], weap;
-	new iUserid = get_user_userid( id );
-
-	if ( is_user_connected(id) )
+	if ( get_pcvar_num( CVAR_wc3_psychostats ) )
 	{
-		get_user_team( id, szTeam, 15 );
-	}
-	get_user_name( id, szName, 31 );
-	get_user_authid( id, szAuthid, 31 );
+		new szWeapon[64];
 
-	for ( weap = CSW_WAR3_MIN; weap <=CSW_WAR3_MAX; weap++ )
-	{
-		format(szWeapon, 63, "")
+		new szTeam[16], szName[32], szAuthid[32], iWeap;
+		new iUserid = get_user_userid( id );
 
-		switch( weap )
+		if ( is_user_connected(id) )
 		{
-			case CSW_LIGHTNING:     lang_GetSkillName( 3				, 4				, LANG_SERVER,	szWeapon,	63 );
-			case CSW_SUICIDE:		lang_GetSkillName( 1				, 4				, LANG_SERVER,	szWeapon,	63 );
-			case CSW_IMMOLATE:	    lang_GetSkillName( 5				, 4				, LANG_SERVER,	szWeapon,	63 );
-			case CSW_LOCUSTS:		lang_GetSkillName( 8				, 4				, LANG_SERVER,	szWeapon,	63 );
-			case CSW_SERPENTWARD:   lang_GetSkillName( 6				, 3				, LANG_SERVER,	szWeapon,	63 );
-			case CSW_SHADOW:		lang_GetSkillName( 7				, 3				, LANG_SERVER,	szWeapon,	63 );
-			case CSW_THORNS:		lang_GetSkillName( 4				, 2				, LANG_SERVER,	szWeapon,	63 );
-			case CSW_CARAPACE:		lang_GetSkillName( 8				, 2				, LANG_SERVER,	szWeapon,	63 );
-			case CSW_CARRION:		lang_GetSkillName( 8				, 3				, LANG_SERVER,	szWeapon,	63 );
-			case CSW_ORB:			lang_GetSkillName( RACE_CRYPT		, SKILL_HERO	, LANG_SERVER,	szWeapon,	63 );
-			case CSW_CONCOCTION:	lang_GetSkillName( RACE_SHADOW		, SKILL_HERO	, LANG_SERVER,	szWeapon,	63 );
+			get_user_team( id, szTeam, 15 );
 		}
-		
-		replace( szWeapon, 63, " ", "_" );
+		get_user_name( id, szName, 31 );
+		get_user_authid( id, szAuthid, 31 );
 
-		new WEAPON = weap - CSW_WAR3_MIN;
-		
-		if ( iStatsShots[id][WEAPON] || iStatsHits[id][WEAPON] || iStatsKills[id][WEAPON] ||  iStatsHS[id][WEAPON] || iStatsTKS[id][WEAPON] || iStatsDamage[id][WEAPON] || iStatsDeaths[id][WEAPON] || iStatsHead[id][WEAPON] || iStatsChest[id][WEAPON] || iStatsStomach[id][WEAPON] || iStatsLeftArm[id][WEAPON] || iStatsRightArm[id][WEAPON] || iStatsLeftLeg[id][WEAPON] || iStatsRightLeg[id][WEAPON] )
+		for ( iWeap = CSW_WAR3_MIN; iWeap <=CSW_WAR3_MAX; iWeap++ )
 		{
+			format( szWeapon, 63, "" );
 
-			// Counter-Strike/Condition Zero log format is different than the DOD
-			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+			switch( iWeap )
 			{
-				log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^")", szName, iUserid, szAuthid, szTeam, szWeapon, iStatsShots[id][WEAPON], iStatsHits[id][WEAPON], iStatsKills[id][WEAPON], iStatsHS[id][WEAPON], iStatsTKS[id][WEAPON], iStatsDamage[id][WEAPON], iStatsDeaths[id][WEAPON] );
-			}
-
-			// Day of Defeat log format
-			else if ( g_MOD == GAME_DOD )
-			{
-				log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^") (score ^"%d^")", szName, iUserid, szAuthid, szTeam, szWeapon, iStatsShots[id][WEAPON], iStatsHits[id][WEAPON], iStatsKills[id][WEAPON], iStatsHS[id][WEAPON], iStatsTKS[id][WEAPON], iStatsDamage[id][WEAPON], iStatsDeaths[id][WEAPON], 0 );
+				case CSW_LIGHTNING:     LANG_GetSkillName( ULTIMATE_CHAINLIGHTNING	, LANG_SERVER,	szWeapon	, 63 );
+				case CSW_SUICIDE:		LANG_GetSkillName( ULTIMATE_SUICIDE			, LANG_SERVER,	szWeapon	, 63 );
+				case CSW_IMMOLATE:	    LANG_GetSkillName( ULTIMATE_IMMOLATE		, LANG_SERVER,	szWeapon	, 63 );
+				case CSW_LOCUSTS:		LANG_GetSkillName( ULTIMATE_LOCUSTSWARM		, LANG_SERVER,	szWeapon	, 63 );
+				case CSW_SERPENTWARD:   LANG_GetSkillName( SKILL_SERPENTWARD		, LANG_SERVER,	szWeapon	, 63 );
+				case CSW_SHADOW:		LANG_GetSkillName( SKILL_SHADOWSTRIKE		, LANG_SERVER,	szWeapon	, 63 );
+				case CSW_THORNS:		LANG_GetSkillName( SKILL_THORNS				, LANG_SERVER,	szWeapon	, 63 );
+				case CSW_CARAPACE:		LANG_GetSkillName( SKILL_SPIKEDCARAPACE		, LANG_SERVER,	szWeapon	, 63 );
+				case CSW_CARRION:		LANG_GetSkillName( SKILL_CARRIONBEETLES		, LANG_SERVER,	szWeapon	, 63 );
+				case CSW_ORB:			LANG_GetSkillName( PASS_ORB					, LANG_SERVER,	szWeapon	, 63 );
+				case CSW_CONCOCTION:	LANG_GetSkillName( PASS_UNSTABLECONCOCTION	, LANG_SERVER,	szWeapon	, 63 );
 			}
 			
-			log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats2^" (weapon ^"%s^") (head ^"%d^") (chest ^"%d^") (stomach ^"%d^") (leftarm ^"%d^") (rightarm ^"%d^") (leftleg ^"%d^") (rightleg ^"%d^")", szName, iUserid, szAuthid, szTeam, szWeapon, iStatsHead[id][WEAPON], iStatsChest[id][WEAPON], iStatsStomach[id][WEAPON], iStatsLeftArm[id][WEAPON], iStatsRightArm[id][WEAPON], iStatsLeftLeg[id][WEAPON], iStatsRightLeg[id][WEAPON] );
-		
-			iStatsShots[id][WEAPON]		= 0;
-			iStatsHits[id][WEAPON]		= 0;
-			iStatsKills[id][WEAPON]		= 0;
-			iStatsHS[id][WEAPON]		= 0;
-			iStatsTKS[id][WEAPON]		= 0;
-			iStatsDamage[id][WEAPON]	= 0;
-			iStatsDeaths[id][WEAPON]	= 0;
-			iStatsHead[id][WEAPON]		= 0;
-			iStatsChest[id][WEAPON]		= 0;
-			iStatsStomach[id][WEAPON]	= 0;
-			iStatsLeftArm[id][WEAPON]	= 0;
-			iStatsRightArm[id][WEAPON]	= 0;
-			iStatsLeftLeg[id][WEAPON]	= 0;
-			iStatsRightLeg[id][WEAPON]	= 0;
+			replace( szWeapon, 63, " ", "_" );
+
+			new WEAPON = iWeap - CSW_WAR3_MIN;
+			
+			if ( iStatsShots[id][WEAPON] || iStatsHits[id][WEAPON] || iStatsKills[id][WEAPON] ||  iStatsHS[id][WEAPON] || iStatsTKS[id][WEAPON] || iStatsDamage[id][WEAPON] || iStatsDeaths[id][WEAPON] || iStatsHead[id][WEAPON] || iStatsChest[id][WEAPON] || iStatsStomach[id][WEAPON] || iStatsLeftArm[id][WEAPON] || iStatsRightArm[id][WEAPON] || iStatsLeftLeg[id][WEAPON] || iStatsRightLeg[id][WEAPON] )
+			{
+
+				// Counter-Strike/Condition Zero log format is different than the DOD
+				if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+				{
+					log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^")", szName, iUserid, szAuthid, szTeam, szWeapon, iStatsShots[id][WEAPON], iStatsHits[id][WEAPON], iStatsKills[id][WEAPON], iStatsHS[id][WEAPON], iStatsTKS[id][WEAPON], iStatsDamage[id][WEAPON], iStatsDeaths[id][WEAPON] );
+				}
+
+				// Day of Defeat log format
+				else if ( g_MOD == GAME_DOD )
+				{
+					log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^") (score ^"%d^")", szName, iUserid, szAuthid, szTeam, szWeapon, iStatsShots[id][WEAPON], iStatsHits[id][WEAPON], iStatsKills[id][WEAPON], iStatsHS[id][WEAPON], iStatsTKS[id][WEAPON], iStatsDamage[id][WEAPON], iStatsDeaths[id][WEAPON], 0 );
+				}
+				
+				log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats2^" (weapon ^"%s^") (head ^"%d^") (chest ^"%d^") (stomach ^"%d^") (leftarm ^"%d^") (rightarm ^"%d^") (leftleg ^"%d^") (rightleg ^"%d^")", szName, iUserid, szAuthid, szTeam, szWeapon, iStatsHead[id][WEAPON], iStatsChest[id][WEAPON], iStatsStomach[id][WEAPON], iStatsLeftArm[id][WEAPON], iStatsRightArm[id][WEAPON], iStatsLeftLeg[id][WEAPON], iStatsRightLeg[id][WEAPON] );
+			
+				iStatsShots[id][WEAPON]		= 0;
+				iStatsHits[id][WEAPON]		= 0;
+				iStatsKills[id][WEAPON]		= 0;
+				iStatsHS[id][WEAPON]		= 0;
+				iStatsTKS[id][WEAPON]		= 0;
+				iStatsDamage[id][WEAPON]	= 0;
+				iStatsDeaths[id][WEAPON]	= 0;
+				iStatsHead[id][WEAPON]		= 0;
+				iStatsChest[id][WEAPON]		= 0;
+				iStatsStomach[id][WEAPON]	= 0;
+				iStatsLeftArm[id][WEAPON]	= 0;
+				iStatsRightArm[id][WEAPON]	= 0;
+				iStatsLeftLeg[id][WEAPON]	= 0;
+				iStatsRightLeg[id][WEAPON]	= 0;
+			}
 		}
 	}
-#endif
 }
 
 

@@ -451,23 +451,21 @@ new g_ChamSkills[5];
 new p_data[33][P_LAST]					// Contains player data
 new bool:p_data_b[33][PB_LAST]			// Contains player data of type boolean
 
-
-#if ADVANCED_STATS
-	new iStatsHead[33][MAX_CSW_S]
-	new iStatsChest[33][MAX_CSW_S]
-	new iStatsStomach[33][MAX_CSW_S]
-	new iStatsLeftArm[33][MAX_CSW_S]
-	new iStatsRightArm[33][MAX_CSW_S]
-	new iStatsLeftLeg[33][MAX_CSW_S]
-	new iStatsRightLeg[33][MAX_CSW_S]
-	new iStatsKills[33][MAX_CSW_S]
-	new iStatsDeaths[33][MAX_CSW_S]
-	new iStatsHS[33][MAX_CSW_S]
-	new iStatsTKS[33][MAX_CSW_S]
-	new iStatsShots[33][MAX_CSW_S]
-	new iStatsHits[33][MAX_CSW_S]
-	new iStatsDamage[33][MAX_CSW_S]
-#endif
+// Used for advanced statistics
+new iStatsHead[33][MAX_CSW_S]
+new iStatsChest[33][MAX_CSW_S]
+new iStatsStomach[33][MAX_CSW_S]
+new iStatsLeftArm[33][MAX_CSW_S]
+new iStatsRightArm[33][MAX_CSW_S]
+new iStatsLeftLeg[33][MAX_CSW_S]
+new iStatsRightLeg[33][MAX_CSW_S]
+new iStatsKills[33][MAX_CSW_S]
+new iStatsDeaths[33][MAX_CSW_S]
+new iStatsHS[33][MAX_CSW_S]
+new iStatsTKS[33][MAX_CSW_S]
+new iStatsShots[33][MAX_CSW_S]
+new iStatsHits[33][MAX_CSW_S]
+new iStatsDamage[33][MAX_CSW_S]
 
 new MAXPLAYERS
 
