@@ -129,7 +129,7 @@ public OR_ULT_ChainEffect( iCaster, iTarget, iLineWidth, iDamage, iBodyPart )
 	WC3_Damage( iTarget, iCaster, iDamage, CSW_LIGHTNING, iBodyPart );
 	
 	// Create the lightning
-	Create_TE_BEAMENTS( iCaster, iTarget, g_sLightning, 0, 15, 10, iLineWidth, 10, 255, 255, 255, 255, 0 );
+	Create_TE_BEAMENTS( iCaster, iTarget, g_iSprites[SPR_LIGHTNING], 0, 15, 10, iLineWidth, 10, 255, 255, 255, 255, 0 );
 	
 	// Get the target's origin
 	new vOrigin[3]
@@ -139,7 +139,7 @@ public OR_ULT_ChainEffect( iCaster, iTarget, iLineWidth, iDamage, iBodyPart )
 	Create_TE_ELIGHT( iTarget, vOrigin, 100, 255, 255, 255, 10, 0 );
 
 	// Play the lightning sound
-	emit_sound( iCaster, CHAN_STATIC, SOUND_LIGHTNING, 1.0, ATTN_NORM, 0, PITCH_NORM );
+	emit_sound( iCaster, CHAN_STATIC, g_szSounds[SOUND_LIGHTNING], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 	return;
 }

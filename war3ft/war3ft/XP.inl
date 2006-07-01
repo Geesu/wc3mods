@@ -396,7 +396,7 @@ XP_Check( id, bShowGained = true )
 	{
 		WC3_StatusText( id, TXT_TOP_CENTER, "%L", id, "YOU_GAINED_A_LEVEL" );
 
-		emit_sound( id, CHAN_STATIC, SOUND_LEVELUP, 1.0, ATTN_NORM, 0, PITCH_NORM );
+		emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_LEVELUP], 1.0, ATTN_NORM, 0, PITCH_NORM );
 	}
 
 	// We might need to lower the skills the user has ( can occur if you load XP info from a database and the XP multiplier has changed)
@@ -602,6 +602,8 @@ public XP_SaveAll()
 		set_task( time, "DB_SaveXP", TASK_SAVE + players[i] );
 
 		time += 0.1;
+
+		server_print( "[DEBUG] Task set for %0.0f for %d", time, players[i] );
 	}
 
 	return;

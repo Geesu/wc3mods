@@ -391,7 +391,12 @@ public MENU_SelectRace( id, iRaceXP[MAX_RACES] )
 	}
 
 	pos += formatex( szMenu[pos], 512-pos, "%L", id, "MENU_SELECT_RACE" );
-	pos += formatex( szMenu[pos], 512-pos, "%L", id, "SELECT_RACE_TITLE" );
+
+	// Then add the experience column
+	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
+	{
+		pos += formatex( szMenu[pos], 512-pos, "\R%L^n^n", id, "MENU_WORD_EXPERIENCE" );
+	}
 
 	// Build the changerace menu (for every race)
 	for ( i = 0; i < get_pcvar_num( CVAR_wc3_races ); i++ )

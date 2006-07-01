@@ -15,82 +15,108 @@ public WAR3_precache()
 	
 	precache_generic( "wc3.css" );
 
-	copy( SOUND_VENGEANCE		, 63, "warcraft3/MiniSpiritPissed1.wav"				);	// Warden's Ultimate
-	copy( SOUND_SUICIDE			, 63, "ambience/particle_suck1.wav"					);	// Undead's Ultimate
-	copy( SOUND_BANISH			, 63, "warcraft3/banishcaster.wav"					);	// Banish
-	copy( SOUND_LOCUSTSWARM		, 63, "warcraft3/locustswarmloop.wav"				);	// Locust Swarm
-	copy( SOUND_SHADOWSTRIKE	, 63, "warcraft3/shadowstrikebirth.wav"				);	// Shadow Strike
-	copy( SOUND_CARRION			, 63, "warcraft3/carrionswarmlaunch1.wav"			);	// Carrion Beetles
-	copy( SOUND_IMPALE			, 63, "warcraft3/impalehit.wav"						);	// Impale
-	copy( SOUND_VOODOO			, 63, "warcraft3/divineshield.wav"					);	// Big Bad Voodoo
-	copy( SOUND_FLAMESTRIKE		, 63, "warcraft3/flamestriketargetwavenonloop1.wav"	);	// Flame Strike
-	copy( SOUND_ENTANGLING		, 63, "warcraft3/entanglingrootstarget1.wav"		);	// Entangling Roots
-	copy( SOUND_LIGHTNING		, 63, "warcraft3/lightningbolt.wav"					);	// Chain Lightning
-	copy( SOUND_TELEPORT		, 63, "warcraft3/massteleporttarget.wav"			);	// Teleport
-	copy( SOUND_BLINK			, 63, "warcraft3/blinkarrival.wav"					);	// Blink Teleport
-	copy( SOUND_LEVELUP			, 63, "warcraft3/Levelupcaster.wav"					);	// Level up
-	copy( SOUND_PICKUPITEM		, 63, "warcraft3/PickUpItem.wav"					);	// Buy / Pick up item
-	copy( SOUND_TOME			, 63, "warcraft3/Tomes.wav"							);	// Tome of Experience
-	copy( SOUND_ULTIMATESCAN	, 63, "turret/tu_ping.wav"							);	// Ultimate Beep
-	copy( SOUND_ULTIMATEREADY	, 63, "warcraft3/ResurrectTarget.wav"				);	// Ultimate Beep
-	copy( SOUND_ANNIHILATION	, 63, "warcraft3/PurgeTarget1.wav"					);	// Orb of Annihilation
-	copy( SOUND_CONCOCTION_CAST	, 63, "warcraft3/PossessionMissileLaunch1.wav"		);	// Unstable Concoction Cast
-	copy( SOUND_CONCOCTION_HIT	, 63, "warcraft3/PossessionMissileHit1.wav"			);	// Unstable Concoction Hit
-	copy( SOUND_HEX				, 63, "warcraft3/PolymorphDone.wav"					);	// Hex
-	copy( SOUND_IMMOLATE		, 63, "warcraft3/ImmolationDecay1.wav"				);	// Immolate
-	copy( SOUND_IMMOLATE_BURNING, 63, "ambience/flameburst1.wav"				    );	// Immolate Burning
+	copy( g_szSounds[SOUND_VENGEANCE]		, 63, "warcraft3/MiniSpiritPissed1.wav"				);	// Warden's Ultimate
+	copy( g_szSounds[SOUND_SUICIDE]			, 63, "ambience/particle_suck1.wav"					);	// Undead's Ultimate
+	copy( g_szSounds[SOUND_BANISH]			, 63, "warcraft3/banishcaster.wav"					);	// Banish
+	copy( g_szSounds[SOUND_LOCUSTSWARM]		, 63, "warcraft3/locustswarmloop.wav"				);	// Locust Swarm
+	copy( g_szSounds[SOUND_SHADOWSTRIKE]	, 63, "warcraft3/shadowstrikebirth.wav"				);	// Shadow Strike
+	copy( g_szSounds[SOUND_CARRION]			, 63, "warcraft3/carrionswarmlaunch1.wav"			);	// Carrion Beetles
+	copy( g_szSounds[SOUND_IMPALE]			, 63, "warcraft3/impalehit.wav"						);	// Impale
+	copy( g_szSounds[SOUND_VOODOO]			, 63, "warcraft3/divineshield.wav"					);	// Big Bad Voodoo
+	copy( g_szSounds[SOUND_FLAMESTRIKE]		, 63, "warcraft3/flamestriketargetwavenonloop1.wav"	);	// Flame Strike
+	copy( g_szSounds[SOUND_ENTANGLING]		, 63, "warcraft3/entanglingrootstarget1.wav"		);	// Entangling Roots
+	copy( g_szSounds[SOUND_LIGHTNING]		, 63, "warcraft3/lightningbolt.wav"					);	// Chain Lightning
+	copy( g_szSounds[SOUND_TELEPORT]		, 63, "warcraft3/massteleporttarget.wav"			);	// Teleport
+	copy( g_szSounds[SOUND_BLINK]			, 63, "warcraft3/blinkarrival.wav"					);	// Blink Teleport
+	copy( g_szSounds[SOUND_LEVELUP]			, 63, "warcraft3/levelupcaster.wav"					);	// Level up
+	copy( g_szSounds[SOUND_PICKUPITEM]		, 63, "warcraft3/pickupitem.wav"					);	// Buy / Pick up item
+	copy( g_szSounds[SOUND_TOME]			, 63, "warcraft3/Tomes.wav"							);	// Tome of Experience
+	copy( g_szSounds[SOUND_ULTIMATESCAN]	, 63, "turret/tu_ping.wav"							);	// Ultimate Beep
+	copy( g_szSounds[SOUND_ULTIMATEREADY]	, 63, "warcraft3/resurrecttarget.wav"				);	// Ultimate Beep
+	copy( g_szSounds[SOUND_ANNIHILATION]	, 63, "warcraft3/PurgeTarget1.wav"					);	// Orb of Annihilation
+	copy( g_szSounds[SOUND_CONCOCTION_CAST]	, 63, "warcraft3/PossessionMissileLaunch1.wav"		);	// Unstable Concoction Cast
+	copy( g_szSounds[SOUND_CONCOCTION_HIT]	, 63, "warcraft3/PossessionMissileHit1.wav"			);	// Unstable Concoction Hit
+	copy( g_szSounds[SOUND_HEX]				, 63, "warcraft3/PolymorphDone.wav"					);	// Hex
+	copy( g_szSounds[SOUND_IMMOLATE]		, 63, "warcraft3/ImmolationDecay1.wav"				);	// Immolate
+	copy( g_szSounds[SOUND_IMMOLATE_BURNING], 63, "ambience/flameburst1.wav"				    );	// Immolate Burning
 
-	copy( SOUND_REINCARNATION	, 63, "warcraft3/soundpack/reincarnation.wav"		);	// Weapon Reincarnation/Ankh
-	copy( SOUND_ANTEND			, 63, "warcraft3/antend.wav"						);	// Sound played when you try to shoot a chameleoned teammate 
-	copy( SOUND_ERROR			, 63, "warcraft3/bonus/Error.wav"					);	// Sound played on errors 
+	copy( g_szSounds[SOUND_REINCARNATION]	, 63, "warcraft3/soundpack/reincarnation.wav"		);	// Weapon Reincarnation/Ankh
+	copy( g_szSounds[SOUND_ANTEND]			, 63, "warcraft3/antend.wav"						);	// Sound played when you try to shoot a chameleoned teammate 
+	copy( g_szSounds[SOUND_ERROR]			, 63, "warcraft3/bonus/Error.wav"					);	// Sound played on errors 
 
-	// Skills / Ultimates
-	precache_sound( SOUND_VENGEANCE			);
- 	precache_sound( SOUND_SUICIDE			);
-	precache_sound( SOUND_BANISH			);
-	precache_sound( SOUND_LOCUSTSWARM		);
-	precache_sound( SOUND_SHADOWSTRIKE		);
-	precache_sound( SOUND_CARRION			);
-	precache_sound( SOUND_IMPALE			);
-	precache_sound( SOUND_VOODOO			);
-	precache_sound( SOUND_FLAMESTRIKE		);
-	precache_sound( SOUND_ENTANGLING		);
-	precache_sound( SOUND_LIGHTNING			);
-	precache_sound( SOUND_TELEPORT			);
-	precache_sound( SOUND_BLINK				);
-	precache_sound( SOUND_ANNIHILATION		);
-	precache_sound( SOUND_CONCOCTION_CAST	);
-	precache_sound( SOUND_CONCOCTION_HIT	);
-	precache_sound( SOUND_HEX				);
-	precache_sound( SOUND_IMMOLATE			);
-	precache_sound( SOUND_IMMOLATE_BURNING	);
+	// Lets make sure we have all of the sound files!!!
+	new i, szTmp[128], bool:bError = false;
 
-	// Miscellaneous
-	precache_sound( SOUND_LEVELUP			);
-	precache_sound( SOUND_PICKUPITEM		);
-	precache_sound( SOUND_TOME				);
-	precache_sound( SOUND_ULTIMATESCAN		);
-	precache_sound( SOUND_ULTIMATEREADY		);
-	precache_sound( SOUND_REINCARNATION		);
-	precache_sound( SOUND_ANTEND			);
-	precache_sound( SOUND_ERROR				);
+	for ( i = 0; i < MAX_SOUNDS; i++ )
+	{
 
-	// Precache objects/sprites used
-	SPR_BANISH			= precache_model( "sprites/nhth1.spr"				);
+		// We only need to look for warcraft3 files (other files should be w/base HLDS installation)
+		if ( containi( g_szSounds[i], "warcraft3" ) != -1 )
+		{
+			formatex( szTmp, 127, "sound/%s", g_szSounds[i] );
 
-	g_sFireball			= precache_model( "sprites/zerogxplode.spr"			);
-	g_sSpriteTexture	= precache_model( "sprites/shockwave.spr"			);
-	g_siBeam4			= precache_model( "sprites/zbeam4.spr"				);
-	g_sLightning		= precache_model( "sprites/lgtning.spr"				);
-	g_sFire				= precache_model( "sprites/explode1.spr"			);
-	g_sBurning			= precache_model( "sprites/xfire.spr"				);
-	g_sImmolate			= precache_model( "sprites/warcraft3/fireball.spr"	);
-	g_sShadow			= precache_model( "sprites/animglow01.spr"			);
-	g_sBeetle			= precache_model( "sprites/agrunt1.spr"				);
-	g_siTrail			= precache_model( "sprites/smoke.spr"				);
-	g_sFlare			= precache_model( "sprites/blueflare2.spr"			);
-	g_sWave				= precache_model( "sprites/gwave1.spr"				);
+			if ( !file_exists( szTmp ) )
+			{
+				log_amx( "[ERROR] Missing sound file '%s'", szTmp );
 
+				bError = true;
+			}
+		}
+	}
+
+	// All sound files exist!! Lets continue!
+	if ( !bError )
+	{
+		
+		// Precache all files
+		for ( i = 0; i < MAX_SOUNDS; i++ )
+		{
+			precache_sound( g_szSounds[i] );
+		}
+	}
+
+	// We need to throw a runtime error :/
+	else
+	{
+		set_fail_state( "Sound files are missing, unable to load plugin" );
+	}
+
+
+	// Copy the sprite files to the array
+	copy( g_szSprites[SPR_BANISH]		, 63, "sprites/nhth1.spr" );
+	copy( g_szSprites[SPR_SHADOWSTRIKE]	, 63, "sprites/animglow01.spr" );
+	copy( g_szSprites[SPR_FIRE]			, 63, "sprites/explode1.spr" );
+	copy( g_szSprites[SPR_BURNING]		, 63, "sprites/xfire.spr" );
+	copy( g_szSprites[SPR_BEETLE]		, 63, "sprites/agrunt1.spr" );
+	copy( g_szSprites[SPR_FIREBALL]		, 63, "sprites/zerogxplode.spr" );
+	copy( g_szSprites[SPR_BEAM]			, 63, "sprites/zbeam4.spr" );
+	copy( g_szSprites[SPR_TRAIL]		, 63, "sprites/smoke.spr" );
+	copy( g_szSprites[SPR_SHOCKWAVE]	, 63, "sprites/shockwave.spr" );
+	copy( g_szSprites[SPR_LIGHTNING]	, 63, "sprites/lgtning.spr" );
+	copy( g_szSprites[SPR_FLARE]		, 63, "sprites/blueflare2.spr" );
+	copy( g_szSprites[SPR_WAVE]			, 63, "sprites/gwave1.spr" );
+	copy( g_szSprites[SPR_IMMOLATE]		, 63, "sprites/warcraft3/fireball.spr" );
+
+	// Store race sprite names
+	copy( g_szRaceSprites[RACE_NONE]		, 63, "sprites/warcraft3/races/wc3_none_01.spr"		);
+	copy( g_szRaceSprites[RACE_UNDEAD]		, 63, "sprites/warcraft3/races/wc3_undead_01.spr"	);
+	copy( g_szRaceSprites[RACE_HUMAN]		, 63, "sprites/warcraft3/races/wc3_human_01.spr"	);
+	copy( g_szRaceSprites[RACE_ORC]			, 63, "sprites/warcraft3/races/wc3_orc_01.spr"	);
+	copy( g_szRaceSprites[RACE_ELF]			, 63, "sprites/warcraft3/races/wc3_elves_01.spr"	);
+	copy( g_szRaceSprites[RACE_BLOOD]		, 63, "sprites/warcraft3/races/wc3_bloodmage_01.spr"	);
+	copy( g_szRaceSprites[RACE_SHADOW]		, 63, "sprites/warcraft3/races/wc3_shadow_01.spr"	);
+	copy( g_szRaceSprites[RACE_WARDEN]		, 63, "sprites/warcraft3/races/wc3_warden_01.spr"	);
+	copy( g_szRaceSprites[RACE_CRYPT]		, 63, "sprites/warcraft3/races/wc3_cryptlord_01.spr"	);
+	copy( g_szRaceSprites[RACE_CHAMELEON]	, 63, "sprites/warcraft3/races/wc3_chameleon_01.spr"	);
+
+	// Store level sprite names
+	for ( i = 0; i < 11; i++ )
+	{
+		formatex( g_szLevelSprites[i], 63, "sprites/warcraft3/level/a_level_%d.spr", i );
+	}
+
+
+	// Precache models
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
 		if ( g_MOD == GAME_CZERO )
@@ -108,9 +134,9 @@ public WAR3_precache()
 		precache_model( "models/player/leet/leet.mdl"				);
 		precache_model( "models/player/guerilla/guerilla.mdl"		);
 		precache_model( "models/player/terror/terror.mdl"			);
-
-		g_sSmoke	= precache_model( "sprites/steam1.spr"			);
-		g_sSnow		= precache_model( "sprites/snow.spr"			);
+		
+		copy( g_szSprites[SPR_SMOKE]		, 63, "sprites/steam1.spr"	);
+		copy( g_szSprites[SPR_SNOW]			, 63, "sprites/snow.spr"	);
 	}
 	else if ( g_MOD == GAME_DOD )
 	{
@@ -120,45 +146,92 @@ public WAR3_precache()
 		precache_model( "models/player/us-inf/us-inf.mdl"			);
 		precache_model( "models/player/us-para/us-para.mdl"			);
 
-		g_sSnow		= precache_model( "sprites/warcraft3/snow.spr"	);
+		copy( g_szSprites[SPR_SNOW]			, 63, "sprites/warcraft3/snow.spr" );
 	}
 
-	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	// Now lets make sure the sprites exist
+	for ( i = 0; i < MAX_SPRITES; i++ )
 	{
-		new szMapName[32];
-		get_mapname( szMapName, 31 );
 
-		if ( !equali( szMapName, "de_inferno_cz" ) )
+		// We only need to look for warcraft3 files (other files should be w/base HLDS installation)
+		if ( containi( g_szSprites[i], "warcraft3" ) != -1 )
 		{
-			g_spritesEnabled	= true;
-			g_sRace[0]			= precache_model( "sprites/warcraft3/races/wc3_none_01.spr"			);
-			g_sRace[1]			= precache_model( "sprites/warcraft3/races/wc3_undead_01.spr"		);
-			g_sRace[2]			= precache_model( "sprites/warcraft3/races/wc3_human_01.spr"		);
-			g_sRace[3]			= precache_model( "sprites/warcraft3/races/wc3_orc_01.spr"			);
-			g_sRace[4]			= precache_model( "sprites/warcraft3/races/wc3_elves_01.spr"		);
-			g_sRace[5]			= precache_model( "sprites/warcraft3/races/wc3_bloodmage_01.spr"	);
-			g_sRace[6]			= precache_model( "sprites/warcraft3/races/wc3_shadow_01.spr"		);
-			g_sRace[7]			= precache_model( "sprites/warcraft3/races/wc3_warden_01.spr"		);
-			g_sRace[8]			= precache_model( "sprites/warcraft3/races/wc3_cryptlord_01.spr"	);
-			g_sRace[9]			= precache_model( "sprites/warcraft3/races/wc3_chameleon_01.spr"	);
-		
-			g_sLevel[0]			= precache_model( "sprites/warcraft3/level/a_level_0.spr"			);
-			g_sLevel[1]			= precache_model( "sprites/warcraft3/level/a_level_1.spr"			);
-			g_sLevel[2]			= precache_model( "sprites/warcraft3/level/a_level_2.spr"			);
-			g_sLevel[3]			= precache_model( "sprites/warcraft3/level/a_level_3.spr"			);
-			g_sLevel[4]			= precache_model( "sprites/warcraft3/level/a_level_4.spr"			);
-			g_sLevel[5]			= precache_model( "sprites/warcraft3/level/a_level_5.spr"			);
-			g_sLevel[6]			= precache_model( "sprites/warcraft3/level/a_level_6.spr"			);
-			g_sLevel[7]			= precache_model( "sprites/warcraft3/level/a_level_7.spr"			);
-			g_sLevel[8]			= precache_model( "sprites/warcraft3/level/a_level_8.spr"			);
-			g_sLevel[9]			= precache_model( "sprites/warcraft3/level/a_level_9.spr"			);
-			g_sLevel[10]		= precache_model( "sprites/warcraft3/level/a_level_10.spr"			);
+			if ( !file_exists( g_szSprites[i] ) )
+			{
+				log_amx( "[ERROR] Missing sprite file '%s'", g_szSprites[i] );
+
+				bError = true;
+			}
 		}
 	}
+
+	// Check the race sprites
+	for ( i = 0; i <= MAX_RACES; i++ )
+	{
+		if ( !file_exists( g_szRaceSprites[i] ) )
+		{
+			log_amx( "[ERROR] Missing sprite file '%s'", g_szRaceSprites[i] );
+
+			bError = true;
+		}
+	}
+
+
+	// Check the level sprites
+	for ( i = 0; i <= MAX_LEVELS; i++ )
+	{
+		if ( !file_exists( g_szLevelSprites[i] ) )
+		{
+			log_amx( "[ERROR] Missing sprite file '%s'", g_szLevelSprites[i] );
+
+			bError = true;
+		}
+	}
+
+	// All sprite files exist!! Lets continue!
+	if ( !bError )
+	{
+		
+		// Precache all common sprites
+		for ( i = 0; i < MAX_SPRITES; i++ )
+		{
+			if ( g_szSprites[i][0] )
+			{
+				g_iSprites[i] = precache_model( g_szSprites[i] );
+			}
+		}
+
+		// Precache others if allowed
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			new szMapName[32];
+			get_mapname( szMapName, 31 );
+
+			if ( !equali( szMapName, "de_inferno_cz" ) )
+			{
+				g_bExtraSpritesEnabled	= true;
+
+				// Precache race sprites
+				for ( i = 0; i <= MAX_RACES; i++ )
+				{
+					g_iRaceSprites[i] = precache_model( g_szRaceSprites[i] );
+				}
+
+				// Precache level sprites
+				for ( i = 0; i <= MAX_RACES; i++ )
+				{
+					g_iLevelSprites[i] = precache_model( g_szLevelSprites[i] );
+				}
+			}
+		}
+	}
+
+	// We need to throw a runtime error :/
 	else
 	{
-		g_spritesEnabled		= false;
+		set_fail_state( "Sprite files are missing, unable to load plugin" );
 	}
+
 }
 
 public WC3_CheckDev( id )
@@ -489,7 +562,7 @@ WC3_SetRace( id, race )
 	ULT_ClearIcons( id );
 	
 	// Play level up sound
-	emit_sound( id, CHAN_STATIC, SOUND_LEVELUP, 1.0, ATTN_NORM, 0, PITCH_NORM );
+	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_LEVELUP], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 	// Set the user's race
 	p_data[id][P_RACE] = race

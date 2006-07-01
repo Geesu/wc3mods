@@ -167,18 +167,18 @@ public on_ShowStatus(id){
 
 	if(get_user_team(id)==get_user_team(pid) && (ITEM_Has( id, ITEM_CHAMELEON ) || p_data[pid][P_SKINCHANGED]==SKIN_SWITCH) && is_user_alive(pid)){
 		client_print(id,print_center,"%L",id,"HES_ON_YOUR_TEAM_DONT_SHOOT")
-		client_cmd(id,"speak %s", SOUND_ANTEND)
+		client_cmd(id,"speak %s", g_szSounds[SOUND_ANTEND])
 	}
 
 	// Used to show player icons
-	if (g_spritesEnabled){
+	if (g_bExtraSpritesEnabled){
 		if (warcraft3 && (get_user_team(id) == get_user_team(pid))){
 			if (get_pcvar_num( CVAR_wc3_race_icon ) && p_data[id][P_SHOWICONS]){
-				Create_TE_PLAYERATTACHMENT(id, pid, 55, g_sRace[p_data[pid][P_RACE]], 15)
+				Create_TE_PLAYERATTACHMENT(id, pid, 55, g_iRaceSprites[p_data[pid][P_RACE]], 15)
 			}
 
 			if (get_pcvar_num( CVAR_wc3_level_icon ) && p_data[id][P_SHOWICONS])
-				Create_TE_PLAYERATTACHMENT(id, pid, 35, g_sLevel[p_data[pid][P_LEVEL]], 16)
+				Create_TE_PLAYERATTACHMENT(id, pid, 35, g_iLevelSprites[p_data[pid][P_LEVEL]], 16)
 		}
 	}
 

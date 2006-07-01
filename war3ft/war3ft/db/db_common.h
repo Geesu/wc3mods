@@ -13,9 +13,9 @@
 #define DB_SAVEBY_NAME				2
 
 // Used with g_DBType
-#define DB_VAULT			1
-#define DB_MYSQLX			2
-#define DB_SQLITE			3
+#define DB_VAULT			0
+#define DB_MYSQLX			1
+#define DB_SQLITE			2
 
 // Variable Declaration
 new g_szDBType[16];

@@ -375,7 +375,7 @@ public SHARED_DOD_Reincarnation( id )
 	else
 	{
 
-		client_cmd( id, "speak %s", SOUND_REINCARNATION );
+		client_cmd( id, "speak %s", g_szSounds[SOUND_REINCARNATION] );
 
 		// Make the user glow!
 		SHARED_Glow( id, 0, 100, 0, 0 );
@@ -505,7 +505,7 @@ public SHARED_CS_Reincarnation( id )
 
 	if ( bGiveWeapons )
 	{
-		client_cmd( id, "speak %s", SOUND_REINCARNATION );
+		client_cmd( id, "speak %s", g_szSounds[SOUND_REINCARNATION] );
 		
 		// Make the user glow!
 		SHARED_Glow( id, 0, 100, 0, 0 );

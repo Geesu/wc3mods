@@ -298,7 +298,6 @@ say /resetxp - Will reset your level and XP to 0
 ULTIMATE_NOT_READY = Ultimate not ready.^n(%d seconds remaining)
 ULTIMATE_NOT_FOUND = Ultimate not found.
 ULTIMATE_READY = Ultimate is ready.
-SELECT_RACE_TITLE = \RExperience^n^n
 SELECT_RACE_FOOTER = ^n\w%d. Auto-select
 SELECT_HERO = ^n\ySelect Hero^n^n
 NO_FREE_SPAWN_FOUND = No free spawn was found to teleport to
@@ -339,3 +338,4 @@ CENTER_CHANGED_NEXT = Your race will be changed at the start of the next round
 DOD_AWARDED_XP_OBJECTIVE = You are awarded %d XP for completing an objective
 DOD_PHOENIX = You are given a bonus $%d because a nearby teammate (%s) with Phoenix has killed an enemy
 HEX_NO_ABILITY = You may not use this ability while you are hexed
+MENU_WORD_EXPERIENCE = Expe r ience

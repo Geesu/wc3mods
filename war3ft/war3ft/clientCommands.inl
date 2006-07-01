@@ -91,7 +91,7 @@ public cmd_Ultimate(id)
 	{
 		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "HEX_NO_ABILITY" );
 
-		client_cmd(id, "speak %s", SOUND_ERROR)
+		client_cmd( id, "speak %s", g_szSounds[SOUND_ERROR] );
 
 		return PLUGIN_HANDLED;
 	}
@@ -101,7 +101,7 @@ public cmd_Ultimate(id)
 	{
 		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_NOT_FOUND" );
 
-		client_cmd(id, "speak %s", SOUND_ERROR)
+		client_cmd( id, "speak %s", g_szSounds[SOUND_ERROR] );
 
 		return PLUGIN_HANDLED;
 	}
@@ -111,7 +111,7 @@ public cmd_Ultimate(id)
 	{
 		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_NOT_READY", g_iUltimateDelay );
 
-		client_cmd(id, "speak %s", SOUND_ERROR)
+		client_cmd( id, "speak %s", g_szSounds[SOUND_ERROR] );
 
 		return PLUGIN_HANDLED;
 	}
@@ -121,7 +121,7 @@ public cmd_Ultimate(id)
 	{
 		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_NOT_READY", p_data[id][P_ULTIMATEDELAY] );
 
-		client_cmd(id, "speak %s", SOUND_ERROR)
+		client_cmd( id, "speak %s", g_szSounds[SOUND_ERROR] );
 
 		return PLUGIN_HANDLED;
 	}
@@ -292,7 +292,7 @@ CMD_Handle( id, szCmd[] )
 	{
 
 		// Sprites not enabled or icons are disabled
-		if ( !g_spritesEnabled || ( !get_pcvar_num( CVAR_wc3_race_icon ) && !get_pcvar_num( CVAR_wc3_level_icon ) ) )
+		if ( !g_bExtraSpritesEnabled || ( !get_pcvar_num( CVAR_wc3_race_icon ) && !get_pcvar_num( CVAR_wc3_level_icon ) ) )
 		{
 			client_print( id, print_center, "%L", id, "ICONS_ARE_DISABLED" );
 		}

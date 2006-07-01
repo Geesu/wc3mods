@@ -184,6 +184,7 @@
 #define MAX_CSW_S				12
 
 // Race numbers
+#define RACE_NONE				0
 #define RACE_UNDEAD				1
 #define RACE_HUMAN				2
 #define RACE_ORC				3
@@ -414,37 +415,6 @@ new bool:g_bGivenLevel10[33][MAX_RACES+1];	// Stores if we gave them level 10
 
 new g_GlowLevel[33][4];
 
-
-/* Variables for precaching sounds */
-
-new SOUND_ANNIHILATION[64]
-new SOUND_CONCOCTION_CAST[64]
-new SOUND_CONCOCTION_HIT[64]
-new SOUND_VENGEANCE[64]
-new SOUND_SUICIDE[64]
-new SOUND_BANISH[64]
-new SOUND_LOCUSTSWARM[64]
-new SOUND_SHADOWSTRIKE[64]
-new SOUND_CARRION[64]
-new SOUND_IMPALE[64]
-new SOUND_VOODOO[64]
-new SOUND_FLAMESTRIKE[64]
-new SOUND_ENTANGLING[64]
-new SOUND_LIGHTNING[64]
-new SOUND_TELEPORT[64]
-new SOUND_BLINK[64]
-new SOUND_LEVELUP[64]
-new SOUND_PICKUPITEM[64]
-new SOUND_TOME[64]
-new SOUND_ULTIMATESCAN[64]
-new SOUND_ULTIMATEREADY[64]
-new SOUND_HEX[64]
-new SOUND_IMMOLATE[64];
-new SOUND_IMMOLATE_BURNING[64];
-new SOUND_REINCARNATION[64]
-new SOUND_ANTEND[64];
-new SOUND_ERROR[64];
-
 // Used for Chameleon
 new g_ChamSkills[5];
 
@@ -520,31 +490,10 @@ new gmsgScreenShake
 new gmsgScoreInfo
 new gmsgStatusIcon
 
-new bool:g_spritesEnabled = false
-
 // Used for Mole
 new bool:spawnPointsused[33] = false
 
 new bool:g_GameRestarting = false;
-
-// Sprites
-new SPR_BANISH;
-new g_sShadow
-new g_sSnow
-new g_sFire 
-new g_sBurning 
-new g_sBeetle
-new g_sFireball
-new g_siBeam4
-new g_siTrail
-new g_sSpriteTexture
-new g_sLightning
-new g_sFlare
-new g_sWave
-new g_sRace[10]
-new g_sLevel[11]
-new g_sSmoke
-new g_sImmolate;
 
 new g_MODclient[15] = "* [WAR3FT]"
 
@@ -686,3 +635,66 @@ new const Float:p_carrion[3] =			{0.15,0.25,0.45}		// Carrion Beetle			(skill 3)
 new const Float:p_orb[11] =				{0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.15}	// Orb of Annihilation	(Skill 4)
 
 new MOTD_header[] = "<html><head><LINK REL=^"StyleSheet^" HREF=^"wc3.css^" TYPE=^"text/css^"></head><body>";
+
+
+// SOUNDS
+#define MAX_SOUNDS	27
+
+new g_szSounds[MAX_SOUNDS][64];
+
+#define SOUND_VENGEANCE			0
+#define SOUND_SUICIDE			1
+#define SOUND_BANISH			2
+#define SOUND_LOCUSTSWARM		3
+#define SOUND_SHADOWSTRIKE		4
+#define SOUND_CARRION			5
+#define SOUND_IMPALE			6
+#define SOUND_VOODOO			7
+#define SOUND_FLAMESTRIKE		8
+#define SOUND_ENTANGLING		9
+#define SOUND_LIGHTNING			10
+#define SOUND_TELEPORT			11
+#define SOUND_BLINK				12
+#define SOUND_ANNIHILATION		13
+#define SOUND_CONCOCTION_CAST	14
+#define SOUND_CONCOCTION_HIT	15
+#define SOUND_HEX				16
+#define SOUND_IMMOLATE			17
+#define SOUND_IMMOLATE_BURNING	18
+#define SOUND_LEVELUP			19
+#define SOUND_PICKUPITEM		20
+#define SOUND_TOME				21
+#define SOUND_ULTIMATESCAN		22
+#define SOUND_ULTIMATEREADY		23
+#define SOUND_REINCARNATION		24
+#define SOUND_ANTEND			25
+#define SOUND_ERROR				26
+
+// SPRITES
+#define MAX_SPRITES	15
+
+new g_szSprites[MAX_SPRITES][64];
+new g_szRaceSprites[MAX_RACES + 1][64];
+new g_szLevelSprites[MAX_LEVELS + 1][64];
+
+new g_iRaceSprites[MAX_RACES + 1];
+new g_iLevelSprites[MAX_LEVELS + 1];
+new g_iSprites[MAX_SPRITES] = {0};
+
+new bool:g_bExtraSpritesEnabled = false
+
+#define SPR_BANISH			0
+#define SPR_SHADOWSTRIKE	1
+#define SPR_SNOW			2
+#define SPR_FIRE			3
+#define SPR_BURNING			4
+#define SPR_BEETLE			5
+#define SPR_FIREBALL		6
+#define SPR_BEAM			7
+#define SPR_TRAIL			8
+#define SPR_SHOCKWAVE		9
+#define SPR_LIGHTNING		10
+#define SPR_FLARE			11
+#define SPR_WAVE			12
+#define SPR_SMOKE			13
+#define SPR_IMMOLATE		14

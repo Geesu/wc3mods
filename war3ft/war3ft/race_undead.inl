@@ -22,10 +22,8 @@ UD_Suicide( id )
 		return;
 	}
 
-	
 	// Play the undead explosion sound!!!
-	emit_sound( id, CHAN_STATIC, SOUND_SUICIDE, 1.0, ATTN_NORM, 0, PITCH_NORM );
-
+	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_SUICIDE], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 	new parm[5], vOrigin[3];
 	get_user_origin( id, vOrigin );
@@ -68,12 +66,12 @@ public _UD_SuicideExplode( parm[5] )
 	vPosition[1] = vOrigin[1] + random_num( -100, 100 );
 	vPosition[2] = vOrigin[2] + random_num( -50, 50 );
 	
-	Create_TE_EXPLOSION( vOrigin, vPosition, g_sFireball, (random_num(0,20) + 20), 12, TE_EXPLFLAG_NONE );
+	Create_TE_EXPLOSION( vOrigin, vPosition, g_iSprites[SPR_FIREBALL], (random_num(0,20) + 20), 12, TE_EXPLFLAG_NONE );
 	
 	// This doesn't look correct in Day of Defeat, so lets only do it for CS/CZ
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		Create_TE_Smoke( vOrigin, vPosition, g_sSmoke, 60, 10 );
+		Create_TE_Smoke( vOrigin, vPosition, g_iSprites[SPR_SMOKE], 60, 10 );
 	}
 
 	new players[32], numberofplayers;
@@ -132,11 +130,11 @@ public _UD_SuicideBlastCircles( parm[5] )
 	vPosition[1] = vOrigin[1];
 	vPosition[2] = vOrigin[2] + EXPLOSION_BLAST_RADIUS;
 
-	Create_TE_BEAMCYLINDER( vOrigin, vOrigin, vPosition, g_sSpriteTexture, 0, 0, 6, 16, 0, 188, 220, 255, 255, 0 );
+	Create_TE_BEAMCYLINDER( vOrigin, vOrigin, vPosition, g_iSprites[SPR_SHOCKWAVE], 0, 0, 6, 16, 0, 188, 220, 255, 255, 0 );
 
 	vOrigin[2] = ( vOrigin[2] - EXPLOSION_BLAST_RADIUS ) + ( EXPLOSION_BLAST_RADIUS / 2 );
 
-	Create_TE_BEAMCYLINDER( vOrigin, vOrigin, vPosition, g_sSpriteTexture, 0, 0, 6, 16, 0, 188, 220, 255, 255, 0 );
+	Create_TE_BEAMCYLINDER( vOrigin, vOrigin, vPosition, g_iSprites[SPR_SHOCKWAVE], 0, 0, 6, 16, 0, 188, 220, 255, 255, 0 );
 }
 
 

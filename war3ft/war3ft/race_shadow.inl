@@ -106,7 +106,7 @@ public _SH_RemoveHex( id )
 	// Reset the user's rendering
 	set_user_rendering( id );
 
-	emit_sound( id, CHAN_STATIC, SOUND_HEX, 1.0, ATTN_NORM, 0, PITCH_NORM );
+	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_HEX], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 	return PLUGIN_HANDLED;
 }
@@ -225,7 +225,7 @@ public _SH_DrawSerpentWard( parm[5] )
 	}
 
 	// Draw the serpent ward
-	Create_TE_BEAMPOINTS( start, end, g_sLightning, 1, 5, 2, 500, 20, red, green, blue, 100, 100 );
+	Create_TE_BEAMPOINTS( start, end, g_iSprites[SPR_LIGHTNING], 1, 5, 2, 500, 20, red, green, blue, 100, 100 );
 
 	// Now lets check and see if any players are near that need to be damaged
 	new players[32], numberofplayers;
@@ -326,7 +326,7 @@ public SH_Ult_BigBadVoodoo( id )
 		Create_BarTime( id, SH_BIGBADVOODOO_DURATION, 0 );
 	}
 		
-	emit_sound( id, CHAN_STATIC, SOUND_VOODOO, 1.0, ATTN_NORM, 0, PITCH_NORM );
+	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_VOODOO], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 	set_user_rendering( id, kRenderFxGlowShell, 255, 245, 50, kRenderNormal, 16 );
 
@@ -384,7 +384,7 @@ SH_SkillsOffensive( iAttacker, iVictim )
 			set_task( SH_HEX_LENGTH ,"_SH_RemoveHex", TASK_HEX + iVictim );
 
 			// Play the hex sound
-			emit_sound( iVictim, CHAN_STATIC, SOUND_HEX, 1.0, ATTN_NORM, 0, PITCH_NORM );
+			emit_sound( iVictim, CHAN_STATIC, g_szSounds[SOUND_HEX], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 			// Make the user glow!
 			SHARED_Glow( iVictim, 150, 150, 150, 0 );
@@ -410,7 +410,7 @@ SH_SkillsDefensive( iAttacker, iVictim )
 			get_user_origin( iAttacker, vOrigin );
 			
 			// Play sound on attacker
-			emit_sound( iAttacker, CHAN_STATIC, SOUND_CONCOCTION_CAST, 1.0, ATTN_NORM, 0, PITCH_NORM );
+			emit_sound( iAttacker, CHAN_STATIC, g_szSounds[SOUND_CONCOCTION_CAST], 1.0, ATTN_NORM, 0, PITCH_NORM );
 			
 			// Set up the origins for the effect
 			vInitOrigin[0] = vOrigin[0];
@@ -424,7 +424,7 @@ SH_SkillsDefensive( iAttacker, iVictim )
 			// Display the effect on the attacker
 			for ( i = 0; i < 200; i += 25 )
 			{
-				Create_TE_BEAMCYLINDER( vOrigin, vInitOrigin, vAxisOrigin, g_sSpriteTexture, 0, 0, 9, 20, 0, 188, 220, 255, 255, 0 );
+				Create_TE_BEAMCYLINDER( vOrigin, vInitOrigin, vAxisOrigin, g_iSprites[SPR_SHOCKWAVE], 0, 0, 9, 20, 0, 188, 220, 255, 255, 0 );
 
 				vInitOrigin[2] += 25;
 			}
@@ -450,7 +450,7 @@ SH_SkillsDefensive( iAttacker, iVictim )
 						WC3_Damage( players[i], iVictim, SH_CONCOCTION_DAMAGE, CSW_CONCOCTION, 0 );
 					
 						// Let the victim know he hit someone
-						emit_sound( iVictim, CHAN_STATIC, SOUND_CONCOCTION_HIT, 1.0, ATTN_NORM, 0, PITCH_NORM );
+						emit_sound( iVictim, CHAN_STATIC, g_szSounds[SOUND_CONCOCTION_HIT], 1.0, ATTN_NORM, 0, PITCH_NORM );
 					}
 				}
 			}

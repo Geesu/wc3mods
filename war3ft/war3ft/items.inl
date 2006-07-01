@@ -265,7 +265,7 @@ public ITEM_Set( id, iItem )
 		}
 
 	}
-	emit_sound( id, CHAN_STATIC, SOUND_PICKUPITEM, 1.0, ATTN_NORM, 0, PITCH_NORM );
+	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_PICKUPITEM], 1.0, ATTN_NORM, 0, PITCH_NORM );
 	WC3_ShowBar( id );
 
 	return 1;

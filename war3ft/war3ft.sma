@@ -54,8 +54,6 @@ new const WC3DATE[] =		__DATE__
 #include <cstrike>
 #include <dodfun>
 #include <dodx>
-
-#define AMXMODX_NOAUTOLOAD
 #include <dbi>
 #include <sqlx>
 

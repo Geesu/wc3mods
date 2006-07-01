@@ -64,7 +64,7 @@ Ultimate_Ready( id )
 	if ( is_user_alive( id ) && p_data_b[id][PB_ISCONNECTED] && p_data[id][P_ULTIMATE] )
 	{
 		// Play the ultimate ready sound
-		client_cmd( id, "speak %s", SOUND_ULTIMATEREADY )
+		client_cmd( id, "speak %s", g_szSounds[SOUND_ULTIMATEREADY] )
 		
 		// Give the user a graphical message that their ultimate is ready
 		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_READY" );
@@ -194,7 +194,7 @@ public _ULT_Ping( parm[] )
 		ULT_Icon( id, ICON_FLASH );
 
 		// Play the ping sound
-		emit_sound( id, CHAN_STATIC, SOUND_ULTIMATESCAN, 1.0, ATTN_NORM, 0, PITCH_NORM );
+		emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_ULTIMATESCAN], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 		set_task( 1.0, "_ULT_Ping", TASK_ULTPING + id, parm, 2 );
 	}

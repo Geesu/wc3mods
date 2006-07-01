@@ -27,7 +27,7 @@ public grenade_throw( index, greindex, wId )
 			{
 				new iWidth = 3 *  p_data[index][SKILL2];
 
-				Create_TE_BEAMFOLLOW( greindex, g_siTrail, 20, iWidth, 255, 32, 32, 196 );
+				Create_TE_BEAMFOLLOW( greindex, g_iSprites[SPR_TRAIL], 20, iWidth, 255, 32, 32, 196 );
 			}
 		}
 	}

@@ -14,15 +14,15 @@ new bool:g_bPlayerBanished[33];
 
 public BM_ULT_Immolate( iCaster, iTarget )
 {
-	emit_sound( iCaster, CHAN_STATIC, SOUND_IMMOLATE, 0.5, ATTN_NORM, 0, PITCH_NORM );
+	emit_sound( iCaster, CHAN_STATIC, g_szSounds[SOUND_IMMOLATE], 0.5, ATTN_NORM, 0, PITCH_NORM );
 
 	// Emit sound and create the fire exploding effect on the player
 
 	new vTargetOrigin[3];
 	get_user_origin( iTarget, vTargetOrigin );
 
-	Create_TE_EXPLOSION( vTargetOrigin, vTargetOrigin, g_sImmolate, 20, 24, 4 );
-	Create_TE_EXPLOSION( vTargetOrigin, vTargetOrigin, g_sBurning, 30, 24, 4 );
+	Create_TE_EXPLOSION( vTargetOrigin, vTargetOrigin, g_iSprites[SPR_IMMOLATE], 20, 24, 4 );
+	Create_TE_EXPLOSION( vTargetOrigin, vTargetOrigin, g_iSprites[SPR_BURNING], 30, 24, 4 );
 
 	Create_ScreenShake( iTarget, (10<<12), (2<<12), (5<<12) );
 
@@ -62,9 +62,9 @@ public BM_ULT_Immolate_DoT( parm_DoT[3] )
     new vTargetOrigin[3];
     get_user_origin( iTarget, vTargetOrigin );
 
-	emit_sound( iTarget, CHAN_STATIC, SOUND_IMMOLATE_BURNING, 0.5, ATTN_NORM, 0, PITCH_NORM );
+	emit_sound( iTarget, CHAN_STATIC, g_szSounds[SOUND_IMMOLATE_BURNING], 0.5, ATTN_NORM, 0, PITCH_NORM );
 
-	Create_TE_SPRITE( vTargetOrigin, g_sFire, 3, 200 );
+	Create_TE_SPRITE( vTargetOrigin, g_iSprites[SPR_FIRE], 3, 200 );
 
 	// Do the DoT damage
 
@@ -273,7 +273,7 @@ BM_SkillsDefensive( iAttacker, iVictim, iDamage )
 				WC3_Damage( iAttacker, iVictim, BANISH_DAMAGE, CSW_BANISH, 0 );
 				
 				// Play the Banish sound
-				emit_sound( iAttacker, CHAN_STATIC, SOUND_BANISH, 1.0, ATTN_NORM, 0, PITCH_NORM );
+				emit_sound( iAttacker, CHAN_STATIC, g_szSounds[SOUND_BANISH], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 				// Black screen the user!
 				Create_ScreenFade( iAttacker, 2, (1<<10), (1<<12), 0, 0, 0, 255 );
@@ -289,7 +289,7 @@ BM_SkillsDefensive( iAttacker, iVictim, iDamage )
 				parm[4] = vOrigin[2];
 
 				// Create the "banish" sprite
-				Create_TE_SPRITE( vOrigin, SPR_BANISH, 10, 255 );
+				Create_TE_SPRITE( vOrigin, g_iSprites[SPR_BANISH], 10, 255 );
 
 				vOrigin[2] -= 2000;
 

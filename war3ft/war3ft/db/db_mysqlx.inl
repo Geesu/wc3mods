@@ -27,7 +27,7 @@ MYSQLX_Init()
 		return;
 	}
 
-	server_print( "%s database connection successful", g_szDBType );
+	server_print( "[WAR3FT] %s database connection successful", g_szDBType );
 
 	
 	// Create the default table if we need to
@@ -146,13 +146,27 @@ MYSQLX_Save( id )
 	new szQuery[512];
 	format( szQuery, 511, "REPLACE INTO `%s` (`playerid`, `playerip`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', '%s', %d, %d, %d, %d, %d, %d)", g_DBTableName, szPlayerID, szPlayerIP, szPlayerName, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE] );
 
-	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save", szQuery )
+	new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+	if ( !SQL_Execute( query ) )
+	{
+		MYSQLX_Error( query, szQuery, 5 );
+
+		return;
+	}
+
+	server_print( "[DEBUG] Thread hit for %d", id );
+
+	//SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save", szQuery )
 
 	return;
 }
 
 public _MYSQLX_Save( failstate, Handle:query, error[], errnum, data[], size )
 {
+
+	server_print( "[DEBUG] Done!" );
+
 	// Error during the query
 	if ( failstate )
 	{

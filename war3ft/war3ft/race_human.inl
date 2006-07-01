@@ -27,7 +27,7 @@ HU_ULT_Blink( id )
 	get_user_origin( id, vNewLocation, 3 );
 	
 	// Play the blink sound!
-	emit_sound( id, CHAN_STATIC, SOUND_BLINK, 1.0, ATTN_NORM, 0, PITCH_NORM );
+	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_BLINK], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 	// Make sure a nearby enemy doesn't have immunity
 	if ( WC3_IsImmunePlayerNear( id, vOldLocation ) || WC3_IsImmunePlayerNear( id, vNewLocation ) )
@@ -66,14 +66,14 @@ HU_ULT_Blink( id )
 	vAxisOrigin[2]		= vOldLocation[2] + 10 + TELEPORT_RADIUS;
 
 	// Lets create some beam cylinders!
-	Create_TE_BEAMCYLINDER( vOldLocation, vCenterOrigin, vAxisOrigin, g_sSpriteTexture, 0, 0, 3, 60, 0, 255, 255, 255, 255, 0 );
+	Create_TE_BEAMCYLINDER( vOldLocation, vCenterOrigin, vAxisOrigin, g_iSprites[SPR_SHOCKWAVE], 0, 0, 3, 60, 0, 255, 255, 255, 255, 0 );
 	
 	// Modify our effects a bit for another cylinder
 	vCenterOrigin[2]	+= 80;
 	vAxisOrigin[2]		+= 80;
 	
 	// And draw another cylinder!!!
-	Create_TE_BEAMCYLINDER( vOldLocation, vCenterOrigin, vAxisOrigin, g_sSpriteTexture, 0, 0, 3, 60, 0, 255, 255, 255, 255, 0 );
+	Create_TE_BEAMCYLINDER( vOldLocation, vCenterOrigin, vAxisOrigin, g_iSprites[SPR_SHOCKWAVE], 0, 0, 3, 60, 0, 255, 255, 255, 255, 0 );
 
 	// Planting the bomb then teleporting = bad, lets stop this...
 	client_cmd( id, "-use" );
@@ -108,8 +108,8 @@ HU_ULT_Blink( id )
 
 	ULT_Icon( id, ICON_HIDE );
 
-	emit_sound( id, CHAN_STATIC, SOUND_BLINK, 1.0, ATTN_NORM, 0, PITCH_NORM );
-			
+	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_BLINK], 1.0, ATTN_NORM, 0, PITCH_NORM );
+
 	return;
 }
 
@@ -156,7 +156,7 @@ public _HU_ULT_BlinkStuck( parm[] )
 		vStartOrigin[1] = vOrigin[1];
 		vStartOrigin[2] = vOrigin[2] + 40;
 		
-		Create_TE_SPRITETRAIL( vStartOrigin, vOrigin, g_sFlare, 30, 10, 1, 50, 10 );
+		Create_TE_SPRITETRAIL( vStartOrigin, vOrigin, g_iSprites[SPR_FLARE], 30, 10, 1, 50, 10 );
 
 		// Flash the player
 		if ( get_pcvar_num( CVAR_wc3_blink_dizziness ) == 1 )

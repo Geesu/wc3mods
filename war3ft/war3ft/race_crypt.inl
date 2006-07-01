@@ -96,7 +96,7 @@ public _CL_ULT_LocustEffect( parm[] )
 	vFunnel[2] = parm[4];
 	
 	// Draw a funnel
-	Create_TE_LARGEFUNNEL( vFunnel, g_sSnow, 0 );
+	Create_TE_LARGEFUNNEL( vFunnel, g_iSprites[SPR_SNOW], 0 );
 	
 	// Now we need to calculate where the next funnel will be drawn
 	new vDist[3];
@@ -149,7 +149,7 @@ public _CL_ULT_LocustEffect( parm[] )
 
 		WC3_Damage( iVictim, iAttacker, iDamage, CSW_LOCUSTS, -1 );
 
-		emit_sound( iVictim, CHAN_STATIC, SOUND_LOCUSTSWARM, 1.0, ATTN_NORM, 0, PITCH_NORM );
+		emit_sound( iVictim, CHAN_STATIC, g_szSounds[SOUND_LOCUSTSWARM], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 		ULT_ResetCooldown( iAttacker, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 		
@@ -191,10 +191,10 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 			vVictimOrigin[2] -= 20;
 			
 			// Create the orb effect
-			Create_TE_SPRITE( vVictimOrigin, g_sWave, 10, 200 );
+			Create_TE_SPRITE( vVictimOrigin, g_iSprites[SPR_WAVE], 10, 200 );
 			
 			// Play the orb sound
-			emit_sound( iVictim, CHAN_STATIC, SOUND_ANNIHILATION, 1.0, ATTN_NORM, 0, PITCH_NORM );
+			emit_sound( iVictim, CHAN_STATIC, g_szSounds[SOUND_ANNIHILATION], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 			// Damage the user
 			WC3_Damage( iVictim, iAttacker, ORB_DAMAGE, CSW_ORB, iHitPlace );
@@ -219,10 +219,10 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 				get_user_origin( iAttacker, vAttackerorigin );
 				
 				// Create the Carrion Beetle effect
-				Create_TE_SPRITETRAIL( vAttackerorigin, vVictimOrigin, g_sBeetle, 15, 15, 1, 2, 6 );
+				Create_TE_SPRITETRAIL( vAttackerorigin, vVictimOrigin, g_iSprites[SPR_BEETLE], 15, 15, 1, 2, 6 );
 				
 				// Play the carrion beetle sound
-				emit_sound( iVictim, CHAN_STATIC, SOUND_CARRION, 1.0, ATTN_NORM, 0, PITCH_NORM );
+				emit_sound( iVictim, CHAN_STATIC, g_szSounds[SOUND_CARRION], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 				p_data[iAttacker][P_CARRIONCOUNT]--;
 
@@ -246,7 +246,7 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 		{
 
 			// Play the impale sound
-			emit_sound( iVictim, CHAN_STATIC, SOUND_IMPALE, 1.0, ATTN_NORM, 0, PITCH_NORM );
+			emit_sound( iVictim, CHAN_STATIC, g_szSounds[SOUND_IMPALE], 1.0, ATTN_NORM, 0, PITCH_NORM );
 			
 			new Float:vVelocity[3];
 			entity_get_vector( iVictim, EV_VEC_velocity, vVelocity );

@@ -4,32 +4,25 @@
 
 public DB_DetermineType()
 {
-	// If the DBI Module isn't loaded then we can't use SQL for saving XP
-	if ( ( !LibraryExists( "dbi", LibType_Class ) && !LibraryExists( "sqlx", LibType_Class ) ) && get_pcvar_num( CVAR_wc3_save_xp_sql ) )
-	{
 
-		log_amx( "[WARNING] Unable to saving using SQLite, please enable a sqlite_amxx to save XP using DBI" );
-		log_amx( "[WARNING] Saving will be done using NVault" );
+	new iDatabaseType = get_pcvar_num( CVAR_wc3_save_xp_db );
 
-		set_pcvar_num( CVAR_wc3_save_xp_sql, 0 );
-	}
-
-	
-	// Then we are saving using SQL, lets determine if it's sqlite or mysql
-	if ( get_pcvar_num( CVAR_wc3_save_xp_sql ) == 1 )
+	// See if we can save with SQLite
+	if ( iDatabaseType == DB_SQLITE )
 	{
 		
-		// Using MySQL X
-		if ( LibraryExists( "sqlx", LibType_Class ) )
+		// Then we can't save w/this!!!
+		if ( !LibraryExists( "dbi", LibType_Class )  )
 		{
-			g_DBType = DB_MYSQLX;
-			copy( g_szDBType, 15, "MySQLX" );
+			log_amx( "[WARNING] Unable to saving using SQLite, please enable the sqlite module" );
+			log_amx( "[WARNING] Saving will be done using NVault" );
+
+			set_pcvar_num( CVAR_wc3_save_xp_db, 0 );
 		}
-
-		// Using SQLite (lets hope if we get here)
-		else if ( LibraryExists( "dbi", LibType_Class ) )
+		
+		// OK we can save
+		else
 		{
-
 			// Get the DB Type
 			new szDBIType[16];
 			dbi_type( szDBIType, 15 );
@@ -44,8 +37,32 @@ public DB_DetermineType()
 			// Using an unsupported DB Type - lets default to vault
 			else
 			{
-				log_amx( "Unsupported database type loaded: %s, the supported databases are MySQL X or SQLite", szDBIType );
+				log_amx( "[WARNING] Unsupported database type loaded: %s, please enable the sqlite module", szDBIType );
+				log_amx( "[WARNING] Saving will be done using NVault" );
+
+				set_pcvar_num( CVAR_wc3_save_xp_db, 0 );
 			}
+		}
+	}
+
+	// See if we can save with MySQL
+	if ( iDatabaseType == DB_MYSQLX )
+	{
+	
+		// Then we can't save using mysql
+		if ( !LibraryExists( "sqlx", LibType_Class ) )
+		{
+			log_amx( "[WARNING] Unable to saving using MySQL, please enable the mysql module" );
+			log_amx( "[WARNING] Saving will be done using NVault" );
+
+			set_pcvar_num( CVAR_wc3_save_xp_db, 0 );
+		}
+
+		// OK we can save!
+		else
+		{
+			g_DBType = DB_MYSQLX;
+			copy( g_szDBType, 15, "MySQLX" );
 		}
 	}
 	
@@ -148,6 +165,8 @@ public DB_SaveXP( id )
 		return;
 	}
 	
+	server_print( "[DEBUG] About to save for %d", id );
+
 	// Save the XP	
 	switch( g_DBType )
 	{

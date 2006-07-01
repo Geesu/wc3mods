@@ -9,7 +9,7 @@ public NE_ULT_Entangle( iCaster, iEnemy )
 {
 
 	// Follow the user until they stop moving...
-	Create_TE_BEAMFOLLOW( iEnemy, g_siTrail, 10, 5, 10, 108, 23, 255 );
+	Create_TE_BEAMFOLLOW( iEnemy, g_iSprites[SPR_TRAIL], 10, 5, 10, 108, 23, 255 );
 	
 	// User is now stunned so we can't do any other stun abilities
 	p_data_b[iEnemy][PB_STUNNED] = true;
@@ -87,7 +87,7 @@ public NE_ULT_EntangleEffect( id )
 	get_user_origin( id, vOrigin );
 	
 	// Play the entangle sound
-	emit_sound( id, CHAN_STATIC, SOUND_ENTANGLING, 1.0, ATTN_NORM, 0, PITCH_NORM );
+	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_ENTANGLING], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
 	new iStart[3], iEnd[3], iHeight;
 	new iRadius	= 20, iCounter = 0;
@@ -142,7 +142,7 @@ public NE_ULT_EntangleEffect( id )
 			iEnd[1]		= vOrigin[1] + y2;
 			iEnd[2]		= vOrigin[2] + iHeight + 2;
 			
-			Create_TE_BEAMPOINTS( iStart, iEnd, g_siBeam4, 0, 0, ( floatround( ENTANGLE_TIME ) * 10 ), 10, 5, 10, 108, 23, 255, 0 );
+			Create_TE_BEAMPOINTS( iStart, iEnd, g_iSprites[SPR_BEAM], 0, 0, ( floatround( ENTANGLE_TIME ) * 10 ), 10, 5, 10, 108, 23, 255, 0 );
 
 			iHeight -= 16;
 		}
