@@ -11,6 +11,7 @@ v3.0
  - Addition: Plugin will now auto-load even if modules aren't enabled, thanks BAIL!
  - Addition: Plugin will no longer load if any required sound files or sprites are missing
  - Bug Fix: cl_minmodels task was not repeating
+ - Change: You now gain XP when nearby teammates kill an enemy!
  - Change: Mole's can now buy items when they have moled!!
  - Change: Helm of Excellence price increase to 3000
  - Change: Chameleon race can now have ANY skills (not just a subset of that skill number like before)
@@ -70,7 +71,6 @@ v3.0
 //bug: phoenix will try to respawn users when changing team
 //bug: strip_user_weapons will remove bomb + not give it back
 //block knife = http://forums.alliedmods.net/showthread.php?t=29836
-//make sure files exist... otherwise don't load plugin
 
 //shopmenu 3 ideas:
 // immune to some magic

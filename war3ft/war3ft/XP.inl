@@ -2,6 +2,7 @@
 *	XP Functions
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
+#define XP_NEARBY_RADIUS		250
 
 // START FROM CSX.INC - This is a hack b/c we can't include CSX and DODX in the same plugin :/
 forward bomb_planting(planter);
@@ -240,6 +241,9 @@ XP_onDeath( iVictim, iAttacker, iWeaponIndex, iHeadshot )
 
 			iBonusXP = XP_Give( iAttacker, iBonusXP );
 			
+			// Lets give some bonus XP to the player's nearby teammates
+			XP_NearbyBonus( iAttacker, iBonusXP );
+
 			if ( iBonusXP != 0 && get_pcvar_num( CVAR_wc3_show_kill_obj ) )
 			{
 				client_print( iAttacker, print_chat, "%s You have been awarded %d XP for killing the enemy", g_MODclient, iBonusXP );
@@ -395,8 +399,12 @@ XP_Check( id, bShowGained = true )
 	if ( p_data[id][P_LEVEL] > iOldLevel && p_data[id][P_RACE] != 0 && bShowGained )
 	{
 		WC3_StatusText( id, TXT_TOP_CENTER, "%L", id, "YOU_GAINED_A_LEVEL" );
-
-		emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_LEVELUP], 1.0, ATTN_NORM, 0, PITCH_NORM );
+		
+		// Only play the sound if the user is alived!!
+		if ( is_user_alive( id ) )
+		{
+			emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_LEVELUP], 1.0, ATTN_NORM, 0, PITCH_NORM );
+		}
 	}
 
 	// We might need to lower the skills the user has ( can occur if you load XP info from a database and the XP multiplier has changed)
@@ -651,4 +659,41 @@ stock XP_Give( id, iBonusXP )
 	}
 
 	return 0;
+}
+
+XP_NearbyBonus( id, iXP )
+{
+
+	new iTeam = get_user_team( id );
+
+	new iPlayers[32], iNumPlayers, i, iTargetID, vTargetOrigin[3], iBonusXP, iDistance;
+	get_players( iPlayers, iNumPlayers );
+	
+	new vOrigin[3];
+	get_user_origin( id, vOrigin );
+
+	for ( i = 0; i < iNumPlayers; i++ )
+	{
+		iTargetID = iPlayers[i];
+		
+		// Lets give the teammate some XP if they're close enough!
+		if ( iTeam == get_user_team( iTargetID ) )
+		{
+			get_user_origin( iTargetID, vTargetOrigin );
+			
+			iDistance = get_distance( vOrigin, vTargetOrigin );
+
+			// Then lets give them some XP!!!
+			if ( iDistance <= XP_NEARBY_RADIUS )
+			{
+				iBonusXP = floatround( float( iXP ) * ( float( iDistance ) / float( XP_NEARBY_RADIUS ) ) );
+
+				p_data[id][P_XP] += iBonusXP;
+
+				client_print( id, print_chat, "[DEBUG] You have been awarded %d XP because a nearby teammate killed someone", iBonusXP );
+
+				XP_Check( id );
+			}
+		}
+	}
 }
