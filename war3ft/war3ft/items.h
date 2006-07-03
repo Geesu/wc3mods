@@ -6,6 +6,7 @@
 #define MAX_PAGE_ITEMS      9
 #define ITEM_SLOT_ONE       0
 #define ITEM_SLOT_TWO       1
+#define ITEM_SLOT_FULL      2
 
 #define ITEM_NONE          -1
 #define ITEM_ANKH		    0
@@ -31,9 +32,9 @@
 
 new g_iShopMenuItems[33][MAX_PLAYER_ITEMS];			// Holds the player's current items
 new g_iMultipleItems[33][2];						// Holds the number of the same item - i.e. rings
-new g_iFutureShopMenu[33];							// This will hold which shopmenu we should display after the user has selected an item to remove
+new g_iFutureItem[33];                              // Holds the item that the player wants to buy 
 
-new bool:g_bPlayerBoughtAnkh[33];							// Set to true when a user buys an ankh
-new bool:g_bPlayerBoughtMole[33];							// Set to true when a user buys a mole
+new bool:g_bPlayerBoughtAnkh[33];					// Set to true when a user buys an ankh
+new bool:g_bPlayerBoughtMole[33];					// Set to true when a user buys a mole
 
 new ITEM_COST[MAX_SHOPMENU_ITEMS] = {0};

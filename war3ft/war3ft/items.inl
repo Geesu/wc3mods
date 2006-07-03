@@ -343,8 +343,8 @@ public ITEM_Remove( id, iItem, iItemSlot )
 
 ITEM_GetSlot( id )
 {
-	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE )
-		return ITEM_SLOT_ONE;
+	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE && g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE )
+		return ITEM_SLOT_FULL;
 
 	else if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE )
 		return ITEM_SLOT_TWO;

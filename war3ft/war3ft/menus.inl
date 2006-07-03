@@ -567,8 +567,7 @@ public _menu_ReplaceItem( id, iKey )
 		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_TWO], ITEM_SLOT_TWO )
 	}
 
-	// Display the shopmenu now
-	MENU_Shopmenu( id, g_iFutureShopMenu[id] );
+	ITEM_Buy( id, g_iFutureItem[id] );
 
 	return;
 }
@@ -577,16 +576,6 @@ public MENU_Shopmenu( id, iStart )
 {
 	if ( !WAR3_Check( id ) || !ITEM_CanBuy( id ) )
 	{
-		return;
-	}
-
-	// If the user has 2 items, we need to determine which item to remove before they can buy another
-	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE && g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE )
-	{
-		g_iFutureShopMenu[id] = iStart;
-
-		MENU_ReplaceItem( id );
-
 		return;
 	}
 
@@ -638,8 +627,17 @@ public _MENU_Shopmenu1( id, iKey )
 	{
 		return;
 	}
-	
-	ITEM_Buy( id, iKey );
+
+	if ( ITEM_GetSlot( id ) == ITEM_SLOT_FULL )
+	{
+		g_iFutureItem[id] = iKey;
+
+		MENU_ReplaceItem( id );
+	}
+	else
+	{
+		ITEM_Buy( id, iKey );
+	}
 
 	return;
 }
@@ -651,10 +649,18 @@ public _MENU_Shopmenu2( id, iKey )
 		return;
 	}
 	
-	// Since it's shopmenu 2, we need to add 9 to the selection
-	iKey += MAX_PAGE_ITEMS;
+	if ( ITEM_GetSlot( id ) == ITEM_SLOT_FULL )
+	{
+		MENU_ReplaceItem( id );
+	}
+	else
+	{
+		iKey += MAX_PAGE_ITEMS;
 
-	ITEM_Buy( id, iKey );
+		g_iFutureItem[id] = iKey;
+
+		ITEM_Buy( id, iKey );
+	}
 
 	return;
 }
