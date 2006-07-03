@@ -652,17 +652,17 @@ public _MENU_Shopmenu2( id, iKey )
 	{
 		return;
 	}
+
+	iKey += MAX_PAGE_ITEMS;
 	
 	if ( ITEM_GetSlot( id ) == ITEM_SLOT_FULL )
 	{
+		g_iFutureItem[id] = iKey;
+
 		MENU_ReplaceItem( id );
 	}
 	else
 	{
-		iKey += MAX_PAGE_ITEMS;
-
-		g_iFutureItem[id] = iKey;
-
 		ITEM_Buy( id, iKey );
 	}
 
