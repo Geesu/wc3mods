@@ -397,6 +397,10 @@ public MENU_SelectRace( id, iRaceXP[MAX_RACES] )
 	{
 		pos += formatex( szMenu[pos], 512-pos, "\R%L^n^n", id, "MENU_WORD_EXPERIENCE" );
 	}
+	else
+	{
+		pos += formatex( szMenu[pos], 512-pos, "^n^n" );
+	}
 
 	// Build the changerace menu (for every race)
 	for ( i = 0; i < get_pcvar_num( CVAR_wc3_races ); i++ )
