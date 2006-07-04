@@ -1346,10 +1346,7 @@ SHARED_CreateBuyZone( id )
 
 	new Float:fDuration = get_pcvar_float( CVAR_mp_buytime );
 
-	new iParm[1];
-	iParm[0] = iEnt;
-
-	set_task( fDuration, "_SHARED_RemoveBuyZone", TASK_REMOVEBUYZONE + id, iParm, 1 );  
+	set_task( fDuration, "_SHARED_RemoveBuyZone", TASK_REMOVEBUYZONE + iEnt );  
 
 	// Display to target they can buy ( add this into language file )
 	new szMessage[128];
@@ -1361,13 +1358,17 @@ SHARED_CreateBuyZone( id )
 }  
 
 // This will remove the buyzone if it exists
-public _SHARED_RemoveBuyZone( iParm[1] )  
+public _SHARED_RemoveBuyZone( iEnt )  
 {
-	new iEnt = iParm[0];
+	if ( iEnt >= TASK_REMOVEBUYZONE )
+	{ 	 
+		iEnt -= TASK_REMOVEBUYZONE; 	 
+	}
 
 	// Make sure we're removing a valid entity!
 	if ( is_valid_ent( iEnt ) )
 	{
+		log_amx( "Removing entity: %d", iEnt );
 		remove_entity( iEnt );  
 	}
 
