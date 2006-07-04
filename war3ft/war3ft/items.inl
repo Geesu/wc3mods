@@ -49,7 +49,7 @@ public ITEM_Buy( id, iItem )
 	}
 	
 	// User has purchased the maximum allowed rings
-	else if ( g_iMultipleItems[id][0] >= 5 && iItem == ITEM_RING )
+	else if ( g_iTotalRings[id] >= 5 && iItem == ITEM_RING )
 	{
 		client_print( id, print_center, "%L", id, "NOT_PURCHASE_MORE_THAN_FIVE_RINGS" );
 
@@ -173,7 +173,9 @@ public ITEM_Set( id, iItem )
 
 		case ITEM_NECKLACE:
 		{
-			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU_6" );
+			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU_6", NECKLACE_CHARGES );
+
+			g_iNecklaceCharges[id] += NECKLACE_CHARGES;
 		}
 
 		case ITEM_FROST:
@@ -238,7 +240,7 @@ public ITEM_Set( id, iItem )
 		{
 			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_7" );
 
-			g_iMultipleItems[id][0]++;
+			g_iTotalRings[id]++;
 
 			if ( !task_exists( TASK_ITEM_RING + id ) )
 			{
@@ -265,6 +267,7 @@ public ITEM_Set( id, iItem )
 		}
 
 	}
+
 	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_PICKUPITEM], 1.0, ATTN_NORM, 0, PITCH_NORM );
 	WC3_ShowBar( id );
 
@@ -282,6 +285,21 @@ ITEM_RemoveSlot( id, iItemSlot )
 	}
 }
 
+// Remove an item based on it's ID
+ITEM_RemoveID( id, iItem )
+{
+	
+	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] == iItem )
+	{
+		ITEM_Remove( id, iItem, ITEM_SLOT_ONE );
+	}
+
+	else if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] == iItem )
+	{
+		ITEM_Remove( id, iItem, ITEM_SLOT_TWO );
+	}
+}
+
 public ITEM_Remove( id, iItem, iItemSlot )
 {
 	g_iShopMenuItems[id][iItemSlot] = ITEM_NONE;
@@ -296,6 +314,11 @@ public ITEM_Remove( id, iItem, iItemSlot )
 		case ITEM_CLOAK:
 		{
 			SHARED_INVIS_Set( id );
+		}
+
+		case ITEM_NECKLACE:
+		{
+			g_iNecklaceCharges[id] = 0;
 		}
 
 		case ITEM_HEALTH:
@@ -326,7 +349,7 @@ public ITEM_Remove( id, iItem, iItemSlot )
 		{
 			if ( task_exists( TASK_ITEM_RING + id ) )
 			{
-				g_iMultipleItems[id][0] = 0;
+				g_iTotalRings[id] = 0;
 
 				remove_task( TASK_ITEM_RING + id );
 			}
@@ -442,7 +465,7 @@ ITEM_BuyRings( id )
 {
 	new iMoney;
 	
-	while ( g_iMultipleItems[id][0] < 5 )
+	while ( g_iTotalRings[id] < 5 )
 	{
 		iMoney = SHARED_GetUserMoney( id );
 
@@ -477,7 +500,7 @@ public _ITEM_Ring( id )
 		return;
 	}
 
-	new iBonusHealth = g_iMultipleItems[id][0];
+	new iBonusHealth = g_iTotalRings[id];
 
 	while ( iBonusHealth > 0 )
 	{
@@ -614,5 +637,15 @@ ITEM_Init()
 	if ( g_MOD == GAME_DOD )
 	{
 		ITEM_COST[9]	= 800;
+	}
+}
+
+ITEM_NeckRemoveCharge( id )
+{
+	g_iNecklaceCharges[id]--;
+	
+	if ( g_iNecklaceCharges[id] <= 0 )
+	{
+		ITEM_RemoveID( id, ITEM_NECKLACE );
 	}
 }

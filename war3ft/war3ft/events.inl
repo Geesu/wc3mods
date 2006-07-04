@@ -469,24 +469,34 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 		if ( SHARED_ValidPlayer( iAttacker ) && p_data_b[iAttacker][PB_ISSEARCHING] )
 		{
 
-			// Now lets make sure the person he's looking at isn't immune and isn't on the same team
-			if ( get_user_team( iAttacker ) != get_user_team( iVictim ) && !ULT_IsImmune( iVictim ) && SHARED_IsEntInView( iAttacker, iVictim ) )
+			// Now lets make sure the person he's looking at is in view and isn't on the same team
+			if ( get_user_team( iAttacker ) != get_user_team( iVictim ) && SHARED_IsEntInView( iAttacker, iVictim ) )
 			{
-
-				// Well we do have a target so lets execute the user's ultimate!!
-				if ( SM_VerifySkill( iAttacker, ULTIMATE_CHAINLIGHTNING ) )
-				{
-					OR_ULT_ChainLightning( iAttacker, iVictim, iHitZone );
-				}
-				else if ( SM_VerifySkill( iAttacker, ULTIMATE_ENTANGLE ) )
-				{
-					NE_ULT_Entangle( iAttacker, iVictim );
-				}
-				else if ( SM_VerifySkill( iAttacker, ULTIMATE_IMMOLATE ) )
-				{
-					BM_ULT_Immolate( iAttacker, iVictim );
-				}
 				
+				// Check to see if the user should block this ultimate!
+				if ( ULT_IsImmune( iVictim ) )
+				{
+					ULT_Blocked( iAttacker );
+				}
+
+				// Then the user's ult should work!
+				else
+				{
+					// Well we do have a target so lets execute the user's ultimate!!
+					if ( SM_VerifySkill( iAttacker, ULTIMATE_CHAINLIGHTNING ) )
+					{
+						OR_ULT_ChainLightning( iAttacker, iVictim, iHitZone );
+					}
+					else if ( SM_VerifySkill( iAttacker, ULTIMATE_ENTANGLE ) )
+					{
+						NE_ULT_Entangle( iAttacker, iVictim );
+					}
+					else if ( SM_VerifySkill( iAttacker, ULTIMATE_IMMOLATE ) )
+					{
+						BM_ULT_Immolate( iAttacker, iVictim );
+					}
+				}
+
 				// No longer searching since we found a target
 				p_data_b[iAttacker][PB_ISSEARCHING]	= false;
 

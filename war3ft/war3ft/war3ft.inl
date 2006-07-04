@@ -793,13 +793,14 @@ WC3_ShowRaceInfo( id )
 			pos += formatex( szMsg[pos], 255-pos, "^n%s", szSkillNames[4] );
 		}
 
+		log_amx( szMsg );
+
 		WC3_StatusText( id, TXT_RACE_INFO, szMsg );
 	}
 	
 	// User has no race
 	else
 	{
-
 		WC3_StatusText( id, TXT_RACE_INFO, "You need to select a race first!" );
 	}
 }
@@ -1291,7 +1292,7 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 			// Killer has immunity, user shouldn't respawn :/
 			if ( ULT_IsImmune( iKiller ) )
 			{
-				client_print( iVictim, print_chat, "%s You will not respawn because your killer has immunity.", g_MODclient );
+				client_print( iVictim, print_chat, "%s You will not respawn because your killer has immunity", g_MODclient );
 			}
 
 			// Otherwise lets spawn them!!!

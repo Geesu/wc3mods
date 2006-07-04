@@ -39,6 +39,8 @@ v3.0
  - Change: Bash now holds for 0.7 seconds instead of 1.0
  - Change: Humans can no longer teleport into the VIP Escape zone
  - Change: A recompile is no longer required for a DOD/CS/CZ plugin
+ - Change: Necklace now has charges (3)
+ - Change: When an ultimate is blocked b/c of immunity, the user has to wait for the length of the cooldown to re-use
  - Removed: FT_impale_intensity cvar (edit this constant at the top of skills.inl)
  - Removed: FT_blink_radius cvar (replaced with NECKLACE_RADIUS define)
  - Removed: FT_healing_range cvar (defined at top of skills.inl)
@@ -53,6 +55,9 @@ v3.0
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
+//fix the number of things displayed w/items... i.e. rings in shop 1 on statusbar
+//chain lightning being cut off...
+//keep using hud channels?  i.e. /level multiple times
 //make mysqlx saving threaded and pruning
 //finish re-writing how skills are handled
 //verify all skills given with selectskill

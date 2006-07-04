@@ -53,6 +53,12 @@ WA_ULT_Vengeance( id )
 			// Immune person nearby
 			if ( ent == -2 )
 			{
+				// The user's ultimate was blocked!
+				ULT_Blocked( id );
+
+				// Set up a new ultimate delay
+				ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
+
 				WC3_StatusText( id, 0, "%L", id, "VENGEANCE_FAILED_ENEMY_IMMUNITY" );
 			}
 

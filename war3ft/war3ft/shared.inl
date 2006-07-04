@@ -419,7 +419,7 @@ public _SHARED_DOD_Reincarnation_Check( id )
 	get_user_origin( id, origin );
 
 	// Failure, stuck somewhere, put them back
-	if( origin[2] == iReincarnation[id][2] )
+	if ( origin[2] == iReincarnation[id][2] )
 	{
 
 		new ent = SHARED_FindFreeSpawn( id, false );
@@ -1063,7 +1063,7 @@ SHARED_FindFreeSpawn( id, bImmunityCheck = false, bReverseTeam = false )
 			}
 		}
 	}
-	while ( ent && !bFound )
+	while ( ent && !bFound && !bImmunityNear )
 	
 	// Reset the spawn points...
 	if ( !task_exists( TASK_RESETSPAWNS ) )

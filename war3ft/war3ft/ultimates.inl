@@ -162,7 +162,37 @@ ULT_Available( id )
 
 ULT_IsImmune( id )
 {
-	return ( ITEM_Has( id, ITEM_NECKLACE ) || p_data_b[id][PB_WARDENBLINK] )
+
+	new bool:bBlocked = false;
+
+	if ( p_data_b[id][PB_WARDENBLINK] )
+	{
+		bBlocked = true;
+	}
+
+	else if ( ITEM_Has( id, ITEM_NECKLACE ) )
+	{
+
+		if ( g_iNecklaceCharges[id] > 0 )
+		{
+			ITEM_NeckRemoveCharge( id );
+
+			bBlocked = true;
+		}
+	}
+
+	if ( bBlocked )
+	{
+		client_print( id, print_chat, "%s You have blocked an enemy's ultimate!", g_MODclient );
+	}
+
+	return bBlocked;
+}
+
+ULT_Blocked( id )
+{
+	// Maybe play a sound here instead?
+	client_print( id, print_chat, "%s Your ultimate has been blocked", g_MODclient );
 }
 
 public _ULT_Ping( parm[] )

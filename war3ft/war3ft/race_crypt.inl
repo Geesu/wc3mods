@@ -22,7 +22,7 @@ CL_ULT_LocustSwarm( id )
 	{
 		iTargetID = players[i];
 
-		if ( get_user_team( iTargetID ) != iTeam && !ULT_IsImmune( iTargetID ) )
+		if ( get_user_team( iTargetID ) != iTeam )
 		{
 			iTargets[iTotalTargets++] = iTargetID;
 		}
@@ -44,6 +44,17 @@ CL_ULT_LocustSwarm( id )
 		iRandomSpot = random_num( 0, iTotalTargets );
 
 		iVictim = iTargets[iRandomSpot];
+	}
+
+	// Then the user's ultimate was blocked :/
+	if ( ULT_IsImmune( iVictim ) )
+	{
+		ULT_Blocked( id );
+
+		// Reset the user's ultimate
+		ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
+
+		return;
 	}
 
 	// Lets get the origin of the caster
@@ -74,7 +85,7 @@ public _CL_ULT_LocustEffect( parm[] )
 	new iAttacker	= parm[0];
 	new iVictim		= parm[1];
 
-	if ( ULT_IsImmune( iVictim ) || !is_user_alive( iVictim ) || !p_data_b[iVictim][PB_ISCONNECTED] )
+	if ( !is_user_alive( iVictim ) || !p_data_b[iVictim][PB_ISCONNECTED] )
 	{
 		client_print( iAttacker, print_chat, "%s Target is no longer targetable, try casting again!", g_MODclient );
 

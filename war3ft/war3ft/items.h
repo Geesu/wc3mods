@@ -1,4 +1,6 @@
 
+#define NECKLACE_CHARGES	3
+
 
 // Item Defines
 #define MAX_SHOPMENU_ITEMS  18
@@ -28,11 +30,12 @@
 #define ITEM_CHAMELEON	    16
 #define ITEM_MOLE		    17
 
-
-
 new g_iShopMenuItems[33][MAX_PLAYER_ITEMS];			// Holds the player's current items
-new g_iMultipleItems[33][2];						// Holds the number of the same item - i.e. rings
 new g_iFutureItem[33];                              // Holds the item that the player wants to buy 
+
+new g_iTotalRings[33];								// Holds the number of rings the player has
+new g_iNecklaceCharges[33];							// Holds the number of charges left in the player's necklace
+new g_iHelmCharges[33];								// Holds the number of charges left in the player's helm
 
 new bool:g_bPlayerBoughtAnkh[33];					// Set to true when a user buys an ankh
 new bool:g_bPlayerBoughtMole[33];					// Set to true when a user buys a mole

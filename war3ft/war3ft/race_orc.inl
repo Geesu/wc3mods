@@ -76,6 +76,12 @@ public _OR_ULT_ChainLightning( parm[5] )
 				// Make sure target isn't immune!
 				if ( ULT_IsImmune( iTarget )  )
 				{
+					ULT_Blocked( iTarget );
+				}
+
+				// Then we can hit this user!
+				else
+				{
 					
 					// This user is closest!! Lets make a note of this...
 					if ( iDistanceBetween < iClosestDistance || iClosestTarget == 0 )
@@ -83,6 +89,7 @@ public _OR_ULT_ChainLightning( parm[5] )
 						iClosestDistance = iDistanceBetween;
 						iClosestTarget = iTarget;
 					}
+
 				}//end immune check
 			}//end distance/hit check
 		}//end team check

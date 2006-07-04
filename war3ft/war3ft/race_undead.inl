@@ -45,6 +45,10 @@ UD_Suicide( id )
 	p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
 }
 
+
+// This is only use in _UD_SuicideExplode so declaring it here should be fine
+new bool:bIgnoreDmg[33] = false;
+
 // Draw the explosions
 public _UD_SuicideExplode( parm[5] )
 {
@@ -92,19 +96,37 @@ public _UD_SuicideExplode( parm[5] )
 		// Get distance in b/t target and caster
 		iDistance = get_distance( vOrigin, vTargetOrigin );
 		
-		// Make sure this user is close enough to do damage + isn't immune + isn't on the same team
-		if ( iDistance < EXPLOSION_RANGE && !ULT_IsImmune( iTargetID ) && iTeam != get_user_team( iTargetID ) )
+		// Make sure this user is close enough to do damage + isn't immune + isn't on the same team + isn't already immune to all damage
+		if ( iDistance < EXPLOSION_RANGE && iTeam != get_user_team( iTargetID ) && !bIgnoreDmg[iTargetID] )
 		{
+
+			if ( ULT_IsImmune( iTargetID ) )
+			{
+				ULT_Blocked( id );
+				
+				bIgnoreDmg[iTargetID] = true;
+			}
 			
-			// Calculate the damage to be done
-			iDamage = ( EXPLOSION_RANGE - iDistance) * iMultiplier;
-			iDamage = sqroot( iDamage );
+			// The user isn't immune!
+			else
+			{
 			
-			// Damage them!!!!
-			WC3_Damage( iTargetID, id, iDamage, CSW_SUICIDE, -1 );
-			
-			// Lets shake up their screen a bit
-			Create_ScreenShake( iTargetID, (1<<14), (1<<13), (1<<14) );
+				// Calculate the damage to be done
+				iDamage = ( EXPLOSION_RANGE - iDistance) * iMultiplier;
+				iDamage = sqroot( iDamage );
+				
+				// Damage them!!!!
+				WC3_Damage( iTargetID, id, iDamage, CSW_SUICIDE, -1 );
+				
+				// Lets shake up their screen a bit
+				Create_ScreenShake( iTargetID, (1<<14), (1<<13), (1<<14) );
+			}
+		}
+
+		// Reset the "don't damage" rule
+		if ( parm[1] - 1 <= 0 )
+		{
+			bIgnoreDmg[iTargetID] = false;
 		}
 	}
 

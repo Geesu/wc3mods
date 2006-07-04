@@ -32,10 +32,12 @@ HU_ULT_Blink( id )
 	// Make sure a nearby enemy doesn't have immunity
 	if ( WC3_IsImmunePlayerNear( id, vOldLocation ) || WC3_IsImmunePlayerNear( id, vNewLocation ) )
 	{
-
 		//set_hudmessage( 255, 255, 10, -1.0, -0.4, 1, 0.5, BLINK_COOLDOWN, 0.2, 0.2 ,-1 );
 		WC3_StatusText( id, 0, "%L", id, "TELEPORT_FAILED_ENEMY_IMMUNITY" );
 		
+		// Reset the user's ultimate
+		ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
+
 		return;
 	}
 
@@ -44,6 +46,9 @@ HU_ULT_Blink( id )
 	{
 		WC3_StatusText( id, 0, "Blink failed, you cannot teleport so close to the escape zone!" );
 		
+		// Reset the user's ultimate
+		ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
+
 		return;
 	}
 
