@@ -64,12 +64,9 @@ public MOTD_ItemsInfo( id, iStart )
 		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[8], id, "SHOPMENU2_9" );
 
 		formatex( szTitle, 127, "%L", id, "SHOPMENU2_TITLE" );
-
 	}
 
-
 	show_motd( id, szTmpMsg, szTitle );
-
 }
 
 public MOTD_PlayerSkills( id )
@@ -79,7 +76,6 @@ public MOTD_PlayerSkills( id )
 	{
 		return;
 	}
-
 
 	new iPlayers[32], iNumPlayers, i;
 	get_players( iPlayers, iNumPlayers );
@@ -94,8 +90,7 @@ public MOTD_PlayerSkills( id )
 		bRaceUsed[iRaceID] = true;
 	}
 	
-	
-	new pos = 0, iTeam, k, iTeamColor;
+	new pos = 0, iTeam, k, szTeamColor[1];
 
 	// Then we have a player, and we're not on the server console
 	if ( id != 0 )
@@ -133,17 +128,17 @@ public MOTD_PlayerSkills( id )
 			{
 				
 				// Default color
-				iTeamColor = 'p';
+				formatex( szTeamColor, 1, "p" );
 
 				if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 				{
 					if ( iTeam == TEAM_T )
 					{
-						iTeamColor = 't';
+						formatex( szTeamColor, 1, "t" );
 					}
 					else if ( iTeam == TEAM_CT )
 					{
-						iTeamColor = 'c';
+						formatex( szTeamColor, 1, "c" );
 					}
 				}
 
@@ -151,11 +146,11 @@ public MOTD_PlayerSkills( id )
 				{
 					if ( iTeam == ALLIES )
 					{
-						iTeamColor = 'a';
+						formatex( szTeamColor, 1, "a" );
 					}
 					else if ( iTeam == AXIS )
 					{
-						iTeamColor = 'x';
+						formatex( szTeamColor, 1, "x" );
 					}
 				}
 
@@ -175,7 +170,7 @@ public MOTD_PlayerSkills( id )
 						// Player
 						if ( id != 0 )
 						{
-							pos += formatex( szTmpMsg[pos], 2047 - pos, "<li id='%c'>(%d) %s</li>", iTeamColor, p_data[iTargetID][P_LEVEL], szTmpName );
+							pos += formatex( szTmpMsg[pos], 2047 - pos, "<li id='%s'>(%d) %s</li>", szTeamColor, p_data[iTargetID][P_LEVEL], szTmpName );
 						}
 
 						// Server Console
@@ -200,6 +195,9 @@ public MOTD_PlayerSkills( id )
 	{
 		new szTitle[128];
 		formatex( szTitle, 127, "%L", id, "PLAYER_SKILLS" );
+
+		console_print( id, "%s", szTmpMsg );
+		log_amx( "%s", szTmpMsg );
 
 		show_motd( id, szTmpMsg, szTitle );
 	}
@@ -245,7 +243,7 @@ public MOTD_SkillsInfo( id )
 			LANG_GetSkillInfo( iSkillID, id, szTmpDesc, 255 );
 
 			// Add each skill
-			if ( i < 3)
+			if ( i < 3 )
 			{
 				// Add the trainable skills header
 				if ( i == 0 )

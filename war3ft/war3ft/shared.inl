@@ -291,7 +291,7 @@ public _SHARED_Spawn( id )
 
 		return;
 	}
-	
+
 	// Reset items when the user spawns!
 	g_iShopMenuItems[id][ITEM_SLOT_ONE]	= ITEM_NONE;
 	g_iShopMenuItems[id][ITEM_SLOT_TWO] = ITEM_NONE;
@@ -311,6 +311,12 @@ public _SHARED_Spawn( id )
 	
 	// Give the user godmode for a little
 	set_user_godmode( id, 1 );
+
+	// Reset the user's skin to normal
+	SHARED_ChangeSkin( id, SKIN_RESET );
+
+	// The user should no longer be a mole!
+	p_data_b[id][PB_MOLE] = false;
 
 	set_task( 0.2, "_SHARED_Spawn_Final", TASK_SPAWNPLAYER + id );
 	set_task( 0.4, "_SHARED_CS_GiveWeapons", TASK_GIVEITEMS + id );
@@ -1344,15 +1350,12 @@ SHARED_CreateBuyZone( id )
 
 	DispatchSpawn( iEnt );  
 
-	new Float:fDuration = get_pcvar_float( CVAR_mp_buytime );
+	new Float:fDuration = ( get_pcvar_float( CVAR_mp_buytime ) * 60.0 );
 
 	set_task( fDuration, "_SHARED_RemoveBuyZone", TASK_REMOVEBUYZONE + iEnt );  
 
-	// Display to target they can buy ( add this into language file )
-	new szMessage[128];
-	format( szMessage, 127, "You have %d seconds to buy items", fDuration );
-
-	WC3_StatusText( id, TXT_OTHER, szMessage );
+	// Display to target they can buy
+	client_print( id, print_center, "Quick buy some items!" );
 
 	return;       
 }  
@@ -1368,7 +1371,6 @@ public _SHARED_RemoveBuyZone( iEnt )
 	// Make sure we're removing a valid entity!
 	if ( is_valid_ent( iEnt ) )
 	{
-		log_amx( "Removing entity: %d", iEnt );
 		remove_entity( iEnt );  
 	}
 

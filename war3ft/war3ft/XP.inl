@@ -129,7 +129,7 @@ public on_PlayerAction()
 	else if (equal(sAction,"Dropped_The_Bomb"))
 	{
 		g_iPlayerRole[id] = 0;
-		new iBonusXP = XP_Give( id, -1 * SPAWN_BOMB );
+		new iBonusXP = XP_Give( id, -1 * BOMB_PICKUP );
 
 		if ( iBonusXP != 0 && get_pcvar_num( CVAR_wc3_show_objectives ) )
 		{

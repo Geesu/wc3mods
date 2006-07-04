@@ -975,14 +975,15 @@ WC3_CommonSpawn( id )
 		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
 	}
 
+	// Should the user mole?
+	SHARED_MoleCheck( id );
+
+
 	WC3_SetSkills( id );
 }
 
 WC3_SetSkills( id )
 {
-	// Should the user mole?
-	SHARED_MoleCheck( id );
-
 	// Undead's Unholy Aura
 	SHARED_SetGravity(id);
 

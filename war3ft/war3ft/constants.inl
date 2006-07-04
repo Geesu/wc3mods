@@ -600,7 +600,7 @@ new const Float:p_vampiric[3] =			{0.10,0.20,0.30}		// Vampiric Aura			(skill 1)
 new Float:p_unholy[3] =					{265.0,285.0,300.0}		// Unholy Aura				(skill 2)
 new const Float:p_levitation[3] =		{0.8,0.6,0.4}			// Levitation				(skill 3)
 
-new const p_invisibility[3] =			{200,165,125}			// Invisibility				(skill 1)
+new const p_invisibility[3] =			{200,175,135}			// Invisibility				(skill 1)
 new const p_devotion =					15						// Devotion Aura			(skill 2)
 new const Float:p_bash[3] =				{0.10,0.20,0.30}		// Bash						(skill 3)
 
