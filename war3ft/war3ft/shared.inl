@@ -1344,24 +1344,26 @@ SHARED_CreateBuyZone( id )
 
 	DispatchSpawn( iEnt );  
 
+	new Float:fDuration = get_pcvar_float( CVAR_mp_buytime );
 
-	new Float:fDuration = get_pcvar_float( CVAR_mp_buytime );  
+	new iParm[1];
+	iParm[0] = iEnt;
 
-	set_task( fDuration, "_SHARED_RemoveBuyZone", TASK_REMOVEBUYZONE + id );  
+	set_task( fDuration, "_SHARED_RemoveBuyZone", TASK_REMOVEBUYZONE + id, iParm, 1 );  
 
-	// Display to target they can buy
-	client_print( id, print_center, "Quick buy some items!" );
+	// Display to target they can buy ( add this into language file )
+	new szMessage[128];
+	format( szMessage, 127, "You have %d seconds to buy items", fDuration );
+
+	WC3_StatusText( id, TXT_OTHER, szMessage );
 
 	return;       
 }  
 
 // This will remove the buyzone if it exists
-public _SHARED_RemoveBuyZone( iEnt )  
+public _SHARED_RemoveBuyZone( iParm[1] )  
 {
-	if ( iEnt >= TASK_REMOVEBUYZONE )
-	{
-		iEnt -= TASK_REMOVEBUYZONE;
-	}
+	new iEnt = iParm[0];
 
 	// Make sure we're removing a valid entity!
 	if ( is_valid_ent( iEnt ) )
