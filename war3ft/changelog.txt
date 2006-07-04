@@ -53,10 +53,8 @@ v3.0
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
-//make mysqlx saving threaded
+//make mysqlx saving threaded and pruning
 //finish re-writing how skills are handled
-//disable human tele for VIP if VIP escape zone check doesn't work well
-//human ult = getting stuck
 //verify all skills given with selectskill
 //allow user to changerace when in spec?
 //g_buyTime - buytime check for shopmenu??

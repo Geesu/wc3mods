@@ -1324,7 +1324,7 @@ SHARED_NearObjective( vOrigin[3] )
 	{
 		new Float:fDistance = vector_distance( fOrigin, g_fObjectiveOrigin[i] );
 
-		if ( fDistance < 200.0 )
+		if ( fDistance < 250.0 )
 		{
 			return g_iObjectiveEntType[i];
 		}

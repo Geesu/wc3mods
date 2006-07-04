@@ -155,8 +155,6 @@ MYSQLX_Save( id )
 		return;
 	}
 
-	server_print( "[DEBUG] Thread hit for %d", id );
-
 	//SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save", szQuery )
 
 	return;
@@ -164,8 +162,6 @@ MYSQLX_Save( id )
 
 public _MYSQLX_Save( failstate, Handle:query, error[], errnum, data[], size )
 {
-
-	server_print( "[DEBUG] Done!" );
 
 	// Error during the query
 	if ( failstate )
@@ -344,7 +340,16 @@ MYSQLX_Prune()
 	new szQuery[256];
 	format( szQuery, 255, "DELETE FROM `%s` WHERE DATE_SUB(CURDATE(), INTERVAL %d DAY) > time;", g_DBTableName, get_pcvar_num( CVAR_wc3_days_before_delete ) );
 
-	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Prune", szQuery );	
+	new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+	if ( !SQL_Execute( query ) )
+	{
+		MYSQLX_Error( query, szQuery, 6 );
+
+		return;
+	}
+
+	//SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Prune", szQuery );	
 }
 
 public _MYSQLX_Prune( failstate, Handle:query, error[], errnum, data[], size )

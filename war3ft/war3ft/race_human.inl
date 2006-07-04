@@ -96,13 +96,14 @@ HU_ULT_Blink( id )
 	set_user_origin( id, vNewLocation );
 
 	// Check if Blink landed you in a wall, if so, abort
-	new parm[4];
+	new parm[5];
 	parm[0] = id;
 	parm[1] = vOldLocation[0];
 	parm[2] = vOldLocation[1];
 	parm[3] = vOldLocation[2];
+	parm[4] = vNewLocation[2];
 	
-	set_task( 0.1, "_HU_ULT_BlinkStuck", TASK_BLINKSTUCK + id, parm, 4 );
+	set_task( 0.1, "_HU_ULT_BlinkStuck", TASK_BLINKSTUCK + id, parm, 5 );
 	
 	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 
@@ -132,10 +133,8 @@ public _HU_ULT_BlinkStuck( parm[] )
 
 	get_user_origin( id, vOrigin );
 	
-	client_print( id, print_chat, "[DEBUG] %d:%d", vOldLocation[2], vOrigin[2] );
-
 	// Then the user is stuck :/
-	if ( vOldLocation[2] == vOrigin[2] )
+	if ( parm[4] == vOrigin[2] )
 	{
 
 		//set_hudmessage( 255, 255, 10, -1.0, -0.4, 1, 0.5, BLINK_COOLDOWN, 0.2, 0.2, 5 );
