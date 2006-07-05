@@ -362,6 +362,8 @@ public client_connect( id )
 	{
 		g_bGivenLevel10[id][j]	= false;
 	}
+
+	CS_GetIcon( id );
 	
 	return;
 }

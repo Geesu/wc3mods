@@ -10,6 +10,7 @@ v3.0
  - Addition: Users will be given god mode for 1 second after they respawn
  - Addition: Plugin will now auto-load even if modules aren't enabled, thanks BAIL!
  - Addition: Plugin will no longer load if any required sound files or sprites are missing
+ - Addition: /icons now saves on the client (using setinfo) so (in theory) joining any war3ft 3.0 server will know if you want /icons on or off
  - Bug Fix: cl_minmodels task was not repeating
  - Change: With mole protectant you can now view players names during freezetime by looking at them
  - Change: You now gain XP when nearby teammates kill an enemy!
@@ -70,7 +71,6 @@ v3.0
 //spec hudmsg needs to not carry over when you spawn
 //reset skills/ultimates when user dies or right before the round starts
 //let /level show the user's XP if they're dead!
-//save icon info
 //remove all task_exists
 //fix hex playing after ur dead...
 //bug: phoenix will try to respawn users when changing team

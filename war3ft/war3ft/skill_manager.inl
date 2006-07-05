@@ -239,6 +239,9 @@ SM_VerifyRace( id, race_id )
 }
 
 
+// The functions below do not serve any purpose (yet)
+
+/*
 // This function will return the level of a user's skill
 SM_GetSkillLevel( id, skill_id )
 {
@@ -254,6 +257,7 @@ SM_GetSkillLevel( id, skill_id )
 
 	return -1;
 }
+*/
 
 SM_SetPlayerRace( id, iRace )
 {

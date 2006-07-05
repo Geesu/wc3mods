@@ -316,6 +316,8 @@ CMD_Handle( id, szCmd[] )
 
 				client_print( id, print_center, "%L", id, "NOW_SEE_ICONS" );
 			}
+
+			CS_SetIcon( id );
 		}
 	}
 

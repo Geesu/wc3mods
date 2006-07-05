@@ -324,3 +324,23 @@ public _CS_BuyTimeOver()
 {
 	g_buyTime = false;
 }
+
+CS_GetIcon( id )
+{
+	new szInfo[32];
+	get_user_info( id, "_wc3", szInfo, 31 );
+
+	if ( strlen( szInfo ) > 0 && str_to_num( szInfo ) > 0 )
+	{
+		p_data[id][P_SHOWICONS] = true;
+	}
+	else
+	{
+		p_data[id][P_SHOWICONS] = false;
+	}
+}
+
+CS_SetIcon( id )
+{
+	client_cmd( id, "setinfo _wc3 ^"%d^"", p_data[id][P_SHOWICONS] )
+}
