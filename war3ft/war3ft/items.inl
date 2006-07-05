@@ -17,7 +17,7 @@ public ITEM_Buy( id, iItem )
 	}
 	
 	// User already owns the item!
-	else if ( ITEM_Has( id, iItem ) && iItem != ITEM_RING )
+	else if ( ITEM_Has( id, iItem ) && iItem != ITEM_RING && iItem != ITEM_NECKLACE && iItem != ITEM_HELM )
 	{
 		client_print( id, print_center, "%L", id, "ALREADY_OWN_THAT_ITEM" );
 
@@ -112,20 +112,35 @@ bool:ITEM_CanBuy( id )
 
 public ITEM_Set( id, iItem )
 {
+	
+	// Check for the items we can buy more than one of!
+	if ( iItem == ITEM_RING && ITEM_Has( id, ITEM_RING ) )
+	{}
 
-	new iItemSlot = ITEM_GetSlot( id );
+	else if ( iItem == ITEM_NECKLACE && ITEM_Has( id, ITEM_NECKLACE ) )
+	{}
 
-	new iOldItem = g_iShopMenuItems[id][iItemSlot];
+	else if ( iItem == ITEM_HELM && ITEM_Has( id, ITEM_HELM ) )
+	{}
 
-	// Remove the user's old item if necessary
-	if ( iOldItem > ITEM_NONE )
+	else
 	{
-		ITEM_Remove( id, iOldItem, iItemSlot );
+		new iItemSlot = ITEM_GetSlot( id );
+		
+		server_print( "%d:%d", id, iItemSlot );
+
+		new iOldItem = g_iShopMenuItems[id][iItemSlot];
+
+		// Remove the user's old item if necessary
+		if ( iOldItem > ITEM_NONE )
+		{
+			ITEM_Remove( id, iOldItem, iItemSlot );
+		}
+		
+		// Set their new item
+		g_iShopMenuItems[id][iItemSlot] = iItem;
 	}
-	
-	// Set their new item
-	g_iShopMenuItems[id][iItemSlot] = iItem;
-	
+
 	// Display a message regarding the item they just purchased
 	switch ( iItem )
 	{
@@ -215,7 +230,11 @@ public ITEM_Set( id, iItem )
 
 		case ITEM_HELM:
 		{
-			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_3" );
+			new iRandomCharges = random_num( 3, 5 );
+
+			g_iHelmCharges[id] += iRandomCharges;
+
+			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_3", iRandomCharges );
 		}
 
 		case ITEM_AMULET:
@@ -331,6 +350,10 @@ public ITEM_Remove( id, iItem, iItemSlot )
 			set_user_health( id, iNewHealth );
 		}
 
+		case ITEM_HELM:
+		{
+			g_iHelmCharges[id] = 0;
+		}
 		
 		case ITEM_SOCK:
 		{
@@ -360,6 +383,8 @@ public ITEM_Remove( id, iItem, iItemSlot )
 			SHARED_ChangeSkin( id, SKIN_RESET );
 		}
 	}
+
+	WC3_ShowBar( id );
 
 	return PLUGIN_HANDLED;
 }
@@ -463,7 +488,7 @@ public _ITEM_Glove_Give( id )
 
 ITEM_BuyRings( id )
 {
-	new iMoney;
+	new iMoney, bool:bSet = false;
 	
 	while ( g_iTotalRings[id] < 5 )
 	{
@@ -476,8 +501,13 @@ ITEM_BuyRings( id )
 		
 		new iNewMoney = iMoney - ITEM_COST[ITEM_RING];
 		SHARED_SetUserMoney( id, iNewMoney, 1 );
+		
+		if ( !bSet )
+		{
+			ITEM_Set( id, ITEM_RING );
 
-		ITEM_Set( id, ITEM_RING );
+			bSet = true;
+		}
 	}
 
 	return;
@@ -647,5 +677,46 @@ ITEM_NeckRemoveCharge( id )
 	if ( g_iNecklaceCharges[id] <= 0 )
 	{
 		ITEM_RemoveID( id, ITEM_NECKLACE );
+	}
+}
+
+ITEM_HelmRemoveCharge( id )
+{
+	g_iHelmCharges[id]--;
+	
+	client_print( id, print_chat, "[DEBUG] You lost a helm charge!  %d left", g_iHelmCharges[id] );
+
+	if ( g_iHelmCharges[id] <= 0 )
+	{
+		ITEM_RemoveID( id, ITEM_HELM );
+	}
+}
+
+// Format the item for WC3_ShowBar
+ITEM_Format( id, iItem, szItemString[], len )
+{
+	new szItemName[32];
+	LANG_GetItemName( iItem, id, szItemName, 31, true );
+
+	// Special options
+	if ( iItem == ITEM_NECKLACE )
+	{
+		formatex( szItemString, len, "%s x%d", szItemName, g_iNecklaceCharges[id] );
+	}
+
+	else if ( iItem == ITEM_HELM )
+	{
+		formatex( szItemString, len, "%s x%d", szItemName, g_iHelmCharges[id] );
+	}
+
+	else if ( iItem == ITEM_RING )
+	{
+		formatex( szItemString, len, "%s x%d", szItemName, g_iTotalRings[id] );
+	}
+	
+	// All other cases
+	else
+	{
+		copy( szItemString, len, szItemName );
 	}
 }

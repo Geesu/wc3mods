@@ -631,11 +631,9 @@ WC3_ShowBar( id )
 
 	new szString[256], pos = 0;
 	new szItemInfo[256], szRaceInfo[256];
-	new szRaceName[64], szShortRaceName[32], szItemName[32], szItemName2[32];
+	new szRaceName[64], szShortRaceName[32], szItemName[32];
 
-	// Get the item and race names
-	LANG_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_ONE], id, szItemName, 31, true );
-	LANG_GetItemName( g_iShopMenuItems[id][ITEM_SLOT_TWO], id, szItemName2, 31, true );
+	// Get the race names
 	lang_GetRaceName( p_data[id][P_RACE], id, szRaceName, 63 );
 	lang_GetRaceName( p_data[id][P_RACE], id, szShortRaceName, 31, true );
 	
@@ -710,28 +708,26 @@ WC3_ShowBar( id )
 	// User has one item
 	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE )
 	{
+		ITEM_Format( id, g_iShopMenuItems[id][ITEM_SLOT_ONE], szItemName, 31 )
+
 		pos += formatex( szItemInfo[pos], 256-pos, "%s", szItemName );
 	}
 
 	// User has another item
 	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE )
 	{
+		ITEM_Format( id, g_iShopMenuItems[id][ITEM_SLOT_TWO], szItemName, 31 )
+
 		// Then the string isn't empty and we have information in it (so we have a first item)
 		if ( szItemInfo[0] )
 		{
-			pos += formatex( szItemInfo[pos], 256-pos, " %L %s", id, "WORD_AND", szItemName2 );
+			pos += formatex( szItemInfo[pos], 256-pos, " %L %s", id, "WORD_AND", szItemName );
 		}
 
 		// We don't need the word "and"
 		else
 		{
-			pos += formatex( szItemInfo[pos], 256-pos, "%s", szItemName2 );
-		}
-		
-		// Then they have rings, lets print how many there are
-		if ( ITEM_Has( id, ITEM_RING ) && p_data[id][P_RINGS] > 1 )
-		{
-			pos += formatex( szItemInfo[pos], 256-pos, " x%d", p_data[id][P_RINGS] );
+			pos += formatex( szItemInfo[pos], 256-pos, "%s", szItemName );
 		}
 	}
 
@@ -792,8 +788,6 @@ WC3_ShowRaceInfo( id )
 		{
 			pos += formatex( szMsg[pos], 255-pos, "^n%s", szSkillNames[4] );
 		}
-
-		log_amx( szMsg );
 
 		WC3_StatusText( id, TXT_RACE_INFO, szMsg );
 	}
@@ -1016,9 +1010,9 @@ WC3_SetSkills( id )
 // Function will print a message in the center of the screen
 WC3_StatusText( id, iType, const fmt[], ... )
 {
-	static szFormattedText[128];
+	static szFormattedText[512];
 
-	vformat( szFormattedText, 127, fmt, 4 );
+	vformat( szFormattedText, 511, fmt, 4 );
 
 	// Check for Counter-Strike or Condition Zero
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )

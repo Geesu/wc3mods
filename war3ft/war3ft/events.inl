@@ -517,10 +517,15 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				set_tr( TR_flFraction, 1.0 );
 				
 				// Do the check to see if we should flash the screen orange
-				new Float:time = halflife_time();
-				if ( 0 < iAttacker <= MAXPLAYERS && time - fLastShotFired[iAttacker] < 0.1 && !fLastShotFired[iAttacker] )
+				new Float:fTime = halflife_time();
+				new Float:fDifference = fTime - fLastShotFired[iAttacker];
+
+				if ( SHARED_ValidPlayer( iAttacker ) && fDifference < 0.1 && fDifference > 0.0 )
 				{
 					Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 0, 0, 255, 150 );
+
+					// Lets remove a charge from the helm!
+					ITEM_HelmRemoveCharge( iVictim );
 				}
 				
 				return FMRES_SUPERCEDE;
@@ -532,7 +537,9 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 		{
 			// Do the check to see if we should "evade" this shot
 			new Float:fTime = halflife_time();
-			if ( 0 < iAttacker <= MAXPLAYERS && fTime - fLastShotFired[iAttacker] < 0.1 && !fLastShotFired[iAttacker] )
+			new Float:fDifference = fTime - fLastShotFired[iAttacker];
+
+			if ( SHARED_ValidPlayer( iAttacker ) && fDifference < 0.1 && fDifference > 0.0 )
 			{
 
 				// Basically if friendly fire is on, we want to block ALL shots, otherwise we only block shots from enemies

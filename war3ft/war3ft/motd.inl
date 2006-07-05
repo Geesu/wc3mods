@@ -90,7 +90,7 @@ public MOTD_PlayerSkills( id )
 		bRaceUsed[iRaceID] = true;
 	}
 	
-	new pos = 0, iTeam, k, szTeamColor[1];
+	new pos = 0, iTeam, k, szTeamColor[2];
 
 	// Then we have a player, and we're not on the server console
 	if ( id != 0 )
@@ -153,7 +153,6 @@ public MOTD_PlayerSkills( id )
 						formatex( szTeamColor, 1, "x" );
 					}
 				}
-
 
 				// Loop through all players
 				for ( k = 0; k < iNumPlayers; k++ )

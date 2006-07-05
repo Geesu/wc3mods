@@ -655,7 +655,7 @@ public _MENU_Shopmenu2( id, iKey )
 
 	iKey += MAX_PAGE_ITEMS;
 	
-	if ( ITEM_GetSlot( id ) == ITEM_SLOT_FULL && iKey != ITEM_RING )
+	if ( ITEM_GetSlot( id ) == ITEM_SLOT_FULL && iKey != ITEM_RING && iKey != ITEM_HELM )
 	{
 		g_iFutureItem[id] = iKey;
 

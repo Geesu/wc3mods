@@ -55,8 +55,9 @@ v3.0
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
-//fix the number of things displayed w/items... i.e. rings in shop 1 on statusbar
-//chain lightning being cut off...
+//clean up items
+//config file for mole/shopzone
+//check for config file locations... make sure they're there
 //keep using hud channels?  i.e. /level multiple times
 //make mysqlx saving threaded and pruning
 //finish re-writing how skills are handled

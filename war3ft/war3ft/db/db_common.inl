@@ -165,8 +165,6 @@ public DB_SaveXP( id )
 		return;
 	}
 	
-	server_print( "[DEBUG] About to save for %d", id );
-
 	// Save the XP	
 	switch( g_DBType )
 	{
