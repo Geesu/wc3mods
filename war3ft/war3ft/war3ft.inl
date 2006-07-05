@@ -644,7 +644,7 @@ WC3_ShowBar( id )
 		return;
 	}
 
-	new szString[256], pos = 0;
+	new szString[256], pos = 0, szXPInfo[32];
 	new szItemInfo[256], szRaceInfo[256];
 	new szRaceName[64], szShortRaceName[32], szItemName[32];
 
@@ -669,18 +669,21 @@ WC3_ShowBar( id )
 			if ( p_data[id][P_LEVEL] == 0 )
 			{
 				pos += formatex( szRaceInfo[pos], 255, "%s  XP: %d/%d ", szRaceName, p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
+				formatex( szXPInfo, 31, "XP: %d/%d", p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
 			}
 
 			// User is under level 10
 			else if ( p_data[id][P_LEVEL] < 10 )
 			{
 				pos += formatex( szRaceInfo[pos], 255, "%s %L: %d   XP: %d/%d ", szShortRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
+				formatex( szXPInfo, 31, "%L: %d   XP: %d/%d", id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
 			}			
 				
 			// User is level 10
 			else
 			{
 				pos += formatex( szRaceInfo[pos], 255, "%s %L: %d   XP: %d ", szShortRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP] );
+				formatex( szXPInfo, 31, "%L: %d   XP: %d", id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP] );
 			}
 		}
 	}
@@ -704,9 +707,10 @@ WC3_ShowBar( id )
 			}
 
 			// User is under level 10
-			else if(p_data[id][P_LEVEL]<10)
+			else if ( p_data[id][P_LEVEL] < 10 )
 			{
 				pos += formatex( szRaceInfo[pos], 255, "%s %L: %d^nXP: %d/%d^n", szShortRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
+			
 			}			
 				
 			// User is level 10
@@ -754,7 +758,18 @@ WC3_ShowBar( id )
 		// Display the item + race info with a hudmessage
 		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 		{
-			Create_StatusText( id, 0, szString );
+
+			if ( is_user_alive( id ) )
+			{
+				Create_StatusText( id, 0, szString );
+			}
+
+			else
+			{
+				set_hudmessage( 160, 160, 160, 0.012, 0.90, HUDMESSAGE_FX_FADEIN, 10.0, 0.0, 2.0, 3.0, HUD_XP );
+				
+				show_hudmessage( id, "%s", szXPInfo );
+			}
 		}
 
 		// Display the item + race info with a hudtext
@@ -953,17 +968,22 @@ WC3_ShowSpecInfo( id, iTargetID )
 	
 	
 	// Format the message
+	new Float:fSpecTime = 12.0;
+
 	if ( get_pcvar_num( CVAR_wc3_spec_position ) == 0 )
 	{
-		set_hudmessage( 255, 255, 255, 0.018, 0.9, 2, 1.5, 12.0, 0.02, 5.0, 1 );
+		set_hudmessage( 255, 255, 255, 0.018, 0.9, 2, 1.5, fSpecTime, 0.02, 5.0, HUD_SPEC_INFO );
 	}
 	else
 	{
-		set_hudmessage( 255, 255, 255, 0.65, 0.9, 2, 1.5, 12.0, 0.02, 5.0, 1 );
+		set_hudmessage( 255, 255, 255, 0.65, 0.9, 2, 1.5, fSpecTime, 0.02, 5.0, HUD_SPEC_INFO );
 	}
 	
 	// Show the message
 	show_hudmessage( id, szMsg );
+
+	// This allows us to "remove" the spec message if need be on round start
+	g_fSpecInfoExpire[id] = fSpecTime + halflife_time();
 }
 
 // Since things are set differently for DOD + CS, this is common to both
@@ -1036,37 +1056,37 @@ WC3_StatusText( id, iType, const fmt[], ... )
 		// I.E. "You have gained a level"
 		if ( iType == TXT_TOP_CENTER )
 		{
-			set_hudmessage( 200, 100, 0, -1.0, 0.25, 0, 1.0, 2.0, 0.1, 0.2, -1 );
+			set_hudmessage( 200, 100, 0, -1.0, 0.25, HUDMESSAGE_FX_FADEIN, 1.0, 2.0, 0.1, 0.2, HUD_AUTO );
 		}
 
 		// I.E. /level
 		else if ( iType == TXT_RACE_INFO )
 		{
-			set_hudmessage( 255, 255, 255, -1.0, 0.3, 0, 3.0, 5.0, 0.1, 0.2, 2 );
+			set_hudmessage( 255, 255, 255, -1.0, 0.3, HUDMESSAGE_FX_FADEIN, 3.0, 5.0, 0.1, 0.2, HUD_RACE_INFO );
 		}
 
 		// Ultimate messages
 		else if ( iType == TXT_ULTIMATE )
 		{
-			set_hudmessage( 255, 208, 0, -1.0, 0.85, 0, 6.0, 0.5, 0.1, 0.5, 1 );
+			set_hudmessage( 255, 208, 0, -1.0, 0.85, HUDMESSAGE_FX_FADEIN, 6.0, 0.5, 0.1, 0.5, HUD_ULTIMATE );
 		}
 
 		// I.E. Suicide Bomb Armed
 		else if ( iType == TXT_BLINK_CENTER )
 		{
-			set_hudmessage( 178, 14, 41, -1.0, -0.4, 1, 0.5, 1.7, 0.2, 0.2, -1 );
+			set_hudmessage( 178, 14, 41, -1.0, -0.4, HUDMESSAGE_FX_FLICKER, 0.5, 1.7, 0.2, 0.2, HUD_AUTO );
 		}
 
 		// I.E. "You have evaded a shot"
 		else if ( iType == TXT_SKILL )
 		{
-			set_hudmessage( 0, 0, 255, 0.75, 0.85, 0, 6.0, 3.0, 0.2, 0.7, 3 );
+			set_hudmessage( 0, 0, 255, 0.75, 0.85, HUDMESSAGE_FX_FADEIN, 6.0, 3.0, 0.2, 0.7, HUD_SKILL );
 		}
 
 		// All other cases
 		else
 		{
-			set_hudmessage( 255, 255, 10, -1.0, -0.4, 1, 0.5, 2.0, 0.2, 0.2, -1 );
+			set_hudmessage( 255, 255, 10, -1.0, -0.4, HUDMESSAGE_FX_FLICKER, 0.5, 2.0, 0.2, 0.2, HUD_AUTO );
 		}
 
 		show_hudmessage( id, szFormattedText );

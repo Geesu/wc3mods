@@ -216,28 +216,7 @@
 #define GAME_CZERO			2
 #define GAME_DOD			3
 
-
-#define HUDMESSAGE_CHAN_LEVEL		1     // Level information centered @ mid-top of screen
-#define HUDMESSAGE_CHAN_STATUS		1     // WAR3 status text centered @ bottom of screen
-//#define HUDMESSAGE_CHAN_XP			3     // XP Information @ bottom left of screen
-#define HUDMESSAGE_CHAN_INFO		2     // Misc info centered @ top of screen
-#define HUDMESSAGE_CHAN_ITEM		3     // Race/Item Information @ bottom left of screen
-#define HUDMESSAGE_CHAN_MONEY		4     // Race/Item Information @ bottom left of screen
-
-
-#define HUDMESSAGE_CHAN_SERVER		2     // Server messages centered @ mid-bottom of screen
-#define HUDMESSAGE_CHAN_DEAD		2     // Follow message (spectator)
-
-#define HUDMESSAGE_FX_FADEIN		0         // hudmessage effect types
-#define HUDMESSAGE_FX_FLICKER		1
-#define HUDMESSAGE_FX_WRITEOUT		2
-
-#define HUDMESSAGE_POS_STATUS		0.85
-#define HUDMESSAGE_POS_SERVER		0.70
-#define HUDMESSAGE_POS_INFO			0.20
-#define HUDMESSAGE_POS_LEVEL		0.25
-#define HUDMESSAGE_POS_CENTER		-1.0
-
+// Used with P_SKINCHANGED
 #define SKIN_RESET					0
 #define SKIN_SWITCH					1
 
@@ -697,3 +676,29 @@ new bool:g_bExtraSpritesEnabled = false
 #define SPR_WAVE			12
 #define SPR_SMOKE			13
 #define SPR_IMMOLATE		14
+
+new Float:g_fSpecInfoExpire[33];
+
+
+// HUD Channels
+#define HUD_SPEC_INFO			1	// Info displayed in bottom corner of player being spectated
+#define HUD_SHOWSTATUS			4	// Information shown on enemies/teammates when looking at them
+#define HUD_DOD_MONEY			4	// Money Displayed at top center of screen in DOD
+#define HUD_RACE_INFO			2	// /level command
+#define HUD_ULTIMATE			1	// Ultimate messages (i.e. you have _ seconds remaining)
+#define HUD_SKILL				3	// i.e. "you have evaded a shot"
+#define HUD_XP					3	// Used to show the user their xp/items when dead
+#define HUD_AUTO				-1	// Automatically choose one!
+
+#define FADE_OUT                0x0000          // Fade out from max alpha
+#define FADE_IN                 0x0001          // Fade in to max alpha
+#define FADE_MODULATE_OUT       0x0002          // Modulate, fade out from max alpha
+#define FADE_MODULATE_IN        0x0003      // Modulate, fade in to max alpha
+#define FADE_ONLYONE_OUT        0x0004      // Start at max Alpha, no fade out
+#define FADE_ONLYONE_IN         0x0005      // Fade in to max Alpha, no fade out
+#define FADE_MODONE_OUT         0x0006      // Modulate, Start at max Alpha, no fade
+#define FADE_MODONE_IN          0x0007      // Modulate, Fade in to max Alpha, no fade out
+
+#define HUDMESSAGE_FX_FADEIN    0           // hudmessage effect types
+#define HUDMESSAGE_FX_FLICKER   1
+#define HUDMESSAGE_FX_WRITEOUT  2

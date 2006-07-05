@@ -84,7 +84,7 @@ public _DOD_showMoney(parm[3])
 		new szMsg[128];
 
 		// Set up the hud message
-		set_hudmessage( 255, 255, 255, 0.5, 0.0, 2, 1.5, 40.0, 0.1, 0.5, HUDMESSAGE_CHAN_MONEY );
+		set_hudmessage( 255, 255, 255, 0.5, 0.0, 2, 1.5, 40.0, 0.1, 0.5, HUD_DOD_MONEY );
 
 		// Should we show the change in money?
 		if ( parm[1] == 1 )

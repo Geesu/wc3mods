@@ -160,8 +160,6 @@ public on_ArmorType(id)
 	return;
 }
 
-#define HUD_SHOWSTATUS		4
-
 // Event triggered when you look at another player
 public on_ShowStatus( id )
 {
@@ -285,11 +283,9 @@ public on_ShowStatus( id )
 // This is called when the user is no longer viewing the player
 public on_HideStatus( id )
 {
-
 	if ( get_pcvar_num( CVAR_wc3_show_player ) && !g_freezeTime )
 	{
-		set_hudmessage( 0, 0, 0, 0.0, 0.0, 0, 0.0, 0.01, 0.0, 0.0, HUD_SHOWSTATUS );
-		show_hudmessage( id, "" );
+		UTIL_ClearHudChannel( id, HUD_SHOWSTATUS );
 	}
 }
 

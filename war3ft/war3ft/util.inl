@@ -153,3 +153,9 @@ stock UTIL_EntInView( id, iEnt )
 	
 	return 0;
 }
+
+UTIL_ClearHudChannel( id, iChannel )
+{
+	set_hudmessage( 0, 0, 0, 0.0, 0.0, 0, 0.0, 0.0, 0.0, 0.0, iChannel );
+	show_hudmessage( id, "" );
+}

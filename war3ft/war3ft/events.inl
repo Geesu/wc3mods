@@ -596,6 +596,12 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 // Function called right before the user spawns
 EVENT_JustBeforeSpawn( id )
 {
+	
+	// Remove the spectating info if necessary
+	if ( g_fSpecInfoExpire[id] > halflife_time() )
+	{
+		UTIL_ClearHudChannel( id, HUD_SPEC_INFO );
+	}
 
 	// Reset the player's role
 	g_iPlayerRole[id] = 0;
