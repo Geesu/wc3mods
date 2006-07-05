@@ -176,6 +176,29 @@ public DB_SaveXP( id )
 	return;
 }
 
+// This function will save the XP for all players
+public DB_SaveAll()
+{
+
+	if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
+	{
+		return;
+	}
+
+	new Float:fTime = 0.0;
+	new players[32], numofplayers, i;
+	get_players( players, numofplayers );
+
+	for ( i = 0; i < numofplayers; i++ )
+	{
+		set_task( fTime, "DB_SaveXP", TASK_SAVE + players[i] );
+
+		fTime += 0.1;
+	}
+
+	return;
+}
+
 // Function will return the appropriate key for a user
 DB_GetKey( id, szKey[], len )
 {

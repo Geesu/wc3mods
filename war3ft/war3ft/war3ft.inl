@@ -10,7 +10,7 @@
 		Precaching FUNCTIONS (idea from war3x)
 ***********************************************************************/
 
-public WAR3_precache()
+public WC3_Precache()
 {
 	
 	precache_generic( "wc3.css" );
@@ -293,19 +293,11 @@ public WC3_Init()
 	// Initialize our skills
 	SM_Init();
 
-	// Execute the config file to get the CVAR values
-	new configsDir[64];
-	get_configsdir( configsDir, 63 );
-	server_cmd( "exec %s/war3ft/war3FT.cfg", configsDir );
-	
 	// Register the player menus
 	LANG_SetMenus();
 
 	// Configure the database connection
 	set_task( 1.0, "DB_Init", TASK_SETSQL );
-
-	// Configure the XP based on level
-	XP_Configure();
 
 	// Set which string should be displayed with messages (war3ft or war3)
 	if ( get_pcvar_num( CVAR_wc3_races ) < 5 )
@@ -316,7 +308,7 @@ public WC3_Init()
 	// cl_minmodels check
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		set_task( 0.7, "WAR3_Mole_Fix", TASK_MOLEFIX, "", 0, "b" );
+		set_task( 0.7, "_CS_MinModelsLoop", TASK_MOLEFIX, "", 0, "b" );
 	}
 
 
@@ -406,9 +398,28 @@ public WC3_Init()
 	}
 
 	// Lets find out if we should disable orc nades or gloves of warmth
-	g_bOrcNadesDisabled = WC3_MapDisableCheck( "skill_orc_nade.cfg" );
-	g_bGlovesDisabled	= WC3_MapDisableCheck( "item_gloves.cfg" );
+	g_bOrcNadesDisabled		= WC3_MapDisableCheck( "skill_orc_nade.cfg" );
+	g_bGlovesDisabled		= WC3_MapDisableCheck( "item_gloves.cfg" );
+	g_bMoleBuyZoneDisabled	= WC3_MapDisableCheck( "skill_mole_shopzone.cfg" );
 
+	// Format our config file
+	new szConfigFile[64];
+	get_configsdir( szConfigFile, 63 );
+	add( szConfigFile, 63, "/war3ft/war3FT.cfg" )
+
+	// Make sure the config file exists!
+	if ( file_exists( szConfigFile ) )
+	{
+		server_cmd( "exec %s", szConfigFile );
+	}
+	else
+	{
+		log_amx( "[ERROR] Config file '%s' missing!", szConfigFile );
+		set_fail_state( "Config file is missing, unable to load plugin" );
+	}
+
+	// Configure the XP based on level
+	XP_Configure();
 }
 
 public WC3_DetermineGame()
@@ -568,6 +579,7 @@ WC3_SetRace( id, race )
 	p_data[id][P_RACE] = race
 
 	// Reset all race data
+	SM_ResetSkillLevels( id );
 	p_data[id][P_SKILL1] = 0
 	p_data[id][P_SKILL2] = 0
 	p_data[id][P_SKILL3] = 0
@@ -597,6 +609,9 @@ WC3_SetRace( id, race )
 // Function called right after the user's race information is set
 WC3_SetRaceUp( id )
 {
+	// This function will assign the race's skills to this player
+	SM_SetPlayerRace( id, p_data[id][P_RACE] );
+
 	WC3_SetSkills( id );
 
 	// Copy the global ULT timeout over to just this user...

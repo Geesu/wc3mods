@@ -886,7 +886,6 @@ public SHARED_ChangeSkin( id, reset )
 			dod_set_model( id, szSkin );
 		}
 
-
 		p_data[id][P_SKINCHANGED] = SKIN_SWITCH;
 	}
 
@@ -1161,9 +1160,15 @@ public _SHARED_Mole( parm[2] )
 		
 		// User is a mole
 		p_data_b[id][PB_MOLE] = true;
+		
+		if ( !g_bMoleBuyZoneDisabled )
+		{
+			// Give the user a buyzone!
+			SHARED_CreateBuyZone( id );
 
-		// Give the user a buyzone!
-		SHARED_CreateBuyZone( id );
+			// Display to target they can buy
+			client_print( id, print_center, "Quick buy some items!" );
+		}
 	}
 
 	// No spawn found
@@ -1353,9 +1358,6 @@ SHARED_CreateBuyZone( id )
 	new Float:fDuration = ( get_pcvar_float( CVAR_mp_buytime ) * 60.0 );
 
 	set_task( fDuration, "_SHARED_RemoveBuyZone", TASK_REMOVEBUYZONE + iEnt );  
-
-	// Display to target they can buy
-	client_print( id, print_center, "Quick buy some items!" );
 
 	return;       
 }  

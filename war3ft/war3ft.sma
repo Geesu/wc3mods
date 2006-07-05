@@ -57,9 +57,6 @@ new const WC3DATE[] =		__DATE__
 #include <dbi>
 #include <sqlx>
 
-// Compiling Options
-#define SHOW_SPECTATE_INFO		1				// Show spectating information on users
-
 // Header files that contain function declarations and variables
 #include "war3ft/constants.inl"
 #include "war3ft/db/db_common.h"
@@ -189,7 +186,6 @@ public plugin_init()
 		register_event( "StatusValue"	, "on_HideStatus"	, "be"	, "1=1"		,"2=0"					);
 		register_event( "TextMsg"		, "on_SetSpecMode"	, "bd"	, "2&ec_Mod"						);
 		register_event( "StatusValue"	, "on_Spectate"		, "bd"	, "1=2"								);
-		register_event( "Damage"		, "on_Damage"		, "b"	, "2!0"								);
 
 		// Old Style
 		register_menucmd( register_menuid( "BuyItem" )	, (1<<3)	, "cmd_hegren"	);
@@ -248,7 +244,7 @@ public plugin_end()
 		return;
 	}
 	
-	XP_SaveAll();
+	DB_SaveAll();
 	DB_Prune();
 	DB_Close();
 
@@ -257,7 +253,7 @@ public plugin_end()
 
 public plugin_precache()
 {
-	WAR3_precache()
+	WC3_Precache();
 }
 
 public client_putinserver( id )

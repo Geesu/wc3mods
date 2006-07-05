@@ -1,100 +1,107 @@
+/*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
+*	Counter-Strike and Condition Zero only functions
+´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
-// From the HL SDK
-#define MAX_WEAPONS		32
-// From CSX Module
-#define MAX_CWEAPONS	6
+// Called when a user's spectating mode is set
+public on_SetSpecMode( id )
+{
+	
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+	
+	new szArg1[12], szArg2[12];
+	read_data( 1, szArg1, 11 );
+	read_data( 2, szArg2, 11 );
 
-public on_SetSpecMode(id) {
+	client_print( id, print_chat, "[DEBUG] Spec mode set: %s and %s (Total args: %d", szArg1, szArg2, read_datanum() );
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
+	p_data[id][P_SPECMODE] = ( szArg2[10] == '2' ) ? 1 : 0;
 
-	new arg[12] 
-	read_data( 2 , arg , 11 ) 
-	p_data[id][P_SPECMODE] = ( arg[10] == '2' ) ? 1 : 0 
-
-	return PLUGIN_CONTINUE
+	return;
 }
 
-public on_Spectate(id){
+// Called when a user is spectating
+public on_Spectate( id )
+{
 
-	if(!p_data[id][P_SPECMODE] || !warcraft3 || !SHOW_SPECTATE_INFO)
-		return PLUGIN_CONTINUE
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
 
-	new a = read_data(2)
+	if ( !p_data[id][P_SPECMODE] )
+	{
+		return;
+	}
+	
+	// Bots don't need hud messages duh!
+	if ( is_user_bot( id ) )
+	{
+		return;
+	}
 
-	if ( is_user_bot(id) )
-		return PLUGIN_CONTINUE
+	new iTarget = read_data( 2 );
 
 	// Not a valid target
-	if (!p_data_b[a][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
+	if ( !p_data_b[iTarget][PB_ISCONNECTED] )
+	{
+		return;
+	}
 
-	WC3_ShowSpecInfo(id, a)
+	// Lets show our spectator some info on who they're spectating
+	WC3_ShowSpecInfo( id, iTarget );
 	
-	return PLUGIN_CONTINUE
+	return;
 }
 
-public on_EndRound(){
+public on_EndRound()
+{
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
 
 	g_EndRound = true;
 
-	//set_task( 4.9, "_EVENT_Before_ResetHUD", TASK_BEFORE_ROUND_START );
 
-	new players[32], numberofplayers
-	new y, id
-	get_players(players, numberofplayers)
-
-	for (y = 0; y < numberofplayers; ++y){
-		id = players[y]
-
-		p_data_b[id][PB_MOLE] = false
-		p_data[id][P_DEFUSERINDEX] = 0
-
-	}
-
-	for(y=0;y<33;++y)
-		spawnPointsused[y]=false
-
-	g_freezeCalled = false
-
-	if( task_exists(TASK_BUYTIME) )
-		remove_task(TASK_BUYTIME)
-
-	if( task_exists(TASK_BOMBTIMER) )
-		remove_task(TASK_BOMBTIMER)
-	
 	// Save XP at the end of the round?
-	if ( get_pcvar_num( CVAR_wc3_save_xp ) && get_pcvar_num( CVAR_wc3_save_end_round ) )
+	if ( get_pcvar_num( CVAR_wc3_save_end_round ) )
 	{
-		XP_SaveAll();
+		DB_SaveAll();
 	}
 	
-	return PLUGIN_CONTINUE
+	return;
 }
 
-public on_FreezeTimeComplete() {
+// Called when freezetime is over
+public on_FreezeTimeComplete()
+{
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	g_freezeTime = false
-	
-	new players[32],numberofplayers, id, i
-	get_players(players, numberofplayers)
-	
-	for (i = 0; i < numberofplayers; ++i){
-		id=players[i]
-		
-		WC3_ShowBar( id );
-
-		set_task( 0.1, "SHARED_SetSpeed", TASK_UNHOLYSPEED + id );
+	if ( !WAR3_Check() )
+	{
+		return;
 	}
 
-	return PLUGIN_CONTINUE
+	g_freezeTime = false;
+	
+	new iPlayers[32], iNumPlayers, i;
+	get_players( iPlayers, iNumPlayers, "a" );
+	
+	// Loop through all players
+	for ( i = 0; i < iNumPlayers; i++ )
+	{
+		
+		// Show them their race/xp/item bar
+		WC3_ShowBar( iPlayers[i] );
+
+		// Award speed bonuses (if any)
+		set_task( 0.1, "SHARED_SetSpeed", TASK_UNHOLYSPEED + iPlayers[i] );
+	}
+
+	return;
 }
 
 public on_TerroristWin()
@@ -153,131 +160,167 @@ public on_ArmorType(id)
 	return;
 }
 
-public on_ShowStatus(id){
+#define HUD_SHOWSTATUS		4
 
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	if (g_freezeTime){
-		Create_StatusText(id, 0, "")
-		return PLUGIN_HANDLED
-	}
-
-	new pid = read_data(2)
-
-	if(get_user_team(id)==get_user_team(pid) && (ITEM_Has( id, ITEM_CHAMELEON ) || p_data[pid][P_SKINCHANGED]==SKIN_SWITCH) && is_user_alive(pid)){
-		client_print(id,print_center,"%L",id,"HES_ON_YOUR_TEAM_DONT_SHOOT")
-		client_cmd(id,"speak %s", g_szSounds[SOUND_ANTEND])
-	}
-
-	// Used to show player icons
-	if (g_bExtraSpritesEnabled){
-		if (warcraft3 && (get_user_team(id) == get_user_team(pid))){
-			if (get_pcvar_num( CVAR_wc3_race_icon ) && p_data[id][P_SHOWICONS]){
-				Create_TE_PLAYERATTACHMENT(id, pid, 55, g_iRaceSprites[p_data[pid][P_RACE]], 15)
-			}
-
-			if (get_pcvar_num( CVAR_wc3_level_icon ) && p_data[id][P_SHOWICONS])
-				Create_TE_PLAYERATTACHMENT(id, pid, 35, g_iLevelSprites[p_data[pid][P_LEVEL]], 16)
-		}
-	}
-
-	if ( get_pcvar_num( CVAR_wc3_show_player ) && !g_freezeTime ){
-		// From miscstats.sma
-		new name[32], red = 0, blue = 0
-		new team = get_user_team(pid)
-		new idteam = get_user_team(id)
-
-		get_user_name(pid,name,31)
-		
-		if ( team == TS ){
-			if ( (p_data_b[pid][PB_MOLE] && team != idteam) && !ITEM_Has( id, ITEM_PROTECTANT ) )
-				blue = 255
-			else
-				red = 255
-		}
-		else if ( team == CTS ){
-			if ( (p_data_b[pid][PB_MOLE] && team != idteam) && !ITEM_Has( id, ITEM_PROTECTANT ) )
-				red = 255
-			else
-				blue = 255
-		}
-		
-		// Teammate
-		if ( idteam == team || p_data_b[pid][PB_MOLE] ) {
-			new wpnname[32] , clip, ammo, wpnid = get_user_weapon(pid,clip,ammo) 
-			
-			if ( wpnid > 0 && wpnid < MAX_WEAPONS + MAX_CWEAPONS ){
-				get_weaponname(wpnid,wpnname,31) 
-			}
-			set_hudmessage(red,50,blue,-1.0,0.60,1, 0.01, 3.0, 0.01, 0.01, 4)
-			show_hudmessage(id,"%s -- %d HP / %d AP / %s", name, get_user_health(pid), get_user_armor(pid), wpnname)
-		} 
-		else { 
-			set_hudmessage(red,50,blue,-1.0,0.60,1, 0.01, 3.0, 0.01, 0.01, 4) 
-			show_hudmessage(id, name) 
-		} 
-	}
-
-	return PLUGIN_CONTINUE
-}
-
-public on_HideStatus(id){
-
-	if ( get_pcvar_num( CVAR_wc3_show_player ) && !g_freezeTime ){
-		set_hudmessage(0,0,0,0.0,0.0,0, 0.0, 0.01, 0.0, 0.0, 4) 
-		show_hudmessage(id,"")
-	}
-}
-
-public WAR3_Mole_Fix(){
-
-	if ( get_pcvar_num( CVAR_wc3_query_client ) )
-	{
-		new players[32], num
-		get_players(players, num, "c")
-		
-		for(new i = 0; i < num; i++)
-		{
-			if ( !is_user_bot( players[i] ) )
-			{
-				query_client_cvar(players[i], "cl_minmodels", "check_cvars");
-			}
-		}
-	}
-}
-
-public check_cvars(id, const cvar[], const value[])
-{
-	if( equali(cvar,"cl_minmodels") && str_to_num(value) > 0 )
-	{
-		//client_cmd(id, "cl_minmodels 0");
-		client_cmd(id, "echo ^"======== Warcraft 3 Frozen Throne ========^"");
-		client_cmd(id, "echo ^"You were kicked because cl_minmodels is set to 1 on your client, please change this to 0.^"");
-		client_cmd(id, "echo ^"Type ^"cl_minmodels 0^" in your console and press enter to do this.^"");
-		client_cmd(id, "echo ^"=========================================^"");
-		server_cmd("kick #%d ^"cl_minmodels 1 is not allowed on this server^"", get_user_userid(id));
-	} 
-} 
-
-public on_Damage( iVictim )
+// Event triggered when you look at another player
+public on_ShowStatus( id )
 {
 
 	if ( !WAR3_Check() )
 	{
 		return;
 	}
-	
-	if ( !SHARED_ValidPlayer( iVictim ) )
+
+	// Lets not show any player info during freezetime! - don't want them to find moles (unless they have mole protectant) :P
+	if ( g_freezeTime && !ITEM_Has( id, ITEM_PROTECTANT ) )
 	{
+		Create_StatusText( id, 0, "" );
+
 		return;
 	}
-	
-	new iWeapon, iHitPlace, iAttacker;
-	new iDamage = read_data( 2 );
-	iAttacker = get_user_attacker( iVictim, iWeapon, iHitPlace );
 
-	EVENT_Damage( iVictim, iAttacker, iDamage, iWeapon, iHitPlace );
+	new iTarget = read_data( 2 );
+	
+	new iTargetTeam = get_user_team( iTarget );
+	new iViewerTeam = get_user_team( id );
+
+	// Same team check
+	if ( iViewerTeam == iTargetTeam )
+	{
+
+		// Check if your teammate looks like the enemy!
+		if ( p_data[iTarget][P_SKINCHANGED] == SKIN_SWITCH )
+		{
+		
+			client_print( id, print_center, "%L", id, "HES_ON_YOUR_TEAM_DONT_SHOOT" );
+			
+			client_cmd( id, "speak %s", g_szSounds[SOUND_ANTEND] );
+		}
+	}
+
+	// Show player icons if they are enabled
+	if ( g_bExtraSpritesEnabled )
+	{
+
+		// Only show if player is on the same team
+		if ( iViewerTeam == iTargetTeam )
+		{
+
+			// Race icons are enabled and the user has them turned on!
+			if ( get_pcvar_num( CVAR_wc3_race_icon ) && p_data[id][P_SHOWICONS] )
+			{
+				Create_TE_PLAYERATTACHMENT( id, iTarget, 55, g_iRaceSprites[p_data[iTarget][P_RACE]], 15 );
+			}
+
+			// Level icons are enabled and the user has them turned on!
+			if ( get_pcvar_num( CVAR_wc3_level_icon ) && p_data[id][P_SHOWICONS] )
+			{
+				Create_TE_PLAYERATTACHMENT( id, iTarget, 35, g_iLevelSprites[p_data[iTarget][P_LEVEL]], 16 );
+			}
+		}
+	}
+
+	// Show player information on screen?
+	if ( !g_freezeTime && get_pcvar_num( CVAR_wc3_show_player ) )
+	{
+
+		new iRed = 0, iBlue = 0, bool:bShowAsTeammate = false;
+
+		new szTargetName[32];
+		get_user_name( iTarget, szTargetName, 31 );
+		
+		// The target looks like the enemy o.O
+		if ( p_data[iTarget][P_SKINCHANGED] == SKIN_SWITCH )
+		{
+
+			// Then the viewer should see the user's true color!
+			if ( ITEM_Has( id, ITEM_PROTECTANT ) )
+			{
+				( iTargetTeam == TEAM_T )	? ( iRed = 255 ) : 0;
+				( iTargetTeam == TEAM_CT )	? ( iBlue = 255 ) : 0;
+			}
+
+			// Lets "camouflage" them
+			else
+			{
+				( iTargetTeam == TEAM_T )	? ( iBlue = 255 ) : 0;
+				( iTargetTeam == TEAM_CT )	? ( iRed = 255 ) : 0;
+
+				bShowAsTeammate = true;
+			}
+		}
+		
+		// Lets just set the correct colors
+		else
+		{
+			( iTargetTeam == TEAM_T )	? ( iRed = 255 ) : 0;
+			( iTargetTeam == TEAM_CT )	? ( iBlue = 255 ) : 0;
+		}
+		
+		// Set up the hud message
+		set_hudmessage( iRed, 50, iBlue, -1.0, 0.60, 1, 0.01, 3.0, 0.01, 0.01, HUD_SHOWSTATUS );
+
+		// Teammate or should look like teammate
+		if ( iViewerTeam == iTargetTeam || bShowAsTeammate )
+		{
+			new iClip, iAmmo;
+			new iWeaponID = get_user_weapon( iTarget, iClip, iAmmo );
+		
+			new szWeaponName[32];
+			get_weaponname( iWeaponID, szWeaponName, 31 );
+			
+			show_hudmessage( id, "%s -- %d HP / %d AP / %s", szTargetName, get_user_health( iTarget ), get_user_armor( iTarget ), szWeaponName );
+		} 
+
+		// Enemy
+		else
+		{
+			show_hudmessage( id, szTargetName );
+		}
+	}
 
 	return;
+}
+
+// This is called when the user is no longer viewing the player
+public on_HideStatus( id )
+{
+
+	if ( get_pcvar_num( CVAR_wc3_show_player ) && !g_freezeTime )
+	{
+		set_hudmessage( 0, 0, 0, 0.0, 0.0, 0, 0.0, 0.01, 0.0, 0.0, HUD_SHOWSTATUS );
+		show_hudmessage( id, "" );
+	}
+}
+
+public _CS_MinModelsLoop()
+{
+	if ( get_pcvar_num( CVAR_wc3_query_client ) )
+	{
+		new iPlayers[32], iNumPlayers, i;
+		get_players( iPlayers, iNumPlayers, "c" );
+		
+		for ( i = 0; i < iNumPlayers; i++ )
+		{
+			query_client_cvar( iPlayers[i], "cl_minmodels", "_CS_CheckMinModelsValue" );
+		}
+	}
+}
+
+public _CS_CheckMinModelsValue( id, const cvar[], const value[] )
+{
+	if ( equali( cvar,"cl_minmodels" ) && str_to_num( value ) > 0 )
+	{
+		client_cmd( id, "echo ^"======== Warcraft 3 Frozen Throne ========^"" );
+		client_cmd( id, "echo ^"You were kicked because cl_minmodels is set to 1 on your client, please change this to 0.^"" );
+		client_cmd( id, "echo ^"Type ^"cl_minmodels 0^" in your console and press enter to do this.^"" );
+		client_cmd( id, "echo ^"=========================================^"" );
+		server_cmd( "kick #%d ^"cl_minmodels 1 is not allowed on this server^"", get_user_userid( id ) );
+	} 
+}
+
+// Function is called when buytime is over
+public _CS_BuyTimeOver()
+{
+	g_buyTime = false;
 }

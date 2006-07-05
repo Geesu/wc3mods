@@ -244,7 +244,7 @@ SM_GetSkillLevel( id, skill_id )
 {
 	new i;
 
-	for ( i = 0; i < 5; i++ )
+	for ( i = 0; i < MAX_PLAYER_SKILLS; i++ )
 	{
 		if ( g_PlayerSkills[id][i] == skill_id )
 		{
@@ -253,4 +253,30 @@ SM_GetSkillLevel( id, skill_id )
 	}
 
 	return -1;
+}
+
+SM_SetPlayerRace( id, iRace )
+{
+	new iSkillID, i = 0;
+
+	// Loop through all possible skills to find all valid skills for this race
+	for ( iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
+	{
+
+		// Valid skill found, assign it to this player
+		if ( g_SkillOwner[iSkillID] == iRace )
+		{
+			g_PlayerSkills[id][i++] = iSkillID;
+		}
+	}
+}
+
+SM_ResetSkillLevels( id )
+{
+	new i;
+
+	for ( i = 0; i < MAX_PLAYER_SKILLS; i++ )
+	{
+		g_PlayerSkillLevel[id][i] = 0;
+	}
 }

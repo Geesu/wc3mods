@@ -188,7 +188,7 @@ public _menu_Admin_Options(id,key){
 			g_menuSettings[id] = 50
 			menu_TeamXP_Options(id)
 		}
-		case 2: XP_SaveAll()
+		case 2: DB_SaveAll();
 		case 8: menu_War3menu(id)
 		default: return PLUGIN_HANDLED
 	}

@@ -592,31 +592,6 @@ public XP_Reset(id)
 	return PLUGIN_CONTINUE;
 }	
 
-// This function will save the XP for all players, but it will save the data every 0.1 seconds (reduce lag?)
-public XP_SaveAll()
-{
-
-	if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
-	{
-		return;
-	}
-
-	new Float:time = 0.0;
-	new players[32], numofplayers, i;
-	get_players( players, numofplayers );
-
-	for ( i = 0; i < numofplayers; i++ )
-	{
-		set_task( time, "DB_SaveXP", TASK_SAVE + players[i] );
-
-		time += 0.1;
-
-		server_print( "[DEBUG] Task set for %0.0f for %d", time, players[i] );
-	}
-
-	return;
-}
-
 // Function from war3x thanks ryan!!!
 public XP_GetAdminFlag()
 {

@@ -1,3 +1,6 @@
+/*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
+*	Day of Defeat only functions
+´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
 public EVENT_DOD_EndRound()
 {
@@ -31,88 +34,8 @@ public EVENT_DOD_EndRound()
 	return;
 }
 
-
-public client_score(index,score,total){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-
-	// Award the user money
-	SHARED_SetUserMoney( index, SHARED_GetUserMoney(index)+(score*1000), 1 );
-
-	// Award the user XP
-	new iXP, iXPAwarded;
-	iXP = score * xpgiven[p_data[index][P_LEVEL]];
-	iXPAwarded = XP_Give( index, iXP );
-	if (get_pcvar_num( CVAR_wc3_show_objectives ))
-	{
-		client_print(index, print_chat, "%s %L", g_MODclient, index, "DOD_AWARDED_XP_OBJECTIVE", iXPAwarded);
-	}
-
-	return PLUGIN_CONTINUE
-}
-
-public _DOD_showMoney(parm[3]){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
-	
-	new id = parm[0]
-	new Float:timer = 0.7
-
-	if(!p_data_b[id][PB_ISCONNECTED])
-		return PLUGIN_CONTINUE
-
-	if(get_user_team(id) == ALLIES || get_user_team(id) == AXIS){
-		if(parm[1]==1){		// Should we show the change in money?
-			new message[128]
-			if(parm[2]<0)
-				format(message,127,"$%d^n%d", p_data[id][P_MONEY], parm[2])	// Lost money
-			else
-				format(message,127,"$%d^n+%d", p_data[id][P_MONEY], parm[2])	// Gained money
-
-			set_hudmessage(255,255,255,0.5,0.0,2, 1.5, 40.0, 0.1, 0.5, HUDMESSAGE_CHAN_MONEY)
-			show_hudmessage(id,message)
-			if(task_exists(TASK_MONEYLOOP+id))
-				remove_task(TASK_MONEYLOOP+id)
-			
-			timer = 2.0
-		}
-		else{
-			new message[128]
-			format(message,127,"$%d", p_data[id][P_MONEY])
-			set_hudmessage(255,255,255,0.5,0.0,2, 1.5, 40.0, 0.1, 0.5, HUDMESSAGE_CHAN_MONEY)
-			show_hudmessage(id,message)
-		}
-	}
-
-	parm[1] = 0
-	parm[2] = 0
-	set_task(timer, "_DOD_showMoney", TASK_MONEYLOOP+id, parm, 3)
-
-	return PLUGIN_CONTINUE
-}
-
-public on_StatusValue(id)
-{	
-	if(!warcraft3 || !SHOW_SPECTATE_INFO || !p_data_b[id][PB_ISCONNECTED])
-	{
-		return PLUGIN_CONTINUE;
-	}
-
-	new targetid = entity_get_int(id, EV_INT_iuser2);
-
-	if( targetid == 0 )
-	{
-		return PLUGIN_CONTINUE;
-	}
-
-	WC3_ShowSpecInfo(id, targetid);
-
-	return PLUGIN_CONTINUE;
-}
-
-public client_damage( attacker, victim, damage, wpnindex, hitplace, TA )
+// Called when a user scores!
+public client_score( index, score, total )
 {
 
 	if ( !WAR3_Check() )
@@ -120,13 +43,115 @@ public client_damage( attacker, victim, damage, wpnindex, hitplace, TA )
 		return;
 	}
 
-	if ( g_MOD != GAME_DOD )
+	new iBonusMoney = score * 1000;
+
+	// Award the user money
+	SHARED_SetUserMoney( index, SHARED_GetUserMoney( index ) + iBonusMoney, 1 );
+
+	// Award the user XP
+	new iXP = score * xpgiven[p_data[index][P_LEVEL]];
+
+	iXP = XP_Give( index, iXP );
+
+	if ( get_pcvar_num( CVAR_wc3_show_objectives ) )
+	{
+		client_print( index, print_chat, "%s %L", g_MODclient, index, "DOD_AWARDED_XP_OBJECTIVE", iXP );
+	}
+
+	return;
+}
+
+public _DOD_showMoney(parm[3])
+{
+
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+	
+	new id = parm[0];
+
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
+	
+	new Float:fTime = 0.7;
+
+	if ( SHARED_IsOnTeam( id ) )
+	{
+
+		new szMsg[128];
+
+		// Set up the hud message
+		set_hudmessage( 255, 255, 255, 0.5, 0.0, 2, 1.5, 40.0, 0.1, 0.5, HUDMESSAGE_CHAN_MONEY );
+
+		// Should we show the change in money?
+		if ( parm[1] == 1 )
+		{
+			// Lost Money
+			if ( parm[2] < 0 )
+			{
+				formatex( szMsg, 127, "$%d^n%d", p_data[id][P_MONEY], parm[2] );
+			}
+
+			// Gained Money
+			else
+			{
+				formatex( szMsg, 127, "$%d^n+%d", p_data[id][P_MONEY], parm[2] );
+			}
+
+			show_hudmessage( id, szMsg );
+			
+			// Remove task if it exists
+			( task_exists( TASK_MONEYLOOP + id ) ) ? remove_task( TASK_MONEYLOOP + id ) : 0;
+			
+			// Don't show the message for 2 seconds so the user notices the change in money
+			fTime = 2.0
+		}
+
+		// Just show the money like usual
+		else
+		{
+			format( szMsg, 127, "$%d", p_data[id][P_MONEY] );
+
+			show_hudmessage( id, szMsg );
+		}
+	}
+
+	parm[1] = 0;
+	parm[2] = 0;
+
+	set_task( fTime, "_DOD_showMoney", TASK_MONEYLOOP+id, parm, 3 );
+
+	return;
+}
+
+public on_StatusValue( id )
+{	
+	
+	if ( !WAR3_Check() )
 	{
 		return;
 	}
 
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
+	
+	// This is the player that the dead person is spectating
+	new iTarget = entity_get_int( id, EV_INT_iuser2 );
 
-	EVENT_Damage( victim, attacker, damage, wpnindex, hitplace );
+	new szTargetName[32];
+	get_user_name( iTarget, szTargetName, 31 );
+
+	client_print( id, print_chat, "[DEBUG] You are viewing %s (%d)", szTargetName, iTarget );
+
+	if ( SHARED_ValidPlayer( iTarget ) )
+	{
+		WC3_ShowSpecInfo( id, iTarget );
+	}
 
 	return;
 }

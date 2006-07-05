@@ -150,7 +150,7 @@ LANG_GetSkillName( skill_id, id, skill_name[], len )
 
 LANG_GetSkillInfo( skill_id, id, skill_description[], len )
 {
-	switch( skill_id )
+	switch ( skill_id )
 	{
 		// Undead Scourge
 		case SKILL_VAMPIRICAURA:		formatex ( skill_description, len, "%L", id, "SKILL_I_0" );

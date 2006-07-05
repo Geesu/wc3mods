@@ -34,7 +34,7 @@ public grenade_throw( index, greindex, wId )
 	return;
 }
 
-public EVENT_Damage( iVictim, iAttacker, iDamage, iWeapon, iHitPlace )
+public client_damage( iAttacker, iVictim, iDamage, iWeapon, iHitPlace, TA )
 {
 
 	// If they damage themself we don't care now do we ?
@@ -47,6 +47,12 @@ public EVENT_Damage( iVictim, iAttacker, iDamage, iWeapon, iHitPlace )
 
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
+
+		if ( iWeapon == CSW_C4 )
+		{
+			client_print( iVictim, print_chat, "[DEBUG] Attacked by bomb for %d damage", iDamage );
+		}
+
 		// Check out who the inflictor was
 		new iInflictor = entity_get_edict( iVictim, EV_ENT_dmg_inflictor );
 
@@ -232,7 +238,7 @@ public on_GameRestart()
 		return;
 	}
 
-	XP_SaveAll();
+	DB_SaveAll();
 
 	g_GameRestarting = true;
 
@@ -443,15 +449,15 @@ public EVENT_NewRound()
 	{
 		if ( get_pcvar_num( CVAR_wc3_buy_time ) )
 		{
+			// Remove our buytime task if it exists (from a previous round)
+			( task_exists( TASK_BUYTIME ) ) ? remove_task( TASK_BUYTIME ) : 0;
+
 			g_buyTime = true;
-			set_task( get_cvar_float("mp_buytime") * 60.0, "_WAR3_set_buytime", TASK_BUYTIME );
+
+			set_task( get_cvar_float("mp_buytime") * 60.0, "_CS_BuyTimeOver", TASK_BUYTIME );
 		}
 
-		if ( !g_freezeCalled )
-		{
-			g_freezeTime	= true;
-			g_freezeCalled	= true;
-		}
+		g_freezeTime	= true;
 	}
 
 	g_EndRound = false;
@@ -593,6 +599,9 @@ EVENT_JustBeforeSpawn( id )
 
 	// Reset the player's role
 	g_iPlayerRole[id] = 0;
+	
+	// User shouldn't be a mole anymore...
+	p_data_b[id][PB_MOLE] = false;
 
 	// Reset the bomb/defusing check
 	bHasBegunPlantingOrDefusing[id] = false;

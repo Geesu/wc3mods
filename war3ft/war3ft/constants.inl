@@ -74,7 +74,7 @@
 //#define	TASK_CHECKMAP		2011
 #define TASK_BOIDTHINK		2012
 #define TASK_TARGETBOMBED	2013
-#define TASK_BOMBTIMER		2014
+//#define TASK_BOMBTIMER		2014
 //#define TASK_WAR3CHECK		2015	// Checks the value of sv_warcraft3 every 5 seconds (better than checking it on every function call)
 #define TASK_SIPHON			2016
 #define TASK_ENDULTIMATE	2017
@@ -294,7 +294,7 @@
 //	#define P_ITEM2                 8		// Item from shopmenu 2
 
 	// Miscellaneous options
-	#define P_DEFUSERINDEX			9		// Player is the defuse
+	//#define P_DEFUSERINDEX			9		// Player is the defuse
 	#define P_SPECMODE				10		// Used to determine if the player is spectating or not
 	#define P_SHOWRACEMENU			11		// Should we show the race menu when the player respawns?
 	#define P_SHOWICONS				12		// Show player icons/levels for this player?
@@ -453,7 +453,6 @@ new szSpawnEnt[2][32];
 
 /*  START - CSTRIKE VARIABLES */
 new bool:g_freezeTime	= false;
-new bool:g_freezeCalled = false;
 new bool:g_buyTime
 
 // Counter-Strike/Condition Zero Skins
@@ -490,9 +489,6 @@ new gmsgScreenShake
 new gmsgScoreInfo
 new gmsgStatusIcon
 
-// Used for Mole
-new bool:spawnPointsused[33] = false
-
 new bool:g_GameRestarting = false;
 
 new g_MODclient[15] = "* [WAR3FT]"
@@ -525,6 +521,7 @@ new g_iTotalObjectiveEnts = 0;
 
 new bool:g_bOrcNadesDisabled = false;
 new bool:g_bGlovesDisabled = false;
+new bool:g_bMoleBuyZoneDisabled = false;
 
 // ***************************
 // Skill Information
@@ -536,8 +533,10 @@ new bool:g_bGlovesDisabled = false;
 #define SKILL_ULTIMATE				4
 #define SKILL_PASSIVE				5
 
-new g_PlayerSkills[33][6];				// Stores what skills the player has
-new g_PlayerSkillLevel[33][6];			// Stores what level each skill is
+#define MAX_PLAYER_SKILLS			6
+
+new g_PlayerSkills[33][MAX_PLAYER_SKILLS];				// Stores what skills the player has
+new g_PlayerSkillLevel[33][MAX_PLAYER_SKILLS];			// Stores what level each skill is
 
 // SKILL DEFINES
 #define SKILL_NONE				-1
