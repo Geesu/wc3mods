@@ -1027,7 +1027,7 @@ WC3_StatusText( id, iType, const fmt[], ... )
 		// I.E. /level
 		else if ( iType == TXT_RACE_INFO )
 		{
-			set_hudmessage( 255, 255, 255, -1.0, 0.3, 0, 3.0, 5.0, 0.1, 0.2, -1 );
+			set_hudmessage( 255, 255, 255, -1.0, 0.3, 0, 3.0, 5.0, 0.1, 0.2, 2 );
 		}
 
 		// Ultimate messages
@@ -1039,13 +1039,13 @@ WC3_StatusText( id, iType, const fmt[], ... )
 		// I.E. Suicide Bomb Armed
 		else if ( iType == TXT_BLINK_CENTER )
 		{
-			set_hudmessage( 178, 14, 41, -1.0, -0.4, 1, 0.5, 1.7, 0.2, 0.2, 5 );
+			set_hudmessage( 178, 14, 41, -1.0, -0.4, 1, 0.5, 1.7, 0.2, 0.2, -1 );
 		}
 
 		// I.E. "You have evaded a shot"
 		else if ( iType == TXT_SKILL )
 		{
-			set_hudmessage( 0, 0, 255, 0.75, 0.85, 0, 6.0, 3.0, 0.2, 0.7, -1 );
+			set_hudmessage( 0, 0, 255, 0.75, 0.85, 0, 6.0, 3.0, 0.2, 0.7, 3 );
 		}
 
 		// All other cases

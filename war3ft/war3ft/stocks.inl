@@ -39,22 +39,3 @@ stock SHARED_IsSecondaryWeapon( iWeaponID )
 
 	return false;
 }
-
-stock SHARED_IsEntInView( id, iEnt )
-{
-	new Float:vPlayerOrigin[3];
-	entity_get_vector( id, EV_VEC_origin, vPlayerOrigin );
-
-	new Float:vEntOrigin[3];
-	entity_get_vector( iEnt, EV_VEC_origin, vEntOrigin );
-
-	new Float:vReturn[3];
-
-	new iHitEnt = trace_line( id, vPlayerOrigin, vEntOrigin, vReturn );
-
-	if ( iHitEnt == iEnt )
-		return 1;
-	
-	return 0;
-}
-

@@ -266,8 +266,9 @@ BM_SkillsDefensive( iAttacker, iVictim, iDamage )
 
 		if ( random_float( 0.0, 1.0 ) <= p_banish[p_data[iVictim][P_SKILL2]-1] )
 		{
-						
-			if ( !g_bPlayerBanished[iAttacker] )
+			
+			// Make sure the user isn't banished and that the enemy isn't in the victim's view (victim might be attacking them)
+			if ( !g_bPlayerBanished[iAttacker] && !UTIL_EntInView( iVictim, iAttacker ) )
 			{
 				// Deal some damage
 				WC3_Damage( iAttacker, iVictim, BANISH_DAMAGE, CSW_BANISH, 0 );

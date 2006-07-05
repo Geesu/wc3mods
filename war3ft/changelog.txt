@@ -55,6 +55,7 @@ v3.0
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
+//during banish switch to knife?
 //clean up items
 //config file for mole/shopzone
 //check for config file locations... make sure they're there
