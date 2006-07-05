@@ -360,7 +360,7 @@ public _SHARED_Spawn_Final( id )
 public SHARED_DOD_Reincarnation( id )
 {
 
-	if ( !warcraft3 )
+	if ( !WAR3_Check() )
 	{
 		return PLUGIN_CONTINUE
 	}
@@ -403,7 +403,7 @@ public SHARED_DOD_Reincarnation( id )
 public _SHARED_DOD_Reincarnation_Check( id )
 {
 	
-	if ( !warcraft3 )
+	if ( !WAR3_Check() )
 	{
 		return;
 	}
@@ -474,7 +474,7 @@ public _SHARED_DOD_Reincarnation_Loc( id )
 public SHARED_CS_Reincarnation( id )
 {
 
-	if ( !p_data_b[id][PB_ISCONNECTED] || !warcraft3 )
+	if ( !p_data_b[id][PB_ISCONNECTED] || !WAR3_Check() )
 	{
 		return PLUGIN_CONTINUE;
 	}
@@ -801,11 +801,11 @@ SHARED_IsPlayerSlowed( id )
 }
 
 // Function changes your skin for ITEM_MOLE and Chameleon
-public SHARED_ChangeSkin( id, reset )
+public SHARED_ChangeSkin( id, iFlag )
 {
 	
 	// Don't change a bots model - it just confuses the bots!
-	if ( !warcraft3 || is_user_bot( id ) )
+	if ( !WAR3_Check() || is_user_bot( id ) )
 	{
 		return;
 	}
@@ -813,7 +813,7 @@ public SHARED_ChangeSkin( id, reset )
 	new szSkin[32];
 	
 	// Reset the user's model
-	if ( reset == SKIN_RESET && p_data[id][P_SKINCHANGED] == SKIN_SWITCH )
+	if ( iFlag == SKIN_RESET && p_data[id][PB_SKINSWITCHED] )
 	{
 
 		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
@@ -825,11 +825,11 @@ public SHARED_ChangeSkin( id, reset )
 			dod_clear_model( id );
 		}
 
-		p_data[id][P_SKINCHANGED] = SKIN_RESET;
+		p_data[id][PB_SKINSWITCHED] = false;
 	}
 	
 	// Switch the user's skin to the opposing team
-	else if ( reset == SKIN_SWITCH )
+	else if ( iFlag == SKIN_SWITCH )
 	{
 		new iTeam = get_user_team( id );
 		
@@ -886,7 +886,7 @@ public SHARED_ChangeSkin( id, reset )
 			dod_set_model( id, szSkin );
 		}
 
-		p_data[id][P_SKINCHANGED] = SKIN_SWITCH;
+		p_data[id][PB_SKINSWITCHED] = true;
 	}
 
 	return;

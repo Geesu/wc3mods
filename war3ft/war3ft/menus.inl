@@ -1,7 +1,5 @@
-public menu_War3menu(id){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
+public menu_War3menu(id)
+{
 
 	new pos = 0, i, menu_body[512], menuitems[5][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4)|(1<<9)
@@ -24,22 +22,24 @@ public menu_War3menu(id){
 
 public _menu_War3menu(id,key){
 
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	switch (key){
 		case 0:	menu_Skill_Options(id)
 		case 1:	menu_Race_Options(id)
 		case 2:	menu_Item_Options(id)
 		case 3:	MOTD_War3help(id)
 		case 4:	menu_Admin_Options(id)
-		default:	return PLUGIN_HANDLED
+		default:	return;
 	}
 	
-	return PLUGIN_HANDLED
+	return;
 }
 
 public menu_Skill_Options(id){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
 
 	new pos = 0, i, menu_body[512], menuitems[3][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<8)|(1<<9)
@@ -61,21 +61,23 @@ public menu_Skill_Options(id){
 }
 
 public _menu_Skill_Options(id,key){
+	
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
 
 	switch (key){
 		case 0:	MENU_SelectSkill( id );
 		case 1:	MOTD_SkillsInfo( id );
 		case 2:	CMD_Handle( id, "resetskills" );
 		case 8: menu_War3menu(id)
-		default: return PLUGIN_HANDLED
+		default: return;
 	}
-	return PLUGIN_HANDLED
+	return;
 }
 
 public menu_Race_Options(id){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
 
 	new pos = 0, i, menu_body[512], menuitems[4][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<8)|(1<<9)
@@ -98,21 +100,23 @@ public menu_Race_Options(id){
 
 public _menu_Race_Options(id,key){
 
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	switch (key){
 		case 0:	WC3_ChangeRaceStart( id );
 		case 1:	WC3_ShowRaceInfo( id );
 		case 2:	menu_ResetXP(id)
 		case 3:	MOTD_PlayerSkills( id );
 		case 8: menu_War3menu(id)
-		default: return PLUGIN_HANDLED
+		default: return;
 	}
-	return PLUGIN_HANDLED
+	return;
 }
 
 public menu_Item_Options(id){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
 
 	new pos = 0, i, menu_body[512], menuitems[4][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<8)|(1<<9)
@@ -135,21 +139,23 @@ public menu_Item_Options(id){
 
 public _menu_Item_Options(id,key){
 
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	switch (key){
 		case 0:	MENU_Shopmenu( id, 0 );
 		case 1:	MENU_Shopmenu( id, 9 );
 		case 2:	MOTD_ItemsInfo( id, 0 );
 		case 3:	MOTD_ItemsInfo( id, 9 );
 		case 8: menu_War3menu(id)
-		default: return PLUGIN_HANDLED
+		default: return;
 	}
-	return PLUGIN_HANDLED
+	return;
 }
 
 public menu_Admin_Options(id){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
 
     if ( id && !( get_user_flags( id ) & XP_GetAdminFlag() ) )
 	{
@@ -177,6 +183,11 @@ public menu_Admin_Options(id){
 
 public _menu_Admin_Options(id,key){
 
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	switch (key){
 		case 0:{
 			g_menuOption[id] = 1
@@ -190,15 +201,11 @@ public _menu_Admin_Options(id,key){
 		}
 		case 2: DB_SaveAll();
 		case 8: menu_War3menu(id)
-		default: return PLUGIN_HANDLED
 	}
-	return PLUGIN_HANDLED
+	return;
 }
 
 public menu_PlayerXP_Options(id,pos){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
 
 	if (pos < 0){
 		menu_Admin_Options(id)
@@ -251,6 +258,11 @@ public menu_PlayerXP_Options(id,pos){
 
 public _menu_PlayerXP_Options(id,key){
 
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	switch(key){
 		case 7:{
 			++g_menuOption[id]
@@ -279,13 +291,10 @@ public _menu_PlayerXP_Options(id,key){
 			menu_PlayerXP_Options(id,g_menuPosition[id])
 		}
 	}
-	return PLUGIN_HANDLED
+	return;
 }
 
 public menu_TeamXP_Options(id){
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE
 
 	new pos = 0, i, menu_body[512], menuitems[3][32], give[16]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<7)|(1<<8)|(1<<9)
@@ -308,6 +317,11 @@ public menu_TeamXP_Options(id){
 }
 
 public _menu_TeamXP_Options(id,key){
+
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
 
 	switch(key){
 		case 0:
@@ -339,17 +353,12 @@ public _menu_TeamXP_Options(id,key){
 			menu_TeamXP_Options(id)
 		}
 		case 8: menu_Admin_Options(id)
-		case 9: return PLUGIN_HANDLED
-		default: return PLUGIN_HANDLED
 	}
-	return PLUGIN_HANDLED
+	return;
 }
 
 public menu_ResetXP(id)
 {
-
-	if (!warcraft3)
-		return PLUGIN_CONTINUE;
 
 	new szMenu[512];
 	new keys = (1<<0)|(1<<1)|(1<<9);
@@ -364,6 +373,11 @@ public menu_ResetXP(id)
 public _menu_ResetXP( id, key )
 {
 	
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	// User selected yes
 	if ( key == 0 )
 	{
@@ -377,11 +391,6 @@ public _menu_ResetXP( id, key )
 public MENU_SelectRace( id, iRaceXP[MAX_RACES] )
 {
 	
-	if ( !WAR3_Check( id ) )
-	{
-		return;
-	}
-
 	new szRaceName[MAX_RACES+1][64], i, pos, iKeys = 0, szMenu[512], szXP[16];
 
 	// Get our race names
@@ -524,10 +533,6 @@ public _MENU_SelectRace( id, key )
 
 public MENU_ReplaceItem( id )
 {
-	if ( !WAR3_Check( id ) )
-	{
-		return;
-	}
 
 	new szMenu[512] = "", pos = 0;
 	new iKeys = (1<<9)|(1<<0)|(1<<1);
@@ -578,7 +583,7 @@ public _menu_ReplaceItem( id, iKey )
 
 public MENU_Shopmenu( id, iStart )
 {
-	if ( !WAR3_Check( id ) || !ITEM_CanBuy( id ) )
+	if ( !ITEM_CanBuy( id ) )
 	{
 		return;
 	}
@@ -671,11 +676,6 @@ public _MENU_Shopmenu2( id, iKey )
 
 public MENU_SelectSkill( id )
 {
-
-	if ( !WAR3_Check() )
-	{
-		return;
-	}
 
 	// User has no race, how can we select skills?!?
 	if ( p_data[id][P_RACE] == 0 )

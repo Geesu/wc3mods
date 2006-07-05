@@ -59,18 +59,17 @@ v3.0
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
+//finish wc3_disable checking - on race_blood.inl
+//re-write menus
 //add sound when ult fails b/c of target immunity
 //actually use SM_ResetSkillLevels/SM_SetPlayerRace/SM_GetSkillLevel
 //improve spec info responses
 //during banish switch to knife?
 //clean up items
-//set up defines for hud channels
-//make mysqlx saving threaded and pruning
 //finish re-writing how skills are handled
 //verify all skills given with selectskill
 //allow user to changerace when in spec?
 //Fix bug with doing autoselect w/FT_Races 8 then changerace and CENTER_CHANGED_NEXT displaying
-//reset skills/ultimates when user dies or right before the round starts
 //remove all task_exists
 //fix hex playing after ur dead...
 //bug: phoenix will try to respawn users when changing team

@@ -216,7 +216,7 @@
 #define GAME_CZERO			2
 #define GAME_DOD			3
 
-// Used with P_SKINCHANGED
+// Used with PB_SKINSWITCHED
 #define SKIN_RESET					0
 #define SKIN_SWITCH					1
 
@@ -298,7 +298,7 @@
 	#define P_RINGS					24
 //	#define P_LASTITEM				25		// Holds the item that the user had during the previous round
 //	#define P_LASTITEM2				26
-	#define P_SKINCHANGED			27		// Did the user's skin change?
+//	#define P_SKINSWITCHED			27		// Did the user's skin change?
 	#define P_ULTIMATEDELAY			30
 	#define P_RESPAWNBY				31		// Stores how the user is going to respawn
 
@@ -316,7 +316,7 @@
 	// ***************************
 
 	// Miscellaneous
-//	#define PB_GAMECOMMENCING		0		// Was there a game commencing message? (change how this functions?  do we really need it to be [33]?)
+	#define PB_SKINSWITCHED			0		// Set if the user's skin has been changed
 	#define PB_RESETSKILLS			1		// Does the player want to reset their skills in the next round?
 	#define PB_CHANGINGTEAM			2		// Is the user currently changing his/her team?
 	#define PB_DIEDLASTROUND		4
@@ -702,3 +702,5 @@ new Float:g_fSpecInfoExpire[33];
 #define HUDMESSAGE_FX_FADEIN    0           // hudmessage effect types
 #define HUDMESSAGE_FX_FLICKER   1
 #define HUDMESSAGE_FX_WRITEOUT  2
+
+new bool:g_bPluginEnding = false;

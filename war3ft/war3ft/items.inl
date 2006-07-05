@@ -410,9 +410,6 @@ bool:ITEM_Has( id, iItem )
 
 ITEM_Tome( id )
 {
-	if ( !WAR3_Check() || !p_data_b[id][PB_ISCONNECTED] )
-		return;
-
 	new iXp = get_pcvar_num( CVAR_wc3_tome ) + xpgiven[p_data[id][P_LEVEL]];
 		
 	if ( g_MOD == GAME_DOD )

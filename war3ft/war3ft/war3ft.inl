@@ -442,12 +442,17 @@ public WC3_DetermineGame()
 public WC3_GetUserInput( id )
 {
 	
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	if ( id > TASK_GETINPUT )
 	{
 		id -= TASK_GETINPUT;
 	}
 
-	if ( !warcraft3 || !p_data_b[id][PB_ISCONNECTED] )
+	if ( !p_data_b[id][PB_ISCONNECTED] )
 	{
 		return;
 	}
@@ -1008,7 +1013,7 @@ WC3_CommonSpawn( id )
 	// Should the user mole?
 	SHARED_MoleCheck( id );
 
-
+	// Set the user's skills!
 	WC3_SetSkills( id );
 }
 

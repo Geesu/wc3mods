@@ -139,9 +139,16 @@ public ADMIN_Handler( id )
 			ADMIN_Print( id, "%s The plugin was already disabled!", g_MODclient );
 		}
 
-		// Enable the plugin!
+		// Disable the plugin!
 		else
 		{
+			// What needs to happen here?
+			//    - all skills set to 0 for each player
+			//    - call SHARED_SetGravity
+			//    - call SHARED_SetInvis
+			//    - call SHARED_SetSpeed
+			//    - stop tasks - like money task for dod
+
 			warcraft3 = false;
 			ADMIN_Print( id, "%s Plugin disabled!", g_MODclient );
 		}

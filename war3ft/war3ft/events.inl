@@ -37,6 +37,11 @@ public grenade_throw( index, greindex, wId )
 public client_damage( iAttacker, iVictim, iDamage, iWeapon, iHitPlace, TA )
 {
 
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	// If they damage themself we don't care now do we ?
 	if ( iVictim == iAttacker )
 	{
@@ -229,36 +234,6 @@ public on_CurWeapon( id )
 	return;
 }
 
-
-public on_GameRestart()
-{
-
-	if ( !WAR3_Check() )
-	{
-		return;
-	}
-
-	DB_SaveAll();
-
-	g_GameRestarting = true;
-
-	return
-}
-
-
-public on_WeapPickup( id )
-{ 
-
-	if ( !WAR3_Check() )
-	{
-		return;
-	}
-
-	SHARED_SaveWeapons( id );
-
-	return;
-}
-
 public on_Drop( id )
 {
 	if ( !WAR3_Check() )
@@ -274,17 +249,11 @@ public on_Drop( id )
 public on_ResetHud(id)
 {
 
-	if ( !warcraft3 )
+	if ( !WAR3_Check() )
 	{
 		return PLUGIN_CONTINUE;
 	}
 	
-	// Then this is the first call of the new round
-	if ( g_EndRound )
-	{
-		EVENT_NewRound();
-	}
-
 	// ResetHUD can be called when the user is not alive, lets ignore those calls
 	if ( !is_user_alive( id ) )
 	{
@@ -421,6 +390,11 @@ public EVENT_PlayerSpawned( id )
 // Function is called ONCE at the start of a new round BEFORE user's spawn
 public EVENT_NewRound()
 {
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	// Reset the global ultimate delay
 	g_iUltimateDelay = get_pcvar_num( CVAR_wc3_ult_delay );
 
@@ -466,6 +440,11 @@ public EVENT_NewRound()
 // Called when a user looks somewhere
 public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 {
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	new iAttacker = pentToSkip;
 	new iVictim = get_tr(TR_pHit);
 	new iHitZone = (1 << get_tr(TR_iHitgroup));

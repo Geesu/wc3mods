@@ -187,7 +187,7 @@ public on_ShowStatus( id )
 	{
 
 		// Check if your teammate looks like the enemy!
-		if ( p_data[iTarget][P_SKINCHANGED] == SKIN_SWITCH )
+		if ( p_data[iTarget][PB_SKINSWITCHED] )
 		{
 		
 			client_print( id, print_center, "%L", id, "HES_ON_YOUR_TEAM_DONT_SHOOT" );
@@ -228,7 +228,7 @@ public on_ShowStatus( id )
 		get_user_name( iTarget, szTargetName, 31 );
 		
 		// The target looks like the enemy o.O
-		if ( p_data[iTarget][P_SKINCHANGED] == SKIN_SWITCH )
+		if ( p_data[iTarget][PB_SKINSWITCHED] )
 		{
 
 			// Then the viewer should see the user's true color!
@@ -283,6 +283,11 @@ public on_ShowStatus( id )
 // This is called when the user is no longer viewing the player
 public on_HideStatus( id )
 {
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	if ( get_pcvar_num( CVAR_wc3_show_player ) && !g_freezeTime )
 	{
 		UTIL_ClearHudChannel( id, HUD_SHOWSTATUS );
@@ -291,6 +296,11 @@ public on_HideStatus( id )
 
 public _CS_MinModelsLoop()
 {
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	if ( get_pcvar_num( CVAR_wc3_query_client ) )
 	{
 		new iPlayers[32], iNumPlayers, i;
@@ -339,4 +349,32 @@ CS_GetIcon( id )
 CS_SetIcon( id )
 {
 	client_cmd( id, "setinfo _wc3 ^"%d^"", p_data[id][P_SHOWICONS] )
+}
+
+public on_WeapPickup( id )
+{ 
+
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
+	SHARED_SaveWeapons( id );
+
+	return;
+}
+
+public on_GameRestart()
+{
+
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
+	DB_SaveAll();
+
+	g_GameRestarting = true;
+
+	return
 }

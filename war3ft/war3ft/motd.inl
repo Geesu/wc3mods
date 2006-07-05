@@ -3,11 +3,6 @@
 public MOTD_ItemsInfo( id, iStart )
 {
 
-	if ( !WAR3_Check( id ) )
-	{
-		return;
-	}
-
 	new szTitle[128], pos = 0, i;
 	new szItemName[9][64], iItemID;
 
@@ -71,11 +66,6 @@ public MOTD_ItemsInfo( id, iStart )
 
 public MOTD_PlayerSkills( id )
 {
-
-	if ( !WAR3_Check( id ) )
-	{
-		return;
-	}
 
 	new iPlayers[32], iNumPlayers, i;
 	get_players( iPlayers, iNumPlayers );
@@ -207,11 +197,6 @@ public MOTD_PlayerSkills( id )
 
 public MOTD_SkillsInfo( id )
 {
-
-	if ( !WAR3_Check( id ) )
-	{
-		return;
-	}
 
 	if ( 0 < p_data[id][P_RACE] <= get_pcvar_num( CVAR_wc3_races ) )
 	{

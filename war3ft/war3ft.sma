@@ -134,7 +134,7 @@ public plugin_init()
 	register_clcmd( "level"				, "CMD_Handler"		, -1 );
 	register_clcmd( "say"				, "cmd_Say"			, -1 );
 	register_clcmd( "say_team"			, "cmd_Say"			, -1 );
-	register_clcmd( "war3help"			, "MOTD_War3help"	, -1 );
+	register_clcmd( "war3help"			, "CMD_Handler"		, -1 );
 	register_clcmd( "ultimate"			, "cmd_Ultimate"	, -1 );
 	register_clcmd( "fullupdate"		, "cmd_fullupdate"	, -1 );
 	register_clcmd( "drop"				, "on_Drop"			, -1 );
@@ -212,7 +212,7 @@ public plugin_init()
 	}
 	else if ( g_MOD == GAME_DOD )
 	{
-		gmsgHudText = get_user_msgid("HudText");
+		gmsgHudText = get_user_msgid( "HudText" );
 
 		register_statsfwd( XMF_SCORE	);
 		register_statsfwd( XMF_DAMAGE	);
@@ -223,13 +223,6 @@ public plugin_init()
 
 	// Plugin initialization procedures
 	WC3_Init();
-
-	register_concmd( "test", "test" );
-}
-
-public test( id )
-{
-	WC3_StatusText( id, TXT_SKILL, "You have evaded a shot!" );
 }
 
 public plugin_end()
@@ -244,6 +237,8 @@ public plugin_end()
 		return;
 	}
 	
+	g_bPluginEnding = true;
+
 	DB_SaveAll();
 	DB_Prune();
 	DB_Close();
@@ -299,6 +294,11 @@ public client_putinserver( id )
 
 public client_connect( id )
 {
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
+
 	client_cmd( id, "hud_centerid 0" );
 
 	p_data[id][P_RACE]					= 0;
@@ -370,6 +370,10 @@ public client_connect( id )
 
 public client_disconnect(id)
 {
+	if ( !WAR3_Check() )
+	{
+		return;
+	}
 
 	// Remove the money task when a user disconnects
 	if ( g_MOD == GAME_DOD )

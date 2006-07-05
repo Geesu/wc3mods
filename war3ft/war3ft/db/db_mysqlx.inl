@@ -145,17 +145,25 @@ MYSQLX_Save( id )
 	// Save the data
 	new szQuery[512];
 	format( szQuery, 511, "REPLACE INTO `%s` (`playerid`, `playerip`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', '%s', %d, %d, %d, %d, %d, %d)", g_DBTableName, szPlayerID, szPlayerIP, szPlayerName, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE] );
-
-	new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
-
-	if ( !SQL_Execute( query ) )
+	
+	// Then we don't want to do threaded!
+	if ( g_bPluginEnding )
 	{
-		MYSQLX_Error( query, szQuery, 5 );
+		new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
 
-		return;
+		if ( !SQL_Execute( query ) )
+		{
+			MYSQLX_Error( query, szQuery, 5 );
+
+			return;
+		}
 	}
 
-	//SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save", szQuery )
+	// We're clear lets thread it!
+	else
+	{
+		SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save", szQuery )
+	}
 
 	return;
 }
@@ -348,28 +356,6 @@ MYSQLX_Prune()
 
 		return;
 	}
-
-	//SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Prune", szQuery );	
-}
-
-public _MYSQLX_Prune( failstate, Handle:query, error[], errnum, data[], size )
-{
-	// Error during the query
-	if ( failstate )
-	{
-		new szQuery[256];
-		
-		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 4 );
-	}
-
-	// Query successful, we can do stuff!
-	else
-	{
-		// Free the handle
-		SQL_FreeHandle( query );
-	}
-
-	return;
 }
 
 MYSQLX_UpdateTimestamp( id )

@@ -423,13 +423,23 @@ CMD_Handle( id, szCmd[] )
 CMD_Equal( id,  szCmd[], szCorrectCmd[] )
 {
 
-	if ( !WAR3_Check( id ) )
-	{
-		return false;
-	}
-
 	new szTmp[64];
 	formatex( szTmp, 63, "/%s", szCorrectCmd );
 
-	return ( equali( szCmd, szTmp ) || equali( szCmd, szCorrectCmd ) );
+	new bool:bValid = equali( szCmd, szTmp ) || equali( szCmd, szCorrectCmd );
+	
+	if ( !WAR3_Check() )
+	{
+		
+		// Only print a message if the command was valid
+		if ( bValid )
+		{
+			WAR3_Check( id );
+		}
+	
+		return false;
+	}
+
+
+	return bValid;
 }
