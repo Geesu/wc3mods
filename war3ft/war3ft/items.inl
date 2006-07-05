@@ -563,6 +563,11 @@ ITEM_Scroll( id )
 
 ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 {
+	if ( !SHARED_ValidPlayer( iAttacker ) )
+	{
+		return;
+	}
+
 	// Claws of Attack
 	if ( ITEM_Has( iAttacker, ITEM_CLAWS ) )
 	{	
