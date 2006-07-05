@@ -114,7 +114,10 @@ public EVENT_Damage( iVictim, iAttacker, iDamage, iWeapon, iHitPlace )
 	}
 
 	// Item abilities
-	ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace );
+	if ( SHARED_ValidPlayer( iAttacker ) )
+	{
+		ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace );
+	}
 
 	return;
 }
