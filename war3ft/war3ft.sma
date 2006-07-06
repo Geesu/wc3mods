@@ -580,16 +580,22 @@ public client_PreThink( id )
 
 			// Check to see if spectated player has changed
 			new iTarget = entity_get_int( id, EV_INT_iuser2 );
+			
+			new Float:fTime = halflife_time();
 
-			if ( p_data[id][P_LASTSPEC] != iTarget )
+			// Then we are looking at a new player or the last hud message has disappeared
+			if ( g_iSpectatingID[id] != iTarget || g_fLastSpecDisplay[id] <= fTime )
 			{
-				
+
+				// We have a valid target!!
 				if ( SHARED_ValidPlayer( iTarget ) )
 				{
 					WC3_ShowSpecInfo( id, iTarget );
+
+					g_fLastSpecDisplay[id] = fTime + SPEC_HOLDTIME;
 				}
 
-				p_data[id][P_LASTSPEC] = iTarget;
+				g_iSpectatingID[id] = iTarget;
 			}
 		}
 	}

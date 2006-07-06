@@ -973,7 +973,7 @@ WC3_ShowSpecInfo( id, iTargetID )
 	
 	
 	// Format the message
-	new Float:fSpecTime = 12.0;
+	new Float:fSpecTime = SPEC_HOLDTIME;
 
 	if ( get_pcvar_num( CVAR_wc3_spec_position ) == 0 )
 	{
@@ -986,9 +986,6 @@ WC3_ShowSpecInfo( id, iTargetID )
 	
 	// Show the message
 	show_hudmessage( id, szMsg );
-
-	// This allows us to "remove" the spec message if need be on round start
-	g_fSpecInfoExpire[id] = fSpecTime + halflife_time();
 }
 
 // Since things are set differently for DOD + CS, this is common to both

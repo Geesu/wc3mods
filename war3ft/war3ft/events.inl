@@ -577,13 +577,13 @@ EVENT_JustBeforeSpawn( id )
 {
 	
 	// Remove the spectating info if necessary
-	if ( g_fSpecInfoExpire[id] > halflife_time() )
+	if ( g_fLastSpecDisplay[id] >= halflife_time() )
 	{
 		UTIL_ClearHudChannel( id, HUD_SPEC_INFO );
 	}
 
 	// Reset who the user was spectating
-	p_data[id][P_LASTSPEC] = -1;
+	g_iSpectatingID[id] = -1;
 
 	// Reset the player's role
 	g_iPlayerRole[id] = 0;

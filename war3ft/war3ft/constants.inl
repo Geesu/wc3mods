@@ -269,7 +269,7 @@
 	#define P_ULTIMATE              4		// Ultimate level
 	#define P_LEVEL					5		// Player Level
 	#define P_XP                    6		// Current XP
-	#define P_LASTSPEC              7		// Item from shopmenu 1
+//	#define P_LASTSPEC              7		// Item from shopmenu 1
 //	#define P_ITEM2                 8		// Item from shopmenu 2
 
 	// Miscellaneous options
@@ -677,9 +677,6 @@ new bool:g_bExtraSpritesEnabled = false
 #define SPR_SMOKE			13
 #define SPR_IMMOLATE		14
 
-new Float:g_fSpecInfoExpire[33];
-
-
 // HUD Channels
 #define HUD_SPEC_INFO			1	// Info displayed in bottom corner of player being spectated
 #define HUD_SHOWSTATUS			4	// Information shown on enemies/teammates when looking at them
@@ -703,4 +700,11 @@ new Float:g_fSpecInfoExpire[33];
 #define HUDMESSAGE_FX_FLICKER   1
 #define HUDMESSAGE_FX_WRITEOUT  2
 
+// Variable used so we don't do any threading queries on mapchange
 new bool:g_bPluginEnding = false;
+
+
+// Used for spectating info
+#define SPEC_HOLDTIME		10.0
+new g_iSpectatingID[33];
+new Float:g_fLastSpecDisplay[33];
