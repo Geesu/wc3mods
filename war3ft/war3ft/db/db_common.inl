@@ -147,7 +147,7 @@ public DB_SaveXP( id )
 		id -= TASK_SAVE;
 	}
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}

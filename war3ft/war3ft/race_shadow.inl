@@ -156,7 +156,7 @@ public SH_PlaceSerpentWard( id )
 public _SH_DrawSerpentWard( parm[5] )
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return PLUGIN_HANDLED;
 	}

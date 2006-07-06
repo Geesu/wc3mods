@@ -5,7 +5,7 @@
 public EVENT_DOD_EndRound()
 {
 	
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -38,7 +38,7 @@ public EVENT_DOD_EndRound()
 public client_score( index, score, total )
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -64,7 +64,7 @@ public client_score( index, score, total )
 public _DOD_showMoney(parm[3])
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}

@@ -267,7 +267,7 @@ public test(id)
 
 public plugin_end()
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -293,7 +293,7 @@ public plugin_precache()
 
 public client_putinserver( id )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -334,7 +334,7 @@ public client_putinserver( id )
 
 public client_connect( id )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -411,7 +411,7 @@ public client_connect( id )
 
 public client_disconnect(id)
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -509,7 +509,7 @@ public client_disconnect(id)
 
 public client_PreThink( id )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}

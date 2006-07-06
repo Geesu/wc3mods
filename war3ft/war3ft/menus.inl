@@ -22,7 +22,7 @@ public menu_War3menu(id)
 
 public _menu_War3menu(id,key){
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -62,7 +62,7 @@ public menu_Skill_Options(id){
 
 public _menu_Skill_Options(id,key){
 	
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -100,7 +100,7 @@ public menu_Race_Options(id){
 
 public _menu_Race_Options(id,key){
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -139,7 +139,7 @@ public menu_Item_Options(id){
 
 public _menu_Item_Options(id,key){
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -183,7 +183,7 @@ public menu_Admin_Options(id){
 
 public _menu_Admin_Options(id,key){
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -258,7 +258,7 @@ public menu_PlayerXP_Options(id,pos){
 
 public _menu_PlayerXP_Options(id,key){
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -318,7 +318,7 @@ public menu_TeamXP_Options(id){
 
 public _menu_TeamXP_Options(id,key){
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -373,7 +373,7 @@ public menu_ResetXP(id)
 public _menu_ResetXP( id, key )
 {
 	
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -470,7 +470,7 @@ public MENU_SelectRace( id, iRaceXP[MAX_RACES] )
 public _MENU_SelectRace( id, key )
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -559,7 +559,7 @@ public MENU_ReplaceItem( id )
 
 public _menu_ReplaceItem( id, iKey )
 {
-	if ( !WAR3_Check() || iKey == 9 )
+	if ( !WC3_Check() || iKey == 9 )
 	{
 		return;
 	}
@@ -632,7 +632,7 @@ public MENU_Shopmenu( id, iStart )
 
 public _MENU_Shopmenu1( id, iKey )
 {
-	if ( !WAR3_Check() || iKey == 9 )
+	if ( !WC3_Check() || iKey == 9 )
 	{
 		return;
 	}
@@ -653,7 +653,7 @@ public _MENU_Shopmenu1( id, iKey )
 
 public _MENU_Shopmenu2( id, iKey )
 {
-	if ( !WAR3_Check() || iKey == 9 )
+	if ( !WC3_Check() || iKey == 9 )
 	{
 		return;
 	}
@@ -802,7 +802,7 @@ public MENU_SelectSkill( id )
 public _MENU_SelectSkill( id, iKey )
 {
 
-	if ( !WAR3_Check() || iKey == 9 )
+	if ( !WC3_Check() || iKey == 9 )
 	{
 		return;
 	}

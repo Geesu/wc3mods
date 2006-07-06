@@ -53,10 +53,10 @@ ULT_ResetCooldown( id, iTime, iHideIcon = true )
 
 Ultimate_Ready( id )
 {
-	// Need to set this before the war3_check in case they want to restart war3ft
+	// Need to set this before the WC3_Check in case they want to restart war3ft
 	p_data_b[id][PB_ULTIMATEUSED] = false;
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}

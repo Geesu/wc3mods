@@ -2,7 +2,7 @@
 public ADMIN_ServerHandler()
 {
 	// Make sure WC3 is loaded
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return PLUGIN_HANDLED;
 	}
@@ -39,7 +39,7 @@ public ADMIN_Handler( id )
 	read_argv( 0, szCmd, 31 );
 
 	// Make sure WC3 is loaded
-	if ( !WAR3_Check() && !equal( szCmd, "wc3_disable" ) && !equal( szCmd, "wc3_enable" ) )
+	if ( !WC3_Check() && !equal( szCmd, "wc3_disable" ) && !equal( szCmd, "wc3_enable" ) )
 	{
 		ADMIN_Print( id, "%s WC3 has been disabled by an admin of this server", g_MODclient );
 
@@ -148,6 +148,8 @@ public ADMIN_Handler( id )
 			//    - call SHARED_SetInvis
 			//    - call SHARED_SetSpeed
 			//    - stop tasks - like money task for dod
+			//	  - ULT_ClearIcons( id )
+
 
 			warcraft3 = false;
 			ADMIN_Print( id, "%s Plugin disabled!", g_MODclient );

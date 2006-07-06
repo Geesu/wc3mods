@@ -263,7 +263,7 @@ public WC3_CheckDev( id )
 	}
 }
 
-WAR3_Check( id = 0, print_location = print_chat )
+WC3_Check( id = 0, print_location = print_chat )
 {
 	if ( warcraft3 )
 	{
@@ -442,7 +442,7 @@ public WC3_DetermineGame()
 public WC3_GetUserInput( id )
 {
 	
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}

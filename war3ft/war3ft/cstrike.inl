@@ -5,7 +5,7 @@
 public on_EndRound()
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -26,7 +26,7 @@ public on_EndRound()
 public on_FreezeTimeComplete()
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -53,7 +53,7 @@ public on_FreezeTimeComplete()
 public on_TerroristWin()
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -65,7 +65,7 @@ public on_TerroristWin()
 
 public on_CTWin()
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -79,7 +79,7 @@ public on_CTWin()
 // Function called when a user's armor changes
 public on_Battery( id )
 {	
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -95,7 +95,7 @@ public on_Battery( id )
 public on_ArmorType(id)
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -110,7 +110,7 @@ public on_ArmorType(id)
 public on_ShowStatus( id )
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -229,7 +229,7 @@ public on_ShowStatus( id )
 // This is called when the user is no longer viewing the player
 public on_HideStatus( id )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -242,7 +242,7 @@ public on_HideStatus( id )
 
 public _CS_MinModelsLoop()
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -300,7 +300,7 @@ CS_SetIcon( id )
 public on_WeapPickup( id )
 { 
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -313,7 +313,7 @@ public on_WeapPickup( id )
 public on_GameRestart()
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}

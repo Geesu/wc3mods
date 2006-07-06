@@ -5,6 +5,7 @@
 // Half-Life CVARs
 new CVAR_mp_friendlyfire;
 new CVAR_mp_buytime;
+new CVAR_sv_gravity;
 
 // Miscellaneous Configuration CVARs
 new CVAR_wc3_query_client;
@@ -200,4 +201,5 @@ public plugin_cfg()
 	// Get Half-Life CVAR Pointers
 	CVAR_mp_friendlyfire	= get_cvar_pointer( "mp_friendlyfire" );
 	CVAR_mp_buytime			= get_cvar_pointer( "mp_buytime" );
+	CVAR_sv_gravity			= get_cvar_pointer( "sv_gravity" );
 }

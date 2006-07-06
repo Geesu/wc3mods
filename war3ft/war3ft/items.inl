@@ -428,7 +428,7 @@ ITEM_Tome( id )
 
 ITEM_Gloves( id )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -443,7 +443,7 @@ ITEM_Gloves( id )
 
 public _ITEM_Glove_Give( id )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -512,7 +512,7 @@ ITEM_BuyRings( id )
 
 public _ITEM_Ring( id )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}

@@ -14,7 +14,7 @@ forward bomb_defused(defuser);
 // Called when a user begins defusing the bomb
 public bomb_defusing( defuser )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -36,7 +36,7 @@ public bomb_defusing( defuser )
 // Called when a user defuses the bomb
 public bomb_defused( defuser )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -54,7 +54,7 @@ public bomb_defused( defuser )
 // Called when a user begins planting the bomb
 public bomb_planting( planter )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -77,7 +77,7 @@ public bomb_planting( planter )
 // Called when a user has planted the bomb
 public bomb_planted( planter )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -95,7 +95,7 @@ public bomb_planted( planter )
 // Called on certain player events
 public on_PlayerAction()
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -605,7 +605,7 @@ public XP_GetAdminFlag()
 stock XP_Give( id, iBonusXP )
 {
 
-	if ( !WAR3_Check() || !id )
+	if ( !WC3_Check() || !id )
 	{
 		return 0;
 	}

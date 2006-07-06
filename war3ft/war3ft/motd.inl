@@ -272,7 +272,7 @@ public MOTD_SkillsInfo( id )
 public MOTD_War3help(id)
 {
 
-	if ( !WAR3_Check( id ) )
+	if ( !WC3_Check( id ) )
 	{
 		return;
 	}

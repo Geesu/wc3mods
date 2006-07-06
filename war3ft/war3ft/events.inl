@@ -2,7 +2,7 @@
 public grenade_throw( index, greindex, wId )
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -37,7 +37,7 @@ public grenade_throw( index, greindex, wId )
 public client_damage( iAttacker, iVictim, iDamage, iWeapon, iHitPlace, TA )
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -136,7 +136,7 @@ public client_damage( iAttacker, iVictim, iDamage, iWeapon, iHitPlace, TA )
 public on_Death( iVictim, iAttacker, iWeaponID, iHeadshot )
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -180,7 +180,7 @@ public on_Death( iVictim, iAttacker, iWeaponID, iHeadshot )
 public on_DeathMsg()
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -203,7 +203,7 @@ public on_CurWeapon( id )
 	// read_data(2) = weapon index
 	// read_data(3) = ammo
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -236,7 +236,7 @@ public on_CurWeapon( id )
 
 public on_Drop( id )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -249,7 +249,7 @@ public on_Drop( id )
 public on_ResetHud(id)
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return PLUGIN_CONTINUE;
 	}
@@ -390,7 +390,7 @@ public EVENT_PlayerSpawned( id )
 // Function is called ONCE at the start of a new round BEFORE user's spawn
 public EVENT_NewRound()
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -440,7 +440,7 @@ public EVENT_NewRound()
 // Called when a user looks somewhere
 public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return FMRES_IGNORED;
 	}

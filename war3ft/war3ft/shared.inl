@@ -360,7 +360,7 @@ public _SHARED_Spawn_Final( id )
 public SHARED_DOD_Reincarnation( id )
 {
 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return PLUGIN_CONTINUE
 	}
@@ -402,11 +402,6 @@ public SHARED_DOD_Reincarnation( id )
 
 public _SHARED_DOD_Reincarnation_Check( id )
 {
-	
-	if ( !WAR3_Check() )
-	{
-		return;
-	}
 
 	id -= TASK_REINCARNATION;
 
@@ -453,11 +448,6 @@ public _SHARED_DOD_Reincarnation_Check( id )
 
 public _SHARED_DOD_Reincarnation_Loc( id )
 {
-	if ( !WAR3_Check() )
-	{
-		return;
-	}
-
 	id -= TASK_REINCCHECK;
 
 	if ( !p_data_b[id][PB_ISCONNECTED] )
@@ -474,7 +464,7 @@ public _SHARED_DOD_Reincarnation_Loc( id )
 public SHARED_CS_Reincarnation( id )
 {
 
-	if ( !p_data_b[id][PB_ISCONNECTED] || !WAR3_Check() )
+	if ( !p_data_b[id][PB_ISCONNECTED] )
 	{
 		return PLUGIN_CONTINUE;
 	}
@@ -541,7 +531,7 @@ public _SHARED_CS_GiveWeapons(id)
 		id -= TASK_GIVEITEMS;
 	}
 
-	if ( !WAR3_Check() || !p_data_b[id][PB_ISCONNECTED] )
+	if ( !p_data_b[id][PB_ISCONNECTED] )
 	{
 		return;
 	}
@@ -805,7 +795,7 @@ public SHARED_ChangeSkin( id, iFlag )
 {
 	
 	// Don't change a bots model - it just confuses the bots!
-	if ( !WAR3_Check() || is_user_bot( id ) )
+	if ( is_user_bot( id ) )
 	{
 		return;
 	}
@@ -897,7 +887,7 @@ public SHARED_SetGravity( id )
 	
 	// If gravity is less than this, lets not change per-user b/c it BLOWS ASS in game
 
-	if ( get_cvar_num("sv_gravity") > 650 )
+	if ( get_pcvar_num( CVAR_sv_gravity ) > 650 )
 	{
 		// Set the user's gravity based on the item
 		if ( ITEM_Has( id, ITEM_SOCK ) )
@@ -1123,11 +1113,6 @@ public SHARED_MoleCheck( id )
 public _SHARED_Mole( parm[2] )
 {
 	
-	if ( !WAR3_Check() )
-	{
-		return;
-	}
-
 	new id = parm[0];
 
 	if ( !p_data_b[id][PB_ISCONNECTED] )

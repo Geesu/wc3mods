@@ -3,7 +3,7 @@
 // This isn't actually called when they join spectator :/
 public cmd_Teamselect( id, key )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -13,7 +13,7 @@ public cmd_Teamselect( id, key )
 
 public cmd_Jointeam( id )
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return;
 	}
@@ -24,7 +24,7 @@ public cmd_Jointeam( id )
 // This is here to prevent the user from forcing a ResetHUD event
 public cmd_fullupdate()
 {
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return PLUGIN_CONTINUE;
 	}
@@ -35,7 +35,7 @@ public cmd_fullupdate()
 // Called when the user buys a he grenade
 public cmd_hegren( id )
 { 
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		return PLUGIN_CONTINUE;
 	}
@@ -75,7 +75,7 @@ public cmd_hegren( id )
 public cmd_Ultimate(id)
 {
 
-	if ( !WAR3_Check( id ) )
+	if ( !WC3_Check( id ) )
 	{
 		return PLUGIN_HANDLED;
 	}
@@ -428,13 +428,13 @@ CMD_Equal( id,  szCmd[], szCorrectCmd[] )
 
 	new bool:bValid = equali( szCmd, szTmp ) || equali( szCmd, szCorrectCmd );
 	
-	if ( !WAR3_Check() )
+	if ( !WC3_Check() )
 	{
 		
 		// Only print a message if the command was valid
 		if ( bValid )
 		{
-			WAR3_Check( id );
+			WC3_Check( id );
 		}
 	
 		return false;
