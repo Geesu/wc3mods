@@ -567,13 +567,13 @@ public _menu_ReplaceItem( id, iKey )
 	// Remove item from item slot one
 	if ( iKey == 0 )
 	{
-		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_ONE], ITEM_SLOT_ONE )
+		ITEM_Remove( id, ITEM_SLOT_ONE )
 	}
 
 	// Remove item from itemslot two
 	else if ( iKey == 1 )
 	{
-		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_TWO], ITEM_SLOT_TWO )
+		ITEM_Remove( id, ITEM_SLOT_TWO )
 	}
 
 	ITEM_Buy( id, g_iFutureItem[id] );

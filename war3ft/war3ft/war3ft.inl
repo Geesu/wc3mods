@@ -496,8 +496,8 @@ public WC3_ResetGame()
 		p_data_b[id][PB_DIEDLASTROUND]		= false;
 		
 		// Remove player's items
-		ITEM_RemoveSlot( id, ITEM_SLOT_ONE );
-		ITEM_RemoveSlot( id, ITEM_SLOT_TWO );
+		ITEM_Remove( id, ITEM_SLOT_ONE );
+		ITEM_Remove( id, ITEM_SLOT_TWO );
 		
 		// Reset item info
 		g_bPlayerBoughtAnkh[id]		= false;
@@ -950,7 +950,7 @@ WC3_ShowSpecInfo( id, iTargetID )
 		}
 		
 		// Then they have rings, lets print how many there are
-		if ( ITEM_Has( iTargetID, ITEM_RING ) && p_data[iTargetID][P_RINGS] > 1 )
+		if ( ITEM_Has( iTargetID, ITEM_RING ) > ITEM_NONE && p_data[iTargetID][P_RINGS] > 1 )
 		{
 			pos += formatex( szItemInfo[pos], 256-pos, " x%d", p_data[id][P_RINGS] );
 		}
@@ -1312,7 +1312,7 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 		BM_PhoenixSpawn( iVictim );
 
 		// Does the user have a scroll?
-		if ( ITEM_Has( iVictim, ITEM_SCROLL ) )
+		if ( ITEM_Has( iVictim, ITEM_SCROLL ) > ITEM_NONE )
 		{
 			ITEM_Scroll( iVictim );
 		}

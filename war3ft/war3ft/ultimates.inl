@@ -170,15 +170,11 @@ ULT_IsImmune( id )
 		bBlocked = true;
 	}
 
-	else if ( ITEM_Has( id, ITEM_NECKLACE ) )
+	else if ( ITEM_Has( id, ITEM_NECKLACE ) > ITEM_NONE )
 	{
+		ITEM_SetMultipleItems( id, ITEM_NECKLACE, -CHARGE_DISPOSE )
 
-		if ( g_iNecklaceCharges[id] > 0 )
-		{
-			ITEM_NeckRemoveCharge( id );
-
-			bBlocked = true;
-		}
+		bBlocked = true;
 	}
 
 	if ( bBlocked )

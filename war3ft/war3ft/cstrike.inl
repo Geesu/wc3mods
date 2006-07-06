@@ -116,7 +116,7 @@ public on_ShowStatus( id )
 	}
 
 	// Lets not show any player info during freezetime! - don't want them to find moles (unless they have mole protectant) :P
-	if ( g_freezeTime && !ITEM_Has( id, ITEM_PROTECTANT ) )
+	if ( g_freezeTime && ITEM_Has( id, ITEM_PROTECTANT ) == ITEM_NONE )
 	{
 		Create_StatusText( id, 0, "" );
 
@@ -178,7 +178,7 @@ public on_ShowStatus( id )
 		{
 
 			// Then the viewer should see the user's true color!
-			if ( ITEM_Has( id, ITEM_PROTECTANT ) )
+			if ( ITEM_Has( id, ITEM_PROTECTANT ) > ITEM_NONE )
 			{
 				( iTargetTeam == TEAM_T )	? ( iRed = 255 ) : 0;
 				( iTargetTeam == TEAM_CT )	? ( iBlue = 255 ) : 0;

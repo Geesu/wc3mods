@@ -1,6 +1,9 @@
 
 #define NECKLACE_CHARGES	3
-
+#define MIN_HELM_CHARGES	3
+#define MAX_HELM_CHARGES    5
+#define CHARGE_DISPOSE      1
+#define RING_INCREMENT      1
 
 // Item Defines
 #define MAX_SHOPMENU_ITEMS  18

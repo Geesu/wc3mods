@@ -7,7 +7,7 @@ public grenade_throw( index, greindex, wId )
 		return;
 	}
 
-	if ( ITEM_Has( index, ITEM_GLOVES ) )
+	if ( ITEM_Has( index, ITEM_GLOVES ) > ITEM_NONE )
 	{
 		new Float:fTimer = get_pcvar_float( CVAR_wc3_glove_timer );
 
@@ -497,7 +497,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 		}
 
 		// This is a nice check for Helm of Excellence
-		if ( ITEM_Has( iVictim, ITEM_HELM ) )
+		if ( ITEM_Has( iVictim, ITEM_HELM ) > ITEM_NONE )
 		{
 			// If its a headshot then we want to block it
 			if ( iHitZone & (1 << 1) )
@@ -516,7 +516,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 						Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 0, 0, 255, 150 );
 
 						// Lets remove a charge from the helm!
-						ITEM_HelmRemoveCharge( iVictim );
+						ITEM_SetMultipleItems( iVictim, ITEM_HELM, -CHARGE_DISPOSE )
 					}
 				}
 				
@@ -556,7 +556,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 		}
 		
 		// Mole protectant
-		if ( SHARED_ValidPlayer( iAttacker ) && p_data_b[iAttacker][PB_MOLE] && ITEM_Has( iVictim, ITEM_PROTECTANT ) )
+		if ( SHARED_ValidPlayer( iAttacker ) && p_data_b[iAttacker][PB_MOLE] && ITEM_Has( iVictim, ITEM_PROTECTANT ) > ITEM_NONE )
 		{	
 			new Float:fTime = halflife_time();
 

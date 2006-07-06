@@ -17,7 +17,7 @@ public ITEM_Buy( id, iItem )
 	}
 	
 	// User already owns the item!
-	else if ( ITEM_Has( id, iItem ) && iItem != ITEM_RING && iItem != ITEM_NECKLACE && iItem != ITEM_HELM )
+	else if ( ITEM_Has( id, iItem ) > ITEM_NONE && iItem != ITEM_RING && iItem != ITEM_NECKLACE && iItem != ITEM_HELM )
 	{
 		client_print( id, print_center, "%L", id, "ALREADY_OWN_THAT_ITEM" );
 
@@ -64,14 +64,7 @@ public ITEM_Buy( id, iItem )
 		return;
 	}
 
-	if ( iItem == ITEM_TOME )
-	{
-		ITEM_Tome( id );
-		new iNewMoney = SHARED_GetUserMoney( id ) - ITEM_COST[iItem];
-		SHARED_SetUserMoney( id, iNewMoney );
-	}
-
-	else if ( ITEM_Set( id, iItem ) )
+	if ( ITEM_Set( id, iItem ) )
 	{
 		new iNewMoney = SHARED_GetUserMoney( id ) - ITEM_COST[iItem];
 		SHARED_SetUserMoney( id, iNewMoney );
@@ -112,29 +105,41 @@ bool:ITEM_CanBuy( id )
 
 public ITEM_Set( id, iItem )
 {
+	if ( iItem == ITEM_TOME )
+	{
+		ITEM_Tome( id );
+
+		return 1;
+	}
 	
 	// Check for the items we can buy more than one of!
-	if ( iItem == ITEM_RING && ITEM_Has( id, ITEM_RING ) )
-	{}
+	else if ( iItem == ITEM_NECKLACE && ITEM_Has( id, ITEM_NECKLACE ) > ITEM_NONE )
+	{
+		ITEM_SetMultipleItems( id, ITEM_NECKLACE, NECKLACE_CHARGES );
+	}
 
-	else if ( iItem == ITEM_NECKLACE && ITEM_Has( id, ITEM_NECKLACE ) )
-	{}
+	else if ( iItem == ITEM_HELM && ITEM_Has( id, ITEM_HELM ) > ITEM_NONE )
+	{
+		new iCharges = random_num( MIN_HELM_CHARGES, MAX_HELM_CHARGES );
 
-	else if ( iItem == ITEM_HELM && ITEM_Has( id, ITEM_HELM ) )
-	{}
+		ITEM_SetMultipleItems( id, ITEM_HELM, iCharges );
+	}
 
+	else if ( iItem == ITEM_RING && ITEM_Has( id, ITEM_RING ) > ITEM_NONE )
+	{
+		ITEM_SetMultipleItems( id, ITEM_RING, RING_INCREMENT );
+	}
+			
 	else
 	{
 		new iItemSlot = ITEM_GetSlot( id );
 		
 		server_print( "%d:%d", id, iItemSlot );
 
-		new iOldItem = g_iShopMenuItems[id][iItemSlot];
-
 		// Remove the user's old item if necessary
-		if ( iOldItem > ITEM_NONE )
+		if ( g_iShopMenuItems[id][iItemSlot] > ITEM_NONE )
 		{
-			ITEM_Remove( id, iOldItem, iItemSlot );
+			ITEM_Remove( id, iItemSlot );
 		}
 		
 		// Set their new item
@@ -186,13 +191,6 @@ public ITEM_Set( id, iItem )
 			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_5", fMask );
 		}
 
-		case ITEM_NECKLACE:
-		{
-			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU_6", NECKLACE_CHARGES );
-
-			g_iNecklaceCharges[id] += NECKLACE_CHARGES;
-		}
-
 		case ITEM_FROST:
 		{
 			new Float:fFrost = 100.0 * ( get_pcvar_float( CVAR_wc3_frost ) / 260.0 );
@@ -228,15 +226,6 @@ public ITEM_Set( id, iItem )
 			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_2" );
 		}
 
-		case ITEM_HELM:
-		{
-			new iRandomCharges = random_num( 3, 5 );
-
-			g_iHelmCharges[id] += iRandomCharges;
-
-			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_3", iRandomCharges );
-		}
-
 		case ITEM_AMULET:
 		{
 			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_4" );
@@ -257,10 +246,6 @@ public ITEM_Set( id, iItem )
 
 		case ITEM_RING:
 		{
-			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_7" );
-
-			g_iTotalRings[id]++;
-
 			if ( !task_exists( TASK_ITEM_RING + id ) )
 			{
 				_ITEM_Ring( id );
@@ -271,7 +256,6 @@ public ITEM_Set( id, iItem )
 		{
 			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 			{
-
 				client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_8" );
 
 				SHARED_ChangeSkin( id, SKIN_SWITCH );
@@ -293,34 +277,23 @@ public ITEM_Set( id, iItem )
 	return 1;
 }
 
-ITEM_RemoveSlot( id, iItemSlot )
-{
-	new iOldItem = g_iShopMenuItems[id][iItemSlot];
-
-	// Remove the user's old item if necessary
-	if ( iOldItem > ITEM_NONE )
-	{
-		ITEM_Remove( id, iOldItem, iItemSlot );
-	}
-}
-
 // Remove an item based on it's ID
 ITEM_RemoveID( id, iItem )
 {
-	
-	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] == iItem )
+	new iItemSlot = ITEM_Has( id, iItem );
+
+	if ( iItemSlot > ITEM_NONE )
 	{
-		ITEM_Remove( id, iItem, ITEM_SLOT_ONE );
+		ITEM_Remove( id, iItemSlot );
 	}
 
-	else if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] == iItem )
-	{
-		ITEM_Remove( id, iItem, ITEM_SLOT_TWO );
-	}
+	return;
 }
 
-public ITEM_Remove( id, iItem, iItemSlot )
+public ITEM_Remove( id, iItemSlot )
 {
+	new iItem = g_iShopMenuItems[id][iItemSlot];
+
 	g_iShopMenuItems[id][iItemSlot] = ITEM_NONE;
 
 	switch( iItem )
@@ -400,12 +373,15 @@ ITEM_GetSlot( id )
 	return ITEM_SLOT_ONE;
 }
 
-bool:ITEM_Has( id, iItem )
+ITEM_Has( id, iItem )
 {
-	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] == iItem || g_iShopMenuItems[id][ITEM_SLOT_TWO] == iItem )
-		return true;
+	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] == iItem )
+		return ITEM_SLOT_ONE;
 
-	return false;
+	else if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] == iItem )
+		return ITEM_SLOT_TWO;
+
+	return ITEM_NONE;
 }
 
 ITEM_Tome( id )
@@ -522,7 +498,7 @@ public _ITEM_Ring( id )
 		id -= TASK_ITEM_RING;
 	}
 
-	if ( !p_data_b[id][PB_ISCONNECTED] || !ITEM_Has( id, ITEM_RING ) )
+	if ( !p_data_b[id][PB_ISCONNECTED] || ITEM_Has( id, ITEM_RING ) == ITEM_NONE )
 	{
 		return;
 	}
@@ -562,7 +538,7 @@ ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 {
 
 	// Claws of Attack
-	if ( ITEM_Has( iAttacker, ITEM_CLAWS ) )
+	if ( ITEM_Has( iAttacker, ITEM_CLAWS ) > ITEM_NONE )
 	{	
 		WC3_Damage( iVictim, iAttacker, get_pcvar_num( CVAR_wc3_claw ), iWeapon, iHitPlace );
 		
@@ -572,7 +548,7 @@ ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 	}
 
 	// Mask of Death
-	else if ( ITEM_Has( iAttacker, ITEM_MASK ) )
+	else if ( ITEM_Has( iAttacker, ITEM_MASK ) > ITEM_NONE )
 	{
 		new iHealth = get_user_health( iAttacker );
 		new iBonusHealth = floatround( float( iDamage ) * get_pcvar_num( CVAR_wc3_mask ) );
@@ -603,7 +579,7 @@ ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 	}
 
 	// Orb of Frost
-	else if ( ITEM_Has( iAttacker, ITEM_FROST ) )
+	else if ( ITEM_Has( iAttacker, ITEM_FROST ) > ITEM_NONE )
 	{
 		// Only slow them if they aren't slowed/stunned already
 		if ( !SHARED_IsPlayerSlowed( iVictim ) )
@@ -629,12 +605,12 @@ ITEM_UserDied( id )
 	// The user just died, remove all items
 	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE )
 	{
-		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_ONE], ITEM_SLOT_ONE );
+		ITEM_Remove( id, ITEM_SLOT_ONE );
 	}
 
 	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE )
 	{
-		ITEM_Remove( id, g_iShopMenuItems[id][ITEM_SLOT_TWO], ITEM_SLOT_TWO );
+		ITEM_Remove( id, ITEM_SLOT_TWO );
 	}
 }
 
@@ -642,52 +618,98 @@ ITEM_UserDied( id )
 ITEM_Init()
 {
 	
-	ITEM_COST[0]	= 1500;			// Ankh of Reincarnation
-	ITEM_COST[1]	= 2500;			// Boots of Speed
-	ITEM_COST[2]	= 1000;			// Claws of Attack
-	ITEM_COST[3]	= 800;			// Cloak of Shadows
-	ITEM_COST[4]	= 2000;			// Mask of Death
-	ITEM_COST[5]	= 800;			// Necklace of Immunity
-	ITEM_COST[6]	= 2000;			// Orb of Frost
-	ITEM_COST[7]	= 1000;			// Periapt of Health
-	ITEM_COST[8]	= 4000;			// Tome of Experience
-	ITEM_COST[9]	= 6000;			// Scroll of Respawning
-	ITEM_COST[10]	= 1500;			// Mole Protectant
-	ITEM_COST[11]	= 3000;			// Helm of Excellence
-	ITEM_COST[12]	= 1500;			// Amulet of the Cat
-	ITEM_COST[13]	= 1500;			// Sock of the Feather
-	ITEM_COST[14]	= 1750;			// Flaming Gloves of Warmth
-	ITEM_COST[15]	= 1000;			// Ring of Regeneration + 1
-	ITEM_COST[16]	= 4500;			// Chameleon
-	ITEM_COST[17]	= 16000;		// Mole
+	ITEM_COST[ITEM_ANKH]	    = 1500;			// Ankh of Reincarnation
+	ITEM_COST[ITEM_BOOTS]       = 2500;			// Boots of Speed
+	ITEM_COST[ITEM_CLAWS]	    = 1000;			// Claws of Attack
+	ITEM_COST[ITEM_CLOAK]	    = 800;			// Cloak of Shadows
+	ITEM_COST[ITEM_MASK]	    = 2000;			// Mask of Death
+	ITEM_COST[ITEM_NECKLACE]	= 800;			// Necklace of Immunity
+	ITEM_COST[ITEM_FROST]	    = 2000;			// Orb of Frost
+	ITEM_COST[ITEM_HEALTH]	    = 1000;			// Periapt of Health
+	ITEM_COST[ITEM_TOME]	    = 4000;			// Tome of Experience
+	ITEM_COST[ITEM_SCROLL]	    = 6000;			// Scroll of Respawning
+	ITEM_COST[ITEM_PROTECTANT]	= 1500;			// Mole Protectant
+	ITEM_COST[ITEM_HELM]	    = 3000;			// Helm of Excellence
+	ITEM_COST[ITEM_AMULET]	    = 1500;			// Amulet of the Cat
+	ITEM_COST[ITEM_SOCK]	    = 1500;			// Sock of the Feather
+	ITEM_COST[ITEM_GLOVES]	    = 1750;			// Flaming Gloves of Warmth
+	ITEM_COST[ITEM_RING]	    = 1000;			// Ring of Regeneration + 1
+	ITEM_COST[ITEM_CHAMELEON]	= 4500;			// Chameleon
+	ITEM_COST[ITEM_MOLE]	    = 16000;		// Mole
 
 	// Item costs are a little different for DOD
 	if ( g_MOD == GAME_DOD )
 	{
-		ITEM_COST[9]	= 800;
+		ITEM_COST[ITEM_SCROLL]	= 800;
 	}
 }
 
-ITEM_NeckRemoveCharge( id )
+ITEM_SetMultipleItems( id, iItem, iNumber)
 {
-	g_iNecklaceCharges[id]--;
-	
-	if ( g_iNecklaceCharges[id] <= 0 )
+	switch( iItem )
 	{
-		ITEM_RemoveID( id, ITEM_NECKLACE );
-	}
-}
+		case ITEM_NECKLACE:
+		{
+			g_iNecklaceCharges[id] += iNumber;
 
-ITEM_HelmRemoveCharge( id )
-{
-	g_iHelmCharges[id]--;
-	
-	client_print( id, print_chat, "[DEBUG] You lost a helm charge!  %d left", g_iHelmCharges[id] );
+			if ( iNumber )
+			{
+				client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU_6", NECKLACE_CHARGES );
+			}
 
-	if ( g_iHelmCharges[id] <= 0 )
-	{
-		ITEM_RemoveID( id, ITEM_HELM );
+			else
+			{
+
+			}
+
+			if ( g_iNecklaceCharges[id] <= 0 )
+			{
+				ITEM_RemoveID( id, ITEM_NECKLACE )
+			}
+		}
+
+		case ITEM_HELM:
+		{
+			g_iHelmCharges[id] += iNumber;
+
+			if ( iNumber )
+			{
+				client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_3", iNumber );
+			}
+
+			else
+			{
+
+			}
+
+			if ( g_iNecklaceCharges[id] <= 0 )
+			{
+				ITEM_RemoveID( id, ITEM_HELM )
+			}
+		}
+
+		case ITEM_RING:
+		{
+			g_iTotalRings[id] += iNumber;
+
+			if ( iNumber )
+			{
+				client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_7" );
+			}
+
+			else
+			{
+
+			}
+
+			if ( g_iTotalRings[id] <= 0 )
+			{
+				ITEM_RemoveID( id, ITEM_RING )
+			}
+		}
 	}
+
+	return;
 }
 
 // Format the item for WC3_ShowBar
