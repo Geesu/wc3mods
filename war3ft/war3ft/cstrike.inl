@@ -2,60 +2,6 @@
 *	Counter-Strike and Condition Zero only functions
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
-// Called when a user's spectating mode is set
-public on_SetSpecMode( id )
-{
-	
-	if ( !WAR3_Check() )
-	{
-		return;
-	}
-	
-	new szArg1[12], szArg2[12];
-	read_data( 1, szArg1, 11 );
-	read_data( 2, szArg2, 11 );
-
-	client_print( id, print_chat, "[DEBUG] Spec mode set: %s and %s (Total args: %d", szArg1, szArg2, read_datanum() );
-
-	p_data[id][P_SPECMODE] = ( szArg2[10] == '2' ) ? 1 : 0;
-
-	return;
-}
-
-// Called when a user is spectating
-public on_Spectate( id )
-{
-
-	if ( !WAR3_Check() )
-	{
-		return;
-	}
-
-	if ( !p_data[id][P_SPECMODE] )
-	{
-		return;
-	}
-	
-	// Bots don't need hud messages duh!
-	if ( is_user_bot( id ) )
-	{
-		return;
-	}
-
-	new iTarget = read_data( 2 );
-
-	// Not a valid target
-	if ( !p_data_b[iTarget][PB_ISCONNECTED] )
-	{
-		return;
-	}
-
-	// Lets show our spectator some info on who they're spectating
-	WC3_ShowSpecInfo( id, iTarget );
-	
-	return;
-}
-
 public on_EndRound()
 {
 
@@ -187,7 +133,7 @@ public on_ShowStatus( id )
 	{
 
 		// Check if your teammate looks like the enemy!
-		if ( p_data[iTarget][PB_SKINSWITCHED] )
+		if ( p_data_b[iTarget][PB_SKINSWITCHED] )
 		{
 		
 			client_print( id, print_center, "%L", id, "HES_ON_YOUR_TEAM_DONT_SHOOT" );
@@ -228,7 +174,7 @@ public on_ShowStatus( id )
 		get_user_name( iTarget, szTargetName, 31 );
 		
 		// The target looks like the enemy o.O
-		if ( p_data[iTarget][PB_SKINSWITCHED] )
+		if ( p_data_b[iTarget][PB_SKINSWITCHED] )
 		{
 
 			// Then the viewer should see the user's true color!

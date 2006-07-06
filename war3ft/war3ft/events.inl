@@ -442,7 +442,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 {
 	if ( !WAR3_Check() )
 	{
-		return;
+		return FMRES_IGNORED;
 	}
 
 	new iAttacker = pentToSkip;
@@ -581,6 +581,9 @@ EVENT_JustBeforeSpawn( id )
 	{
 		UTIL_ClearHudChannel( id, HUD_SPEC_INFO );
 	}
+
+	// Reset who the user was spectating
+	p_data[id][P_LASTSPEC] = -1;
 
 	// Reset the player's role
 	g_iPlayerRole[id] = 0;

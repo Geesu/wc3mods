@@ -280,7 +280,7 @@ public _menu_PlayerXP_Options(id,key){
 			menu_PlayerXP_Options(id,g_menuPosition[id])
 		}
 		case 8: menu_PlayerXP_Options(id,++g_menuPosition[id])
-		case 9: return PLUGIN_HANDLED
+		case 9: return;
 		default:{
 			new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key]
 			client_print(player,print_chat,"%s %L",g_MODclient, id,"THE_ADMIN_JUST_GAVE_YOU_XP",g_menuSettings[id])

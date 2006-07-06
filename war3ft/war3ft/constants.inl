@@ -269,7 +269,7 @@
 	#define P_ULTIMATE              4		// Ultimate level
 	#define P_LEVEL					5		// Player Level
 	#define P_XP                    6		// Current XP
-//	#define P_ITEM                  7		// Item from shopmenu 1
+	#define P_LASTSPEC              7		// Item from shopmenu 1
 //	#define P_ITEM2                 8		// Item from shopmenu 2
 
 	// Miscellaneous options

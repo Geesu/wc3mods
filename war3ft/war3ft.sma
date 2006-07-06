@@ -184,8 +184,6 @@ public plugin_init()
 		register_event( "WeapPickup"	, "on_WeapPickup"	, "b"										); 
 		register_event( "StatusValue"	, "on_ShowStatus"	, "be"	, "1=2"		,"2!0"					);
 		register_event( "StatusValue"	, "on_HideStatus"	, "be"	, "1=1"		,"2=0"					);
-		register_event( "TextMsg"		, "on_SetSpecMode"	, "bd"	, "2&ec_Mod"						);
-		register_event( "StatusValue"	, "on_Spectate"		, "bd"	, "1=2"								);
 
 		// Old Style
 		register_menucmd( register_menuid( "BuyItem" )	, (1<<3)	, "cmd_hegren"	);
@@ -218,11 +216,53 @@ public plugin_init()
 		register_statsfwd( XMF_DAMAGE	);
 
 		register_event( "RoundState"	, "EVENT_DOD_EndRound"		, "a"	, "1=3"	, "1=4"	);
-		register_event( "StatusValue"	, "on_StatusValue"			, "b"					);
 	}
 
 	// Plugin initialization procedures
 	WC3_Init();
+
+	register_concmd( "test", "test" );
+}
+
+new iShit[50];
+new bool:bCheck = false;
+
+public test(id)
+{
+	new iTemp;
+
+	//4 stores id
+	for ( new i = 0; i < 37; i++ )
+	{
+
+		if ( bCheck )
+		{
+			iTemp = entity_get_int( id, i );
+
+			if ( iTemp != iShit[i] )
+			{
+				console_print( id, "[%d] %d:%d", i, iTemp, iShit[i] );
+			}
+		}
+
+		else
+		{
+			iShit[i] = entity_get_int( id, i );
+		}
+	}
+
+	if ( bCheck )
+	{
+		bCheck = false;
+
+		client_print( id, print_chat, "Set to false" );
+	}
+	else
+	{
+		bCheck = true;
+
+		client_print( id, print_chat, "Set to true" );
+	}
 }
 
 public plugin_end()
@@ -275,7 +315,7 @@ public client_putinserver( id )
 		// Check user's cvar
 		if ( !is_user_bot( id ) )
 		{
-			query_client_cvar( id, "cl_minmodels", "check_cvars" );
+			query_client_cvar( id, "cl_minmodels", "_CS_CheckMinModelsValue" );
 		}
 	}
 
@@ -316,6 +356,7 @@ public client_connect( id )
 	p_data_b[id][PB_JUSTJOINED]			= true;
 	p_data_b[id][PB_CAN_RENDER]			= true;
 	p_data_b[id][PB_HAS_SPAWNED]		= false;
+	p_data_b[id][PB_SKINSWITCHED]		= false;
 	
 	// User should have no items on connect...
 	g_iShopMenuItems[id][0] = -1;
@@ -466,8 +507,6 @@ public client_disconnect(id)
 	}
 }
 
-
-
 public client_PreThink( id )
 {
 	if ( !WAR3_Check() )
@@ -532,6 +571,25 @@ public client_PreThink( id )
 			if ( ITEM_Has( id, ITEM_AMULET ) )
 			{
 				entity_set_int( id, EV_INT_flTimeStepSound, 999 );
+			}
+		}
+		
+		// User is dead
+		else
+		{
+
+			// Check to see if spectated player has changed
+			new iTarget = entity_get_int( id, EV_INT_iuser2 );
+
+			if ( p_data[id][P_LASTSPEC] != iTarget )
+			{
+				
+				if ( SHARED_ValidPlayer( iTarget ) )
+				{
+					WC3_ShowSpecInfo( id, iTarget );
+				}
+
+				p_data[id][P_LASTSPEC] = iTarget;
 			}
 		}
 	}

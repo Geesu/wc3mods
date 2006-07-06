@@ -126,32 +126,3 @@ public _DOD_showMoney(parm[3])
 
 	return;
 }
-
-public on_StatusValue( id )
-{	
-	
-	if ( !WAR3_Check() )
-	{
-		return;
-	}
-
-	if ( !p_data_b[id][PB_ISCONNECTED] )
-	{
-		return;
-	}
-	
-	// This is the player that the dead person is spectating
-	new iTarget = entity_get_int( id, EV_INT_iuser2 );
-
-	new szTargetName[32];
-	get_user_name( iTarget, szTargetName, 31 );
-
-	client_print( id, print_chat, "[DEBUG] You are viewing %s (%d)", szTargetName, iTarget );
-
-	if ( SHARED_ValidPlayer( iTarget ) )
-	{
-		WC3_ShowSpecInfo( id, iTarget );
-	}
-
-	return;
-}

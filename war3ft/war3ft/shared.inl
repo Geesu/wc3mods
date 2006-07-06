@@ -813,7 +813,7 @@ public SHARED_ChangeSkin( id, iFlag )
 	new szSkin[32];
 	
 	// Reset the user's model
-	if ( iFlag == SKIN_RESET && p_data[id][PB_SKINSWITCHED] )
+	if ( iFlag == SKIN_RESET && p_data_b[id][PB_SKINSWITCHED] )
 	{
 
 		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
@@ -825,7 +825,7 @@ public SHARED_ChangeSkin( id, iFlag )
 			dod_clear_model( id );
 		}
 
-		p_data[id][PB_SKINSWITCHED] = false;
+		p_data_b[id][PB_SKINSWITCHED] = false;
 	}
 	
 	// Switch the user's skin to the opposing team
@@ -886,7 +886,7 @@ public SHARED_ChangeSkin( id, iFlag )
 			dod_set_model( id, szSkin );
 		}
 
-		p_data[id][PB_SKINSWITCHED] = true;
+		p_data_b[id][PB_SKINSWITCHED] = true;
 	}
 
 	return;
