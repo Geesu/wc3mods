@@ -5,6 +5,36 @@
 
 #define DOD_BOOT_SPEED 45.0
 
+bool:ITEM_CanBuy( id )
+{
+	if ( !get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive( id ) )
+	{
+		client_print( id, print_center, "%L", id, "NOT_BUY_ITEMS_WHEN_DEAD" );
+		
+		return false;
+	}
+	
+	else if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		
+		if ( get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime )
+		{
+			client_print( id, print_center, "%L", id, "SECONDS_HAVE_PASSED_CANT_BUY", ( get_cvar_float( "mp_buytime" ) * 60.0 ) );
+
+			return false;
+		}
+		
+		else if ( get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone( id ) && is_user_alive( id ) )
+		{
+			client_print( id, print_center, "%L", id, "MUST_BE_IN_BUYZONE" );
+			
+			return false;
+		}
+	}
+	
+	return true;
+}
+
 public ITEM_Buy( id, iItem )
 {
 
@@ -64,7 +94,16 @@ public ITEM_Buy( id, iItem )
 		return;
 	}
 
-	if ( ITEM_Set( id, iItem ) )
+	else if ( ( iItem != ITEM_NECKLACE || iItem != ITEM_HELM || iItem != ITEM_RING ) && ITEM_GetSlot( id ) == ITEM_SLOT_FULL )
+	{
+		g_iFutureItem[id] = iItem;
+
+		MENU_ReplaceItem( id )
+
+		return;
+	}
+
+	if ( ITEM_PreSet( id, iItem ) )
 	{
 		new iNewMoney = SHARED_GetUserMoney( id ) - ITEM_COST[iItem];
 		SHARED_SetUserMoney( id, iNewMoney );
@@ -73,37 +112,7 @@ public ITEM_Buy( id, iItem )
 	return;
 }
 
-bool:ITEM_CanBuy( id )
-{
-	if ( !get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive( id ) )
-	{
-		client_print( id, print_center, "%L", id, "NOT_BUY_ITEMS_WHEN_DEAD" );
-		
-		return false;
-	}
-	
-	else if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-	{
-		
-		if ( get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime )
-		{
-			client_print( id, print_center, "%L", id, "SECONDS_HAVE_PASSED_CANT_BUY", ( get_cvar_float( "mp_buytime" ) * 60.0 ) );
-
-			return false;
-		}
-		
-		else if ( get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone( id ) && is_user_alive( id ) )
-		{
-			client_print( id, print_center, "%L", id, "MUST_BE_IN_BUYZONE" );
-			
-			return false;
-		}
-	}
-	
-	return true;
-}
-
-public ITEM_Set( id, iItem )
+public ITEM_PreSet( id, iItem )
 {
 	if ( iItem == ITEM_TOME )
 	{
@@ -111,41 +120,53 @@ public ITEM_Set( id, iItem )
 
 		return 1;
 	}
-	
-	// Check for the items we can buy more than one of!
-	else if ( iItem == ITEM_NECKLACE && ITEM_Has( id, ITEM_NECKLACE ) > ITEM_NONE )
+
+	else if ( iItem == ITEM_NECKLACE || iItem == ITEM_HELM || iItem == ITEM_RING )
 	{
-		ITEM_SetMultipleItems( id, ITEM_NECKLACE, NECKLACE_CHARGES );
+		ITEM_SetMultipleItems( id, iItem );
 	}
 
-	else if ( iItem == ITEM_HELM && ITEM_Has( id, ITEM_HELM ) > ITEM_NONE )
-	{
-		new iCharges = random_num( MIN_HELM_CHARGES, MAX_HELM_CHARGES );
-
-		ITEM_SetMultipleItems( id, ITEM_HELM, iCharges );
-	}
-
-	else if ( iItem == ITEM_RING && ITEM_Has( id, ITEM_RING ) > ITEM_NONE )
-	{
-		ITEM_SetMultipleItems( id, ITEM_RING, RING_INCREMENT );
-	}
-			
 	else
 	{
-		new iItemSlot = ITEM_GetSlot( id );
-		
-		server_print( "%d:%d", id, iItemSlot );
-
-		// Remove the user's old item if necessary
-		if ( g_iShopMenuItems[id][iItemSlot] > ITEM_NONE )
+		if ( !ITEM_Set( id, iItem ) )
 		{
-			ITEM_Remove( id, iItemSlot );
+			return 0;
 		}
-		
-		// Set their new item
-		g_iShopMenuItems[id][iItemSlot] = iItem;
 	}
 
+	ITEM_Equip( id, iItem );
+
+	return 1;
+}
+
+public ITEM_Equip( id, iItem )
+{
+	new iItemSlot = ITEM_GetSlot( id );
+
+	new iOldItem = g_iShopMenuItems[id][iItemSlot];
+
+	if ( iItem == iOldItem || ITEM_Has( id, iItem ) > ITEM_NONE )
+	{
+		return;
+	}
+
+	// Remove the user's old item if necessary
+	else if ( g_iShopMenuItems[id][iItemSlot] > ITEM_NONE )
+	{
+		ITEM_Remove( id, iItemSlot );
+	}
+		
+	// Set their new item
+	g_iShopMenuItems[id][iItemSlot] = iItem;
+
+	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_PICKUPITEM], 1.0, ATTN_NORM, 0, PITCH_NORM );
+	WC3_ShowBar( id );
+
+	return;
+}
+
+public ITEM_Set( id, iItem )
+{	
 	// Display a message regarding the item they just purchased
 	switch ( iItem )
 	{
@@ -244,14 +265,6 @@ public ITEM_Set( id, iItem )
 			ITEM_Gloves( id );
 		}
 
-		case ITEM_RING:
-		{
-			if ( !task_exists( TASK_ITEM_RING + id ) )
-			{
-				_ITEM_Ring( id );
-			}
-		}
-
 		case ITEM_CHAMELEON:
 		{
 			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
@@ -270,9 +283,6 @@ public ITEM_Set( id, iItem )
 		}
 
 	}
-
-	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_PICKUPITEM], 1.0, ATTN_NORM, 0, PITCH_NORM );
-	WC3_ShowBar( id );
 
 	return 1;
 }
@@ -644,71 +654,82 @@ ITEM_Init()
 	}
 }
 
-ITEM_SetMultipleItems( id, iItem, iNumber)
+ITEM_SetMultipleItems( id, iItem )
 {
 	switch( iItem )
 	{
 		case ITEM_NECKLACE:
 		{
-			g_iNecklaceCharges[id] += iNumber;
+			g_iNecklaceCharges[id] += NECKLACE_CHARGES;
 
-			if ( iNumber )
-			{
-				client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU_6", NECKLACE_CHARGES );
-			}
-
-			else
-			{
-
-			}
-
-			if ( g_iNecklaceCharges[id] <= 0 )
-			{
-				ITEM_RemoveID( id, ITEM_NECKLACE )
-			}
+			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU_6", NECKLACE_CHARGES );
 		}
 
 		case ITEM_HELM:
 		{
-			g_iHelmCharges[id] += iNumber;
+			new iCharges = random_num( MIN_HELM_CHARGES, MAX_HELM_CHARGES );
 
-			if ( iNumber )
-			{
-				client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_3", iNumber );
-			}
-
-			else
-			{
-
-			}
-
-			if ( g_iNecklaceCharges[id] <= 0 )
-			{
-				ITEM_RemoveID( id, ITEM_HELM )
-			}
+			g_iHelmCharges[id] += iCharges;
+	
+			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_3", iCharges );
 		}
 
 		case ITEM_RING:
 		{
-			g_iTotalRings[id] += iNumber;
+			g_iTotalRings[id] += RING_INCREMENT;
 
-			if ( iNumber )
+			client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_7" );
+
+			if ( !task_exists( TASK_ITEM_RING + id ) )
 			{
-				client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU2_7" );
-			}
-
-			else
-			{
-
-			}
-
-			if ( g_iTotalRings[id] <= 0 )
-			{
-				ITEM_RemoveID( id, ITEM_RING )
+				_ITEM_Ring( id );
 			}
 		}
 	}
 
+	WC3_ShowBar( id );
+	return 1;
+}
+
+ITEM_RemoveMultipleItems( id, iItem )
+{
+	if ( ITEM_Has( id, iItem ) > ITEM_NONE )
+	{
+		switch( iItem )
+		{
+			case ITEM_NECKLACE:
+			{
+				g_iNecklaceCharges[id] -= CHARGE_DISPOSE;
+				
+				if ( g_iNecklaceCharges[id] <= 0 )
+				{
+					ITEM_RemoveID( id, iItem );
+				}
+			}
+
+			case ITEM_HELM:
+			{
+				g_iHelmCharges[id] -= CHARGE_DISPOSE;
+				
+				if ( g_iHelmCharges[id] <= 0 )
+				{
+					ITEM_RemoveID( id, iItem );
+				}
+			}
+
+			case ITEM_RING:
+			{
+				g_iTotalRings[id] -= CHARGE_DISPOSE;
+				
+				if ( g_iTotalRings[id] <= 0 )
+				{
+					ITEM_RemoveID( id, iItem );
+				}
+			}
+		}
+	}
+
+	WC3_ShowBar( id );
 	return;
 }
 

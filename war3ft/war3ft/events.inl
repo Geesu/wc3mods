@@ -516,7 +516,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 						Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 0, 0, 255, 150 );
 
 						// Lets remove a charge from the helm!
-						ITEM_SetMultipleItems( iVictim, ITEM_HELM, -CHARGE_DISPOSE )
+						ITEM_RemoveMultipleItems( iVictim, ITEM_HELM );
 					}
 				}
 				

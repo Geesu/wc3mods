@@ -1473,19 +1473,21 @@ public WC3_KillUser( iVictim, iKiller, iWeapon )
 }
 
 // Funtion will check a file to see if the mapname exists
-bool:WC3_MapDisableCheck( file_name[] )
+bool:WC3_MapDisableCheck( szFileName[] )
 {
-
 	// Format the Orc Nade Disable File
-	new szOrcNadeFile[128];
-	get_configsdir( szOrcNadeFile, 127 );
-	formatex( szOrcNadeFile, 63, "%s/war3ft/disable/%s", szOrcNadeFile, file_name );
+	new szFile[128];
+	get_configsdir( szFile, 127 );
+	formatex( szFile, 63, "%s/war3ft/disable/%s", szFile, szFileName );
+
+	if ( !file_exists( szFile ) )
+		return false;
 
 	new iLineNum, szData[64], iTextLen, iLen;
 	new szMapName[64], szRestrictName[64];
 	get_mapname( szMapName, 63 );
 
-	while ( read_file( szOrcNadeFile, iLineNum, szData, 63, iTextLen ) )
+	while ( read_file( szFile, iLineNum, szData, 63, iTextLen ) )
 	{
 		iLen = copyc( szRestrictName, 63, szData, '*' );
 
