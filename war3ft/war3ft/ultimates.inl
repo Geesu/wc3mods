@@ -180,6 +180,9 @@ ULT_IsImmune( id )
 	if ( bBlocked )
 	{
 		client_print( id, print_chat, "%s You have blocked an enemy's ultimate!", g_MODclient );
+
+		// Play ultimate blocked sound
+		emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_SPELLSHIELD], 1.0, ATTN_NORM, 0, PITCH_NORM );
 	}
 
 	return bBlocked;
@@ -189,6 +192,9 @@ ULT_Blocked( id )
 {
 	// Maybe play a sound here instead?
 	client_print( id, print_chat, "%s Your ultimate has been blocked", g_MODclient );
+
+	// Play ultimate blocked sound
+	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_SPELLSHIELD], 1.0, ATTN_NORM, 0, PITCH_NORM );
 }
 
 public _ULT_Ping( parm[] )

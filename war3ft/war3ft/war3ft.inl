@@ -44,6 +44,10 @@ public WC3_Precache()
 	copy( g_szSounds[SOUND_ANTEND]			, 63, "warcraft3/antend.wav"						);	// Sound played when you try to shoot a chameleoned teammate 
 	copy( g_szSounds[SOUND_ERROR]			, 63, "warcraft3/bonus/Error.wav"					);	// Sound played on errors 
 
+	copy( g_szSounds[SOUND_DISPELL]			, 63, "warcraft3/DispelMagicTarget.wav"				);	// Dispell an ultimate - played on caster
+	copy( g_szSounds[SOUND_SPELLSHIELD]		, 63, "warcraft3/SpellShieldImpact1.wav"			);	// Dispell an ultimate - played on blocker
+
+
 	// Lets make sure we have all of the sound files!!!
 	new i, szTmp[128], bool:bError = false;
 
@@ -81,6 +85,7 @@ public WC3_Precache()
 		set_fail_state( "Sound files are missing, unable to load plugin" );
 	}
 
+	bError = false;
 
 	// Copy the sprite files to the array
 	copy( g_szSprites[SPR_BANISH]		, 63, "sprites/nhth1.spr" );

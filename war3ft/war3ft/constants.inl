@@ -616,7 +616,7 @@ new MOTD_header[] = "<html><head><LINK REL=^"StyleSheet^" HREF=^"wc3.css^" TYPE=
 
 
 // SOUNDS
-#define MAX_SOUNDS	27
+#define MAX_SOUNDS	29
 
 new g_szSounds[MAX_SOUNDS][64];
 
@@ -647,6 +647,8 @@ new g_szSounds[MAX_SOUNDS][64];
 #define SOUND_REINCARNATION		24
 #define SOUND_ANTEND			25
 #define SOUND_ERROR				26
+#define SOUND_DISPELL			27
+#define SOUND_SPELLSHIELD		28
 
 // SPRITES
 #define MAX_SPRITES	15

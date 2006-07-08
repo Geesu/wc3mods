@@ -561,14 +561,14 @@ public client_PreThink( id )
 				}
 
 				// Give the user more stamina
-				if ( ITEM_Has( id, ITEM_BOOTS ) && entity_get_float( id, EV_FL_fuser4 ) < DOD_BOOT_SPEED )
+				if ( ITEM_Has( id, ITEM_BOOTS ) > ITEM_NONE && entity_get_float( id, EV_FL_fuser4 ) < DOD_BOOT_SPEED )
 				{
 					entity_set_float( id, EV_FL_fuser4, DOD_BOOT_SPEED );
 				}
 			}
 
 			// Amulet of the Cat
-			if ( ITEM_Has( id, ITEM_AMULET ) )
+			if ( ITEM_Has( id, ITEM_AMULET ) > ITEM_NONE )
 			{
 				entity_set_int( id, EV_INT_flTimeStepSound, 999 );
 			}
