@@ -194,7 +194,7 @@ ULT_Blocked( id )
 	client_print( id, print_chat, "%s Your ultimate has been blocked", g_MODclient );
 
 	// Play ultimate blocked sound
-	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_SPELLSHIELD], 1.0, ATTN_NORM, 0, PITCH_NORM );
+	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_DISPELL], 1.0, ATTN_NORM, 0, PITCH_NORM );
 }
 
 public _ULT_Ping( parm[] )
