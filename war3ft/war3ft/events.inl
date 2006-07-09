@@ -488,9 +488,6 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				// No longer searching since we found a target
 				p_data_b[iAttacker][PB_ISSEARCHING]	= false;
 
-				// Hide the ultimate icon
-				ULT_Icon( iAttacker, ICON_HIDE );
-
 				// Set up the user's ultimate delay
 				ULT_ResetCooldown( iAttacker, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 			}

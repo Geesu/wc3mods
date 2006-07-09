@@ -471,9 +471,10 @@ public _ITEM_Glove_Give( id )
 
 ITEM_BuyRings( id )
 {
-	new iMoney, bool:bSet = false;
+	new iMoney;
+	new iAdditionalRings = 0;
 	
-	while ( g_iTotalRings[id] < 5 )
+	while ( g_iTotalRings[id] + iAdditionalRings < 5 )
 	{
 		iMoney = SHARED_GetUserMoney( id );
 
@@ -481,16 +482,21 @@ ITEM_BuyRings( id )
 		{
 			break;
 		}
+
+		iAdditionalRings++;
 		
 		new iNewMoney = iMoney - ITEM_COST[ITEM_RING];
 		SHARED_SetUserMoney( id, iNewMoney, 1 );
-		
-		if ( !bSet )
-		{
-			ITEM_Set( id, ITEM_RING );
+	}
 
-			bSet = true;
-		}
+	// Then we need to give them some rings!
+	if ( iAdditionalRings > 0 )
+	{
+
+		// Subtract 1 b/c ITEM_PreSet will add one
+		g_iTotalRings[id] += ( ( iAdditionalRings * RING_INCREMENT ) - ( RING_INCREMENT ) );
+
+		ITEM_PreSet( id, ITEM_RING );
 	}
 
 	return;
@@ -537,7 +543,6 @@ ITEM_Scroll( id )
 	// Make sure the user isn't about to respawn when we do these checks
 	if ( !p_data[id][P_RESPAWNBY] )
 	{
-		
 		p_data[id][P_RESPAWNBY] = RESPAWN_ITEM;
 
 		set_task( SPAWN_DELAY, "_SHARED_Spawn", TASK_SPAWN + id );

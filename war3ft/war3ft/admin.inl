@@ -1,3 +1,7 @@
+/*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
+*	Admin Functions
+´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
+
 // Advanced Swear Filter and Punishment plugin uses this function
 public ADMIN_ServerHandler()
 {
@@ -234,7 +238,7 @@ ADMIN_GiveItem( id, szTarget[], iItemID )
 	{
 		client_print( iTarget, print_chat, "%s The admin has given you the item '%s'", g_MODclient, szItemName );
 		
-		ITEM_Set( iTarget, iItemID );
+		ITEM_PreSet( iTarget, iItemID );
 
 		bTargetFound = true;
 	}
