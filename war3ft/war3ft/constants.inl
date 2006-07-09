@@ -269,43 +269,33 @@
 	#define P_ULTIMATE              4		// Ultimate level
 	#define P_LEVEL					5		// Player Level
 	#define P_XP                    6		// Current XP
-//	#define P_LASTSPEC              7		// Item from shopmenu 1
-//	#define P_ITEM2                 8		// Item from shopmenu 2
 
 	// Miscellaneous options
-	//#define P_DEFUSERINDEX			9		// Player is the defuse
-	#define P_SPECMODE				10		// Used to determine if the player is spectating or not
-	#define P_SHOWRACEMENU			11		// Should we show the race menu when the player respawns?
-	#define P_SHOWICONS				12		// Show player icons/levels for this player?
-//	#define P_SPECFRIEND			13		// Determines if the player the user is looking at is on his/her team (used for icons)
-	#define P_CHANGERACE			29		// Holds the value of what race to change to when the following round starts
+	#define P_SPECMODE				7		// Used to determine if the player is spectating or not
+	#define P_SHOWRACEMENU			8		// Should we show the race menu when the player respawns?
+	#define P_SHOWICONS				9		// Show player icons/levels for this player?
+	#define P_CHANGERACE			10		// Holds the value of what race to change to when the following round starts
 
 	// Used for weapon Reincarnation
-	#define P_FLASHCOUNT			14		// Number of flash grenades bought that round
-	#define	P_HECOUNT				15		// Number of HE's bought that round
-	#define P_SMOKECOUNT			16		// Number of smoke grenades bought that round
-	#define P_ARMORONDEATH			17		// Amount of armor the player had when he/she died
-	#define P_LASTARMOR				18		// This will contain the previous value of P_ARMORONDEATH
-//	#define P_ARMORTYPE				18		// Type of armor the user had on death
-//	#define P_SAVEDNUMBER			19
+	#define P_FLASHCOUNT			11		// Number of flash grenades bought that round
+	#define	P_HECOUNT				12		// Number of HE's bought that round
+	#define P_SMOKECOUNT			13		// Number of smoke grenades bought that round
+	#define P_ARMORONDEATH			14		// Amount of armor the player had when he/she died
+	#define P_LASTARMOR				15		// This will contain the previous value of P_ARMORONDEATH
 
 	// Used by various ultimates/abilities
-	#define P_TELEMENU				19		// Used by teleport
-	#define P_CARRIONCOUNT			20		// Number of carrion beetles the player has left
-	#define P_SHADOWCOUNT			21		// Number of shadow strikes the player has left
-//	#define P_FLAMECOUNT			22		// Number of flame shots the player has left
-	#define P_SERPENTCOUNT			23		// Number of serpent wards the player has left
-	#define P_RINGS					24
-//	#define P_LASTITEM				25		// Holds the item that the user had during the previous round
-//	#define P_LASTITEM2				26
-//	#define P_SKINSWITCHED			27		// Did the user's skin change?
-	#define P_ULTIMATEDELAY			30
-	#define P_RESPAWNBY				31		// Stores how the user is going to respawn
+	#define P_TELEMENU				16		// Used by teleport
+	#define P_CARRIONCOUNT			17		// Number of carrion beetles the player has left
+	#define P_SHADOWCOUNT			18		// Number of shadow strikes the player has left
+	#define P_SERPENTCOUNT			19		// Number of serpent wards the player has left
+	#define P_RINGS					20
+	#define P_ULTIMATEDELAY			21
+	#define P_RESPAWNBY				22		// Stores how the user is going to respawn
 
 	// Used for DOD
-	#define P_MONEY					28		// Amount of money the player has
+	#define P_MONEY					23		// Amount of money the player has
 
-	#define P_LAST					32
+	#define P_LAST					24
 	// ***************************
 	//		End of info for player_data
 	// ***************************
@@ -319,51 +309,38 @@
 	#define PB_SKINSWITCHED			0		// Set if the user's skin has been changed
 	#define PB_RESETSKILLS			1		// Does the player want to reset their skills in the next round?
 	#define PB_CHANGINGTEAM			2		// Is the user currently changing his/her team?
-	#define PB_DIEDLASTROUND		4
+	#define PB_DIEDLASTROUND		3		// Did the user died during the previous round?
 
 	// Used for weapon Reincarnation
-//	#define PB_HELMET				5		// Player had a helmet when he/she died?
-	#define PB_DEFUSE				6		// Player had a defuse kit when he/she died?
-	#define PB_SHIELD				7		// Player had a shield when he/she died?
-	#define PB_NIGHTVISION			8		// Player had nightvision when he/she died?
+	#define PB_DEFUSE				4		// Player had a defuse kit when he/she died?
+	#define PB_SHIELD				5		// Player had a shield when he/she died?
+	#define PB_NIGHTVISION			6		// Player had nightvision when he/she died?
 
 	// Used by various ultimates/abilities
-	#define PB_GIVEITEMS			10		// Tells weapon controller function to give the player his items after respawning
-//	#define PB_PLAYERSPAWNED		11		// Did the player respawn from a skill/item?
-//	#define PB_SPAWNEDFROMITEM		12		// Did the player spawn from an item/teammate ability? (used to determine the health to give the player after they spawn)
-	#define PB_NADEJUSTRECEIVED		13		// Used with flaming gloves... (removable?)
-//	#define PB_BLINKDELAYED			14		// Used to determine if the blink ability should be delayed (change this so its not [33])
-	#define PB_MOLE					15		// Is the player a mole?
-//	#define PB_TOBEREVIVED			16		// Will this player be revived?
-	#define PB_PHOENIX				17		// Will this player have phoenix?
-	#define PB_WARDENBLINK			18		// Does this player have blink enabled?
-	#define PB_SUICIDEATTEMPT		19		// Has this player made a suicide attempt for undead's ultimate?
-	#define PB_ISBURNING			20		// Is the player burning from the immolate ultimate?
-//	#define PB_EVADENEXTSHOT		21
-	#define PB_STUNNED				22
-	#define PB_SLOWED				23
-	#define PB_ISSEARCHING			24
-	#define PB_LIGHTNINGHIT			25
-	#define PB_INVIS				26
-	#define PB_ULTIMATEUSED			27
-	#define PB_HEXED				28		// Is the player hexed? (All abilities are disabled)
-//	#define PB_SILENT				29
-	#define PB_JUSTJOINED			30
-	#define PB_ISCONNECTED			31
-	#define PB_GODMODE				32
+	#define PB_GIVEITEMS			7		// Tells weapon controller function to give the player his items after respawning
+	#define PB_NADEJUSTRECEIVED		8		// Used with flaming gloves... (removable?)
+	#define PB_MOLE					9		// Is the player a mole?
+	#define PB_PHOENIX				10		// Will this player have phoenix?
+	#define PB_WARDENBLINK			11		// Does this player have blink enabled?
+	#define PB_SUICIDEATTEMPT		12		// Has this player made a suicide attempt for undead's ultimate?
+	#define PB_ISBURNING			13		// Is the player burning from the immolate ultimate?
+	#define PB_STUNNED				14
+	#define PB_SLOWED				15
+	#define PB_ISSEARCHING			16
+	#define PB_LIGHTNINGHIT			17
+	#define PB_INVIS				18
+	#define PB_HEXED				19		// Is the player hexed? (All abilities are disabled)
+	#define PB_JUSTJOINED			20
+	#define PB_ISCONNECTED			21
+	#define PB_GODMODE				22
 
-	
-	#define PB_HAS_SPAWNED			33		// Has the player previously spawned this round?
-	#define PB_CAN_RENDER			34
-	
-//	#define PB_VENGEANCE_SPAWN		35		// Player spawned from vengeance?
+	#define PB_HAS_SPAWNED			23		// Has the player previously spawned this round?
+	#define PB_CAN_RENDER			24
 
-	#define PB_REINCARNATION_DELAY	36
-	#define PB_REINCARNATION_SKIP	37
+	#define PB_REINCARNATION_DELAY	25
+	#define PB_REINCARNATION_SKIP	26
 
-//	#define PB_ABOUT_TO_RESPAWN		39		// User is going to respawn b/c of something
-
-	#define PB_LAST					38
+	#define PB_LAST					27
 	// ***************************
 	//		End of info for player_data_bool
 	// ***************************

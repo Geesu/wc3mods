@@ -117,7 +117,7 @@ public cmd_Ultimate(id)
 	}
 
 	// Ultimate is used or not ready yet
-	else if ( p_data_b[id][PB_ULTIMATEUSED] || p_data[id][P_ULTIMATEDELAY] > 0 )
+	else if ( p_data[id][P_ULTIMATEDELAY] > 0 )
 	{
 		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_NOT_READY", p_data[id][P_ULTIMATEDELAY] );
 

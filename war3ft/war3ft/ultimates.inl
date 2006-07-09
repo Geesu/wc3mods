@@ -31,7 +31,7 @@ public _ULT_Delay()
 		p_data[id][P_ULTIMATEDELAY]--;
 
 		// Then the user's ultimate is ready
-		if ( p_data[id][P_ULTIMATEDELAY] <= 0 && p_data_b[id][PB_ULTIMATEUSED] )
+		if ( p_data[id][P_ULTIMATEDELAY] == 0 )
 		{
 			Ultimate_Ready( id );
 		}
@@ -41,7 +41,6 @@ public _ULT_Delay()
 
 ULT_ResetCooldown( id, iTime, iHideIcon = true )
 {
-	p_data_b[id][PB_ULTIMATEUSED]	= true;
 	p_data[id][P_ULTIMATEDELAY]		= iTime;
 	
 	// Hide the user's ultimate icon
@@ -53,8 +52,6 @@ ULT_ResetCooldown( id, iTime, iHideIcon = true )
 
 Ultimate_Ready( id )
 {
-	// Need to set this before the WC3_Check in case they want to restart war3ft
-	p_data_b[id][PB_ULTIMATEUSED] = false;
 
 	if ( !WC3_Check() )
 	{
@@ -152,7 +149,7 @@ ULT_Available( id )
 {
 
 	// User needs ult + can't have it used + can't have a delay + can't have a global delay
-	if ( p_data[id][P_ULTIMATE] && !p_data_b[id][PB_ULTIMATEUSED] && p_data[id][P_ULTIMATEDELAY] <= 0 && g_iUltimateDelay <= 0 )
+	if ( p_data[id][P_ULTIMATE] && p_data[id][P_ULTIMATEDELAY] <= 0 && g_iUltimateDelay <= 0 )
 	{
 		return true;
 	}
