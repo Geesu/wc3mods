@@ -299,7 +299,7 @@ public client_putinserver( id )
 	}
 
 	// Check for steam ID pending
-	new szPlayerID[32];
+	static szPlayerID[32];
 	get_user_authid( id, szPlayerID, 31 );
 	
 	// Then the player doesn't have a steam id, lets make them reconnect
@@ -323,7 +323,7 @@ public client_putinserver( id )
 	else if ( g_MOD == GAME_DOD )
 	{
 		p_data[id][P_MONEY] = get_pcvar_num( CVAR_wc3_dod_start_money );
-		new parm[3];
+		static parm[3];
 		parm[0] = id;
 		parm[1] = 0;
 		_DOD_showMoney( parm );
@@ -436,10 +436,10 @@ public client_disconnect(id)
 
 	if ( get_pcvar_num( CVAR_wc3_psychostats ) )
 	{
-		new szWeapon[64];
+		static szWeapon[64];
 
-		new szTeam[16], szName[32], szAuthid[32], iWeap;
-		new iUserid = get_user_userid( id );
+		static szTeam[16], szName[32], szAuthid[32];
+		new iWeap, iUserid = get_user_userid( id );
 
 		if ( is_user_connected(id) )
 		{
@@ -579,9 +579,9 @@ public client_PreThink( id )
 		{
 
 			// Check to see if spectated player has changed
-			new iTarget = entity_get_int( id, EV_INT_iuser2 );
+			static iTarget = entity_get_int( id, EV_INT_iuser2 );
 			
-			new Float:fTime = halflife_time();
+			static Float:fTime = halflife_time();
 
 			// Then we are looking at a new player or the last hud message has disappeared
 			if ( g_iSpectatingID[id] != iTarget || g_fLastSpecDisplay[id] <= fTime )
