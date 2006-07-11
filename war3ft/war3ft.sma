@@ -579,9 +579,9 @@ public client_PreThink( id )
 		{
 
 			// Check to see if spectated player has changed
-			static iTarget = entity_get_int( id, EV_INT_iuser2 );
+			new iTarget = entity_get_int( id, EV_INT_iuser2 );
 			
-			static Float:fTime = halflife_time();
+			new Float:fTime = halflife_time();
 
 			// Then we are looking at a new player or the last hud message has disappeared
 			if ( g_iSpectatingID[id] != iTarget || g_fLastSpecDisplay[id] <= fTime )
