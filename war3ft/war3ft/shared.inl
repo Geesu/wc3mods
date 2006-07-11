@@ -134,7 +134,7 @@ SHARED_IsPrimaryWeapon( iWeaponID )
 	// Check for Counter-Strike or Condition Zero
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		if ( iWeaponID == CSW_GALIL || iWeaponID == CSW_FAMAS || iWeaponID == CSW_M3 || iWeaponID == CSW_XM1014 || iWeaponID == CSW_MP5NAVY || iWeaponID == CSW_TMP || iWeaponID == CSW_P90 || iWeaponID == CSW_MAC10 || iWeaponID == CSW_UMP45 || iWeaponID == CSW_AK47 || iWeaponID == CSW_SG552 || iWeaponID == CSW_M4A1 || iWeaponID == CSW_AUG || iWeaponID == CSW_SCOUT || iWeaponID == CSW_AWP || iWeaponID == CSW_G3SG1 || iWeaponID == CSW_SG550 || iWeaponID == CSW_M249)
+		if ( iWeaponID == CSW_GALIL || iWeaponID == CSW_FAMAS || iWeaponID == CSW_M3 || iWeaponID == CSW_XM1014 || iWeaponID == CSW_MP5NAVY || iWeaponID == CSW_TMP || iWeaponID == CSW_P90 || iWeaponID == CSW_MAC10 || iWeaponID == CSW_UMP45 || iWeaponID == CSW_AK47 || iWeaponID == CSW_SG552 || iWeaponID == CSW_M4A1 || iWeaponID == CSW_AUG || iWeaponID == CSW_SCOUT || iWeaponID == CSW_AWP || iWeaponID == CSW_G3SG1 || iWeaponID == CSW_SG550 || iWeaponID == CSW_M249 )
 		{
 			return true;
 		}
@@ -597,18 +597,36 @@ public _SHARED_CS_GiveWeapons(id)
 					}
 				}
 			}
+		}
 
-			if ( SHARED_IsPrimaryWeapon( iWeapID ) )
-			{
-				bPrimaryFound = true;
-			}
+		if ( SHARED_IsPrimaryWeapon( iWeapID ) )
+		{
+			new szWeaponName[32];
+			get_weaponname( iWeapID, szWeaponName, 31 );
+
+			bPrimaryFound = true;
+
+			log_amx( "[PRIMARY] Found: %s (%d)", szWeaponName, iWeapID );
 		}
 	}
 
 	// Only give it if the user doesn't have a primary weapon
-	if ( p_data_b[id][PB_SHIELD] && !bPrimaryFound )
+	if ( p_data_b[id][PB_SHIELD] )
 	{
-		give_item( id, "weapon_shield" );
+		if ( !bPrimaryFound )
+		{
+			give_item( id, "weapon_shield" );
+			log_amx( "[SHIELD] Giving" );
+		}
+		else
+		{
+			log_amx( "[SHIELD] Primary weapon found" );
+		}
+	}
+	else
+	{
+		log_amx( "[SHIELD] Not found" );
+
 	}
 
 
