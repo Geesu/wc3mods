@@ -564,18 +564,13 @@ public _SHARED_CS_GiveWeapons(id)
 		cs_set_user_nvg(id, 1);
 	}
 
-	if ( p_data_b[id][PB_SHIELD] )
-	{
-		give_item( id, "weapon_shield" );
-	}
-
 	// Give the user a bomb
 	if ( bGiveBomb )
 	{
 		give_item( id, "weapon_c4" );
 	}
 	
-	new iWeapID = 0, i = 0;
+	new iWeapID = 0, i = 0, bool:bPrimaryFound = false;
 	for ( i = 0; i < 32; i++ )
 	{
 		iWeapID = g_PlayerLastWeapons[id][i];
@@ -602,8 +597,20 @@ public _SHARED_CS_GiveWeapons(id)
 					}
 				}
 			}
+
+			if ( SHARED_IsPrimaryWeapon( iWeapID ) )
+			{
+				bPrimaryFound = true;
+			}
 		}
 	}
+
+	// Only give it if the user doesn't have a primary weapon
+	if ( p_data_b[id][PB_SHIELD] && !bPrimaryFound )
+	{
+		give_item( id, "weapon_shield" );
+	}
+
 
 	// GIve them their flash bangs back
 	while ( p_data[id][P_FLASHCOUNT] > 0 )
