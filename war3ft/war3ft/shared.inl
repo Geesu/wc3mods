@@ -536,6 +536,8 @@ public _SHARED_CS_GiveWeapons(id)
 		return;
 	}
 
+	log_amx( "[GIVEWEAPONS] %d", id );
+
 	// Check to see if the user should have the bomb
 	new bool:bGiveBomb = false;
 	if ( cs_get_user_plant( id ) )
