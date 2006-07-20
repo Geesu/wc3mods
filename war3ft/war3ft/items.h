@@ -1,11 +1,18 @@
+/*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
+*	Item Defines
+´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
+// Item Values
+#define DOD_BOOT_SPEED 45.0
+
+// Item Charge Defines
 #define NECKLACE_CHARGES	3
 #define MIN_HELM_CHARGES	3
 #define MAX_HELM_CHARGES    5
 #define CHARGE_DISPOSE      1
 #define RING_INCREMENT      1
 
-// Item Defines
+// Item Variable Defines
 #define MAX_SHOPMENU_ITEMS  18
 #define MAX_PLAYER_ITEMS    2
 #define MAX_PAGE_ITEMS      9
@@ -33,6 +40,7 @@
 #define ITEM_CHAMELEON	    16
 #define ITEM_MOLE		    17
 
+// Item Variables
 new g_iShopMenuItems[33][MAX_PLAYER_ITEMS];			// Holds the player's current items
 new g_iFutureItem[33];                              // Holds the item that the player wants to buy 
 
@@ -43,4 +51,4 @@ new g_iHelmCharges[33];								// Holds the number of charges left in the player
 new bool:g_bPlayerBoughtAnkh[33];					// Set to true when a user buys an ankh
 new bool:g_bPlayerBoughtMole[33];					// Set to true when a user buys a mole
 
-new ITEM_COST[MAX_SHOPMENU_ITEMS] = {0};
+new ITEM_COST[MAX_SHOPMENU_ITEMS];                  // Holds the price of an item
