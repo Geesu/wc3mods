@@ -61,6 +61,7 @@ v3.0
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
+//cham passive fixed?
 //use CSX for custom weapons?
 //test: spec info disappearing and re-appearing after 10.0 seconds
 //re-write menus
