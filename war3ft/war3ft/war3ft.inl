@@ -301,15 +301,15 @@ public WC3_Init()
 	// Register the player menus
 	LANG_SetMenus();
 
+	// We need to execute config file in a bit don't we?
+	set_task( 0.3, "_CVAR_ExecuteConfig", TASK_EXECUTECONFIG );
+
 	// Configure the database connection
 	set_task( 1.0, "DB_Init", TASK_SETSQL );
 
-	// Set which string should be displayed with messages (war3ft or war3)
-	if ( get_pcvar_num( CVAR_wc3_races ) < 5 )
-	{
-		g_MODclient = "* [WC3]";
-	}
-	
+	// Set up things when our config file has loaded the values
+	set_task( 1.5, "_WC3_RunAfterConfig", TASK_AFTERCONFIG );
+
 	// cl_minmodels check
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
@@ -406,6 +406,21 @@ public WC3_Init()
 	g_bOrcNadesDisabled		= WC3_MapDisableCheck( "skill_orc_nade.cfg" );
 	g_bGlovesDisabled		= WC3_MapDisableCheck( "item_gloves.cfg" );
 	g_bMoleBuyZoneDisabled	= WC3_MapDisableCheck( "skill_mole_shopzone.cfg" );
+}
+
+public _WC3_RunAfterConfig()
+{
+	// Set which string should be displayed with messages (war3ft or war3)
+	if ( get_pcvar_num( CVAR_wc3_races ) < 5 )
+	{
+		g_MODclient = "* [WC3]";
+	}
+
+	// Configure the XP based on level
+	XP_Configure();
+
+	// Set up our CVARs - some of them
+	CVAR_Configure();
 }
 
 public WC3_DetermineGame()

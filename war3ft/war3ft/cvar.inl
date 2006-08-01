@@ -200,3 +200,22 @@ CVAR_Configure()
 
 	CHAM_Configure();
 }
+
+public _CVAR_ExecuteConfig()
+{
+	// Format our config file
+	new szConfigFile[64];
+	get_configsdir( szConfigFile, 63 );
+	add( szConfigFile, 63, "/war3ft/war3FT.cfg" );
+
+	// Make sure the config file exists!
+	if ( file_exists( szConfigFile ) )
+	{
+		server_cmd( "exec %s", szConfigFile );
+	}
+	else
+	{
+		log_amx( "[ERROR] Config file '%s' missing!", szConfigFile );
+		set_fail_state( "Config file is missing, unable to load plugin" );
+	}
+}

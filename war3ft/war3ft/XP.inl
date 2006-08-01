@@ -459,6 +459,12 @@ XP_Configure()
 	{
 		xpgiven = {6,8,10,12,14,16,18,20,24,28,32};
 		xplevel = {0,100,200,400,800,1600,3200,6400,12800,25600,51200};
+
+		log_amx( "[DEBUG] Saving XP" );
+	}
+	else
+	{
+		log_amx( "[DEBUG] NOT Saving XP" );
 	}
 
 	// Set the XP multiplier

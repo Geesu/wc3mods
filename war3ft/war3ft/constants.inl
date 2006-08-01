@@ -65,8 +65,8 @@
 #define	TASK_CHECKVOTES		2002	// Used for checking the votes
 #define	TASK_FTCONTROLLER	2003	// Used for automatic start/stop
 #define	TASK_CHECKWAR3		2004
-//#define	TASK_SETLONGXP		2005
-//#define	TASK_SETSHORTXP		2006
+#define	TASK_EXECUTECONFIG	2005
+#define	TASK_AFTERCONFIG	2006
 #define	TASK_SETSQL			2007
 //#define	TASK_SETLANGUAGE	2008
 #define	TASK_SETVARIABLES	2009
@@ -680,7 +680,7 @@ new bool:g_bExtraSpritesEnabled = false
 #define HUDMESSAGE_FX_WRITEOUT  2
 
 // Variable used so we don't do any threading queries on mapchange
-new bool:g_bPluginEnding = false;
+new bool:g_bPluginEnding = true;
 
 
 // Used for spectating info
