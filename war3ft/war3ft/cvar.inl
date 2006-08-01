@@ -183,7 +183,7 @@ public CVAR_Init()
 }
 
 // Function will configure the various CVARs
-public CVAR_Configure()
+CVAR_Configure()
 {
 	// We will only change the bonus' if we are saving XP
 	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
@@ -193,13 +193,10 @@ public CVAR_Configure()
 		set_pcvar_num( CVAR_wc3_tome				, (get_pcvar_num( CVAR_wc3_tome ) / iXPDivisor)					);
 	}
 
-	CHAM_Configure();
-}
-
-public plugin_cfg()
-{
 	// Get Half-Life CVAR Pointers
 	CVAR_mp_friendlyfire	= get_cvar_pointer( "mp_friendlyfire" );
 	CVAR_mp_buytime			= get_cvar_pointer( "mp_buytime" );
 	CVAR_sv_gravity			= get_cvar_pointer( "sv_gravity" );
+
+	CHAM_Configure();
 }

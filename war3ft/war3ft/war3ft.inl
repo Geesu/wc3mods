@@ -406,25 +406,6 @@ public WC3_Init()
 	g_bOrcNadesDisabled		= WC3_MapDisableCheck( "skill_orc_nade.cfg" );
 	g_bGlovesDisabled		= WC3_MapDisableCheck( "item_gloves.cfg" );
 	g_bMoleBuyZoneDisabled	= WC3_MapDisableCheck( "skill_mole_shopzone.cfg" );
-
-	// Format our config file
-	new szConfigFile[64];
-	get_configsdir( szConfigFile, 63 );
-	add( szConfigFile, 63, "/war3ft/war3FT.cfg" )
-
-	// Make sure the config file exists!
-	if ( file_exists( szConfigFile ) )
-	{
-		server_cmd( "exec %s", szConfigFile );
-	}
-	else
-	{
-		log_amx( "[ERROR] Config file '%s' missing!", szConfigFile );
-		set_fail_state( "Config file is missing, unable to load plugin" );
-	}
-
-	// Configure the XP based on level
-	XP_Configure();
 }
 
 public WC3_DetermineGame()
