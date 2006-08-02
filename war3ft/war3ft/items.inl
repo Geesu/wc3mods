@@ -150,7 +150,7 @@ public ITEM_Buy( id, iItem )
 		return;
 	}
 
-	else if ( ( iItem != ITEM_NECKLACE || iItem != ITEM_HELM || iItem != ITEM_RING ) && ITEM_GetSlot( id ) == ITEM_SLOT_FULL )
+	else if ( ( iItem != ITEM_NECKLACE && iItem != ITEM_HELM && iItem != ITEM_RING && iItem != ITEM_TOME ) && ITEM_GetSlot( id ) == ITEM_SLOT_FULL )
 	{
 		g_iFutureItem[id] = iItem;
 

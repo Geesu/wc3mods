@@ -278,6 +278,11 @@ CMD_Handle( id, szCmd[] )
 		MOTD_PlayerSkills( id );
 	}
 
+	else if ( CMD_Equal( id,  szCmd, "ms" ) || CMD_Equal( id,  szCmd, "movespeed" ) )
+	{
+		client_print( id, print_chat, "Move Speed: %0.0f", get_user_maxspeed( id ) );
+	}
+
 	else if ( CMD_Equal( id,  szCmd, "skillsinfo" ) )
 	{
 		MOTD_SkillsInfo( id );
