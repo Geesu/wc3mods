@@ -61,8 +61,8 @@
 // - WAR3X Information ------------------------------------ //
 
 new const WAR3X_PLUGINNAME[] = "Warcraft 3: Expansion";
-new const WAR3X_VERSION[]    = "v1.0.2 RC1";
-new const WAR3X_DATE[]       = "05/05/2006";
+new const WAR3X_VERSION[]    = "v1.0.3";
+new const WAR3X_DATE[]       = __DATE__;
 new const WAR3X_AUTHORS[]    = "Ryan, Geesu, Avanderik, Willyumyum";
 
 new const WAR3X_PLUGINNAME_SHORT[] = "WAR3X";
