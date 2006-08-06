@@ -588,7 +588,7 @@ public client_PreThink( id )
 			{
 
 				// We have a valid target!!
-				if ( SHARED_ValidPlayer( iTarget ) )
+				if ( SHARED_ValidPlayer( iTarget ) && iTarget != id )
 				{
 					WC3_ShowSpecInfo( id, iTarget );
 
