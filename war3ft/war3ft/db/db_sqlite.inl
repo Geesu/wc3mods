@@ -165,9 +165,15 @@ SQLITE_Save( id )
 	// Prepare name for the query (playername is 66 in case all 33 characters are ')
 	DB_FormatString( szPlayerName, 65 );
 
+	new iSkillLevels[4];
+	iSkillLevels[0] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_1 ) );
+	iSkillLevels[1] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_2 ) );
+	iSkillLevels[2] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_3 ) );
+	iSkillLevels[3] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_4 ) );
+
 	// Save the data
 	new szQuery[512];
-	format( szQuery, 511, "REPLACE INTO `%s` (`playerid`, `playerip`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', '%s', %d, %d, %d, %d, %d, %d)", g_DBTableName, szPlayerID, szPlayerIP, szPlayerName, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE] );
+	format( szQuery, 511, "REPLACE INTO `%s` (`playerid`, `playerip`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', '%s', %d, %d, %d, %d, %d, %d)", g_DBTableName, szPlayerID, szPlayerIP, szPlayerName, p_data[id][P_XP], p_data[id][P_RACE], iSkillLevels[0], iSkillLevels[1], iSkillLevels[2], iSkillLevels[3] );
 
 	new Result:res = dbi_query( g_DB, szQuery );
 	
@@ -256,6 +262,12 @@ SQLITE_SetData( id )
 		return;
 	}
 	
+	new iSkillIDs[4];
+	iSkillIDs[0] = SM_GetSkillByPos( id, SKILL_POS_1 );
+	iSkillIDs[1] = SM_GetSkillByPos( id, SKILL_POS_2 );
+	iSkillIDs[2] = SM_GetSkillByPos( id, SKILL_POS_3 );
+	iSkillIDs[3] = SM_GetSkillByPos( id, SKILL_POS_4 );
+
 	// Then we have data in the database
 	if ( res && dbi_nextrow( res ) > 0 )
 	{
@@ -268,20 +280,21 @@ SQLITE_SetData( id )
 		dbi_result( res, "skill4"	, szSkill4	, 1 );			
 
 		p_data[id][P_XP]		= str_to_num( szXP		);
-		p_data[id][P_SKILL1]	= str_to_num( szSkill1	);
-		p_data[id][P_SKILL2]	= str_to_num( szSkill2	);
-		p_data[id][P_SKILL3]	= str_to_num( szSkill3	);
-		p_data[id][P_ULTIMATE]	= str_to_num( szSkill4	);
+		SM_SetSkillLevel( id, iSkillIDs[0], str_to_num( szSkill1 ) );
+		SM_SetSkillLevel( id, iSkillIDs[1], str_to_num( szSkill2 ) );
+		SM_SetSkillLevel( id, iSkillIDs[2], str_to_num( szSkill3 ) );
+		SM_SetSkillLevel( id, iSkillIDs[3], str_to_num( szSkill4 ) );
 	}
 
 	// The user has no record, start them at 0
 	else
 	{
 		p_data[id][P_XP]		= 0;
-		p_data[id][P_SKILL1]	= 0;
-		p_data[id][P_SKILL2]	= 0;
-		p_data[id][P_SKILL3]	= 0;
-		p_data[id][P_ULTIMATE]	= 0;
+		SM_SetSkillLevel( id, iSkillIDs[0], 0 );
+		SM_SetSkillLevel( id, iSkillIDs[1], 0 );
+		SM_SetSkillLevel( id, iSkillIDs[2], 0 );
+		SM_SetSkillLevel( id, iSkillIDs[3], 0 );
+
 	}
 	
 	// Free the result

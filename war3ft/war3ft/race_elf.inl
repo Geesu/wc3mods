@@ -155,7 +155,9 @@ NE_Evasion( id, iHitZone )
 {
 
 	// Check to see if they should evade the next shot?
-	if ( random_float( 0.0, 1.0 ) <= p_evasion[p_data[id][P_SKILL1]-1] )
+	new iSkillLevel = SM_GetSkillLevel( id, SKILL_EVASION );
+
+	if ( random_float( 0.0, 1.0 ) <= p_evasion[iSkillLevel-1] )
 	{
 
 		new iGlowIntensity = random_num( 20, 50 );
@@ -189,7 +191,9 @@ NE_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 	// Trueshot Aura
 	if ( SM_VerifySkill( iAttacker, SKILL_TRUESHOT ) )
 	{
-		new iTempDamage = floatround( float( iDamage ) * p_trueshot[p_data[iAttacker][P_SKILL3]-1] );
+		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_TRUESHOT );
+
+		new iTempDamage = floatround( float( iDamage ) * p_trueshot[iSkillLevel-1] );
 		
 		// Damage the user
 		WC3_Damage( iVictim, iAttacker, iTempDamage, iWeapon, iHitPlace );
@@ -207,7 +211,9 @@ NE_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace )
 	// Thorns Aura ( attacker could be dead... i.e. nade )
 	if ( SM_VerifySkill( iVictim, SKILL_THORNS ) && is_user_alive( iAttacker ) )
 	{
-		new iAdditionalDamage = floatround( float( iDamage ) * p_thorns[p_data[iVictim][P_SKILL2]-1] );
+		new iSkillLevel = SM_GetSkillLevel( iVictim, SKILL_THORNS );
+
+		new iAdditionalDamage = floatround( float( iDamage ) * p_thorns[iSkillLevel-1] );
 		
 		// Damage the user
 		WC3_Damage( iAttacker, iVictim, iAdditionalDamage, CSW_THORNS, iHitPlace );

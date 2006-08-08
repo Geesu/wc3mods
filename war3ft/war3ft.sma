@@ -341,11 +341,10 @@ public client_connect( id )
 
 	client_cmd( id, "hud_centerid 0" );
 
+	SM_ResetSkillLevels( id );
+	SM_ResetSkills( id );
+
 	p_data[id][P_RACE]					= 0;
-	p_data[id][P_SKILL1]				= 0;
-	p_data[id][P_SKILL2]				= 0;
-	p_data[id][P_SKILL3]				= 0;
-	p_data[id][P_ULTIMATE]				= 0;
 	p_data[id][P_LEVEL]					= 0;
 	p_data[id][P_XP]					= 0;
 
@@ -553,9 +552,12 @@ public client_PreThink( id )
 				// Give the user more stamina
 				if ( SM_VerifySkill( id, SKILL_UNHOLYAURA ) )
 				{
-					if ( entity_get_float( id, EV_FL_fuser4 ) < p_unholy[p_data[id][P_SKILL2]-1] )
+					static iSkillLevel;
+					iSkillLevel = SM_GetSkillLevel( id, SKILL_UNHOLYAURA );
+
+					if ( entity_get_float( id, EV_FL_fuser4 ) < p_unholy[iSkillLevel-1] )
 					{
-						entity_set_float( id, EV_FL_fuser4, p_unholy[p_data[id][P_SKILL2]-1] );
+						entity_set_float( id, EV_FL_fuser4, p_unholy[iSkillLevel-1] );
 					}
 
 				}

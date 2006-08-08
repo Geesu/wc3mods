@@ -1,4 +1,5 @@
-stock get_user_maxhealth(id){
+stock get_user_maxhealth( id )
+{
 
 	new maxHealth = 100
 
@@ -6,7 +7,9 @@ stock get_user_maxhealth(id){
 
 	if ( SM_VerifySkill( id, SKILL_DEVOTION ) )
 	{
-		maxHealth += p_data[id][P_SKILL2] * p_devotion;
+		new iSkillLevel = SM_GetSkillLevel( id, SKILL_DEVOTION );
+
+		maxHealth += iSkillLevel * p_devotion;
 	}
 
 

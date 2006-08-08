@@ -37,7 +37,9 @@ public _SH_HealingWave( id )
 	// Continue healing...
 	if ( is_user_alive( id ) )
 	{
-		set_task( p_heal[p_data[id][P_SKILL1]-1], "_SH_HealingWave", TASK_WAVE + id );
+		new iSkillLevel = SM_GetSkillLevel( id, SKILL_HEALINGWAVE );
+
+		set_task( p_heal[iSkillLevel-1], "_SH_HealingWave", TASK_WAVE + id );
 	}
 	
 	// Prevent healing if this player is hexed
@@ -300,7 +302,9 @@ SH_SerpentWardSet( id )
 {
 	if ( SM_VerifySkill( id, SKILL_SERPENTWARD ) )
 	{
-		p_data[id][P_SERPENTCOUNT]		= p_serpent[p_data[id][P_SKILL3]-1];
+		new iSkillLevel = SM_GetSkillLevel( id, SKILL_SERPENTWARD );
+
+		p_data[id][P_SERPENTCOUNT]		= p_serpent[iSkillLevel-1];
 	}
 }
 
@@ -370,7 +374,9 @@ SH_SkillsOffensive( iAttacker, iVictim )
 	if ( SM_VerifySkill( iAttacker, SKILL_HEX ) )
 	{
 
-		if ( random_float( 0.0, 1.0 ) <= p_hex[p_data[iAttacker][P_SKILL2]-1] )
+		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_HEX );
+
+		if ( random_float( 0.0, 1.0 ) <= p_hex[iSkillLevel-1] )
 		{
 						
 			// We need to identify the victim as slowed + hexed			

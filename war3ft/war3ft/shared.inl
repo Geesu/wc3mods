@@ -18,9 +18,9 @@ public SHARED_INVIS_Set( id )
 	// If they are Human Alliance with Invisibility lets set the level
 	if ( SM_VerifySkill( id, SKILL_INVISIBILITY ) )
 	{
-		new iSkillLevel = p_data[id][P_SKILL1]-1;
+		new iSkillLevel = SM_GetSkillLevel( id, SKILL_INVISIBILITY );
 
-		iInvisLevel = p_invisibility[iSkillLevel];
+		iInvisLevel = p_invisibility[iSkillLevel-1];
 	}
 
 	// User has a Cloak of Invisibility
@@ -484,7 +484,9 @@ public SHARED_CS_Reincarnation( id )
 		// Orc's Reincarnation
 		if ( SM_VerifySkill( id, SKILL_REINCARNATION ) )
 		{
-			if( random_float( 0.0, 1.0 ) <= p_ankh[p_data[id][P_SKILL3]-1] )
+			new iSkillLevel = SM_GetSkillLevel( id, SKILL_REINCARNATION );
+
+			if ( random_float( 0.0, 1.0 ) <= p_ankh[iSkillLevel-1] )
 			{
 				bGiveWeapons = true;		
 			}
@@ -751,7 +753,9 @@ public SHARED_SetSpeed( id )
 		if ( SM_VerifySkill( id, SKILL_UNHOLYAURA ) )
 		{
 			// Give them the bonus
-			set_user_maxspeed( id, p_unholy[p_data[id][P_SKILL2]-1] );
+			new iSkillLevel = SM_GetSkillLevel( id, SKILL_UNHOLYAURA );
+
+			set_user_maxspeed( id, p_unholy[iSkillLevel-1] );
 
 			return;
 		}
@@ -925,9 +929,11 @@ public SHARED_SetGravity( id )
 		// Set the user's gravity based on undead's levitation
 		else if ( SM_VerifySkill( id, SKILL_LEVITATION ) )
 		{
-			if ( get_user_gravity( id ) != p_levitation[p_data[id][P_SKILL3]-1] )
+			new iSkillLevel = SM_GetSkillLevel( id, SKILL_LEVITATION );
+
+			if ( get_user_gravity( id ) != p_levitation[iSkillLevel-1] )
 			{
-				set_user_gravity( id, p_levitation[p_data[id][P_SKILL3]-1] );
+				set_user_gravity( id, p_levitation[iSkillLevel-1] );
 			}
 		}
 		else
@@ -1111,7 +1117,9 @@ public SHARED_MoleCheck( id )
 	// Mole from Fan of Knives?
 	if ( SM_VerifySkill( id, SKILL_FANOFKNIVES ) )
 	{
-		if ( random_float( 0.0, 1.0 ) <= p_fan[p_data[id][P_SKILL1]-1] )
+		new iSkillLevel = SM_GetSkillLevel( id, SKILL_FANOFKNIVES );
+
+		if ( random_float( 0.0, 1.0 ) <= p_fan[iSkillLevel-1] )
 		{
 			parm[1] = 1;
 		}

@@ -15,6 +15,7 @@ v3.0
  - Bug Fix: cl_minmodels task was not repeating
  - Bug Fix: Spawning with a shield and primary weapon
  - Bug Fix: User's speed not changed until switching weapons when unholy aura was selected
+ - Change: Entire re-write of how skills function (can anyone say uwc3 extension?)
  - Change: Spectating info now changes when you switch people (sometimes it wouldn't always switch over)
  - Change: Spectating info will no longer carry over when the next round starts
  - Change: With mole protectant you can now view players names during freezetime by looking at them
@@ -62,13 +63,14 @@ v3.0
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
+//update saving system to allow for uwc3?
+//Stop using SM_VerifySkill and just check the iSkillLevel?
 //is_in_viewcone for banish
 //clear items on death - the hud message
 //g_bPluginEnding should be false
 //use CSX for custom weapons?
 //test: spec info disappearing and re-appearing after 10.0 seconds
 //re-write menus
-//actually use SM_ResetSkillLevels/SM_SetPlayerRace/SM_GetSkillLevel
 //during banish switch to knife?
 //clean up items
 //verify all skills given with selectskill

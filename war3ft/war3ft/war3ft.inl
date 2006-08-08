@@ -458,7 +458,7 @@ public WC3_GetUserInput( id )
 		return;
 	}
 
-	new iTotalSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+	new iTotalSkillsUsed = SM_TotalSelectableSkills( id );
 	
 	// User has no race
 	if ( p_data[id][P_RACE] == 0 )
@@ -509,11 +509,9 @@ public WC3_ResetGame()
 		{
 			p_data[id][P_LEVEL]					= 0;
 			p_data[id][P_RACE]					= 0;
-			p_data[id][P_SKILL1]				= 0;
-			p_data[id][P_SKILL2]				= 0;
-			p_data[id][P_SKILL3]				= 0;
-			p_data[id][P_ULTIMATE]				= 0;
 			p_data[id][P_XP]					= 0;
+			SM_ResetSkillLevels( id );
+			SM_ResetSkills( id );
 		}
 
 		// Check for Counter-Strike or Condition Zero
@@ -586,10 +584,7 @@ WC3_SetRace( id, race )
 
 	// Reset all race data
 	SM_ResetSkillLevels( id );
-	p_data[id][P_SKILL1] = 0
-	p_data[id][P_SKILL2] = 0
-	p_data[id][P_SKILL3] = 0
-	p_data[id][P_ULTIMATE] = 0
+	SM_ResetSkills( id );
 	p_data[id][P_CHANGERACE] = 0
 	
 	// Set up the fuses if we're in DOD
@@ -630,7 +625,7 @@ WC3_SetRaceUp( id )
 	}
 	
 	// See if there are any skills available
-	new iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3];
+	new iSkillsUsed = SM_TotalSelectableSkills( id );
 	if ( iSkillsUsed < p_data[id][P_LEVEL] )
 	{
 		MENU_SelectSkill( id );
@@ -794,35 +789,38 @@ WC3_ShowRaceInfo( id )
 
 	if ( p_data[id][P_RACE] != 0 )
 	{
-		new szMsg[256], szRaceName[64], szSkillNames[5][64], pos = 0;
+		new szMsg[256], szRaceName[64], szSkillName[64], pos = 0;
 		lang_GetRaceName( p_data[id][P_RACE], id, szRaceName, 63 );
 
 		pos += formatex( szMsg[pos], 255-pos, "%s^n%L %d", szRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL] );
 
-		// Get the skill names
-		new i, iSkillID;
+		new iSkillCounter = 1, iSkillID, iSkillLevel;
+		new iTotalSkills = SM_TotalSelectableSkills( id );
 
-		for ( i = 0; i < 5; i++ )
+		while ( iSkillCounter <= iTotalSkills )
 		{
-			iSkillID = SM_GetSkill( p_data[id][P_RACE], i );
+			iSkillID = SM_GetSkillByPos( id, iSkillCounter );
+			iSkillLevel = SM_GetSkillLevel( id, iSkillID );
 
-			LANG_GetSkillName( iSkillID , id, szSkillNames[i], 63 );
-		}
+			LANG_GetSkillName( iSkillID , id, szSkillName, 63 );
 
+			// Skill is trainable
+			if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_TRAINABLE && iSkillLevel > 0 )
+			{
+				pos += formatex( szMsg[pos], 255-pos, "^n%s %L %d", szSkillName, id, "WORD_LEVEL", iSkillLevel );
+			}
 
-		// Add the skills to the msg
+			// Skill is an ultimate
+			else if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_ULTIMATE && iSkillLevel > 0 )
+			{
+				pos += formatex( szMsg[pos], 255-pos, "^n%L: %s", id, "WORD_ULTIMATE", szSkillName );
+			}
 
-		( p_data[id][P_SKILL1]		) ? ( pos += formatex( szMsg[pos], 255-pos, "^n%s %L %d", szSkillNames[0], id, "WORD_LEVEL", p_data[id][P_SKILL1] ) ) : 0;
-		( p_data[id][P_SKILL2]		) ? ( pos += formatex( szMsg[pos], 255-pos, "^n%s %L %d", szSkillNames[1], id, "WORD_LEVEL", p_data[id][P_SKILL2] ) ) : 0;
-		( p_data[id][P_SKILL3]		) ? ( pos += formatex( szMsg[pos], 255-pos, "^n%s %L %d", szSkillNames[2], id, "WORD_LEVEL", p_data[id][P_SKILL3] ) ) : 0;
-		( p_data[id][P_ULTIMATE]	) ? ( pos += formatex( szMsg[pos], 255-pos, "^n%L: %s", id, "WORD_ULTIMATE", szSkillNames[3] ) ) : 0;
-
-		
-		// Add the passive hero skill
-
-		if ( p_data[id][P_RACE] > 4 )
-		{
-			pos += formatex( szMsg[pos], 255-pos, "^n%s", szSkillNames[4] );
+			// Skill is passive
+			else if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_PASSIVE )
+			{
+				pos += formatex( szMsg[pos], 255-pos, "^n%s", szSkillName );
+			}
 		}
 
 		WC3_StatusText( id, TXT_RACE_INFO, szMsg );
@@ -873,11 +871,8 @@ WC3_ResetSkills( id )
 	// Reset the user's skills
 	if ( p_data_b[id][PB_RESETSKILLS] ) 
 	{
-		p_data[id][P_SKILL1]	= 0;
-		p_data[id][P_SKILL2]	= 0;
-		p_data[id][P_SKILL3]	= 0;
-		p_data[id][P_ULTIMATE]	= 0;
 		p_data[id][P_LEVEL]		= 0;
+		SM_ResetSkillLevels( id );
 
 		WC3_ShowBar( id );
 		XP_Check( id, false );

@@ -106,8 +106,10 @@ BM_PhoenixCheck( id )
 	if ( SM_VerifySkill( id, SKILL_PHOENIX ) )
 	{
 		
+		new iSkillLevel = SM_GetSkillLevel( id, SKILL_PHOENIX );
+
 		// Should the user be a Phoenix
-		if ( random_float( 0.0, 1.0 ) <= p_phoenix[p_data[id][P_SKILL1]-1] ) 
+		if ( random_float( 0.0, 1.0 ) <= p_phoenix[iSkillLevel-1] ) 
 		{
 			p_data_b[id][PB_PHOENIX] = true;
 		}
@@ -183,8 +185,10 @@ BM_PhoenixExists( iTeam )
 BM_PhoenixDOD( id )
 {
 
+	new iSkillLevel = SM_GetSkillLevel( id, SKILL_PHOENIX );
+
 	// Award the player money for having Phoenix
-	SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + p_phoenix_dod[p_data[id][P_SKILL1]-1] );
+	SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + p_phoenix_dod[iSkillLevel-1] );
 
 	new szUserName[32], iTeam, iTargetID;
 	new i, vTargetOrigin[3], vOrigin[3];
@@ -202,7 +206,7 @@ BM_PhoenixDOD( id )
 	new players[32], numberofplayers;
 	get_players( players, numberofplayers, "a" );
 
-	new iMoney = p_phoenix_dod[p_data[id][P_SKILL1]-1] / 2;
+	new iMoney = p_phoenix_dod[iSkillLevel-1] / 2;
 
 	for ( i = 0; i < numberofplayers; i++ )
 	{
@@ -233,7 +237,9 @@ BM_SkillsOffensive( iAttacker, iVictim, iDamage )
 	// Siphon Mana
 	if ( SM_VerifySkill( iAttacker, SKILL_SIPHONMANA ) )
 	{
-		new iMoney = floatround( p_mana[p_data[iAttacker][P_SKILL3]-1] * SHARED_GetUserMoney(iVictim) );
+		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_SIPHONMANA );
+
+		new iMoney = floatround( p_mana[iSkillLevel-1] * SHARED_GetUserMoney(iVictim) );
 		
 		// Remove the money from the victim
 		SHARED_SetUserMoney( iVictim, SHARED_GetUserMoney( iVictim ) - iMoney, 1 );
@@ -264,7 +270,9 @@ BM_SkillsDefensive( iAttacker, iVictim, iDamage )
 	if ( SM_VerifySkill( iVictim, SKILL_BANISH ) )
 	{
 
-		if ( random_float( 0.0, 1.0 ) <= p_banish[p_data[iVictim][P_SKILL2]-1] )
+		new iSkillLevel = SM_GetSkillLevel( iVictim, SKILL_BANISH );
+
+		if ( random_float( 0.0, 1.0 ) <= p_banish[iSkillLevel-1] )
 		{
 
 			// Make sure the user isn't banished and that the enemy isn't in the victim's view (victim might be attacking them)

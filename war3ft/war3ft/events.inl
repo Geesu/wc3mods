@@ -94,8 +94,9 @@ public client_damage( iAttacker, iVictim, iDamage, iWeapon, iHitPlace, TA )
 
 
 	// Bot should "auto" cast his/her ultimate on random
-	if ( SHARED_ValidPlayer( iAttacker) && is_user_bot( iAttacker ) && p_data[iAttacker][P_ULTIMATE] )
+	if ( SHARED_ValidPlayer( iAttacker) && is_user_bot( iAttacker ) )
 	{
+		// Check for an actual ultimate is done in this function, why do it twice?
 		cmd_Ultimate( iAttacker );
 	}
 	
@@ -355,7 +356,9 @@ public EVENT_PlayerSpawned( id )
 		// or from a skill?
 		else if ( SM_VerifySkill( id, SKILL_REINCARNATION ) )
 		{
-			if ( random_float( 0.0, 1.0 ) <= p_ankh[p_data[id][P_SKILL3]-1] )
+			new iSkillLevel = SM_GetSkillLevel( id, SKILL_REINCARNATION );
+
+			if ( random_float( 0.0, 1.0 ) <= p_ankh[iSkillLevel-1] )
 			{
 				SHARED_DOD_Reincarnation( id );
 			}

@@ -669,7 +669,7 @@ public MENU_SelectSkill( id )
 	}
 
 	// Lets make sure the user has some available skill points
-	new iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+	new iSkillsUsed = SM_TotalSkillsUsed( id );
 	if ( iSkillsUsed >= p_data[id][P_LEVEL] )
 	{
 
@@ -682,26 +682,29 @@ public MENU_SelectSkill( id )
 	// Bots don't need a menu now do they??
 	if ( is_user_bot( id ) )
 	{
-		static iRandomSkill;
-		
+		static iRandomSkill, iSkillLevel;
+
+	
 		// Loop while we have skills available
 		while ( iSkillsUsed < p_data[id][P_LEVEL] )
 		{
-			iRandomSkill = random_num( 1, 3 );
+			iRandomSkill = SM_GetRandomSkill( id );
+			iSkillLevel = SM_GetSkillLevel( id, iRandomSkill );
+
 			
 			// Give them their ultimate if we can
-			if ( p_data[id][P_ULTIMATE] == 0 && p_data[id][P_LEVEL] >= 6 )
+			if ( SM_GetSkillType( iRandomSkill ) == SKILL_TYPE_ULTIMATE && iSkillLevel == 0 && p_data[id][P_LEVEL] >= 6 )
 			{
-				p_data[id][P_ULTIMATE] = 1;
+				SM_SetSkillLevel( id, iRandomSkill, iSkillLevel + 1 );
 			}
 
 			// Give them a skill if we can
-			else if ( p_data[id][iRandomSkill] != 3 && p_data[id][P_LEVEL] > 2 * p_data[id][iRandomSkill] )
+			else if ( SM_GetSkillType( iRandomSkill ) == SKILL_TYPE_TRAINABLE && iSkillLevel != MAX_SKILL_LEVEL && p_data[id][P_LEVEL] > 2 * iSkillLevel )
 			{
-				++p_data[id][iRandomSkill];
+				SM_SetSkillLevel( id, iRandomSkill, iSkillLevel + 1 );
 			}
 
-			iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+			iSkillsUsed = SM_TotalSkillsUsed( id );
 		}
 
 		return;
@@ -715,25 +718,27 @@ public MENU_SelectSkill( id )
 	pos += formatex( szMsg[pos], 512-pos, "%L", id, "MENU_SELECT_SKILL" );
 
 	// Lets get the names of all the skills	+ add them to the menu
-	new iSkillCounter = 0, iSkillID, iKeys = (1<<9);
+	new iSkillCounter = 1, iSkillID, iKeys = (1<<9), iSkillLevel;
+	new iTotalSkills = SM_TotalSelectableSkills( id );
 
-	while ( iSkillCounter < 4 )
+	while ( iSkillCounter <= iTotalSkills )
 	{
-		iSkillID = SM_GetSkill( p_data[id][P_RACE], iSkillCounter );
+		iSkillID = SM_GetSkillByPos( id, iSkillCounter );
+		iSkillLevel = SM_GetSkillLevel( id, iSkillID );
 
 		LANG_GetSkillName( iSkillID , id, szSkillName, 63 );
 		
 
 		// Add the trainable skills to the menu
-		if ( iSkillCounter < 3 )
+		if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_TRAINABLE )
 		{
 
 			// Only add it to the menu if they don't have level 3 already!
-			if ( p_data[id][iSkillCounter + 1] != 3 )
+			if ( iSkillLevel < MAX_SKILL_LEVEL )
 			{
 
 				// User isn't high enough of a level to select this skill yet
-				if ( p_data[id][P_LEVEL] <= 2 * p_data[id][iSkillCounter + 1] )
+				if ( p_data[id][P_LEVEL] <= 2 * iSkillLevel )
 				{
 					pos += formatex( szMsg[pos], 512-pos, "\d" );
 				}
@@ -744,14 +749,14 @@ public MENU_SelectSkill( id )
 					iKeys |= (1<<iSkillCounter);
 				}
 
-				pos += formatex( szMsg[pos], 512-pos, "^n%d. %s %L %d\w", iSkillCounter + 1, szSkillName, id, "WORD_LEVEL", p_data[id][iSkillCounter + 1] + 1 );
+				pos += formatex( szMsg[pos], 512-pos, "^n%d. %s %L %d\w", iSkillCounter, szSkillName, id, "WORD_LEVEL", iSkillLevel + 1 );
 			}
 		}
 		
 		// Add the ultimate to the menu
-		else
+		else if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_ULTIMATE )
 		{
-			if ( p_data[id][P_ULTIMATE] == 0 )
+			if ( iSkillLevel < MAX_ULTIMATE_LEVEL )
 			{
 				// User can't choose ultimate yet :/
 				if ( p_data[id][P_LEVEL] <= 5 )
@@ -789,14 +794,16 @@ public _MENU_SelectSkill( id, iKey )
 		return;
 	}
 
-	// Determine the skill position
-	new iSkillPos = iKey + 1;
+	// Determine which key was just selected
+	new iSkillID = SM_GetSkillByPos( id, iKey + 1 );
 
-	// Increment the skill!
-	++p_data[id][iSkillPos];
+	// Get the user's current skill level
+	new iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
 
+	// Add one to their level!
+	SM_SetSkillLevel( id, iSkillID, iCurrentLevel + 1 );
 
-	new iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+	new iSkillsUsed = SM_TotalSkillsUsed( id );
 	
 	// Then they have another skill to select!!
 	if ( iSkillsUsed < p_data[id][P_LEVEL] )
@@ -814,48 +821,47 @@ public _MENU_SelectSkill( id, iKey )
 	// Skill Checks
 	//*****************************
 	
-	// User selected skill number 2
-	if ( iKey == 1 )
+	switch ( iSkillID )
 	{
-
-		// Devotion Aura Chosen
-		if ( SM_VerifyRace( id, RACE_HUMAN ) && is_user_alive( id ) )
+		// Human's Devotion Aura
+		case SKILL_DEVOTION:
 		{
-			set_user_health( id, get_user_health( id ) + 15 );
+			if ( is_user_alive( id ) )
+			{
+				set_user_health( id, get_user_health( id ) + 15 );
+			}
 		}
 
-		// Blink Chosen
-		else if ( SM_VerifyRace( id, RACE_WARDEN ) && !p_data_b[id][PB_WARDENBLINK] )
-		{
-			WA_Blink( id );
-		}
-	}
-
-	// User selected skill number 3
-	else if ( iKey == 2 )
-	{
-
-		// Serpent Ward Chosen
-		if ( SM_VerifyRace( id, RACE_SHADOW ) )
+		// Shadow Hunter's Serpent Ward
+		case SKILL_SERPENTWARD:
 		{
 			p_data[id][P_SERPENTCOUNT]++;
 		}
 
-		// Carrion Beetle Chosen
-		else if ( SM_VerifyRace( id, RACE_CRYPT ) )
+		// Warden's Blink
+		case SKILL_BLINK:
 		{
-			p_data[id][P_CARRIONCOUNT]--;
+			if ( !p_data_b[id][PB_WARDENBLINK] )
+			{
+				WA_Blink( id );
+			}
 		}
 
-		// Shadow Strike Chosen
-		else if ( SM_VerifyRace( id, RACE_WARDEN ) )
+		// Warden's Shadow Strike
+		case SKILL_SHADOWSTRIKE:
 		{
 			p_data[id][P_SHADOWCOUNT]--;
 		}
+		
+		// Crypt Lord's Carrion Beetles
+		case SKILL_CARRIONBEETLES:
+		{
+			p_data[id][P_CARRIONCOUNT]--;
+		}
 	}
 
-	// User selected skill number 4 - Ultimate
-	else if ( iKey == 3 )
+	// User selected an ultimate
+	if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_ULTIMATE )
 	{
 		Ultimate_Ready( id );
 	}

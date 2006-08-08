@@ -116,8 +116,9 @@ WA_Blink( id )
 	// User has the ability, lets initiate a "check"
 	if ( SM_VerifySkill( id, SKILL_BLINK ) )
 	{
+		new iSkillLevel = SM_GetSkillLevel( id, SKILL_BLINK );
 
-		if ( random_float( 0.0, 1.0 ) <= p_blink[p_data[id][P_SKILL2]-1] )
+		if ( random_float( 0.0, 1.0 ) <= p_blink[iSkillLevel-1] )
 		{
 			p_data_b[id][PB_WARDENBLINK] = true;
 			client_print( id, print_chat, "%s You will now be immune to all ultimates.", g_MODclient );
@@ -131,8 +132,9 @@ WA_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 	// Shadow Strike
 	if ( SM_VerifySkill( iAttacker, SKILL_SHADOWSTRIKE ) )
 	{
+		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_SHADOWSTRIKE );
 
-		if ( random_float( 0.0, 1.0 ) <= p_shadow[p_data[iAttacker][P_SKILL3]-1] )
+		if ( random_float( 0.0, 1.0 ) <= p_shadow[iSkillLevel-1] )
 		{
 			if ( p_data[iAttacker][P_SHADOWCOUNT] <= SHADOWSTRIKE_TOTAL )
 			{

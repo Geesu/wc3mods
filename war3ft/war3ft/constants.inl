@@ -263,10 +263,10 @@
 	// ***************************
 
 	#define P_RACE                  0		// Race
-	#define P_SKILL1                1		// Skill 1 level
-	#define P_SKILL2                2		// Skill 2 level
-	#define P_SKILL3                3		// Skill 4 level
-	#define P_ULTIMATE              4		// Ultimate level
+	//#define P_SKILL1                1		// Skill 1 level
+	//#define P_SKILL2                2		// Skill 2 level
+	//#define P_SKILL3                3		// Skill 4 level
+	//#define P_ULTIMATE              4		// Ultimate level
 	#define P_LEVEL					5		// Player Level
 	#define P_XP                    6		// Current XP
 
@@ -491,9 +491,6 @@ new bool:g_bMoleBuyZoneDisabled = false;
 
 #define MAX_PLAYER_SKILLS			6
 
-new g_PlayerSkills[33][MAX_PLAYER_SKILLS];				// Stores what skills the player has
-new g_PlayerSkillLevel[33][MAX_PLAYER_SKILLS];			// Stores what level each skill is
-
 // SKILL DEFINES
 #define SKILL_NONE				-1
 
@@ -542,13 +539,28 @@ new g_PlayerSkillLevel[33][MAX_PLAYER_SKILLS];			// Stores what level each skill
 #define PASS_ORB				35
 
 #define MAX_SKILLS				36
+#define MAX_SKILL_LEVEL			3
+#define MAX_ULTIMATE_LEVEL		1
 
+// Used with g_SkillType
 #define SKILL_TYPE_TRAINABLE	1
 #define SKILL_TYPE_PASSIVE		2
 #define SKILL_TYPE_ULTIMATE		3
 
+// Used with g_SkillOrder
+#define SKILL_POS_NONE			-1
+#define SKILL_POS_1				1
+#define SKILL_POS_2				2
+#define SKILL_POS_3				3
+#define SKILL_POS_4				4
+
 new g_SkillOwner[MAX_SKILLS	];	// For each skill, says who the owning race is
 new g_SkillType[MAX_SKILLS	];	// For each skill, says what type of skill it is (trainable/ultimate/passive)
+new g_SkillOrder[MAX_SKILLS	];	// For each skill, lists what order it should appear in /level and /selectskill (and how it should save)
+
+// Used to store what level each skill is for the players
+new g_PlayerSkillLevel[33][MAX_SKILLS];			// Stores what level each skill is
+new bool:g_bPlayerSkills[33][MAX_SKILLS];		// Stores what skills the player has available (set on race selection)
 
 // Constants for Abilities
 new const Float:p_vampiric[3] =			{0.10,0.20,0.30}		// Vampiric Aura			(skill 1)

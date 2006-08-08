@@ -61,16 +61,22 @@ Ultimate_Ready( id )
 		return;
 	}
 	
-	if ( is_user_alive( id ) && p_data_b[id][PB_ISCONNECTED] && p_data[id][P_ULTIMATE] )
+	if ( is_user_alive( id ) && p_data_b[id][PB_ISCONNECTED] )
 	{
-		// Play the ultimate ready sound
-		client_cmd( id, "speak %s", g_szSounds[SOUND_ULTIMATEREADY] )
-		
-		// Give the user a graphical message that their ultimate is ready
-		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_READY" );
-		
-		// Show their ultimate icon
-		ULT_Icon( id, ICON_SHOW );
+		new iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
+		new iSkillLevel = SM_GetSkillLevel( id, iSkillID );
+
+		if ( iSkillLevel > 0 )
+		{
+			// Play the ultimate ready sound
+			client_cmd( id, "speak %s", g_szSounds[SOUND_ULTIMATEREADY] )
+			
+			// Give the user a graphical message that their ultimate is ready
+			WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_READY" );
+			
+			// Show their ultimate icon
+			ULT_Icon( id, ICON_SHOW );
+		}
 	}
 	
 	return;
@@ -152,9 +158,15 @@ ULT_Available( id )
 {
 
 	// User needs ult + can't have it used + can't have a delay + can't have a global delay
-	if ( p_data[id][P_ULTIMATE] && p_data[id][P_ULTIMATEDELAY] <= 0 && g_iUltimateDelay <= 0 )
+	if ( p_data[id][P_ULTIMATEDELAY] <= 0 && g_iUltimateDelay <= 0 )
 	{
-		return true;
+		new iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
+		new iSkillLevel = SM_GetSkillLevel( id, iSkillID );
+		
+		if ( iSkillLevel > 0 )
+		{
+			return true;
+		}
 	}
 
 	return false;

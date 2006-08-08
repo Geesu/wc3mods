@@ -381,7 +381,9 @@ HU_SkillsOffensive( iAttacker, iVictim )
 	{
 
 		// Cannot bash if already bashed or user is slowed
-		if ( random_float( 0.0, 1.0 ) <= p_bash[p_data[iAttacker][P_SKILL3]-1] && !SHARED_IsPlayerSlowed( iVictim ) )
+		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_BASH );
+
+		if ( random_float( 0.0, 1.0 ) <= p_bash[iSkillLevel-1] && !SHARED_IsPlayerSlowed( iVictim ) )
 		{		
 
 			p_data_b[iVictim][PB_STUNNED] = true;

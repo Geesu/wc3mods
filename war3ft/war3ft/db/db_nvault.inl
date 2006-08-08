@@ -57,8 +57,14 @@ NVAULT_Save( id )
 	get_user_ip(		id, szPlayerIP		, 19 );
 	get_user_authid(	id, szPlayerID		, 31 );
 
+	new iSkillLevels[4];
+	iSkillLevels[0] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_1 ) );
+	iSkillLevels[1] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_2 ) );
+	iSkillLevels[2] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_3 ) );
+	iSkillLevels[3] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_4 ) );
+
 	// Format the data for entry
-	format( szData, 255, "%s %d %d %d %d %d %d %s %d %s", szPlayerID, p_data[id][P_XP], p_data[id][P_RACE], p_data[id][P_SKILL1], p_data[id][P_SKILL2], p_data[id][P_SKILL3], p_data[id][P_ULTIMATE], szPlayerIP, get_systime(), szPlayerName );
+	format( szData, 255, "%s %d %d %d %d %d %d %s %d %s", szPlayerID, p_data[id][P_XP], p_data[id][P_RACE], iSkillLevels[0], iSkillLevels[1], iSkillLevels[2], iSkillLevels[3], szPlayerIP, get_systime(), szPlayerName );
 	
 	// Format the vault key
 	format( szKey, 127, "%s", ( ( get_pcvar_num( CVAR_wc3_save_by ) == DB_SAVEBY_NAME ) ? szPlayerName : ( ( get_pcvar_num( CVAR_wc3_save_by ) == DB_SAVEBY_IP ) ? szPlayerIP : szPlayerID ) ) );
@@ -108,6 +114,12 @@ NVAULT_SetData( id )
 
 	iAttempt = nvault_lookup( g_Vault[iRace], szKey, szData, 255, iTimestamp );
 	
+	new iSkillIDs[4];
+	iSkillIDs[0] = SM_GetSkillByPos( id, SKILL_POS_1 );
+	iSkillIDs[1] = SM_GetSkillByPos( id, SKILL_POS_2 );
+	iSkillIDs[2] = SM_GetSkillByPos( id, SKILL_POS_3 );
+	iSkillIDs[3] = SM_GetSkillByPos( id, SKILL_POS_4 );
+
 	// Then we found a record in the vault
 	if ( iAttempt )
 	{
@@ -116,21 +128,21 @@ NVAULT_SetData( id )
 		// Parse the vault entry
 		parse( szData, szPlayerID, 31, szXP, 7, szRace, 1, szSkill1, 1, szSkill2, 1, szSkill3, 1, szSkill4, 1 );
 
-		p_data[id][P_XP]		= str_to_num(szXP);
-		p_data[id][P_SKILL1]	= str_to_num(szSkill1);
-		p_data[id][P_SKILL2]	= str_to_num(szSkill2);
-		p_data[id][P_SKILL3]	= str_to_num(szSkill3);
-		p_data[id][P_ULTIMATE]	= str_to_num(szSkill4);
+		p_data[id][P_XP]		= str_to_num( szXP );
+		SM_SetSkillLevel( id, iSkillIDs[0], str_to_num( szSkill1 ) );
+		SM_SetSkillLevel( id, iSkillIDs[1], str_to_num( szSkill2 ) );
+		SM_SetSkillLevel( id, iSkillIDs[2], str_to_num( szSkill3 ) );
+		SM_SetSkillLevel( id, iSkillIDs[3], str_to_num( szSkill4 ) );
 	}
 
 	// No record was found, lets start them at 0
 	else
 	{
 		p_data[id][P_XP]		= 0;
-		p_data[id][P_SKILL1]	= 0;
-		p_data[id][P_SKILL2]	= 0;
-		p_data[id][P_SKILL3]	= 0;
-		p_data[id][P_ULTIMATE]	= 0;
+		SM_SetSkillLevel( id, iSkillIDs[0], 0 );
+		SM_SetSkillLevel( id, iSkillIDs[1], 0 );
+		SM_SetSkillLevel( id, iSkillIDs[2], 0 );
+		SM_SetSkillLevel( id, iSkillIDs[3], 0 );
 	}
 
 	// Set the race up

@@ -169,7 +169,9 @@ UD_SkillsOffensive( iAttacker, iDamage )
 		new iHealth		= get_user_health( iAttacker );
 		new iMaxHealth	= get_user_maxhealth( iAttacker );
 
-		new iBonusHealth = floatround( float( iDamage ) * p_vampiric[p_data[iAttacker][P_SKILL1]-1] );
+		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_VAMPIRICAURA );
+
+		new iBonusHealth = floatround( float( iDamage ) * p_vampiric[iSkillLevel-1] );
 		
 		// Give the user health!
 		if ( iHealth < iMaxHealth )

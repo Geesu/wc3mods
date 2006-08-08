@@ -160,7 +160,9 @@ OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 
 		if ( random_float( 0.0, 1.0 ) <= CRITICAL_STRIKE_CHANCE )
 		{
-			new iBonusDamage = floatround( float( iDamage ) * p_critical[p_data[iAttacker][P_SKILL1]-1] );
+			new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_CRITICALSTRIKE );
+
+			new iBonusDamage = floatround( float( iDamage ) * p_critical[iSkillLevel-1] );
 			
 			// Damage our victim
 			WC3_Damage( iVictim, iAttacker, iBonusDamage, iWeapon, iHitPlace );
@@ -187,8 +189,8 @@ OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 			{
 		
 				new iMaxHealth = get_user_maxhealth( iVictim );
-
-				new iBonusDamage = floatround( float( iDamage ) * p_grenade[p_data[iAttacker][P_SKILL2]-1] );
+				new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_CRITICALGRENADE );
+				new iBonusDamage = floatround( float( iDamage ) * p_grenade[iSkillLevel-1] );
 				
 				// We don't want to do more damage than the user's maximum health
 				if ( iBonusDamage + iDamage >= iMaxHealth )

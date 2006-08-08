@@ -222,7 +222,10 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 	// Carrion Beetle
 	if ( SM_VerifySkill( iAttacker, SKILL_CARRIONBEETLES ) )
 	{
-		if ( random_float( 0.0, 1.0 ) <= p_carrion[p_data[iAttacker][P_SKILL3]-1] )
+
+		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_CARRIONBEETLES );
+
+		if ( random_float( 0.0, 1.0 ) <= p_carrion[iSkillLevel-1] )
 		{
 			if ( p_data[iAttacker][P_CARRIONCOUNT] <= CARRIONBEETLE_TOTAL && is_user_alive( iVictim ) )
 			{
@@ -254,7 +257,9 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 	if ( SM_VerifySkill( iAttacker, SKILL_IMPALE ) )
 	{
 
-		if ( random_float( 0.0, 1.0 ) <= p_impale[p_data[iAttacker][P_SKILL1]-1] )
+		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_IMPALE );
+
+		if ( random_float( 0.0, 1.0 ) <= p_impale[iSkillLevel-1] )
 		{
 
 			// Play the impale sound
@@ -276,8 +281,10 @@ CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace )
 {
 	// Spiked Carapace
 	if ( SM_VerifySkill( iVictim, SKILL_SPIKEDCARAPACE ) )
-	{						
-		new iTemp = floatround( float( iDamage ) * p_spiked[p_data[iVictim][P_SKILL2]-1] );
+	{
+		new iSkillLevel = SM_GetSkillLevel( iVictim, SKILL_SPIKEDCARAPACE );
+
+		new iTemp = floatround( float( iDamage ) * p_spiked[iSkillLevel-1] );
 		
 		// Give the victim some armor...
 		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )

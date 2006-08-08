@@ -86,6 +86,9 @@ public cmd_Ultimate(id)
 		return PLUGIN_HANDLED;
 	}
 
+	new iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
+	new iSkillLevel = SM_GetSkillLevel( id, iSkillID );
+
 	// User can't use their ultimate when they're hexed
 	if ( p_data_b[id][PB_HEXED] )
 	{
@@ -97,7 +100,7 @@ public cmd_Ultimate(id)
 	}
 	
 	// User has no ultimate!
-	else if ( !p_data[id][P_ULTIMATE] )
+	else if ( iSkillLevel == 0 )
 	{
 		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_NOT_FOUND" );
 
@@ -126,106 +129,115 @@ public cmd_Ultimate(id)
 		return PLUGIN_HANDLED;
 	}
 
-
-	// UNDEAD - Suicide Bomber
-	if ( SM_VerifySkill( id, ULTIMATE_SUICIDE ) )
+	// If we got here, then we can cast the user's ultimate
+	switch ( iSkillID )
 	{
-
-		// User has already had their warning - kill them!
-		if ( p_data_b[id][PB_SUICIDEATTEMPT] )
-		{
-			WC3_KillUser( id, 0, 0 );
 		
-			p_data_b[id][PB_SUICIDEATTEMPT] = false
-		}
-
-		// Give the user his/her warning
-		else
+		// UNDEAD - Suicide Bomber
+		case ULTIMATE_SUICIDE:
 		{
-			// Flash the user's ultimate icon
-			ULT_Icon( id, ICON_FLASH );
+			// User has already had their warning - kill them!
+			if ( p_data_b[id][PB_SUICIDEATTEMPT] )
+			{
+				WC3_KillUser( id, 0, 0 );
+			
+				p_data_b[id][PB_SUICIDEATTEMPT] = false
+			}
 
-			p_data_b[id][PB_SUICIDEATTEMPT] = true
+			// Give the user his/her warning
+			else
+			{
+				// Flash the user's ultimate icon
+				ULT_Icon( id, ICON_FLASH );
 
-			WC3_StatusText( id, TXT_BLINK_CENTER, "%L", id, "SUICIDE_BOMB_ARMED" );
+				p_data_b[id][PB_SUICIDEATTEMPT] = true
+
+				WC3_StatusText( id, TXT_BLINK_CENTER, "%L", id, "SUICIDE_BOMB_ARMED" );
+			}
 		}
-	}
 
-	// HUMAN ALLIANCE - Blink
-	else if ( SM_VerifySkill( id, ULTIMATE_BLINK ) )
-	{
-		HU_ULT_Blink( id );
-	}
-
-	// ORCISH HORDE - Chain Lightning
-	else if ( SM_VerifySkill( id, ULTIMATE_CHAINLIGHTNING ) && !p_data_b[id][PB_ISSEARCHING] )
-	{
-		p_data_b[id][PB_ISSEARCHING] = true;
-
-		// Don't continue if task already exists...
-		if ( !task_exists( TASK_ULTPING + id ) )
+		// HUMAN ALLIANCE - Blink
+		case ULTIMATE_BLINK:
 		{
-			new parm[2];
-			parm[0] = id;
-			parm[1] = 5;
-			_ULT_Ping( parm );
+			HU_ULT_Blink( id );
 		}
-	}
 
-	// NIGHT ELF - Entangling Roots
-	else if ( SM_VerifySkill( id, ULTIMATE_ENTANGLE ) && !p_data_b[id][PB_ISSEARCHING] )
-	{
-		p_data_b[id][PB_ISSEARCHING] = true;
-
-		// Don't continue if task already exists...
-		if ( !task_exists( TASK_ULTPING + id ) )
+		// ORCISH HORDE - Chain Lightning
+		case ULTIMATE_CHAINLIGHTNING:
 		{
-			new parm[2];
-			parm[0] = id;
-			parm[1] = 5;
-			_ULT_Ping( parm );
+			if ( !p_data_b[id][PB_ISSEARCHING] )
+			{
+				p_data_b[id][PB_ISSEARCHING] = true;
+
+				// Don't continue if task already exists...
+				if ( !task_exists( TASK_ULTPING + id ) )
+				{
+					new parm[2];
+					parm[0] = id;
+					parm[1] = 5;
+					_ULT_Ping( parm );
+				}
+			}
 		}
-	}
 
-	// BLOOD MAGE - Immolate
-	else if ( SM_VerifySkill( id, ULTIMATE_IMMOLATE ) )
-	{
-		p_data_b[id][PB_ISSEARCHING] = true;
-
-		// Don't continue if task already exists...
-		if ( !task_exists( TASK_ULTPING + id ) )
+		// NIGHT ELF - Entangling Roots
+		case ULTIMATE_ENTANGLE:
 		{
-			new parm[2];
-			parm[0] = id;
-			parm[1] = 5;
-			_ULT_Ping( parm );
+			if ( !p_data_b[id][PB_ISSEARCHING] )
+			{
+				p_data_b[id][PB_ISSEARCHING] = true;
+
+				// Don't continue if task already exists...
+				if ( !task_exists( TASK_ULTPING + id ) )
+				{
+					new parm[2];
+					parm[0] = id;
+					parm[1] = 5;
+					_ULT_Ping( parm );
+				}
+			}
 		}
-	}
 
-	// SHADOW HUNTER - Big Bad Voodoo
-	else if ( SM_VerifySkill( id, ULTIMATE_BIGBADVOODOO ) )
-	{
-		SH_Ult_BigBadVoodoo( id );
-	}
-
-	// WARDEN - Vengeance
-	else if ( SM_VerifySkill( id, ULTIMATE_VENGEANCE ) )
-	{
-		WA_ULT_Vengeance( id );
-	}
-
-	// CRYPT LORD - Locust Swarm
-	else if ( SM_VerifySkill( id, ULTIMATE_LOCUSTSWARM ) )
-	{
-
-		if ( get_pcvar_num( CVAR_wc3_psychostats ) )
+		// BLOOD MAGE - Immolate
+		case ULTIMATE_IMMOLATE:
 		{
-			new WEAPON = CSW_LOCUSTS - CSW_WAR3_MIN;
+			p_data_b[id][PB_ISSEARCHING] = true;
 
-			iStatsShots[id][WEAPON]++;
+			// Don't continue if task already exists...
+			if ( !task_exists( TASK_ULTPING + id ) )
+			{
+				new parm[2];
+				parm[0] = id;
+				parm[1] = 5;
+				_ULT_Ping( parm );
+			}
 		}
 
-		CL_ULT_LocustSwarm( id );
+		// SHADOW HUNTER - Big Bad Voodoo
+		case ULTIMATE_BIGBADVOODOO:
+		{
+			SH_Ult_BigBadVoodoo( id );
+		}
+
+		// WARDEN - Vengeance
+		case ULTIMATE_VENGEANCE:
+		{
+			WA_ULT_Vengeance( id );
+		}
+
+		// CRYPT LORD - Locust Swarm
+		case ULTIMATE_LOCUSTSWARM:
+		{
+
+			if ( get_pcvar_num( CVAR_wc3_psychostats ) )
+			{
+				new WEAPON = CSW_LOCUSTS - CSW_WAR3_MIN;
+
+				iStatsShots[id][WEAPON]++;
+			}
+
+			CL_ULT_LocustSwarm( id );
+		}
 	}
 
 	return PLUGIN_HANDLED;

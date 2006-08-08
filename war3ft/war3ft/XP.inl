@@ -408,45 +408,35 @@ XP_Check( id, bShowGained = true )
 	}
 
 	// We might need to lower the skills the user has ( can occur if you load XP info from a database and the XP multiplier has changed)
-	new iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+	new iSkillsUsed = SM_TotalSelectableSkills( id );
+	new iSkillID, iSkillLevel;
 
 	while ( iSkillsUsed > p_data[id][P_LEVEL] )
 	{
+		iSkillID = SM_GetRandomSkill( id );
+		iSkillLevel = SM_GetSkillLevel( id, iSkillID );
 
-		// Remove the user's ultimate
-		if ( p_data[id][P_ULTIMATE] == 1 && p_data[id][P_LEVEL] < 6 )
+		// We don't want a passive skill or a skill that is level 0 so keep trying
+		while ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_PASSIVE || iSkillLevel == 0 )
 		{
-			p_data[id][P_ULTIMATE] = 0;
+			iSkillLevel = SM_GetSkillLevel( id, iSkillID );
+			iSkillID = SM_GetRandomSkill( id );
 		}
+		
+		// OK at this point we have a valid skill, lets remove a level!
+		SM_SetSkillLevel( id, iSkillID, iSkillLevel - 1 );
 
-		// Remove first skill
-		else if ( p_data[id][P_SKILL1] >= p_data[id][P_SKILL2] && p_data[id][P_SKILL1] >= p_data[id][P_SKILL3] )
-		{
-			--p_data[id][P_SKILL1];
-		}
-
-		// Remove second skill
-		else if ( p_data[id][P_SKILL2] >= p_data[id][P_SKILL1] && p_data[id][P_SKILL2] >= p_data[id][P_SKILL3] )
-		{
-			--p_data[id][P_SKILL2];
-		}
-
-		// Remove third skill
-		else if ( p_data[id][P_SKILL3] >= p_data[id][P_SKILL1] && p_data[id][P_SKILL3] >= p_data[id][P_SKILL2] )
-		{
-			--p_data[id][P_SKILL3];
-		}
-
-		iSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+		// Get our current skills used
+		iSkillsUsed = SM_TotalSelectableSkills( id );
 	}
 	
 	// OK lets check the total skills the user has, and maybe show them the selectskills menu
-	new iTotalSkillsUsed = p_data[id][P_SKILL1] + p_data[id][P_SKILL2] + p_data[id][P_SKILL3] + p_data[id][P_ULTIMATE];
+	new iTotalSkillsUsed = SM_TotalSelectableSkills( id );
+
 	if ( iTotalSkillsUsed < p_data[id][P_LEVEL] )
 	{
 		MENU_SelectSkill( id );
 	}
-
 
 	WC3_ShowBar( id );
 }
@@ -459,12 +449,6 @@ XP_Configure()
 	{
 		xpgiven = {6,8,10,12,14,16,18,20,24,28,32};
 		xplevel = {0,100,200,400,800,1600,3200,6400,12800,25600,51200};
-
-		log_amx( "[DEBUG] Saving XP" );
-	}
-	else
-	{
-		log_amx( "[DEBUG] NOT Saving XP" );
 	}
 
 	// Set the XP multiplier
@@ -586,10 +570,7 @@ public XP_Reset(id)
 
 	p_data[id][P_LEVEL]		= 0;
 	p_data[id][P_XP]		= 0;
-	p_data[id][P_SKILL1]	= 0;
-	p_data[id][P_SKILL2]	= 0;
-	p_data[id][P_SKILL3]	= 0;
-	p_data[id][P_ULTIMATE]	= 0;
+	SM_ResetSkillLevels( id );
 
 	WC3_ShowBar( id );
 
