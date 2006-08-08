@@ -18,8 +18,11 @@ public grenade_throw( index, greindex, wId )
 		set_task( fTimer, "_ITEM_Glove_Give", TASK_ITEM_GLOVES + index );
 	}
 
+	static iSkillLevel;
+	iSkillLevel = SM_GetSkillLevel( index, SKILL_CRITICALGRENADE );
+
 	// Make sure the user has the skill and we actually have a grenade index
-	if ( greindex && SM_VerifySkill( index, SKILL_CRITICALGRENADE ) )
+	if ( greindex && iSkillLevel > 0 )
 	{
 		
 		// Then Critical Grenades are allowed
@@ -29,7 +32,7 @@ public grenade_throw( index, greindex, wId )
 			// Then draw it!
 			if ( SHARED_IsGrenade( wId ) )
 			{
-				new iWidth = 3 *  p_data[index][SKILL2];
+				new iWidth = 3 * iSkillLevel;
 
 				Create_TE_BEAMFOLLOW( greindex, g_iSprites[SPR_TRAIL], 20, iWidth, 255, 32, 32, 196 );
 			}
@@ -106,27 +109,27 @@ public client_damage( iAttacker, iVictim, iDamage, iWeapon, iHitPlace, TA )
 	{
 
 		// Run the offensive spells
-		SM_VerifyRace( iAttacker, RACE_UNDEAD )	? UD_SkillsOffensive( iAttacker, iDamage ) : 0;
-		SM_VerifyRace( iAttacker, RACE_HUMAN )	? HU_SkillsOffensive( iAttacker, iVictim ) : 0;
-		SM_VerifyRace( iAttacker, RACE_ORC )		? OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
-		SM_VerifyRace( iAttacker, RACE_ELF )		? NE_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
-		SM_VerifyRace( iAttacker, RACE_BLOOD )	? BM_SkillsOffensive( iAttacker, iVictim, iDamage ) : 0;
-		SM_VerifyRace( iAttacker, RACE_SHADOW )	? SH_SkillsOffensive( iAttacker, iVictim ) : 0;
-		SM_VerifyRace( iAttacker, RACE_WARDEN )	? WA_SkillsOffensive( iAttacker, iVictim, iHitPlace ) : 0;
-		SM_VerifyRace( iAttacker, RACE_CRYPT )	? CL_SkillsOffensive( iAttacker, iVictim, iHitPlace ) : 0;
+		UD_SkillsOffensive( iAttacker, iDamage );
+		HU_SkillsOffensive( iAttacker, iVictim );
+		OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace );
+		NE_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace );
+		BM_SkillsOffensive( iAttacker, iVictim, iDamage );
+		SH_SkillsOffensive( iAttacker, iVictim );
+		WA_SkillsOffensive( iAttacker, iVictim, iHitPlace );
+		CL_SkillsOffensive( iAttacker, iVictim, iHitPlace );
 	}
 
 	// Make sure we can run the defensive skills
 	if ( SHARED_ValidPlayer( iAttacker ) && !p_data_b[iVictim][PB_HEXED] )
 	{
-		//SM_VerifyRace( iVictim, RACE_UNDEAD )		? UD_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
-		//SM_VerifyRace( iVictim, RACE_HUMAN )		? HU_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
-		//SM_VerifyRace( iVictim, RACE_ORC )		? OR_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
-		SM_VerifyRace( iVictim, RACE_ELF )		? NE_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace ) : 0;
-		SM_VerifyRace( iVictim, RACE_BLOOD )		? BM_SkillsDefensive( iAttacker, iVictim, iDamage ) : 0;
-		SM_VerifyRace( iVictim, RACE_SHADOW )		? SH_SkillsDefensive( iAttacker, iVictim ) : 0;
-		//SM_VerifyRace( iVictim, RACE_WARDEN )		? WA_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace ) : 0;
-		SM_VerifyRace( iVictim, RACE_CRYPT )		? CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace ) : 0;
+		//UD_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace );
+		//HU_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace );
+		//OR_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace );
+		NE_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace );
+		BM_SkillsDefensive( iAttacker, iVictim, iDamage );
+		SH_SkillsDefensive( iAttacker, iVictim );
+		//WA_SkillsDefensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace );
+		CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace );
 	}
 
 	// Item abilities
@@ -224,7 +227,7 @@ public on_CurWeapon( id )
 	{
 
 		// Critical Grenade
-		if ( SM_VerifySkill( id, SKILL_CRITICALGRENADE ) && SHARED_HasGrenade( id ) )
+		if ( SM_GetSkillLevel( id, SKILL_CRITICALGRENADE ) > 0 && SHARED_HasGrenade( id ) )
 		{
 			dod_set_fuse( id, FUSE_SET, 2.0, FT_NEW );
 		}
@@ -354,7 +357,7 @@ public EVENT_PlayerSpawned( id )
 		}
 
 		// or from a skill?
-		else if ( SM_VerifySkill( id, SKILL_REINCARNATION ) )
+		else if ( SM_GetSkillLevel( id, SKILL_REINCARNATION ) > 0 )
 		{
 			new iSkillLevel = SM_GetSkillLevel( id, SKILL_REINCARNATION );
 
@@ -473,15 +476,15 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				else
 				{
 					// Well we do have a target so lets execute the user's ultimate!!
-					if ( SM_VerifySkill( iAttacker, ULTIMATE_CHAINLIGHTNING ) )
+					if ( SM_GetSkillLevel( iAttacker, ULTIMATE_CHAINLIGHTNING ) > 0 )
 					{
 						OR_ULT_ChainLightning( iAttacker, iVictim, iHitZone );
 					}
-					else if ( SM_VerifySkill( iAttacker, ULTIMATE_ENTANGLE ) )
+					else if ( SM_GetSkillLevel( iAttacker, ULTIMATE_ENTANGLE ) > 0 )
 					{
 						NE_ULT_Entangle( iAttacker, iVictim );
 					}
-					else if ( SM_VerifySkill( iAttacker, ULTIMATE_IMMOLATE ) )
+					else if ( SM_GetSkillLevel( iAttacker, ULTIMATE_IMMOLATE ) > 0 )
 					{
 						BM_ULT_Immolate( iAttacker, iVictim );
 					}
@@ -524,7 +527,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 		}
 
 		// Check to see if this user has night elf's evasion
-		if ( SM_VerifySkill( iVictim, SKILL_EVASION ) && SHARED_ValidPlayer( iAttacker ) )
+		if ( SM_GetSkillLevel( iVictim, SKILL_EVASION ) > 0 && SHARED_ValidPlayer( iAttacker ) )
 		{
 			// Do the check to see if we should "evade" this shot
 			new Float:fTime = halflife_time();

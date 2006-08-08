@@ -523,7 +523,7 @@ public client_PreThink( id )
 			{
 
 				// This is used so we can't hear the undead's footsteps at level 3
-				if ( SM_VerifySkill( id, SKILL_UNHOLYAURA ) && !p_data_b[id][PB_STUNNED] && !p_data_b[id][PB_SLOWED] )
+				if ( SM_GetSkillLevel( id, SKILL_UNHOLYAURA ) > 0 && !p_data_b[id][PB_STUNNED] && !p_data_b[id][PB_SLOWED] )
 				{
 					new Float:vel[3];
 					entity_get_vector( id, EV_VEC_velocity, vel );
@@ -549,12 +549,12 @@ public client_PreThink( id )
 				// Set the user's speed
 				SHARED_SetSpeed( id );
 				
-				// Give the user more stamina
-				if ( SM_VerifySkill( id, SKILL_UNHOLYAURA ) )
-				{
-					static iSkillLevel;
-					iSkillLevel = SM_GetSkillLevel( id, SKILL_UNHOLYAURA );
+				static iSkillLevel;
+				iSkillLevel = SM_GetSkillLevel( id, SKILL_UNHOLYAURA );
 
+				// Give the user more stamina
+				if ( iSkillLevel > 0 )
+				{
 					if ( entity_get_float( id, EV_FL_fuser4 ) < p_unholy[iSkillLevel-1] )
 					{
 						entity_set_float( id, EV_FL_fuser4, p_unholy[iSkillLevel-1] );

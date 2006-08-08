@@ -241,13 +241,6 @@
 //#define DISPLAYLEVEL_SHOWBOTH		3
 #define	DISPLAYLEVEL_SHOWRACECHAT	4
 
-#define SKILL1						1
-#define SKILL2						2
-#define SKILL3						3
-#define SKILL4						4
-#define SKILL5						5
-
-
 #define MAX_RACES					9
 
 #define MAX_LEVELS					10

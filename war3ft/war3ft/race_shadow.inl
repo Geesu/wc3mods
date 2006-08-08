@@ -29,7 +29,7 @@ public _SH_HealingWave( id )
 	}
 	
 	// User doesn't have this skill, so lets return
-	if ( !SM_VerifySkill( id, SKILL_HEALINGWAVE ) )
+	if ( SM_GetSkillLevel( id, SKILL_HEALINGWAVE ) <= 0 )
 	{
 		return;
 	}
@@ -128,7 +128,7 @@ public SH_PlaceSerpentWard( id )
 	}
 
 	// User is alive we can place a ward!
-	else if ( is_user_alive( id ) && SM_VerifySkill( id, SKILL_SERPENTWARD ) && p_data[id][P_SERPENTCOUNT] > 0 )
+	else if ( is_user_alive( id ) && SM_GetSkillLevel( id, SKILL_SERPENTWARD ) > 0 && p_data[id][P_SERPENTCOUNT] > 0 )
 	{
 
 		// Serpent Ward
@@ -300,10 +300,11 @@ bool:SH_CanPlaceWard( id )
 
 SH_SerpentWardSet( id )
 {
-	if ( SM_VerifySkill( id, SKILL_SERPENTWARD ) )
-	{
-		new iSkillLevel = SM_GetSkillLevel( id, SKILL_SERPENTWARD );
+	static iSkillLevel;
+	iSkillLevel = SM_GetSkillLevel( id, SKILL_SERPENTWARD );
 
+	if ( iSkillLevel > 0 )
+	{
 		p_data[id][P_SERPENTCOUNT]		= p_serpent[iSkillLevel-1];
 	}
 }
@@ -370,11 +371,12 @@ public SH_Ult_Remove( id )
 SH_SkillsOffensive( iAttacker, iVictim )
 {
 
-	// Hex
-	if ( SM_VerifySkill( iAttacker, SKILL_HEX ) )
-	{
+	static iSkillLevel;
 
-		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_HEX );
+	// Hex
+	iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_HEX );
+	if ( iSkillLevel > 0 )
+	{
 
 		if ( random_float( 0.0, 1.0 ) <= p_hex[iSkillLevel-1] )
 		{
@@ -403,12 +405,14 @@ SH_SkillsOffensive( iAttacker, iVictim )
 
 SH_SkillsDefensive( iAttacker, iVictim )
 {
+	static iSkillLevel;
 
 	// Unstable Concoction
-	if ( SM_VerifyRace(iVictim, RACE_SHADOW) )
+	iSkillLevel = SM_GetSkillLevel( iVictim, PASS_UNSTABLECONCOCTION );
+	if ( iSkillLevel > 0 )
 	{
 		// Check to see if we should "concoction"
-		if ( random_float( 0.0, 1.0 ) <= p_concoction[p_data[iVictim][P_LEVEL]] )
+		if ( random_float( 0.0, 1.0 ) <= p_concoction[iSkillLevel] )
 		{
 			new vOrigin[3], vInitOrigin[3], vAxisOrigin[3], i;
 			

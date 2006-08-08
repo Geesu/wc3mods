@@ -198,73 +198,100 @@ public MOTD_PlayerSkills( id )
 public MOTD_SkillsInfo( id )
 {
 
-	if ( 0 < p_data[id][P_RACE] <= get_pcvar_num( CVAR_wc3_races ) )
+	static iSkillID, bool:bHeaderShown, pos;
+	new szTitle[128], szTmpDesc[256], szSkillName[128], szRaceName[64];
+
+	pos = 0;
+	pos += formatex( szTmpMsg[pos], 2047-pos, "%s", MOTD_header );
+
+	// Valid race found!
+	if ( SM_IsValidRace( p_data[id][P_RACE] ) )
 	{
-
-		new szTmp[128], szTmpDesc[256], szRaceName[64];
-		new pos = 0, i, iSkillID;
-
 		// Get the Race Name
 		lang_GetRaceName( p_data[id][P_RACE], id, szRaceName, 63 );
 
 		// format the title
-		pos += formatex( szTmpMsg[pos], 2047-pos, "%s", MOTD_header );
 		pos += formatex( szTmpMsg[pos], 2047-pos, "<div id=^"title^">%s</div><br><br>", szRaceName );
-
-		// Lets add each skill to the msg!
-		for ( i = 0; i < 5; i++ )
-		{
-			if ( p_data[id][P_RACE] == RACE_CHAMELEON )
-			{
-				iSkillID = g_ChamSkills[i];
-			}
-			else
-			{
-				iSkillID = SM_GetSkill( p_data[id][P_RACE], i );
-			}
-			
-			LANG_GetSkillName( iSkillID, id, szTmp, 127 )
-			LANG_GetSkillInfo( iSkillID, id, szTmpDesc, 255 );
-
-			// Add each skill
-			if ( i < 3 )
-			{
-				// Add the trainable skills header
-				if ( i == 0 )
-				{
-					pos += formatex( szTmpMsg[pos], 2047-pos, "<h1>%L</h1>", id, "WORD_TRAINABLE_SKILLS" );
-				}
-
-				pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><ul>%s</ul><br>", szTmp, szTmpDesc );
-			}
-
-			// Add the ultimate
-			else if ( i == 3 )
-			{
-				pos += formatex( szTmpMsg[pos], 2047-pos, "<h1>%L</h1>", id, "WORD_ULTIMATE" );
-				pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><ul>%s</ul>", szTmp, szTmpDesc );
-
-			}
-
-			// Add the hero's passive ability
-			else if ( i == 4 && p_data[id][P_RACE] > 4 )
-			{
-				pos += formatex( szTmpMsg[pos], 2047-pos, "<br><h1>%L</h1>", id, "WORD_HERO_ABILITY" );
-				pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><ul>%s</ul><br>", szTmp, szTmpDesc );
-			}
-		}
-
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<br><div>%L</div>", id, "MOTD_MORE_INFO", g_MOD );
-
-		formatex( szTmp, 127, "%s %L", szRaceName, id, "WORD_INFORMATION" );
-		show_motd( id, szTmpMsg, szTmp );
+		
+		// Format the MOTD title
+		formatex( szTitle, 127, "%s %L", szRaceName, id, "WORD_INFORMATION" );
 	}
+
+	// No race selected
 	else
 	{
-		show_motd( id, "Select a race before trying to view skillsinfo", "No race selected" );
+		pos += formatex( szTmpMsg[pos], 2047-pos, "<div id=^"title^">No Race Selected</div><br><br>" );
 
-		return;
+		// Format the MOTD title
+		formatex( szTitle, 127, "Skills Information" );
 	}
+
+
+	// Lets get the trainable skills first!
+	bHeaderShown = false;
+	iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_TRAINABLE );
+
+	while ( iSkillID != -1 )
+	{
+		if ( !bHeaderShown )
+		{
+			pos += formatex( szTmpMsg[pos], 2047-pos, "<h1>%L</h1>", id, "WORD_TRAINABLE_SKILLS" );
+
+			bHeaderShown = true;
+		}
+
+		LANG_GetSkillName( iSkillID, id, szSkillName, 127 )
+		LANG_GetSkillInfo( iSkillID, id, szTmpDesc, 255 );
+
+		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><ul>%s</ul><br>", szSkillName, szTmpDesc );
+
+		iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_TRAINABLE, iSkillID + 1 );
+	}
+
+	// Now add the user's ultimate(s)
+	bHeaderShown = false;
+	iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
+	while ( iSkillID != -1 )
+	{
+		if ( !bHeaderShown )
+		{
+			pos += formatex( szTmpMsg[pos], 2047-pos, "<h1>%L</h1>", id, "WORD_ULTIMATE" );
+
+			bHeaderShown = true;
+		}
+
+		LANG_GetSkillName( iSkillID, id, szSkillName, 127 )
+		LANG_GetSkillInfo( iSkillID, id, szTmpDesc, 255 );
+
+		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><ul>%s</ul>", szSkillName, szTmpDesc );
+
+		iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE, iSkillID + 1 );
+	}
+
+	// Now add the user's passive ability(s)
+	bHeaderShown = false;
+	iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_PASSIVE );
+	while ( iSkillID != -1 )
+	{
+		if ( !bHeaderShown )
+		{
+			pos += formatex( szTmpMsg[pos], 2047-pos, "<h1>%L</h1>", id, "WORD_HERO_ABILITY" );
+
+			bHeaderShown = true;
+		}
+
+		LANG_GetSkillName( iSkillID, id, szSkillName, 127 )
+		LANG_GetSkillInfo( iSkillID, id, szTmpDesc, 255 );
+
+		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><ul>%s</ul><br>", szSkillName, szTmpDesc );
+
+		iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_PASSIVE, iSkillID + 1 );
+	}
+
+	// Add the footer
+	pos += formatex( szTmpMsg[pos], 2047-pos, "<br><div>%L</div>", id, "MOTD_MORE_INFO", g_MOD );
+
+	show_motd( id, szTmpMsg, szTitle );
 
 	return;
 }

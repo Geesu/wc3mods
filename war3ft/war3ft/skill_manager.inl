@@ -138,142 +138,6 @@ SM_Init()
 	g_SkillOrder[PASS_ORB					]	= SKILL_POS_NONE;
 }
 
-// This function will return the skill ID when given a race and a skill position
-// Position 0 = Skill 1
-// Position 1 = Skill 2
-// Position 2 = Skill 3
-// Position 3 = Ultimate
-// Position 4 = Passive Ability (if it exists)
-SM_GetSkill( iRace, iSkillPos, iType = -1 )
-{
-	
-	new iSkillID;
-	
-	// This is quite "simple" for Chameleon
-	if ( iRace == RACE_CHAMELEON )
-	{
-		return g_ChamSkills[iSkillPos];
-	}
-
-	else
-	{
-		for ( iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
-		{
-			if ( g_SkillOwner[iSkillID] == iRace )
-			{
-				// Are we searching for a type ?
-				if ( iType != -1 )
-				{
-					if ( g_SkillType[iSkillID] == iType )
-					{
-						iSkillPos--;
-					}
-				}
-
-				// Not looking for a particular skill type
-				else
-				{
-					iSkillPos--;
-				}
-			}
-			
-			// Then skill was found, return it!
-			if ( iSkillPos < 0 )
-			{
-				return iSkillID;
-			}
-		}
-	}
-
-	return -1;
-}
-
-SM_GetSkillPos( skill_id )
-{
-
-	if ( skill_id >= 0 && skill_id < MAX_SKILLS )
-	{
-		return g_SkillOrder[skill_id];
-	}
-
-	log_error( AMX_ERR_NONE, "Invalid skill id: %d", skill_id );
-
-	return -1;
-}
-
-SM_VerifySkill( id, skill_id )
-{
-
-	if ( id == 0 )
-	{
-		return 0;
-	}
-
-	// Determine which race the skill belongs to
-	new iRaceID		= g_SkillOwner[skill_id];
-	new iSkillPos	= SM_GetSkillPos( skill_id );
-
-	// In theory this should never occur, unless someone edits the source
-	if ( iSkillPos == -1 )
-	{
-		log_amx( "Skill %d is dangling - no skill position found", skill_id );
-
-		return 0;
-	}
-	
-	if ( p_data[id][P_RACE] == iRaceID && p_data[id][iSkillPos] )
-	{
-		return p_data[id][iSkillPos];
-	}
-
-	// Chameleon Check
-	else if ( p_data[id][P_RACE] == RACE_CHAMELEON )
-	{
-		// Find the skill in the chameleon array
-		iSkillPos = CHAM_FindSkill( skill_id );
-
-		if ( iSkillPos != -1 && p_data[id][iSkillPos] )
-		{
-			return p_data[id][iSkillPos];
-		}
-	}
-
-	return 0;
-}
-
-SM_VerifyRace( id, race_id )
-{
-
-	if ( id == 0 )
-	{
-		return false;
-	}
-
-	if ( p_data[id][P_RACE] == race_id )
-	{
-		return true;
-	}
-
-	// Chameleon Check
-	else if ( p_data[id][P_RACE] == RACE_CHAMELEON )
-	{
-		new i, iSkillID;
-
-		for ( i = 0; i < 5; i++ )
-		{
-			iSkillID = g_ChamSkills[i];
-
-			if ( g_SkillOwner[iSkillID] == race_id )
-			{
-				return true;
-			}
-		}
-	}
-
-	return false;
-}
-
-
 /***** NEW SKILL SET UP BELOW!! *****/
 
 SM_SetPlayerRace( id, iRace )
@@ -482,4 +346,14 @@ SM_GetSkillOfType( id, type, iStart = 0 )
 	}
 
 	return -1;
+}
+
+bool:SM_IsValidRace( iRace )
+{
+	if ( 1 <= iRace <= get_pcvar_num( CVAR_wc3_races ) )
+	{
+		return true;
+	}
+
+	return false;
 }

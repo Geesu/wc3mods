@@ -153,9 +153,10 @@ public NE_ULT_EntangleEffect( id )
 
 NE_Evasion( id, iHitZone )
 {
+	static iSkillLevel;
 
-	// Check to see if they should evade the next shot?
-	new iSkillLevel = SM_GetSkillLevel( id, SKILL_EVASION );
+	// Check to see if they should evade this shot?
+	iSkillLevel = SM_GetSkillLevel( id, SKILL_EVASION );
 
 	if ( random_float( 0.0, 1.0 ) <= p_evasion[iSkillLevel-1] )
 	{
@@ -187,13 +188,14 @@ NE_Evasion( id, iHitZone )
 
 NE_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 {
+	static iSkillLevel;
 
 	// Trueshot Aura
-	if ( SM_VerifySkill( iAttacker, SKILL_TRUESHOT ) )
+	iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_TRUESHOT );
+	if ( iSkillLevel > 0 )
 	{
-		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_TRUESHOT );
-
-		new iTempDamage = floatround( float( iDamage ) * p_trueshot[iSkillLevel-1] );
+		static iTempDamage;
+		iTempDamage = floatround( float( iDamage ) * p_trueshot[iSkillLevel-1] );
 		
 		// Damage the user
 		WC3_Damage( iVictim, iAttacker, iTempDamage, iWeapon, iHitPlace );
@@ -208,12 +210,14 @@ NE_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 
 NE_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace )
 {
-	// Thorns Aura ( attacker could be dead... i.e. nade )
-	if ( SM_VerifySkill( iVictim, SKILL_THORNS ) && is_user_alive( iAttacker ) )
-	{
-		new iSkillLevel = SM_GetSkillLevel( iVictim, SKILL_THORNS );
+	static iSkillLevel;
 
-		new iAdditionalDamage = floatround( float( iDamage ) * p_thorns[iSkillLevel-1] );
+	// Thorns Aura ( attacker could be dead... i.e. nade )
+	iSkillLevel = SM_GetSkillLevel( iVictim, SKILL_THORNS );
+	if ( iSkillLevel > 0 && is_user_alive( iAttacker ) )
+	{
+		static iAdditionalDamage;
+		iAdditionalDamage = floatround( float( iDamage ) * p_thorns[iSkillLevel-1] );
 		
 		// Damage the user
 		WC3_Damage( iAttacker, iVictim, iAdditionalDamage, CSW_THORNS, iHitPlace );

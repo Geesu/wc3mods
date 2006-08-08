@@ -103,11 +103,11 @@ BM_ULT_Immolate_Remove( iTarget )
 // Check to see if a player will become a Phoenix
 BM_PhoenixCheck( id )
 {
-	if ( SM_VerifySkill( id, SKILL_PHOENIX ) )
+	new iSkillLevel = SM_GetSkillLevel( id, SKILL_PHOENIX );
+
+	if ( iSkillLevel > 0 )
 	{
 		
-		new iSkillLevel = SM_GetSkillLevel( id, SKILL_PHOENIX );
-
 		// Should the user be a Phoenix
 		if ( random_float( 0.0, 1.0 ) <= p_phoenix[iSkillLevel-1] ) 
 		{
@@ -231,13 +231,49 @@ BM_PhoenixDOD( id )
 	}
 }
 
+public _BM_BanishReturn( parm[] )
+{
+	new id = parm[0];
+
+	// If the round is over we want to move the player back - otherwise they might be moved after they have respawned - that'd be bad
+	if ( parm[1] > 0 && !g_EndRound )
+	{
+		parm[1]--;
+		
+		// Black screen the user!
+		Create_ScreenFade( id, 2, (1<<10), (1<<12), 0, 0, 0, 255 );
+
+		set_task( 0.1, "_BM_BanishReturn", TASK_BANISH + id, parm, 5 );
+	}
+	else
+	{
+		new vOrigin[3];
+		vOrigin[0] = parm[2];
+		vOrigin[1] = parm[3];
+		vOrigin[2] = parm[4] + 10;
+
+		// Move the user back!
+		set_user_origin( id, vOrigin );
+
+		// Make the user glow!
+		SHARED_Glow( id, 0, 0, 0, 100 );
+
+		// Create a screen fade
+		Create_ScreenFade( id, 0, 0, 0, 0, 0, 0, 0 );
+
+		// User is no longer banished
+		g_bPlayerBanished[id] = false;
+	}
+}
+
 BM_SkillsOffensive( iAttacker, iVictim, iDamage )
 {
+	static iSkillLevel;
 
 	// Siphon Mana
-	if ( SM_VerifySkill( iAttacker, SKILL_SIPHONMANA ) )
+	iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_SIPHONMANA );
+	if ( iSkillLevel > 0 )
 	{
-		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_SIPHONMANA );
 
 		new iMoney = floatround( p_mana[iSkillLevel-1] * SHARED_GetUserMoney(iVictim) );
 		
@@ -257,20 +293,22 @@ BM_SkillsOffensive( iAttacker, iVictim, iDamage )
 
 BM_SkillsDefensive( iAttacker, iVictim, iDamage )
 {
-
+	static iSkillLevel;
+	
 	// Resistant Skin
-	if ( SM_VerifyRace( iVictim, RACE_BLOOD ) )
+	iSkillLevel = SM_GetSkillLevel( iVictim, PASS_RESISTANTSKIN );
+	if ( iSkillLevel > 0 )
 	{
 		new iBonusHealth = floatround( float( iDamage ) * p_resistant[p_data[iVictim][P_LEVEL]] );
 
 		set_user_health( iVictim, get_user_health( iVictim ) + iBonusHealth );
 	}
 
-	// Banish
-	if ( SM_VerifySkill( iVictim, SKILL_BANISH ) )
-	{
 
-		new iSkillLevel = SM_GetSkillLevel( iVictim, SKILL_BANISH );
+	// Banish
+	iSkillLevel = SM_GetSkillLevel( iVictim, SKILL_BANISH );
+	if ( iSkillLevel > 0 )
+	{
 
 		if ( random_float( 0.0, 1.0 ) <= p_banish[iSkillLevel-1] )
 		{
@@ -308,40 +346,5 @@ BM_SkillsDefensive( iAttacker, iVictim, iDamage )
 				set_task( 0.1, "_BM_BanishReturn", TASK_BANISH + iAttacker, parm, 5 );
 			}
 		}
-	}
-}
-
-public _BM_BanishReturn( parm[] )
-{
-	new id = parm[0];
-
-	// If the round is over we want to move the player back - otherwise they might be moved after they have respawned - that'd be bad
-	if ( parm[1] > 0 && !g_EndRound )
-	{
-		parm[1]--;
-		
-		// Black screen the user!
-		Create_ScreenFade( id, 2, (1<<10), (1<<12), 0, 0, 0, 255 );
-
-		set_task( 0.1, "_BM_BanishReturn", TASK_BANISH + id, parm, 5 );
-	}
-	else
-	{
-		new vOrigin[3];
-		vOrigin[0] = parm[2];
-		vOrigin[1] = parm[3];
-		vOrigin[2] = parm[4] + 10;
-
-		// Move the user back!
-		set_user_origin( id, vOrigin );
-
-		// Make the user glow!
-		SHARED_Glow( id, 0, 0, 0, 100 );
-
-		// Create a screen fade
-		Create_ScreenFade( id, 0, 0, 0, 0, 0, 0, 0 );
-
-		// User is no longer banished
-		g_bPlayerBanished[id] = false;
 	}
 }

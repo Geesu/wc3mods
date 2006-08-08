@@ -151,11 +151,32 @@ public OR_ULT_ChainEffect( iCaster, iTarget, iLineWidth, iDamage, iBodyPart )
 	return;
 }
 
+// Function checks to see if critical grenades are allowed
+bool:OR_CriticalGrenadeAllowed( id )
+{
+
+	// Need to do the glove check
+	if ( ITEM_Has( id, ITEM_GLOVES ) > ITEM_NONE && !get_pcvar_num( CVAR_wc3_glove_orc_damage ) )
+	{
+		return false;
+	}
+
+	// Check to see if we are on a disabled map
+	if ( g_bOrcNadesDisabled )
+	{
+		return false;
+	}
+
+	return true;
+}
 
 OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 {
+	static iSkillLevel;
+
 	// Critical Strike
-	if ( SM_VerifySkill( iAttacker, SKILL_CRITICALSTRIKE ) )
+	iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_CRITICALSTRIKE );
+	if ( iSkillLevel > 0 )
 	{
 
 		if ( random_float( 0.0, 1.0 ) <= CRITICAL_STRIKE_CHANCE )
@@ -176,21 +197,20 @@ OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 	}
 
 	// Critical Grenade
-	if ( SM_VerifySkill( iAttacker, SKILL_CRITICALGRENADE ) )
+	iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_CRITICALGRENADE );
+	if ( iSkillLevel > 0 )
 	{		
 		
 		// Can only do this if the user has a grenade
 		if ( SHARED_IsGrenade( iWeapon ) )
 		{
-
 			
 			// Then we're clear!!
 			if ( OR_CriticalGrenadeAllowed( iAttacker ) )
 			{
-		
-				new iMaxHealth = get_user_maxhealth( iVictim );
-				new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_CRITICALGRENADE );
-				new iBonusDamage = floatround( float( iDamage ) * p_grenade[iSkillLevel-1] );
+				static iMaxHealth, iBonusDamage;
+				iMaxHealth = get_user_maxhealth( iVictim );
+				iBonusDamage = floatround( float( iDamage ) * p_grenade[iSkillLevel-1] );
 				
 				// We don't want to do more damage than the user's maximum health
 				if ( iBonusDamage + iDamage >= iMaxHealth )
@@ -201,7 +221,6 @@ OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 				// Damage the user!
 				WC3_Damage( iVictim, iAttacker, iBonusDamage, iWeapon, iHitPlace );
 
-
 				// Make the user glow
 				SHARED_Glow( iVictim, iBonusDamage, 0, 0, 0 );
 
@@ -210,23 +229,4 @@ OR_SkillsOffensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 			}
 		}
 	}
-}
-
-// Function checks to see if critical grenades are allowed
-bool:OR_CriticalGrenadeAllowed( id )
-{
-
-	// Need to do the glove check
-	if ( ITEM_Has( id, ITEM_GLOVES ) > ITEM_NONE && !get_pcvar_num( CVAR_wc3_glove_orc_damage ) )
-	{
-		return false;
-	}
-
-	// Check to see if we are on a disabled map
-	if ( g_bOrcNadesDisabled )
-	{
-		return false;
-	}
-
-	return true;
 }

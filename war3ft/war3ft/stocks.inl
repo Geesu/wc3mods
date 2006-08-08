@@ -3,12 +3,12 @@ stock get_user_maxhealth( id )
 
 	new maxHealth = 100
 
+	static iSkillLevel;
+	iSkillLevel = SM_GetSkillLevel( id, SKILL_DEVOTION );
+
 	// Human Devotion Skill
-
-	if ( SM_VerifySkill( id, SKILL_DEVOTION ) )
+	if ( iSkillLevel > 0 )
 	{
-		new iSkillLevel = SM_GetSkillLevel( id, SKILL_DEVOTION );
-
 		maxHealth += iSkillLevel * p_devotion;
 	}
 

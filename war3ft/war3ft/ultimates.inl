@@ -127,7 +127,7 @@ ULT_Icon( id, flag )
 			{
 
 				// Change colors for Suicide Bomber or Immolate
-				if ( SM_VerifySkill( id, ULTIMATE_SUICIDE ) || SM_VerifySkill( id, ULTIMATE_IMMOLATE ) )
+				if ( SM_GetSkillLevel( id, ULTIMATE_SUICIDE ) > 0 || SM_GetSkillLevel( id, ULTIMATE_IMMOLATE ) > 0 )
 				{
 					r=255, g=255, b=255;
 				}

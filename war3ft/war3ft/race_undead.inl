@@ -162,16 +162,17 @@ public _UD_SuicideBlastCircles( parm[5] )
 
 UD_SkillsOffensive( iAttacker, iDamage )
 {
+	static iSkillLevel;
 
 	// Vampiric Aura
-	if ( SM_VerifySkill( iAttacker, SKILL_VAMPIRICAURA ) )
+	iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_VAMPIRICAURA );
+	if ( iSkillLevel > 0 )
 	{
-		new iHealth		= get_user_health( iAttacker );
-		new iMaxHealth	= get_user_maxhealth( iAttacker );
+		static iHealth, iMaxHealth, iBonusHealth;
 
-		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_VAMPIRICAURA );
-
-		new iBonusHealth = floatround( float( iDamage ) * p_vampiric[iSkillLevel-1] );
+		iHealth		= get_user_health( iAttacker );
+		iMaxHealth	= get_user_maxhealth( iAttacker );
+		iBonusHealth = floatround( float( iDamage ) * p_vampiric[iSkillLevel-1] );
 		
 		// Give the user health!
 		if ( iHealth < iMaxHealth )

@@ -188,11 +188,18 @@ CL_HLP_Diff( iNum, iNum2 )
 	return 0;
 }
 
+CL_CarrionBeetle_Reset( id )
+{
+	p_data[id][P_CARRIONCOUNT] = 0;
+}
+
 CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 {
+	static iSkillLevel;
 
 	// Orb of Annihilation
-	if ( SM_VerifyRace( iAttacker, RACE_CRYPT ) )
+	iSkillLevel = SM_GetSkillLevel( iAttacker, PASS_ORB );
+	if ( iSkillLevel > 0 )
 	{
 
 		if ( random_float( 0.0, 1.0 ) <= p_orb[p_data[iAttacker][P_LEVEL]] )
@@ -219,11 +226,10 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 		}
 	}
 
-	// Carrion Beetle
-	if ( SM_VerifySkill( iAttacker, SKILL_CARRIONBEETLES ) )
+	// Carrion Beetles
+	iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_CARRIONBEETLES );
+	if ( iSkillLevel > 0 )
 	{
-
-		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_CARRIONBEETLES );
 
 		if ( random_float( 0.0, 1.0 ) <= p_carrion[iSkillLevel-1] )
 		{
@@ -253,11 +259,11 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 		}
 	}
 	
-	// Impale
-	if ( SM_VerifySkill( iAttacker, SKILL_IMPALE ) )
-	{
 
-		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_IMPALE );
+	// Impale
+	iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_IMPALE );
+	if ( iSkillLevel > 0 )
+	{
 
 		if ( random_float( 0.0, 1.0 ) <= p_impale[iSkillLevel-1] )
 		{
@@ -279,10 +285,12 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 
 CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace )
 {
+	static iSkillLevel;
+
 	// Spiked Carapace
-	if ( SM_VerifySkill( iVictim, SKILL_SPIKEDCARAPACE ) )
+	iSkillLevel = SM_GetSkillLevel( iVictim, SKILL_SPIKEDCARAPACE );
+	if ( iSkillLevel > 0 )
 	{
-		new iSkillLevel = SM_GetSkillLevel( iVictim, SKILL_SPIKEDCARAPACE );
 
 		new iTemp = floatround( float( iDamage ) * p_spiked[iSkillLevel-1] );
 		
@@ -318,9 +326,4 @@ CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace )
 			Create_ScreenFade( iAttacker, (1<<10), (1<<10), (1<<12), 255, 0, 0, iTemp );
 		}
 	}
-}
-
-CL_CarrionBeetle_Reset( id )
-{
-	p_data[id][P_CARRIONCOUNT] = 0;
 }

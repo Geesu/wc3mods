@@ -1248,7 +1248,7 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 			SHARED_SetUserMoney( iKiller, SHARED_GetUserMoney( iKiller ) + 600, 1 );
 			
 			// Give more money for Phoenix skill if it exists
-			if ( SM_VerifySkill( iKiller, SKILL_PHOENIX ) )
+			if ( SM_GetSkillLevel( iKiller, SKILL_PHOENIX ) > 0 )
 			{
 				BM_PhoenixDOD( iKiller );
 			}
@@ -1294,7 +1294,7 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 	p_data_b[iVictim][PB_DIEDLASTROUND] = true;
 
 	// Suicide Bomber should go off when the user dies
-	if ( SM_VerifySkill( iVictim, ULTIMATE_SUICIDE ) )
+	if ( SM_GetSkillLevel( iVictim, ULTIMATE_SUICIDE ) > 0 )
 	{	
 		UD_Suicide( iVictim );
 	}
@@ -1314,7 +1314,7 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 		}
 
 		// Should we respawn for Vengeance?
-		if ( SM_VerifySkill( iVictim, ULTIMATE_VENGEANCE ) && iKiller != iVictim )
+		if ( SM_GetSkillLevel( iVictim, ULTIMATE_VENGEANCE ) > 0 && iKiller != iVictim )
 		{
 			// Killer has immunity, user shouldn't respawn :/
 			if ( ULT_IsImmune( iKiller ) )

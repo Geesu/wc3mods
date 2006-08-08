@@ -116,19 +116,3 @@ CHAM_ValidSkill( skill_id, iType )
 
 	return true;
 }
-
-// This function will return the location of the skill in the p_data array (i.e. SKILL_1, SKILL_2, SKILL_3, etc...)
-CHAM_FindSkill( skill_id )
-{
-	new i;
-
-	for ( i = 0; i < 5; i++ )
-	{
-		if ( g_ChamSkills[i] == skill_id )
-		{
-			return i + 1;
-		}
-	}
-
-	return -1;
-}

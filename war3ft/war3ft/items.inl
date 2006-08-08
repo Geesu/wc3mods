@@ -127,7 +127,7 @@ public ITEM_Buy( id, iItem )
 	}
 
 	// User doesn't need an ankh if they're going to reincarnate
-	else if ( iItem == ITEM_ANKH && SM_VerifySkill( id, SKILL_REINCARNATION ) == 3 )
+	else if ( iItem == ITEM_ANKH && SM_GetSkillLevel( id, SKILL_REINCARNATION ) == 3 )
 	{
 		client_print( id, print_center, "You will already reincarnate your weapons through one of your skills!" );
 
@@ -570,7 +570,7 @@ ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 		new iHealth = get_user_health( iAttacker );
 		new iBonusHealth = floatround( float( iDamage ) * get_pcvar_num( CVAR_wc3_mask ) );
 		
-		new iVampiricBonus = SM_VerifySkill( iAttacker, SKILL_VAMPIRICAURA );
+		new iVampiricBonus = SM_GetSkillLevel( iAttacker, SKILL_VAMPIRICAURA );
 		
 		// Then the user already gets a bonus, lets lower the total amount the user is going to get
 		if ( iVampiricBonus )

@@ -14,12 +14,13 @@ public SHARED_INVIS_Set( id )
 	}
 
 	new iInvisLevel = 0;
-	
-	// If they are Human Alliance with Invisibility lets set the level
-	if ( SM_VerifySkill( id, SKILL_INVISIBILITY ) )
-	{
-		new iSkillLevel = SM_GetSkillLevel( id, SKILL_INVISIBILITY );
 
+	static iSkillLevel;
+	iSkillLevel = SM_GetSkillLevel( id, SKILL_INVISIBILITY );
+
+	// If they are Human Alliance with Invisibility lets set the level
+	if ( iSkillLevel > 0 )
+	{
 		iInvisLevel = p_invisibility[iSkillLevel-1];
 	}
 
@@ -481,10 +482,12 @@ public SHARED_CS_Reincarnation( id )
 	// Check based on skill or if the user has an item
 	if ( p_data_b[id][PB_DIEDLASTROUND] )
 	{
+		static iSkillLevel;
+		iSkillLevel = SM_GetSkillLevel( id, SKILL_REINCARNATION );
+
 		// Orc's Reincarnation
-		if ( SM_VerifySkill( id, SKILL_REINCARNATION ) )
+		if ( iSkillLevel > 0 )
 		{
-			new iSkillLevel = SM_GetSkillLevel( id, SKILL_REINCARNATION );
 
 			if ( random_float( 0.0, 1.0 ) <= p_ankh[iSkillLevel-1] )
 			{
@@ -737,7 +740,7 @@ public SHARED_SetSpeed( id )
 		}
 
 		// User has a rocket launcher "mounted", we let users w/unholy aura + boots of speed run faster with it
-		else if ( get_user_maxspeed( id ) == 50.0 && ( ITEM_Has( id, ITEM_BOOTS ) > ITEM_NONE || SM_VerifySkill( id, SKILL_UNHOLYAURA ) ) )
+		else if ( get_user_maxspeed( id ) == 50.0 && ( ITEM_Has( id, ITEM_BOOTS ) > ITEM_NONE || SM_GetSkillLevel( id, SKILL_UNHOLYAURA ) > 0 ) )
 		{
 			set_user_maxspeed( id, 600.0 );
 
@@ -748,13 +751,13 @@ public SHARED_SetSpeed( id )
 	// Counter-Strike and Condition Zero specific checks
 	else if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
+		static iSkillLevel;
+		iSkillLevel = SM_GetSkillLevel( id, SKILL_UNHOLYAURA );
 
 		// Unholy Aura bonus
-		if ( SM_VerifySkill( id, SKILL_UNHOLYAURA ) )
+		if ( iSkillLevel > 0 )
 		{
 			// Give them the bonus
-			new iSkillLevel = SM_GetSkillLevel( id, SKILL_UNHOLYAURA );
-
 			set_user_maxspeed( id, p_unholy[iSkillLevel-1] );
 
 			return;
@@ -920,6 +923,8 @@ public SHARED_SetGravity( id )
 
 	if ( get_pcvar_num( CVAR_sv_gravity ) > 650 )
 	{
+		static iSkillLevel;
+
 		// Set the user's gravity based on the item
 		if ( ITEM_Has( id, ITEM_SOCK ) > ITEM_NONE )
 		{
@@ -927,10 +932,8 @@ public SHARED_SetGravity( id )
 		}
 
 		// Set the user's gravity based on undead's levitation
-		else if ( SM_VerifySkill( id, SKILL_LEVITATION ) )
+		else if ( ( iSkillLevel = SM_GetSkillLevel( id, SKILL_LEVITATION ) ) > 0 )
 		{
-			new iSkillLevel = SM_GetSkillLevel( id, SKILL_LEVITATION );
-
 			if ( get_user_gravity( id ) != p_levitation[iSkillLevel-1] )
 			{
 				set_user_gravity( id, p_levitation[iSkillLevel-1] );
@@ -1114,15 +1117,13 @@ public SHARED_MoleCheck( id )
 	new parm[2];
 	parm[1] = 0;
 
-	// Mole from Fan of Knives?
-	if ( SM_VerifySkill( id, SKILL_FANOFKNIVES ) )
-	{
-		new iSkillLevel = SM_GetSkillLevel( id, SKILL_FANOFKNIVES );
+	static iSkillLevel;
+	iSkillLevel = SM_GetSkillLevel( id, SKILL_FANOFKNIVES );
 
-		if ( random_float( 0.0, 1.0 ) <= p_fan[iSkillLevel-1] )
-		{
-			parm[1] = 1;
-		}
+	// Mole from Fan of Knives?
+	if ( iSkillLevel > 0 && random_float( 0.0, 1.0 ) <= p_fan[iSkillLevel-1] )
+	{
+		parm[1] = 1;
 	}
 	
 	// Mole from an item?
@@ -1234,7 +1235,7 @@ SHARED_Glow( id, iRed, iGreen, iBlue, iAll )
 	}
 		
 	// Don't glow if invisible
-	else if ( SM_VerifySkill( id, SKILL_INVISIBILITY ) || ITEM_Has( id, ITEM_CLOAK ) > ITEM_NONE )
+	else if ( SM_GetSkillLevel( id, SKILL_INVISIBILITY ) > 0 || ITEM_Has( id, ITEM_CLOAK ) > ITEM_NONE )
 	{
 		return;
 	}

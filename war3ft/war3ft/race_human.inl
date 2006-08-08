@@ -373,16 +373,28 @@ HU_ULT_BlinkProtection( id, vOrigin[3] )
 	return bSlay;
 }
 
+HU_DevotionAura( id )
+{
+	new iBonusMultiplier = SM_GetSkillLevel( id, SKILL_DEVOTION );
+
+	if ( iBonusMultiplier )
+	{
+		new iNewHealth = 100 + ( iBonusMultiplier * p_devotion );
+
+		set_user_health( id, iNewHealth );
+	}
+}
+
 HU_SkillsOffensive( iAttacker, iVictim )
 {
+	static iSkillLevel;
 
 	// Bash
-	if ( SM_VerifySkill( iAttacker, SKILL_BASH ) )
+	iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_BASH );
+	if ( iSkillLevel > 0 )
 	{
 
 		// Cannot bash if already bashed or user is slowed
-		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_BASH );
-
 		if ( random_float( 0.0, 1.0 ) <= p_bash[iSkillLevel-1] && !SHARED_IsPlayerSlowed( iVictim ) )
 		{		
 
@@ -397,17 +409,5 @@ HU_SkillsOffensive( iAttacker, iVictim )
 			// Create a screen fade
 			Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 255, 255, 255, g_GlowLevel[iVictim][3] )
 		}
-	}
-}
-
-HU_DevotionAura( id )
-{
-	new iBonusMultiplier = SM_VerifySkill( id, SKILL_DEVOTION );
-
-	if ( iBonusMultiplier )
-	{
-		new iNewHealth = 100 + ( iBonusMultiplier * p_devotion );
-
-		set_user_health( id, iNewHealth );
 	}
 }

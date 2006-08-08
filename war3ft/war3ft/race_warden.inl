@@ -113,11 +113,13 @@ WA_Blink( id )
 	
 	p_data_b[id][PB_WARDENBLINK] = false;
 
-	// User has the ability, lets initiate a "check"
-	if ( SM_VerifySkill( id, SKILL_BLINK ) )
-	{
-		new iSkillLevel = SM_GetSkillLevel( id, SKILL_BLINK );
+	static iSkillLevel;
+	iSkillLevel = SM_GetSkillLevel( id, SKILL_BLINK );
 
+	// User has the ability, lets initiate a "check"
+	if ( iSkillLevel > 0 )
+	{
+		
 		if ( random_float( 0.0, 1.0 ) <= p_blink[iSkillLevel-1] )
 		{
 			p_data_b[id][PB_WARDENBLINK] = true;
@@ -126,16 +128,41 @@ WA_Blink( id )
 	}
 }
 
+WA_HardenedSkin( iVictim, iDamage )
+{
+	static iSkillLevel;
+
+	// Hardened Skin
+	iSkillLevel = SM_GetSkillLevel( iVictim, PASS_HARDENEDSKIN );
+	if ( iSkillLevel > 0 )
+	{
+		static iLevel;
+		iLevel = p_data[iVictim][P_LEVEL];
+
+		return ( floatround( float( iDamage ) * p_harden[iLevel] ) );
+	}
+
+	return iDamage;	
+}
+
+WA_ShadowStrike_Reset( id )
+{
+	p_data[id][P_SHADOWCOUNT] = 0;
+}
+
 WA_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 {
 
+	static iSkillLevel;
+
 	// Shadow Strike
-	if ( SM_VerifySkill( iAttacker, SKILL_SHADOWSTRIKE ) )
+	iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_SHADOWSTRIKE );
+	if ( iSkillLevel > 0 )
 	{
-		new iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_SHADOWSTRIKE );
 
 		if ( random_float( 0.0, 1.0 ) <= p_shadow[iSkillLevel-1] )
 		{
+
 			if ( p_data[iAttacker][P_SHADOWCOUNT] <= SHADOWSTRIKE_TOTAL )
 			{
 				new vVictimOrigin[3], vAttackerOrigin[3]
@@ -163,22 +190,4 @@ WA_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 			iStatsShots[iAttacker][WEAPON]++;
 		}
 	}
-}
-
-WA_HardenedSkin( iVictim, iDamage )
-{
-	if ( SM_VerifyRace( iVictim, RACE_WARDEN ) )
-	{
-		new iLevel = p_data[iVictim][P_LEVEL];
-
-		return ( floatround( float( iDamage ) * p_harden[iLevel] ) );
-	}
-
-	return iDamage;	
-}
-
-WA_ShadowStrike_Reset( id )
-{
-	p_data[id][P_SHADOWCOUNT] = 0;
-
 }
