@@ -658,7 +658,7 @@ XP_NearbyBonus( id, iXP )
 		iTargetID = iPlayers[i];
 		
 		// Lets give the teammate some XP if they're close enough!
-		if ( iTeam == get_user_team( iTargetID ) && iTargetID != id )
+		if ( iTeam == get_user_team( iTargetID ) && iTargetID != id && is_user_alive( iTargetID ) )
 		{
 			get_user_origin( iTargetID, vTargetOrigin );
 			
@@ -667,12 +667,17 @@ XP_NearbyBonus( id, iXP )
 			// Then lets give them some XP!!!
 			if ( iDistance <= XP_NEARBY_RADIUS )
 			{
+				static szName[32];
+				get_user_name( iTargetID, szName, 31 );
+
+				client_print( id, print_chat, "[DEBUG] You have given %d XP to a nearby teammate: %s", iBonusXP, szName );
 				client_print( id, print_chat, "[DEBUG] %0.0f * ( %0.0f / %0.0f ) = %f", float( iXP ), float( iDistance ), float( XP_NEARBY_RADIUS ), float( iXP ) * ( float( iDistance ) / float( XP_NEARBY_RADIUS ) ) );
+				
 				iBonusXP = floatround( float( iXP ) * ( float( iDistance ) / float( XP_NEARBY_RADIUS ) ) );
 
 				p_data[id][P_XP] += iBonusXP;
 
-				client_print( id, print_chat, "[DEBUG] You have been awarded %d XP because a nearby teammate killed someone", iBonusXP );
+				client_print( iTargetID, print_chat, "[DEBUG] You have been awarded %d XP because a nearby teammate killed someone", iBonusXP );
 
 				XP_Check( id );
 			}

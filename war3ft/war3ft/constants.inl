@@ -570,7 +570,7 @@ new const Float:p_trueshot[3] =			{0.1,0.2,0.35}			// Trueshot Aura			(skill 3)
 
 new const Float:p_phoenix[3] =			{0.333,0.666,1.0}		// Phoenix					(skill 1)
 new const p_phoenix_dod[3] =			{300,600,900}			// Phoenix - DOD			(skill 1)
-new const Float:p_banish[3] =			{0.07,0.13,0.20}		// Banish					(skill 2)
+new const Float:p_banish[3] =			{0.05,0.10,0.15}		// Banish					(skill 2)
 new const Float:p_mana[3] =				{0.02,0.04,0.08}		// Siphon Mana				(skill 3)
 new const Float:p_resistant[11] =		{0.02, 0.04, 0.08, 0.12, 0.16, 0.20, 0.24, 0.28, 0.32, 0.36, 0.40}	// Resistant Skin		(Skill 4)
 

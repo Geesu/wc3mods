@@ -820,7 +820,7 @@ WC3_ShowRaceInfo( id )
 		
 		// Add the passive hero skill
 
-		if ( 4 < p_data[id][P_RACE] < 9 )
+		if ( p_data[id][P_RACE] > 4 )
 		{
 			pos += formatex( szMsg[pos], 255-pos, "^n%s", szSkillNames[4] );
 		}
@@ -1039,10 +1039,10 @@ WC3_SetSkills( id )
 	SHARED_INVIS_Set( id );
 
 	// Crypt Lord's Carrion Beetles
-	p_data[id][P_CARRIONCOUNT] = 2;
-	
+	CL_CarrionBeetle_Reset( id );
+
 	// Warden's Shadow Strike
-	p_data[id][P_SHADOWCOUNT] = 2;
+	WA_ShadowStrike_Reset( id );
 }
 
 // Function will print a message in the center of the screen

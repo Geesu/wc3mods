@@ -682,7 +682,7 @@ public MENU_SelectSkill( id )
 	// Bots don't need a menu now do they??
 	if ( is_user_bot( id ) )
 	{
-		new iRandomSkill;
+		static iRandomSkill;
 		
 		// Loop while we have skills available
 		while ( iSkillsUsed < p_data[id][P_LEVEL] )
@@ -823,6 +823,12 @@ public _MENU_SelectSkill( id, iKey )
 		{
 			set_user_health( id, get_user_health( id ) + 15 );
 		}
+
+		// Blink Chosen
+		else if ( SM_VerifyRace( id, RACE_WARDEN ) && !p_data_b[id][PB_WARDENBLINK] )
+		{
+			WA_Blink( id );
+		}
 	}
 
 	// User selected skill number 3
@@ -838,19 +844,13 @@ public _MENU_SelectSkill( id, iKey )
 		// Carrion Beetle Chosen
 		else if ( SM_VerifyRace( id, RACE_CRYPT ) )
 		{
-			if ( p_data[id][P_CARRIONCOUNT] < 3 )
-			{
-				p_data[id][P_CARRIONCOUNT]++;
-			}
+			p_data[id][P_CARRIONCOUNT]--;
 		}
 
 		// Shadow Strike Chosen
 		else if ( SM_VerifyRace( id, RACE_WARDEN ) )
 		{
-			if ( p_data[id][P_SHADOWCOUNT] < 3 )
-			{
-				p_data[id][P_SHADOWCOUNT] = 2;
-			}
+			p_data[id][P_SHADOWCOUNT]--;
 		}
 	}
 
@@ -864,7 +864,10 @@ public _MENU_SelectSkill( id, iKey )
 	SHARED_INVIS_Set( id );
 
 	// Undead's Unholy Aura
-	SHARED_SetGravity(id);
+	SHARED_SetGravity( id );
+
+	// Set the user's speed
+	SHARED_SetSpeed( id );
 
 	return;
 }

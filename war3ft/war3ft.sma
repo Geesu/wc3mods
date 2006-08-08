@@ -142,7 +142,7 @@ public plugin_init()
 
 	// Admin Commands
 	register_concmd( "wc3_givexp"		, "ADMIN_Handler"		, 0 , " -- Gives XP to players"				);
-	register_concmd( "wc3_setlevel"	    , "ADMIN_Handler"		, 0 , " -- Sets a players level"			);
+	register_concmd( "wc3_setlevel"	    , "ADMIN_Handler"		, 0 , " -- Sets a player's level"			);
 	register_concmd( "wc3_giveitem"		, "ADMIN_Handler"		, 0 , " -- Gives an item to a player"		);
 	register_concmd( "wc3_enable"		, "ADMIN_Handler"		, 0 , " -- Enables war3ft"					);
 	register_concmd( "wc3_disable"		, "ADMIN_Handler"		, 0 , " -- Disables war3ft"					);

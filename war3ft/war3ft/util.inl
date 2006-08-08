@@ -149,7 +149,9 @@ stock UTIL_EntInView( id, iEnt )
 	new iHitEnt = trace_line( id, vPlayerOrigin, vEntOrigin, vReturn );
 
 	if ( iHitEnt == iEnt )
+	{
 		return 1;
+	}
 	
 	return 0;
 }
@@ -158,4 +160,13 @@ UTIL_ClearHudChannel( id, iChannel )
 {
 	set_hudmessage( 0, 0, 0, 0.0, 0.0, 0, 0.0, 0.0, 0.0, 0.0, iChannel );
 	show_hudmessage( id, "" );
+}
+
+stock UTIL_CanSeePlayer( id, iTargetID )
+{
+	new Float:vOrigin[3];
+	entity_get_vector( iTargetID, EV_VEC_origin, vOrigin );
+
+
+	return is_in_viewcone( id, vOrigin );
 }

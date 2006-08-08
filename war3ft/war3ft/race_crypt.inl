@@ -5,6 +5,7 @@
 #define LOCUSTSWARM_DMG_MIN				30
 #define LOCUSTSWARM_DMG_MAX				60
 #define CARRIONBEETLE_DAMAGE			10
+#define CARRIONBEETLE_TOTAL				3
 #define IMPALE_INTENSITY				10.0		// Intensity of impale
 
 CL_ULT_LocustSwarm( id )
@@ -223,7 +224,7 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 	{
 		if ( random_float( 0.0, 1.0 ) <= p_carrion[p_data[iAttacker][P_SKILL3]-1] )
 		{
-			if ( p_data[iAttacker][P_CARRIONCOUNT] > 0 && is_user_alive( iVictim ) )
+			if ( p_data[iAttacker][P_CARRIONCOUNT] <= CARRIONBEETLE_TOTAL && is_user_alive( iVictim ) )
 			{
 				new vVictimOrigin[3], vAttackerorigin[3];
 				get_user_origin( iVictim, vVictimOrigin );
@@ -235,7 +236,7 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 				// Play the carrion beetle sound
 				emit_sound( iVictim, CHAN_STATIC, g_szSounds[SOUND_CARRION], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-				p_data[iAttacker][P_CARRIONCOUNT]--;
+				p_data[iAttacker][P_CARRIONCOUNT]++;
 
 				WC3_Damage( iVictim, iAttacker, CARRIONBEETLE_DAMAGE, CSW_CARRION, iHitPlace );
 			}
@@ -310,4 +311,9 @@ CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace )
 			Create_ScreenFade( iAttacker, (1<<10), (1<<10), (1<<12), 255, 0, 0, iTemp );
 		}
 	}
+}
+
+CL_CarrionBeetle_Reset( id )
+{
+	p_data[id][P_CARRIONCOUNT] = 0;
 }

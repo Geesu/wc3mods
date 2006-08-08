@@ -4,6 +4,7 @@
 
 #define VENGEANCE_HEALTH		50			// Health the user should have after using his ult
 #define SHADOWSTRIKE_DAMAGE		10			// Amount of damage dealt with shadow strike
+#define SHADOWSTRIKE_TOTAL		3			// Maximum amount of shadow strikes allowed per round
 
 WA_ULT_Vengeance( id )
 {
@@ -133,7 +134,7 @@ WA_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 
 		if ( random_float( 0.0, 1.0 ) <= p_shadow[p_data[iAttacker][P_SKILL3]-1] )
 		{
-			if ( p_data[iAttacker][P_SHADOWCOUNT] > 0 )
+			if ( p_data[iAttacker][P_SHADOWCOUNT] <= SHADOWSTRIKE_TOTAL )
 			{
 				new vVictimOrigin[3], vAttackerOrigin[3]
 				get_user_origin( iVictim, vVictimOrigin );
@@ -146,7 +147,7 @@ WA_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 				emit_sound( iVictim, CHAN_STATIC, g_szSounds[SOUND_SHADOWSTRIKE], 1.0, ATTN_NORM, 0, PITCH_NORM );
 				
 				// User only has so many per round...
-				p_data[iAttacker][P_SHADOWCOUNT]--;
+				p_data[iAttacker][P_SHADOWCOUNT]++;
 
 				// Damage the user
 				WC3_Damage( iVictim, iAttacker, SHADOWSTRIKE_DAMAGE, CSW_SHADOW, iHitPlace );
@@ -172,4 +173,10 @@ WA_HardenedSkin( iVictim, iDamage )
 	}
 
 	return iDamage;	
+}
+
+WA_ShadowStrike_Reset( id )
+{
+	p_data[id][P_SHADOWCOUNT] = 0;
+
 }

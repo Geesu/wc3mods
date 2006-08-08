@@ -1,3 +1,7 @@
+
+#define BOT_CHANGERACE			0.25
+
+
 // Forwards from the CSX module and DODX module
 public grenade_throw( index, greindex, wId )
 {
@@ -285,21 +289,6 @@ public EVENT_PlayerInitialSpawn( id )
 		p_data_b[id][PB_JUSTJOINED]			= false;
 	}
 
-	// Bot options
-	if ( is_user_bot(id) )
-	{
-		// Give the bot some random XP if we're saving XP
-		if ( get_pcvar_num( CVAR_wc3_save_xp ) && !p_data[id][P_XP] )
-		{
-			p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
-		}
-
-		if ( !p_data[id][P_RACE] )
-		{
-			p_data[id][P_RACE] = random_num(1, get_pcvar_num( CVAR_wc3_races ));
-		}
-	}
-
 	// Display the new Chameleon skills for the round
 	if ( p_data[id][P_RACE] == 9 && get_pcvar_num( CVAR_wc3_cham_random ) )
 	{
@@ -382,7 +371,11 @@ public EVENT_PlayerSpawned( id )
 		}
 	}
 
-	WC3_CommonSpawn( id );
+	// For Day of Defeat we're calling this everytime a user spawns - for CS only on initial spawn
+	if ( g_MOD == GAME_DOD )
+	{
+		WC3_CommonSpawn( id );
+	}
 
 	p_data_b[id][PB_DIEDLASTROUND]	= false;
 }
@@ -449,10 +442,16 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 	new iVictim = get_tr(TR_pHit);
 	new iHitZone = (1 << get_tr(TR_iHitgroup));
 	
-
 	// Make sure we have a valid victim
 	if ( SHARED_ValidPlayer( iVictim ) )
 	{
+/*
+		new Float:fVecEndPos[3];
+		get_tr( TR_vecEndPos, fVecEndPos );
+
+		client_print( iVictim, print_chat, "( %0.0f, %0.0f, %0.0f )", fVecEndPos[0], fVecEndPos[1], fVecEndPos[2] );
+		client_print( iAttacker, print_chat, "( %0.0f, %0.0f, %0.0f )", fVecEndPos[0], fVecEndPos[1], fVecEndPos[2] );
+*/
 		// This is a check for ultimates that need to "search" for a target
 		if ( SHARED_ValidPlayer( iAttacker ) && p_data_b[iAttacker][PB_ISSEARCHING] )
 		{
@@ -606,4 +605,21 @@ EVENT_JustBeforeSpawn( id )
 
 	// Remove any serpant wards
 	( task_exists( TASK_LIGHT + id ) ) ? remove_task( TASK_LIGHT + id ) : 0;
+
+
+	// If it's a bot, should we change the race?
+	if ( is_user_bot( id ) )
+	{
+
+		// Give the bot some random XP if we're saving XP
+		if ( get_pcvar_num( CVAR_wc3_save_xp ) && !p_data[id][P_XP] )
+		{
+			p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
+		}
+
+		if ( random_float( 0.0, 1.0 ) <= BOT_CHANGERACE || !p_data[id][P_RACE] )
+		{
+			p_data[id][P_RACE] = random_num( 1, get_pcvar_num( CVAR_wc3_races ) );
+		}
+	}
 }
