@@ -312,8 +312,8 @@ public client_putinserver( id )
 	
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		// Check user's cvar
-		if ( !is_user_bot( id ) )
+		// Check user's cvar if the user isn't a bot and if we're not running a 64-bit server
+		if ( !is_user_bot( id ) && !is_amd64_server() )
 		{
 			query_client_cvar( id, "cl_minmodels", "_CS_CheckMinModelsValue" );
 		}
