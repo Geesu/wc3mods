@@ -1,45 +1,48 @@
-public menu_War3menu(id)
+public MENU_War3Menu( id )
 {
+	static pos, szMenu[256], keys;
+	keys = (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4)|(1<<9);
+	pos = 0;
 
-	new pos = 0, i, menu_body[512], menuitems[5][32]
-	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4)|(1<<9)
+	// Add the title
+	pos += formatex( szMenu[pos], 255-pos, "%L^n^n", id, "MENU_WAR3MENU" );
 
-	format(menuitems[0],31,"%L",id,"SKILLS_MENU")
-	format(menuitems[1],31,"%L",id,"RACE_MENU")
-	format(menuitems[2],31,"%L",id,"ITEM_MENU")
-	format(menuitems[3],31,"%L",id,"HELP")
-	format(menuitems[4],31,"%L",id,"ADMIN_MENU_TITLE")
+	// Add the actual options to the menu
+	pos += formatex( szMenu[pos], 255-pos, "\w1. %L^n", id, "SKILLS_MENU" );
+	pos += formatex( szMenu[pos], 255-pos, "\w2. %L^n", id, "RACE_MENU" );
+	pos += formatex( szMenu[pos], 255-pos, "\w3. %L^n", id, "ITEM_MENU" );
+	pos += formatex( szMenu[pos], 255-pos, "\w4. %L^n", id, "HELP" );
+	pos += formatex( szMenu[pos], 255-pos, "\w5. %L^n", id, "ADMIN_MENU_TITLE" );
+	pos += formatex( szMenu[pos], 255-pos, "^n\w0. %L", id, "WORD_EXIT" );
 
-	pos += format(menu_body[pos], 511-pos, "%L^n^n",id,"MENU_WAR3_FT_MENU")
-	for (i = 0; i<5; i++){
-		pos += format(menu_body[pos], 511-pos, "\w%d. %s^n",i+1,menuitems[i])
-	}
-	pos += format(menu_body[pos], 511-pos, "^n\w0. %L",id,"WORD_EXIT")
-	show_menu(id,keys,menu_body,-1)
+	// Display the menu
+	show_menu( id, keys, szMenu, -1 );
 
-	return PLUGIN_HANDLED
+	return;
 }
 
-public _menu_War3menu(id,key){
+public _MENU_War3Menu( id, key )
+{
 
 	if ( !WC3_Check() )
 	{
 		return;
 	}
 
-	switch (key){
-		case 0:	menu_Skill_Options(id)
-		case 1:	menu_Race_Options(id)
-		case 2:	menu_Item_Options(id)
-		case 3:	MOTD_War3help(id)
-		case 4:	menu_Admin_Options(id)
-		default:	return;
+	switch ( key )
+	{
+		case 0:	menu_Skill_Options( id );
+		case 1:	menu_Race_Options( id );
+		case 2:	menu_Item_Options( id );
+		case 3:	MOTD_War3help( id );
+		case 4:	menu_Admin_Options( id );
 	}
 	
 	return;
 }
 
-public menu_Skill_Options(id){
+public menu_Skill_Options( id )
+{
 
 	new pos = 0, i, menu_body[512], menuitems[3][32]
 	new keys = (1<<0)|(1<<1)|(1<<2)|(1<<8)|(1<<9)
@@ -71,7 +74,7 @@ public _menu_Skill_Options(id,key){
 		case 0:	MENU_SelectSkill( id );
 		case 1:	MOTD_SkillsInfo( id );
 		case 2:	CMD_Handle( id, "resetskills" );
-		case 8: menu_War3menu(id)
+		case 8: MENU_War3Menu(id)
 		default: return;
 	}
 	return;
@@ -108,9 +111,9 @@ public _menu_Race_Options(id,key){
 	switch (key){
 		case 0:	WC3_ChangeRaceStart( id );
 		case 1:	WC3_ShowRaceInfo( id );
-		case 2:	menu_ResetXP(id)
+		case 2:	MENU_ResetXP( id );
 		case 3:	MOTD_PlayerSkills( id );
-		case 8: menu_War3menu(id)
+		case 8: MENU_War3Menu(id)
 		default: return;
 	}
 	return;
@@ -149,7 +152,7 @@ public _menu_Item_Options(id,key){
 		case 1:	MENU_Shopmenu( id, 9 );
 		case 2:	MOTD_ItemsInfo( id, 0 );
 		case 3:	MOTD_ItemsInfo( id, 9 );
-		case 8: menu_War3menu(id)
+		case 8: MENU_War3Menu(id)
 		default: return;
 	}
 	return;
@@ -200,7 +203,7 @@ public _menu_Admin_Options(id,key){
 			menu_TeamXP_Options(id)
 		}
 		case 2: DB_SaveAll();
-		case 8: menu_War3menu(id)
+		case 8: MENU_War3Menu(id)
 	}
 	return;
 }
@@ -357,20 +360,20 @@ public _menu_TeamXP_Options(id,key){
 	return;
 }
 
-public menu_ResetXP(id)
+public MENU_ResetXP(id)
 {
 
-	new szMenu[512];
+	static szMenu[128];
 	new keys = (1<<0)|(1<<1)|(1<<9);
 	
-	format( szMenu, 511, "%L^n^n\w1. Yes^n\w2. No", id, "MENU_RESET_XP" );
+	formatex( szMenu, 127, "%L^n^n\w1. Yes^n\w2. No", id, "MENU_RESET_XP" );
 
-	show_menu(id, keys, szMenu, -1);
+	show_menu( id, keys, szMenu, -1 );
 
-	return PLUGIN_CONTINUE;
+	return;
 }
 
-public _menu_ResetXP( id, key )
+public _MENU_ResetXP( id, key )
 {
 	
 	if ( !WC3_Check() )
@@ -381,7 +384,7 @@ public _menu_ResetXP( id, key )
 	// User selected yes
 	if ( key == 0 )
 	{
-		XP_Reset(id);
+		XP_Reset( id );
 	}
 	
 	return;

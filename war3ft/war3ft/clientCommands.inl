@@ -351,7 +351,7 @@ CMD_Handle( id, szCmd[] )
 
 	else if ( CMD_Equal( id,  szCmd, "resetxp" ) )
 	{
-		menu_ResetXP( id );
+		MENU_ResetXP( id );
 	}
 
 	else if ( CMD_Equal( id,  szCmd, "itemsinfo" ) )
@@ -360,7 +360,7 @@ CMD_Handle( id, szCmd[] )
 	}
 	else if ( CMD_Equal( id,  szCmd, "war3menu" ) )
 	{
-		menu_War3menu(id)
+		MENU_War3Menu( id );
 	}
 	else if ( CMD_Equal( id,  szCmd, "savexp" ) )
 	{

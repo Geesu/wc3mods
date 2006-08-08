@@ -40,6 +40,8 @@
 #define ITEM_CHAMELEON	    16
 #define ITEM_MOLE		    17
 
+#define MAX_ITEMS_PAGE		9
+
 // Item Variables
 new g_iShopMenuItems[33][MAX_PLAYER_ITEMS];			// Holds the player's current items
 new g_iFutureItem[33];                              // Holds the item that the player wants to buy 

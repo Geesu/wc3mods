@@ -3,65 +3,31 @@
 public MOTD_ItemsInfo( id, iStart )
 {
 
-	new szTitle[128], pos = 0, i;
-	new szItemName[9][64], iItemID;
-
-	// Build the list of items
-	for ( i = 0; i < 9; i++ )
-	{
-		iItemID = iStart + i;
-
-		LANG_GetItemName ( iItemID, id, szItemName[i], 63 );
-	}
+	static szTmp[256], szTmp2[256], pos, i;
+	pos = 0;
 
 	// Add header
 	pos += formatex( szTmpMsg[pos], 2047-pos, "%s", MOTD_header );
 
 	// Add the item information
-	
-	// "Shopmenu 1"
+	for ( i = iStart; i < MAX_ITEMS_PAGE + iStart; i++ )
+	{
+		LANG_GetItemInfo( i, id, szTmp, 127 );
+		LANG_GetItemName( i, id, szTmp2, 127 );
+
+		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%s</div><br>", szTmp, szTmp2 );
+	}
+
 	if ( iStart == 0 )
 	{
-		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-		{
-			pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[0], id, "SHOPMENU_1" );
-			pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[1], id, "SHOPMENU_2" );
-		}
-		else if ( g_MOD == GAME_DOD )
-		{
-			pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[0], id, "DOD_SHOPMENU_1" );
-			pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[1], id, "DOD_SHOPMENU_2" );
-		}
-
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[2], id, "SHOPMENU_3", get_pcvar_num( CVAR_wc3_claw ), get_pcvar_num( CVAR_wc3_claw ) );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[3], id, "SHOPMENU_4" );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[4], id, "SHOPMENU_5" );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[5], id, "SHOPMENU_6" );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[6], id, "SHOPMENU_7" );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[7], id, "SHOPMENU_8" );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[8], id, "SHOPMENU_9" );
-	
-		formatex( szTitle, 127, "%L", id, "SHOPMENU_TITLE" );
+		formatex( szTmp, 127, "%L", id, "MOTD_TITLE_SHOPMENU" );
 	}
-
-	// "Shopmenu 2"
-	else if ( iStart == 9 )
+	else
 	{
-
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[0], id, "SHOPMENU2_1" );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[1], id, "SHOPMENU2_2" );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[2], id, "SHOPMENU2_3" );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[3], id, "SHOPMENU2_4" );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[4], id, "SHOPMENU2_5" );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[5], id, "SHOPMENU2_6", get_pcvar_num( CVAR_wc3_glove_timer ) );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[6], id, "SHOPMENU2_7" );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[7], id, "SHOPMENU2_8" );
-		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><div id='s'>%L</div><br>", szItemName[8], id, "SHOPMENU2_9" );
-
-		formatex( szTitle, 127, "%L", id, "SHOPMENU2_TITLE" );
+		formatex( szTmp, 127, "%L", id, "MOTD_TITLE_SHOPMENU2" );
 	}
 
-	show_motd( id, szTmpMsg, szTitle );
+	show_motd( id, szTmpMsg, szTmp );
 }
 
 public MOTD_PlayerSkills( id )

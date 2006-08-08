@@ -21,44 +21,6 @@ RACE_S_7 = Warden
 RACE_S_8 = Crypt Lord
 RACE_S_9 = Chameleon
 
-ITEM_0 = Ankh of Reincarnation
-ITEM_1 = Boots of Speed
-ITEM_2 = Claws of Attack
-ITEM_3 = Cloak of Shadows
-ITEM_4 = Mask of Death
-ITEM_5 = Necklace of Immunity
-ITEM_6 = Orb of Frost
-ITEM_7 = Periapt of Health
-ITEM_8 = Tome of Experience
-ITEM_9 = Scroll of Respawning
-ITEM_10 = Mole Protectant
-ITEM_11 = Helm of Excellence
-ITEM_12 = Amulet of the Cat
-ITEM_13 = Sock of the Feater
-ITEM_14 = Flaming Gloves of Warmth
-ITEM_15 = Ring of Regeneration +1
-ITEM_16 = Chameleon
-ITEM_17 = Mole
-
-ITEM_S_0 = Ankh
-ITEM_S_1 = Boots
-ITEM_S_2 = Claw
-ITEM_S_3 = Cloak
-ITEM_S_4 = Mask
-ITEM_S_5 = Necklace
-ITEM_S_6 = Orb
-ITEM_S_7 = Periapt
-ITEM_S_8 = Tome
-ITEM_S_9 = Scroll
-ITEM_S_10 = Protectant
-ITEM_S_11 = Helm
-ITEM_S_12 = Amulet
-ITEM_S_13 = Sock
-ITEM_S_14 = Gloves
-ITEM_S_15 = Ring
-ITEM_S_16 = Chameleon
-ITEM_S_17 = Mole
-
 SKILL_0 = Vampiric Aura
 SKILL_1 = Unholy Aura
 SKILL_2 = Levitation
@@ -139,6 +101,68 @@ SKILL_I_1_DOD = Gives you more stamina
 SKILL_I_10_DOD = Gives you a (%d%%, %d%% or %d%%) chance of spawning where you died
 SKILL_I_16_DOD = You will gain more money with each kill, half of this is also awarded to nearby teammates
 
+ITEM_0 = Ankh of Reincarnation
+ITEM_1 = Boots of Speed
+ITEM_2 = Claws of Attack
+ITEM_3 = Cloak of Shadows
+ITEM_4 = Mask of Death
+ITEM_5 = Necklace of Immunity
+ITEM_6 = Orb of Frost
+ITEM_7 = Periapt of Health
+ITEM_8 = Tome of Experience
+ITEM_9 = Scroll of Respawning
+ITEM_10 = Mole Protectant
+ITEM_11 = Helm of Excellence
+ITEM_12 = Amulet of the Cat
+ITEM_13 = Sock of the Feater
+ITEM_14 = Flaming Gloves of Warmth
+ITEM_15 = Ring of Regeneration +1
+ITEM_16 = Chameleon
+ITEM_17 = Mole
+
+ITEM_S_0 = Ankh
+ITEM_S_1 = Boots
+ITEM_S_2 = Claw
+ITEM_S_3 = Cloak
+ITEM_S_4 = Mask
+ITEM_S_5 = Necklace
+ITEM_S_6 = Orb
+ITEM_S_7 = Periapt
+ITEM_S_8 = Tome
+ITEM_S_9 = Scroll
+ITEM_S_10 = Protectant
+ITEM_S_11 = Helm
+ITEM_S_12 = Amulet
+ITEM_S_13 = Sock
+ITEM_S_14 = Gloves
+ITEM_S_15 = Ring
+ITEM_S_16 = Chameleon
+ITEM_S_17 = Mole
+
+ITEM_I_0 = If you die you will retrieve your equipment the following round
+ITEM_I_1 = Allows you to run faster
+ITEM_I_2 = +%d: An additional %d hp will be removed from the enemy on every successful attack
+ITEM_I_3 = Makes you partially invisible, invisibility is increased when holding the knife
+ITEM_I_4 = You will receive health for every hit on the enemy
+ITEM_I_5 = You will be immune to enemy ultimates
+ITEM_I_6 = Slows your enemy down when you hit him
+ITEM_I_7 = Receive extra health
+ITEM_I_8 = Automatically gain experience, this item is used on purchase
+ITEM_I_9 = You will respawn after death
+ITEM_I_10 = Deflects some damage from moles
+ITEM_I_11 = Immune to headshots
+ITEM_I_12 = You cannot be heard when running/going up ladders
+ITEM_I_13 = You will be able to jump higher
+ITEM_I_14 = You will be given a high explosive grenade every %d seconds
+ITEM_I_15 = Gives 1 health every 2 seconds, you can have 5 max (type rings to receive 5)
+ITEM_I_16 = You look like the enemy
+ITEM_I_17 = Teleported to enemy spawn at the start of the round, can only be used once
+
+ITEM_I_0_DOD = This item will make you respawn where you died
+ITEM_I_1_DOD = Gives you more stamina
+
+MOTD_TITLE_SHOPMENU = Shopmenu Item Information
+MOTD_TITLE_SHOPMENU2 = Shopmenu2 Item Information
 
 CURRENT_ITEMS_RING = Current Items: %s and %s x%d
 CURRENT_ITEMS = Current Items: %s and %s
@@ -160,25 +184,6 @@ UNTIL_YOUR_NEXT_GRENADE = %d second(s) until your next grenade
 DONT_DIE_GOOSE = Don't die next time and I'll give you another nade ya silly goose!
 RACE_NOT_YET_SELECTED = %s - race not yet selected%s
 PLAYER_SKILLS = Warcraft 3 Frozen Throne Player Skills
-SHOPMENU_1 = If you die you will retrieve your equipment the following round
-SHOPMENU_2 = Allows you to run faster
-SHOPMENU_3 = +%d: An additional %d hp will be removed from the enemy on every successful attack
-SHOPMENU_4 = Makes you partially invisible, invisibility is increased when holding the knife
-SHOPMENU_5 = You will receive health for every hit on the enemy
-SHOPMENU_6 = You will be immune to enemy ultimates
-SHOPMENU_7 = Slows your enemy down when you hit him
-SHOPMENU_8 = Receive extra health
-SHOPMENU_9 = Automatically gain experience, this item is used on purchase
-SHOPMENU_TITLE = Shopmenu Item Information
-SHOPMENU2_1 = You will respawn after death
-SHOPMENU2_2 = Deflects some damage from moles
-SHOPMENU2_3 = Immune to headshots
-SHOPMENU2_4 = You cannot be heard when running/going up ladders
-SHOPMENU2_6 = You will be given a high explosive grenade every %d seconds
-SHOPMENU2_7 = Gives 1 health every 2 seconds, you can have 5 max (type rings to receive 5)
-SHOPMENU2_8 = You look like the enemy
-SHOPMENU2_9 = Teleported to enemy spawn at the start of the round, can only be used once
-SHOPMENU2_TITLE = Shopmenu2 Item Information
 NOT_ULTIMATE_DURING_FREEZETIME = You may not use your ultimate during freezetime
 SUICIDE_BOMB_ARMED = Suicide Bomb Armed^nPress Again To Detonate
 BLINK_DISABLED_FOR_FIRST = Blink disabled for the^nfirst %.0f seconds of the round
@@ -258,12 +263,11 @@ MOTD_CLICK_FOR_LATEST = Click <a href="http://www.war3ft.com">here</a> for the l
 MOTD_MORE_INFO = Click <a href="http://war3ft.com/online/war3info.php?game=%s">here</a> for more information regarding the races
 
 ICONS_ARE_DISABLED = Race Icons are disabled
-INCORRECT_NUM_RACES = ERROR, INCORRECT NUMBER OF RACES ARE SELECTED
 MENU_BUY_ITEM = \yShopmenu 1\R$  Cost^n^n
 MENU_BUY_ITEM2 = \yShopmenu 2\R$  Cost^n^n
 MENU_SELECT_RACE = \ySelect Race:
 MENU_SELECT_SKILL = \ySelect Skill:\w^n
-MENU_WAR3_FT_MENU = \yWarcraft 3 Frozen Throne Menu
+MENU_WAR3MENU = \yWarcraft 3 Frozen Throne Options
 MENU_SKILLS_OPTIONS = \ySkills Options
 MENU_ITEM_OPTIONS = \yItem Options
 MENU_RACE_OPTIONS = \yRace Options
@@ -277,22 +281,24 @@ WAR3HELP_TITLE = Warcraft 3 Frozen Throne Help
 WAR3HELP :
 This is how you bind a key<p>
 1) Type ` to get to the console (key to the left of number 1)<br>
-2) Type bind alt ultimate<br>
+2) Type bind mouse3 ultimate<br>
 3) Type bind - shopmenu<br>
 4) Type bind = shopmenu2<br>
-5) Type bind p ability<p>
+5) Type bind alt ability<p>
 There are a few commands you need to know in order take full advantage of the plugin<p>
-say /selectskill - Allows you to select skills before the start of the next round<br>
+say /ability - if you have serpent wards it will plant them<br>
 say /changerace - Allows you to change your race<br>
-say /playerskills - Shows you what skills other players have chosen<br>
-say /skillsinfo - Shows you what each skill does for the race you have selected<br>
 say /itemsinfo - Shows you a list of items and what they do<br>
 say /itemsinfo2 - Shows you more items<br>
 say /level - Shows you what race, level and skills you have<br>
-say /war3menu -  Shows the War3 Frozen Throne Player menu<br>
-say /ability - if you have serpent wards it will plant them<br>
+say /movespeed - Shows your current movespeed<br>
+say /playerskills - Shows you what skills other players have chosen<br>
 say /resetskills - resets your skills<br>		
 say /resetxp - Will reset your level and XP to 0
+say /selectskill - Allows you to select skills before the start of the next round<br>
+say /skillsinfo - Shows you what each skill does for the race you have selected<br>
+say /war3menu -  Shows the War3 Frozen Throne Player menu<br>
+
 :
 
 ULTIMATE_NOT_READY = Ultimate not ready.^n(%d seconds remaining)
@@ -328,9 +334,6 @@ INFO_SHOPMENU2_8 = You now look like the enemy
 INFO_SHOPMENU2_9 = You will be disguised as your enemy and appear at the enemy's spawn next round
 SKILL_REINCARNATION_SKIPPING = Skipping reincarnation this round due to nearby enemies
 SKILL_REINCARNATION_FAILED = Reincarnation failed
-DOD_SHOPMENU_1 = This item will make you respawn where you died
-DOD_SHOPMENU_2 = Gives you more stamina
-SHOPMENU2_5 = You will be able to jump higher
 WORD_HERO_ABILITY = Hero Ability (passive)
 WORD_TRAINABLE_SKILLS = Trainable Skills
 WORD_INFORMATION = Information
