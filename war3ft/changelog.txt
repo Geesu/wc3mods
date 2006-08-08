@@ -65,7 +65,6 @@ v3.0
 
 //search map for buyzone on map start...  if not exists then don't create on for moles
 //update saving system to allow for uwc3?
-//is_in_viewcone for banish
 //clear items on death - the hud message
 //g_bPluginEnding should be false
 //use CSX for custom weapons?
