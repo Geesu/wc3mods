@@ -144,14 +144,27 @@ SM_SetPlayerRace( id, iRace )
 {
 	static i;
 
-	// Loop through all possible skills to find all valid skills for this race
-	for ( i = 0; i < MAX_SKILLS; i++ )
+	// Set up the chameleon skills
+	if ( iRace == RACE_CHAMELEON )
 	{
+		g_bPlayerSkills[id][g_ChamSkills[0]] = true;
+		g_bPlayerSkills[id][g_ChamSkills[1]] = true;
+		g_bPlayerSkills[id][g_ChamSkills[2]] = true;
+		g_bPlayerSkills[id][g_ChamSkills[3]] = true;
+		g_bPlayerSkills[id][g_ChamSkills[4]] = true;
+	}
 
-		// Valid skill found, assign it to this player
-		if ( g_SkillOwner[i] == iRace )
+	else
+	{
+		// Loop through all possible skills to find all valid skills for this race
+		for ( i = 0; i < MAX_SKILLS; i++ )
 		{
-			g_bPlayerSkills[id][i] = true;
+
+			// Valid skill found, assign it to this player
+			if ( g_SkillOwner[i] == iRace )
+			{
+				g_bPlayerSkills[id][i] = true;
+			}
 		}
 	}
 }
@@ -178,41 +191,47 @@ SM_ResetSkills( id )
 	}
 }
 
-// Function will return the total number of skill points used
-SM_TotalSkillsUsed( id )
-{
-	static i, iTotalSkillsUsed;
-	iTotalSkillsUsed = 0;
-
-	for ( i = 0; i < MAX_SKILLS; i++ )
-	{
-		iTotalSkillsUsed += g_PlayerSkillLevel[id][i];
-	}
-
-	return iTotalSkillsUsed;
-}
-
 // Function will return the skill ID number based on the position (i.e. used after a skill is selected)
 SM_GetSkillByPos( id, iPos )
 {
-	static iCurrentSkill, i;
-	iCurrentSkill = 1;
+	static i, j;
+	j = 0;
 
+	new iUserSkills[MAX_SKILLS] = {0};
+
+	// Sort by trainable first
 	for ( i = 0; i < MAX_SKILLS; i++ )
 	{
-		if ( g_bPlayerSkills[id][i] )
+		if ( g_bPlayerSkills[id][i] && g_SkillType[i] == SKILL_TYPE_TRAINABLE )
 		{
-			if ( iCurrentSkill == iPos )
-			{
-				return i;
-			}
-
-			iCurrentSkill++;
+			iUserSkills[j++] = i;
 		}
 	}
 
-	// Technically we should NEVER be here
-	log_error( AMX_ERR_NONE, "No valid skill found for position %d with race %d", iPos, p_data[id][P_RACE] );
+	// Then sort by ultimates
+	for ( i = 0; i < MAX_SKILLS; i++ )
+	{
+		if ( g_bPlayerSkills[id][i] && g_SkillType[i] == SKILL_TYPE_ULTIMATE )
+		{
+			iUserSkills[j++] = i;
+		}
+	}
+
+	// Then sort by passive
+	for ( i = 0; i < MAX_SKILLS; i++ )
+	{
+		if ( g_bPlayerSkills[id][i] && g_SkillType[i] == SKILL_TYPE_PASSIVE )
+		{
+			iUserSkills[j++] = i;
+		}
+	}
+
+	// Now lets return the position
+	
+	if ( iUserSkills[iPos] != 0 )
+	{
+		return iUserSkills[iPos];
+	}
 
 	return -1;
 }
@@ -222,7 +241,7 @@ SM_GetSkillLevel( id, skill_id )
 {
 	if ( !SM_IsValidSkill( skill_id ) )
 	{
-		log_error( AMX_ERR_NONE, "Invalid skill: %d", skill_id );
+		log_error( AMX_ERR_NATIVE, "[0] Invalid skill: %d", skill_id );
 
 		return 0;
 	}
@@ -247,7 +266,7 @@ SM_SetSkillLevel( id, skill_id, iLevel )
 {
 	if ( !SM_IsValidSkill( skill_id ) )
 	{
-		log_amx( "Invalid skill: %d", skill_id );
+		log_error( AMX_ERR_NATIVE, "[1] Invalid skill: %d", skill_id );
 
 		return;
 	}
@@ -261,7 +280,7 @@ SM_SetSkillLevel( id, skill_id, iLevel )
 	// We shouldn't be setting a passive skill's level!
 	if ( g_SkillType[skill_id] == SKILL_TYPE_PASSIVE )
 	{
-		log_error( AMX_ERR_NONE, "Setting a passive skill's level %d to %d", skill_id, iLevel );
+		log_error( AMX_ERR_NATIVE, "Setting a passive skill's level %d to %d", skill_id, iLevel );
 
 		return;
 	}
@@ -286,8 +305,16 @@ bool:SM_IsValidSkill( skill_id )
 // Function will get a random skill for the user's current skills (great for bots)
 SM_GetRandomSkill( id )
 {
+
+	// Make sure a skill is available
+	if ( !SM_SkillAvailable( id ) )
+	{
+		return -1;
+	}
+
 	static iRandomSkill;
 	
+
 	// Initial condition selected
 	iRandomSkill = random_num( 0, MAX_SKILLS - 1 );
 
@@ -299,12 +326,27 @@ SM_GetRandomSkill( id )
 	return iRandomSkill;
 }
 
+bool:SM_SkillAvailable( id )
+{
+	static i;
+
+	for ( i = 0; i < MAX_SKILLS; i++ )
+	{
+		if ( g_bPlayerSkills[id][i] )
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 // Function will simply return the skill type
 SM_GetSkillType( skill_id )
 {
 	if ( !SM_IsValidSkill( skill_id ) )
 	{
-		log_amx( "Invalid skill: %d", skill_id );
+		log_error( AMX_ERR_NATIVE, "[2] Invalid skill: %d", skill_id );
 
 		return 0;
 	}
@@ -312,8 +354,7 @@ SM_GetSkillType( skill_id )
 	return g_SkillType[skill_id];
 }
 
-// Returns the total selectable skills that this user currently has
-SM_TotalSelectableSkills( id )
+SM_TotalSkillPointsUsed( id )
 {
 	static i, iTotal;
 	iTotal = 0;
@@ -324,7 +365,7 @@ SM_TotalSelectableSkills( id )
 		{
 			if ( g_bPlayerSkills[id][i] )
 			{
-				iTotal++;
+				iTotal += g_PlayerSkillLevel[id][i];
 			}
 		}
 	}

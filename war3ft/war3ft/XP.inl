@@ -408,7 +408,7 @@ XP_Check( id, bShowGained = true )
 	}
 
 	// We might need to lower the skills the user has ( can occur if you load XP info from a database and the XP multiplier has changed)
-	new iSkillsUsed = SM_TotalSelectableSkills( id );
+	new iSkillsUsed = SM_TotalSkillPointsUsed( id );
 	new iSkillID, iSkillLevel;
 
 	while ( iSkillsUsed > p_data[id][P_LEVEL] )
@@ -427,11 +427,11 @@ XP_Check( id, bShowGained = true )
 		SM_SetSkillLevel( id, iSkillID, iSkillLevel - 1 );
 
 		// Get our current skills used
-		iSkillsUsed = SM_TotalSelectableSkills( id );
+		iSkillsUsed = SM_TotalSkillPointsUsed( id );
 	}
 	
 	// OK lets check the total skills the user has, and maybe show them the selectskills menu
-	new iTotalSkillsUsed = SM_TotalSelectableSkills( id );
+	new iTotalSkillsUsed = SM_TotalSkillPointsUsed( id );
 
 	if ( iTotalSkillsUsed < p_data[id][P_LEVEL] )
 	{

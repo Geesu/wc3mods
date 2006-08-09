@@ -39,6 +39,29 @@ public CHAM_Randomize()
 
 			g_ChamSkills[i] = iNewSkill;
 		}
+
+		// Do we need to set-up the skills for certain players?
+		new iPlayers[32], iNumPlayers, id;
+		get_players( iPlayers, iNumPlayers );
+
+		for ( i = 0; i < iNumPlayers; i++ )
+		{
+			id = iPlayers[i];
+
+			if ( p_data[id][P_RACE] == RACE_CHAMELEON )
+			{
+				
+				// Reset everything
+				SM_ResetSkillLevels( id );
+				SM_ResetSkills( id );
+
+				// Set up the player's race again
+				SM_SetPlayerRace( id, RACE_CHAMELEON );
+
+				// Show the skill info
+				WC3_ShowRaceInfo( id );
+			}
+		}
 	} 
 }
 

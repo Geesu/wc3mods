@@ -542,10 +542,10 @@ new bool:g_bMoleBuyZoneDisabled = false;
 
 // Used with g_SkillOrder
 #define SKILL_POS_NONE			-1
-#define SKILL_POS_1				1
-#define SKILL_POS_2				2
-#define SKILL_POS_3				3
-#define SKILL_POS_4				4
+#define SKILL_POS_1				0
+#define SKILL_POS_2				1
+#define SKILL_POS_3				2
+#define SKILL_POS_4				3
 
 new g_SkillOwner[MAX_SKILLS	];	// For each skill, says who the owning race is
 new g_SkillType[MAX_SKILLS	];	// For each skill, says what type of skill it is (trainable/ultimate/passive)

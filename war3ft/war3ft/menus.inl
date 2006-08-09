@@ -672,7 +672,7 @@ public MENU_SelectSkill( id )
 	}
 
 	// Lets make sure the user has some available skill points
-	new iSkillsUsed = SM_TotalSkillsUsed( id );
+	new iSkillsUsed = SM_TotalSkillPointsUsed( id );
 	if ( iSkillsUsed >= p_data[id][P_LEVEL] )
 	{
 
@@ -685,6 +685,12 @@ public MENU_SelectSkill( id )
 	// Bots don't need a menu now do they??
 	if ( is_user_bot( id ) )
 	{
+		// No race has been selected yet!!
+		if ( !SM_SkillAvailable( id ) )
+		{
+			return;
+		}
+
 		static iRandomSkill, iSkillLevel;
 
 	
@@ -707,7 +713,7 @@ public MENU_SelectSkill( id )
 				SM_SetSkillLevel( id, iRandomSkill, iSkillLevel + 1 );
 			}
 
-			iSkillsUsed = SM_TotalSkillsUsed( id );
+			iSkillsUsed = SM_TotalSkillPointsUsed( id );
 		}
 
 		return;
@@ -716,22 +722,19 @@ public MENU_SelectSkill( id )
 	// OK set up a menu!!!
 
 	new szMsg[512], pos = 0, szSkillName[64];
-	
+	new iSkillCounter = 0, iSkillID = 0, iKeys = (1<<9), iSkillLevel;
+
 	// Add the menu header
 	pos += formatex( szMsg[pos], 512-pos, "%L", id, "MENU_SELECT_SKILL" );
 
-	// Lets get the names of all the skills	+ add them to the menu
-	new iSkillCounter = 1, iSkillID, iKeys = (1<<9), iSkillLevel;
-	new iTotalSkills = SM_TotalSelectableSkills( id );
+	iSkillID = SM_GetSkillByPos( id, iSkillCounter );
 
-	while ( iSkillCounter <= iTotalSkills )
+	while ( iSkillID != -1 )
 	{
-		iSkillID = SM_GetSkillByPos( id, iSkillCounter );
 		iSkillLevel = SM_GetSkillLevel( id, iSkillID );
 
 		LANG_GetSkillName( iSkillID , id, szSkillName, 63 );
 		
-
 		// Add the trainable skills to the menu
 		if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_TRAINABLE )
 		{
@@ -745,20 +748,21 @@ public MENU_SelectSkill( id )
 				{
 					pos += formatex( szMsg[pos], 512-pos, "\d" );
 				}
-				
+
 				// Then the user can choose it!
 				else
 				{
 					iKeys |= (1<<iSkillCounter);
 				}
 
-				pos += formatex( szMsg[pos], 512-pos, "^n%d. %s %L %d\w", iSkillCounter, szSkillName, id, "WORD_LEVEL", iSkillLevel + 1 );
+				pos += formatex( szMsg[pos], 512-pos, "^n%d. %s %L %d\w", iSkillCounter+1, szSkillName, id, "WORD_LEVEL", iSkillLevel + 1 );
 			}
 		}
 		
 		// Add the ultimate to the menu
 		else if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_ULTIMATE )
 		{
+
 			if ( iSkillLevel < MAX_ULTIMATE_LEVEL )
 			{
 				// User can't choose ultimate yet :/
@@ -770,14 +774,15 @@ public MENU_SelectSkill( id )
 				// Then the user is level 6 or above and can select their ultimate!
 				else
 				{
-					iKeys |= (1<<3);
+					iKeys |= (1<<iSkillCounter);
 				}
 
-				pos += formatex( szMsg[pos], 512-pos, "^n4. %L: %s\w", id, "WORD_ULTIMATE", szSkillName );
+				pos += formatex( szMsg[pos], 512-pos, "^n%d. %L: %s\w", iSkillCounter+1, id, "WORD_ULTIMATE", szSkillName );
 			}
 		}
 
-		++iSkillCounter;
+		iSkillCounter++;
+		iSkillID = SM_GetSkillByPos( id, iSkillCounter );
 	}
 
 	// Add the cancel button to the menu
@@ -798,7 +803,7 @@ public _MENU_SelectSkill( id, iKey )
 	}
 
 	// Determine which key was just selected
-	new iSkillID = SM_GetSkillByPos( id, iKey + 1 );
+	new iSkillID = SM_GetSkillByPos( id, iKey );
 
 	// Get the user's current skill level
 	new iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
@@ -806,7 +811,7 @@ public _MENU_SelectSkill( id, iKey )
 	// Add one to their level!
 	SM_SetSkillLevel( id, iSkillID, iCurrentLevel + 1 );
 
-	new iSkillsUsed = SM_TotalSkillsUsed( id );
+	new iSkillsUsed = SM_TotalSkillPointsUsed( id );
 	
 	// Then they have another skill to select!!
 	if ( iSkillsUsed < p_data[id][P_LEVEL] )

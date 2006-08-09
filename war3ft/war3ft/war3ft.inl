@@ -421,6 +421,9 @@ public _WC3_RunAfterConfig()
 
 	// Set up our CVARs - some of them
 	CVAR_Configure();
+
+	// Randomize Chameleon if necessary
+	CHAM_Randomize();
 }
 
 public WC3_DetermineGame()
@@ -458,7 +461,7 @@ public WC3_GetUserInput( id )
 		return;
 	}
 
-	new iTotalSkillsUsed = SM_TotalSelectableSkills( id );
+	new iTotalSkillsUsed = SM_TotalSkillPointsUsed( id );
 	
 	// User has no race
 	if ( p_data[id][P_RACE] == 0 )
@@ -594,6 +597,9 @@ WC3_SetRace( id, race )
 		dod_set_fuse( id, FUSE_RESET );
 	}
 
+	// This function will assign the race's skills to this player
+	SM_SetPlayerRace( id, p_data[id][P_RACE] );
+
 	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
 	{
 		p_data[id][P_LEVEL] = 0
@@ -610,9 +616,6 @@ WC3_SetRace( id, race )
 // Function called right after the user's race information is set
 WC3_SetRaceUp( id )
 {
-	// This function will assign the race's skills to this player
-	SM_SetPlayerRace( id, p_data[id][P_RACE] );
-
 	WC3_SetSkills( id );
 
 	// Copy the global ULT timeout over to just this user...
@@ -625,7 +628,7 @@ WC3_SetRaceUp( id )
 	}
 	
 	// See if there are any skills available
-	new iSkillsUsed = SM_TotalSelectableSkills( id );
+	new iSkillsUsed = SM_TotalSkillPointsUsed( id );
 	if ( iSkillsUsed < p_data[id][P_LEVEL] )
 	{
 		MENU_SelectSkill( id );
@@ -794,10 +797,10 @@ WC3_ShowRaceInfo( id )
 
 		pos += formatex( szMsg[pos], 255-pos, "%s^n%L %d", szRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL] );
 
-		new iSkillCounter = 1, iSkillID, iSkillLevel;
-		new iTotalSkills = SM_TotalSelectableSkills( id );
+		new iSkillCounter = 0, iSkillID, iSkillLevel;
+		new iTotalSkills = SM_TotalSkillPointsUsed( id );
 
-		while ( iSkillCounter <= iTotalSkills )
+		while ( iSkillCounter < iTotalSkills )
 		{
 			iSkillID = SM_GetSkillByPos( id, iSkillCounter );
 			iSkillLevel = SM_GetSkillLevel( id, iSkillID );
@@ -821,6 +824,8 @@ WC3_ShowRaceInfo( id )
 			{
 				pos += formatex( szMsg[pos], 255-pos, "^n%s", szSkillName );
 			}
+
+			iSkillCounter++;
 		}
 
 		WC3_StatusText( id, TXT_RACE_INFO, szMsg );

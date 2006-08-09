@@ -541,8 +541,6 @@ public _SHARED_CS_GiveWeapons(id)
 		return;
 	}
 
-	log_amx( "[GIVEWEAPONS] %d", id );
-
 	// Check to see if the user should have the bomb
 	new bool:bGiveBomb = false;
 	if ( cs_get_user_plant( id ) )
@@ -612,8 +610,6 @@ public _SHARED_CS_GiveWeapons(id)
 			get_weaponname( iWeapID, szWeaponName, 31 );
 
 			bPrimaryFound = true;
-
-			log_amx( "[PRIMARY] Found: %s (%d)", szWeaponName, iWeapID );
 		}
 	}
 
@@ -623,19 +619,8 @@ public _SHARED_CS_GiveWeapons(id)
 		if ( !bPrimaryFound )
 		{
 			give_item( id, "weapon_shield" );
-			log_amx( "[SHIELD] Giving" );
-		}
-		else
-		{
-			log_amx( "[SHIELD] Primary weapon found" );
 		}
 	}
-	else
-	{
-		log_amx( "[SHIELD] Not found" );
-
-	}
-
 
 	// GIve them their flash bangs back
 	while ( p_data[id][P_FLASHCOUNT] > 0 )
