@@ -623,9 +623,13 @@ EVENT_JustBeforeSpawn( id )
 			p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
 		}
 
+		// Set the bot's race?
 		if ( random_float( 0.0, 1.0 ) <= BOT_CHANGERACE || !p_data[id][P_RACE] )
 		{
 			p_data[id][P_RACE] = random_num( 1, get_pcvar_num( CVAR_wc3_races ) );
+
+			// Now lets set the bot's race!
+			WC3_SetRace( id, p_data[id][P_RACE] );
 		}
 	}
 }

@@ -224,44 +224,20 @@ public plugin_init()
 	register_concmd( "test", "test" );
 }
 
-new iShit[50];
-new bool:bCheck = false;
-
 public test(id)
 {
-	new iTemp;
+	new players[32], num, i, szName[32];
+	get_players( players, num );
 
-	//4 stores id
-	for ( new i = 0; i < 37; i++ )
+	for ( i = 0; i < num; i++ )
 	{
+		get_user_name( players[i], szName, 31 );
 
-		if ( bCheck )
-		{
-			iTemp = entity_get_int( id, i );
+		log_amx( "**** %s ****", szName );
 
-			if ( iTemp != iShit[i] )
-			{
-				console_print( id, "[%d] %d:%d", i, iTemp, iShit[i] );
-			}
-		}
-
-		else
-		{
-			iShit[i] = entity_get_int( id, i );
-		}
-	}
-
-	if ( bCheck )
-	{
-		bCheck = false;
-
-		client_print( id, print_chat, "Set to false" );
-	}
-	else
-	{
-		bCheck = true;
-
-		client_print( id, print_chat, "Set to true" );
+		SM_DebugPrint( players[i] );
+		
+		log_amx( " ", szName );
 	}
 }
 

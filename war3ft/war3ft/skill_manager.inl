@@ -398,3 +398,50 @@ bool:SM_IsValidRace( iRace )
 
 	return false;
 }
+
+// Prints debug info on a player to the console...
+SM_DebugPrint( id )
+{
+	static iSkillID;
+	new szSkillName[32];
+
+
+	// **** Trainable ****
+	log_amx( "=== Trainable ===" );
+	
+	iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_TRAINABLE );
+	while ( iSkillID != -1 )
+	{
+		LANG_GetSkillName( iSkillID, LANG_SERVER, szSkillName, 31 );
+
+		log_amx( "[%d] %s", iSkillID, szSkillName );
+
+		iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_TRAINABLE, iSkillID + 1 );
+	}
+
+	// **** Ultimates ****
+	log_amx( "=== Ultimates ===" );
+	
+	iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
+	while ( iSkillID != -1 )
+	{
+		LANG_GetSkillName( iSkillID, LANG_SERVER, szSkillName, 31 );
+
+		log_amx( "[%d] %s", iSkillID, szSkillName );
+
+		iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE, iSkillID + 1 );
+	}
+
+	// **** Passive ****
+	log_amx( "=== Passive ===" );
+	
+	iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_PASSIVE );
+	while ( iSkillID != -1 )
+	{
+		LANG_GetSkillName( iSkillID, LANG_SERVER, szSkillName, 31 );
+
+		log_amx( "[%d] %s", iSkillID, szSkillName );
+
+		iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_PASSIVE, iSkillID + 1 );
+	}
+}
