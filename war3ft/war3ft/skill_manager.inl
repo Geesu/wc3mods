@@ -197,13 +197,7 @@ SM_GetSkillByPos( id, iPos )
 	static i, j;
 	j = 0;
 
-	new iUserSkills[MAX_SKILLS];
-
-	for ( i = 0; i < MAX_SKILLS; i++ )
-	{
-		//server_print( "[DEBUG] [%d]: %d", i, iUserSkills[i] );
-		iUserSkills[i] = -1;
-	}
+	new iUserSkills[MAX_SKILLS] = {-1, ...};
 
 	// Sort by trainable first
 	for ( i = 0; i < MAX_SKILLS; i++ )
