@@ -197,7 +197,13 @@ SM_GetSkillByPos( id, iPos )
 	static i, j;
 	j = 0;
 
-	new iUserSkills[MAX_SKILLS] = {0};
+	new iUserSkills[MAX_SKILLS];
+
+	for ( i = 0; i < MAX_SKILLS; i++ )
+	{
+		//server_print( "[DEBUG] [%d]: %d", i, iUserSkills[i] );
+		iUserSkills[i] = -1;
+	}
 
 	// Sort by trainable first
 	for ( i = 0; i < MAX_SKILLS; i++ )
@@ -227,8 +233,8 @@ SM_GetSkillByPos( id, iPos )
 	}
 
 	// Now lets return the position
-	
-	if ( iUserSkills[iPos] != 0 )
+
+	if ( iUserSkills[iPos] != -1 )
 	{
 		return iUserSkills[iPos];
 	}
