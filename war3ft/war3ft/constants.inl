@@ -684,10 +684,6 @@ new bool:g_bExtraSpritesEnabled = false
 #define HUDMESSAGE_FX_FLICKER   1
 #define HUDMESSAGE_FX_WRITEOUT  2
 
-// Variable used so we don't do any threading queries on mapchange
-new bool:g_bPluginEnding = true;
-
-
 // Used for spectating info
 #define SPEC_HOLDTIME		10.0
 new g_iSpectatingID[33];

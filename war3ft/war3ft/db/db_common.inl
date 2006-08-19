@@ -191,9 +191,7 @@ public DB_SaveAll()
 
 	for ( i = 0; i < numofplayers; i++ )
 	{
-		set_task( fTime, "DB_SaveXP", TASK_SAVE + players[i] );
-
-		fTime += 0.1;
+		DB_SaveXP( players[i] );
 	}
 
 	return;

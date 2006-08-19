@@ -253,8 +253,6 @@ public plugin_end()
 		return;
 	}
 	
-	g_bPluginEnding = true;
-
 	DB_SaveAll();
 	DB_Prune();
 	DB_Close();

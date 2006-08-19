@@ -152,24 +152,7 @@ MYSQLX_Save( id )
 	new szQuery[512];
 	format( szQuery, 511, "REPLACE INTO `%s` (`playerid`, `playerip`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', '%s', %d, %d, %d, %d, %d, %d)", g_DBTableName, szPlayerID, szPlayerIP, szPlayerName, p_data[id][P_XP], p_data[id][P_RACE], iSkillLevels[0], iSkillLevels[1], iSkillLevels[2], iSkillLevels[3] );
 	
-	// Then we don't want to do threaded!
-	if ( g_bPluginEnding )
-	{
-		new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
-
-		if ( !SQL_Execute( query ) )
-		{
-			MYSQLX_Error( query, szQuery, 5 );
-
-			return;
-		}
-	}
-
-	// We're clear lets thread it!
-	else
-	{
-		SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save", szQuery )
-	}
+	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save", szQuery )
 
 	return;
 }
