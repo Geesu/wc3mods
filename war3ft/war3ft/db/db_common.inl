@@ -185,7 +185,6 @@ public DB_SaveAll()
 		return;
 	}
 
-	new Float:fTime = 0.0;
 	new players[32], numofplayers, i;
 	get_players( players, numofplayers );
 
