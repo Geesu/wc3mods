@@ -167,6 +167,5 @@ stock UTIL_CanSeePlayer( id, iTargetID )
 	new Float:vOrigin[3];
 	entity_get_vector( iTargetID, EV_VEC_origin, vOrigin );
 
-
 	return is_in_viewcone( id, vOrigin );
 }

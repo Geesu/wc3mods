@@ -150,7 +150,7 @@ public ITEM_Buy( id, iItem )
 		return;
 	}
 
-	else if ( ( iItem != ITEM_NECKLACE && iItem != ITEM_HELM && iItem != ITEM_RING && iItem != ITEM_TOME ) && ITEM_GetSlot( id ) == ITEM_SLOT_FULL )
+	else if ( !ITEM_CheckMultiples( id, iItem ) && iItem != ITEM_TOME ) && ITEM_GetSlot( id ) == ITEM_SLOT_FULL )
 	{
 		g_iFutureItem[id] = iItem;
 
@@ -532,6 +532,17 @@ ITEM_Has( id, iItem )
 		return ITEM_SLOT_TWO;
 
 	return ITEM_NONE;
+}
+
+ITEM_CheckMultiples( id, iItem )
+{
+	if ( iItem != ITEM_NECKLACE && iItem != ITEM_HELM && iItem != ITEM_RING )
+		return 0;
+
+	if ( ITEM_Has( id, iItem ) == ITEM_NONE )
+		return 0;
+
+	return 1;
 }
 
 // Item Death Function
