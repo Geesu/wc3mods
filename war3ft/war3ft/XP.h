@@ -7,7 +7,7 @@
 #define DEFUSED_BOMB		20			// XP awarded when the user defuses the bomb
 #define PLANTING_BOMB		10			// XP awarded when the user starts planting the bomb
 #define PLANT_BOMB			20			// XP awarded when the user plants the bomb
-#define SPAWN_BOMB			5			// XP awarded when the user spawns with the bomb
+#define SPAWN_BOMB			10			// XP awarded when the user spawns with the bomb
 #define BOMB_PICKUP			10			// XP awarded when the user picks up the bomb
 #define TOUCH_HOSTAGE		10			// XP awarded when the user touches a hostage
 #define RESCUE_HOSTAGE		20			// XP awarded when the user rescues the hostage
