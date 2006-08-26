@@ -525,8 +525,6 @@ public _MENU_ChangeRace( id, key )
 			}
 		}
 
-		client_print( id, print_chat, "[DEBUG] You selected race %d, there are %d so far and the limit is %d", iRace, iTotalRaces[iRace], iRaceLimit );
-		
 		// Make sure the total races aren't greater than the limit!
 		if ( iTotalRaces[iRace] >= iRaceLimit )
 		{
