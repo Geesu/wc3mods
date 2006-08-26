@@ -29,6 +29,118 @@ ITEM_Init()
 	{
 		ITEM_COST[ITEM_SCROLL]	= 800;
 	}
+
+	// Items are chargeable
+	g_iFlag[ITEM_NECKLACE]	|= ITEM_CHARGEABLE;
+	g_iFlag[ITEM_HELM]		|= ITEM_CHARGEABLE;
+	g_iFlag[ITEM_RING]		|= ITEM_CHARGEABLE;
+
+	// Items should be used when bought
+	g_iFlag[ITEM_TOME]		|= ITEM_USEONBUY;
+
+	// Items CAN be bought when dead
+	g_iFlag[ITEM_ANKH]		|= ITEM_BUYWHENDEAD;
+	g_iFlag[ITEM_SCROLL]	|= ITEM_BUYWHENDEAD;
+	g_iFlag[ITEM_MOLE]		|= ITEM_BUYWHENDEAD;
+}
+
+public ITEM_Buy( id, iItem )
+{
+
+	// User doesn't have the money
+	if ( SHARED_GetUserMoney( id ) < ITEM_COST[iItem] )
+	{
+		client_print( id, print_center, "%L", id, "INSUFFICIENT_FUNDS" );
+
+		return;
+	}
+	
+	// User already owns the item and it's not a chargeable item!
+	else if ( ITEM_Has( id, iItem ) > ITEM_NONE && !ITEM_CheckFlag( iItem, ITEM_CHARGEABLE ) )
+	{
+		client_print( id, print_center, "%L", id, "ALREADY_OWN_THAT_ITEM" );
+
+		return;
+	}
+	
+	// Make sure these items can be bought if the user is dead
+	else if ( !is_user_alive( id ) && !ITEM_CheckFlag( iItem, ITEM_BUYWHENDEAD ) ) 
+	{
+		client_print( id, print_center, "%L", id, "NOT_PURCHASE_WHEN_DEAD" );
+
+		return;
+	}
+	
+	// User has necklace + blink, they don't need a necklace
+	else if ( iItem == ITEM_NECKLACE && p_data_b[id][PB_WARDENBLINK] )
+	{
+		client_print( id, print_center, "You are already immune to ultimates through one of your skills!" );
+
+		return;
+	}
+
+	// User doesn't need an ankh if they're going to reincarnate
+	else if ( iItem == ITEM_ANKH && SM_GetSkillLevel( id, SKILL_REINCARNATION ) == 3 )
+	{
+		client_print( id, print_center, "You will already reincarnate your weapons through one of your skills!" );
+
+		return;
+	}
+	
+	// User has purchased the maximum allowed rings
+	else if ( g_iTotalRings[id] >= 5 && iItem == ITEM_RING )
+	{
+		client_print( id, print_center, "%L", id, "NOT_PURCHASE_MORE_THAN_FIVE_RINGS" );
+
+		return;
+	}
+
+	// User has purchased gloves when they're disabled on this map
+	else if ( iItem == ITEM_GLOVES && g_bGlovesDisabled )
+	{
+		client_print( id, print_chat, "Gloves are disabled on this map!" );
+
+		return;
+	}
+
+	// Check to see if the user can equip the item (Has < 2 items and item isn't a buy on use)
+	else if ( ITEM_GetSlot( id ) == ITEM_SLOT_FULL && !ITEM_CheckFlag( iItem, ITEM_USEONBUY ) )
+	{
+		new bool:bShowReplaceMenu = false;
+
+		// If the item isn't chargeable we need to replace it
+		if ( !ITEM_CheckFlag( iItem, ITEM_CHARGEABLE ) )
+		{
+			client_print( id, print_chat, "[DEBUG] Item is not chargeable" );
+
+			bShowReplaceMenu = true;
+		}
+
+		// We also need to replace it if the item is chargeable but they don't own that item
+		if ( ITEM_Has( id, iItem ) == ITEM_NONE && ITEM_CheckFlag( iItem, ITEM_CHARGEABLE ) )
+		{
+			client_print( id, print_chat, "[DEBUG] Doesn't have item and new item is chargeable" );
+
+			bShowReplaceMenu = true;
+		}
+
+		if ( bShowReplaceMenu )
+		{
+			g_iFutureItem[id] = iItem;
+
+			MENU_ReplaceItem( id )
+
+			return;
+		}
+	}
+
+	if ( ITEM_PreSet( id, iItem ) )
+	{
+		new iNewMoney = SHARED_GetUserMoney( id ) - ITEM_COST[iItem];
+		SHARED_SetUserMoney( id, iNewMoney );
+	}
+
+	return;
 }
 
 // Format the item for WC3_ShowBar
@@ -91,98 +203,28 @@ bool:ITEM_CanBuy( id )
 	return true;
 }
 
-public ITEM_Buy( id, iItem )
-{
-
-	// User doesn't have the money
-	if ( SHARED_GetUserMoney( id ) < ITEM_COST[iItem] )
-	{
-		client_print( id, print_center, "%L", id, "INSUFFICIENT_FUNDS" );
-
-		return;
-	}
-	
-	// User already owns the item!
-	else if ( ITEM_Has( id, iItem ) > ITEM_NONE && iItem != ITEM_RING && iItem != ITEM_NECKLACE && iItem != ITEM_HELM )
-	{
-		client_print( id, print_center, "%L", id, "ALREADY_OWN_THAT_ITEM" );
-
-		return;
-	}
-	
-	// Only MOLE + ANKH + SCROLL can be bought when dead
-	else if ( !is_user_alive( id ) && ( iItem != ITEM_ANKH && iItem != ITEM_MOLE && iItem != ITEM_SCROLL ) ) 
-	{
-		client_print( id, print_center, "%L", id, "NOT_PURCHASE_WHEN_DEAD" );
-
-		return;
-	}
-	
-	// User has necklace + blink, they don't need a necklace
-	else if ( iItem == ITEM_NECKLACE && p_data_b[id][PB_WARDENBLINK] )
-	{
-		client_print( id, print_center, "You are already immune to ultimates through one of your skills!" );
-
-		return;
-	}
-
-	// User doesn't need an ankh if they're going to reincarnate
-	else if ( iItem == ITEM_ANKH && SM_GetSkillLevel( id, SKILL_REINCARNATION ) == 3 )
-	{
-		client_print( id, print_center, "You will already reincarnate your weapons through one of your skills!" );
-
-		return;
-	}
-	
-	// User has purchased the maximum allowed rings
-	else if ( g_iTotalRings[id] >= 5 && iItem == ITEM_RING )
-	{
-		client_print( id, print_center, "%L", id, "NOT_PURCHASE_MORE_THAN_FIVE_RINGS" );
-
-		return;
-	}
-
-	// User has purchased gloves when they're disabled on this map
-	else if ( iItem == ITEM_GLOVES && g_bGlovesDisabled )
-	{
-		client_print( id, print_chat, "Gloves are disabled on this map!" );
-
-		return;
-	}
-
-	else if ( !ITEM_CheckMultiples( id, iItem ) && iItem != ITEM_TOME && ITEM_GetSlot( id ) == ITEM_SLOT_FULL )
-	{
-		g_iFutureItem[id] = iItem;
-
-		MENU_ReplaceItem( id )
-
-		return;
-	}
-
-	if ( ITEM_PreSet( id, iItem ) )
-	{
-		new iNewMoney = SHARED_GetUserMoney( id ) - ITEM_COST[iItem];
-		SHARED_SetUserMoney( id, iNewMoney );
-	}
-
-	return;
-}
-
 // Item Preset Function
 public ITEM_PreSet( id, iItem )
 {
-	if ( iItem == ITEM_TOME )
-	{
-		ITEM_Tome( id );
 
-		return 1;
+	// This item we should use instantly
+	if ( ITEM_CheckFlag( iItem, ITEM_USEONBUY ) )
+	{
+		if ( iItem == ITEM_TOME )
+		{
+			ITEM_Tome( id );
+
+			return 1;
+		}
 	}
 
-	else if ( iItem == ITEM_NECKLACE || iItem == ITEM_HELM || iItem == ITEM_RING )
+	// They are just adding some charges
+	else if ( ITEM_CheckFlag( iItem, ITEM_CHARGEABLE ) )
 	{
 		ITEM_SetMultipleItems( id, iItem );
 	}
 
+	// This is a replaceable item, lets do it!
 	else
 	{
 		if ( !ITEM_Set( id, iItem ) )
@@ -319,6 +361,38 @@ public ITEM_Set( id, iItem )
 	return 1;
 }
 
+// Item Equip Function
+public ITEM_Equip( id, iItem )
+{
+	new iItemSlot = ITEM_GetSlot( id );
+
+	// Items are full
+	if ( iItemSlot != ITEM_SLOT_FULL )
+	{
+
+		new iOldItem = g_iShopMenuItems[id][iItemSlot];
+
+		if ( iItem == iOldItem || ITEM_Has( id, iItem ) > ITEM_NONE )
+		{
+			return;
+		}
+
+		// Remove the user's old item if necessary
+		else if ( g_iShopMenuItems[id][iItemSlot] > ITEM_NONE )
+		{
+			ITEM_Remove( id, iItemSlot );
+		}
+			
+		// Set their new item
+		g_iShopMenuItems[id][iItemSlot] = iItem;
+	}
+
+	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_PICKUPITEM], 1.0, ATTN_NORM, 0, PITCH_NORM );
+	WC3_ShowBar( id );
+
+	return;
+}
+
 ITEM_SetMultipleItems( id, iItem )
 {
 	switch( iItem )
@@ -332,7 +406,7 @@ ITEM_SetMultipleItems( id, iItem )
 
 		case ITEM_HELM:
 		{
-			new iCharges = random_num( MIN_HELM_CHARGES, MAX_HELM_CHARGES );
+			new iCharges = HELM_CHARGES;
 
 			g_iHelmCharges[id] += iCharges;
 	
@@ -354,33 +428,6 @@ ITEM_SetMultipleItems( id, iItem )
 
 	WC3_ShowBar( id );
 	return 1;
-}
-
-// Item Equip Function
-public ITEM_Equip( id, iItem )
-{
-	new iItemSlot = ITEM_GetSlot( id );
-
-	new iOldItem = g_iShopMenuItems[id][iItemSlot];
-
-	if ( iItem == iOldItem || ITEM_Has( id, iItem ) > ITEM_NONE )
-	{
-		return;
-	}
-
-	// Remove the user's old item if necessary
-	else if ( g_iShopMenuItems[id][iItemSlot] > ITEM_NONE )
-	{
-		ITEM_Remove( id, iItemSlot );
-	}
-		
-	// Set their new item
-	g_iShopMenuItems[id][iItemSlot] = iItem;
-
-	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_PICKUPITEM], 1.0, ATTN_NORM, 0, PITCH_NORM );
-	WC3_ShowBar( id );
-
-	return;
 }
 
 // Item Remove Functions
@@ -451,10 +498,11 @@ public ITEM_Remove( id, iItemSlot )
 		{
 			if ( task_exists( TASK_ITEM_RING + id ) )
 			{
-				g_iTotalRings[id] = 0;
-
 				remove_task( TASK_ITEM_RING + id );
 			}
+			
+			// Set the number of rings to 0
+			g_iTotalRings[id] = 0;
 		}
 
 		case ITEM_CHAMELEON:
@@ -465,14 +513,14 @@ public ITEM_Remove( id, iItemSlot )
 
 	WC3_ShowBar( id );
 
-	return PLUGIN_HANDLED;
+	return;
 }
 
 ITEM_RemoveMultipleItems( id, iItem )
 {
 	if ( ITEM_Has( id, iItem ) > ITEM_NONE )
 	{
-		switch( iItem )
+		switch ( iItem )
 		{
 			case ITEM_NECKLACE:
 			{
@@ -532,17 +580,6 @@ ITEM_Has( id, iItem )
 		return ITEM_SLOT_TWO;
 
 	return ITEM_NONE;
-}
-
-ITEM_CheckMultiples( id, iItem )
-{
-	if ( iItem != ITEM_NECKLACE && iItem != ITEM_HELM && iItem != ITEM_RING )
-		return 0;
-
-	if ( ITEM_Has( id, iItem ) == ITEM_NONE )
-		return 0;
-
-	return 1;
 }
 
 // Item Death Function
@@ -779,4 +816,14 @@ ITEM_Scroll( id )
 
 		set_task( SPAWN_DELAY, "_SHARED_Spawn", TASK_SPAWN + id );
 	}
+}
+
+ITEM_CheckFlag( iItemID, iFlag )
+{
+	if ( g_iFlag[iItemID] & iFlag )
+	{
+		return true;
+	}
+
+	return false;	
 }

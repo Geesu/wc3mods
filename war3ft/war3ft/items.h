@@ -7,8 +7,7 @@
 
 // Item Charge Defines
 #define NECKLACE_CHARGES	3
-#define MIN_HELM_CHARGES	3
-#define MAX_HELM_CHARGES    5
+#define HELM_CHARGES		3
 #define CHARGE_DISPOSE      1
 #define RING_INCREMENT      1
 
@@ -54,3 +53,9 @@ new bool:g_bPlayerBoughtAnkh[33];					// Set to true when a user buys an ankh
 new bool:g_bPlayerBoughtMole[33];					// Set to true when a user buys a mole
 
 new ITEM_COST[MAX_SHOPMENU_ITEMS];                  // Holds the price of an item
+
+#define ITEM_CHARGEABLE		1
+#define ITEM_USEONBUY		2
+#define ITEM_BUYWHENDEAD	4
+
+new g_iFlag[MAX_SHOPMENU_ITEMS] = {0};			// Stores information about items
