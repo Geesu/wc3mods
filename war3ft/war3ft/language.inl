@@ -29,7 +29,7 @@ new const MENU_CALLBACK[TOTAL_MENUS][] =
 	"_MENU_Shopmenu1",
 	"_MENU_Shopmenu2",
 	"_MENU_SelectSkill",
-	"_MENU_SelectRace",
+	"_MENU_ChangeRace",
 	"_MENU_War3Menu",
 	"_menu_Skill_Options",
 	"_menu_Item_Options",

@@ -100,7 +100,7 @@ NVAULT_GetAllXP( id )
 	}
 
 	// Call the function that will display the "select a race" menu
-	WC3_ChangeRaceEnd( id, iRaceXP );
+	WC3_ChangeRaceShowMenu( id, iRaceXP );
 
 	return;
 }

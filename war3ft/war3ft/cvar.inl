@@ -18,6 +18,7 @@ new CVAR_wc3_spec_position;
 new CVAR_wc3_grenade_protection;
 new CVAR_wc3_cheats;
 new CVAR_wc3_psychostats;
+new CVAR_wc3_race_limit;
 
 // Icon CVARs
 new CVAR_wc3_race_icon;
@@ -111,6 +112,7 @@ public CVAR_Init()
 	CVAR_wc3_grenade_protection		= register_cvar( "wc3_grenade_protection"	, "0"							);
 	CVAR_wc3_cheats					= register_cvar( "wc3_cheats"				, "0"		, FCVAR_SERVER		);
 	CVAR_wc3_psychostats			= register_cvar( "wc3_psychostats"			, "1"							);
+	CVAR_wc3_race_limit				= register_cvar( "wc3_race_limit"			, "0"		, FCVAR_SERVER		);
 
 	// Icon CVARs
 
@@ -123,7 +125,7 @@ public CVAR_Init()
 	CVAR_wc3_save_pruning			= register_cvar( "wc3_save_pruning"			, "0"		, FCVAR_SERVER		);
 	CVAR_wc3_days_before_delete		= register_cvar( "SAVE_Expire_Time"			, "31"							);
 	CVAR_wc3_save_end_round			= register_cvar( "wc3_save_end_round"		, "1"							);
-	CVAR_wc3_save_xp_db			= register_cvar( "wc3_save_xp_db"			, "0"							);
+	CVAR_wc3_save_xp_db				= register_cvar( "wc3_save_xp_db"			, "0"							);
 	CVAR_wc3_save_by				= register_cvar( "wc3_save_by"				, "0"							);
 
 
@@ -177,8 +179,8 @@ public CVAR_Init()
 	CVAR_wc3_bot_buy_item			= register_cvar( "wc3_bot_buy_item"			, "0.33"						);
 
 	// MOD specific CVARs
-	CVAR_wc3_dod_start_money	= register_cvar( "wc3_dod_start_money"			, "800"							);
-	CVAR_wc3_boots				= register_cvar( "wc3_boots"					, "275"							);
+	CVAR_wc3_dod_start_money		= register_cvar( "wc3_dod_start_money"		, "800"							);
+	CVAR_wc3_boots					= register_cvar( "wc3_boots"				, "275"							);
 
 }
 

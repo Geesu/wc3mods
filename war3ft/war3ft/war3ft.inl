@@ -548,7 +548,7 @@ WC3_ChangeRaceStart( id )
 		// We're not saving XP, so lets just change the user's race
 		else
 		{
-			WC3_ChangeRaceEnd( id );
+			WC3_ChangeRaceShowMenu( id );
 		}
 	}
 
@@ -559,7 +559,7 @@ WC3_ChangeRaceStart( id )
 }
 
 // Function will show the "select a race" menu to the user
-WC3_ChangeRaceEnd( id, iRaceXP[MAX_RACES] = {0} )
+WC3_ChangeRaceShowMenu( id, iRaceXP[MAX_RACES] = {0} )
 {
 
 	// We don't want to replace the player's current XP with whats in the database now do we ?
@@ -569,7 +569,7 @@ WC3_ChangeRaceEnd( id, iRaceXP[MAX_RACES] = {0} )
 	}
 
 	// Need to call this here
-	MENU_SelectRace( id, iRaceXP );
+	MENU_ChangeRace( id, iRaceXP );
 }
 
 // This will actually give the user a given race

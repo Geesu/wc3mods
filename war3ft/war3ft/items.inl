@@ -150,7 +150,7 @@ public ITEM_Buy( id, iItem )
 		return;
 	}
 
-	else if ( !ITEM_CheckMultiples( id, iItem ) && iItem != ITEM_TOME ) && ITEM_GetSlot( id ) == ITEM_SLOT_FULL )
+	else if ( !ITEM_CheckMultiples( id, iItem ) && iItem != ITEM_TOME && ITEM_GetSlot( id ) == ITEM_SLOT_FULL )
 	{
 		g_iFutureItem[id] = iItem;
 

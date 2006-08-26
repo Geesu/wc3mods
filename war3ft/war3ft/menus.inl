@@ -391,7 +391,7 @@ public _MENU_ResetXP( id, key )
 }
 
 // Function will display the changerace menu
-public MENU_SelectRace( id, iRaceXP[MAX_RACES] )
+public MENU_ChangeRace( id, iRaceXP[MAX_RACES] )
 {
 	
 	new szRaceName[MAX_RACES+1][64], i, pos, iKeys = 0, szMenu[512], szXP[16];
@@ -470,7 +470,7 @@ public MENU_SelectRace( id, iRaceXP[MAX_RACES] )
 	return;
 }
 
-public _MENU_SelectRace( id, key )
+public _MENU_ChangeRace( id, key )
 {
 
 	if ( !WC3_Check() )
@@ -479,7 +479,7 @@ public _MENU_SelectRace( id, key )
 	}
 	
 	// User pressed 0 (cancel)
-	if( get_pcvar_num( CVAR_wc3_races ) < 9 && key-1 == get_pcvar_num( CVAR_wc3_races ) )
+	if ( get_pcvar_num( CVAR_wc3_races ) < 9 && key - 1 == get_pcvar_num( CVAR_wc3_races ) )
 	{
 		return;
 	}
@@ -504,6 +504,38 @@ public _MENU_SelectRace( id, key )
 	else
 	{
 		iRace = key + 1;
+	}
+
+	// If this is positive we need to make sure there aren't too many races
+	new iRaceLimit = get_pcvar_num( CVAR_wc3_race_limit );
+	if ( iRaceLimit > 0 )
+	{
+
+		new iPlayers[32], iNumPlayers, i, iTarget;
+		new iTotalRaces[MAX_RACES];
+		get_players( iPlayers, iNumPlayers );
+
+		for ( i = 0; i < iNumPlayers; i++ )
+		{
+			iTarget = iPlayers[i];
+
+			if ( iTarget != id )
+			{
+				iTotalRaces[p_data[iTarget][P_RACE]]++;
+			}
+		}
+
+		client_print( id, print_chat, "[DEBUG] You selected race %d, there are %d so far and the limit is %d", iRace, iTotalRaces[iRace], iRaceLimit );
+		
+		// Make sure the total races aren't greater than the limit!
+		if ( iTotalRaces[iRace] >= iRaceLimit )
+		{
+			client_print( id, print_center, "Too many people are that race, please choose another" );
+
+			WC3_ChangeRaceStart( id );
+
+			return;
+		}
 	}
 
 	// User currently has a race

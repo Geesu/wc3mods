@@ -233,7 +233,7 @@ SQLITE_GetAllXP( id )
 	dbi_free_result( res );
 
 	// Call the function that will display the "select a race" menu
-	WC3_ChangeRaceEnd( id, iRaceXP );
+	WC3_ChangeRaceShowMenu( id, iRaceXP );
 
 	return;
 }
