@@ -573,6 +573,8 @@ public _SHARED_CS_GiveWeapons(id)
 	if ( bGiveBomb )
 	{
 		give_item( id, "weapon_c4" );
+
+		cs_set_user_plant( id, 1, 1 );
 	}
 	
 	new iWeapID = 0, i = 0, bool:bPrimaryFound = false;
