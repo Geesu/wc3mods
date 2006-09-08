@@ -282,7 +282,7 @@ public ITEM_Set( id, iItem )
 
 		case ITEM_MASK:
 		{
-			new Float:fMask = ( 100.0 * get_pcvar_num( CVAR_wc3_mask ) );
+			new Float:fMask = ( 100.0 * get_pcvar_float( CVAR_wc3_mask ) );
 			client_print(id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_5", fMask );
 		}
 
