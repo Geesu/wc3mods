@@ -63,8 +63,6 @@ v3.0
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
-//fix lockup on map change
-//search map for buyzone on map start...  if not exists then don't create on for moles
 //update saving system to allow for uwc3?
 //clear items on death - the hud message
 //g_bPluginEnding should be false

@@ -2,6 +2,52 @@
 *	MYSQLX
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
+
+/*
+- New 3.0 DB structure
+
+CREATE TABLE IF NOT EXISTS `wc3_players` 
+(
+	`player_id` INT(8), - autonumber
+	`player_steamid` VARCHAR(35) NOT NULL DEFAULT '', 
+	`player_ip` VARCHAR(20) NOT NULL DEFAULT '', 
+	`player_name` VARCHAR(35) NOT NULL DEFAULT '', 
+	`time` TIMESTAMP(14) NOT NULL, 
+	PRIMARY KEY ( `player_id` )
+)
+
+CREATE TABLE IF NOT EXISTS `wc3_skills`
+(
+	`player_id` INT(8) NOT NULL DEFAULT 0,
+	`skill_id` INT(6) NOT NULL DEFAULT 0,
+	`skill_level` INT(3) NOT NULL DEFAULT 0,
+	PRIMARY KEY( `player_id`, `skill_id` )
+)
+
+CREATE TABLE IF NOT EXISTS `wc3_race`
+(
+	`player_id` INT(8) NOT NULL DEFAULT 0,
+	`race_id` TINYINT(4) NOT NULL DEFAULT 0,
+	`race_xp` INT(14) NOT NULL DEFAULT 0,
+	PRIMARY KEY ( `player_id`, `race_id` )
+)
+
+CREATE TABLE IF NOT EXISTS `wc3_web_skills`
+(
+	`skill_id` INT(6) NOT NULL DEFAULT 0,
+	`skill_name` VARCHAR(100),
+	PRIMARY KEY( `skill_id` )
+)
+
+CREATE TABLE IF NOT EXISTS `wc3_web_races`
+(
+	`race_id` INT(4) NOT NULL,
+	`race_name` VARCHAR(100),
+	PRIMARY KEY( `race_id` )
+)
+
+*/
+
 // Initiate the connection to the MySQL database
 MYSQLX_Init()
 {
@@ -63,7 +109,6 @@ MYSQLX_Init()
 
 MYSQLX_Upgrade()
 {
-
 	new szQuery[256];
 	format( szQuery, 255, "SHOW COLUMNS FROM `%s` LIKE 'playerip';", g_DBTableName );
 	

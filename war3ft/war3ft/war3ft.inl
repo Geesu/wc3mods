@@ -406,6 +406,26 @@ public WC3_Init()
 	g_bOrcNadesDisabled		= WC3_MapDisableCheck( "skill_orc_nade.cfg" );
 	g_bGlovesDisabled		= WC3_MapDisableCheck( "item_gloves.cfg" );
 	g_bMoleBuyZoneDisabled	= WC3_MapDisableCheck( "skill_mole_shopzone.cfg" );
+
+	// We need to check to see if the buyzone creation of buyzone should be disabled (why create a buyzone if one doesn't exist on the map!)
+	for ( i = 0; i <= get_global_int( GL_maxEntities ); i++ )
+	{
+		// We need to skip this ent since it isn't valid
+		if ( !is_valid_ent( i ) )
+		{
+			continue;
+		}
+
+		new szClassName[64];
+		entity_get_string( i, EV_SZ_classname, szClassName, 63 );
+		
+		// We found a buyzone
+		if ( equal( szClassName, "func_buyzone") )	
+		{
+			g_bMoleBuyZoneDisabled = true;
+			break;
+		}
+	}
 }
 
 public _WC3_RunAfterConfig()
