@@ -63,6 +63,7 @@ v3.0
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
+//check for wc3.css
 //update saving system to allow for uwc3?
 //clear items on death - the hud message
 //g_bPluginEnding should be false
