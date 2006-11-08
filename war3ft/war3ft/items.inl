@@ -227,10 +227,13 @@ public ITEM_PreSet( id, iItem )
 	// This is a replaceable item, lets do it!
 	else
 	{
-		if ( !ITEM_Set( id, iItem ) )
-		{
-			return 0;
-		}
+		// Equip the item
+		ITEM_Equip( id, iItem );
+
+		// Give bonuses
+		ITEM_Set( id, iItem )
+
+		return 1;
 	}
 
 	ITEM_Equip( id, iItem );
@@ -256,8 +259,7 @@ public ITEM_Set( id, iItem )
 		{
 			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 			{
-				new Float:fSpeed =  100.0 * ( 1.0-( 260.0 / get_pcvar_float( CVAR_wc3_boots ) ) );
-				client_print( id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_2", fSpeed );
+				client_print( id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_2", ( ( ITEM_BOOT_INCREASE - 1.0 ) * 100.0 ) );
 			}
 
 			else if ( g_MOD == GAME_DOD )
@@ -427,6 +429,7 @@ ITEM_SetMultipleItems( id, iItem )
 	}
 
 	WC3_ShowBar( id );
+
 	return 1;
 }
 

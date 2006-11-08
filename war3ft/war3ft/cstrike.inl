@@ -322,5 +322,30 @@ public on_GameRestart()
 
 	g_GameRestarting = true;
 
-	return
+	return;
+}
+
+// From war3x
+public on_Zoom( id )
+{
+
+	if ( !WC3_Check() )
+	{
+		return;
+	}
+
+	if ( read_data( 1 ) < 90 )
+	{
+		g_bPlayerZoomed[id] = true;
+	}
+
+	else
+	{
+		g_bPlayerZoomed[id] = false;
+	}
+
+	// We will need to change the user's speed on zooming
+	SHARED_SetSpeed( id );
+
+	return;
 }

@@ -1,4 +1,10 @@
-v3.0
+v3.0 RC2
+ - Bug Fix: Players running at same speed with all weapons
+ - Bug Fix: Boots of speed was same speed for all weapons, changed to bonus 5% increase per weapon
+
+// Known bug: boots displaying 4% on purchase
+
+v3.0 RC1
  - Addition: Start/Stop command: amx_wc3 <on|off>
  - Addition: If a needed module isn't loaded, the plugin will modify the modules.ini + reload the map
  - Addition: NVault now used instead of vault (will improve lag when there are NUMEROUS users and saving XP is on)

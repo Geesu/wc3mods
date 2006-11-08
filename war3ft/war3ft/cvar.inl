@@ -81,9 +81,6 @@ new CVAR_wc3_bot_buy_item;
 // DOD CVARs
 new CVAR_wc3_dod_start_money;
 
-// Cstrike/Czero CVARs
-new CVAR_wc3_boots;
-
 public CVAR_Init()
 {
 	// Plugin Information CVARs
@@ -180,7 +177,6 @@ public CVAR_Init()
 
 	// MOD specific CVARs
 	CVAR_wc3_dod_start_money		= register_cvar( "wc3_dod_start_money"		, "800"							);
-	CVAR_wc3_boots					= register_cvar( "wc3_boots"				, "275"							);
 
 }
 

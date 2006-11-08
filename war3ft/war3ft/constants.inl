@@ -398,6 +398,9 @@ new g_menuSettings[33]
 new gmsgStatusText
 new gmsgBarTime
 
+// Used with SHARED_SetUserSpeed
+new bool:g_bPlayerZoomed[33];
+
 new szSpawnEnt[2][32];
 
 /*  START - CSTRIKE VARIABLES */
@@ -418,8 +421,6 @@ new CsArmorType:g_ArmorType[33];
 /*  END - CSTRIKE VARIABLES */
 
 /*  START - DOD VARIABLES */
-//new gmsgObject
-//new gmsgClientAreas
 new gmsgHudText
 
 new iReincarnation[33][3];

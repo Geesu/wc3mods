@@ -718,7 +718,7 @@ public SHARED_SetSpeed( id )
 		if ( entity_get_int( id, EV_INT_iuser3 ) )
 		{
 			// When prone the maxspeed should be 50, never let it be different than this
-			if( get_user_maxspeed( id ) > 500.0 )
+			if ( get_user_maxspeed( id ) > 500.0 )
 			{
 				set_user_maxspeed( id, 50.0 );
 			}
@@ -753,9 +753,18 @@ public SHARED_SetSpeed( id )
 		// Boots of Speed bonus
 		else if ( ITEM_Has( id, ITEM_BOOTS ) > ITEM_NONE )
 		{
+			new iClip, iAmmo;
+			new iWeapon = get_user_weapon( id, iClip, iAmmo );
 
 			// Give them the bonus
-			set_user_maxspeed( id, get_pcvar_float( CVAR_wc3_boots ) );
+			if ( g_bPlayerZoomed[id] )
+			{
+				set_user_maxspeed( id, CS_WEAPON_SPEED_ZOOM[iWeapon] * ITEM_BOOT_INCREASE );
+			}
+			else
+			{
+				set_user_maxspeed( id, CS_WEAPON_SPEED[iWeapon] * ITEM_BOOT_INCREASE );
+			}
 
 			return;
 		}
@@ -764,7 +773,18 @@ public SHARED_SetSpeed( id )
 	// We would never get here unless we didn't hit any if statement from above
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		set_user_maxspeed( id, 250.0 );
+		// Here we want to reset the user's speed
+		new iClip, iAmmo;
+		new iWeapon = get_user_weapon( id, iClip, iAmmo );
+
+		if ( g_bPlayerZoomed[id] )
+		{
+			set_user_maxspeed( id, CS_WEAPON_SPEED_ZOOM[iWeapon] );
+		}
+		else
+		{
+			set_user_maxspeed( id, CS_WEAPON_SPEED[iWeapon] );
+		}
 	}
 	else if ( g_MOD == GAME_DOD )
 	{
@@ -1385,4 +1405,40 @@ public _SHARED_RemoveBuyZone( iEnt )
 	}
 
 	return;  
+}
+
+stock SHARED_ForceWeaponChange( id )
+{
+	new iAmmo, iClip, szWeaponName[32], i;
+	new num = 0, iWeapons[32];
+
+	new iCurWeapon = get_user_weapon( id, iAmmo, iClip );
+
+	// We need a valid current weapon to do this!
+	if ( iCurWeapon != 0 )
+	{
+		// Get all weapons the user is holding
+		get_user_weapons( id, iWeapons, num );
+
+		// Loop through all weapons
+		for ( i = 0; i < num; i++ )
+		{
+			
+			// Find a weapon the player isn't currently holding
+			if ( iWeapons[i] != iCurWeapon && iWeapons[i] > 0 )
+			{
+				get_weaponname( iWeapons[i], szWeaponName, 31 );
+
+				client_cmd( id, szWeaponName );
+
+				break;
+			}
+		}
+
+		// Switch back to the user's current weapon
+		get_weaponname( iCurWeapon, szWeaponName, 31 );
+		client_cmd( id, szWeaponName );
+	}
+
+	return;
 }

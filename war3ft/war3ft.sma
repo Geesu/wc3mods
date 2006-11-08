@@ -33,7 +33,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu & Avanderik"
-new const WC3VERSION[] =	"3.0 RC1"
+new const WC3VERSION[] =	"3.0 RC2"
 new const WC3DATE[] =		__DATE__
 
 // Let AMX X know that we NEED these modules (as of amx x 1.75)
@@ -67,6 +67,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/dod_h.inl"
 #include "war3ft/XP.h"
 #include "war3ft/war3ft.h"
+#include "war3ft/cstrike.h"
 
 // Source Code
 #include "war3ft/cvar.inl"
@@ -184,6 +185,7 @@ public plugin_init()
 		register_event( "WeapPickup"	, "on_WeapPickup"	, "b"										); 
 		register_event( "StatusValue"	, "on_ShowStatus"	, "be"	, "1=2"		,"2!0"					);
 		register_event( "StatusValue"	, "on_HideStatus"	, "be"	, "1=1"		,"2=0"					);
+		register_event( "SetFOV"		, "on_Zoom"			, "be"										);
 
 		// Old Style
 		register_menucmd( register_menuid( "BuyItem" )	, (1<<3)	, "cmd_hegren"	);
@@ -222,6 +224,7 @@ public plugin_init()
 	WC3_Init();
 
 	register_concmd( "test", "test" );
+
 }
 
 public test(id)

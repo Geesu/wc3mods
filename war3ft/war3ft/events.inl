@@ -204,9 +204,9 @@ public on_DeathMsg()
 	return;
 }
 
+new g_iLastCurWeapon[33];
 public on_CurWeapon( id )
 {
-
 	// read_data(1) = isActive?
 	// read_data(2) = weapon index
 	// read_data(3) = ammo
@@ -216,12 +216,14 @@ public on_CurWeapon( id )
 		return;
 	}
 
+	new iCurWeapon = read_data( 2 );
+
 	// Record the last time a shot was fired
 	fLastShotFired[id] = halflife_time();
 	
 	// Save the user's weapons
 	SHARED_SaveWeapons( id );
-	
+
 	// Set the fuse for the weapon in DOD
 	if ( g_MOD == GAME_DOD )
 	{
@@ -232,12 +234,18 @@ public on_CurWeapon( id )
 			dod_set_fuse( id, FUSE_SET, 2.0, FT_NEW );
 		}
 	}
+	
+	// We only need to run these functions if the user's weapon has changed since our last function call!
+	if ( g_iLastCurWeapon[id] != iCurWeapon )
+	{
+		// Check to see if we should set the player's invisibility
+		SHARED_INVIS_Set( id );
+		
+		// Set the user's speed
+		SHARED_SetSpeed( id );
+	}
 
-	// Check to see if we should set the player's invisibility
-	SHARED_INVIS_Set( id );
-
-	// Set the user's speed
-	SHARED_SetSpeed( id );
+	g_iLastCurWeapon[id] = iCurWeapon;
 
 	return;
 }
@@ -324,6 +332,9 @@ public EVENT_PlayerSpawned( id )
 
 	// Reset the user's skin
 	SHARED_ChangeSkin( id, SKIN_RESET );
+
+	// User won't be zoomed when they spawn!
+	g_bPlayerZoomed[id]				= false;
 
 	// Check for Counter-Strike or Condition Zero
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
