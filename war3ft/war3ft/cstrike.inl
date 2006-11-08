@@ -209,11 +209,15 @@ public on_ShowStatus( id )
 		{
 			new iClip, iAmmo;
 			new iWeaponID = get_user_weapon( iTarget, iClip, iAmmo );
-		
 			new szWeaponName[32];
-			get_weaponname( iWeaponID, szWeaponName, 31 );
+
+			// Only get the weapon name if our weapon id is valid
+			if ( iWeaponID > 0 )
+			{
+				get_weaponname( iWeaponID, szWeaponName, 31 );
+			}
 			
-			show_hudmessage( id, "%s -- %d HP / %d AP / %s", szTargetName, get_user_health( iTarget ), get_user_armor( iTarget ), szWeaponName );
+			show_hudmessage( id, "%s -- %d HP / %d AP%s%s", szTargetName, get_user_health( iTarget ), get_user_armor( iTarget ), ( ( iWeaponID > 0 ) ? " / " : "" ), szWeaponName );
 		} 
 
 		// Enemy
