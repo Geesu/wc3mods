@@ -16,7 +16,7 @@ public WC3_Precache()
 	// Precache wc3.css (if it exists!)
 	if ( !file_exists( "wc3.css" ) )
 	{
-		log_amx( "[ERROR] Missing file 'wc3.css'", szTmp );
+		log_amx( "[ERROR] Missing file 'wc3.css'" );
 
 		set_fail_state( "A required file is missing, unable to load plugin" );
 	}
