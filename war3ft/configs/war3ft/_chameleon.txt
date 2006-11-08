@@ -5,7 +5,7 @@ For example, setting the following in war3ft.cfg:
 
 wc3_cham_random		0
 wc3_cham_skill1		14
-wc3_cham_skill2		7
+wc3_cham_skill2		8
 wc3_cham_skill3		28
 wc3_cham_ultimate	29
 wc3_cham_passive	20
@@ -26,9 +26,9 @@ ___________________________________
 4	|	Invisibility
 5	|	Devotion Aura
 6	|	Bash
-7	|	Critical Strike
-8	|	Critical Grenade
-9	|	Reincarnation
+8	|	Critical Strike
+9	|	Critical Grenade
+10	|	Reincarnation
 12	|	Evasion
 13	|	Thorns
 14	|	Trueshot Aura
