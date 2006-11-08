@@ -1,0 +1,70 @@
+This document gives the ID numbers for all of the skills which will be used
+with the configuration of chameleon.
+
+For example, setting the following in war3ft.cfg:
+
+wc3_cham_random		0
+wc3_cham_skill1		14
+wc3_cham_skill2		7
+wc3_cham_skill3		28
+wc3_cham_ultimate	29
+wc3_cham_passive	20
+
+Will give you chameleon with the following: 
+	Skills: Trueshot Aura, Critical Strike, Shadow Strike
+	Ultimate: Vengeance
+	Passive Skill: Resistant Skin
+
+
+*** Skill choices ***
+
+ID		Skill
+___________________________________
+0	|	Vampiric Aura
+1	|	Unholy Aura
+2	|	Levitation
+4	|	Invisibility
+5	|	Devotion Aura
+6	|	Bash
+7	|	Critical Strike
+8	|	Critical Grenade
+9	|	Reincarnation
+12	|	Evasion
+13	|	Thorns
+14	|	Trueshot Aura
+16	|	Phoenix
+17	|	Banish
+18	|	Siphon Mana
+21	|	Healing Wave
+22	|	Hex
+23	|	Serpent Ward
+26	|	Fan of Knives
+27	|	Blink
+28	|	Shadow Strike
+31	|	Impale
+32	|	Spiked Carapace
+33	|	Carrion Beetles
+
+
+*** Ultimate choices ***
+
+ID		Ultimate
+___________________________________
+3	|	Suicide Bomber
+7	|	Blink
+11	|	Chain Lightning
+15	|	Entangle
+19	|	Immolate
+24	|	Big Bad Voodoo
+29	|	Vengeance
+34	|	Locust Swarm
+
+
+*** Passive choices ***
+
+ID		Passive Skill
+___________________________________
+20	|	Resistant Skin
+25	|	Unstable Concoction
+30	|	Hardened Skin
+35	|	Orb

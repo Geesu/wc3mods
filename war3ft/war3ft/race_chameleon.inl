@@ -112,7 +112,7 @@ CHAM_Configure()
 		}
 
 		// Check Passive
-		if ( !CHAM_ValidSkill( g_ChamSkills[4], SKILL_TYPE_ULTIMATE ) )
+		if ( !CHAM_ValidSkill( g_ChamSkills[4], SKILL_TYPE_PASSIVE ) )
 		{
 			log_amx( "Invalid passive skill for cvar wc3_cham_passive: %d", g_ChamSkills[4] );
 			bError = true;

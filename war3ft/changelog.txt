@@ -1,6 +1,7 @@
 v3.0 RC2
  - Bug Fix: Players running at same speed with all weapons
  - Bug Fix: Boots of speed was same speed for all weapons, changed to bonus 5% increase per weapon
+ - Bug Fix: Fixed configuration issues with setting chameleon's races, also added a file explaining how to use it
 
 // Known bug: boots displaying 4% on purchase
 

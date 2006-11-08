@@ -149,11 +149,11 @@ public CVAR_Init()
 	// Chameleon Race CVARs
 
 	CVAR_wc3_cham_random			= register_cvar( "wc3_cham_random"			, "1"							);
-	CVAR_wc3_cham_skill1			= register_cvar( "wc3_cham_skill1"			, "1"							);
-	CVAR_wc3_cham_skill2			= register_cvar( "wc3_cham_skill2"			, "1"							);
-	CVAR_wc3_cham_skill3			= register_cvar( "wc3_cham_skill3"			, "1"							);
-	CVAR_wc3_cham_ultimate			= register_cvar( "wc3_cham_ultimate"		, "1"							);
-	CVAR_wc3_cham_passive			= register_cvar( "wc3_cham_passive"			, "1"							);
+	CVAR_wc3_cham_skill1			= register_cvar( "wc3_cham_skill1"			, ""							);
+	CVAR_wc3_cham_skill2			= register_cvar( "wc3_cham_skill2"			, ""							);
+	CVAR_wc3_cham_skill3			= register_cvar( "wc3_cham_skill3"			, ""							);
+	CVAR_wc3_cham_ultimate			= register_cvar( "wc3_cham_ultimate"		, ""							);
+	CVAR_wc3_cham_passive			= register_cvar( "wc3_cham_passive"			, ""							);
 
 	// Database CVARs
 
