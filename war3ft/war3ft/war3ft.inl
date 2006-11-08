@@ -13,7 +13,17 @@
 public WC3_Precache()
 {
 	
-	precache_generic( "wc3.css" );
+	// Precache wc3.css (if it exists!)
+	if ( !file_exists( "wc3.css" ) )
+	{
+		log_amx( "[ERROR] Missing file 'wc3.css'", szTmp );
+
+		set_fail_state( "A required file is missing, unable to load plugin" );
+	}
+	else
+	{
+		precache_generic( "wc3.css" );
+	}
 
 	copy( g_szSounds[SOUND_VENGEANCE]		, 63, "warcraft3/MiniSpiritPissed1.wav"				);	// Warden's Ultimate
 	copy( g_szSounds[SOUND_SUICIDE]			, 63, "ambience/particle_suck1.wav"					);	// Undead's Ultimate

@@ -1,4 +1,6 @@
 v3.0 RC2
+ - Addition: Help file explaining how to configure chameleon (file is: /configs/war3ft/_chameleon.txt)
+ - Addition: Added check for wc3.css on server start (plugin will not load without it)
  - Bug Fix: Players running at same speed with all weapons
  - Bug Fix: Boots of speed was same speed for all weapons, changed to bonus 5% increase per weapon
  - Bug Fix: Fixed configuration issues with setting chameleon's races, also added a file explaining how to use it
@@ -70,10 +72,8 @@ v3.0 RC1
  - Removed: sv_warcraft3 (added a start/stop option)
  - Removed: PRECACHE_WAR3FTSOUNDS define, precached sounds are required
 
-//check for wc3.css
 //update saving system to allow for uwc3?
 //clear items on death - the hud message
-//g_bPluginEnding should be false
 //use CSX for custom weapons?
 //test: spec info disappearing and re-appearing after 10.0 seconds
 //re-write menus
@@ -85,7 +85,6 @@ v3.0 RC1
 //remove all task_exists
 //fix hex playing after ur dead...
 //bug: phoenix will try to respawn users when changing team
-//bug: strip_user_weapons will remove bomb + not give it back
 //block knife = http://forums.alliedmods.net/showthread.php?t=29836
 
 //shopmenu 3 ideas:
