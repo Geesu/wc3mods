@@ -426,6 +426,9 @@ new gmsgHudText
 new iReincarnation[33][3];
 /*  END - DOD VARIABLES */
 
+// Used to keep track of how much dmg one player does to another
+new g_iDamageDealt[33][33];
+
 // Used with helm
 new Float:fLastShotFired[33];
 

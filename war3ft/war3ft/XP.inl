@@ -203,62 +203,79 @@ public on_PlayerAction()
 
 XP_onDeath( iVictim, iAttacker, iWeaponIndex, iHeadshot )
 {
-	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+
+	// We don't want to give XP to the world
+	if ( iAttacker == 0 )
 	{
-		// We don't want to give XP to the world
-		if ( iAttacker == 0 )
+		return;
+	}
+
+	// We don't want to give XP to suiciders
+	else if ( iAttacker == iVictim )
+	{
+		return;
+	}
+	
+	new iLevel = p_data[iVictim][P_LEVEL]
+	new iBonusXP, iXP = floatround( XP_GivenByLevel( iLevel ) * fWpnXPMultiplier[iWeaponIndex] );
+
+	// Check for a team kill
+	if ( get_user_team( iAttacker ) == get_user_team( iVictim ) )
+	{
+		// Remove XP since he killed his teammate
+		iBonusXP = XP_Give( iAttacker, -1 * iXP );
+
+		// This message should be displayed no matter what XP_kill_objectives is, b/c it's a no-no
+		if ( iBonusXP != 0 )
 		{
-			return;
+			client_print( iAttacker, print_chat, "%s You have lost %d XP for killing a teammate", g_MODclient, -1 * iBonusXP );
 		}
 
-		// We don't want to give XP to suiciders
-		else if ( iAttacker == iVictim )
-		{
-			return;
-		}
+	}
+
+	// Otherwise the player killed the other team
+	else
+	{
+		// Award XP for a kill
+		iBonusXP = XP_Give( iAttacker, iXP );
 		
-		new iLevel = p_data[iVictim][P_LEVEL]
-
-		// Check for a team kill
-		if ( get_user_team( iAttacker ) == get_user_team( iVictim ) )
+		if ( iBonusXP != 0 && get_pcvar_num( CVAR_wc3_show_kill_obj ) )
 		{
-			// Remove XP since he killed his teammate
-			new iBonusXP = XP_Give( iAttacker, -1 * iBonusXP );
-
-			// This message should be displayed no matter what XP_kill_objectives is, b/c it's a no-no
-			if ( iBonusXP != 0 )
-			{
-				client_print( iAttacker, print_chat, "%s You have lost %d XP for killing a teammate", g_MODclient, -1 * iBonusXP );
-			}
-
+			client_print( iAttacker, print_chat, "%s You have been awarded %d XP for killing the enemy", g_MODclient, iBonusXP );
 		}
 
-		// Otherwise the player killed the other team
-		else
+		// User had a headshot?  Give bonus XP!
+		if ( iHeadshot )
 		{
-			// Award XP for a kill
-			new iBonusXP = floatround( XP_GivenByLevel( iLevel ) * fWpnXPMultiplier[iWeaponIndex] );
-
-			iBonusXP = XP_Give( iAttacker, iBonusXP );
+			iBonusXP = XP_Give( iAttacker, KILL_HEADSHOT );
 			
-			// Lets give some bonus XP to the player's nearby teammates
-			XP_NearbyBonus( iAttacker, iBonusXP );
-
 			if ( iBonusXP != 0 && get_pcvar_num( CVAR_wc3_show_kill_obj ) )
 			{
-				client_print( iAttacker, print_chat, "%s You have been awarded %d XP for killing the enemy", g_MODclient, iBonusXP );
+				client_print( iAttacker, print_chat, "%s You have been awarded %d XP for getting a headshot", g_MODclient, iBonusXP );
 			}
+		}
 
-			// User had a headshot?  Give bonus XP!
-			if ( iHeadshot )
+		// Award XP for other people doing damage to this victim
+		for ( new i = 0; i < MAXPLAYERS; i++ )
+		{
+			// Then this player dealt some damage to this player this round
+			if ( g_iDamageDealt[i][iVictim] > 0 && iAttacker != i )
 			{
-				iBonusXP = XP_Give( iAttacker, KILL_HEADSHOT );
-				
-				if ( iBonusXP != 0 && get_pcvar_num( CVAR_wc3_show_kill_obj ) )
+				new iVictimMaxHealth = get_user_maxhealth( iVictim );
+				new Float:fMultiplier = float( g_iDamageDealt[i][iVictim] ) / float( iVictimMaxHealth );
+
+				// Need a ratio of XP to award to person who dealt damage
+				iBonusXP = XP_Give( i, floatround( float( iXP ) * fMultiplier ) );
+
+				if ( iBonusXP != 0 )
 				{
-					client_print( iAttacker, print_chat, "%s You have been awarded %d XP for getting a headshot", g_MODclient, iBonusXP );
+					client_print( i, print_chat, "%s You have been awarded %d XP for a kill assist!", g_MODclient, iBonusXP );
 				}
 			}
+		}
+
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
 			
 			// User killed a hostage rescuer
 			if ( g_iPlayerRole[iVictim] == PLR_HOSTAGE_RESCUER )
@@ -312,14 +329,15 @@ XP_onDeath( iVictim, iAttacker, iWeaponIndex, iHeadshot )
 			}
 		}
 		
+
+		else if ( g_MOD == GAME_DOD )
+		{
+
+
+		}
+
 		// Player died, so lets reset their data
 		g_iPlayerRole[iVictim] = 0;
-	}
-
-	else if ( g_MOD == GAME_DOD )
-	{
-
-
 	}
 }
 
@@ -621,47 +639,4 @@ stock XP_Give( id, iBonusXP )
 	}
 
 	return 0;
-}
-
-XP_NearbyBonus( id, iXP )
-{
-
-	new iTeam = get_user_team( id );
-
-	new iPlayers[32], iNumPlayers, i, iTargetID, vTargetOrigin[3], iBonusXP, iDistance;
-	get_players( iPlayers, iNumPlayers );
-	
-	new vOrigin[3];
-	get_user_origin( id, vOrigin );
-
-	for ( i = 0; i < iNumPlayers; i++ )
-	{
-		iTargetID = iPlayers[i];
-		
-		// Lets give the teammate some XP if they're close enough!
-		if ( iTeam == get_user_team( iTargetID ) && iTargetID != id && is_user_alive( iTargetID ) )
-		{
-			get_user_origin( iTargetID, vTargetOrigin );
-			
-			iDistance = get_distance( vOrigin, vTargetOrigin );
-
-			// Then lets give them some XP!!!
-			if ( iDistance <= XP_NEARBY_RADIUS )
-			{
-				static szName[32];
-				get_user_name( iTargetID, szName, 31 );
-
-				client_print( id, print_chat, "[DEBUG] You have given %d XP to a nearby teammate: %s", iBonusXP, szName );
-				client_print( id, print_chat, "[DEBUG] %0.0f * ( %0.0f / %0.0f ) = %f", float( iXP ), float( iDistance ), float( XP_NEARBY_RADIUS ), float( iXP ) * ( float( iDistance ) / float( XP_NEARBY_RADIUS ) ) );
-				
-				iBonusXP = floatround( float( iXP ) * ( float( iDistance ) / float( XP_NEARBY_RADIUS ) ) );
-
-				p_data[iTargetID][P_XP] += iBonusXP;
-
-				client_print( iTargetID, print_chat, "[DEBUG] You have been awarded %d XP because a nearby teammate killed someone", iBonusXP );
-
-				XP_Check( iTargetID );
-			}
-		}
-	}
 }

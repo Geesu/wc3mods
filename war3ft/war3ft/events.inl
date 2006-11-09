@@ -55,6 +55,8 @@ public client_damage( iAttacker, iVictim, iDamage, iWeapon, iHitPlace, TA )
 		return;
 	}
 	
+	g_iDamageDealt[iAttacker][iVictim] += iDamage;
+
 	// Counter-Strike and Condition Zero check only - Bomb Explosion
 
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
@@ -308,6 +310,12 @@ public EVENT_PlayerInitialSpawn( id )
 	}
 
 	WC3_CommonSpawn( id );
+
+	// Need to reset damage dealt since it's a new round
+	for ( new i = 0; i < MAXPLAYERS; i++ )
+	{
+		g_iDamageDealt[id][i] = 0;
+	}
 
 	return;
 }

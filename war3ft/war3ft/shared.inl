@@ -302,6 +302,9 @@ public _SHARED_Spawn( id )
 		return;
 	}
 
+	// Save their previous weapons!
+	SHARED_CopySavedWeapons( id );
+
 	// Spawn the player
 	spawn( id );
 	spawn( id );
@@ -776,7 +779,7 @@ public SHARED_SetSpeed( id )
 		// Here we want to reset the user's speed
 		new iClip, iAmmo;
 		new iWeapon = get_user_weapon( id, iClip, iAmmo );
-
+		
 		if ( g_bPlayerZoomed[id] )
 		{
 			set_user_maxspeed( id, CS_WEAPON_SPEED_ZOOM[iWeapon] );
