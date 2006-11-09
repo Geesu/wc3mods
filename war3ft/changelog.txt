@@ -5,6 +5,7 @@ v3.0 RC2
  - Bug Fix: Boots of speed was same speed for all weapons, changed to bonus 5% increase per weapon
  - Bug Fix: Fixed configuration issues with setting chameleon's races, also added a file explaining how to use it
  - Bug Fix: Nearby player's weren't given XP for a nearby teammate killing someone
+ - Change: Bot XP will now save if saving is done by name
 
 // Known bug: boots displaying 4% on purchase
 // Known bug: rings doesn't always give health back
@@ -88,6 +89,7 @@ v3.0 RC1
 //fix hex playing after ur dead...
 //bug: phoenix will try to respawn users when changing team
 //block knife = http://forums.alliedmods.net/showthread.php?t=29836
+//award XP for dealing dmg
 
 //shopmenu 3 ideas:
 // immune to some magic

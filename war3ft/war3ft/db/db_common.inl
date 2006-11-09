@@ -154,7 +154,13 @@ public DB_SaveXP( id )
 
 	new iRaceID = p_data[id][P_RACE];
 
-	if ( iRaceID == 0 || is_user_bot(id) || !get_pcvar_num( CVAR_wc3_save_xp ) || p_data[id][P_XP] == 0 )
+	if ( iRaceID == 0 || !get_pcvar_num( CVAR_wc3_save_xp ) || p_data[id][P_XP] == 0 )
+	{
+		return;
+	}
+
+	// Allow bot's XP to be saved if we're saving by name
+	if ( is_user_bot( id ) && get_pcvar_num( CVAR_wc3_save_by ) != DB_SAVEBY_NAME )
 	{
 		return;
 	}
