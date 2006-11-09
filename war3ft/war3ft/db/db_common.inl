@@ -105,7 +105,7 @@ public DB_Init()
 	{
 		DB_DetermineType();
 	}	
-	
+
 	// Initiate our database
 	switch( g_DBType )
 	{

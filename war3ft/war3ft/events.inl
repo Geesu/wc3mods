@@ -236,7 +236,7 @@ public on_CurWeapon( id )
 	}
 	
 	// We only need to run these functions if the user's weapon has changed since our last function call!
-	if ( g_iLastCurWeapon[id] != iCurWeapon )
+	if ( g_iLastCurWeapon[id] != iCurWeapon && SHARED_ValidPlayer( id ) )
 	{
 		// Check to see if we should set the player's invisibility
 		SHARED_INVIS_Set( id );

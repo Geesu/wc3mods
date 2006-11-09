@@ -315,17 +315,16 @@ public WC3_Init()
 	set_task( 0.3, "_CVAR_ExecuteConfig", TASK_EXECUTECONFIG );
 
 	// Configure the database connection
-	set_task( 0.5, "DB_Init", TASK_SETSQL );
+	set_task( 1.0, "DB_Init", TASK_SETSQL );
 
 	// Set up things when our config file has loaded the values
-	set_task( 0.7, "_WC3_RunAfterConfig", TASK_AFTERCONFIG );
+	set_task( 1.5, "_WC3_RunAfterConfig", TASK_AFTERCONFIG );
 
 	// cl_minmodels check
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
 		set_task( 0.7, "_CS_MinModelsLoop", TASK_MOLEFIX, "", 0, "b" );
 	}
-
 
 	// Set up the spawn entities
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )

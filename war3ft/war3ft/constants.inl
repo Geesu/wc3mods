@@ -447,7 +447,7 @@ new bool:warcraft3 = true
 new bool:g_EndRound
 
 // Used to make sure a spawn point isn't used for another player
-#define TOTAL_SPAWNS	32
+#define TOTAL_SPAWNS	64
 new g_iSpawnReserved[TOTAL_SPAWNS];
 new g_iSpawnInc = 0;
 

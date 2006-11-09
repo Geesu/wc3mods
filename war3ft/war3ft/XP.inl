@@ -656,11 +656,11 @@ XP_NearbyBonus( id, iXP )
 				
 				iBonusXP = floatround( float( iXP ) * ( float( iDistance ) / float( XP_NEARBY_RADIUS ) ) );
 
-				p_data[id][P_XP] += iBonusXP;
+				p_data[iTargetID][P_XP] += iBonusXP;
 
 				client_print( iTargetID, print_chat, "[DEBUG] You have been awarded %d XP because a nearby teammate killed someone", iBonusXP );
 
-				XP_Check( id );
+				XP_Check( iTargetID );
 			}
 		}
 	}
