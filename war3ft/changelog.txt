@@ -11,6 +11,8 @@ v3.0 RC2
 
 // Known bug: rings doesn't always give health back
 // Known bug: ankh not giving weapons back on bomb explosion
+// Known bug: gloves giving grenade too fast
+// Known bug: flash grenades aren't given on reincarnation
 
 v3.0 RC1
  - Addition: Start/Stop command: amx_wc3 <on|off>
@@ -92,6 +94,7 @@ v3.0 RC1
 //bug: phoenix will try to respawn users when changing team
 //block knife = http://forums.alliedmods.net/showthread.php?t=29836
 //VIP speed != default VIP speed
+//nightvision not given back when respawning
 
 //shopmenu 3 ideas:
 // immune to some magic

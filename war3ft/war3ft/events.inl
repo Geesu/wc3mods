@@ -16,6 +16,8 @@ public grenade_throw( index, greindex, wId )
 		new Float:fTimer = get_pcvar_float( CVAR_wc3_glove_timer );
 
 		set_task( fTimer, "_ITEM_Glove_Give", TASK_ITEM_GLOVES + index );
+
+		client_print( index, print_chat, "[DEBUG] You will receive another grenade in %f seconds", fTimer );
 	}
 
 	static iSkillLevel;
