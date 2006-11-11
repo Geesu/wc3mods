@@ -423,6 +423,7 @@ ITEM_SetMultipleItems( id, iItem )
 
 			if ( !task_exists( TASK_ITEM_RING + id ) )
 			{
+				client_print( id, print_chat, "[DEBUG] Calling _ITEM_Ring" );
 				_ITEM_Ring( id );
 			}
 		}
@@ -786,10 +787,14 @@ public _ITEM_Ring( id )
 		id -= TASK_ITEM_RING;
 	}
 
-	if ( !p_data_b[id][PB_ISCONNECTED] || ITEM_Has( id, ITEM_RING ) == ITEM_NONE )
+	client_print( id, print_chat, "[DEBUG] _ITEM_Ring %d || %d", (!p_data_b[id][PB_ISCONNECTED]), (ITEM_Has( id, ITEM_RING ) == ITEM_NONE) );
+
+	if ( !p_data_b[id][PB_ISCONNECTED] || ( ITEM_Has( id, ITEM_RING ) == ITEM_NONE && g_iTotalRings[id] == 0 ) )
 	{
 		return;
 	}
+
+	client_print( id, print_chat, "[DEBUG] 1" );
 
 	new iBonusHealth = g_iTotalRings[id];
 
@@ -804,6 +809,8 @@ public _ITEM_Ring( id )
 
 		iBonusHealth--;
 	}
+
+	client_print( id, print_chat, "[DEBUG] 2" );
 
 	set_task( 2.0, "_ITEM_Ring", TASK_ITEM_RING + id );
 
@@ -829,4 +836,11 @@ ITEM_CheckFlag( iItemID, iFlag )
 	}
 
 	return false;	
+}
+
+ITEM_RoundStart()
+{
+
+
+
 }
