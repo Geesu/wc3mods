@@ -238,7 +238,7 @@ ADMIN_GiveItem( id, szTarget[], iItemID )
 	{
 		client_print( iTarget, print_chat, "%s The admin has given you the item '%s'", g_MODclient, szItemName );
 		
-		ITEM_PreSet( iTarget, iItemID );
+		ITEM_GiveItem( iTarget, iItemID );
 
 		bTargetFound = true;
 	}

@@ -616,7 +616,7 @@ public _menu_ReplaceItem( id, iKey )
 
 public MENU_Shopmenu( id, iStart )
 {
-	if ( !ITEM_CanBuy( id ) )
+	if ( !ITEM_MenuCanBuyCheck( id ) )
 	{
 		return;
 	}

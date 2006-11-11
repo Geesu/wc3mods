@@ -184,7 +184,7 @@ ULT_IsImmune( id )
 
 	else if ( ITEM_Has( id, ITEM_NECKLACE ) > ITEM_NONE )
 	{
-		ITEM_RemoveMultipleItems( id, ITEM_NECKLACE );
+		ITEM_RemoveCharge( id, ITEM_NECKLACE );
 
 		bBlocked = true;
 	}

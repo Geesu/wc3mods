@@ -627,10 +627,10 @@ public _SHARED_CS_GiveWeapons(id)
 		}
 	}
 
-	// GIve them their flash bangs back
+	// Give them their flash bangs back
 	while ( p_data[id][P_FLASHCOUNT] > 0 )
 	{
-		give_item( id, "weapon_flash" );
+		give_item( id, "weapon_flashbang" );
 
 		p_data[id][P_FLASHCOUNT]--;
 	}

@@ -6,13 +6,16 @@ v3.0 RC2
  - Bug Fix: Boots of speed was same speed for all weapons, changed to bonus 5% increase per weapon
  - Bug Fix: Fixed configuration issues with setting chameleon's races, also added a file explaining how to use it
  - Bug Fix: Nearby player's weren't given XP for a nearby teammate killing someone
+ - Bug Fix: Rings not giving health
+ - Bug Fix: Periapt wasn't giving health at round start
+ - Bug Fix: Ankh would stay in items if purchased when dead (but it wouldn't work)
+ - Bug Fix: Flash grenades will reincarnate now
  - Change: Bot XP will now save if saving is done by name
+ - Change: Item handling
  - Removed: Nearby XP bonus when a nearby player kills someone
 
-// Known bug: rings doesn't always give health back
 // Known bug: ankh not giving weapons back on bomb explosion
 // Known bug: gloves giving grenade too fast
-// Known bug: flash grenades aren't given on reincarnation
 
 v3.0 RC1
  - Addition: Start/Stop command: amx_wc3 <on|off>

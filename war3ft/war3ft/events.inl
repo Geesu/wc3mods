@@ -343,6 +343,9 @@ public EVENT_PlayerSpawned( id )
 	// Reset the user's skin
 	SHARED_ChangeSkin( id, SKIN_RESET );
 
+	// Give the user their item bonuses!
+	ITEM_GiveAllBonuses( id );
+
 	// User won't be zoomed when they spawn!
 	g_bPlayerZoomed[id]				= false;
 
@@ -350,7 +353,6 @@ public EVENT_PlayerSpawned( id )
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
 		p_data[id][P_HECOUNT]		= 0;
-		p_data[id][P_FLASHCOUNT]	= 0;
 		
 		// If we need to give the user their weapons back, then lets
 		SHARED_CS_Reincarnation( id );
@@ -539,7 +541,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 						Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 0, 0, 255, 150 );
 
 						// Lets remove a charge from the helm!
-						ITEM_RemoveMultipleItems( iVictim, ITEM_HELM );
+						ITEM_RemoveCharge( iVictim, ITEM_HELM );
 					}
 				}
 				
