@@ -59,47 +59,6 @@ public client_damage( iAttacker, iVictim, iDamage, iWeapon, iHitPlace, TA )
 	
 	g_iDamageDealt[iAttacker][iVictim] += iDamage;
 
-	// Counter-Strike and Condition Zero check only - Bomb Explosion
-
-	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-	{
-
-		if ( iWeapon == CSW_C4 )
-		{
-			client_print( iVictim, print_chat, "[DEBUG] Attacked by bomb for %d damage", iDamage );
-		}
-
-		// Check out who the inflictor was
-		new iInflictor = entity_get_edict( iVictim, EV_ENT_dmg_inflictor );
-
-		// Check to see if the iDamage was from the bomb
-		if ( !SHARED_ValidPlayer( iInflictor ) && iWeapon != CSW_HEGRENADE && iAttacker != iVictim && iInflictor )
-		{
-			
-			if ( is_valid_ent ( iInflictor ) )
-			{
-				new szClassName[64];
-				entity_get_string( iInflictor, EV_SZ_classname, szClassName, 63 );
-					
-				// Technically I don't think we need to check the classname, but just in case
-				if ( equali( szClassName, "grenade" ) || equali( szClassName, "env_explosion" ) )
-				{
-					iWeapon = CSW_C4;
-					iAttacker = 0;
-
-					// We need to call the death function manually b/c DeathMsg isn't broadcasted when the bomb explodes and kills someone
-					if ( get_user_health( iVictim ) - iDamage < 0 )
-					{
-						on_Death( iVictim, iAttacker, iWeapon, 0 );
-					}
-
-					client_print( iVictim, print_chat, "[DEBUG] You were just attacked by the bomb for %d damage (%s) Alive? %d", iDamage, szClassName, is_user_alive( iVictim ) );
-				}
-			}
-		}
-	}
-
-
 	// Bot should "auto" cast his/her ultimate on random
 	if ( SHARED_ValidPlayer( iAttacker) && is_user_bot( iAttacker ) )
 	{
@@ -143,6 +102,43 @@ public client_damage( iAttacker, iVictim, iDamage, iWeapon, iHitPlace, TA )
 	}
 
 	return;
+}
+
+// All we want to check is if the user was killed by the bomb
+public client_death( iAttacker, iVictim, iWeapon, hitplace, TK )
+{
+	// Counter-Strike and Condition Zero Checks
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+
+		// Check out who the inflictor was
+		new iInflictor = entity_get_edict( iVictim, EV_ENT_dmg_inflictor );
+
+		// Check to see if the death was from the bomb
+		if ( !SHARED_ValidPlayer( iInflictor ) && iWeapon != CSW_HEGRENADE && iInflictor )
+		{
+			
+			if ( is_valid_ent ( iInflictor ) )
+			{
+				new szClassName[64];
+				entity_get_string( iInflictor, EV_SZ_classname, szClassName, 63 );
+
+				// Check the classname of our inflictor
+				if ( equali( szClassName, "grenade" ) || equali( szClassName, "env_explosion" ) )
+				{
+					iWeapon = CSW_C4;
+					iAttacker = 0;
+
+					// Well if this isn't set, shouldn't it be?
+					if ( !p_data_b[iVictim][PB_DIEDLASTROUND] )
+					{
+						on_Death( iVictim, iAttacker, iWeapon, 0 );
+					}
+					//client_print( iVictim, print_chat, "[DEBUG] You were just killed by the bomb (%s) Alive? %d", szClassName, is_user_alive( iVictim ) );
+				}
+			}
+		}
+	}
 }
 
 public on_Death( iVictim, iAttacker, iWeaponID, iHeadshot )

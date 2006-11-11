@@ -760,10 +760,16 @@ public SHARED_SetSpeed( id )
 			new iWeapon = get_user_weapon( id, iClip, iAmmo );
 
 			// Give them the bonus
-			if ( g_bPlayerZoomed[id] )
+			if ( g_iPlayerRole[id] == PLR_VIP )
+			{
+				set_user_maxspeed( id, CS_SPEED_VIP * ITEM_BOOT_INCREASE );
+			}
+			// Player zoomed in
+			else if ( g_bPlayerZoomed[id] )
 			{
 				set_user_maxspeed( id, CS_WEAPON_SPEED_ZOOM[iWeapon] * ITEM_BOOT_INCREASE );
 			}
+			// Regular
 			else
 			{
 				set_user_maxspeed( id, CS_WEAPON_SPEED[iWeapon] * ITEM_BOOT_INCREASE );
@@ -780,7 +786,11 @@ public SHARED_SetSpeed( id )
 		new iClip, iAmmo;
 		new iWeapon = get_user_weapon( id, iClip, iAmmo );
 		
-		if ( g_bPlayerZoomed[id] )
+		if ( g_iPlayerRole[id] == PLR_VIP )
+		{
+			set_user_maxspeed( id, CS_SPEED_VIP );
+		}
+		else if ( g_bPlayerZoomed[id] )
 		{
 			set_user_maxspeed( id, CS_WEAPON_SPEED_ZOOM[iWeapon] );
 		}
