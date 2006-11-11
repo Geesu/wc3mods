@@ -68,6 +68,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/XP.h"
 #include "war3ft/war3ft.h"
 #include "war3ft/cstrike.h"
+#include "war3ft/menus.h"
 
 // Source Code
 #include "war3ft/cvar.inl"
@@ -224,7 +225,13 @@ public plugin_init()
 	WC3_Init();
 
 	register_concmd( "test", "test" );
+	register_concmd( "test2", "test2" );
 
+}
+
+public test2(id)
+{
+	menu_display( id, g_Menu[MENU_SHOPMENU2], 0 );
 }
 
 public test(id)

@@ -311,6 +311,9 @@ public WC3_Init()
 	// Register the player menus
 	LANG_SetMenus();
 
+	// Register our menus
+	MENU_BuildAll();
+
 	// We need to execute config file in a bit don't we?
 	set_task( 0.3, "_CVAR_ExecuteConfig", TASK_EXECUTECONFIG );
 
