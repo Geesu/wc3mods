@@ -74,7 +74,7 @@ public _MENU_War3Menu( id, key )
 
 	if ( !WC3_Check() )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	switch ( key )
@@ -86,7 +86,7 @@ public _MENU_War3Menu( id, key )
 		case 4:	menu_Admin_Options( id );
 	}
 	
-	return;
+	return PLUGIN_HANDLED;
 }
 
 public menu_Skill_Options( id )
@@ -115,7 +115,7 @@ public _menu_Skill_Options(id,key){
 	
 	if ( !WC3_Check() )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	switch (key){
@@ -123,9 +123,10 @@ public _menu_Skill_Options(id,key){
 		case 1:	MOTD_SkillsInfo( id );
 		case 2:	CMD_Handle( id, "resetskills" );
 		case 8: MENU_War3Menu(id)
-		default: return;
+		default: return PLUGIN_HANDLED;
 	}
-	return;
+
+	return PLUGIN_HANDLED;
 }
 
 public menu_Race_Options(id){
@@ -153,7 +154,7 @@ public _menu_Race_Options(id,key){
 
 	if ( !WC3_Check() )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	switch (key){
@@ -162,9 +163,10 @@ public _menu_Race_Options(id,key){
 		case 2:	MENU_ResetXP( id );
 		case 3:	MOTD_PlayerSkills( id );
 		case 8: MENU_War3Menu(id)
-		default: return;
+		default: return PLUGIN_HANDLED;
 	}
-	return;
+
+	return PLUGIN_HANDLED;
 }
 
 public menu_Item_Options(id){
@@ -192,7 +194,7 @@ public _menu_Item_Options(id,key){
 
 	if ( !WC3_Check() )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	switch (key){
@@ -200,10 +202,11 @@ public _menu_Item_Options(id,key){
 		case 1:	MENU_Shopmenu( id, 9 );
 		case 2:	MOTD_ItemsInfo( id, 0 );
 		case 3:	MOTD_ItemsInfo( id, 9 );
-		case 8: MENU_War3Menu(id)
-		default: return;
+		case 8: MENU_War3Menu(id);
+		default: return PLUGIN_HANDLED;
 	}
-	return;
+
+	return PLUGIN_HANDLED;
 }
 
 public menu_Admin_Options(id){
@@ -236,7 +239,7 @@ public _menu_Admin_Options(id,key){
 
 	if ( !WC3_Check() )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	switch (key){
@@ -253,7 +256,8 @@ public _menu_Admin_Options(id,key){
 		case 2: DB_SaveAll();
 		case 8: MENU_War3Menu(id)
 	}
-	return;
+
+	return PLUGIN_HANDLED;
 }
 
 public menu_PlayerXP_Options(id,pos){
@@ -311,7 +315,7 @@ public _menu_PlayerXP_Options(id,key){
 
 	if ( !WC3_Check() )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	switch(key){
@@ -331,7 +335,7 @@ public _menu_PlayerXP_Options(id,key){
 			menu_PlayerXP_Options(id,g_menuPosition[id])
 		}
 		case 8: menu_PlayerXP_Options(id,++g_menuPosition[id])
-		case 9: return;
+		case 9: return PLUGIN_HANDLED;
 		default:{
 			new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key]
 			client_print(player,print_chat,"%s %L",g_MODclient, id,"THE_ADMIN_JUST_GAVE_YOU_XP",g_menuSettings[id])
@@ -342,7 +346,8 @@ public _menu_PlayerXP_Options(id,key){
 			menu_PlayerXP_Options(id,g_menuPosition[id])
 		}
 	}
-	return;
+
+	return PLUGIN_HANDLED;
 }
 
 public menu_TeamXP_Options(id){
@@ -371,7 +376,7 @@ public _menu_TeamXP_Options(id,key){
 
 	if ( !WC3_Check() )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	switch(key){
@@ -405,7 +410,8 @@ public _menu_TeamXP_Options(id,key){
 		}
 		case 8: menu_Admin_Options(id)
 	}
-	return;
+
+	return PLUGIN_HANDLED;
 }
 
 public MENU_ResetXP(id)
@@ -426,7 +432,7 @@ public _MENU_ResetXP( id, key )
 	
 	if ( !WC3_Check() )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	// User selected yes
@@ -435,7 +441,7 @@ public _MENU_ResetXP( id, key )
 		XP_Reset( id );
 	}
 	
-	return;
+	return PLUGIN_HANDLED;
 }
 
 // Function will display the changerace menu
@@ -523,13 +529,13 @@ public _MENU_ChangeRace( id, key )
 
 	if ( !WC3_Check() )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 	
 	// User pressed 0 (cancel)
 	if ( get_pcvar_num( CVAR_wc3_races ) < 9 && key - 1 == get_pcvar_num( CVAR_wc3_races ) )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	// Save the current race data before we change
@@ -580,7 +586,7 @@ public _MENU_ChangeRace( id, key )
 
 			WC3_ChangeRaceStart( id );
 
-			return;
+			return PLUGIN_HANDLED;
 		}
 	}
 
@@ -609,7 +615,7 @@ public _MENU_ChangeRace( id, key )
 		WC3_SetRace( id, iRace );
 	}
 
-	return;
+	return PLUGIN_HANDLED;
 }
 
 public MENU_ReplaceItem( id )
@@ -642,7 +648,7 @@ public _menu_ReplaceItem( id, iKey )
 {
 	if ( !WC3_Check() || iKey == 9 )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	// Remove item from item slot one
@@ -659,7 +665,7 @@ public _menu_ReplaceItem( id, iKey )
 
 	ITEM_Buy( id, g_iFutureItem[id] );
 
-	return;
+	return PLUGIN_HANDLED;
 }
 
 public MENU_Shopmenu( id, iStart )
@@ -715,26 +721,26 @@ public _MENU_Shopmenu1( id, iKey )
 {
 	if ( !WC3_Check() || iKey == 9 )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	ITEM_Buy( id, iKey );
 
-	return;
+	return PLUGIN_HANDLED;
 }
 
 public _MENU_Shopmenu2( id, iKey )
 {
 	if ( !WC3_Check() || iKey == 9 )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	iKey += MAX_PAGE_ITEMS;
 	
 	ITEM_Buy( id, iKey );
 
-	return;
+	return PLUGIN_HANDLED;
 }
 
 public MENU_SelectSkill( id )
@@ -877,7 +883,7 @@ public _MENU_SelectSkill( id, iKey )
 
 	if ( !WC3_Check() || iKey == 9 )
 	{
-		return;
+		return PLUGIN_HANDLED;
 	}
 
 	// Determine which key was just selected
@@ -961,5 +967,5 @@ public _MENU_SelectSkill( id, iKey )
 	// Set the user's speed
 	SHARED_SetSpeed( id );
 
-	return;
+	return PLUGIN_HANDLED;
 }

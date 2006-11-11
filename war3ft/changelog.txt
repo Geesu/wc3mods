@@ -1,3 +1,6 @@
+v3.0 RC3
+ - Bug Fix: After choosing an option on a menu, a radio command is executed or an item is bought (thanks p3tsin/VEN)
+
 v3.0 RC2
  - Addition: Help file explaining how to configure chameleon (file is: /configs/war3ft/_chameleon.txt)
  - Addition: Added check for wc3.css on server start (plugin will not load without it)
