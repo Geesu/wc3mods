@@ -663,7 +663,7 @@ ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 	else if ( ITEM_Has( iAttacker, ITEM_MASK ) > ITEM_NONE )
 	{
 		new iHealth = get_user_health( iAttacker );
-		new iBonusHealth = floatround( float( iDamage ) * get_pcvar_num( CVAR_wc3_mask ) );
+		new iBonusHealth = floatround( float( iDamage ) * get_pcvar_float( CVAR_wc3_mask ) );
 		
 		new iVampiricBonus = SM_GetSkillLevel( iAttacker, SKILL_VAMPIRICAURA );
 		
