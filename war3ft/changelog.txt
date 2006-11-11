@@ -11,11 +11,10 @@ v3.0 RC2
  - Bug Fix: Ankh would stay in items if purchased when dead (but it wouldn't work)
  - Bug Fix: Flash grenades will reincarnate now
  - Bug Fix: Weapons will now reincarnate if you are killed by the bomb
+ - Bug Fix: Undead's levitation busted when pcvar wasn't found
  - Change: Bot XP will now save if saving is done by name
  - Change: Item handling
  - Removed: Nearby XP bonus when a nearby player kills someone
-
-// Known bug: gloves giving grenade too fast
 
 v3.0 RC1
  - Addition: Start/Stop command: amx_wc3 <on|off>
@@ -96,8 +95,6 @@ v3.0 RC1
 //fix hex playing after ur dead...
 //bug: phoenix will try to respawn users when changing team
 //block knife = http://forums.alliedmods.net/showthread.php?t=29836
-//VIP speed != default VIP speed
-//nightvision not given back when respawning
 
 //shopmenu 3 ideas:
 // immune to some magic

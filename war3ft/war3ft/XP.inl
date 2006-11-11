@@ -594,6 +594,16 @@ public XP_Reset(id)
 
 	client_print( id, print_chat, "%s %L", g_MODclient, id, "YOUR_XP_HAS_BEEN_RESET" );
 
+	// Reset the skills...
+
+	SHARED_INVIS_Set( id );
+
+	// Undead's Unholy Aura
+	SHARED_SetGravity( id );
+
+	// Set the user's speed
+	SHARED_SetSpeed( id );
+
 	return PLUGIN_CONTINUE;
 }	
 

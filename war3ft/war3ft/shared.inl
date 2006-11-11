@@ -941,7 +941,7 @@ public SHARED_SetGravity( id )
 	
 	// If gravity is less than this, lets not change per-user b/c it BLOWS ASS in game
 
-	if ( CVAR_sv_gravity > 0 && get_pcvar_num( CVAR_sv_gravity ) > 650 )
+	if ( CVAR_sv_gravity == 0 || get_pcvar_num( CVAR_sv_gravity ) > 650 )
 	{
 		static iSkillLevel;
 
