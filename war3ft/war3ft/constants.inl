@@ -350,7 +350,7 @@
 // Enemies who have immunity w/in this radius will cause blink to fail 
 #define IMMUNITY_RADIUS		500
 
-#define SPAWN_DELAY			0.3
+#define SPAWN_DELAY			1.5
 
 // ***************************************************************************
 //  Start of variables

@@ -1158,7 +1158,7 @@ public SHARED_MoleCheck( id )
 	}
 
 	// OK then lets mole!!
-	if ( parm[1] )
+	if ( parm[1] > 0 )
 	{
 		parm[0] = id;
 		
