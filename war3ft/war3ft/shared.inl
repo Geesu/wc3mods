@@ -8,7 +8,7 @@
 public SHARED_INVIS_Set( id )
 {
 	// Do not want to set them as invisible if the player is currently rendering
-	if ( !p_data_b[id][PB_CAN_RENDER] )
+	if ( !p_data_b[id][PB_CAN_RENDER] || !p_data_b[id][PB_ISCONNECTED] )
 	{
 		return;
 	}
@@ -938,7 +938,13 @@ public SHARED_ChangeSkin( id, iFlag )
 
 public SHARED_SetGravity( id )
 {
-	
+
+	// Can't set gravity if user isn't connected!
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
+
 	// If gravity is less than this, lets not change per-user b/c it BLOWS ASS in game
 
 	if ( CVAR_sv_gravity == 0 || get_pcvar_num( CVAR_sv_gravity ) > 650 )

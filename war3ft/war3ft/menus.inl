@@ -573,7 +573,7 @@ public _MENU_ChangeRace( id, key )
 		{
 			iTarget = iPlayers[i];
 
-			if ( iTarget != id )
+			if ( iTarget != id && p_data[iTarget][P_RACE] > 0 && p_data[iTarget][P_RACE] <= get_pcvar_num( CVAR_wc3_races ) )
 			{
 				iTotalRaces[p_data[iTarget][P_RACE]]++;
 			}
