@@ -125,31 +125,36 @@ public ITEM_Buy( id, iItem )
 		if ( ITEM_GetSlot( id ) == ITEM_SLOT_FULL && !ITEM_CheckFlag( iItem, ITEM_USEONBUY ) )
 		{
 
-			new bool:bShowReplaceMenu = false;
-
-			// One time use...
-			if ( !ITEM_CheckFlag( iItem, ITEM_CHARGEABLE ) )
+			// We only care about items being full if this item isn't a use on buy
+			if ( !ITEM_CheckFlag( iItem, ITEM_USEONBUY ) )
 			{
-				client_print( id, print_chat, "[DEBUG] Item is not chargeable" );
 
-				bShowReplaceMenu = true;
-			}
+				new bool:bShowReplaceMenu = false;
 
-			// We also need to replace it if the item is chargeable but they don't own that item
-			if ( ITEM_Has( id, iItem ) == ITEM_NONE && ITEM_CheckFlag( iItem, ITEM_CHARGEABLE ) )
-			{
-				client_print( id, print_chat, "[DEBUG] Doesn't have item and new item is chargeable" );
+				// One time use...
+				if ( !ITEM_CheckFlag( iItem, ITEM_CHARGEABLE ) )
+				{
+					client_print( id, print_chat, "[DEBUG] Item is not chargeable" );
 
-				bShowReplaceMenu = true;
-			}
+					bShowReplaceMenu = true;
+				}
 
-			if ( bShowReplaceMenu )
-			{
-				g_iFutureItem[id] = iItem;
+				// We also need to replace it if the item is chargeable but they don't own that item
+				if ( ITEM_Has( id, iItem ) == ITEM_NONE && ITEM_CheckFlag( iItem, ITEM_CHARGEABLE ) )
+				{
+					client_print( id, print_chat, "[DEBUG] Doesn't have item and new item is chargeable" );
 
-				MENU_ReplaceItem( id )
+					bShowReplaceMenu = true;
+				}
 
-				return;
+				if ( bShowReplaceMenu )
+				{
+					g_iFutureItem[id] = iItem;
+
+					MENU_ReplaceItem( id )
+
+					return;
+				}
 			}
 		}
 	
@@ -719,9 +724,12 @@ ITEM_Tome( id )
 		iXp *= 2;
 	}
 
-	client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU_9", iXp );
+	new iBonusXP = XP_Give( id, iXp );
 
-	XP_Give( id, iXp );
+	if ( iBonusXP != 0 )
+	{
+		client_print( id, print_chat, "%s %L", g_MODclient, id, "INFO_SHOPMENU_9", iBonusXP );
+	}
 
 	emit_sound( id, CHAN_STATIC, "warcraft3/Tomes.wav", 1.0, ATTN_NORM, 0, PITCH_NORM );
 

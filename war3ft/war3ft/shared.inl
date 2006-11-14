@@ -333,7 +333,11 @@ public _SHARED_SpawnRemoveGod( id )
 {
 	id -= TASK_SPAWNREMOVEGOD;
 
-	set_user_godmode( id, 0 );
+	// Only do this if the user is connected
+	if ( p_data_b[id][PB_ISCONNECTED] )
+	{
+		set_user_godmode( id, 0 );
+	}
 }
 
 // Function will just spawn a player again
@@ -950,25 +954,36 @@ public SHARED_SetGravity( id )
 	if ( CVAR_sv_gravity == 0 || get_pcvar_num( CVAR_sv_gravity ) > 650 )
 	{
 		static iSkillLevel;
+		iSkillLevel = SM_GetSkillLevel( id, SKILL_LEVITATION );
+
+		new Float:fGravityLevel = 1.0;
+
+		// Our gravity level bonus because of undead's levitation
+		if ( iSkillLevel > 0 )
+		{
+			fGravityLevel = p_levitation[iSkillLevel-1];
+		}
 
 		// Set the user's gravity based on the item
 		if ( ITEM_Has( id, ITEM_SOCK ) > ITEM_NONE )
 		{
-			set_user_gravity( id, get_pcvar_float( CVAR_wc3_sock ) );
-		}
-
-		// Set the user's gravity based on undead's levitation
-		else if ( ( iSkillLevel = SM_GetSkillLevel( id, SKILL_LEVITATION ) ) > 0 )
-		{
-			if ( get_user_gravity( id ) != p_levitation[iSkillLevel-1] )
+			
+			// User has levitation + sock, give them an extra bonus
+			if ( fGravityLevel > 0.0 )
 			{
-				set_user_gravity( id, p_levitation[iSkillLevel-1] );
+				fGravityLevel /= 2.0;
+
+			}
+
+			// User just has sock
+			else
+			{
+				fGravityLevel = get_pcvar_float( CVAR_wc3_sock );
 			}
 		}
-		else
-		{
-			set_user_gravity( id, 1.0 );
-		}
+
+		// Set the user's gravity!
+		set_user_gravity( id, fGravityLevel );
 	}
 
 	return;
