@@ -1,11 +1,11 @@
 v3.0 RC3
- - Addition: Sock of the feather stacks with Undead's Levitation (suggestion by Striker)
+ - Addition: Sock of the feather stacks with Undead's Levitation (suggestion by YamiKaitou)
  - Bug Fix: After choosing an option on a menu, a radio command is executed or an item is bought (thanks p3tsin/VEN)
  - Bug Fix: Mask of death not doing anything (thanks zverj)
  - Bug Fix: Wasn't possible to buy a tomb of experience if you had 2 items (thanks snapdoodle)
  - Bug Fix: Tomb would display that you gained XP even if you didn't (i.e. no other players in server)
  - Bug Fix: Runtime error - [0] shared.inl::_SHARED_SpawnRemoveGod (line 336) (thanks Striker)
- - Bug Fix: Sock of the feather would over-rule undead's levitation even if it was worse (thanks Striker)
+ - Bug Fix: Sock of the feather would over-rule undead's levitation even if it was worse (thanks YamiKaitou)
 
 v3.0 RC2
  - Addition: Help file explaining how to configure chameleon (file is: /configs/war3ft/_chameleon.txt)
