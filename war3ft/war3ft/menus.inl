@@ -483,21 +483,79 @@ public MENU_ChangeRace( id, iRaceXP[MAX_RACES] )
 		if ( i == p_data[id][P_RACE] - 1 )
 		{
 			pos += formatex( szMenu[pos], 512-pos, "\d%d. %s\d\R%s^n", i + 1, szRaceName[i], ( (get_pcvar_num( CVAR_wc3_save_xp )) ? szXP : " " ) );
+
+			iKeys |= (1<<i);
 		}
 
 		// Race the user wants to change to
 		else if ( i == p_data[id][P_CHANGERACE] - 1 )
 		{
 			pos += formatex( szMenu[pos], 512-pos, "\r%d. %s\r\R%s^n", i + 1, szRaceName[i], ( (get_pcvar_num( CVAR_wc3_save_xp )) ? szXP : " " ) );
+
+			iKeys |= (1<<i);
 		}
 
 		// All other cases
 		else
 		{
-			pos += formatex( szMenu[pos], 512-pos, "\w%d. %s\y\R%s^n", i + 1, szRaceName[i], ( (get_pcvar_num( CVAR_wc3_save_xp )) ? szXP : " " ) );
+			/*
+			new iRaceLimit = get_pcvar_num( CVAR_wc3_race_limit );
+			new bool:bAllowRace = true;
+
+			if ( iRaceLimit > 0 )
+			{
+				new iTotal[MAX_RACES];
+
+				// Get how many people are using each race
+				new iPlayers[32], iNumPlayers, i, iTarget;
+				get_players( iPlayers, iNumPlayers );
+
+				for ( i = 0; i < iNumPlayers; i++ )
+				{
+					iTarget = iPlayers[i];
+
+					if ( iTarget != id && p_data[iTarget][P_RACE] > 0 && p_data[iTarget][P_RACE] <= get_pcvar_num( CVAR_wc3_races ) )
+					{
+						iTotal[p_data[iTarget][P_RACE]]++;
+					}
+				}
+				
+				// Now if we have more races selected than iRaceLimit provides us with, then we need to increase iRaceLimit
+				while ( HLPR_TotalUsingRaces( iTotal ) > iRaceLimit * get_playersnum() )
+				{
+					iRaceLimit++;
+				}
+
+				// Check to see if there was an increase that was necessary
+				if ( iRaceLimit > get_pcvar_num( CVAR_wc3_race_limit ) )
+				{
+					log_amx( "Error, increase wc3_race_limit to at least %d", iRaceLimit );
+				}
+
+				if ( iTotal[i+1] >= iRaceLimit )
+				{
+					bAllowRace = false;
+
+				}
+			}*/
+
+			new bool:bAllowRace = true;
+
+			// Check to see if the user can choose this race (are there too many of this race?)
+			if ( bAllowRace )
+			{
+				pos += formatex( szMenu[pos], 512-pos, "\w%d. %s\y\R%s^n", i + 1, szRaceName[i], ( (get_pcvar_num( CVAR_wc3_save_xp )) ? szXP : " " ) );
+
+				iKeys |= (1<<i);
+			}
+
+			// If not, display the race, but don't give them a key to press
+			else
+			{
+				pos += formatex( szMenu[pos], 512-pos, "\d%d. %s\y\R%s^n", i + 1, szRaceName[i], ( (get_pcvar_num( CVAR_wc3_save_xp )) ? szXP : " " ) );
+			}
 		}
 
-		iKeys |= (1<<i);
 	}
 
 	iKeys |= (1<<i);
@@ -523,6 +581,19 @@ public MENU_ChangeRace( id, iRaceXP[MAX_RACES] )
 
 	return;
 }
+
+HLPR_TotalUsingRaces( iTotalRaces[MAX_RACES] )
+{
+	new iTotal = 0;
+	for ( new i = 1; i <= get_pcvar_num( CVAR_wc3_races ); i++ )
+	{
+		log_amx( "%d", i );
+		iTotal += iTotalRaces[i];
+	}
+
+	return iTotal;
+}
+
 
 public _MENU_ChangeRace( id, key )
 {
@@ -558,36 +629,6 @@ public _MENU_ChangeRace( id, key )
 	else
 	{
 		iRace = key + 1;
-	}
-
-	// If this is positive we need to make sure there aren't too many races
-	new iRaceLimit = get_pcvar_num( CVAR_wc3_race_limit );
-	if ( iRaceLimit > 0 )
-	{
-
-		new iPlayers[32], iNumPlayers, i, iTarget;
-		new iTotalRaces[MAX_RACES];
-		get_players( iPlayers, iNumPlayers );
-
-		for ( i = 0; i < iNumPlayers; i++ )
-		{
-			iTarget = iPlayers[i];
-
-			if ( iTarget != id && p_data[iTarget][P_RACE] > 0 && p_data[iTarget][P_RACE] <= get_pcvar_num( CVAR_wc3_races ) )
-			{
-				iTotalRaces[p_data[iTarget][P_RACE]]++;
-			}
-		}
-
-		// Make sure the total races aren't greater than the limit!
-		if ( iTotalRaces[iRace] >= iRaceLimit )
-		{
-			client_print( id, print_center, "Too many people are that race, please choose another" );
-
-			WC3_ChangeRaceStart( id );
-
-			return PLUGIN_HANDLED;
-		}
 	}
 
 	// User currently has a race
