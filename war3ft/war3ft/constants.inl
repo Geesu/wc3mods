@@ -487,6 +487,7 @@ new bool:g_bMoleBuyZoneDisabled = false;
 #define SKILL_PASSIVE				5
 
 #define MAX_PLAYER_SKILLS			6
+#define MIN_ULT_LEVEL               6
 
 // SKILL DEFINES
 #define SKILL_NONE				-1
@@ -536,6 +537,7 @@ new bool:g_bMoleBuyZoneDisabled = false;
 #define PASS_ORB				35
 
 #define MAX_SKILLS				36
+#define MAX_RACE_SKILLS         3
 #define MAX_SKILL_LEVEL			3
 #define MAX_ULTIMATE_LEVEL		1
 

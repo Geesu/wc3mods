@@ -796,6 +796,13 @@ public MENU_SelectSkill( id )
 		return;
 	}
 
+	else if ( p_data[id][P_RACE] == RACE_CHAMELEON )
+	{
+		WC3_StatusText( id, TXT_TOP_CENTER, "%s", id, "Chameleons can't select skills" );
+
+		return;
+	}
+
 	// Lets make sure the user has some available skill points
 	new iSkillsUsed = SM_TotalSkillPointsUsed( id );
 	if ( iSkillsUsed >= p_data[id][P_LEVEL] )
@@ -827,7 +834,7 @@ public MENU_SelectSkill( id )
 
 			
 			// Give them their ultimate if we can
-			if ( SM_GetSkillType( iRandomSkill ) == SKILL_TYPE_ULTIMATE && iSkillLevel == 0 && p_data[id][P_LEVEL] >= 6 )
+			if ( SM_GetSkillType( iRandomSkill ) == SKILL_TYPE_ULTIMATE && iSkillLevel == 0 && p_data[id][P_LEVEL] >= MIN_ULT_LEVEL )
 			{
 				SM_SetSkillLevel( id, iRandomSkill, iSkillLevel + 1 );
 			}

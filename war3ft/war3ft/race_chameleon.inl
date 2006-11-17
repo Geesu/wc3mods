@@ -58,6 +58,9 @@ public CHAM_Randomize()
 				// Set up the player's race again
 				SM_SetPlayerRace( id, RACE_CHAMELEON );
 
+				// Set up the player's skill levels
+				CHAM_ConfigureSkills( id );
+
 				// Show the skill info
 				WC3_ShowRaceInfo( id );
 			}
@@ -124,6 +127,34 @@ CHAM_Configure()
 		}
 	}
 }
+
+CHAM_ConfigureSkills( id )
+{
+	new iPoints = p_data[id][P_LEVEL];
+	new i = 0, iSkills[3];
+
+	if ( iPoints >= MIN_ULT_LEVEL )
+	{
+		SM_SetSkillLevel( id, g_bPlayerSkills[id][g_ChamSkills[4]], 1 );
+		--iPoints;
+	}
+
+	while ( i < iPoints )
+	{
+		if ( i >= MAX_RACE_SKILLS )
+			i = 0;
+
+		++iSkills[i];
+
+		++i;
+	}
+
+	for ( i = 0; i < MAX_RACE_SKILLS; i++ )
+	{
+		SM_SetSkillLevel( id, g_bPlayerSkills[id][g_ChamSkills[i]], iSkills[i] );
+	}
+}
+
 
 CHAM_ValidSkill( skill_id, iType )
 {
