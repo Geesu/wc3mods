@@ -42,6 +42,7 @@ ITEM_Init()
 	g_iFlag[ITEM_ANKH]		|= ITEM_BUYWHENDEAD;
 	g_iFlag[ITEM_SCROLL]	|= ITEM_BUYWHENDEAD;
 	g_iFlag[ITEM_MOLE]		|= ITEM_BUYWHENDEAD;
+	g_iFlag[ITEM_TOME]		|= ITEM_BUYWHENDEAD;
 }
 
 public ITEM_CanBuy( id, iItem )
