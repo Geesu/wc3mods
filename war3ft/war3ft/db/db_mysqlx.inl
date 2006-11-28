@@ -344,6 +344,7 @@ public _MYSQLX_SetData( failstate, Handle:query, error[], errnum, data[], size )
 MYSQLX_Close()
 {
 	SQL_FreeHandle( g_DBTuple );
+	SQL_FreeHandle( g_DBConn );
 }
 
 // The id should be a unique number, so we know what function called it (useful for debugging)
