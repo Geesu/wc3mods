@@ -339,6 +339,9 @@ public EVENT_PlayerSpawned( id )
 	// Reset the user's skin
 	SHARED_ChangeSkin( id, SKIN_RESET );
 
+	// Do we need to give the user a gravity boost?
+	SHARED_SetGravity( id );
+
 	// Give the user their item bonuses!
 	ITEM_GiveAllBonuses( id );
 

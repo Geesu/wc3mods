@@ -6,6 +6,8 @@ v3.0 RC3
  - Bug Fix: Tomb would display that you gained XP even if you didn't (i.e. no other players in server)
  - Bug Fix: Runtime error - [0] shared.inl::_SHARED_SpawnRemoveGod (line 336) (thanks Striker)
  - Bug Fix: Sock of the feather would over-rule undead's levitation even if it was worse (thanks YamiKaitou)
+ - Bug Fix: Undead's levitation would not work after being respawned after death (thanks Saint K)
+ - Bug Fix: If multiple offensive items were purchased - only one would work (thanks snapdoodle)
 
 v3.0 RC2
  - Addition: Help file explaining how to configure chameleon (file is: /configs/war3ft/_chameleon.txt)
