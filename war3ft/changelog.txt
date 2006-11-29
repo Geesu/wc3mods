@@ -1,5 +1,6 @@
 v3.0 RC3
  - Addition: Sock of the feather stacks with Undead's Levitation (suggestion by YamiKaitou)
+ - Addition: Costs of items now depends on the player's level
  - Bug Fix: After choosing an option on a menu, a radio command is executed or an item is bought (thanks p3tsin/VEN)
  - Bug Fix: Mask of death not doing anything (thanks zverj)
  - Bug Fix: Wasn't possible to buy a tomb of experience if you had 2 items (thanks snapdoodle)

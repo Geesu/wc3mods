@@ -287,7 +287,7 @@ public _SHARED_Spawn( id )
 		{
 			client_print( id, print_chat, "%s Unable to respawn because the round is over, here is your money back", g_MODclient );
 
-			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + ITEM_COST[ITEM_SCROLL] );
+			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + ITEM_Cost( id, ITEM_SCROLL ) );
 		}
 
 		return;
@@ -1239,7 +1239,7 @@ public _SHARED_Mole( parm[2] )
 		// Moving b/c of item - if no spot then give the user his/her money back!
 		if ( parm[1] == 2 )
 		{
-			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + ITEM_COST[ITEM_MOLE], 1 );
+			SHARED_SetUserMoney( id, SHARED_GetUserMoney( id ) + ITEM_Cost( id, ITEM_MOLE ), 1 );
 
 			client_print( id, print_chat, "%s %L", g_MODclient, id, "NO_SPOT_MOLE_MONEY" );
 		}

@@ -45,10 +45,20 @@ ITEM_Init()
 	g_iFlag[ITEM_TOME]		|= ITEM_BUYWHENDEAD;
 }
 
+// We created this to allow for different prices of items at different levels
+ITEM_Cost( id, iItem )
+{
+	// Cost * ratio (0.8 to 1.0 dependent on level)
+	new Float:fRatio = (float( p_data[id][P_LEVEL] ) * 0.2) + 0.8;
+
+	return floatround( float( ITEM_COST[iItem] ) * fRatio );
+}
+
+
 public ITEM_CanBuy( id, iItem )
 {
 	// User doesn't have the money
-	if ( SHARED_GetUserMoney( id ) < ITEM_COST[iItem] )
+	if ( SHARED_GetUserMoney( id ) < ITEM_Cost( id, iItem ) )
 	{
 		client_print( id, print_center, "%L", id, "INSUFFICIENT_FUNDS" );
 
@@ -162,7 +172,7 @@ public ITEM_Buy( id, iItem )
 		// We're clear!
 
 		// Remove user's money
-		new iNewMoney = SHARED_GetUserMoney( id ) - ITEM_COST[iItem];
+		new iNewMoney = SHARED_GetUserMoney( id ) - ITEM_Cost( id, iItem );
 		SHARED_SetUserMoney( id, iNewMoney );
 
 		ITEM_GiveItem( id, iItem );
@@ -803,14 +813,14 @@ ITEM_BuyRings( id )
 	{
 		iMoney = SHARED_GetUserMoney( id );
 
-		if ( iMoney < ITEM_COST[ITEM_RING] )
+		if ( iMoney < ITEM_Cost( id, ITEM_RING ) )
 		{
 			break;
 		}
 
 		iAdditionalRings++;
 		
-		new iNewMoney = iMoney - ITEM_COST[ITEM_RING];
+		new iNewMoney = iMoney - ITEM_Cost( id, ITEM_RING );
 		SHARED_SetUserMoney( id, iNewMoney, 1 );
 	}
 
