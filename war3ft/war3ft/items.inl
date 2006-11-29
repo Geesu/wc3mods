@@ -48,8 +48,11 @@ ITEM_Init()
 // We created this to allow for different prices of items at different levels
 ITEM_Cost( id, iItem )
 {
-	// Cost * ratio (0.8 to 1.0 dependent on level)
-	new Float:fRatio = (float( p_data[id][P_LEVEL] ) * 0.2) + 0.8;
+	// How much should ratio increase per level?
+	new Float:fInc = ( 1.0 - ITEM_COST_RATIO ) / float( MAX_LEVELS );
+
+	// Cost * ratio (ITEM_COST_RATIO to 1.0 dependent on level)
+	new Float:fRatio = (float( p_data[id][P_LEVEL] ) * fInc) + ITEM_COST_RATIO;
 
 	return floatround( float( ITEM_COST[iItem] ) * fRatio );
 }
