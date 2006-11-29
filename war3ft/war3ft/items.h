@@ -62,4 +62,4 @@ new g_iFlag[MAX_SHOPMENU_ITEMS] = {0};			// Stores information about items
 
 #define ITEM_BOOT_INCREASE	1.10					// Represents % increase
 
-#define ITEM_COST_RATIO		0.6
+#define ITEM_COST_RATIO		0.7
