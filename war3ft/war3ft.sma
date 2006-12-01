@@ -33,7 +33,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu & Avanderik"
-new const WC3VERSION[] =	"3.0 RC3"
+new const WC3VERSION[] =	"3.0 RC4"
 new const WC3DATE[] =		__DATE__
 
 // Let AMX X know that we NEED these modules (as of amx x 1.75)
@@ -179,14 +179,16 @@ public plugin_init()
 		register_logevent( "on_FreezeTimeComplete"	, 2		, "0=World triggered"	, "1=Round_Start"	);
 		register_logevent( "on_EndRound"			, 2		, "0=World triggered"	, "1=Round_End"		);
 
-		register_event( "SendAudio"		, "on_TerroristWin"	, "a"	, "2=%!MRAD_terwin"					);
-		register_event( "SendAudio"		, "on_CTWin"		, "a"	, "2=%!MRAD_ctwin"					);
-		register_event( "ArmorType"		, "on_ArmorType"	, "be"										);
-		register_event( "Battery"		, "on_Battery"		, "be"										);
-		register_event( "WeapPickup"	, "on_WeapPickup"	, "b"										); 
-		register_event( "StatusValue"	, "on_ShowStatus"	, "be"	, "1=2"		,"2!0"					);
-		register_event( "StatusValue"	, "on_HideStatus"	, "be"	, "1=1"		,"2=0"					);
-		register_event( "SetFOV"		, "on_Zoom"			, "be"										);
+		register_event( "SendAudio"		, "on_TerroristWin"		, "a"	, "2=%!MRAD_terwin"					);
+		register_event( "SendAudio"		, "on_CTWin"			, "a"	, "2=%!MRAD_ctwin"					);
+		register_event( "ArmorType"		, "on_ArmorType"		, "be"										);
+		register_event( "Battery"		, "on_Battery"			, "be"										);
+		register_event( "WeapPickup"	, "on_WeapPickup"		, "b"										); 
+		register_event( "StatusValue"	, "on_ShowStatus"		, "be"	, "1=2"		,"2!0"					);
+		register_event( "StatusValue"	, "on_HideStatus"		, "be"	, "1=1"		,"2=0"					);
+		register_event( "SetFOV"		, "on_Zoom"				, "be"										);
+		register_event( "BarTime"		, "on_BombPlanting"		, "be"	, "1=3"								);
+		register_event( "BarTime"		, "on_BombStopPlanting"	, "b"	, "1=0"								);
 
 		// Old Style
 		register_menucmd( register_menuid( "BuyItem" )	, (1<<3)	, "cmd_hegren"	);

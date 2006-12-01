@@ -333,7 +333,9 @@
 	#define PB_REINCARNATION_DELAY	25
 	#define PB_REINCARNATION_SKIP	26
 
-	#define PB_LAST					27
+	#define PB_ISPLANTING			27		// Set to true if the user is planting the bomb
+
+	#define PB_LAST					28
 	// ***************************
 	//		End of info for player_data_bool
 	// ***************************

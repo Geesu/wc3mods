@@ -353,3 +353,13 @@ public on_Zoom( id )
 
 	return;
 }
+
+public on_BombPlanting( id )
+{
+	p_data_b[id][PB_ISPLANTING] = true;
+}
+
+public on_BombStopPlanting( id )
+{
+	p_data_b[id][PB_ISPLANTING] = false;
+}

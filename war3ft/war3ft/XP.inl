@@ -90,6 +90,7 @@ public bomb_planted( planter )
 	}
 
 	g_iPlayerRole[planter] = 0;
+	p_data_b[planter][PB_ISPLANTING] = false;
 }
 
 // Called on certain player events

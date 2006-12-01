@@ -1,3 +1,6 @@
+v3.0 RC4
+ - Bug Fix: Bug with warden and planting the bomb (thanks damian086pl)
+
 v3.0 RC3
  - Addition: Sock of the feather stacks with Undead's Levitation (suggestion by YamiKaitou)
  - Addition: Costs of items now depends on the player's level

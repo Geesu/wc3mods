@@ -9,6 +9,13 @@
 WA_ULT_Vengeance( id )
 {
 	
+	// User can't use ultimate while planting or defusing!
+	if ( p_data_b[id][PB_ISPLANTING] )
+	{
+		client_print( id, print_center, "You cannot use your ultimate while planting the bomb!" );
+		return;
+	}
+
 	// If the user's ultimate is not available, then why are we here?
 	if ( !ULT_Available( id ) )
 	{		
