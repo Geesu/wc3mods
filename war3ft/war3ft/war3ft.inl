@@ -621,13 +621,6 @@ WC3_SetRace( id, race )
 	SM_ResetSkillLevels( id );
 	SM_ResetSkills( id );
 	p_data[id][P_CHANGERACE] = 0
-	
-	// Set up the fuses if we're in DOD
-	if ( g_MOD == GAME_DOD )
-	{
-		p_data_b[id][PB_REINCARNATION_DELAY] = false;
-		dod_set_fuse( id, FUSE_RESET );
-	}
 
 	// This function will assign the race's skills to this player
 	SM_SetPlayerRace( id, p_data[id][P_RACE] );
@@ -1049,8 +1042,11 @@ WC3_CommonSpawn( id )
 
 WC3_SetSkills( id )
 {
+	// Undead's Levitation
+	SHARED_SetGravity( id );
+
 	// Undead's Unholy Aura
-	SHARED_SetGravity(id);
+	SHARED_SetSpeed( id );
 
 	// Warden's Blink
 	WA_Blink( id );
@@ -1075,6 +1071,13 @@ WC3_SetSkills( id )
 
 	// Warden's Shadow Strike
 	WA_ShadowStrike_Reset( id );
+
+	// Set up the fuses if we're in DOD
+	if ( g_MOD == GAME_DOD )
+	{
+		p_data_b[id][PB_REINCARNATION_DELAY] = false;
+		dod_set_fuse( id, FUSE_RESET );
+	}
 }
 
 // Function will print a message in the center of the screen
