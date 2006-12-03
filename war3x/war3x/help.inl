@@ -15,7 +15,7 @@ public HELP_generate( id ) {
 	new szMessage[256];
 	formatex( szMessage, 255, "%L", id, "INFO_GENERATEHELP_CHAT" );
 
-	status_print( id, szMessage );
+	client_print( id, print_chat, szMessage );
 
 	return PLUGIN_HANDLED;
 }
@@ -665,7 +665,7 @@ public HELP_create_files() {
 				write_file( szFileName, szSkillHeader, -1 );
 			}
 
-			//LANG_GetSkillName( iRaceNum, iUltimateNum, LANG_SERVER, szSkillName );
+			LANG_GetSkillName( iRaceNum + 1, iUltimateNum, LANG_SERVER, szSkillName, 31 );
 			HELP_description_ultimate( iRaceNum, iUltimateNum, LANG_SERVER, szSkillDesc );
 
 			formatex( szText, 255, "<li><b>%s</b>^n%s", szSkillName, szSkillDesc );
@@ -696,8 +696,8 @@ public HELP_create_files() {
 
 	for ( new iItemNum = 1; iItemNum <= TOTAL_SHOPITEMS; iItemNum++ )
 	{
-		LANG_GetItemName ( iItemNum, SHOP_COMMON, LANG_SERVER, szItemName, 31 )
-		LANG_GetItemDesc ( iItemNum, SHOP_COMMON, LANG_SERVER, szItemDesc, 255 )
+		LANG_GetItemName ( iItemNum, SHOP_COMMON, LANG_SERVER, szItemName, 31 );
+		LANG_GetItemDesc ( iItemNum, SHOP_COMMON, szItemDesc );
 
 		// Grab values
 
@@ -710,7 +710,7 @@ public HELP_create_files() {
 
 		// Create String ( Max 5 args )
 
-		formatex( szItemDesc, 255, szItemDesc, szValueArgs[0], szValueArgs[1], szValueArgs[2], szValueArgs[3], szValueArgs[4] );
+		formatex( szItemDesc, 255, "%L", LANG_SERVER, szItemDesc, szValueArgs[0], szValueArgs[1], szValueArgs[2], szValueArgs[3], szValueArgs[4] );
 
 		formatex( szText, 255, "<li><b><font color=rgb(%i,%i,%i)>%s</font></b>^n%s", ITEM_COLOR[iItemNum][GLOW_R], ITEM_COLOR[iItemNum][GLOW_G], ITEM_COLOR[iItemNum][GLOW_B], szItemName, szItemDesc );
 		write_file( szFileName, szText, -1 );
@@ -724,7 +724,7 @@ static HELP_description_racial( iRaceNum, id, szDescription[256], iLevel ) {
 
 	// Grab skill description template
 
-	LANG_GetSkillDesc( iRaceNum + 1, SKILL_RACIAL, id, szDescription, 255 )
+	LANG_GetSkillDesc( iRaceNum + 1, SKILL_RACIAL, szDescription );
 
 	// Grab values
 
@@ -769,7 +769,7 @@ static HELP_description_racial( iRaceNum, id, szDescription[256], iLevel ) {
 
 	// Create String ( Max 5 args )
 
-	format( szDescription, 255, szDescription, szNewValues[0], szNewValues[1], szNewValues[2], szNewValues[3], szNewValues[4] );
+	format( szDescription, 255, "%L", id, szDescription, szNewValues[0], szNewValues[1], szNewValues[2], szNewValues[3], szNewValues[4] );
 
 	return PLUGIN_HANDLED;
 
@@ -780,7 +780,7 @@ static HELP_description_trained( iRaceNum, iSkillNum, id, szDescription[256], iL
 
 	// Grab skill description template
 
-	LANG_GetSkillDesc( iRaceNum + 1, iSkillNum, id, szDescription, 255 )
+	LANG_GetSkillDesc( iRaceNum + 1, iSkillNum, szDescription );
 
 	// Grab values
 
@@ -830,7 +830,7 @@ static HELP_description_trained( iRaceNum, iSkillNum, id, szDescription[256], iL
 
 	// Create String ( Max 5 args )
 
-	format( szDescription, 255, szDescription, szNewValues[0], szNewValues[1], szNewValues[2], szNewValues[3], szNewValues[4] );
+	format( szDescription, 255, "%L", id, szDescription, szNewValues[0], szNewValues[1], szNewValues[2], szNewValues[3], szNewValues[4] );
 
 	return PLUGIN_HANDLED;
 
@@ -841,7 +841,7 @@ static HELP_description_ultimate( iRaceNum, iUltimateNum, id, szDescription[256]
 
 	// Grab skill description template
 
-	LANG_GetSkillDesc( iRaceNum + 1, iUltimateNum + TOTAL_SKILLS, id, szDescription, 255 )
+	LANG_GetSkillDesc( iRaceNum + 1, iUltimateNum, szDescription );
 
 	// Grab values
 
@@ -861,7 +861,7 @@ static HELP_description_ultimate( iRaceNum, iUltimateNum, id, szDescription[256]
 
 	// Create String ( Max 5 args )
 
-	format( szDescription, 255, szDescription, szNewValues[0], szNewValues[1], szNewValues[2], szNewValues[3], szNewValues[4] );
+	format( szDescription, 255, "%L", id, szDescription, szNewValues[0], szNewValues[1], szNewValues[2], szNewValues[3], szNewValues[4] );
 
 	return PLUGIN_HANDLED;
 }

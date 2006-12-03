@@ -77,12 +77,9 @@ public LANG_GetItemName( item_id, shop_id, id, item_name[],	len	) {
 }
 
 
-public LANG_GetItemDesc( item_id, shop_id, id, item_desc[],	len	) {
+public LANG_GetItemDesc( item_id, shop_id, item_desc[] ) {
 
-	new	szItemHelper[32];
-
-	formatex( szItemHelper,	31,	"SHOP%d_ITEM%d_DESC", shop_id, item_id );
-	formatex( item_desc, len, "%L",	id,	szItemHelper );
+	formatex( item_desc, 31, "SHOP%d_ITEM%d_DESC", shop_id, item_id );
 
 	return PLUGIN_HANDLED;
 }
@@ -132,15 +129,13 @@ public LANG_GetSkillName( race_id, skill_id, id, skill_name[], len ) {
 }
 
 
-public LANG_GetSkillDesc( race_id, skill_id, id, skill_desc[], len ) {
-
-	new	szSkillHelper[32];
+public LANG_GetSkillDesc( race_id, skill_id, skill_desc[] ) {
 
 	// Racial /	trained	skill
 
 	if ( skill_id <	TOTAL_SKILLS )
 	{
-		formatex( szSkillHelper, 31, "RACE%d_SKILL%d_DESC",	race_id, skill_id );
+		formatex( skill_desc, 31, "RACE%d_SKILL%d_DESC",	race_id, skill_id );
 	}
 
 	// Ultimate
@@ -148,11 +143,8 @@ public LANG_GetSkillDesc( race_id, skill_id, id, skill_desc[], len ) {
 	else
 	{
 		skill_id -=	( TOTAL_SKILLS - 1 );
-		formatex( szSkillHelper, 31, "RACE%d_ULTIMATE%d_DESC", race_id,	skill_id );
+		formatex( skill_desc, 31, "RACE%d_ULTIMATE%d_DESC", race_id,	skill_id );
 	}
-	
-	log_amx( "%s", szSkillHelper );
-	formatex( skill_desc, len, "%L", id, szSkillHelper );
 
 	return PLUGIN_HANDLED;
 }
