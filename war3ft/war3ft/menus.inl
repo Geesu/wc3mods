@@ -798,7 +798,7 @@ public MENU_SelectSkill( id )
 
 	else if ( p_data[id][P_RACE] == RACE_CHAMELEON )
 	{
-		WC3_StatusText( id, TXT_TOP_CENTER, "%s", id, "Chameleons can't select skills" );
+		WC3_StatusText( id, TXT_TOP_CENTER, "%s", "Chameleons can't select skills!" );
 
 		return;
 	}

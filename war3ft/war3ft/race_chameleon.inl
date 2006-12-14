@@ -128,14 +128,20 @@ CHAM_Configure()
 	}
 }
 
+// This will randomly assign skills to a player w/chameleon
 CHAM_ConfigureSkills( id )
 {
+	// Number of points to distribute based on the player's level
 	new iPoints = p_data[id][P_LEVEL];
 	new i = 0, iSkills[3];
 
+	// Lets give the player their ultimate!
 	if ( iPoints >= MIN_ULT_LEVEL )
 	{
 		SM_SetSkillLevel( id, g_bPlayerSkills[id][g_ChamSkills[4]], 1 );
+
+		client_print( id, print_chat, "Ultimate given: %d", g_ChamSkills[4] );
+
 		--iPoints;
 	}
 
@@ -152,6 +158,8 @@ CHAM_ConfigureSkills( id )
 	for ( i = 0; i < MAX_RACE_SKILLS; i++ )
 	{
 		SM_SetSkillLevel( id, g_bPlayerSkills[id][g_ChamSkills[i]], iSkills[i] );
+
+		client_print( id, print_chat, "Setting skill %d to %d", g_ChamSkills[i], iSkills[i] );
 	}
 }
 
