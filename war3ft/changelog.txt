@@ -1,5 +1,6 @@
 v3.0 RC4
  - Bug Fix: Bug with warden and planting the bomb (thanks damian086pl)
+ - Bug Fix: (DOD) Buyzone was attempted to be created when a player would mole
 
 v3.0 RC3
  - Addition: Sock of the feather stacks with Undead's Levitation (suggestion by YamiKaitou)
