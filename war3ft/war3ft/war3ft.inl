@@ -1278,19 +1278,24 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 		// Ignore if they killed themself
 		if ( iKiller != iVictim )
 		{
-			// Award them money for dying b/c i'm nice
-			if ( get_user_team( iVictim ) != get_user_team( iKiller ) )
+			// Users need to be connected
+			if ( p_data_b[iVictim][PB_ISCONNECTED] && p_data_b[iKilled][PB_ISCONNECTED] )
 			{
-				SHARED_SetUserMoney( iVictim, SHARED_GetUserMoney( iVictim ) + 300, 1 );
-			}
-			
-			// Award the killer some money
-			SHARED_SetUserMoney( iKiller, SHARED_GetUserMoney( iKiller ) + 600, 1 );
-			
-			// Give more money for Phoenix skill if it exists
-			if ( SM_GetSkillLevel( iKiller, SKILL_PHOENIX ) > 0 )
-			{
-				BM_PhoenixDOD( iKiller );
+
+				// Award them money for dying b/c i'm nice
+				if ( get_user_team( iVictim ) != get_user_team( iKiller ) )
+				{
+					SHARED_SetUserMoney( iVictim, SHARED_GetUserMoney( iVictim ) + 300, 1 );
+				}
+				
+				// Award the killer some money
+				SHARED_SetUserMoney( iKiller, SHARED_GetUserMoney( iKiller ) + 600, 1 );
+				
+				// Give more money for Phoenix skill if it exists
+				if ( SM_GetSkillLevel( iKiller, SKILL_PHOENIX ) > 0 )
+				{
+					BM_PhoenixDOD( iKiller );
+				}
 			}
 		}
 	}
