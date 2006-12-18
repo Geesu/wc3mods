@@ -12,7 +12,6 @@ HU_ULT_Blink( id )
 	// User can't Blink when he/she's stunned
 	if ( p_data_b[id][PB_STUNNED] )
 	{
-
 		WC3_StatusText( id, 0, "You can't blink when you're stunned!" );
 
 		return;

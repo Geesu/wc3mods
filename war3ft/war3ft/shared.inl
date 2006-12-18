@@ -1223,13 +1223,16 @@ public _SHARED_Mole( parm[2] )
 		// User is a mole
 		p_data_b[id][PB_MOLE] = true;
 		
-		if ( !g_bMoleBuyZoneDisabled )
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 		{
-			// Give the user a buyzone!
-			SHARED_CreateBuyZone( id );
+			if ( !g_bMoleBuyZoneDisabled )
+			{
+				// Give the user a buyzone!
+				SHARED_CreateBuyZone( id );
 
-			// Display to target they can buy
-			client_print( id, print_center, "Quick buy some items!" );
+				// Display to target they can buy
+				client_print( id, print_center, "Quick buy some items!" );
+			}
 		}
 	}
 
