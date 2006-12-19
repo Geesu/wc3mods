@@ -153,6 +153,11 @@ SHARED_IsPrimaryWeapon( iWeaponID )
 // Function will return the user's money
 SHARED_GetUserMoney( id )
 {
+	// If user isn't connected - then he shouldn't have any money
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return 0;
+	}
 
 	// Check for Counter-Strike or Condition Zero
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )

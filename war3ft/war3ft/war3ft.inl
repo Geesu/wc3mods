@@ -1279,7 +1279,7 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 		if ( iKiller != iVictim )
 		{
 			// Users need to be connected
-			if ( p_data_b[iVictim][PB_ISCONNECTED] && p_data_b[iKilled][PB_ISCONNECTED] )
+			if ( p_data_b[iVictim][PB_ISCONNECTED] && p_data_b[iKiller][PB_ISCONNECTED] )
 			{
 
 				// Award them money for dying b/c i'm nice
