@@ -632,10 +632,19 @@ public module_filter( const module[] )
 
 public native_filter( const name[], index, trap )
 {
+
+	static szBuffer[256];
+	dbg_fmt_error( szBuffer, 255 );
+
+	log_amx( "[RUNTIME] '%s' '%s'", name, szBuffer );
+
+
 	if ( !trap )
 	{
 		return PLUGIN_HANDLED;
 	}
+
+	
 
 	return PLUGIN_CONTINUE;
 }
