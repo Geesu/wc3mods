@@ -131,7 +131,7 @@ public MOTD_PlayerSkills( id )
 						// Server Console
 						else
 						{
-							console_print( id, "   (%d) %s", p_data[iTargetID][P_LEVEL], szTmpName );
+							server_print( "   (%d) %s", p_data[iTargetID][P_LEVEL], szTmpName );
 						}
 					}
 				}//end player loop
@@ -150,9 +150,6 @@ public MOTD_PlayerSkills( id )
 	{
 		new szTitle[128];
 		formatex( szTitle, 127, "%L", id, "PLAYER_SKILLS" );
-
-		console_print( id, "%s", szTmpMsg );
-		log_amx( "%s", szTmpMsg );
 
 		show_motd( id, szTmpMsg, szTitle );
 	}
