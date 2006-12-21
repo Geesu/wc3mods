@@ -99,17 +99,17 @@ UTIL_GetWeaponName( iWeapon, szWpnName[], len )
 	{
 		case CSW_WORLDSPAWN:    copy( szWpnName, len, "world"													);
 
-		case CSW_LIGHTNING:     LANG_GetSkillName( ULTIMATE_CHAINLIGHTNING	, LANG_SERVER	, szWpnName	, len	);
-		case CSW_SUICIDE:		LANG_GetSkillName( ULTIMATE_SUICIDE			, LANG_SERVER	, szWpnName	, len	);
-		case CSW_IMMOLATE:		LANG_GetSkillName( ULTIMATE_IMMOLATE		, LANG_SERVER	, szWpnName	, len	);
-		case CSW_LOCUSTS:		LANG_GetSkillName( ULTIMATE_LOCUSTSWARM		, LANG_SERVER	, szWpnName	, len	);
-		case CSW_SERPENTWARD:   LANG_GetSkillName( SKILL_SERPENTWARD		, LANG_SERVER	, szWpnName	, len	);
-		case CSW_SHADOW:		LANG_GetSkillName( SKILL_SHADOWSTRIKE		, LANG_SERVER	, szWpnName	, len	);
-		case CSW_THORNS:		LANG_GetSkillName( SKILL_THORNS				, LANG_SERVER	, szWpnName	, len	);
-		case CSW_CARAPACE:		LANG_GetSkillName( SKILL_SPIKEDCARAPACE		, LANG_SERVER	, szWpnName	, len	);
-		case CSW_CARRION:		LANG_GetSkillName( SKILL_CARRIONBEETLES		, LANG_SERVER	, szWpnName	, len	);
-		case CSW_ORB:			LANG_GetSkillName( PASS_ORB					, LANG_SERVER	, szWpnName	, len	);
-		case CSW_CONCOCTION:	LANG_GetSkillName( PASS_UNSTABLECONCOCTION	, LANG_SERVER	, szWpnName	, len	);
+		case CSW_LIGHTNING:     LANG_GetSkillName( ULTIMATE_CHAINLIGHTNING	, LANG_SERVER	, szWpnName	, len, 8	);
+		case CSW_SUICIDE:		LANG_GetSkillName( ULTIMATE_SUICIDE			, LANG_SERVER	, szWpnName	, len, 9	);
+		case CSW_IMMOLATE:		LANG_GetSkillName( ULTIMATE_IMMOLATE		, LANG_SERVER	, szWpnName	, len, 10	);
+		case CSW_LOCUSTS:		LANG_GetSkillName( ULTIMATE_LOCUSTSWARM		, LANG_SERVER	, szWpnName	, len, 11	);
+		case CSW_SERPENTWARD:   LANG_GetSkillName( SKILL_SERPENTWARD		, LANG_SERVER	, szWpnName	, len, 12	);
+		case CSW_SHADOW:		LANG_GetSkillName( SKILL_SHADOWSTRIKE		, LANG_SERVER	, szWpnName	, len, 13	);
+		case CSW_THORNS:		LANG_GetSkillName( SKILL_THORNS				, LANG_SERVER	, szWpnName	, len, 14	);
+		case CSW_CARAPACE:		LANG_GetSkillName( SKILL_SPIKEDCARAPACE		, LANG_SERVER	, szWpnName	, len, 15	);
+		case CSW_CARRION:		LANG_GetSkillName( SKILL_CARRIONBEETLES		, LANG_SERVER	, szWpnName	, len, 16	);
+		case CSW_ORB:			LANG_GetSkillName( PASS_ORB					, LANG_SERVER	, szWpnName	, len, 17	);
+		case CSW_CONCOCTION:	LANG_GetSkillName( PASS_UNSTABLECONCOCTION	, LANG_SERVER	, szWpnName	, len, 18	);
 	}
 }
 

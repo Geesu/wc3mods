@@ -830,7 +830,7 @@ WC3_ShowRaceInfo( id )
 			iSkillID = SM_GetSkillByPos( id, iSkillCounter );
 			iSkillLevel = SM_GetSkillLevel( id, iSkillID );
 
-			LANG_GetSkillName( iSkillID , id, szSkillName, 63 );
+			LANG_GetSkillName( iSkillID , id, szSkillName, 63, 19 );
 
 			// Skill is trainable
 			if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_TRAINABLE && iSkillLevel > 0 )

@@ -206,7 +206,7 @@ public MOTD_SkillsInfo( id )
 			bHeaderShown = true;
 		}
 
-		LANG_GetSkillName( iSkillID, id, szSkillName, 127 )
+		LANG_GetSkillName( iSkillID, id, szSkillName, 127, 2 )
 		LANG_GetSkillInfo( iSkillID, id, szTmpDesc, 255 );
 
 		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><ul>%s</ul><br>", szSkillName, szTmpDesc );
@@ -226,7 +226,7 @@ public MOTD_SkillsInfo( id )
 			bHeaderShown = true;
 		}
 
-		LANG_GetSkillName( iSkillID, id, szSkillName, 127 )
+		LANG_GetSkillName( iSkillID, id, szSkillName, 127, 3 )
 		LANG_GetSkillInfo( iSkillID, id, szTmpDesc, 255 );
 
 		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><ul>%s</ul>", szSkillName, szTmpDesc );
@@ -246,7 +246,7 @@ public MOTD_SkillsInfo( id )
 			bHeaderShown = true;
 		}
 
-		LANG_GetSkillName( iSkillID, id, szSkillName, 127 )
+		LANG_GetSkillName( iSkillID, id, szSkillName, 127, 4 )
 		LANG_GetSkillInfo( iSkillID, id, szTmpDesc, 255 );
 
 		pos += formatex( szTmpMsg[pos], 2047-pos, "<li>%s</li><ul>%s</ul><br>", szSkillName, szTmpDesc );

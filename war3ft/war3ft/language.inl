@@ -148,7 +148,7 @@ LANG_GetItemInfo( item_id, id, item_description[], len )
 }
 
 //Description: Function will return the skill name based on the race id, skill id and the language of the user
-LANG_GetSkillName( skill_id, id, skill_name[], len )
+LANG_GetSkillName( skill_id, id, skill_name[], len, func_id )
 {	
 
 	// Handle any game-specific instructions first
@@ -165,7 +165,7 @@ LANG_GetSkillName( skill_id, id, skill_name[], len )
 	// Handle everything else
 	if ( skill_id < 0 || skill_id >= MAX_SKILLS )
 	{
-		log_amx( "Invalid skill: %d", skill_id );
+		log_amx( "[%d] Invalid skill: %d", func_id, skill_id );
 		return;
 	}
 

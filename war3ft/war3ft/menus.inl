@@ -582,7 +582,7 @@ public MENU_ChangeRace( id, iRaceXP[MAX_RACES] )
 	return;
 }
 
-HLPR_TotalUsingRaces( iTotalRaces[MAX_RACES] )
+/*HLPR_TotalUsingRaces( iTotalRaces[MAX_RACES] )
 {
 	new iTotal = 0;
 	for ( new i = 1; i <= get_pcvar_num( CVAR_wc3_races ); i++ )
@@ -592,7 +592,7 @@ HLPR_TotalUsingRaces( iTotalRaces[MAX_RACES] )
 	}
 
 	return iTotal;
-}
+}*/
 
 
 public _MENU_ChangeRace( id, key )
@@ -865,7 +865,7 @@ public MENU_SelectSkill( id )
 	{
 		iSkillLevel = SM_GetSkillLevel( id, iSkillID );
 
-		LANG_GetSkillName( iSkillID , id, szSkillName, 63 );
+		LANG_GetSkillName( iSkillID , id, szSkillName, 63, 1 );
 		
 		// Add the trainable skills to the menu
 		if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_TRAINABLE )

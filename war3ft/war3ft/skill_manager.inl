@@ -412,7 +412,7 @@ SM_DebugPrint( id )
 	iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_TRAINABLE );
 	while ( iSkillID != -1 )
 	{
-		LANG_GetSkillName( iSkillID, LANG_SERVER, szSkillName, 31 );
+		LANG_GetSkillName( iSkillID, LANG_SERVER, szSkillName, 31, 5 );
 
 		log_amx( "[%d] %s", iSkillID, szSkillName );
 
@@ -425,7 +425,7 @@ SM_DebugPrint( id )
 	iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
 	while ( iSkillID != -1 )
 	{
-		LANG_GetSkillName( iSkillID, LANG_SERVER, szSkillName, 31 );
+		LANG_GetSkillName( iSkillID, LANG_SERVER, szSkillName, 31, 6 );
 
 		log_amx( "[%d] %s", iSkillID, szSkillName );
 
@@ -438,7 +438,7 @@ SM_DebugPrint( id )
 	iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_PASSIVE );
 	while ( iSkillID != -1 )
 	{
-		LANG_GetSkillName( iSkillID, LANG_SERVER, szSkillName, 31 );
+		LANG_GetSkillName( iSkillID, LANG_SERVER, szSkillName, 31, 7 );
 
 		log_amx( "[%d] %s", iSkillID, szSkillName );
 
