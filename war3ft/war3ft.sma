@@ -413,6 +413,12 @@ public client_disconnect(id)
 	p_data_b[id][PB_JUSTJOINED]		= false;
 	p_data_b[id][PB_ISCONNECTED]	= false;
 	
+	// Reset xp assist
+	for ( new i = 0; i < MAXPLAYERS; i++ )
+	{
+		g_iDamageDealt[id][i] = 0;
+	}
+
 	// Save the user's XP if we have XP to save
 	if ( get_pcvar_num( CVAR_wc3_save_xp ) && !is_user_bot(id) && p_data[id][P_RACE] && p_data[id][P_XP] )
 	{
@@ -633,10 +639,10 @@ public module_filter( const module[] )
 public native_filter( const name[], index, trap )
 {
 
-	static szBuffer[256];
+	new szBuffer[256];
 	dbg_fmt_error( szBuffer, 255 );
 
-	log_amx( "[RUNTIME] '%s' '%s'", name, szBuffer );
+	log_amx( "[RUNTIME] '%s' '%d' '%d' '%s'", name, index, trap, szBuffer );
 
 
 	if ( !trap )

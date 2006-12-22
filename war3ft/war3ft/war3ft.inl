@@ -828,26 +828,31 @@ WC3_ShowRaceInfo( id )
 		while ( iSkillCounter < iTotalSkills )
 		{
 			iSkillID = SM_GetSkillByPos( id, iSkillCounter );
-			iSkillLevel = SM_GetSkillLevel( id, iSkillID );
-
-			LANG_GetSkillName( iSkillID , id, szSkillName, 63, 19 );
-
-			// Skill is trainable
-			if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_TRAINABLE && iSkillLevel > 0 )
+			
+			// Make sure we have a valid skill id!
+			if ( iSkillID != -1 )
 			{
-				pos += formatex( szMsg[pos], 255-pos, "^n%s %L %d", szSkillName, id, "WORD_LEVEL", iSkillLevel );
-			}
+				iSkillLevel = SM_GetSkillLevel( id, iSkillID );
 
-			// Skill is an ultimate
-			else if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_ULTIMATE && iSkillLevel > 0 )
-			{
-				pos += formatex( szMsg[pos], 255-pos, "^n%L: %s", id, "WORD_ULTIMATE", szSkillName );
-			}
+				LANG_GetSkillName( iSkillID , id, szSkillName, 63, 19 );
 
-			// Skill is passive
-			else if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_PASSIVE )
-			{
-				pos += formatex( szMsg[pos], 255-pos, "^n%s", szSkillName );
+				// Skill is trainable
+				if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_TRAINABLE && iSkillLevel > 0 )
+				{
+					pos += formatex( szMsg[pos], 255-pos, "^n%s %L %d", szSkillName, id, "WORD_LEVEL", iSkillLevel );
+				}
+
+				// Skill is an ultimate
+				else if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_ULTIMATE && iSkillLevel > 0 )
+				{
+					pos += formatex( szMsg[pos], 255-pos, "^n%L: %s", id, "WORD_ULTIMATE", szSkillName );
+				}
+
+				// Skill is passive
+				else if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_PASSIVE )
+				{
+					pos += formatex( szMsg[pos], 255-pos, "^n%s", szSkillName );
+				}
 			}
 
 			iSkillCounter++;
