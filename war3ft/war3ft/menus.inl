@@ -716,6 +716,12 @@ public MENU_Shopmenu( id, iStart )
 		return;
 	}
 
+	// Shopmenu2 can't display if we don't have the correct number of races!
+	if ( iStart == MAX_PAGE_ITEMS && get_pcvar_num( CVAR_wc3_races ) <= 4 )
+	{
+		return;
+	}
+
 	new szMenu[512], szItemName[64], pos = 0, i, iItemID;
 	new iKeys = (1<<9);
 
