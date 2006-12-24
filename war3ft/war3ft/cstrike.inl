@@ -84,10 +84,13 @@ public on_Battery( id )
 		return;
 	}
 	
-	// Store the previous value (we do this b/c the Battery event is triggered (and set to 0) before weapon reincarnation)
-	p_data[id][P_LASTARMOR] = p_data[id][P_ARMORONDEATH];
+	if ( !bIgnoreArmorSet[id] )
+	{
+		// Store the previous value (we do this b/c the Battery event is triggered (and set to 0) before weapon reincarnation)
+		p_data[id][P_LASTARMOR] = p_data[id][P_ARMORONDEATH];
 
-	p_data[id][P_ARMORONDEATH] = read_data( 1 );
+		p_data[id][P_ARMORONDEATH] = read_data( 1 );
+	}
 
 	return;
 }

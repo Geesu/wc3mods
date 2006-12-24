@@ -412,6 +412,7 @@ public client_disconnect(id)
 	p_data_b[id][PB_DIEDLASTROUND]	= false;
 	p_data_b[id][PB_JUSTJOINED]		= false;
 	p_data_b[id][PB_ISCONNECTED]	= false;
+	bIgnoreArmorSet[id]				= false;
 	
 	// Reset xp assist
 	for ( new i = 0; i < MAXPLAYERS; i++ )
@@ -601,6 +602,15 @@ public plugin_natives()
 {
 	set_module_filter( "module_filter" );
 	set_native_filter( "native_filter" );
+	set_error_filter( "error_filter" );
+}
+
+public error_filter( error_code, bool:debugging, message[] ) 
+{
+	new szBuffer[256];
+	dbg_fmt_error( szBuffer, 255 );
+
+	log_amx( "[ERROR] '%s' '%d' '%d' '%s'", message, error_code, debugging, szBuffer );
 }
 
 public module_filter( const module[] )
@@ -638,19 +648,10 @@ public module_filter( const module[] )
 
 public native_filter( const name[], index, trap )
 {
-
-	new szBuffer[256];
-	dbg_fmt_error( szBuffer, 255 );
-
-	log_amx( "[RUNTIME] '%s' '%d' '%d' '%s'", name, index, trap, szBuffer );
-
-
 	if ( !trap )
 	{
 		return PLUGIN_HANDLED;
 	}
-
-	
 
 	return PLUGIN_CONTINUE;
 }

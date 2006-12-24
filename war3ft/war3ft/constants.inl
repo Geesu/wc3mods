@@ -446,6 +446,8 @@ new gmsgStatusIcon
 
 new bool:g_GameRestarting = false;
 
+new bool:bIgnoreArmorSet[33];
+
 new g_MODclient[15] = "* [WAR3FT]"
 
 new bool:warcraft3 = true

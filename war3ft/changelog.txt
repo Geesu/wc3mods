@@ -5,6 +5,7 @@ v3.0 RC4
  - Bug Fix: Runtime error - http://wc3mods.net/forums/viewtopic.php?t=2281
  - Bug Fix: Possible for new player to gain xp assist while spectating (thanks kp_downarrow)
  - Bug Fix: Possible to use shopmenu2 with <= 4 races (thanks strawbewwy)
+ - Bug Fix: Armor was not given back when respawning
 
 v3.0 RC3
  - Addition: Sock of the feather stacks with Undead's Levitation (suggestion by YamiKaitou)

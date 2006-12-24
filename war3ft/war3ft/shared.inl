@@ -310,6 +310,9 @@ public _SHARED_Spawn( id )
 	// Save their previous weapons!
 	SHARED_CopySavedWeapons( id );
 
+	// Ignore the armor settaging...
+	bIgnoreArmorSet[id] = true;
+
 	// Spawn the player
 	spawn( id );
 	spawn( id );
@@ -357,6 +360,8 @@ public _SHARED_Spawn_Final( id )
 
 	spawn( id );
 	
+	bIgnoreArmorSet[id] = false;
+
 	// If we don't give them a suit then they won't have a HUD
 	give_item( id, "item_suit" );
 	
@@ -562,6 +567,8 @@ public _SHARED_CS_GiveWeapons(id)
 
 	// Remove all weapons
 	strip_user_weapons( id );
+
+	client_print( id, print_chat, "[DEBUG] Setting armor to: %d with %d", p_data[id][P_LASTARMOR], g_ArmorType[id] );
 
 	// Give armor
 	if ( p_data[id][P_LASTARMOR] )
