@@ -568,8 +568,6 @@ public _SHARED_CS_GiveWeapons(id)
 	// Remove all weapons
 	strip_user_weapons( id );
 
-	client_print( id, print_chat, "[DEBUG] Setting armor to: %d with %d", p_data[id][P_LASTARMOR], g_ArmorType[id] );
-
 	// Give armor
 	if ( p_data[id][P_LASTARMOR] )
 	{
@@ -757,39 +755,53 @@ public SHARED_SetSpeed( id )
 	// Counter-Strike and Condition Zero specific checks
 	else if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
+		new Float:fNewSpeed = 0.0;
 		static iSkillLevel;
 		iSkillLevel = SM_GetSkillLevel( id, SKILL_UNHOLYAURA );
-
+		
 		// Unholy Aura bonus
-		if ( iSkillLevel > 0 )
+		if ( iSkillLevel > 0.0 )
 		{
-			// Give them the bonus
-			set_user_maxspeed( id, p_unholy[iSkillLevel-1] );
-
-			return;
+			fNewSpeed = p_unholy[iSkillLevel-1];
 		}
 
 		// Boots of Speed bonus
-		else if ( ITEM_Has( id, ITEM_BOOTS ) > ITEM_NONE )
+		if ( ITEM_Has( id, ITEM_BOOTS ) > ITEM_NONE )
 		{
 			new iClip, iAmmo;
 			new iWeapon = get_user_weapon( id, iClip, iAmmo );
-
-			// Give them the bonus
-			if ( g_iPlayerRole[id] == PLR_VIP )
+			
+			// Then just apply the bonus!
+			if ( fNewSpeed > 0.0 )
 			{
-				set_user_maxspeed( id, CS_SPEED_VIP * ITEM_BOOT_INCREASE );
+				fNewSpeed *= ITEM_BOOT_INCREASE;
 			}
-			// Player zoomed in
-			else if ( g_bPlayerZoomed[id] )
-			{
-				set_user_maxspeed( id, CS_WEAPON_SPEED_ZOOM[iWeapon] * ITEM_BOOT_INCREASE );
-			}
-			// Regular
+			
+			// User only has boots
 			else
 			{
-				set_user_maxspeed( id, CS_WEAPON_SPEED[iWeapon] * ITEM_BOOT_INCREASE );
+				// Give them the bonus
+				if ( g_iPlayerRole[id] == PLR_VIP )
+				{
+					fNewSpeed = CS_SPEED_VIP * ITEM_BOOT_INCREASE;
+				}
+				// Player zoomed in
+				else if ( g_bPlayerZoomed[id] )
+				{
+					fNewSpeed = CS_WEAPON_SPEED_ZOOM[iWeapon] * ITEM_BOOT_INCREASE;
+				}
+				// Regular
+				else
+				{
+					fNewSpeed = CS_WEAPON_SPEED[iWeapon] * ITEM_BOOT_INCREASE;
+				}
 			}
+		}
+
+		// Change the user's speed!
+		if ( fNewSpeed > 0.0 )
+		{
+			set_user_maxspeed( id, fNewSpeed );
 
 			return;
 		}
