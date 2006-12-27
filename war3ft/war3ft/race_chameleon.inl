@@ -130,43 +130,9 @@ CHAM_Configure()
 
 // This will randomly assign skills to a player w/chameleon
 CHAM_ConfigureSkills( id )
-{
-	// Number of points to distribute based on the player's level
-	new iPointsAvailable	= p_data[id][P_LEVEL] - SM_TotalSkillPointsUsed( id );
-
-	// Lets give the player their ultimate!
-	if ( p_data[id][P_LEVEL] >= MIN_ULT_LEVEL )
-	{
-		// Only give it if the user doesn't have it already!
-		if ( SM_GetSkillLevel( id, g_ChamSkills[4] ) == 0 )
-		{
-			SM_SetSkillLevel( id, g_bPlayerSkills[id][g_ChamSkills[4]], 1 );
-
-			client_print( id, print_chat, "Ultimate given: %d", g_ChamSkills[4] );
-
-			--iPointsAvailable;
-		}
-	}
-	
-	new iRandomSkill, iCurLevel;
-	while ( iPointsAvailable > 0 )
-	{
-		iRandomSkill = random_num( 0, 3 );
-		
-		// What is the current level?
-		iCurLevel = SM_GetSkillLevel( id, g_ChamSkills[iRandomSkill] );
-		
-		if ( iCurLevel < MAX_SKILL_LEVEL )
-		{
-			client_print( id, print_chat, "Setting skill %d to %d", g_ChamSkills[iRandomSkill], iCurLevel + 1 );
-
-			// Lets increase that level!
-			SM_SetSkillLevel( id, g_ChamSkills[iRandomSkill], iCurLevel + 1 );
-			
-			// Decrease the number of points available
-			iPointsAvailable--;
-		}
-	}
+{	
+	// Keep giving the a random skill until we have no more to give!
+	while ( SM_GiveRandomSkillPoint( id ) ) {}
 }
 
 CHAM_ValidSkill( skill_id, iType )

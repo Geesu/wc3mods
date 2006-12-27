@@ -607,7 +607,6 @@ WC3_ChangeRaceShowMenu( id, iRaceXP[MAX_RACES] = {0} )
 // This will actually give the user a given race
 WC3_SetRace( id, race )
 {
-
 	// Clear any ultimate icons that might exist
 	ULT_ClearIcons( id );
 	

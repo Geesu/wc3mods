@@ -432,6 +432,24 @@ XP_Check( id, bShowGained = true )
 
 	while ( iSkillsUsed > p_data[id][P_LEVEL] )
 	{
+		// We might need to remove the ult first!
+		if ( p_data[id][P_LEVEL] < MIN_ULT_LEVEL )
+		{
+			new iUltimateID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
+			
+			// Then we need to remove this!
+			if ( SM_GetSkillLevel( id, iUltimateID ) == 1 )
+			{
+				SM_SetSkillLevel( id, iUltimateID, 0 );
+
+				// Get our current skills used
+				iSkillsUsed = SM_TotalSkillPointsUsed( id );
+
+				// Restart the loop!
+				continue;
+			}
+		}
+
 		iSkillID = SM_GetRandomSkill( id );
 		iSkillLevel = SM_GetSkillLevel( id, iSkillID );
 

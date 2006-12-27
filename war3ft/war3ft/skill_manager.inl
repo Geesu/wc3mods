@@ -451,7 +451,7 @@ SM_SetSkill( id, iSkillID )
 {
 	if ( !SM_IsValidSkill( iSkillID ) )
 	{
-		log_error( AMX_ERR_NATIVE, "[40] Invalid skill: %d", skill_id );
+		log_error( AMX_ERR_NATIVE, "[40] Invalid skill: %d", iSkillID );
 
 		return;
 	}
@@ -528,4 +528,51 @@ SM_SetSkill( id, iSkillID )
 	SHARED_SetSpeed( id );
 
 	return;
+}
+
+// Given a player id - will simply give them a random skill point! - it will always give an ult @ level 6
+// returns false if no point was given
+SM_GiveRandomSkillPoint( id )
+{
+	new iTotalPointsUsed = SM_TotalSkillPointsUsed( id );
+
+	// Then there is nothing to give!
+	if ( iTotalPointsUsed >= p_data[id][P_LEVEL] )
+	{
+		return false;
+	}
+
+	new initSkillsUsed = iTotalPointsUsed;
+	new iRandomSkill, iSkillLevel;
+
+	// Loop while there hasn't been a change
+	while ( initSkillsUsed == iTotalPointsUsed )
+	{
+		iRandomSkill = SM_GetRandomSkill( id );
+		iSkillLevel = SM_GetSkillLevel( id, iRandomSkill );
+
+		// Give them their ultimate if we can
+		if ( SM_GetSkillType( iRandomSkill ) == SKILL_TYPE_ULTIMATE && iSkillLevel == 0 && p_data[id][P_LEVEL] >= MIN_ULT_LEVEL )
+		{
+			SM_SetSkillLevel( id, iRandomSkill, iSkillLevel + 1 );
+			
+			client_print( id, print_chat, "[DEBUG] Ultimate given: %d", iRandomSkill );
+		}
+
+		// Give them a skill if we can
+		else if ( SM_GetSkillType( iRandomSkill ) == SKILL_TYPE_TRAINABLE && iSkillLevel != MAX_SKILL_LEVEL && p_data[id][P_LEVEL] > 2 * iSkillLevel )
+		{
+			SM_SetSkillLevel( id, iRandomSkill, iSkillLevel + 1 );
+
+			client_print( id, print_chat, "[DEBUG] Trainable given: %d", iRandomSkill );
+		}
+		else
+		{
+			client_print( id, print_chat, "[DEBUG] Failed: %d", iRandomSkill );
+		}
+
+		iTotalPointsUsed = SM_TotalSkillPointsUsed( id );
+	}
+
+	return true;
 }

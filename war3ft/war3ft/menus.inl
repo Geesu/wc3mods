@@ -831,8 +831,15 @@ public MENU_SelectSkill( id )
 		{
 			return;
 		}
+		
+		// Keep giving the bot a random ID until we are full!
+		while ( iSkillsUsed < p_data[id][P_LEVEL] )
+		{
+			SM_GiveRandomSkillPoint( id );
 
-		static iRandomSkill, iSkillLevel;
+			iSkillsUsed = SM_TotalSkillPointsUsed( id );
+		}
+		/*static iRandomSkill, iSkillLevel;
 
 	
 		// Loop while we have skills available
@@ -855,7 +862,7 @@ public MENU_SelectSkill( id )
 			}
 
 			iSkillsUsed = SM_TotalSkillPointsUsed( id );
-		}
+		}*/
 
 		return;
 	}

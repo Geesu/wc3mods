@@ -8,7 +8,12 @@ v3.0 RC4
  - Bug Fix: Armor was not given back when respawning
  - Bug Fix: Kills not saved when you kill someone by an ability
  - Bug Fix: Selecting ultimate w/selectskills before the ultimatedelay is up will display the icon but you can't use ult
+ - Bug Fix: Was possible to have ult when < level 6 if your xp dropped below level 6 after having the ult
  - Change: Boots now stack with unholy aura
+
+ - to-ad - CSDM compatibility
+ - ult icon not shown if wc3_setlevel gives lvl w/ult and ult is given
+  - ult given after race select screen shows up for chameleon - wtf?
 
 v3.0 RC3
  - Addition: Sock of the feather stacks with Undead's Levitation (suggestion by YamiKaitou)
@@ -121,6 +126,7 @@ v3.0 RC1
 //fix hex playing after ur dead...
 //bug: phoenix will try to respawn users when changing team
 //block knife = http://forums.alliedmods.net/showthread.php?t=29836
+//skill manager re-write needed
 
 //shopmenu 3 ideas:
 // immune to some magic
