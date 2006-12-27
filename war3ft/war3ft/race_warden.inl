@@ -126,7 +126,6 @@ WA_Blink( id )
 	// User has the ability, lets initiate a "check"
 	if ( iSkillLevel > 0 )
 	{
-		
 		if ( random_float( 0.0, 1.0 ) <= p_blink[iSkillLevel-1] )
 		{
 			p_data_b[id][PB_WARDENBLINK] = true;

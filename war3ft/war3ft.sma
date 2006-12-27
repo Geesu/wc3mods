@@ -342,7 +342,7 @@ public client_connect( id )
 	p_data_b[id][PB_CAN_RENDER]			= true;
 	p_data_b[id][PB_HAS_SPAWNED]		= false;
 	p_data_b[id][PB_SKINSWITCHED]		= false;
-	
+
 	// User should have no items on connect...
 	g_iShopMenuItems[id][0] = -1;
 	g_iShopMenuItems[id][1] = -1;

@@ -335,7 +335,9 @@
 
 	#define PB_ISPLANTING			27		// Set to true if the user is planting the bomb
 
-	#define PB_LAST					28
+//	#define PB_CHAM_CONFIGURED		28		// Has chameleon been configured?
+
+	#define PB_LAST					29
 	// ***************************
 	//		End of info for player_data_bool
 	// ***************************

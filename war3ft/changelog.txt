@@ -6,6 +6,8 @@ v3.0 RC4
  - Bug Fix: Possible for new player to gain xp assist while spectating (thanks kp_downarrow)
  - Bug Fix: Possible to use shopmenu2 with <= 4 races (thanks strawbewwy)
  - Bug Fix: Armor was not given back when respawning
+ - Bug Fix: Kills not saved when you kill someone by an ability
+ - Bug Fix: Selecting ultimate w/selectskills before the ultimatedelay is up will display the icon but you can't use ult
  - Change: Boots now stack with unholy aura
 
 v3.0 RC3

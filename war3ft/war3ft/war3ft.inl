@@ -641,6 +641,12 @@ WC3_SetRace( id, race )
 // Function called right after the user's race information is set
 WC3_SetRaceUp( id )
 {
+	// Need to check the exception here for randomized chameleon!
+	if ( p_data[id][P_RACE] == RACE_CHAMELEON && get_pcvar_num( CVAR_wc3_cham_random ) )
+	{
+		CHAM_ConfigureSkills( id );
+	}
+
 	WC3_SetSkills( id );
 
 	// Copy the global ULT timeout over to just this user...
@@ -817,46 +823,56 @@ WC3_ShowRaceInfo( id )
 
 	if ( p_data[id][P_RACE] != 0 )
 	{
-		new szMsg[256], szRaceName[64], szSkillName[64], pos = 0;
-		lang_GetRaceName( p_data[id][P_RACE], id, szRaceName, 63 );
+		new szSkillName[64], iSkillLevel;
 
-		pos += formatex( szMsg[pos], 255-pos, "%s^n%L %d", szRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL] );
+		new szTrainable[256],	szUltimate[256],	szPassive[256];
+		new posT = 0,			posU = 0,			posP = 0;
 
-		new iSkillCounter = 0, iSkillID, iSkillLevel;
-		new iTotalSkills = SM_TotalSkillPointsUsed( id );
-
-		while ( iSkillCounter < iTotalSkills )
+		// Loop through all available skills to find the trainable options...
+		for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
 		{
-			iSkillID = SM_GetSkillByPos( id, iSkillCounter );
-			
-			// Make sure we have a valid skill id!
-			if ( iSkillID != -1 )
-			{
-				iSkillLevel = SM_GetSkillLevel( id, iSkillID );
+			// Get the skill's level
+			iSkillLevel = SM_GetSkillLevel( id, iSkillID );
 
+			// If the skill level is > 0 then the user has this skill!
+			if ( iSkillLevel > 0 )
+			{
+				// Get the skill's name
 				LANG_GetSkillName( iSkillID , id, szSkillName, 63, 19 );
 
-				// Skill is trainable
-				if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_TRAINABLE && iSkillLevel > 0 )
+				// Trainable skill
+				if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_TRAINABLE )
 				{
-					pos += formatex( szMsg[pos], 255-pos, "^n%s %L %d", szSkillName, id, "WORD_LEVEL", iSkillLevel );
+					posT += formatex( szTrainable[posT], 255-posT, "^n%s %L %d", szSkillName, id, "WORD_LEVEL", iSkillLevel );
 				}
 
 				// Skill is an ultimate
 				else if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_ULTIMATE && iSkillLevel > 0 )
 				{
-					pos += formatex( szMsg[pos], 255-pos, "^n%L: %s", id, "WORD_ULTIMATE", szSkillName );
+					posU += formatex( szUltimate[posU], 255-posU, "^n%L: %s", id, "WORD_ULTIMATE", szSkillName );
 				}
 
 				// Skill is passive
 				else if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_PASSIVE )
 				{
-					pos += formatex( szMsg[pos], 255-pos, "^n%s", szSkillName );
+					posP += formatex( szPassive[posP], 255-posP, "^n%s", szSkillName );
 				}
 			}
-
-			iSkillCounter++;
 		}
+
+		// Get the race's name
+		new szRaceName[64];
+		lang_GetRaceName( p_data[id][P_RACE], id, szRaceName, 63 );
+		
+		// Add the header
+		new szMsg[1024];
+		formatex( szMsg, 1023, "%s^n%L %d", szRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL] );
+
+		// Add all the skills to the message!
+		strcat( szMsg, szTrainable, 1023 );
+		strcat( szMsg, szUltimate, 1023 );
+		strcat( szMsg, szPassive, 1023 );
+
 
 		WC3_StatusText( id, TXT_RACE_INFO, szMsg );
 	}
@@ -1389,10 +1405,9 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 
 public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 {
-
+	// Save stats information?
 	if ( get_pcvar_num( CVAR_wc3_psychostats ) )
 	{
-
 		if ( CSW_WAR3_MIN <= iWeapon <= CSW_WAR3_MAX )
 		{
 			new iSkillWeapon = iWeapon - CSW_WAR3_MIN;
@@ -1431,7 +1446,6 @@ public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 	// Award $300 for a Kill
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-
 		// Make sure they're not on the same team
 		if ( iVictimTeam != iKillerTeam && iKiller != iVictim )
 		{
@@ -1439,7 +1453,7 @@ public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 		}
 	}
 
-
+	// Get the killer's frags
 	new iKillerFrags = get_user_frags( iKiller ) + 1;
 
 	// Team Kill
@@ -1456,8 +1470,12 @@ public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
 		new iKillerDeaths = get_user_deaths( iKiller );
-
+		
+		// Updates realtime
 		Create_ScoreInfo( iKiller, iKillerFrags, iKillerDeaths, 0, iKillerTeam );
+
+		// If we don't do this then next round the number of kills will go back to what it was
+		set_user_frags( iKiller, iKillerFrags );
 	}
 
     // Create Death Message
@@ -1475,11 +1493,7 @@ public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 			new iVictimDeaths = get_user_deaths( iVictim );
 
 			Create_ScoreInfo( iVictim, iVictimFrags, iVictimDeaths, 0, iVictimTeam );
-		}
-			
-		
-		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-		{
+
 			// Get the weapon name
 			new szWeaponName[32];
 			UTIL_GetWeaponName( iWeapon, szWeaponName, 31 );
@@ -1493,6 +1507,7 @@ public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 		}
 	}
 
+	// Log it so psychostats can pick the death up...
 	UTIL_LogDeath( iVictim, iKiller, iWeapon );
 
 	return;

@@ -802,9 +802,12 @@ public MENU_SelectSkill( id )
 		return;
 	}
 
-	else if ( p_data[id][P_RACE] == RACE_CHAMELEON )
+	// They don't choose skills when it's random
+	else if ( p_data[id][P_RACE] == RACE_CHAMELEON && get_pcvar_num( CVAR_wc3_cham_random ) )
 	{
 		WC3_StatusText( id, TXT_TOP_CENTER, "%s", "Chameleons can't select skills!" );
+
+		CHAM_ConfigureSkills( id );
 
 		return;
 	}
@@ -943,12 +946,9 @@ public _MENU_SelectSkill( id, iKey )
 	// Determine which key was just selected
 	new iSkillID = SM_GetSkillByPos( id, iKey );
 
-	// Get the user's current skill level
-	new iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
-
-	// Add one to their level!
-	SM_SetSkillLevel( id, iSkillID, iCurrentLevel + 1 );
-
+	// Set up the skill!
+	SM_SetSkill( id, iSkillID );
+	
 	new iSkillsUsed = SM_TotalSkillPointsUsed( id );
 	
 	// Then they have another skill to select!!
@@ -962,64 +962,6 @@ public _MENU_SelectSkill( id, iKey )
 	{
 		WC3_ShowBar( id );
 	}
-
-	//*****************************
-	// Skill Checks
-	//*****************************
-	
-	switch ( iSkillID )
-	{
-		// Human's Devotion Aura
-		case SKILL_DEVOTION:
-		{
-			if ( is_user_alive( id ) )
-			{
-				set_user_health( id, get_user_health( id ) + 15 );
-			}
-		}
-
-		// Shadow Hunter's Serpent Ward
-		case SKILL_SERPENTWARD:
-		{
-			p_data[id][P_SERPENTCOUNT]++;
-		}
-
-		// Warden's Blink
-		case SKILL_BLINK:
-		{
-			if ( !p_data_b[id][PB_WARDENBLINK] )
-			{
-				WA_Blink( id );
-			}
-		}
-
-		// Warden's Shadow Strike
-		case SKILL_SHADOWSTRIKE:
-		{
-			p_data[id][P_SHADOWCOUNT]--;
-		}
-		
-		// Crypt Lord's Carrion Beetles
-		case SKILL_CARRIONBEETLES:
-		{
-			p_data[id][P_CARRIONCOUNT]--;
-		}
-	}
-
-	// User selected an ultimate
-	if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_ULTIMATE )
-	{
-		Ultimate_Ready( id );
-	}
-
-	// Check to see if they should be more invisible
-	SHARED_INVIS_Set( id );
-
-	// Undead's Unholy Aura
-	SHARED_SetGravity( id );
-
-	// Set the user's speed
-	SHARED_SetSpeed( id );
 
 	return PLUGIN_HANDLED;
 }

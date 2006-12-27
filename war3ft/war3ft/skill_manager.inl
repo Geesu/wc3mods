@@ -445,3 +445,87 @@ SM_DebugPrint( id )
 		iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_PASSIVE, iSkillID + 1 );
 	}
 }
+
+// After we know which skill to give the user - we call this function to give it to them!
+SM_SetSkill( id, iSkillID )
+{
+	if ( !SM_IsValidSkill( iSkillID ) )
+	{
+		log_error( AMX_ERR_NATIVE, "[40] Invalid skill: %d", skill_id );
+
+		return;
+	}
+
+	// Get the user's current skill level
+	new iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
+
+	if ( iCurrentLevel + 1 > MAX_SKILL_LEVEL )
+	{
+		log_amx( "Attempted to increase skill %d to %d", iSkillID, iCurrentLevel + 1 );
+
+		return;
+	}
+
+	// Add one to their level!
+	SM_SetSkillLevel( id, iSkillID, iCurrentLevel + 1 );
+
+	//*****************************
+	// Time for Skill Checks!!!
+	//*****************************
+	
+	switch ( iSkillID )
+	{
+		// Human's Devotion Aura
+		case SKILL_DEVOTION:
+		{
+			if ( is_user_alive( id ) )
+			{
+				set_user_health( id, get_user_health( id ) + 15 );
+			}
+		}
+
+		// Shadow Hunter's Serpent Ward
+		case SKILL_SERPENTWARD:
+		{
+			p_data[id][P_SERPENTCOUNT]++;
+		}
+
+		// Warden's Blink
+		case SKILL_BLINK:
+		{
+			if ( !p_data_b[id][PB_WARDENBLINK] )
+			{
+				WA_Blink( id );
+			}
+		}
+
+		// Warden's Shadow Strike
+		case SKILL_SHADOWSTRIKE:
+		{
+			p_data[id][P_SHADOWCOUNT]--;
+		}
+		
+		// Crypt Lord's Carrion Beetles
+		case SKILL_CARRIONBEETLES:
+		{
+			p_data[id][P_CARRIONCOUNT]--;
+		}
+	}
+
+	// User selected an ultimate + global cooldown is done
+	if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_ULTIMATE && g_iUltimateDelay <= 0 )
+	{
+		Ultimate_Ready( id );
+	}
+
+	// Check to see if they should be more invisible
+	SHARED_INVIS_Set( id );
+
+	// Undead's Unholy Aura
+	SHARED_SetGravity( id );
+
+	// Set the user's speed
+	SHARED_SetSpeed( id );
+
+	return;
+}
