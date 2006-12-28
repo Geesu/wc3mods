@@ -805,8 +805,7 @@ public MENU_SelectSkill( id )
 	// They don't choose skills when it's random
 	else if ( p_data[id][P_RACE] == RACE_CHAMELEON && get_pcvar_num( CVAR_wc3_cham_random ) )
 	{
-		WC3_StatusText( id, TXT_TOP_CENTER, "%s", "Chameleons can't select skills!" );
-
+		//WC3_StatusText( id, TXT_TOP_CENTER, "%s", "Chameleons can't select skills!" );
 		CHAM_ConfigureSkills( id );
 
 		return;

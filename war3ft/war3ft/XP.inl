@@ -256,17 +256,23 @@ XP_onDeath( iVictim, iAttacker, iWeaponIndex, iHeadshot )
 			}
 		}
 
+		new iAssistLevel, iAssistXP, iVictimMaxHealth;
+		new Float:fMultiplier;
+
 		// Award XP for other people doing damage to this victim
 		for ( new i = 0; i < MAXPLAYERS; i++ )
 		{
 			// Then this player dealt some damage to this player this round
 			if ( g_iDamageDealt[i][iVictim] > 0 && iAttacker != i )
 			{
-				new iVictimMaxHealth = get_user_maxhealth( iVictim );
-				new Float:fMultiplier = float( g_iDamageDealt[i][iVictim] ) / float( iVictimMaxHealth );
+				iVictimMaxHealth = get_user_maxhealth( iVictim );
+				fMultiplier = float( g_iDamageDealt[i][iVictim] ) / float( iVictimMaxHealth );
+				
+				iAssistLevel = p_data[i][P_LEVEL];
+				iAssistXP = XP_GivenByLevel( iAssistLevel );
 
 				// Need a ratio of XP to award to person who dealt damage
-				iBonusXP = XP_Give( i, floatround( float( iXP ) * fMultiplier ) );
+				iBonusXP = XP_Give( i, floatround( float( iAssistXP ) * fMultiplier ) );
 
 				if ( iBonusXP != 0 )
 				{
@@ -440,7 +446,12 @@ XP_Check( id, bShowGained = true )
 			// Then we need to remove this!
 			if ( SM_GetSkillLevel( id, iUltimateID ) == 1 )
 			{
+				//client_print( id, print_chat, "[DEBUG] Removing ult %d", iUltimateID );
+
 				SM_SetSkillLevel( id, iUltimateID, 0 );
+
+				// Clear ult icon!
+				ULT_ClearIcons( id );
 
 				// Get our current skills used
 				iSkillsUsed = SM_TotalSkillPointsUsed( id );
@@ -460,6 +471,8 @@ XP_Check( id, bShowGained = true )
 			iSkillID = SM_GetRandomSkill( id );
 		}
 		
+		//client_print( id, print_chat, "[DEBUG] Removing skill %d which was %d", iSkillID, iSkillLevel );
+
 		// OK at this point we have a valid skill, lets remove a level!
 		SM_SetSkillLevel( id, iSkillID, iSkillLevel - 1 );
 

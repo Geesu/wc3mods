@@ -643,6 +643,10 @@ WC3_SetRaceUp( id )
 	// Need to check the exception here for randomized chameleon!
 	if ( p_data[id][P_RACE] == RACE_CHAMELEON && get_pcvar_num( CVAR_wc3_cham_random ) )
 	{
+		// Skill levels were just loaded from the DB - we don't care about these
+		SM_ResetSkillLevels( id );
+
+		// Fill all skills randomly!
 		CHAM_ConfigureSkills( id );
 	}
 
@@ -1264,6 +1268,9 @@ public WC3_Damage( iVictim, iAttacker, iDamage, iWeapon, iBodyPart )
 			iStatsDamage[iAttacker][iSkillWeapon] += iDamage;
 		}
 	}
+
+	// Magical damage should go toward kill assist
+	g_iDamageDealt[iAttacker][iVictim] += iDamage;
 
 	new iHealth = get_user_health( iVictim );
 	

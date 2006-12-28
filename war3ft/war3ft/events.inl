@@ -17,7 +17,7 @@ public grenade_throw( index, greindex, wId )
 
 		set_task( fTimer, "_ITEM_Glove_Give", TASK_ITEM_GLOVES + index );
 
-		client_print( index, print_chat, "[DEBUG] You will receive another grenade in %f seconds", fTimer );
+		//client_print( index, print_chat, "[DEBUG] You will receive another grenade in %f seconds", fTimer );
 	}
 
 	static iSkillLevel;

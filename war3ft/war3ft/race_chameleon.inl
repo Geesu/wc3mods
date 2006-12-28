@@ -133,6 +133,9 @@ CHAM_ConfigureSkills( id )
 {	
 	// Keep giving the a random skill until we have no more to give!
 	while ( SM_GiveRandomSkillPoint( id ) ) {}
+
+	// Display /level info...
+	WC3_ShowRaceInfo( id );
 }
 
 CHAM_ValidSkill( skill_id, iType )

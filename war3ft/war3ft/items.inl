@@ -148,7 +148,7 @@ public ITEM_Buy( id, iItem )
 				// One time use...
 				if ( !ITEM_CheckFlag( iItem, ITEM_CHARGEABLE ) )
 				{
-					client_print( id, print_chat, "[DEBUG] Item is not chargeable" );
+					//client_print( id, print_chat, "[DEBUG] Item is not chargeable" );
 
 					bShowReplaceMenu = true;
 				}
@@ -156,7 +156,7 @@ public ITEM_Buy( id, iItem )
 				// We also need to replace it if the item is chargeable but they don't own that item
 				if ( ITEM_Has( id, iItem ) == ITEM_NONE && ITEM_CheckFlag( iItem, ITEM_CHARGEABLE ) )
 				{
-					client_print( id, print_chat, "[DEBUG] Doesn't have item and new item is chargeable" );
+					//client_print( id, print_chat, "[DEBUG] Doesn't have item and new item is chargeable" );
 
 					bShowReplaceMenu = true;
 				}

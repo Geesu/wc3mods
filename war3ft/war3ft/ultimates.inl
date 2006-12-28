@@ -92,6 +92,14 @@ ULT_Icon( id, flag )
 		return;
 	}
 
+	// If they mysteriously lost a level - we shouldn't display the icon (i.e. admin command)
+	if ( p_data[id][P_LEVEL] < MIN_ULT_LEVEL && flag != ICON_HIDE )
+	{
+		ULT_Icon( id, ICON_HIDE );
+
+		return;
+	}
+
 	new iRaceID = p_data[id][P_RACE];
 	
 	// If we're chameleon we need to display the icon of the ultimate we have

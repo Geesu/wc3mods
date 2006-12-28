@@ -177,6 +177,10 @@ SHARED_GetUserMoney( id )
 // Function will set a user's money, if show is 1 then the difference will be displayed on screen
 SHARED_SetUserMoney( id, money, show = 1 )
 {
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
 
 	// Check for Counter-Strike or Condition Zero
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )

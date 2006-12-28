@@ -326,6 +326,30 @@ SM_GetRandomSkill( id )
 	return iRandomSkill;
 }
 
+SM_GetRandomSkillByType( id, type )
+{
+
+	// Make sure a skill is available
+	if ( !SM_SkillAvailable( id ) )
+	{
+		return -1;
+	}
+
+	static iRandomSkill;
+	
+
+	// Initial condition selected
+	iRandomSkill = random_num( 0, MAX_SKILLS - 1 );
+
+	while ( !g_bPlayerSkills[id][iRandomSkill] || g_SkillType[iRandomSkill] != type )
+	{
+		iRandomSkill = random_num( 0, MAX_SKILLS - 1 );
+	}
+
+	return iRandomSkill;
+}
+
+
 bool:SM_SkillAvailable( id )
 {
 	static i;
@@ -534,45 +558,44 @@ SM_SetSkill( id, iSkillID )
 // returns false if no point was given
 SM_GiveRandomSkillPoint( id )
 {
-	new iTotalPointsUsed = SM_TotalSkillPointsUsed( id );
-
 	// Then there is nothing to give!
-	if ( iTotalPointsUsed >= p_data[id][P_LEVEL] )
+	if ( SM_TotalSkillPointsUsed( id ) >= p_data[id][P_LEVEL] )
 	{
 		return false;
 	}
 
-	new initSkillsUsed = iTotalPointsUsed;
-	new iRandomSkill, iSkillLevel;
-
-	// Loop while there hasn't been a change
-	while ( initSkillsUsed == iTotalPointsUsed )
+	// Give them their ultimate if we can
+	if ( p_data[id][P_LEVEL] >= MIN_ULT_LEVEL )
 	{
-		iRandomSkill = SM_GetRandomSkill( id );
-		iSkillLevel = SM_GetSkillLevel( id, iRandomSkill );
-
-		// Give them their ultimate if we can
-		if ( SM_GetSkillType( iRandomSkill ) == SKILL_TYPE_ULTIMATE && iSkillLevel == 0 && p_data[id][P_LEVEL] >= MIN_ULT_LEVEL )
+		new iUltSkill = SM_GetRandomSkillByType( id, SKILL_TYPE_ULTIMATE );
+		
+		if ( iUltSkill != -1 && SM_GetSkillLevel( id, iUltSkill ) == 0 )
 		{
-			SM_SetSkillLevel( id, iRandomSkill, iSkillLevel + 1 );
-			
-			client_print( id, print_chat, "[DEBUG] Ultimate given: %d", iRandomSkill );
-		}
+			// Set up the skill...
+			SM_SetSkill( id, iUltSkill );
 
-		// Give them a skill if we can
-		else if ( SM_GetSkillType( iRandomSkill ) == SKILL_TYPE_TRAINABLE && iSkillLevel != MAX_SKILL_LEVEL && p_data[id][P_LEVEL] > 2 * iSkillLevel )
-		{
-			SM_SetSkillLevel( id, iRandomSkill, iSkillLevel + 1 );
+			//client_print( id, print_chat, "[DEBUG] Ultimate given: %d", iUltSkill );
 
-			client_print( id, print_chat, "[DEBUG] Trainable given: %d", iRandomSkill );
+			return true;
 		}
-		else
-		{
-			client_print( id, print_chat, "[DEBUG] Failed: %d", iRandomSkill );
-		}
-
-		iTotalPointsUsed = SM_TotalSkillPointsUsed( id );
 	}
+	
+	new iRandomSkill = SM_GetRandomSkillByType( id, SKILL_TYPE_TRAINABLE );
+	new iSkillLevel = SM_GetSkillLevel( id, iRandomSkill );
+
+	// Sweetest conditional statement ever
+	while ( iSkillLevel + 1 > MAX_SKILL_LEVEL || p_data[id][P_LEVEL] <= 2 * iSkillLevel )
+	{
+		//server_print( "[%d:%d] %d >= %d || %d <= %d", iRandomSkill, iSkillLevel, iSkillLevel + 1, MAX_SKILL_LEVEL, p_data[id][P_LEVEL], 2 * iSkillLevel );
+
+		iRandomSkill = SM_GetRandomSkillByType( id, SKILL_TYPE_TRAINABLE );
+		iSkillLevel = SM_GetSkillLevel( id, iRandomSkill );
+	}
+			
+	// Set up the skill...
+	SM_SetSkill( id, iRandomSkill );
+
+	//client_print( id, print_chat, "[DEBUG] (%d) Trainable given - from %d to %d", iRandomSkill, iSkillLevel, iSkillLevel + 1 );
 
 	return true;
 }
