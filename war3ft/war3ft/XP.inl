@@ -272,9 +272,9 @@ XP_onDeath( iVictim, iAttacker, iWeaponIndex, iHeadshot )
 				iAssistXP = XP_GivenByLevel( iAssistLevel );
 
 				// Need a ratio of XP to award to person who dealt damage
-				iBonusXP = XP_Give( i, floatround( float( iAssistXP ) * fMultiplier ) );
+				iBonusXP = XP_Give( i, ( floatround( float( iAssistXP ) * fMultiplier ) / 2 ) );
 
-				if ( iBonusXP != 0 )
+				if ( iBonusXP != 0 && get_pcvar_num( CVAR_wc3_show_kill_obj ) )
 				{
 					client_print( i, print_chat, "%s You have been awarded %d XP for a kill assist!", g_MODclient, iBonusXP );
 				}

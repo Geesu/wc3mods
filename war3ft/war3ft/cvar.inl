@@ -7,6 +7,9 @@ new CVAR_mp_friendlyfire;
 new CVAR_mp_buytime;
 new CVAR_sv_gravity;
 
+// Other plugin CVARs
+new CVAR_csdm_active;
+
 // Miscellaneous Configuration CVARs
 new CVAR_wc3_query_client;
 new CVAR_wc3_show_player;
@@ -195,6 +198,9 @@ CVAR_Configure()
 	CVAR_mp_friendlyfire	= get_cvar_pointer( "mp_friendlyfire" );
 	CVAR_mp_buytime			= get_cvar_pointer( "mp_buytime" );
 	CVAR_sv_gravity			= get_cvar_pointer( "sv_gravity" );
+
+	// Get other plugin cvars
+	CVAR_csdm_active		= get_cvar_pointer( "csdm_active" );
 
 	CHAM_Configure();
 }
