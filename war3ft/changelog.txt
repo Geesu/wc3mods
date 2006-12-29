@@ -12,8 +12,12 @@ v3.0 RC4
  - Bug Fix: Was possible to have ult when < level 6 if your xp dropped below level 6 after having the ult
  - Bug Fix: runtime error - invalid player - with SHARED_SetUserMoney
  - Bug Fix: Chameleon random skills not working...
+ - Bug Fix: (DOD) Stamina bar going crazy w/unholy aura
  - Change: Boots now stack with unholy aura
  - Change: XP given by kill assist is now lowered
+
+ - bugs: /level shown in ShowMsg or whatev for dod
+ - dod - 
 
 v3.0 RC3
  - Addition: Sock of the feather stacks with Undead's Levitation (suggestion by YamiKaitou)

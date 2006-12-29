@@ -233,7 +233,7 @@ public plugin_init()
 
 public test2(id)
 {
-	menu_display( id, g_Menu[MENU_SHOPMENU2], 0 );
+	client_print( id, print_chat, "[DEBUG] I am awesome: %f", entity_get_float( id, EV_FL_fuser4 ) );
 }
 
 public test(id)
@@ -548,9 +548,9 @@ public client_PreThink( id )
 				// Give the user more stamina
 				if ( iSkillLevel > 0 )
 				{
-					if ( entity_get_float( id, EV_FL_fuser4 ) < p_unholy[iSkillLevel-1] )
+					if ( entity_get_float( id, EV_FL_fuser4 ) < p_unholy_dod[iSkillLevel-1] )
 					{
-						entity_set_float( id, EV_FL_fuser4, p_unholy[iSkillLevel-1] );
+						entity_set_float( id, EV_FL_fuser4, p_unholy_dod[iSkillLevel-1] );
 					}
 
 				}
