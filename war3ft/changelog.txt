@@ -17,8 +17,14 @@ v3.0 RC4
  - Change: Boots now stack with unholy aura
  - Change: XP given by kill assist is now lowered
 
+ - skills reset when they should be w/csdm?  i.e. SKILL info?
+ - to do - resetskills for csdm - bots change race in csdm?
+ - to do - chameleon randomize per player basis
+  - "race will be changed at start of next round" - or @ respawn if csdm
+  - bug - if u lose levitation it won't actually go down
+ - more money for kills in csdm?
  - bugs: /level shown in ShowMsg or whatev for dod
- - dod - 
+
 
 v3.0 RC3
  - Addition: Sock of the feather stacks with Undead's Levitation (suggestion by YamiKaitou)
@@ -137,3 +143,4 @@ v3.0 RC1
 // immune to some magic
 // immune to physical damage
 // show invis peeps...
+// lower ultimate cooldown
