@@ -43,6 +43,10 @@ ITEM_Init()
 	g_iFlag[ITEM_SCROLL]	|= ITEM_BUYWHENDEAD;
 	g_iFlag[ITEM_MOLE]		|= ITEM_BUYWHENDEAD;
 	g_iFlag[ITEM_TOME]		|= ITEM_BUYWHENDEAD;
+
+	// Items are used when the next round starts...
+	g_iFlag[ITEM_ANKH]		|= ITEM_NEXTROUNDUSE;
+	g_iFlag[ITEM_MOLE]		|= ITEM_NEXTROUNDUSE;
 }
 
 // We created this to allow for different prices of items at different levels
@@ -379,7 +383,8 @@ ITEM_GiveAllBonuses( id )
 		{
 
 			// Don't want to give the user more charges for free do we?
-			if ( !ITEM_CheckFlag( g_iShopMenuItems[id][i], ITEM_CHARGEABLE ) )
+			//  And we don't want to give the bonuses if this is a next round use item (i.e. if we do then mole for infinity - that doesn't seem nice)
+			if ( !ITEM_CheckFlag( g_iShopMenuItems[id][i], ITEM_CHARGEABLE ) && !ITEM_CheckFlag( g_iShopMenuItems[id][i], ITEM_NEXTROUNDUSE ) )
 			{
 				ITEM_GiveBonuses( id, g_iShopMenuItems[id][i] );
 			}
@@ -463,7 +468,6 @@ ITEM_GiveBonuses( id, iItem )
 		{
 			g_bPlayerBoughtMole[id] = true;
 		}
-
 	}
 }
 
@@ -517,6 +521,11 @@ public ITEM_Remove( id, iItemSlot )
 
 	switch( iItem )
 	{
+		case ITEM_ANKH:
+		{
+			g_bPlayerBoughtAnkh[id] = false;
+		}
+
 		case ITEM_BOOTS:
 		{
 			SHARED_SetSpeed( id );
@@ -574,6 +583,11 @@ public ITEM_Remove( id, iItemSlot )
 		case ITEM_CHAMELEON:
 		{
 			SHARED_ChangeSkin( id, SKIN_RESET );
+		}
+
+		case ITEM_MOLE:
+		{
+			g_bPlayerBoughtMole[id] = false;
 		}
 	}
 

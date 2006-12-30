@@ -57,6 +57,7 @@ new ITEM_COST[MAX_SHOPMENU_ITEMS];                  // Holds the price of an ite
 #define ITEM_CHARGEABLE		1
 #define ITEM_USEONBUY		2
 #define ITEM_BUYWHENDEAD	4
+#define ITEM_NEXTROUNDUSE	8
 
 new g_iFlag[MAX_SHOPMENU_ITEMS] = {0};			// Stores information about items
 

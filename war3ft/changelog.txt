@@ -13,6 +13,7 @@ v3.0 RC4
  - Bug Fix: runtime error - invalid player - with SHARED_SetUserMoney
  - Bug Fix: Chameleon random skills not working...
  - Bug Fix: (DOD) Stamina bar going crazy w/unholy aura
+ - Bug Fix: Mole given every round if the user didn't die
  - Change: Boots now stack with unholy aura
  - Change: XP given by kill assist is now lowered
 
