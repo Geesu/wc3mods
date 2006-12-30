@@ -21,7 +21,6 @@ v3.0 RC4
  - Change: Additional $$ is given per kill if csdm is active
 
 To-dos/Bug Fixes:
- - skills reset when they should be w/csdm?  i.e. SKILL info?
  - to do - bots change race in csdm?
  - to do - chameleon randomize per player basis
   - bug - if u lose levitation it won't actually go down
