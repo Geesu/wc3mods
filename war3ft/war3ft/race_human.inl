@@ -6,6 +6,8 @@
 #define BASH_GLOW_INTENSITY			100
 #define BASH_HOLD_TIME				0.7
 
+new g_HU_DevotionAura[33];			// This will hold the amount of health the user was given as a result of devotion aura
+
 HU_ULT_Blink( id )
 {
 	
@@ -372,15 +374,44 @@ HU_ULT_BlinkProtection( id, vOrigin[3] )
 	return bSlay;
 }
 
-HU_DevotionAura( id )
+HU_SKL_DevotionAura( id )
 {
 	new iBonusMultiplier = SM_GetSkillLevel( id, SKILL_DEVOTION );
-
-	if ( iBonusMultiplier )
+	
+	// Then the user has devotion aura!
+	if ( iBonusMultiplier > 0 )
 	{
 		new iNewHealth = 100 + ( iBonusMultiplier * p_devotion );
 
 		set_user_health( id, iNewHealth );
+		
+		// Lets remember that we've set this!
+		g_HU_DevotionAura[id] = iNewHealth - 100;
+	}
+
+	// The user doesn't have devotion aura - so lets check if they previously has it + lost it - if so we need to remove the health bonus right?
+	else
+	{
+		// Snap they've been given some health - what a shame, we now have to remove it!
+		if ( g_HU_DevotionAura[id] > 0 )
+		{
+			new iCurHealth = get_user_health( id );
+			
+			// Then give them 1 health, otherwise we'd have to kill them - and that's not nice
+			if ( iCurHealth - g_HU_DevotionAura[id] <= 0 )
+			{
+				set_user_health( id, 1 );
+			}
+
+			// Remove bonus
+			else
+			{
+				set_user_health( id, iCurHealth - g_HU_DevotionAura[id] );
+			}
+
+			// Lets display a message so they realize why they just lost health
+			client_print( id, print_chat, "%s You lost your health bonus from devotion aura!", g_MODclient );
+		}
 	}
 }
 

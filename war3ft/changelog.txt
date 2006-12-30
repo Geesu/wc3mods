@@ -2,6 +2,8 @@ v3.0 RC4
  - Addition: Changerace will now work with CSDM
  - Addition: resetskills will now work with CSDM
  - Addition: Appropriate messages for resetskills/changerace (instead of next round now says when respawn)
+ - Bug Fix: Using wc3_bot_buy_item didn't actually work - bots could never buy items
+ - Bug Fix: Setting wc3_bot_buy_item to 0 should disable the feature but it wasn't (thanks mexykanu + YamiKaitou)
  - Bug Fix: Bug with warden and planting the bomb (thanks damian086pl)
  - Bug Fix: (DOD) Buyzone was attempted to be created when a player would mole
  - Bug Fix: (DOD) Runtime error in WC3_Death
@@ -21,6 +23,7 @@ v3.0 RC4
  - Change: Additional $$ is given per kill if csdm is active
 
 To-dos/Bug Fixes:
+ - to do - show detailed skill information in /skillsinfo
  - to do - write WC3_InitPlayerSkills and WC3_InitPlayerItems
  - to do - bots change race in csdm?
  - to do - chameleon randomize per player basis

@@ -405,7 +405,9 @@ public EVENT_PlayerSpawned( id )
 	// If the user is a bot they should have a chance to buy an item
 	if ( is_user_bot( id ) )
 	{
-		if ( random_float( 0.0, 1.0 ) <= get_pcvar_num( CVAR_wc3_bot_buy_item ) )
+		new Float:fBotChance = get_pcvar_float( CVAR_wc3_bot_buy_item );
+
+		if ( fBotChance > 0 && random_float( 0.0, 1.0 ) <= fBotChance )
 		{
 			( random_num( 1, 2 ) == 1 ) ? _MENU_Shopmenu1( id, random_num( 0, 8 ) ) : _MENU_Shopmenu2( id, random_num( 0, 8 ) );
 		}

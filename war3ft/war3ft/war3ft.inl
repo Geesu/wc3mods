@@ -1082,7 +1082,7 @@ WC3_SetSkills( id )
 	SH_SerpentWardSet( id );
 
 	// Human's Devotion Aura
-	HU_DevotionAura( id );
+	HU_SKL_DevotionAura( id );
 	
 	// Shadow Hunter's Healing Ward
 	_SH_HealingWave( id );
@@ -1579,14 +1579,24 @@ bool:WC3_MapDisableCheck( szFileName[] )
 
 // Next generation set skills function ZOMGOMZOMGOMGOZGM
 
-WC3_InitPlayerSkills()
+WC3_InitPlayerSkills( id )
 {
 
-	// unholy aura
-	// levitation
-	// invisibility
-	// devotion aura
-	// (dod) reincarnation
+	// Undead's Unholy Aura
+	SHARED_SetSpeed( id );
+
+	// Undead's Levitation
+	SHARED_SetGravity( id );
+	
+	// Human's Invisibility
+	SHARED_INVIS_Set( id );
+
+	// Human's Devotion Aura
+	HU_SKL_DevotionAura( id );
+
+	// Orc's Reincarnation (DOD)
+
+
 	// evasion? (I think this is done on the fly)
 	// pheonix (dod) - on the fly?
 	// pheonix (cs) - reset the available pheonix for the teams?
