@@ -1297,7 +1297,7 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 
 	// Reset the "about to spawn" variable
 	p_data[iVictim][P_RESPAWNBY] = 0;
-	
+
 	// Day of Defeat Specific functions
 	if ( g_MOD == GAME_DOD )
 	{
@@ -1333,6 +1333,12 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 		if ( p_data_b[iVictim][PB_GODMODE] )
 		{
 			Create_BarTime( iVictim, 0, 0 );
+		}
+
+		// Lets give a little extra money if CSDM is on...
+		if ( get_pcvar_num( CVAR_csdm_active ) == 1 )
+		{
+			SHARED_SetUserMoney( iKiller, SHARED_GetUserMoney( iKiller ) + 300, 1 );
 		}
 	}
 		

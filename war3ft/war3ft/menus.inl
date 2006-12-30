@@ -638,7 +638,16 @@ public _MENU_ChangeRace( id, key )
 		// Change the user's race at the start of next round
 		if ( iRace != p_data[id][P_RACE] )
 		{
-			client_print( id, print_center, "%L", id, "CENTER_CHANGED_NEXT" );
+			
+			// Special message for csdm
+			if ( get_pcvar_num( CVAR_csdm_active ) == 1 )
+			{
+				client_print( id, print_center, "Your race will be changed when you respawn" );
+			}	
+			else
+			{
+				client_print( id, print_center, "%L", id, "CENTER_CHANGED_NEXT" );
+			}
 
 			p_data[id][P_CHANGERACE] = iRace;
 		}

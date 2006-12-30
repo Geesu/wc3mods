@@ -1,5 +1,7 @@
 v3.0 RC4
  - Addition: Changerace will now work with CSDM
+ - Addition: resetskills will now work with CSDM
+ - Addition: Appropriate messages for resetskills/changerace (instead of next round now says when respawn)
  - Bug Fix: Bug with warden and planting the bomb (thanks damian086pl)
  - Bug Fix: (DOD) Buyzone was attempted to be created when a player would mole
  - Bug Fix: (DOD) Runtime error in WC3_Death
@@ -13,18 +15,17 @@ v3.0 RC4
  - Bug Fix: runtime error - invalid player - with SHARED_SetUserMoney
  - Bug Fix: Chameleon random skills not working...
  - Bug Fix: (DOD) Stamina bar going crazy w/unholy aura
- - Bug Fix: Mole given every round if the user didn't die
+ - Bug Fix: Mole given every round if the user didn't die (thanks DesasterUK for testing this)
  - Change: Boots now stack with unholy aura
  - Change: XP given by kill assist is now lowered
+ - Change: Additional $$ is given per kill if csdm is active
 
+To-dos/Bug Fixes:
  - skills reset when they should be w/csdm?  i.e. SKILL info?
- - to do - resetskills for csdm - bots change race in csdm?
+ - to do - bots change race in csdm?
  - to do - chameleon randomize per player basis
-  - "race will be changed at start of next round" - or @ respawn if csdm
   - bug - if u lose levitation it won't actually go down
- - more money for kills in csdm?
  - bugs: /level shown in ShowMsg or whatev for dod
-
 
 v3.0 RC3
  - Addition: Sock of the feather stacks with Undead's Levitation (suggestion by YamiKaitou)

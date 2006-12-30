@@ -325,7 +325,12 @@ public EVENT_PlayerSpawned( id )
 	// Allow the race to be changed if csdm is active...
 	if ( p_data[id][P_CHANGERACE] && get_pcvar_num( CVAR_csdm_active ) == 1 )
 	{
-		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
+		// Don't want to do both of these - that will screw some crap up
+		//   so only change race if we're not resetting skills
+		if ( !WC3_ResetSkills( id ) )
+		{
+			WC3_SetRace( id, p_data[id][P_CHANGERACE] );
+		}
 	}
 
 	// Find out if they need to choose a race or select a skill
