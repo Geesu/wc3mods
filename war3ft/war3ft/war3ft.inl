@@ -1574,3 +1574,48 @@ bool:WC3_MapDisableCheck( szFileName[] )
 
 	return false;
 }
+
+
+
+// Next generation set skills function ZOMGOMZOMGOMGOZGM
+
+WC3_InitPlayerSkills()
+{
+
+	// unholy aura
+	// levitation
+	// invisibility
+	// devotion aura
+	// (dod) reincarnation
+	// evasion? (I think this is done on the fly)
+	// pheonix (dod) - on the fly?
+	// pheonix (cs) - reset the available pheonix for the teams?
+	// healing wave - task going of for this one
+	// hex - some things should be going off - could be a timer - but only affects the victim - check into this
+	// serpent ward - change the ## and remove any existing!
+	// blink - reset
+	// shadow strike - change the # of daggers
+	// carrion beetles - change the ## of beetles
+
+
+
+	// Should we remove functions that might be going off relating to skills?
+	//   suicide bomber
+	//   teleport - we might not want to do anything here as we should let the teleport finish right?
+	//   chain lightning - could be jumping somewhere or pinging
+	//	 entangle roots - pinging
+	//	 flame strike - pinging
+	//   big bad voodoo - stop it?  make sure skill isn't required on finish
+	//	 locust swarm - stop the search?
+
+
+}
+
+// THis needs to be done eventually :/
+/*
+WC3_InitPlayerItems()
+{
+
+
+}
+*/
