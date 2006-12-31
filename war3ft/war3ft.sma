@@ -331,12 +331,6 @@ public client_connect( id )
 
 	client_cmd( id, "hud_centerid 0" );
 
-	SM_ResetSkillLevels( id );
-	SM_ResetSkills( id );
-
-	p_data[id][P_RACE]					= 0;
-	p_data[id][P_LEVEL]					= 0;
-	p_data[id][P_XP]					= 0;
 
 	p_data[id][P_RESPAWNBY]				= 0;
 	p_data[id][P_SPECMODE]				= 0;

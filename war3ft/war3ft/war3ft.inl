@@ -1597,9 +1597,7 @@ WC3_InitPlayerSkills( id )
 	// Warden's Blink
 	WA_Blink( id );
 
-
 	// Should we remove functions that might be going off relating to skills?
-	//   suicide bomber
 	//   teleport - we might not want to do anything here as we should let the teleport finish right?
 	//   chain lightning - could be jumping somewhere or pinging
 	//	 entangle roots - pinging
@@ -1647,6 +1645,16 @@ WC3_OnSpawn( id )
 // Called when a player first joins the server! - we need to reset everything!
 WC3_PlayerInit( id )
 {
+	
+	// Reset all skill information for this player!
+	SM_ResetSkillLevels( id );
+	SM_ResetSkills( id );
+
+	// This player shouldn't have a race/level or xp yet! - I mean they did just join duh!
+	p_data[id][P_RACE]					= 0;
+	p_data[id][P_LEVEL]					= 0;
+	p_data[id][P_XP]					= 0;
+
 
 	g_DOD_ReincarnationStatus[id] = DOD_REINC_JUSTJOINED;			// Reincarnation - DOD
 
