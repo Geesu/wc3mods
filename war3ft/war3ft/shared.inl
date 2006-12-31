@@ -2,7 +2,6 @@
 *	Shared Functions
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
-#define INVIS_CLOAK_DIVISOR		1.5
 
 // This should be called on weapon change, on new round, when the user selects a new skill, and after an item is purchased
 public SHARED_INVIS_Set( id )
@@ -384,24 +383,58 @@ public SHARED_DOD_Reincarnation( id )
 
 	if ( !WC3_Check() )
 	{
-		return PLUGIN_CONTINUE
+		return;
 	}
 	
-	// User just joined or should skip reincarnation
-	if ( p_data_b[id][PB_REINCARNATION_SKIP] )
+	new bReincarnate = 0;
+
+
+	// Reincarnate from a skill?
+	if ( SM_GetSkillLevel( id, SKILL_REINCARNATION ) > 0 )
 	{
-		p_data_b[id][PB_REINCARNATION_SKIP] = false;
-		return PLUGIN_CONTINUE;
+		new iSkillLevel = SM_GetSkillLevel( id, SKILL_REINCARNATION );
+
+		// Then the user shouldn't reincarnate
+		if ( iSkillLevel > 0 && random_float( 0.0, 1.0 ) <= p_ankh[iSkillLevel-1] )
+		{
+			bReincarnate = 2;
+		}
 	}
 
-	
-	if( p_data_b[id][PB_REINCARNATION_DELAY] )
+	// Only use item if we didn't reincarnate from a skill!
+	if ( bReincarnate == 0 && g_bPlayerBoughtAnkh[id] )
+	{
+		bReincarnate = 1;
+	}
+
+
+	// Then we can't reincarnate
+	if ( !bReincarnate )
+	{
+		return;
+	}
+
+
+	// User just joined - we don't actually have a place to respawn them!
+	if ( g_DOD_ReincarnationStatus[id] == DOD_REINC_JUSTJOINED )
+	{
+		return;
+	}
+
+	// User died last time we tried this :/
+	if ( g_DOD_ReincarnationStatus[id] == DOD_REINC_DIEDLAST )
 	{
 		client_print( id, print_chat, "%s %L", g_MODclient, id, "SKILL_REINCARNATION_SKIPPING" );
-		p_data_b[id][PB_REINCARNATION_DELAY] = false;
+
+		g_DOD_ReincarnationStatus[id] = DOD_REINC_READY;
 	}
 	else
 	{
+		// Remove the ankh here
+		if ( bReincarnate == 1 )
+		{
+			g_bPlayerBoughtAnkh[id] = false;
+		}
 
 		client_cmd( id, "speak %s", g_szSounds[SOUND_REINCARNATION] );
 
@@ -411,6 +444,7 @@ public SHARED_DOD_Reincarnation( id )
 		// Screen fade green
 		Create_ScreenFade( id, (1<<10), (1<<10), (1<<12), 0, 255, 0, g_GlowLevel[id][1] );
 
+		// Make sure the user doesn't get stuck in the ground!
 		iReincarnation[id][ZPOS] += 30;
 
 		set_user_origin( id, iReincarnation[id] );
@@ -419,7 +453,7 @@ public SHARED_DOD_Reincarnation( id )
 		set_task( 2.5, "_SHARED_DOD_Reincarnation_Loc", TASK_REINCCHECK + id );
 	}
 
-	return PLUGIN_CONTINUE;
+	return;
 }
 
 public _SHARED_DOD_Reincarnation_Check( id )
@@ -477,7 +511,7 @@ public _SHARED_DOD_Reincarnation_Loc( id )
 		return;
 	}
 	
-	p_data_b[id][PB_REINCARNATION_DELAY] = ( is_user_alive( id ) ) ? true : false;
+	g_DOD_ReincarnationStatus[id] = ( is_user_alive( id ) ) ? DOD_REINC_READY : DOD_REINC_DIEDLAST;
 
 	return;
 }

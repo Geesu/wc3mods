@@ -18,6 +18,7 @@ v3.0 RC4
  - Bug Fix: Chameleon random skills not working...
  - Bug Fix: (DOD) Stamina bar going crazy w/unholy aura
  - Bug Fix: Mole given every round if the user didn't die (thanks DesasterUK for testing this)
+ - Bug Fix: Possible to remain a Phoenix (to respawn a teammate) after you lost the ability
  - Change: Boots now stack with unholy aura
  - Change: XP given by kill assist is now lowered
  - Change: Additional $$ is given per kill if csdm is active
@@ -29,6 +30,10 @@ To-dos/Bug Fixes:
  - to do - chameleon randomize per player basis
   - bug - if u lose levitation it won't actually go down
  - bugs: /level shown in ShowMsg or whatev for dod
+ - to do - DOD - if user just joined - they shouldn't be able to buy ankh
+ - test: dod's reincarnation changes... - give item back if fails?
+ - to do - in SM_SetSkill we need to call WC3_InitPlayerSkills
+ - to do - HU_DevotionAura needs to have a while loop like serpent wards!
 
 v3.0 RC3
  - Addition: Sock of the feather stacks with Undead's Levitation (suggestion by YamiKaitou)

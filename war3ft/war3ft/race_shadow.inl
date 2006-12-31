@@ -11,10 +11,15 @@
 #define SH_CONCOCTION_DAMAGE	  15		// Damage done by Unstable Concoction
 #define SH_CONCOCTION_RADIUS	  300
 
+
+new g_SH_SerpentGiven[33];
+
 // ****************************************
 // Shadow Hunter's Healing Wave
 // ****************************************
 
+
+// We don't need to ever actually "turn this off" since this task will take care of itself
 public _SH_HealingWave( id )
 {
 	
@@ -23,13 +28,17 @@ public _SH_HealingWave( id )
 		id -= TASK_WAVE;
 	}
 
+	// User is no longer connected :/
 	if ( !p_data_b[id][PB_ISCONNECTED] )
 	{
 		return;
 	}
 	
+	static iSkillLevel;
+	iSkillLevel = SM_GetSkillLevel( id, SKILL_HEALINGWAVE );
+
 	// User doesn't have this skill, so lets return
-	if ( SM_GetSkillLevel( id, SKILL_HEALINGWAVE ) <= 0 )
+	if ( iSkillLevel <= 0 )
 	{
 		return;
 	}
@@ -37,8 +46,6 @@ public _SH_HealingWave( id )
 	// Continue healing...
 	if ( is_user_alive( id ) )
 	{
-		new iSkillLevel = SM_GetSkillLevel( id, SKILL_HEALINGWAVE );
-
 		set_task( p_heal[iSkillLevel-1], "_SH_HealingWave", TASK_WAVE + id );
 	}
 	
@@ -91,7 +98,6 @@ public _SH_HealingWave( id )
 
 public _SH_RemoveHex( id )
 {
-
 	id -= TASK_HEX;
 
 	if( !p_data_b[id][PB_ISCONNECTED] )
@@ -117,6 +123,39 @@ public _SH_RemoveHex( id )
 // ****************************************
 // Shadow Hunter's Serpent Ward
 // ****************************************
+
+SH_SerpentWard( id )
+{
+	static iSkillLevel;
+
+	iSkillLevel = SM_GetSkillLevel( id, SKILL_SERPENTWARD );
+
+	// User should have some!
+	if ( iSkillLevel > 0 )
+	{
+
+		// Then we can give the user a serpent ward!
+		while ( g_SH_SerpentGiven[id] < p_serpent[iSkillLevel-1] )
+		{
+			// Increase the available serpent wards
+			p_data[id][P_SERPENTCOUNT]++;
+
+			// Increase the total we have given the user!
+			g_SH_SerpentGiven[id]++;
+
+			client_print( id, print_chat, "[DEBUG] Total wards increased to %d (total given so far: %d)", p_data[id][P_SERPENTCOUNT], g_SH_SerpentGiven[id] );
+		}
+	}
+	
+	// User should not have any!
+	else
+	{
+		// Remove all available serpents!
+		p_data[id][P_SERPENTCOUNT] = 0;
+
+		// We don't need to remove any of the wards b/c the task knows to check the skill level
+	}
+}
 
 public SH_PlaceSerpentWard( id )
 {
@@ -160,7 +199,7 @@ public _SH_DrawSerpentWard( parm[5] )
 
 	if ( !WC3_Check() )
 	{
-		return PLUGIN_HANDLED;
+		return;
 	}
 
 	new id = parm[3];
@@ -168,14 +207,20 @@ public _SH_DrawSerpentWard( parm[5] )
 	// User is no longer connected, stop drawing wards
 	if( !p_data_b[id][PB_ISCONNECTED] )
 	{
-		return PLUGIN_HANDLED;
+		return;
 	}
 
 
 	// User is no longer alive, don't draw wards
 	if ( !is_user_alive( id ) )
 	{
-		return PLUGIN_HANDLED;
+		return;
+	}
+
+	// User doesn't have this skill anymore! Remove the ward!
+	if ( SM_GetSkillLevel( id, SKILL_SERPENTWARD ) <= 0 )
+	{
+		return;
 	}
 
 	new origin[3], start[3], end[3], red, blue, green
@@ -260,7 +305,7 @@ public _SH_DrawSerpentWard( parm[5] )
 
 	set_task( 0.5, "_SH_DrawSerpentWard", TASK_LIGHT + id, parm, 5 );
 
-	return PLUGIN_HANDLED;
+	return;
 }
 
 bool:SH_CanPlaceWard( id )
@@ -296,17 +341,6 @@ bool:SH_CanPlaceWard( id )
 	}
 	
 	return true;
-}
-
-SH_SerpentWardSet( id )
-{
-	static iSkillLevel;
-	iSkillLevel = SM_GetSkillLevel( id, SKILL_SERPENTWARD );
-
-	if ( iSkillLevel > 0 )
-	{
-		p_data[id][P_SERPENTCOUNT]		= p_serpent[iSkillLevel-1];
-	}
 }
 
 // ****************************************
@@ -375,9 +409,9 @@ SH_SkillsOffensive( iAttacker, iVictim )
 
 	// Hex
 	iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_HEX );
+
 	if ( iSkillLevel > 0 )
 	{
-
 		if ( random_float( 0.0, 1.0 ) <= p_hex[iSkillLevel-1] )
 		{
 						

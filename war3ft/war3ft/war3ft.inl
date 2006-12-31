@@ -1079,10 +1079,11 @@ WC3_SetSkills( id )
 	BM_PhoenixCheck( id );
 	
 	// Set the number of serpent wards
-	SH_SerpentWardSet( id );
+	//SH_SerpentWardSet( id );
+	SH_SerpentWard( id );
 
 	// Human's Devotion Aura
-	HU_SKL_DevotionAura( id );
+	HU_DevotionAura( id );
 	
 	// Shadow Hunter's Healing Ward
 	_SH_HealingWave( id );
@@ -1099,7 +1100,6 @@ WC3_SetSkills( id )
 	// Set up the fuses if we're in DOD
 	if ( g_MOD == GAME_DOD )
 	{
-		p_data_b[id][PB_REINCARNATION_DELAY] = false;
 		dod_set_fuse( id, FUSE_RESET );
 	}
 }
@@ -1592,17 +1592,18 @@ WC3_InitPlayerSkills( id )
 	SHARED_INVIS_Set( id );
 
 	// Human's Devotion Aura
-	HU_SKL_DevotionAura( id );
+	HU_DevotionAura( id );
 
-	// Orc's Reincarnation (DOD)
+	// Blood Mage's Phoenix
+	BM_PhoenixCheck( id );
+
+	// Shadow Hunter's Healing Wave
+	_SH_HealingWave( id );
+
+	// Shadow Hunter's Serpent Ward
+	SH_SerpentWard( id );
 
 
-	// evasion? (I think this is done on the fly)
-	// pheonix (dod) - on the fly?
-	// pheonix (cs) - reset the available pheonix for the teams?
-	// healing wave - task going of for this one
-	// hex - some things should be going off - could be a timer - but only affects the victim - check into this
-	// serpent ward - change the ## and remove any existing!
 	// blink - reset
 	// shadow strike - change the # of daggers
 	// carrion beetles - change the ## of beetles
@@ -1629,3 +1630,39 @@ WC3_InitPlayerItems()
 
 }
 */
+
+// These things should be reset on a new "round"
+WC3_NewRound( id )
+{
+
+
+}
+
+// These things need to be reset when a user spawns again
+WC3_OnSpawn( id )
+{
+	// Shadow Hunter's Serpent Wards
+	p_data[id][P_SERPENTCOUNT]	= 0;
+	g_SH_SerpentGiven[id]		= 0;
+
+	// Need to reset human's g_HU_DevotionAura
+	g_HU_DevotionAura[id] = 0;
+}
+
+// Called when a player first joins the server! - we need to reset everything!
+WC3_PlayerInit( id )
+{
+
+	g_DOD_ReincarnationStatus[id] = DOD_REINC_JUSTJOINED;			// Reincarnation - DOD
+
+	for ( new i = 0; i < 3; i++ )
+	{
+		iReincarnation[id][i] = -99999;				// Reincarnation - DOD
+	}
+
+	g_HU_DevotionAura[id]		= 0;			// Human's Devotion Aura - Amount given
+
+	g_SH_SerpentGiven[id]		= 0;			// Shadow Hunter's Serpent Ward - Amount given
+	p_data[id][P_SERPENTCOUNT]	= 0;			// Shadow Hunter's Serpent Ward - Total the user currently has
+
+}

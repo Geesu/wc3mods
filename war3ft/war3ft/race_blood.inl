@@ -104,15 +104,21 @@ BM_ULT_Immolate_Remove( iTarget )
 BM_PhoenixCheck( id )
 {
 	new iSkillLevel = SM_GetSkillLevel( id, SKILL_PHOENIX );
-
+	
+	// Then the user could become a phoenix!
 	if ( iSkillLevel > 0 )
 	{
-		
 		// Should the user be a Phoenix
 		if ( random_float( 0.0, 1.0 ) <= p_phoenix[iSkillLevel-1] ) 
 		{
 			p_data_b[id][PB_PHOENIX] = true;
 		}
+	}
+
+	// Then the user shouldn't be a phoenix!
+	else
+	{
+		p_data_b[id][PB_PHOENIX] = false;
 	}
 }
 
@@ -136,7 +142,6 @@ BM_PhoenixSpawn( id )
 		// Lets make sure they're not going to revive themself
 		if ( iPhoenixID != id )
 		{
-
 			// The caster is no longer a Phoenix
 			p_data_b[iPhoenixID][PB_PHOENIX] = false;
 			

@@ -374,7 +374,7 @@ HU_ULT_BlinkProtection( id, vOrigin[3] )
 	return bSlay;
 }
 
-HU_SKL_DevotionAura( id )
+HU_DevotionAura( id )
 {
 	new iBonusMultiplier = SM_GetSkillLevel( id, SKILL_DEVOTION );
 	

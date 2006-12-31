@@ -69,6 +69,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/war3ft.h"
 #include "war3ft/cstrike.h"
 #include "war3ft/menus.h"
+#include "war3ft/shared.h"
 
 // Source Code
 #include "war3ft/cvar.inl"
@@ -325,6 +326,9 @@ public client_connect( id )
 		return;
 	}
 
+	// Initialize this player
+	WC3_PlayerInit( id );
+
 	client_cmd( id, "hud_centerid 0" );
 
 	SM_ResetSkillLevels( id );
@@ -376,9 +380,6 @@ public client_connect( id )
 	}
 	else if ( g_MOD == GAME_DOD )
 	{
-		// Skip Reincarnation since the user just joined
-		p_data_b[id][PB_REINCARNATION_SKIP] = true;
-
 		p_data[id][P_MONEY] = 0;
 	}
 

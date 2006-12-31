@@ -378,28 +378,8 @@ public EVENT_PlayerSpawned( id )
 	// Check for Day of Defeat
 	else if ( g_MOD == GAME_DOD )
 	{
-
-		// Should the user be reincarnated from an item?
-		if ( g_bPlayerBoughtAnkh[id] )
-		{
-			// We don't want to skip since the user has this item
-			p_data_b[id][PB_REINCARNATION_SKIP] = false;
-
-			SHARED_DOD_Reincarnation( id );
-
-			g_bPlayerBoughtAnkh[id] = false;
-		}
-
-		// or from a skill?
-		else if ( SM_GetSkillLevel( id, SKILL_REINCARNATION ) > 0 )
-		{
-			new iSkillLevel = SM_GetSkillLevel( id, SKILL_REINCARNATION );
-
-			if ( random_float( 0.0, 1.0 ) <= p_ankh[iSkillLevel-1] )
-			{
-				SHARED_DOD_Reincarnation( id );
-			}
-		}
+		// Reincarnation?
+		SHARED_DOD_Reincarnation( id );
 	}	
 
 	// If the user is a bot they should have a chance to buy an item
