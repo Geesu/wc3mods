@@ -1066,6 +1066,11 @@ WC3_CommonSpawn( id )
 
 WC3_SetSkills( id )
 {
+
+	WC3_InitPlayerSkills( id );
+	
+	return;
+	/*
 	// Undead's Levitation
 	SHARED_SetGravity( id );
 
@@ -1090,18 +1095,7 @@ WC3_SetSkills( id )
 
 	// Set the user's Invisibility
 	SHARED_INVIS_Set( id );
-
-	// Crypt Lord's Carrion Beetles
-	CL_CarrionBeetle_Reset( id );
-
-	// Warden's Shadow Strike
-	WA_ShadowStrike_Reset( id );
-
-	// Set up the fuses if we're in DOD
-	if ( g_MOD == GAME_DOD )
-	{
-		dod_set_fuse( id, FUSE_RESET );
-	}
+	*/
 }
 
 // Function will print a message in the center of the screen
@@ -1576,12 +1570,9 @@ bool:WC3_MapDisableCheck( szFileName[] )
 }
 
 
-
-// Next generation set skills function ZOMGOMZOMGOMGOZGM
-
+// This function can be called at ANY time to configure and/or remove skills for a given race
 WC3_InitPlayerSkills( id )
 {
-
 	// Undead's Unholy Aura
 	SHARED_SetSpeed( id );
 
@@ -1603,11 +1594,8 @@ WC3_InitPlayerSkills( id )
 	// Shadow Hunter's Serpent Ward
 	SH_SerpentWard( id );
 
-
-	// blink - reset
-	// shadow strike - change the # of daggers
-	// carrion beetles - change the ## of beetles
-
+	// Warden's Blink
+	WA_Blink( id );
 
 
 	// Should we remove functions that might be going off relating to skills?
@@ -1619,7 +1607,11 @@ WC3_InitPlayerSkills( id )
 	//   big bad voodoo - stop it?  make sure skill isn't required on finish
 	//	 locust swarm - stop the search?
 
-
+	// Set up the fuses if we're in DOD - should this be done here?!?!?!?
+	if ( g_MOD == GAME_DOD )
+	{
+		dod_set_fuse( id, FUSE_RESET );
+	}
 }
 
 // THis needs to be done eventually :/
@@ -1647,6 +1639,9 @@ WC3_OnSpawn( id )
 
 	// Need to reset human's g_HU_DevotionAura
 	g_HU_DevotionAura[id] = 0;
+
+	// Warden's shouldn't default being immune
+	p_data_b[id][PB_WARDENBLINK] = false;
 }
 
 // Called when a player first joins the server! - we need to reset everything!
@@ -1660,9 +1655,11 @@ WC3_PlayerInit( id )
 		iReincarnation[id][i] = -99999;				// Reincarnation - DOD
 	}
 
-	g_HU_DevotionAura[id]		= 0;			// Human's Devotion Aura - Amount given
+	g_HU_DevotionAura[id]			= 0;			// Human's Devotion Aura - Amount given
 
-	g_SH_SerpentGiven[id]		= 0;			// Shadow Hunter's Serpent Ward - Amount given
-	p_data[id][P_SERPENTCOUNT]	= 0;			// Shadow Hunter's Serpent Ward - Total the user currently has
+	g_SH_SerpentGiven[id]			= 0;			// Shadow Hunter's Serpent Ward - Amount given
+	p_data[id][P_SERPENTCOUNT]		= 0;			// Shadow Hunter's Serpent Ward - Total the user currently has
+
+	p_data_b[id][PB_WARDENBLINK]	= false;		// Warden's Blink - Shouldn't start off immune right?  duh!
 
 }

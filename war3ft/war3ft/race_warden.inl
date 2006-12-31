@@ -4,7 +4,6 @@
 
 #define VENGEANCE_HEALTH		50			// Health the user should have after using his ult
 #define SHADOWSTRIKE_DAMAGE		10			// Amount of damage dealt with shadow strike
-#define SHADOWSTRIKE_TOTAL		3			// Maximum amount of shadow strikes allowed per round
 
 WA_ULT_Vengeance( id )
 {
@@ -118,8 +117,6 @@ WA_ULT_Vengeance( id )
 WA_Blink( id )
 {
 	
-	p_data_b[id][PB_WARDENBLINK] = false;
-
 	static iSkillLevel;
 	iSkillLevel = SM_GetSkillLevel( id, SKILL_BLINK );
 
@@ -131,6 +128,12 @@ WA_Blink( id )
 			p_data_b[id][PB_WARDENBLINK] = true;
 			client_print( id, print_chat, "%s You will now be immune to all ultimates.", g_MODclient );
 		}
+	}
+
+	// User shouldn't have blink!
+	else
+	{
+		p_data_b[id][PB_WARDENBLINK] = false;
 	}
 }
 
@@ -151,11 +154,6 @@ WA_HardenedSkin( iVictim, iDamage )
 	return iDamage;	
 }
 
-WA_ShadowStrike_Reset( id )
-{
-	p_data[id][P_SHADOWCOUNT] = 0;
-}
-
 WA_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 {
 
@@ -169,24 +167,18 @@ WA_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 		if ( random_float( 0.0, 1.0 ) <= p_shadow[iSkillLevel-1] )
 		{
 
-			if ( p_data[iAttacker][P_SHADOWCOUNT] <= SHADOWSTRIKE_TOTAL )
-			{
-				new vVictimOrigin[3], vAttackerOrigin[3]
-				get_user_origin( iVictim, vVictimOrigin );
-				get_user_origin( iAttacker, vAttackerOrigin );
-				
-				// Create the shadow strike effect
-				Create_TE_SPRITETRAIL( vAttackerOrigin, vVictimOrigin, g_iSprites[SPR_SHADOWSTRIKE], 50, 15, 1, 2, 6 );
-				
-				// Emit the shadow strike sound
-				emit_sound( iVictim, CHAN_STATIC, g_szSounds[SOUND_SHADOWSTRIKE], 1.0, ATTN_NORM, 0, PITCH_NORM );
-				
-				// User only has so many per round...
-				p_data[iAttacker][P_SHADOWCOUNT]++;
+			new vVictimOrigin[3], vAttackerOrigin[3]
+			get_user_origin( iVictim, vVictimOrigin );
+			get_user_origin( iAttacker, vAttackerOrigin );
+			
+			// Create the shadow strike effect
+			Create_TE_SPRITETRAIL( vAttackerOrigin, vVictimOrigin, g_iSprites[SPR_SHADOWSTRIKE], 50, 15, 1, 2, 6 );
+			
+			// Emit the shadow strike sound
+			emit_sound( iVictim, CHAN_STATIC, g_szSounds[SOUND_SHADOWSTRIKE], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-				// Damage the user
-				WC3_Damage( iVictim, iAttacker, SHADOWSTRIKE_DAMAGE, CSW_SHADOW, iHitPlace );
-			}
+			// Damage the user
+			WC3_Damage( iVictim, iAttacker, SHADOWSTRIKE_DAMAGE, CSW_SHADOW, iHitPlace );
 		}
 
 		else if ( get_pcvar_num( CVAR_wc3_psychostats ) )

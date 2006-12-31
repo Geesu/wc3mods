@@ -278,8 +278,8 @@
 
 	// Used by various ultimates/abilities
 	#define P_TELEMENU				16		// Used by teleport
-	#define P_CARRIONCOUNT			17		// Number of carrion beetles the player has left
-	#define P_SHADOWCOUNT			18		// Number of shadow strikes the player has left
+	//#define P_CARRIONCOUNT			17		// Number of carrion beetles the player has left
+	//#define P_SHADOWCOUNT			18		// Number of shadow strikes the player has left
 	#define P_SERPENTCOUNT			19		// Number of serpent wards the player has left
 	#define P_RINGS					20
 	#define P_ULTIMATEDELAY			21
@@ -599,12 +599,12 @@ new const Float:p_concoction[11] =		{0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0
 
 new const Float:p_fan[3] =				{0.05,0.10,0.15}		// Fan of Knives			(skill 1)
 new const Float:p_blink[3] =			{0.333,0.666,1.0}		// Blink					(skill 2)
-new const Float:p_shadow[3] =			{0.15,0.30,0.45}		// Shadow Strike			(skill 3)
+new const Float:p_shadow[3] =			{0.5,0.10,0.15}			// Shadow Strike			(skill 3)
 new const Float:p_harden[11] =			{0.03, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50}	// Hardened Skin		(Skill 4)
 
 new const Float:p_impale[3] =			{0.05,0.1,0.15}		    // Impale					(skill 1)
 new const Float:p_spiked[3] =			{0.05,0.1,0.15}			// Spiked Carapace			(skill 2)
-new const Float:p_carrion[3] =			{0.15,0.25,0.45}		// Carrion Beetle			(skill 3)
+new const Float:p_carrion[3] =			{0.05,0.10,0.15}		// Carrion Beetle			(skill 3)
 new const Float:p_orb[11] =				{0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.15}	// Orb of Annihilation	(Skill 4)
 
 new MOTD_header[] = "<html><head><LINK REL=^"StyleSheet^" HREF=^"wc3.css^" TYPE=^"text/css^"></head><body>";

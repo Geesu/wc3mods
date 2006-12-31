@@ -22,6 +22,8 @@ v3.0 RC4
  - Change: Boots now stack with unholy aura
  - Change: XP given by kill assist is now lowered
  - Change: Additional $$ is given per kill if csdm is active
+ - Change: Shadow Strike is no longer limited to 3 per round (but the % chance of it occuring is less)
+ - Change: Carrion Beetles are no longer limited to 3 per round (but the % chance of it occuring is less)
 
 To-dos/Bug Fixes:
  - to do - show detailed skill information in /skillsinfo

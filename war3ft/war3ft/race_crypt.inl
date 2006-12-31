@@ -5,7 +5,6 @@
 #define LOCUSTSWARM_DMG_MIN				30
 #define LOCUSTSWARM_DMG_MAX				60
 #define CARRIONBEETLE_DAMAGE			10
-#define CARRIONBEETLE_TOTAL				3
 #define IMPALE_INTENSITY				10.0		// Intensity of impale
 
 CL_ULT_LocustSwarm( id )
@@ -188,11 +187,6 @@ CL_HLP_Diff( iNum, iNum2 )
 	return 0;
 }
 
-CL_CarrionBeetle_Reset( id )
-{
-	p_data[id][P_CARRIONCOUNT] = 0;
-}
-
 CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 {
 	static iSkillLevel;
@@ -233,22 +227,17 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 
 		if ( random_float( 0.0, 1.0 ) <= p_carrion[iSkillLevel-1] )
 		{
-			if ( p_data[iAttacker][P_CARRIONCOUNT] <= CARRIONBEETLE_TOTAL && is_user_alive( iVictim ) )
-			{
-				new vVictimOrigin[3], vAttackerorigin[3];
-				get_user_origin( iVictim, vVictimOrigin );
-				get_user_origin( iAttacker, vAttackerorigin );
-				
-				// Create the Carrion Beetle effect
-				Create_TE_SPRITETRAIL( vAttackerorigin, vVictimOrigin, g_iSprites[SPR_BEETLE], 15, 15, 1, 2, 6 );
-				
-				// Play the carrion beetle sound
-				emit_sound( iVictim, CHAN_STATIC, g_szSounds[SOUND_CARRION], 1.0, ATTN_NORM, 0, PITCH_NORM );
+			new vVictimOrigin[3], vAttackerorigin[3];
+			get_user_origin( iVictim, vVictimOrigin );
+			get_user_origin( iAttacker, vAttackerorigin );
+			
+			// Create the Carrion Beetle effect
+			Create_TE_SPRITETRAIL( vAttackerorigin, vVictimOrigin, g_iSprites[SPR_BEETLE], 15, 15, 1, 2, 6 );
+			
+			// Play the carrion beetle sound
+			emit_sound( iVictim, CHAN_STATIC, g_szSounds[SOUND_CARRION], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
-				p_data[iAttacker][P_CARRIONCOUNT]++;
-
-				WC3_Damage( iVictim, iAttacker, CARRIONBEETLE_DAMAGE, CSW_CARRION, iHitPlace );
-			}
+			WC3_Damage( iVictim, iAttacker, CARRIONBEETLE_DAMAGE, CSW_CARRION, iHitPlace );
 		}
 
 		else if ( get_pcvar_num( CVAR_wc3_psychostats ) )

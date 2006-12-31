@@ -333,6 +333,9 @@ public EVENT_PlayerSpawned( id )
 		}
 	}
 
+	// Should be called EVERY time a user spawns!
+	WC3_OnSpawn( id );
+
 	// Find out if they need to choose a race or select a skill
 	set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + id );
 

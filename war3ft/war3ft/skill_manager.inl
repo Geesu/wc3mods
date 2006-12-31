@@ -502,10 +502,11 @@ SM_SetSkill( id, iSkillID )
 		// Human's Devotion Aura
 		case SKILL_DEVOTION:
 		{
-			if ( is_user_alive( id ) )
+			HU_DevotionAura( id );
+			/*if ( is_user_alive( id ) )
 			{
 				set_user_health( id, get_user_health( id ) + 15 );
-			}
+			}*/
 		}
 
 		// Shadow Hunter's Serpent Ward
@@ -517,22 +518,7 @@ SM_SetSkill( id, iSkillID )
 		// Warden's Blink
 		case SKILL_BLINK:
 		{
-			if ( !p_data_b[id][PB_WARDENBLINK] )
-			{
-				WA_Blink( id );
-			}
-		}
-
-		// Warden's Shadow Strike
-		case SKILL_SHADOWSTRIKE:
-		{
-			p_data[id][P_SHADOWCOUNT]--;
-		}
-		
-		// Crypt Lord's Carrion Beetles
-		case SKILL_CARRIONBEETLES:
-		{
-			p_data[id][P_CARRIONCOUNT]--;
+			WA_Blink( id );
 		}
 	}
 

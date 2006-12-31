@@ -376,20 +376,33 @@ HU_ULT_BlinkProtection( id, vOrigin[3] )
 
 HU_DevotionAura( id )
 {
-	new iBonusMultiplier = SM_GetSkillLevel( id, SKILL_DEVOTION );
-	
-	// Then the user has devotion aura!
-	if ( iBonusMultiplier > 0 )
-	{
-		new iNewHealth = 100 + ( iBonusMultiplier * p_devotion );
 
-		set_user_health( id, iNewHealth );
-		
-		// Lets remember that we've set this!
-		g_HU_DevotionAura[id] = iNewHealth - 100;
+	if ( !is_user_alive( id ) )
+	{
+		return;
 	}
 
-	// The user doesn't have devotion aura - so lets check if they previously has it + lost it - if so we need to remove the health bonus right?
+	static iSkillLevel;
+	iSkillLevel = SM_GetSkillLevel( id, SKILL_DEVOTION );
+	
+	// Then the user has devotion aura!
+	if ( iSkillLevel > 0 )
+	{
+		// Then we can give the user a serpent ward!
+		while ( g_HU_DevotionAura[id] < iSkillLevel * p_devotion )
+		{
+
+			// Increase the user's health
+			set_user_health( id, get_user_health( id ) + p_devotion );
+			
+			// Increase the total we have given the user!
+			g_HU_DevotionAura[id] += p_devotion;
+
+			client_print( id, print_chat, "[DEBUG] Total health increased (total given so far: %d)", g_HU_DevotionAura[id] );
+		}
+	}
+
+	// The user doesn't have devotion aura - so lets check if they previously had it + lost it - if so we need to remove the health bonus right?
 	else
 	{
 		// Snap they've been given some health - what a shame, we now have to remove it!
