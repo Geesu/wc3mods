@@ -1066,36 +1066,7 @@ WC3_CommonSpawn( id )
 
 WC3_SetSkills( id )
 {
-
 	WC3_InitPlayerSkills( id );
-	
-	return;
-	/*
-	// Undead's Levitation
-	SHARED_SetGravity( id );
-
-	// Undead's Unholy Aura
-	SHARED_SetSpeed( id );
-
-	// Warden's Blink
-	WA_Blink( id );
-
-	// Blood Mage's Phoenix
-	BM_PhoenixCheck( id );
-	
-	// Set the number of serpent wards
-	//SH_SerpentWardSet( id );
-	SH_SerpentWard( id );
-
-	// Human's Devotion Aura
-	HU_DevotionAura( id );
-	
-	// Shadow Hunter's Healing Ward
-	_SH_HealingWave( id );
-
-	// Set the user's Invisibility
-	SHARED_INVIS_Set( id );
-	*/
 }
 
 // Function will print a message in the center of the screen
@@ -1597,13 +1568,11 @@ WC3_InitPlayerSkills( id )
 	// Warden's Blink
 	WA_Blink( id );
 
-	// Should we remove functions that might be going off relating to skills?
-	//   teleport - we might not want to do anything here as we should let the teleport finish right?
-	//   chain lightning - could be jumping somewhere or pinging
-	//	 entangle roots - pinging
-	//	 flame strike - pinging
-	//   big bad voodoo - stop it?  make sure skill isn't required on finish
-	//	 locust swarm - stop the search?
+	// Stop all ultimates if the user shouldn't have an ultimate!
+	if ( SM_GetSkillLevel( id, SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE ) ) <= 0 )
+	{
+		ULT_Reset( id );
+	}
 
 	// Set up the fuses if we're in DOD - should this be done here?!?!?!?
 	if ( g_MOD == GAME_DOD )
@@ -1621,13 +1590,6 @@ WC3_InitPlayerItems()
 }
 */
 
-// These things should be reset on a new "round"
-WC3_NewRound( id )
-{
-
-
-}
-
 // These things need to be reset when a user spawns again
 WC3_OnSpawn( id )
 {
@@ -1640,6 +1602,19 @@ WC3_OnSpawn( id )
 
 	// Warden's shouldn't default being immune
 	p_data_b[id][PB_WARDENBLINK] = false;
+}
+
+// Configure this player
+//   - this should be called whenever a "new round" begins, for example:
+//		CSDM - whenever anyone spawns
+//		Normal CS/CZ - @ start of new round
+//		DOD - when player spawns
+WC3_PlayerSpawnSet( id )
+{
+
+
+
+
 }
 
 // Called when a player first joins the server! - we need to reset everything!

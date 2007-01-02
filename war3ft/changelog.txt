@@ -19,6 +19,8 @@ v3.0 RC4
  - Bug Fix: (DOD) Stamina bar going crazy w/unholy aura
  - Bug Fix: Mole given every round if the user didn't die (thanks DesasterUK for testing this)
  - Bug Fix: Possible to remain a Phoenix (to respawn a teammate) after you lost the ability
+ - Bug Fix: Orc's reincarnation would break w/CSDM
+ - Bug Fix: Possibility of respawning abilities conflicting w/CSDM
  - Change: Boots now stack with unholy aura
  - Change: XP given by kill assist is now lowered
  - Change: Additional $$ is given per kill if csdm is active

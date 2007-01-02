@@ -284,8 +284,15 @@ SM_SetSkillLevel( id, skill_id, iLevel )
 
 		return;
 	}
+	
+	static iLastSkillLevel;
+	iLastSkillLevel = g_PlayerSkillLevel[id][skill_id];
 
+	// Set our new skill value
 	g_PlayerSkillLevel[id][skill_id] = iLevel;
+
+	// This will configure the skill (make any changes that should be necessary)
+	SM_SkillSet( id, skill_id, iLastSkillLevel, iLevel );
 
 	return;
 }
@@ -493,49 +500,11 @@ SM_SetSkill( id, iSkillID )
 	// Add one to their level!
 	SM_SetSkillLevel( id, iSkillID, iCurrentLevel + 1 );
 
-	//*****************************
-	// Time for Skill Checks!!!
-	//*****************************
-	
-	switch ( iSkillID )
-	{
-		// Human's Devotion Aura
-		case SKILL_DEVOTION:
-		{
-			HU_DevotionAura( id );
-			/*if ( is_user_alive( id ) )
-			{
-				set_user_health( id, get_user_health( id ) + 15 );
-			}*/
-		}
-
-		// Shadow Hunter's Serpent Ward
-		case SKILL_SERPENTWARD:
-		{
-			p_data[id][P_SERPENTCOUNT]++;
-		}
-
-		// Warden's Blink
-		case SKILL_BLINK:
-		{
-			WA_Blink( id );
-		}
-	}
-
 	// User selected an ultimate + global cooldown is done
 	if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_ULTIMATE && g_iUltimateDelay <= 0 )
 	{
 		Ultimate_Ready( id );
 	}
-
-	// Check to see if they should be more invisible
-	SHARED_INVIS_Set( id );
-
-	// Undead's Unholy Aura
-	SHARED_SetGravity( id );
-
-	// Set the user's speed
-	SHARED_SetSpeed( id );
 
 	return;
 }
@@ -584,4 +553,69 @@ SM_GiveRandomSkillPoint( id )
 	//client_print( id, print_chat, "[DEBUG] (%d) Trainable given - from %d to %d", iRandomSkill, iSkillLevel, iSkillLevel + 1 );
 
 	return true;
+}
+
+// After a user's skill has changed - the skill is configured here!
+SM_SkillSet( id, iSkillID, iPreviousSkillLevel, iNewSkillLevel )
+{
+	switch( iSkillID )
+	{
+		case SKILL_UNHOLYAURA:				// Undead's Unholy Aura
+		{
+			SHARED_SetSpeed( id );
+		}
+
+		case SKILL_LEVITATION:				// Undead's Levitation
+		{
+			SHARED_SetGravity( id );
+		}
+
+		case SKILL_INVISIBILITY:			// Human's Invisibility
+		{
+			SHARED_INVIS_Set( id );
+		}
+
+		case SKILL_DEVOTION:				// Human's Devotion Aura
+		{
+			// May possibly need to lower g_HU_DevotionAura
+			/*if ( iPreviousSkillLevel > iNewSkillLevel )
+			{
+				client_print( id, print_chat, "[DEBUG] Set previous health from %d to %d", g_HU_DevotionAura[id], g_HU_DevotionAura[id] - p_devotion * (iPreviousSkillLevel - iNewSkillLevel) );
+
+				g_HU_DevotionAura[id] -= p_devotion * ( iPreviousSkillLevel - iNewSkillLevel );
+			}*/
+
+			HU_DevotionAura( id );
+		}
+
+		case SKILL_PHOENIX:					// Blood Mage's Phoenix
+		{
+			BM_PhoenixCheck( id );
+		}
+
+		case SKILL_HEALINGWAVE:				// Shadow Hunter's Healing Wave
+		{
+			_SH_HealingWave( id );
+		}
+
+		case SKILL_SERPENTWARD:				// Shadow Hunter's Serpent Ward
+		{
+			// May possibly need to lower g_SH_SerpentGiven
+			if ( iPreviousSkillLevel > iNewSkillLevel )
+			{
+				client_print( id, print_chat, "[DEBUG] Set previous wards from %d to %d", g_SH_SerpentGiven[id], g_SH_SerpentGiven[id] - (p_serpent[iPreviousSkillLevel-1] - p_serpent[iNewSkillLevel-1]) );
+
+				g_SH_SerpentGiven[id] -= ( p_serpent[iPreviousSkillLevel-1] - p_serpent[iNewSkillLevel-1] );
+			}
+
+			SH_SerpentWard( id );
+		}
+
+		case SKILL_BLINK:					// Warden's Blink
+		{
+			WA_Blink( id );
+		}
+	}
+
+	return;
 }

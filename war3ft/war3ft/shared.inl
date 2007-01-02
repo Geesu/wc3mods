@@ -273,6 +273,11 @@ public SHARED_GetAmmoName( iWeapID, szAmmoName[], len )
 // Function used to spawn a player
 public _SHARED_Spawn( id )
 {
+	// Respawning isn't necessary w/CSDM - so lets not do that!
+	if ( get_pcvar_num( CVAR_csdm_active ) == 1 )
+	{
+		return;
+	}
 
 	id -= TASK_SPAWN;
 	
@@ -522,7 +527,13 @@ public SHARED_CS_Reincarnation( id )
 
 	if ( !p_data_b[id][PB_ISCONNECTED] )
 	{
-		return PLUGIN_CONTINUE;
+		return;
+	}
+
+	// Giving weapons will only screw things up w/CSDM - so lets not do that!
+	if ( get_pcvar_num( CVAR_csdm_active ) == 1 )
+	{
+		return;
 	}
 
 	new bool:bGiveWeapons = false;
@@ -580,7 +591,7 @@ public SHARED_CS_Reincarnation( id )
 		}
 	}
 
-	return PLUGIN_CONTINUE;	
+	return;	
 }	
 
 public _SHARED_CS_GiveWeapons(id)

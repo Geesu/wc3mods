@@ -385,9 +385,10 @@ HU_DevotionAura( id )
 	static iSkillLevel;
 	iSkillLevel = SM_GetSkillLevel( id, SKILL_DEVOTION );
 	
-	// Then the user has devotion aura!
-	if ( iSkillLevel > 0 )
+	// Then the user has devotion aura + hasn't lost some skill levels!
+	if ( iSkillLevel > 0 && g_HU_DevotionAura[id] <= iSkillLevel * p_devotion )
 	{
+
 		// Then we can give the user a serpent ward!
 		while ( g_HU_DevotionAura[id] < iSkillLevel * p_devotion )
 		{
@@ -403,6 +404,7 @@ HU_DevotionAura( id )
 	}
 
 	// The user doesn't have devotion aura - so lets check if they previously had it + lost it - if so we need to remove the health bonus right?
+	//  or the user lost some skill levels :/
 	else
 	{
 		// Snap they've been given some health - what a shame, we now have to remove it!
@@ -411,7 +413,7 @@ HU_DevotionAura( id )
 			new iCurHealth = get_user_health( id );
 			
 			// Then give them 1 health, otherwise we'd have to kill them - and that's not nice
-			if ( iCurHealth - g_HU_DevotionAura[id] <= 0 )
+			if ( iCurHealth - p_devotion <= 0 )
 			{
 				set_user_health( id, 1 );
 			}
@@ -419,8 +421,11 @@ HU_DevotionAura( id )
 			// Remove bonus
 			else
 			{
-				set_user_health( id, iCurHealth - g_HU_DevotionAura[id] );
+				set_user_health( id, iCurHealth - p_devotion );
 			}
+			
+			// If we don't do this - the next time they lose health - ouch
+			g_HU_DevotionAura[id] -= p_devotion;
 
 			// Lets display a message so they realize why they just lost health
 			client_print( id, print_chat, "%s You lost your health bonus from devotion aura!", g_MODclient );

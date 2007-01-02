@@ -432,9 +432,10 @@ XP_Check( id, bShowGained = true )
 		}
 	}
 
-	// We might need to lower the skills the user has ( can occur if you load XP info from a database and the XP multiplier has changed)
+	// We might need to lower the skills the user has ( can occur if you load XP info from a database and the XP multiplier has changed )
 	new iSkillsUsed = SM_TotalSkillPointsUsed( id );
 	new iSkillID, iSkillLevel;
+	new bool:bSkillRemoved = false;
 
 	while ( iSkillsUsed > p_data[id][P_LEVEL] )
 	{
@@ -446,9 +447,10 @@ XP_Check( id, bShowGained = true )
 			// Then we need to remove this!
 			if ( SM_GetSkillLevel( id, iUltimateID ) == 1 )
 			{
-				//client_print( id, print_chat, "[DEBUG] Removing ult %d", iUltimateID );
-
+				// Remove the ult
 				SM_SetSkillLevel( id, iUltimateID, 0 );
+
+				bSkillRemoved = true;
 
 				// Clear ult icon!
 				ULT_ClearIcons( id );
@@ -471,15 +473,21 @@ XP_Check( id, bShowGained = true )
 			iSkillID = SM_GetRandomSkill( id );
 		}
 		
-		//client_print( id, print_chat, "[DEBUG] Removing skill %d which was %d", iSkillID, iSkillLevel );
-
 		// OK at this point we have a valid skill, lets remove a level!
 		SM_SetSkillLevel( id, iSkillID, iSkillLevel - 1 );
+
+		bSkillRemoved = true;
 
 		// Get our current skills used
 		iSkillsUsed = SM_TotalSkillPointsUsed( id );
 	}
 	
+	// Need to reset all skill data for the given race if we've removed a skill
+	if ( bSkillRemoved )
+	{
+		WC3_InitPlayerSkills( id );
+	}
+
 	// OK lets check the total skills the user has, and maybe show them the selectskills menu
 	new iTotalSkillsUsed = SM_TotalSkillPointsUsed( id );
 

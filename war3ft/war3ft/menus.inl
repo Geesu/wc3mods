@@ -847,30 +847,6 @@ public MENU_SelectSkill( id )
 
 			iSkillsUsed = SM_TotalSkillPointsUsed( id );
 		}
-		/*static iRandomSkill, iSkillLevel;
-
-	
-		// Loop while we have skills available
-		while ( iSkillsUsed < p_data[id][P_LEVEL] )
-		{
-			iRandomSkill = SM_GetRandomSkill( id );
-			iSkillLevel = SM_GetSkillLevel( id, iRandomSkill );
-
-			
-			// Give them their ultimate if we can
-			if ( SM_GetSkillType( iRandomSkill ) == SKILL_TYPE_ULTIMATE && iSkillLevel == 0 && p_data[id][P_LEVEL] >= MIN_ULT_LEVEL )
-			{
-				SM_SetSkillLevel( id, iRandomSkill, iSkillLevel + 1 );
-			}
-
-			// Give them a skill if we can
-			else if ( SM_GetSkillType( iRandomSkill ) == SKILL_TYPE_TRAINABLE && iSkillLevel != MAX_SKILL_LEVEL && p_data[id][P_LEVEL] > 2 * iSkillLevel )
-			{
-				SM_SetSkillLevel( id, iRandomSkill, iSkillLevel + 1 );
-			}
-
-			iSkillsUsed = SM_TotalSkillPointsUsed( id );
-		}*/
 
 		return;
 	}
