@@ -6,7 +6,7 @@
 #define DOD_BOOT_SPEED 45.0
 
 // Item Charge Defines
-#define NECKLACE_CHARGES	3
+#define NECKLACE_CHARGES	4
 #define HELM_CHARGES		3
 #define CHARGE_DISPOSE      1
 #define RING_INCREMENT      1
