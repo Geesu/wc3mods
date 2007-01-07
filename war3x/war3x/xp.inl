@@ -1123,6 +1123,8 @@ public XP_kill_assist( assister, Float:fPercentDamage ) {
 	new iOldXp = g_PlayerInfo[assister][CURRENT_XP];
 	new iNewXp = iOldXp + iAssistXp;
 
+	client_print( assister, print_chat, "[DEBUG] Old XP: %d, Assist XP: %d(%f), New XP: %d", iOldXp, iAssistXp, fAssistXp, iNewXp );
+
 	XP_Give( assister, iOldXp, iNewXp );
 
 	client_print( assister, print_chat, "%s %L", WAR3X_PREFIX, assister, "XP_KILLASSIST_MESSAGE", iAssistXp );
