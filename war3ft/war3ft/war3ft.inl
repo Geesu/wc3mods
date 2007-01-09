@@ -1645,4 +1645,6 @@ WC3_PlayerInit( id )
 
 	p_data_b[id][PB_WARDENBLINK]	= false;		// Warden's Blink - Shouldn't start off immune right?  duh!
 
+	g_bLevitation[id]				= true;			// By default a user's levitation should be enabled!
+
 }

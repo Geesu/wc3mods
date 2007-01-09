@@ -272,7 +272,6 @@ public cmd_Say( id )
 // Command handler
 CMD_Handle( id, szCmd[] )
 {
-	
 	// Change the user's race
 	if ( CMD_Equal( id,  szCmd, "changerace" ) )
 	{
@@ -336,6 +335,24 @@ CMD_Handle( id, szCmd[] )
 
 			CS_SetIcon( id );
 		}
+	}
+
+	else if ( CMD_Equal( id,  szCmd, "levitation" ) )
+	{
+		if ( g_bLevitation[id] )
+		{
+			g_bLevitation[id] = false;
+			
+			client_print( id, print_chat, "%s Levitation disabled, type /levitation to re-enable", g_MODclient );
+		}
+		else
+		{
+			g_bLevitation[id] = true;
+			
+			client_print( id, print_chat, "%s Levitation enabled, type /levitation to disable", g_MODclient );
+		}
+
+		SHARED_SetGravity( id );
 	}
 
 	else if ( CMD_Equal( id,  szCmd, "level" ) )

@@ -2,6 +2,7 @@ v3.0 RC4
  - Addition: Changerace will now work with CSDM
  - Addition: resetskills will now work with CSDM
  - Addition: Appropriate messages for resetskills/changerace (instead of next round now says when respawn)
+ - Addition: /levitation command to enable/disable levitation
  - Bug Fix: Using wc3_bot_buy_item didn't actually work - bots could never buy items
  - Bug Fix: Setting wc3_bot_buy_item to 0 should disable the feature but it wasn't (thanks mexykanu + YamiKaitou)
  - Bug Fix: Bug with warden and planting the bomb (thanks damian086pl)

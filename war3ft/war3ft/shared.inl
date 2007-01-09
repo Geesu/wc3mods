@@ -1021,9 +1021,16 @@ public SHARED_SetGravity( id )
 	{
 		return;
 	}
+	
+	// This user doesn't want their gravity to be changed! - Make sure it's 1.0!
+	if ( !g_bLevitation[id] )
+	{
+		set_user_gravity( id, 1.0 );
+
+		return;
+	}
 
 	// If gravity is less than this, lets not change per-user b/c it BLOWS ASS in game
-
 	if ( CVAR_sv_gravity == 0 || get_pcvar_num( CVAR_sv_gravity ) > 650 )
 	{
 		static iSkillLevel;
