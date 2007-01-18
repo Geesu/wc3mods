@@ -1233,18 +1233,22 @@ SHARED_FindFreeSpawn( id, bImmunityCheck = false, bReverseTeam = false )
 	return ent;
 }
 
-public SHARED_MoleCheck( id )
+public SHARED_MoleCheck( id, bItemOnly = false )
 {
 	new parm[2];
 	parm[1] = 0;
 
-	static iSkillLevel;
-	iSkillLevel = SM_GetSkillLevel( id, SKILL_FANOFKNIVES );
-
-	// Mole from Fan of Knives?
-	if ( iSkillLevel > 0 && random_float( 0.0, 1.0 ) <= p_fan[iSkillLevel-1] )
+	// Only do a skill check if bItemOnly is false
+	if ( !bItemOnly )
 	{
-		parm[1] = 1;
+		static iSkillLevel;
+		iSkillLevel = SM_GetSkillLevel( id, SKILL_FANOFKNIVES );
+
+		// Mole from Fan of Knives?
+		if ( iSkillLevel > 0 && random_float( 0.0, 1.0 ) <= p_fan[iSkillLevel-1] )
+		{
+			parm[1] = 1;
+		}
 	}
 	
 	// Mole from an item?

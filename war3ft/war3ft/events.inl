@@ -262,7 +262,7 @@ public on_Drop( id )
 	return;
 }
 
-public on_ResetHud(id)
+public on_ResetHud( id )
 {
 
 	if ( !WC3_Check() )
@@ -276,12 +276,23 @@ public on_ResetHud(id)
 		return PLUGIN_CONTINUE;
 	}
 
-	// This is the first time the user has spawned this round
-	if ( !p_data_b[id][PB_HAS_SPAWNED] )
-	{	
-		EVENT_PlayerInitialSpawn( id );
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
 
-		p_data_b[id][PB_HAS_SPAWNED] = true;
+		// This is the first time the user has spawned this round
+		if ( !p_data_b[id][PB_HAS_SPAWNED] )
+		{	
+			WC3_NewSession( id );
+			EVENT_PlayerInitialSpawn( id );
+
+			p_data_b[id][PB_HAS_SPAWNED] = true;
+		}
+	}
+	
+	// For DOD - lets start a new session for a user EVERYTIME they spawn!
+	else if ( g_MOD == GAME_DOD )
+	{
+		WC3_NewSession( id );
 	}
 
 	EVENT_PlayerSpawned( id );

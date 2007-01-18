@@ -6,8 +6,6 @@
 #define BASH_GLOW_INTENSITY			100
 #define BASH_HOLD_TIME				0.7
 
-new g_HU_DevotionAura[33];			// This will hold the amount of health the user was given as a result of devotion aura
-
 HU_ULT_Blink( id )
 {
 	
@@ -386,50 +384,11 @@ HU_DevotionAura( id )
 	iSkillLevel = SM_GetSkillLevel( id, SKILL_DEVOTION );
 	
 	// Then the user has devotion aura + hasn't lost some skill levels!
-	if ( iSkillLevel > 0 && g_HU_DevotionAura[id] <= iSkillLevel * p_devotion )
+	if ( iSkillLevel > 0 )
 	{
 
-		// Then we can give the user a serpent ward!
-		while ( g_HU_DevotionAura[id] < iSkillLevel * p_devotion )
-		{
-
-			// Increase the user's health
-			set_user_health( id, get_user_health( id ) + p_devotion );
-			
-			// Increase the total we have given the user!
-			g_HU_DevotionAura[id] += p_devotion;
-
-			client_print( id, print_chat, "[DEBUG] Total health increased (total given so far: %d)", g_HU_DevotionAura[id] );
-		}
-	}
-
-	// The user doesn't have devotion aura - so lets check if they previously had it + lost it - if so we need to remove the health bonus right?
-	//  or the user lost some skill levels :/
-	else
-	{
-		// Snap they've been given some health - what a shame, we now have to remove it!
-		if ( g_HU_DevotionAura[id] > 0 )
-		{
-			new iCurHealth = get_user_health( id );
-			
-			// Then give them 1 health, otherwise we'd have to kill them - and that's not nice
-			if ( iCurHealth - p_devotion <= 0 )
-			{
-				set_user_health( id, 1 );
-			}
-
-			// Remove bonus
-			else
-			{
-				set_user_health( id, iCurHealth - p_devotion );
-			}
-			
-			// If we don't do this - the next time they lose health - ouch
-			g_HU_DevotionAura[id] -= p_devotion;
-
-			// Lets display a message so they realize why they just lost health
-			client_print( id, print_chat, "%s You lost your health bonus from devotion aura!", g_MODclient );
-		}
+		// Increase the user's health
+		set_user_health( id, get_user_health( id ) + ( p_devotion * iSkillLevel ) );
 	}
 }
 

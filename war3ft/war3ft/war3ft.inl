@@ -493,16 +493,29 @@ public WC3_GetUserInput( id )
 		return;
 	}
 
-	new iTotalSkillsUsed = SM_TotalSkillPointsUsed( id );
-	
+
 	// User has no race
 	if ( p_data[id][P_RACE] == 0 )
 	{
-		WC3_ChangeRaceStart( id );
+		new menu_id, keys;
+
+		new menuUp = player_menu_info( id, menu_id, keys );
+
+		// Only display menu if another isn't shown
+		if ( menuUp <= 0 )
+		{
+			WC3_ChangeRaceStart( id );
+		}
+
+		// Try again in 1 second
+		else
+		{
+			set_task( 1.0, "WC3_GetUserInput", TASK_GETINPUT + id );
+		}
 	}
 
 	// User has skills points available
-	else if ( iTotalSkillsUsed < p_data[id][P_LEVEL] )
+	else if ( SM_TotalSkillPointsUsed( id ) < p_data[id][P_LEVEL] )
 	{
 		MENU_SelectSkill( id );
 	}
@@ -1038,32 +1051,6 @@ WC3_ShowSpecInfo( id, iTargetID )
 	show_hudmessage( id, szMsg );
 }
 
-// Since things are set differently for DOD + CS, this is common to both
-// CS is called at the start of the round, for DOD it's whenever someone spawns
-WC3_CommonSpawn( id )
-{
-	// New ultimate cooldown delay
-	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_delay ) );
-
-	// Reset user skills if we need to (returns 1 if skills were reset)
-	if ( WC3_ResetSkills( id ) )
-	{
-		return;
-	}
-
-	// User has a race selection pending, set it
-	if ( p_data[id][P_CHANGERACE] )
-	{
-		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
-	}
-
-	// Should the user mole?
-	SHARED_MoleCheck( id );
-
-	// Set the user's skills!
-	WC3_SetSkills( id );
-}
-
 WC3_SetSkills( id )
 {
 	WC3_InitPlayerSkills( id );
@@ -1553,9 +1540,6 @@ WC3_InitPlayerSkills( id )
 	// Human's Invisibility
 	SHARED_INVIS_Set( id );
 
-	// Human's Devotion Aura
-	HU_DevotionAura( id );
-
 	// Blood Mage's Phoenix
 	BM_PhoenixCheck( id );
 
@@ -1593,15 +1577,8 @@ WC3_InitPlayerItems()
 // These things need to be reset when a user spawns again
 WC3_OnSpawn( id )
 {
-	// Shadow Hunter's Serpent Wards
-	p_data[id][P_SERPENTCOUNT]	= 0;
-	g_SH_SerpentGiven[id]		= 0;
 
-	// Need to reset human's g_HU_DevotionAura
-	g_HU_DevotionAura[id] = 0;
-
-	// Warden's shouldn't default being immune
-	p_data_b[id][PB_WARDENBLINK] = false;
+	// Human should gain health when he spawns right?
 }
 
 // Configure this player
@@ -1609,13 +1586,77 @@ WC3_OnSpawn( id )
 //		CSDM - whenever anyone spawns
 //		Normal CS/CZ - @ start of new round
 //		DOD - when player spawns
-WC3_PlayerSpawnSet( id )
+WC3_NewSession( id )
 {
 
+	// New ultimate cooldown delay
+	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_delay ) );
 
+	// Should we mole b/c of an item?
+	SHARED_MoleCheck( id, true );			// Only check item!
 
+	// Reset user skills if we need to
+	if ( WC3_ResetSkills( id ) )
+	{
+		// We need to return here b/c we don't want to set everyones' abilities!
+		return;
+	}
+
+	// User has a race selection pending, set it
+	if ( p_data[id][P_CHANGERACE] )
+	{
+		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
+	}
+
+	// Should we mole b/c of an ability?
+	SHARED_MoleCheck( id );			// Check skill
+
+	// Reset some shizit!
+	WC3_ResetOnNewSession( id );
+	
+	// If we made it this far we need to configure the user's skills!
+	// Set the user's skills!
+	WC3_InitPlayerSkills( id );
+
+	// Technically this should be on EVERY spawn right?  yes ok thx
+	//HU_DevotionAura( id );
 
 }
+
+WC3_ResetOnNewSession( id )
+{
+	// Shadow Hunter's Serpent Wards
+	p_data[id][P_SERPENTCOUNT]	= 0;
+	g_SH_SerpentGiven[id]		= 0;
+
+	// Warden's shouldn't default being immune
+	p_data_b[id][PB_WARDENBLINK] = false;
+}
+
+// Since things are set differently for DOD + CS, this is common to both
+// CS is called at the start of the round, for DOD it's whenever someone spawns
+WC3_CommonSpawn( id )
+{
+	// New ultimate cooldown delay
+	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_delay ) );
+
+	// Reset user skills if we need to (returns 1 if skills were reset)
+	if ( WC3_ResetSkills( id ) )
+	{
+		return;
+	}
+
+	// User has a race selection pending, set it
+	if ( p_data[id][P_CHANGERACE] )
+	{
+		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
+	}
+
+	// Should the user mole?
+	SHARED_MoleCheck( id );
+
+}
+
 
 // Called when a player first joins the server! - we need to reset everything!
 WC3_PlayerInit( id )
@@ -1637,8 +1678,6 @@ WC3_PlayerInit( id )
 	{
 		iReincarnation[id][i] = -99999;				// Reincarnation - DOD
 	}
-
-	g_HU_DevotionAura[id]			= 0;			// Human's Devotion Aura - Amount given
 
 	g_SH_SerpentGiven[id]			= 0;			// Shadow Hunter's Serpent Ward - Amount given
 	p_data[id][P_SERPENTCOUNT]		= 0;			// Shadow Hunter's Serpent Ward - Total the user currently has
