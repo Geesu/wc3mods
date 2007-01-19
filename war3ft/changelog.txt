@@ -23,6 +23,7 @@ v3.0 RC4
  - Bug Fix: Possible to remain a Phoenix (to respawn a teammate) after you lost the ability
  - Bug Fix: Orc's reincarnation would break w/CSDM
  - Bug Fix: Possibility of respawning abilities conflicting w/CSDM
+ - Bug Fix: Shadow Hunter's healing ward was healing too often (function was running twice)
  - Change: Boots now stack with unholy aura
  - Change: XP given by kill assist is now lowered
  - Change: Additional $$ is given per kill if csdm is active
@@ -32,15 +33,14 @@ v3.0 RC4
 
 To-dos/Bug Fixes:
  - to do - show detailed skill information in /skillsinfo
- - to do - write WC3_InitPlayerSkills and WC3_InitPlayerItems
- - to do - bots change race in csdm?
+ - to do - write WC3_InitPlayerItems
  - to do - chameleon randomize per player basis
-  - bug - if u lose levitation it won't actually go down
+ - bug - if u lose levitation it won't actually go down ( - do i really care?)
  - bugs: /level shown in ShowMsg or whatev for dod
  - to do - DOD - if user just joined - they shouldn't be able to buy ankh
  - test: dod's reincarnation changes... - give item back if fails?
  - to do - in SM_SetSkill we need to call WC3_InitPlayerSkills
- - to do - HU_DevotionAura needs to have a while loop like serpent wards!
+  - serpent wards display thing overlaps (when you place one)
 
 v3.0 RC3
  - Addition: Sock of the feather stacks with Undead's Levitation (suggestion by YamiKaitou)

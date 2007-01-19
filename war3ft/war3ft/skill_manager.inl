@@ -595,7 +595,7 @@ SM_SkillSet( id, iSkillID, iPreviousSkillLevel, iNewSkillLevel )
 
 		case SKILL_HEALINGWAVE:				// Shadow Hunter's Healing Wave
 		{
-			_SH_HealingWave( id );
+			SH_HealingWave( id )
 		}
 
 		case SKILL_SERPENTWARD:				// Shadow Hunter's Serpent Ward

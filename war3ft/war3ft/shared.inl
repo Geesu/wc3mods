@@ -321,6 +321,9 @@ public _SHARED_Spawn( id )
 	// Ignore the armor settaging...
 	bIgnoreArmorSet[id] = true;
 
+	// We don't want to call a crap-ton of WC3 functions when we're spawning them 3 times do we ?
+	bIgnorePlayerSpawning[id] = true;
+
 	// Spawn the player
 	spawn( id );
 	spawn( id );
@@ -365,6 +368,9 @@ public _SHARED_Spawn_Final( id )
 	{
 		return;
 	}
+
+	// OK lets do something on this spawn!
+	bIgnorePlayerSpawning[id] = false;
 
 	spawn( id );
 	
@@ -531,7 +537,7 @@ public SHARED_CS_Reincarnation( id )
 	}
 
 	// Giving weapons will only screw things up w/CSDM - so lets not do that!
-	if ( get_pcvar_num( CVAR_csdm_active ) == 1 )
+	if ( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 )
 	{
 		return;
 	}
@@ -1233,7 +1239,7 @@ SHARED_FindFreeSpawn( id, bImmunityCheck = false, bReverseTeam = false )
 	return ent;
 }
 
-public SHARED_MoleCheck( id, bItemOnly = false )
+SHARED_MoleCheck( id, bItemOnly = false )
 {
 	new parm[2];
 	parm[1] = 0;

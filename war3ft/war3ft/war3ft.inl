@@ -1544,7 +1544,7 @@ WC3_InitPlayerSkills( id )
 	BM_PhoenixCheck( id );
 
 	// Shadow Hunter's Healing Wave
-	_SH_HealingWave( id );
+	SH_HealingWave( id );
 
 	// Shadow Hunter's Serpent Ward
 	SH_SerpentWard( id );
@@ -1574,11 +1574,134 @@ WC3_InitPlayerItems()
 }
 */
 
+// Function called right before the user spawns
+WC3_BeforeSpawn( id )
+{
+	
+	// Remove the spectating info if necessary
+	if ( g_fLastSpecDisplay[id] >= halflife_time() )
+	{
+		UTIL_ClearHudChannel( id, HUD_SPEC_INFO );
+	}
+
+	// Reset who the user was spectating
+	g_iSpectatingID[id] = -1;
+
+	// Reset the player's role
+	g_iPlayerRole[id] = 0;
+	
+	// User shouldn't be a mole anymore...
+	p_data_b[id][PB_MOLE] = false;
+
+	// Reset the bomb/defusing check
+	bHasBegunPlantingOrDefusing[id] = false;
+
+	// Reset all ultimates
+	ULT_Reset( id );
+
+	// Reset certain player variables
+	p_data_b[id][PB_HAS_SPAWNED]		= false;
+	p_data[id][P_RESPAWNBY]				= 0;
+
+	// Remove any reset_maxspeeds occuring (could cause a person to move during freezetime)
+	task_exists( TASK_RESETSPEED + id ) ? remove_task( TASK_RESETSPEED + id ) : 0;
+	
+	// Save a copy of what weapons the user had the previous round (for weapon reincarnation)
+	SHARED_CopySavedWeapons( id );
+
+	// Remove any serpant wards
+	( task_exists( TASK_LIGHT + id ) ) ? remove_task( TASK_LIGHT + id ) : 0;
+
+
+	// If it's a bot, should we change the race?
+	if ( is_user_bot( id ) )
+	{
+
+		// Give the bot some random XP if we're saving XP
+		if ( get_pcvar_num( CVAR_wc3_save_xp ) && !p_data[id][P_XP] )
+		{
+			p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
+		}
+
+		// Set the bot's race?
+		if ( random_float( 0.0, 1.0 ) <= BOT_CHANGERACE || !p_data[id][P_RACE] )
+		{
+			p_data[id][P_RACE] = random_num( 1, get_pcvar_num( CVAR_wc3_races ) );
+
+			// Now lets set the bot's race!
+			WC3_SetRace( id, p_data[id][P_RACE] );
+		}
+	}
+}
+
 // These things need to be reset when a user spawns again
 WC3_OnSpawn( id )
 {
+	// User isn't changing a team if they just spawned
+	p_data_b[id][PB_CHANGINGTEAM]	= false;
+	
+	// Reset suicide attempt
+	p_data_b[id][PB_SUICIDEATTEMPT] = false;
+	
+	// User should not be burning
+	p_data_b[id][PB_ISBURNING]		= false;
+
+	// The user should not be frozen when they spawn
+	SHARED_ResetMaxSpeed( id );
+
+	// Reset the user's skin
+	SHARED_ChangeSkin( id, SKIN_RESET );
+
+	// Do we need to give the user a gravity boost?
+	SHARED_SetGravity( id );
+
+	// Give the user their item bonuses!
+	ITEM_GiveAllBonuses( id );
 
 	// Human should gain health when he spawns right?
+	HU_DevotionAura( id );
+
+	// User won't be zoomed when they spawn!
+	g_bPlayerZoomed[id]				= false;
+
+	// Check for Counter-Strike or Condition Zero
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		p_data[id][P_HECOUNT]		= 0;
+		
+		// If we need to give the user their weapons back, then lets
+		SHARED_CS_Reincarnation( id );
+
+		// If the user's ultimate is ready, lets show their icon!
+		if ( ULT_Available( id ) )
+		{
+			Ultimate_Ready( id );
+		}
+	}
+
+	// Check for Day of Defeat
+	else if ( g_MOD == GAME_DOD )
+	{
+		// Reincarnation?
+		SHARED_DOD_Reincarnation( id );
+	}	
+
+	// If the user is a bot they should have a chance to buy an item
+	if ( is_user_bot( id ) )
+	{
+		new Float:fBotChance = get_pcvar_float( CVAR_wc3_bot_buy_item );
+
+		if ( fBotChance > 0 && random_float( 0.0, 1.0 ) <= fBotChance )
+		{
+			( random_num( 1, 2 ) == 1 ) ? _MENU_Shopmenu1( id, random_num( 0, 8 ) ) : _MENU_Shopmenu2( id, random_num( 0, 8 ) );
+		}
+	}
+
+	// Find out if they need to choose a race or select a skill
+	set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + id );
+
+	// Set this last - otherwise some skills might be screwed up
+	p_data_b[id][PB_DIEDLASTROUND]	= false;
 }
 
 // Configure this player
@@ -1595,17 +1718,22 @@ WC3_NewSession( id )
 	// Should we mole b/c of an item?
 	SHARED_MoleCheck( id, true );			// Only check item!
 
+	// User has a race selection pending, set it
+	//	- Changing race should get priority over reseting skills!
+	if ( p_data[id][P_CHANGERACE] )
+	{
+		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
+
+		p_data_b[id][PB_RESETSKILLS] = false;
+
+		client_print( id, print_chat, "%s Since you changed your race, your skills will no longer be reset.  Type /resetskills to re-enable", g_MODclient );
+	}
+
 	// Reset user skills if we need to
 	if ( WC3_ResetSkills( id ) )
 	{
 		// We need to return here b/c we don't want to set everyones' abilities!
 		return;
-	}
-
-	// User has a race selection pending, set it
-	if ( p_data[id][P_CHANGERACE] )
-	{
-		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
 	}
 
 	// Should we mole b/c of an ability?
@@ -1617,10 +1745,6 @@ WC3_NewSession( id )
 	// If we made it this far we need to configure the user's skills!
 	// Set the user's skills!
 	WC3_InitPlayerSkills( id );
-
-	// Technically this should be on EVERY spawn right?  yes ok thx
-	//HU_DevotionAura( id );
-
 }
 
 WC3_ResetOnNewSession( id )
@@ -1632,31 +1756,6 @@ WC3_ResetOnNewSession( id )
 	// Warden's shouldn't default being immune
 	p_data_b[id][PB_WARDENBLINK] = false;
 }
-
-// Since things are set differently for DOD + CS, this is common to both
-// CS is called at the start of the round, for DOD it's whenever someone spawns
-WC3_CommonSpawn( id )
-{
-	// New ultimate cooldown delay
-	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_delay ) );
-
-	// Reset user skills if we need to (returns 1 if skills were reset)
-	if ( WC3_ResetSkills( id ) )
-	{
-		return;
-	}
-
-	// User has a race selection pending, set it
-	if ( p_data[id][P_CHANGERACE] )
-	{
-		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
-	}
-
-	// Should the user mole?
-	SHARED_MoleCheck( id );
-
-}
-
 
 // Called when a player first joins the server! - we need to reset everything!
 WC3_PlayerInit( id )
@@ -1685,5 +1784,26 @@ WC3_PlayerInit( id )
 	p_data_b[id][PB_WARDENBLINK]	= false;		// Warden's Blink - Shouldn't start off immune right?  duh!
 
 	g_bLevitation[id]				= true;			// By default a user's levitation should be enabled!
+
+
+	g_iSpectatingID[id] = -1;						// Reset who the user was spectating
+
+	g_iPlayerRole[id] = 0;							// Reset the player's role
+	
+	p_data_b[id][PB_MOLE] = false;					// User shouldn't be a mole anymore...
+
+	bHasBegunPlantingOrDefusing[id] = false;		// Reset the bomb/defusing check
+
+	p_data_b[id][PB_HAS_SPAWNED]	= false;		// Has the user spawned?  nope
+	
+	p_data[id][P_RESPAWNBY]			= 0;			// What did they respawn by?  Nothing I hope the user just joined!
+
+	bIgnorePlayerSpawning[id]		= false;		// We don't want to ignore when the player spawns do we?
+
+
+
+	// Misc Item shizit
+	g_bPlayerBoughtAnkh[id]			= false;		// User didn't buy an ankh!
+	g_bPlayerBoughtMole[id]			= false;		// User didn't buy mole!
 
 }

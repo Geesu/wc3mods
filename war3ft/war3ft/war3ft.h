@@ -8,3 +8,8 @@
 #define TXT_ULTIMATE		3
 #define TXT_BLINK_CENTER	4
 #define TXT_SKILL			5
+
+#define BOT_CHANGERACE			0.25
+
+
+new bool:bIgnorePlayerSpawning[33];

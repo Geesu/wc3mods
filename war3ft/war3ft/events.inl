@@ -1,7 +1,4 @@
 
-#define BOT_CHANGERACE			0.25
-
-
 // Forwards from the CSX module and DODX module
 public grenade_throw( index, greindex, wId )
 {
@@ -262,6 +259,7 @@ public on_Drop( id )
 	return;
 }
 
+// Function called EVERYTIME a user spawns!
 public on_ResetHud( id )
 {
 
@@ -276,34 +274,35 @@ public on_ResetHud( id )
 		return PLUGIN_CONTINUE;
 	}
 
+	// We're forcibly respawning the player - so lets just return
+	if ( bIgnorePlayerSpawning[id] )
+	{
+		return PLUGIN_CONTINUE;
+	}
+
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-
+		
 		// This is the first time the user has spawned this round
 		if ( !p_data_b[id][PB_HAS_SPAWNED] )
 		{	
-			WC3_NewSession( id );
 			EVENT_PlayerInitialSpawn( id );
 
 			p_data_b[id][PB_HAS_SPAWNED] = true;
 		}
 	}
 	
-	// For DOD - lets start a new session for a user EVERYTIME they spawn!
-	else if ( g_MOD == GAME_DOD )
-	{
-		WC3_NewSession( id );
-	}
-
 	EVENT_PlayerSpawned( id );
 
 	return PLUGIN_CONTINUE;
 }
 
 // Function is called when the user is spawned at the START of each round (called before EVENT_PlayerSpawned)
+//		TRIGGERED BY: ResetHUD
 public EVENT_PlayerInitialSpawn( id )
 {
 	
+
 	// Display the cheat message ONLY if they just joined!
 	if ( p_data_b[id][PB_JUSTJOINED] && get_pcvar_num( CVAR_wc3_cheats ) )
 	{
@@ -318,7 +317,8 @@ public EVENT_PlayerInitialSpawn( id )
 		WC3_ShowRaceInfo( id );
 	}
 
-	WC3_CommonSpawn( id );
+	//WC3_CommonSpawn( id );
+	WC3_NewSession( id );
 
 	// Need to reset damage dealt since it's a new round
 	for ( new i = 0; i < MAXPLAYERS; i++ )
@@ -332,88 +332,19 @@ public EVENT_PlayerInitialSpawn( id )
 // Function is called everytime a user spawns (called after EVENT_PlayerInitialSpawn)
 public EVENT_PlayerSpawned( id )
 {
+	// Check for spawn lock?  i.e. we call spawn() like 3 times!
 
-	// Allow the race to be changed if csdm is active...
-	if ( p_data[id][P_CHANGERACE] && get_pcvar_num( CVAR_csdm_active ) == 1 )
+
+	// Start a new session under the following conditions:
+	//		- Day of Defeat - need a new session per spawn!
+	//		- CSDM - rounds never end!!!
+	if ( g_MOD == GAME_DOD || ( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 ) )
 	{
-		// Don't want to do both of these - that will screw some crap up
-		//   so only change race if we're not resetting skills
-		if ( !WC3_ResetSkills( id ) )
-		{
-			WC3_SetRace( id, p_data[id][P_CHANGERACE] );
-		}
+		WC3_NewSession( id );
 	}
 
 	// Should be called EVERY time a user spawns!
 	WC3_OnSpawn( id );
-
-	// Find out if they need to choose a race or select a skill
-	set_task( 0.3, "WC3_GetUserInput", TASK_GETINPUT + id );
-
-	// User isn't changing a team if they just spawned
-	p_data_b[id][PB_CHANGINGTEAM]	= false;
-	
-	// Reset suicide attempt
-	p_data_b[id][PB_SUICIDEATTEMPT] = false;
-	
-	// User should not be burning
-	p_data_b[id][PB_ISBURNING]		= false;
-
-	// The user should not be frozen when they spawn
-	SHARED_ResetMaxSpeed( id );
-
-	// Reset the user's skin
-	SHARED_ChangeSkin( id, SKIN_RESET );
-
-	// Do we need to give the user a gravity boost?
-	SHARED_SetGravity( id );
-
-	// Give the user their item bonuses!
-	ITEM_GiveAllBonuses( id );
-
-	// User won't be zoomed when they spawn!
-	g_bPlayerZoomed[id]				= false;
-
-	// Check for Counter-Strike or Condition Zero
-	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-	{
-		p_data[id][P_HECOUNT]		= 0;
-		
-		// If we need to give the user their weapons back, then lets
-		SHARED_CS_Reincarnation( id );
-
-		// If the user's ultimate is ready, lets show their icon!
-		if ( ULT_Available( id ) )
-		{
-			Ultimate_Ready( id );
-		}
-	}
-
-	// Check for Day of Defeat
-	else if ( g_MOD == GAME_DOD )
-	{
-		// Reincarnation?
-		SHARED_DOD_Reincarnation( id );
-	}	
-
-	// If the user is a bot they should have a chance to buy an item
-	if ( is_user_bot( id ) )
-	{
-		new Float:fBotChance = get_pcvar_float( CVAR_wc3_bot_buy_item );
-
-		if ( fBotChance > 0 && random_float( 0.0, 1.0 ) <= fBotChance )
-		{
-			( random_num( 1, 2 ) == 1 ) ? _MENU_Shopmenu1( id, random_num( 0, 8 ) ) : _MENU_Shopmenu2( id, random_num( 0, 8 ) );
-		}
-	}
-
-	// For Day of Defeat we're calling this everytime a user spawns - for CS only on initial spawn
-	if ( g_MOD == GAME_DOD )
-	{
-		WC3_CommonSpawn( id );
-	}
-
-	p_data_b[id][PB_DIEDLASTROUND]	= false;
 }
 
 // Function is called ONCE at the start of a new round BEFORE user's spawn
@@ -432,7 +363,7 @@ public EVENT_NewRound()
 	get_players( players, numplayers );
 	for ( i = 0; i < numplayers; i++ )
 	{
-		EVENT_JustBeforeSpawn( players[i] );
+		WC3_BeforeSpawn( players[i] );
 	}
 	
 	// Reset which spawn points are reserved....
@@ -602,64 +533,4 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 	}
 	
 	return FMRES_IGNORED;
-}
-
-// Function called right before the user spawns
-EVENT_JustBeforeSpawn( id )
-{
-	
-	// Remove the spectating info if necessary
-	if ( g_fLastSpecDisplay[id] >= halflife_time() )
-	{
-		UTIL_ClearHudChannel( id, HUD_SPEC_INFO );
-	}
-
-	// Reset who the user was spectating
-	g_iSpectatingID[id] = -1;
-
-	// Reset the player's role
-	g_iPlayerRole[id] = 0;
-	
-	// User shouldn't be a mole anymore...
-	p_data_b[id][PB_MOLE] = false;
-
-	// Reset the bomb/defusing check
-	bHasBegunPlantingOrDefusing[id] = false;
-
-	// Reset all ultimates
-	ULT_Reset( id );
-
-	// Reset certain player variables
-	p_data_b[id][PB_HAS_SPAWNED]		= false;
-	p_data[id][P_RESPAWNBY]				= 0;
-
-	// Remove any reset_maxspeeds occuring (could cause a person to move during freezetime)
-	task_exists( TASK_RESETSPEED + id ) ? remove_task( TASK_RESETSPEED + id ) : 0;
-	
-	// Save a copy of what weapons the user had the previous round (for weapon reincarnation)
-	SHARED_CopySavedWeapons( id );
-
-	// Remove any serpant wards
-	( task_exists( TASK_LIGHT + id ) ) ? remove_task( TASK_LIGHT + id ) : 0;
-
-
-	// If it's a bot, should we change the race?
-	if ( is_user_bot( id ) )
-	{
-
-		// Give the bot some random XP if we're saving XP
-		if ( get_pcvar_num( CVAR_wc3_save_xp ) && !p_data[id][P_XP] )
-		{
-			p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
-		}
-
-		// Set the bot's race?
-		if ( random_float( 0.0, 1.0 ) <= BOT_CHANGERACE || !p_data[id][P_RACE] )
-		{
-			p_data[id][P_RACE] = random_num( 1, get_pcvar_num( CVAR_wc3_races ) );
-
-			// Now lets set the bot's race!
-			WC3_SetRace( id, p_data[id][P_RACE] );
-		}
-	}
 }

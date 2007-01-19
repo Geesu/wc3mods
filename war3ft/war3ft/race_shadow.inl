@@ -19,6 +19,15 @@ new g_SH_SerpentGiven[33];
 // ****************************************
 
 
+// Helper function to start the healing process
+public SH_HealingWave( id )
+{
+	if ( !task_exists( id + TASK_WAVE ) )
+	{
+		_SH_HealingWave( id );
+	}
+}
+
 // We don't need to ever actually "turn this off" since this task will take care of itself
 public _SH_HealingWave( id )
 {
@@ -38,6 +47,7 @@ public _SH_HealingWave( id )
 	iSkillLevel = SM_GetSkillLevel( id, SKILL_HEALINGWAVE );
 
 	// User doesn't have this skill, so lets return
+	//  - Also return if this was called twice
 	if ( iSkillLevel <= 0 )
 	{
 		return;

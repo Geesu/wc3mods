@@ -521,11 +521,6 @@ public ITEM_Remove( id, iItemSlot )
 
 	switch( iItem )
 	{
-		case ITEM_ANKH:
-		{
-			g_bPlayerBoughtAnkh[id] = false;
-		}
-
 		case ITEM_BOOTS:
 		{
 			SHARED_SetSpeed( id );
@@ -583,11 +578,6 @@ public ITEM_Remove( id, iItemSlot )
 		case ITEM_CHAMELEON:
 		{
 			SHARED_ChangeSkin( id, SKIN_RESET );
-		}
-
-		case ITEM_MOLE:
-		{
-			g_bPlayerBoughtMole[id] = false;
 		}
 	}
 
