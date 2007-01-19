@@ -274,7 +274,7 @@ public SHARED_GetAmmoName( iWeapID, szAmmoName[], len )
 public _SHARED_Spawn( id )
 {
 	// Respawning isn't necessary w/CSDM - so lets not do that!
-	if ( get_pcvar_num( CVAR_csdm_active ) == 1 )
+	if ( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 )
 	{
 		return;
 	}

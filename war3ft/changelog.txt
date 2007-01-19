@@ -1,3 +1,10 @@
+v3.0 RC5
+ - Bug Fix: Getting more health than you should with Devotion Aura
+
+
+To Do:
+ - all menus wait for other menus to disappear?
+
 v3.0 RC4
  - Addition: Changerace will now work with CSDM
  - Addition: resetskills will now work with CSDM

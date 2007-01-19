@@ -387,7 +387,7 @@ CMD_Handle( id, szCmd[] )
 	else if ( CMD_Equal( id,  szCmd, "resetskills" ) )
 	{
 		// Special message for csdm
-		if ( get_pcvar_num( CVAR_csdm_active ) == 1 )
+		if ( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 )
 		{
 			client_print( id, print_center, "Your skills will be reset when you respawn" );
 		}

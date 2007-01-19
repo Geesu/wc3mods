@@ -6,6 +6,8 @@
 #define BASH_GLOW_INTENSITY			100
 #define BASH_HOLD_TIME				0.7
 
+new g_HU_DevotionAuraGiven[33];
+
 HU_ULT_Blink( id )
 {
 	
@@ -386,9 +388,15 @@ HU_DevotionAura( id )
 	// Then the user has devotion aura + hasn't lost some skill levels!
 	if ( iSkillLevel > 0 )
 	{
+		
+		while ( g_HU_DevotionAuraGiven[id] < p_devotion * iSkillLevel )
+		{
+			// Increase the user's health
+			set_user_health( id, get_user_health( id ) + p_devotion );
 
-		// Increase the user's health
-		set_user_health( id, get_user_health( id ) + ( p_devotion * iSkillLevel ) );
+			g_HU_DevotionAuraGiven[id] += p_devotion;
+		}
+
 	}
 }
 

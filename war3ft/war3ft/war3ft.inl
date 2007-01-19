@@ -1288,7 +1288,7 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 		}
 
 		// Lets give a little extra money if CSDM is on...
-		if ( get_pcvar_num( CVAR_csdm_active ) == 1 )
+		if ( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 )
 		{
 			SHARED_SetUserMoney( iKiller, SHARED_GetUserMoney( iKiller ) + 300, 1 );
 		}
@@ -1637,6 +1637,10 @@ WC3_BeforeSpawn( id )
 // These things need to be reset when a user spawns again
 WC3_OnSpawn( id )
 {
+	// These things need to be reset when the user spawns
+	WC3_ResetOnSpawn( id );
+
+
 	// User isn't changing a team if they just spawned
 	p_data_b[id][PB_CHANGINGTEAM]	= false;
 	
@@ -1753,8 +1757,17 @@ WC3_ResetOnNewSession( id )
 	p_data[id][P_SERPENTCOUNT]	= 0;
 	g_SH_SerpentGiven[id]		= 0;
 
+
 	// Warden's shouldn't default being immune
 	p_data_b[id][PB_WARDENBLINK] = false;
+}
+
+WC3_ResetOnSpawn( id )
+{
+
+	// Reset human's devotion aura
+	g_HU_DevotionAuraGiven[id]	= 0;
+
 }
 
 // Called when a player first joins the server! - we need to reset everything!

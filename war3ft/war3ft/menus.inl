@@ -640,7 +640,7 @@ public _MENU_ChangeRace( id, key )
 		{
 			
 			// Special message for csdm
-			if ( get_pcvar_num( CVAR_csdm_active ) == 1 )
+			if ( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 )
 			{
 				client_print( id, print_center, "Your race will be changed when you respawn" );
 			}	
