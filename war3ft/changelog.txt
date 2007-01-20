@@ -1,6 +1,6 @@
 v3.0 RC5
  - Bug Fix: Getting more health than you should with Devotion Aura
-
+ - Bug Fix: Run-time errors from RC4 which made it unplayable
 
 To Do:
  - all menus wait for other menus to disappear?
