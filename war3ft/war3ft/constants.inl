@@ -205,12 +205,6 @@
 #define TEAM_T		1
 #define TEAM_CT		2
 
-
-// For Icon events
-#define ICON_HIDE 0 
-#define ICON_SHOW 1 
-#define ICON_FLASH 2 
-
 // To determine what game is running
 #define GAME_CSTRIKE		1
 #define GAME_CZERO			2

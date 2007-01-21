@@ -42,7 +42,7 @@ UD_Suicide( id )
 	Create_TE_IMPLOSION( vOrigin, 100, 20, 5 );
 	
 	// Set up an ultimate delay (in case the user respawns)
-	p_data[id][P_ULTIMATEDELAY] = get_pcvar_num( CVAR_wc3_ult_cooldown )
+	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 }
 
 

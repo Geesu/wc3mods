@@ -77,6 +77,9 @@ public _OR_ULT_ChainLightning( parm[5] )
 				if ( ULT_IsImmune( iTarget )  )
 				{
 					ULT_Blocked( iTarget );
+					
+					// Just say the user was hit so they aren't tried to be hit the next round (possibility of removing multiple charges)
+					p_data_b[iTarget][PB_LIGHTNINGHIT] = true;
 				}
 
 				// Then we can hit this user!

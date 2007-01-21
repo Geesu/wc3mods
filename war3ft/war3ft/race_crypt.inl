@@ -87,11 +87,17 @@ public _CL_ULT_LocustEffect( parm[] )
 
 	if ( !is_user_alive( iVictim ) || !p_data_b[iVictim][PB_ISCONNECTED] )
 	{
-		client_print( iAttacker, print_chat, "%s Target is no longer targetable, try casting again!", g_MODclient );
+		// Before we were asking them to use their ultimate again - how about we just do it for them?
+		CL_ULT_LocustSwarm( iAttacker );
+
+		client_print( iAttacker, print_chat, "[DEBUG] Victim is no longer targetable, try casting again!" );
+		
+		/*client_print( iAttacker, print_chat, "%s Victim is no longer targetable, try casting again!", g_MODclient );
 
 		p_data[iAttacker][P_ULTIMATEDELAY] = 0;
 
 		Ultimate_Ready( iAttacker );
+		*/
 
 		return;
 	}

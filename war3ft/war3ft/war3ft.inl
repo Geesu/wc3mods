@@ -663,16 +663,10 @@ WC3_SetRaceUp( id )
 		CHAM_ConfigureSkills( id );
 	}
 
-	WC3_SetSkills( id );
+	WC3_InitPlayerSkills( id );
 
 	// Copy the global ULT timeout over to just this user...
 	p_data[id][P_ULTIMATEDELAY] = g_iUltimateDelay;
-
-	// Set up the user's ultimate if it's ready
-	if ( ULT_Available( id ) )
-	{
-		ULT_Icon( id, ICON_SHOW );
-	}
 	
 	// See if there are any skills available
 	new iSkillsUsed = SM_TotalSkillPointsUsed( id );
@@ -684,6 +678,9 @@ WC3_SetRaceUp( id )
 	XP_Check( id, false );
 	WC3_ShowBar( id );
 	WC3_ShowRaceInfo( id );
+
+	// Show ultimate info if available
+	ULT_IconHandler( id );
 }
 
 WC3_ShowBar( id )
@@ -916,13 +913,14 @@ WC3_IsImmunePlayerNear( id, vOrigin[3] )
 		// Make sure that the user we're looking at is on the opposite team of "id"
 		if ( get_user_team( players[i] ) != iTeam )
 		{	
-			// Does this player have a necklace or warden's blink?  If not we don't need to check the radius
-			if ( ULT_IsImmune( players[i]) )
+			get_user_origin( players[i], vTargetOrigin );
+			
+			// Check the distance
+			if ( get_distance( vOrigin, vTargetOrigin ) <= IMMUNITY_RADIUS )
 			{
-				get_user_origin( players[i], vTargetOrigin );
-				
-				// Then immunity is near
-				if ( get_distance( vOrigin, vTargetOrigin ) <= IMMUNITY_RADIUS )
+
+				// Does this player have a necklace or warden's blink?
+				if ( ULT_IsImmune( players[i] ) )
 				{
 					return true;
 				}
@@ -1049,11 +1047,6 @@ WC3_ShowSpecInfo( id, iTargetID )
 	
 	// Show the message
 	show_hudmessage( id, szMsg );
-}
-
-WC3_SetSkills( id )
-{
-	WC3_InitPlayerSkills( id );
 }
 
 // Function will print a message in the center of the screen
@@ -1574,7 +1567,7 @@ WC3_InitPlayerItems()
 }
 */
 
-// Function called right before the user spawns
+// Function called right before the user spawns - ONLY ON NEW ROUND!
 WC3_BeforeSpawn( id )
 {
 	
@@ -1611,62 +1604,20 @@ WC3_BeforeSpawn( id )
 
 	// Remove any serpant wards
 	( task_exists( TASK_LIGHT + id ) ) ? remove_task( TASK_LIGHT + id ) : 0;
-
-
-	// If it's a bot, should we change the race?
-	if ( is_user_bot( id ) )
-	{
-
-		// Give the bot some random XP if we're saving XP
-		if ( get_pcvar_num( CVAR_wc3_save_xp ) && !p_data[id][P_XP] )
-		{
-			p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
-		}
-
-		// Set the bot's race?
-		if ( random_float( 0.0, 1.0 ) <= BOT_CHANGERACE || !p_data[id][P_RACE] )
-		{
-			p_data[id][P_RACE] = random_num( 1, get_pcvar_num( CVAR_wc3_races ) );
-
-			// Now lets set the bot's race!
-			WC3_SetRace( id, p_data[id][P_RACE] );
-		}
-	}
 }
 
 // These things need to be reset when a user spawns again
 WC3_OnSpawn( id )
 {
+
 	// These things need to be reset when the user spawns
 	WC3_ResetOnSpawn( id );
-
-
-	// User isn't changing a team if they just spawned
-	p_data_b[id][PB_CHANGINGTEAM]	= false;
-	
-	// Reset suicide attempt
-	p_data_b[id][PB_SUICIDEATTEMPT] = false;
-	
-	// User should not be burning
-	p_data_b[id][PB_ISBURNING]		= false;
-
-	// The user should not be frozen when they spawn
-	SHARED_ResetMaxSpeed( id );
-
-	// Reset the user's skin
-	SHARED_ChangeSkin( id, SKIN_RESET );
 
 	// Do we need to give the user a gravity boost?
 	SHARED_SetGravity( id );
 
 	// Give the user their item bonuses!
 	ITEM_GiveAllBonuses( id );
-
-	// Human should gain health when he spawns right?
-	HU_DevotionAura( id );
-
-	// User won't be zoomed when they spawn!
-	g_bPlayerZoomed[id]				= false;
 
 	// Check for Counter-Strike or Condition Zero
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
@@ -1677,10 +1628,7 @@ WC3_OnSpawn( id )
 		SHARED_CS_Reincarnation( id );
 
 		// If the user's ultimate is ready, lets show their icon!
-		if ( ULT_Available( id ) )
-		{
-			Ultimate_Ready( id );
-		}
+		ULT_IconHandler( id );
 	}
 
 	// Check for Day of Defeat
@@ -1715,9 +1663,31 @@ WC3_OnSpawn( id )
 //		DOD - when player spawns
 WC3_NewSession( id )
 {
+	// If it's a bot, should we change the race?
+	if ( is_user_bot( id ) )
+	{
+		// Give the bot some random XP if we're saving XP
+		if ( get_pcvar_num( CVAR_wc3_save_xp ) && !p_data[id][P_XP] )
+		{
+			p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
+		}
 
-	// New ultimate cooldown delay
-	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_delay ) );
+		// Set the bot's race?
+		if ( random_float( 0.0, 1.0 ) <= BOT_CHANGERACE || !p_data[id][P_RACE] )
+		{
+			p_data[id][P_RACE] = random_num( 1, get_pcvar_num( CVAR_wc3_races ) );
+
+			// Now lets set the bot's race!
+			WC3_SetRace( id, p_data[id][P_RACE] );
+		}
+	}
+
+	// Ultimate cooldown reset non-existent at session start for CSDM, just let it carry over from last use!
+	//  - But for normal CS/DOD it should reset
+	if ( !( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 ) )
+	{
+		ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
+	}
 
 	// Should we mole b/c of an item?
 	SHARED_MoleCheck( id, true );			// Only check item!
@@ -1728,9 +1698,12 @@ WC3_NewSession( id )
 	{
 		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
 
-		p_data_b[id][PB_RESETSKILLS] = false;
-
-		client_print( id, print_chat, "%s Since you changed your race, your skills will no longer be reset.  Type /resetskills to re-enable", g_MODclient );
+		if ( p_data_b[id][PB_RESETSKILLS] )
+		{
+			client_print( id, print_chat, "%s Since you changed your race, your skills will no longer be reset.  Type /resetskills to re-enable", g_MODclient );
+		
+			p_data_b[id][PB_RESETSKILLS] = false;
+		}
 	}
 
 	// Reset user skills if we need to
@@ -1768,6 +1741,26 @@ WC3_ResetOnSpawn( id )
 	// Reset human's devotion aura
 	g_HU_DevotionAuraGiven[id]	= 0;
 
+	// Human should gain health when he spawns right?
+	HU_DevotionAura( id );
+
+	// User isn't changing a team if they just spawned
+	p_data_b[id][PB_CHANGINGTEAM]	= false;
+	
+	// Reset suicide attempt
+	p_data_b[id][PB_SUICIDEATTEMPT] = false;
+	
+	// User should not be burning
+	p_data_b[id][PB_ISBURNING]		= false;
+
+	// The user should not be frozen when they spawn
+	SHARED_ResetMaxSpeed( id );
+
+	// Reset the user's skin
+	SHARED_ChangeSkin( id, SKIN_RESET );
+
+	// User won't be zoomed when they spawn!
+	g_bPlayerZoomed[id]				= false;
 }
 
 // Called when a player first joins the server! - we need to reset everything!
@@ -1813,10 +1806,14 @@ WC3_PlayerInit( id )
 
 	bIgnorePlayerSpawning[id]		= false;		// We don't want to ignore when the player spawns do we?
 
+	g_ULT_iLastIconShown[id]		= 0;			// User hasn't shown an icon yet!
 
 
 	// Misc Item shizit
 	g_bPlayerBoughtAnkh[id]			= false;		// User didn't buy an ankh!
 	g_bPlayerBoughtMole[id]			= false;		// User didn't buy mole!
+
+	p_data_b[id][PB_LIGHTNINGHIT]	= false;		// User wasn't hit by lightning!  They just joined!
+
 
 }

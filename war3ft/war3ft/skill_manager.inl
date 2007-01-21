@@ -501,9 +501,9 @@ SM_SetSkill( id, iSkillID )
 	SM_SetSkillLevel( id, iSkillID, iCurrentLevel + 1 );
 
 	// User selected an ultimate + global cooldown is done
-	if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_ULTIMATE && g_iUltimateDelay <= 0 )
+	if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_ULTIMATE )
 	{
-		Ultimate_Ready( id );
+		ULT_IconHandler( id );
 	}
 
 	return;

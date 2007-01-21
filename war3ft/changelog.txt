@@ -1,3 +1,17 @@
+v3.0 RC6
+ - Addition: levitation console command
+ - Addition: Message now displayed when human's ultimate is blocked
+ - Bug Fix: Ultimate icons not always showing
+ - Bug Fix: Reset skills message appearing on EVERY changerace
+ - Bug Fix: Ultimate cooldown timer set wrong at round start
+ - Bug Fix: Ultimate icon not shown when you first select your race
+ - Bug Fix: Human's ultimate was blocked WAY more than it should have been (would always be blocked if anyone had immunity)
+ - Bug Fix: Possible to remove multiple Necklace charges from Orc's ultimate
+ - Bug Fix: Bots not always given a race/XP right away
+ - Re-write: How ultimate icons are handled
+
+ - To Test: crypt lord auto-find-new-target
+
 v3.0 RC5
  - Bug Fix: Getting more health than you should with Devotion Aura
  - Bug Fix: Run-time errors from RC4 which made it unplayable

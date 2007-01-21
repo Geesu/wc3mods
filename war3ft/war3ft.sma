@@ -70,6 +70,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/cstrike.h"
 #include "war3ft/menus.h"
 #include "war3ft/shared.h"
+#include "war3ft/ultimates.h"
 
 // Source Code
 #include "war3ft/cvar.inl"
@@ -122,6 +123,7 @@ public plugin_init()
 
 	register_concmd( "playerskills"		, "CMD_Handler"		, -1 );
 
+	register_clcmd( "levitation"		, "CMD_Handler"		, -1 );
 	register_clcmd( "war3menu"			, "CMD_Handler"		, -1 );
 	register_clcmd( "changerace"		, "CMD_Handler"		, -1 );
 	register_clcmd( "selectskill"		, "CMD_Handler"		, -1 );

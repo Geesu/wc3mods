@@ -366,7 +366,7 @@ public SH_Ult_BigBadVoodoo( id )
 
 	p_data_b[id][PB_CAN_RENDER] = false;
 
-	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) + SH_BIGBADVOODOO_DURATION );
+	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) + SH_BIGBADVOODOO_DURATION, false );
 
 	ULT_Icon( id, ICON_FLASH );
 	

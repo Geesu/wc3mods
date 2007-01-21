@@ -101,9 +101,6 @@ WA_ULT_Vengeance( id )
 
 			// Play the Vengeance sound		
 			emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_VENGEANCE], 1.0, ATTN_NORM, 0, PITCH_NORM );
-						
-			// Hide the user's ultimate icon b/c we just used it!
-			ULT_Icon( id, ICON_HIDE );
 
 			// Set up a new ultimate delay
 			ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );

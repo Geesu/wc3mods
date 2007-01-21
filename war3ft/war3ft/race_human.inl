@@ -39,6 +39,9 @@ HU_ULT_Blink( id )
 		// Reset the user's ultimate
 		ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 
+		// Display ultimate blocked message
+		ULT_Blocked( id );
+
 		return;
 	}
 
@@ -91,7 +94,6 @@ HU_ULT_Blink( id )
 		// Lets go ahead and make this check before they teleport...
 		if ( HU_ULT_BlinkProtection( id, vNewLocation ) )
 		{
-
 			ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 
 			return;
@@ -112,8 +114,6 @@ HU_ULT_Blink( id )
 	set_task( 0.1, "_HU_ULT_BlinkStuck", TASK_BLINKSTUCK + id, parm, 5 );
 	
 	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
-
-	ULT_Icon( id, ICON_HIDE );
 
 	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_BLINK], 1.0, ATTN_NORM, 0, PITCH_NORM );
 

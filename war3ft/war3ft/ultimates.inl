@@ -2,18 +2,6 @@
 *	Common Ultimate Functions
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
-new g_UltimateIcons[8][32] = 
-					{
-						"dmg_rad",				// Undead
-						"item_longjump",		// Human Alliance
-						"dmg_shock",			// Orcish Horde
-						"item_healthkit",		// Night Elf
-						"dmg_heat",				// Blood Mage
-						"suit_full",			// Shadow Hunter
-						"cross",				// Warden
-						"dmg_gas"				// Crypt Lord
-					};
-
 // This is ran every second...
 public _ULT_Delay()
 {
@@ -36,7 +24,7 @@ public _ULT_Delay()
 		// Then the user's ultimate is ready
 		if ( p_data[id][P_ULTIMATEDELAY] == 0 )
 		{
-			Ultimate_Ready( id );
+			ULT_IconHandler( id );
 		}
 	}
 
@@ -53,33 +41,67 @@ ULT_ResetCooldown( id, iTime, iHideIcon = true )
 	}
 }
 
-Ultimate_Ready( id )
+// This function will handle ultimate icons - basically shows if appropriate or hides if appropriate
+ULT_IconHandler( id )
 {
-
+	// WC3 isn't running... shux
 	if ( !WC3_Check() )
 	{
 		return;
 	}
 	
-	if ( is_user_alive( id ) && p_data_b[id][PB_ISCONNECTED] )
-	{
-		new iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
-		new iSkillLevel = SM_GetSkillLevel( id, iSkillID );
+	new bool:bShowIcon = true;
 
-		if ( iSkillLevel > 0 )
-		{
-			// Play the ultimate ready sound
-			client_cmd( id, "speak %s", g_szSounds[SOUND_ULTIMATEREADY] )
-			
-			// Give the user a graphical message that their ultimate is ready
-			WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_READY" );
-			
-			// Show their ultimate icon
-			ULT_Icon( id, ICON_SHOW );
-		}
+	// User has no ultimate!
+	if ( SM_GetSkillLevel( id, SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE ) ) <= 0 )
+	{
+		bShowIcon = false;
 	}
-	
-	return;
+
+	// In global delay - can't show icon!
+	else if ( g_iUltimateDelay > 0 )
+	{
+		bShowIcon = false;
+	}
+
+	// User's delay is longer!
+	else if ( p_data[id][P_ULTIMATEDELAY] > 0 )
+	{
+		bShowIcon = false;
+	}
+
+	// User is dead - don't show icon!
+	else if ( !is_user_alive( id ) )
+	{
+		bShowIcon = false;
+	}
+
+	// User isn't connected! - don't show icon!
+	else if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		bShowIcon = false;
+	}
+
+
+	// We need to hide the user's icon!
+	if ( !bShowIcon )
+	{
+		// In theory I could remember what was displayed when - but easy way out is this
+		ULT_ClearIcons( id );
+	}
+
+	// Show the user's icon!
+	else
+	{
+		// Play the ultimate ready sound
+		client_cmd( id, "speak %s", g_szSounds[SOUND_ULTIMATEREADY] )
+		
+		// Give the user a graphical message that their ultimate is ready
+		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_READY" );
+		
+		// Show their ultimate icon
+		ULT_Icon( id, ICON_SHOW );
+	}
 }
 
 // This function will display/flash/hide the race's ultimate icon on the screen
@@ -95,9 +117,7 @@ ULT_Icon( id, flag )
 	// If they mysteriously lost a level - we shouldn't display the icon (i.e. admin command)
 	if ( p_data[id][P_LEVEL] < MIN_ULT_LEVEL && flag != ICON_HIDE )
 	{
-		ULT_Icon( id, ICON_HIDE );
-
-		return;
+		flag = ICON_HIDE;
 	}
 
 	new iRaceID = p_data[id][P_RACE];
@@ -144,6 +164,18 @@ ULT_Icon( id, flag )
 
 		// Create the status icon
 		Create_StatusIcon( id, flag, g_UltimateIcons[iRaceID - 1], r, g, b );
+
+		// Remember what icon we displayed
+		if ( flag == ICON_SHOW || flag == ICON_FLASH )
+		{
+			g_ULT_iLastIconShown[id] = iRaceID;
+		}
+
+		// No icon shown
+		else if ( flag == ICON_HIDE )
+		{
+			g_ULT_iLastIconShown[id] = 0;
+		}
 	}
 }
 
@@ -152,13 +184,18 @@ ULT_ClearIcons( id )
 	// Only have icons for CS/CZ
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		new i;
+		// Remove the last icon that was shown!
+		if ( g_ULT_iLastIconShown[id] > 0 )
+		{
+			Create_StatusIcon( id, ICON_HIDE, g_UltimateIcons[g_ULT_iLastIconShown[id]-1], 0, 0, 0 );
+		}
 		
+		/*
 		// Loop through all possible icons and remove them
-		for ( i = 0; i < MAX_RACES - 1; i++ )
+		for ( new i = 0; i < MAX_RACES - 1; i++ )
 		{
 			Create_StatusIcon( id, ICON_HIDE, g_UltimateIcons[i], 0, 0, 0 )
-		}
+		}*/
 	}
 }
 
