@@ -153,7 +153,7 @@ SH_SerpentWard( id )
 			// Increase the total we have given the user!
 			g_SH_SerpentGiven[id]++;
 
-			client_print( id, print_chat, "[DEBUG] Total wards increased to %d (total given so far: %d)", p_data[id][P_SERPENTCOUNT], g_SH_SerpentGiven[id] );
+			//client_print( id, print_chat, "[DEBUG] Total wards increased to %d (total given so far: %d)", p_data[id][P_SERPENTCOUNT], g_SH_SerpentGiven[id] );
 		}
 	}
 	
