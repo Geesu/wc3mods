@@ -324,7 +324,7 @@
 	#define PB_HAS_SPAWNED			23		// Has the player previously spawned this round?
 	#define PB_CAN_RENDER			24
 
-	//#define PB_REINCARNATION_DELAY	25
+	#define PB_NO_DAMAGE			25
 	//#define PB_REINCARNATION_SKIP	26
 
 	#define PB_ISPLANTING			27		// Set to true if the user is planting the bomb
@@ -348,7 +348,7 @@
 // Enemies who have immunity w/in this radius will cause blink to fail 
 #define IMMUNITY_RADIUS		500
 
-#define SPAWN_DELAY			1.5
+#define SPAWN_DELAY			0.2
 
 // ***************************************************************************
 //  Start of variables

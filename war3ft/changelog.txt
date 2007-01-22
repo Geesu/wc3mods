@@ -12,6 +12,7 @@ v3.0 RC6
  - Bug Fix: Human health set to 190 w/listen servers (thanks DesasterUK)
  - Bug Fix: Invisibility disappearing after use of Big Bad Voodoo (thanks mattypee)
  - Bug Fix: Changerace menu not appearing when joining server on listen server (thanks DesasterUK)
+ - Change: Respawn time from 1.5 seconds to 0.2 (by ability or item)
  - Re-write: How ultimate icons are handled
 
  - To Test: crypt lord auto-find-new-target

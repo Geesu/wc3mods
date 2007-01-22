@@ -315,6 +315,10 @@ public _SHARED_Spawn( id )
 		return;
 	}
 
+	// Give the user godmode for a little
+	set_user_godmode( id, 1 );
+	p_data_b[id][PB_NO_DAMAGE] = true;
+
 	// Save their previous weapons!
 	SHARED_CopySavedWeapons( id );
 
@@ -332,9 +336,6 @@ public _SHARED_Spawn( id )
 	p_data_b[id][PB_STUNNED]	= false;
 	p_data_b[id][PB_GIVEITEMS]	= true;
 	
-	// Give the user godmode for a little
-	set_user_godmode( id, 1 );
-
 	// Reset the user's skin to normal
 	SHARED_ChangeSkin( id, SKIN_RESET );
 
@@ -356,6 +357,7 @@ public _SHARED_SpawnRemoveGod( id )
 	if ( p_data_b[id][PB_ISCONNECTED] )
 	{
 		set_user_godmode( id, 0 );
+		p_data_b[id][PB_NO_DAMAGE] = false;
 	}
 }
 

@@ -1121,6 +1121,12 @@ public WC3_Damage( iVictim, iAttacker, iDamage, iWeapon, iBodyPart )
 		return;
 	}
 
+	// Don't damage if we shouldn't!
+	if ( p_data_b[iVictim][PB_NO_DAMAGE] )
+	{
+		return;
+	}
+
 	// Warden's Hardened Skin
 	iDamage = WA_HardenedSkin( iVictim, iDamage );
 
@@ -1229,7 +1235,6 @@ public WC3_Damage( iVictim, iAttacker, iDamage, iWeapon, iBodyPart )
 	else
 	{
 		set_user_health( iVictim, iHealth - iDamage );
-
 	}
 
 	return;
@@ -1693,9 +1698,18 @@ WC3_NewSession( id )
 
 	// Ultimate cooldown reset non-existent at session start for CSDM, just let it carry over from last use!
 	//  - But for normal CS/DOD it should reset
-	if ( !( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 ) )
+	/*if ( !( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 ) )
 	{
 		ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
+	}*/
+
+	// Ultimate cooldown on session start!
+	//  - DOD - Set to wc3_ult_delay b/c a new round does not occur often
+	//  - CSDM - Do nothing, let it be their default ultimate delay
+	//  - CS/CZ - Do nothing, a global countdown will occur @ round start
+	if ( g_MOD == GAME_DOD )
+	{
+		ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_delay ) );
 	}
 
 	// Should we mole b/c of an item?
@@ -1828,4 +1842,6 @@ WC3_PlayerInit( id )
 	p_data_b[id][PB_LIGHTNINGHIT]	= false;		// User wasn't hit by lightning!  They just joined!
 
 	g_HU_DevotionAuraGiven[id]		= 0;			// No devotion aura has been given!
+
+	p_data_b[id][PB_NO_DAMAGE]		= false;		// User should be damaged
 }
