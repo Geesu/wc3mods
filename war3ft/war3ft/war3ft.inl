@@ -502,7 +502,7 @@ public WC3_GetUserInput( id )
 		new menuUp = player_menu_info( id, menu_id, keys );
 
 		// Only display menu if another isn't shown
-		if ( menuUp <= 0 )
+		if ( menuUp <= 0 || menu_id < 0 )
 		{
 			WC3_ChangeRaceStart( id );
 		}
@@ -1606,10 +1606,19 @@ WC3_BeforeSpawn( id )
 	( task_exists( TASK_LIGHT + id ) ) ? remove_task( TASK_LIGHT + id ) : 0;
 }
 
-// These things need to be reset when a user spawns again
-WC3_OnSpawn( id )
+// This is called at the START of a user spawning
+WC3_PreSpawn( id )
 {
+	// Reset human's devotion aura - this needs to be done here
+	//  - If we don't do it here, then a user can get > 145 health... i.e. 190
+	g_HU_DevotionAuraGiven[id]	= 0;
 
+
+}
+
+// This is called at the end of someone spawning - i.e. NewSession called before this
+WC3_PostSpawn( id )
+{
 	// These things need to be reset when the user spawns
 	WC3_ResetOnSpawn( id );
 
@@ -1692,11 +1701,18 @@ WC3_NewSession( id )
 	// Should we mole b/c of an item?
 	SHARED_MoleCheck( id, true );			// Only check item!
 
+	// Reset some shizit!
+	WC3_ResetOnNewSession( id );
+
+	new bool:bChangedRace = false;
+
 	// User has a race selection pending, set it
 	//	- Changing race should get priority over reseting skills!
 	if ( p_data[id][P_CHANGERACE] )
 	{
 		WC3_SetRace( id, p_data[id][P_CHANGERACE] );
+		
+		bChangedRace = true;
 
 		if ( p_data_b[id][PB_RESETSKILLS] )
 		{
@@ -1715,13 +1731,14 @@ WC3_NewSession( id )
 
 	// Should we mole b/c of an ability?
 	SHARED_MoleCheck( id );			// Check skill
-
-	// Reset some shizit!
-	WC3_ResetOnNewSession( id );
 	
 	// If we made it this far we need to configure the user's skills!
 	// Set the user's skills!
-	WC3_InitPlayerSkills( id );
+	if ( !bChangedRace )
+	{
+		// This is called when we set a player's race - so we don't need to call it if their race was changed!
+		WC3_InitPlayerSkills( id );
+	}
 }
 
 WC3_ResetOnNewSession( id )
@@ -1730,17 +1747,12 @@ WC3_ResetOnNewSession( id )
 	p_data[id][P_SERPENTCOUNT]	= 0;
 	g_SH_SerpentGiven[id]		= 0;
 
-
 	// Warden's shouldn't default being immune
 	p_data_b[id][PB_WARDENBLINK] = false;
 }
 
 WC3_ResetOnSpawn( id )
 {
-
-	// Reset human's devotion aura
-	g_HU_DevotionAuraGiven[id]	= 0;
-
 	// Human should gain health when he spawns right?
 	HU_DevotionAura( id );
 
@@ -1815,5 +1827,5 @@ WC3_PlayerInit( id )
 
 	p_data_b[id][PB_LIGHTNINGHIT]	= false;		// User wasn't hit by lightning!  They just joined!
 
-
+	g_HU_DevotionAuraGiven[id]		= 0;			// No devotion aura has been given!
 }

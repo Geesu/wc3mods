@@ -285,14 +285,15 @@ SM_SetSkillLevel( id, skill_id, iLevel )
 		return;
 	}
 	
-	static iLastSkillLevel;
-	iLastSkillLevel = g_PlayerSkillLevel[id][skill_id];
+	//static iLastSkillLevel;
+	//iLastSkillLevel = g_PlayerSkillLevel[id][skill_id];
 
 	// Set our new skill value
 	g_PlayerSkillLevel[id][skill_id] = iLevel;
 
 	// This will configure the skill (make any changes that should be necessary)
-	SM_SkillSet( id, skill_id, iLastSkillLevel, iLevel );
+	//SM_SkillSet( id, skill_id, iLastSkillLevel, iLevel );
+	SM_SkillSet( id, skill_id );
 
 	return;
 }
@@ -556,7 +557,8 @@ SM_GiveRandomSkillPoint( id )
 }
 
 // After a user's skill has changed - the skill is configured here!
-SM_SkillSet( id, iSkillID, iPreviousSkillLevel, iNewSkillLevel )
+//SM_SkillSet( id, iSkillID, iPreviousSkillLevel = 0, iNewSkillLevel = 0 )
+SM_SkillSet( id, iSkillID )
 {
 	switch( iSkillID )
 	{
@@ -577,14 +579,6 @@ SM_SkillSet( id, iSkillID, iPreviousSkillLevel, iNewSkillLevel )
 
 		case SKILL_DEVOTION:				// Human's Devotion Aura
 		{
-			// May possibly need to lower g_HU_DevotionAura
-			/*if ( iPreviousSkillLevel > iNewSkillLevel )
-			{
-				client_print( id, print_chat, "[DEBUG] Set previous health from %d to %d", g_HU_DevotionAura[id], g_HU_DevotionAura[id] - p_devotion * (iPreviousSkillLevel - iNewSkillLevel) );
-
-				g_HU_DevotionAura[id] -= p_devotion * ( iPreviousSkillLevel - iNewSkillLevel );
-			}*/
-
 			HU_DevotionAura( id );
 		}
 
@@ -600,14 +594,6 @@ SM_SkillSet( id, iSkillID, iPreviousSkillLevel, iNewSkillLevel )
 
 		case SKILL_SERPENTWARD:				// Shadow Hunter's Serpent Ward
 		{
-			// May possibly need to lower g_SH_SerpentGiven
-			if ( iPreviousSkillLevel > iNewSkillLevel )
-			{
-				client_print( id, print_chat, "[DEBUG] Set previous wards from %d to %d", g_SH_SerpentGiven[id], g_SH_SerpentGiven[id] - (p_serpent[iPreviousSkillLevel-1] - p_serpent[iNewSkillLevel-1]) );
-
-				g_SH_SerpentGiven[id] -= ( p_serpent[iPreviousSkillLevel-1] - p_serpent[iNewSkillLevel-1] );
-			}
-
 			SH_SerpentWard( id );
 		}
 

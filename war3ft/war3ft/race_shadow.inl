@@ -405,7 +405,7 @@ public SH_Ult_Remove( id )
 
 	ULT_Icon( id, ICON_HIDE );
 
-	set_user_rendering( id );
+	SHARED_INVIS_Set( id );
 
 	set_user_godmode( id, 0 );
 

@@ -339,6 +339,13 @@ CMD_Handle( id, szCmd[] )
 
 	else if ( CMD_Equal( id,  szCmd, "levitation" ) )
 	{
+		if ( p_data[id][P_RACE] != RACE_UNDEAD )
+		{
+			client_print( id, print_chat, "%s You are not undead!", g_MODclient );
+
+			return;
+		}
+
 		if ( g_bLevitation[id] )
 		{
 			g_bLevitation[id] = false;

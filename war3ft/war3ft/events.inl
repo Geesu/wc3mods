@@ -267,7 +267,7 @@ public on_ResetHud( id )
 	{
 		return PLUGIN_CONTINUE;
 	}
-	
+
 	// ResetHUD can be called when the user is not alive, lets ignore those calls
 	if ( !is_user_alive( id ) )
 	{
@@ -279,6 +279,10 @@ public on_ResetHud( id )
 	{
 		return PLUGIN_CONTINUE;
 	}
+
+	// Prespawn call
+	//   - Purpose is to have a spawn call that happens before everything else!
+	WC3_PreSpawn( id );
 
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
@@ -292,12 +296,21 @@ public on_ResetHud( id )
 		}
 	}
 	
-	EVENT_PlayerSpawned( id );
+	// Start a new session under the following conditions:
+	//		- Day of Defeat - need a new session per spawn!
+	//		- CSDM - rounds never end!!!
+	if ( g_MOD == GAME_DOD || ( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 ) )
+	{
+		WC3_NewSession( id );
+	}
+
+	// Should be called at the end of each spawn
+	WC3_PostSpawn( id );
 
 	return PLUGIN_CONTINUE;
 }
 
-// Function is called when the user is spawned at the START of each round (called before EVENT_PlayerSpawned)
+// Function is called when the user is spawned at the START of each round - only WC3_PreSpawn is called first
 //		TRIGGERED BY: ResetHUD
 public EVENT_PlayerInitialSpawn( id )
 {
@@ -317,7 +330,6 @@ public EVENT_PlayerInitialSpawn( id )
 		WC3_ShowRaceInfo( id );
 	}
 
-	//WC3_CommonSpawn( id );
 	WC3_NewSession( id );
 
 	// Need to reset damage dealt since it's a new round
@@ -327,24 +339,6 @@ public EVENT_PlayerInitialSpawn( id )
 	}
 
 	return;
-}
-
-// Function is called everytime a user spawns (called after EVENT_PlayerInitialSpawn)
-public EVENT_PlayerSpawned( id )
-{
-	// Check for spawn lock?  i.e. we call spawn() like 3 times!
-
-
-	// Start a new session under the following conditions:
-	//		- Day of Defeat - need a new session per spawn!
-	//		- CSDM - rounds never end!!!
-	if ( g_MOD == GAME_DOD || ( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 ) )
-	{
-		WC3_NewSession( id );
-	}
-
-	// Should be called EVERY time a user spawns!
-	WC3_OnSpawn( id );
 }
 
 // Function is called ONCE at the start of a new round BEFORE user's spawn

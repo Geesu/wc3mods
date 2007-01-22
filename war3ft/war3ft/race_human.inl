@@ -376,7 +376,6 @@ HU_ULT_BlinkProtection( id, vOrigin[3] )
 
 HU_DevotionAura( id )
 {
-
 	if ( !is_user_alive( id ) )
 	{
 		return;
@@ -396,7 +395,6 @@ HU_DevotionAura( id )
 
 			g_HU_DevotionAuraGiven[id] += p_devotion;
 		}
-
 	}
 }
 

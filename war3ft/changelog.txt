@@ -1,6 +1,7 @@
 v3.0 RC6
  - Addition: levitation console command
  - Addition: Message now displayed when human's ultimate is blocked
+ - Addition: Check for correct race when using /levitation
  - Bug Fix: Ultimate icons not always showing
  - Bug Fix: Reset skills message appearing on EVERY changerace
  - Bug Fix: Ultimate cooldown timer set wrong at round start
@@ -8,6 +9,9 @@ v3.0 RC6
  - Bug Fix: Human's ultimate was blocked WAY more than it should have been (would always be blocked if anyone had immunity)
  - Bug Fix: Possible to remove multiple Necklace charges from Orc's ultimate
  - Bug Fix: Bots not always given a race/XP right away
+ - Bug Fix: Human health set to 190 w/listen servers (thanks DesasterUK)
+ - Bug Fix: Invisibility disappearing after use of Big Bad Voodoo (thanks mattypee)
+ - Bug Fix: Changerace menu not appearing when joining server on listen server (thanks DesasterUK)
  - Re-write: How ultimate icons are handled
 
  - To Test: crypt lord auto-find-new-target
