@@ -7,9 +7,11 @@
 #define CARRIONBEETLE_DAMAGE			10
 #define IMPALE_INTENSITY				10.0		// Intensity of impale
 
-CL_ULT_LocustSwarm( id )
+// Returns victim id
+//  -1 if no target
+//  -2 if ult blocked
+CL_ULT_LocustGetTarget( id )
 {
-
 	new iTeam = get_user_team( id );
 
 	// First thing we need to do is find an alive player that isn't immune to target :)
@@ -27,16 +29,13 @@ CL_ULT_LocustSwarm( id )
 			iTargets[iTotalTargets++] = iTargetID;
 		}
 	}
-
-	// No target was found :/
+	
+	// No victims found
 	if ( iTotalTargets == 0 )
 	{
-		//set_hudmessage( 178, 14, 41, -1.0, 0.3, 0, 1.0, 5.0, 0.1, 0.2, -1 );
-		WC3_StatusText( id, TXT_BLINK_CENTER, "No valid targets found" );
-
-		return;
+		return -1;
 	}
-	
+
 	// Lets find ourselves a victim
 	new iVictim = 0, iRandomSpot;
 	while ( iVictim == 0 )
@@ -54,6 +53,29 @@ CL_ULT_LocustSwarm( id )
 		// Reset the user's ultimate
 		ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 
+		return -2;
+	}
+
+	return iVictim;
+}
+
+CL_ULT_LocustSwarm( id )
+{
+
+	new iVictim = CL_ULT_LocustGetTarget( id );
+
+	// No target was found :/
+	if ( iVictim == -1 )
+	{
+		//set_hudmessage( 178, 14, 41, -1.0, 0.3, 0, 1.0, 5.0, 0.1, 0.2, -1 );
+		WC3_StatusText( id, TXT_BLINK_CENTER, "No valid targets found" );
+
+		return;
+	}
+
+	// Ultimate was blocked - do nothing
+	if ( iVictim == -2 )
+	{
 		return;
 	}
 
@@ -63,7 +85,7 @@ CL_ULT_LocustSwarm( id )
 	
 	// Flash their ultimate!
 	ULT_Icon( id, ICON_FLASH );
-	
+
 	// Reset the user's ultimate - but we don't want to hide the icon yet!!
 	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ), false );
 
@@ -87,8 +109,40 @@ public _CL_ULT_LocustEffect( parm[] )
 
 	if ( !is_user_alive( iVictim ) || !p_data_b[iVictim][PB_ISCONNECTED] )
 	{
-		// Before we were asking them to use their ultimate again - how about we just do it for them?
-		CL_ULT_LocustSwarm( iAttacker );
+		client_print( iAttacker, print_chat, "%s Victim is no longer targetable for Locust Swarm, finding new target!", g_MODclient );
+
+		// Need to find a new victim here...
+		new iVictim = CL_ULT_LocustGetTarget( iAttacker );
+
+		// No target was found :/
+		if ( iVictim == -1 )
+		{
+			//set_hudmessage( 178, 14, 41, -1.0, 0.3, 0, 1.0, 5.0, 0.1, 0.2, -1 );
+			WC3_StatusText( iAttacker, TXT_BLINK_CENTER, "No valid targets found" );
+			
+			// Set ultimate timer back to 0
+			p_data[iAttacker][P_ULTIMATEDELAY] = 0;
+
+			// Show icon + play ultimate ready sound
+			ULT_IconHandler( iAttacker );
+
+			return;
+		}
+
+		// Ultimate was blocked - do nothing
+		else if ( iVictim == -2 )
+		{
+			return;
+		}
+
+
+		// Lets get the new origin of the caster
+		new vCasterOrigin[3];
+		get_user_origin( id, vCasterOrigin );
+		parm[1] = iVictim;	// victim
+		parm[2] = vCasterOrigin[0];
+		parm[3] = vCasterOrigin[1];
+		parm[4] = vCasterOrigin[2];
 
 		client_print( iAttacker, print_chat, "[DEBUG] Victim is no longer targetable, try casting again!" );
 		
@@ -99,7 +153,7 @@ public _CL_ULT_LocustEffect( parm[] )
 		Ultimate_Ready( iAttacker );
 		*/
 
-		return;
+		return 0;
 	}
 
 	new MULTIPLIER = 150 // the lower the number the faster it reaches the target
@@ -175,8 +229,6 @@ public _CL_ULT_LocustEffect( parm[] )
 
 		client_print( iAttacker, print_chat, "%s Locust Swarm hit %s for %d damage!", g_MODclient, szName, iDamage );
 	}
-
-	return;
 }
 
 CL_HLP_Diff( iNum, iNum2 )
