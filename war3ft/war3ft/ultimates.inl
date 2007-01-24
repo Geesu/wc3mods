@@ -270,8 +270,11 @@ public _ULT_Ping( parm[] )
 	if ( iTimeLeft == 0 )
 	{
 		p_data_b[id][PB_ISSEARCHING] = false;
-
-		ULT_Icon( id, ICON_SHOW );
+		
+		if ( ULT_Available( id ) )
+		{
+			ULT_Icon( id, ICON_SHOW );
+		}
 	}
 	
 	// Then we need to play the sound + flash their icon!

@@ -2,6 +2,8 @@ v3.0 RC6
  - Addition: levitation console command
  - Addition: Message now displayed when human's ultimate is blocked
  - Addition: Check for correct race when using /levitation
+ - Bug Fix: Possible for ultimate icon to stay after a searching ultimate was used (if on last second of search)
+ - Bug Fix: Message to warden regarding Blink could be repeated
  - Bug Fix: Ultimate icons not always showing
  - Bug Fix: Reset skills message appearing on EVERY changerace
  - Bug Fix: Ultimate cooldown timer set wrong at round start
