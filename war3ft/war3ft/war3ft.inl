@@ -1696,18 +1696,20 @@ WC3_NewSession( id )
 		}
 	}
 
-	// Ultimate cooldown reset non-existent at session start for CSDM, just let it carry over from last use!
-	//  - But for normal CS/DOD it should reset
-	/*if ( !( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 ) )
-	{
-		ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
-	}*/
-
 	// Ultimate cooldown on session start!
 	//  - DOD - Set to wc3_ult_delay b/c a new round does not occur often
 	//  - CSDM - Do nothing, let it be their default ultimate delay
-	//  - CS/CZ - Do nothing, a global countdown will occur @ round start
-	if ( g_MOD == GAME_DOD )
+	//  - CS/CZ - Set delay to be equal to global, a global countdown will occur @ round start
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		// CSDM isn't running!
+		if ( ! ( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 ) )
+		{
+			// Copy the global ULT timeout over to just this user...
+			p_data[id][P_ULTIMATEDELAY] = g_iUltimateDelay;
+		}
+	}
+	else if ( g_MOD == GAME_DOD )
 	{
 		ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_delay ) );
 	}

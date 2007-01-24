@@ -33,7 +33,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu & Avanderik"
-new const WC3VERSION[] =	"3.0 RC6 Beta 2"
+new const WC3VERSION[] =	"3.0 RC6 Beta 3"
 new const WC3DATE[] =		__DATE__
 
 // Let AMX X know that we NEED these modules (as of amx x 1.75)
@@ -123,6 +123,7 @@ public plugin_init()
 
 	register_concmd( "playerskills"		, "CMD_Handler"		, -1 );
 
+	register_clcmd( "debug"				, "CMD_Handler"		, -1 );
 	register_clcmd( "levitation"		, "CMD_Handler"		, -1 );
 	register_clcmd( "war3menu"			, "CMD_Handler"		, -1 );
 	register_clcmd( "changerace"		, "CMD_Handler"		, -1 );

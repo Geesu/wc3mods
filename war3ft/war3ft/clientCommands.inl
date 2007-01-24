@@ -113,7 +113,7 @@ public cmd_Ultimate(id)
 	else if ( g_iUltimateDelay > 0 )
 	{
 		WC3_StatusText( id, TXT_ULTIMATE, "%L", id, "ULTIMATE_NOT_READY", g_iUltimateDelay );
-
+		
 		client_cmd( id, "speak %s", g_szSounds[SOUND_ERROR] );
 
 		return PLUGIN_HANDLED;
@@ -337,7 +337,12 @@ CMD_Handle( id, szCmd[] )
 		}
 	}
 
-	else if ( CMD_Equal( id,  szCmd, "levitation" ) )
+	else if ( CMD_Equal( id, szCmd, "debug" ) )
+	{
+		client_print( id, print_chat, "%s Ultimate Cooldowns - Global:%d  Player:%d", g_MODclient, g_iUltimateDelay, p_data[id][P_ULTIMATEDELAY] );
+	}
+
+	else if ( CMD_Equal( id, szCmd, "levitation" ) )
 	{
 		if ( p_data[id][P_RACE] != RACE_UNDEAD )
 		{

@@ -13,9 +13,11 @@ v3.0 RC6
  - Bug Fix: Invisibility disappearing after use of Big Bad Voodoo (thanks mattypee)
  - Bug Fix: Changerace menu not appearing when joining server on listen server (thanks DesasterUK)
  - Change: Respawn time from 1.5 seconds to 0.2 (by ability or item)
+ - Change: Bots skin will change now if they mole or buy chameleon
  - Re-write: How ultimate icons are handled
 
  - To Test: crypt lord auto-find-new-target
+ - bug setting wc3_save_xp after start
 
 v3.0 RC5
  - Bug Fix: Getting more health than you should with Devotion Aura

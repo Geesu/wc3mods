@@ -138,7 +138,7 @@ public _CL_ULT_LocustEffect( parm[] )
 
 		// Lets get the new origin of the caster
 		new vCasterOrigin[3];
-		get_user_origin( id, vCasterOrigin );
+		get_user_origin( iAttacker, vCasterOrigin );
 		parm[1] = iVictim;	// victim
 		parm[2] = vCasterOrigin[0];
 		parm[3] = vCasterOrigin[1];
@@ -153,7 +153,7 @@ public _CL_ULT_LocustEffect( parm[] )
 		Ultimate_Ready( iAttacker );
 		*/
 
-		return 0;
+		return;
 	}
 
 	new MULTIPLIER = 150 // the lower the number the faster it reaches the target

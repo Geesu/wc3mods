@@ -933,12 +933,6 @@ SHARED_IsPlayerSlowed( id )
 public SHARED_ChangeSkin( id, iFlag )
 {
 	
-	// Don't change a bots model - it just confuses the bots!
-	if ( is_user_bot( id ) )
-	{
-		return;
-	}
-
 	new szSkin[32];
 	
 	// Reset the user's model
@@ -984,7 +978,6 @@ public SHARED_ChangeSkin( id, iFlag )
 			}
 
 			cs_set_user_model( id, szSkin );
-
 		}
 
 		// For Day of Defeat

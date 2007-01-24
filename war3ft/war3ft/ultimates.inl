@@ -8,7 +8,6 @@ public _ULT_Delay()
 	
 	// Decrement the global counter
 	g_iUltimateDelay--;
-
 	
 	// Now we need to loop through all players and decrement their ultimate delay
 	new players[32], numplayers, i, id;
@@ -27,7 +26,6 @@ public _ULT_Delay()
 			ULT_IconHandler( id );
 		}
 	}
-
 }
 
 ULT_ResetCooldown( id, iTime, iHideIcon = true )
