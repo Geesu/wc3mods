@@ -3,51 +3,6 @@
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
 
-/*
-- New 3.0 DB structure
-
-CREATE TABLE IF NOT EXISTS `wc3_players` 
-(
-	`player_id` INT(8), - autonumber
-	`player_steamid` VARCHAR(35) NOT NULL DEFAULT '', 
-	`player_ip` VARCHAR(20) NOT NULL DEFAULT '', 
-	`player_name` VARCHAR(35) NOT NULL DEFAULT '', 
-	`time` TIMESTAMP(14) NOT NULL, 
-	PRIMARY KEY ( `player_id` )
-)
-
-CREATE TABLE IF NOT EXISTS `wc3_skills`
-(
-	`player_id` INT(8) NOT NULL DEFAULT 0,
-	`skill_id` INT(6) NOT NULL DEFAULT 0,
-	`skill_level` INT(3) NOT NULL DEFAULT 0,
-	PRIMARY KEY( `player_id`, `skill_id` )
-)
-
-CREATE TABLE IF NOT EXISTS `wc3_race`
-(
-	`player_id` INT(8) NOT NULL DEFAULT 0,
-	`race_id` TINYINT(4) NOT NULL DEFAULT 0,
-	`race_xp` INT(14) NOT NULL DEFAULT 0,
-	PRIMARY KEY ( `player_id`, `race_id` )
-)
-
-CREATE TABLE IF NOT EXISTS `wc3_web_skills`
-(
-	`skill_id` INT(6) NOT NULL DEFAULT 0,
-	`skill_name` VARCHAR(100),
-	PRIMARY KEY( `skill_id` )
-)
-
-CREATE TABLE IF NOT EXISTS `wc3_web_races`
-(
-	`race_id` INT(4) NOT NULL,
-	`race_name` VARCHAR(100),
-	PRIMARY KEY( `race_id` )
-)
-
-*/
-
 // Initiate the connection to the MySQL database
 MYSQLX_Init()
 {
@@ -101,93 +56,170 @@ MYSQLX_Init()
 
 	// Run an upgrade if we need to
 	MYSQLX_Upgrade();
+}
 
-	// Update the primary key if necessary
-	MYSQLX_UpdateKey();
+// Copy over all the old records?  Ugh that would suck...
+MYSQLX_Upgrade()
+{
+
+	return;
 }
 
 
-MYSQLX_Upgrade()
+MYSQLX_FetchUniqueID( id )
 {
-	new szQuery[256];
-	format( szQuery, 255, "SHOW COLUMNS FROM `%s` LIKE 'playerip';", g_DBTableName );
-	
+	// Remember how we got this ID
+	g_iDBPlayerSavedBy[id] = get_pcvar_num( CVAR_wc3_save_by );
+
+	new szKey[66], szKeyName[32];
+	DB_GetKey( id, szKey, 65 );
+	DB_GetKeyName( szKeyName, 31 );
+
+	new szQuery[512];
+	format( szQuery, 511, "SELECT `player_id` FROM `wc3_players` WHERE `%s` = '%s';", szKeyName, szKey );
 	new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
 
 	if ( !SQL_Execute( query ) )
 	{
-		MYSQLX_Error( query, szQuery, 2 );
+		MYSQLX_Error( query, szQuery, 1 );
 
 		return;
 	}
 
-	new iRows = SQL_NumResults( query );
-	SQL_FreeHandle( query );
-	
-	// We have no result from the above query - so we need to add this to the table
-	if ( !iRows )
+	// If no rows we need to insert!
+	if ( SQL_NumResults( query ) == 0 )
 	{
-		format( szQuery, 255, "ALTER TABLE `%s` ADD `playerip` VARCHAR( 20 ) NOT NULL AFTER `playerid`;", g_DBTableName );
-		
-		query = SQL_PrepareQuery( g_DBConn, szQuery );
-
-		if ( !SQL_Execute( query ) )
-		{
-			MYSQLX_Error( query, szQuery, 3 );
-
-			return;
-		}
-
+		// Free the last handle!
 		SQL_FreeHandle( query );
-	}
 
+		new szKey[66], szKeyName[32];
+		DB_GetKey( id, szKey, 65 );
+		DB_GetKeyName( szKeyName, 31 );
 
-	return;
-}
-
-// Function will update the primary key if we need to
-MYSQLX_UpdateKey()
-{
-	new szQuery[256];
-	
-	// Format the query based on what primary key we would like
-	switch ( get_pcvar_num( CVAR_wc3_save_by ) )
-	{
-		case DB_SAVEBY_STEAMID:	format( szQuery, 255, "ALTER TABLE `war3users` DROP PRIMARY KEY, ADD PRIMARY KEY ( `playerid`, `race` );" );
-		case DB_SAVEBY_IP:		format( szQuery, 255, "ALTER TABLE `war3users` DROP PRIMARY KEY, ADD PRIMARY KEY ( `playerip`, `race` );" );
-		case DB_SAVEBY_NAME:	format( szQuery, 255, "ALTER TABLE `war3users` DROP PRIMARY KEY, ADD PRIMARY KEY ( `playername`, `race` );" );
-	}
-	
-	// Then we have a query to execute
-	if ( strlen( szQuery ) > 0 )
-	{
-
+		// Insert this player!
+		new szQuery[512];
+		format( szQuery, 511, "INSERT INTO `wc3_players` ( `player_id` , `%s` , `time` ) VALUES ( NULL , '%s', NOW() );", szKeyName, szKey );
 		new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
 
 		if ( !SQL_Execute( query ) )
 		{
-			MYSQLX_Error( query, szQuery, 4 );
+			MYSQLX_Error( query, szQuery, 1 );
 
 			return;
 		}
 
+		g_iDBPlayerUniqueID[id] = SQL_GetInsertId( query );
+	}
+
+	// They have been here before - store their ID
+	else
+	{
+		g_iDBPlayerUniqueID[id] = SQL_ReadResult( query, 0 );
+	}
+
+	// Free the last handle!
+	SQL_FreeHandle( query );
+}
+
+
+/*MYSQLX_FetchUniqueID( id )
+{
+	client_print( id, print_chat, "[DEBUG] MYSQLX_FetchUniqueID" );
+	server_print( "[DEBUG] MYSQLX_FetchUniqueID %d", id );
+
+	new szKey[66], szKeyName[32];
+	DB_GetKey( id, szKey, 65 );
+	DB_GetKeyName( szKeyName, 31 );
+
+	new parm[1];
+	parm[0] = id;
+
+	new szQuery[512];
+	format( szQuery, 511, "SELECT `player_id` FROM `wc3_players` WHERE `%s` = '%s';", szKeyName, szKey );
+	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_FetchUniqueID", szQuery, parm, 1 );
+}
+
+public _MYSQLX_FetchUniqueID( failstate, Handle:query, error[], errnum, data[], size )
+{
+
+	server_print( "[DEBUG] _MYSQLX_FetchUniqueID %d", data[0] );
+	client_print( data[0], print_chat, "[DEBUG] _MYSQLX_FetchUniqueID" );
+
+	// Error during the query
+	if ( failstate )
+	{
+		new szQuery[256];
+		
+		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 1 );
+	}
+	
+	// Query successful
+	else
+	{
+		// If no rows we need to insert!
+		if ( SQL_NumResults( query ) == 0 )
+		{
+			new szKey[66], szKeyName[32];
+			DB_GetKey( data[0], szKey, 65 );
+			DB_GetKeyName( szKeyName, 31 );
+
+			// Insert this player!
+			new szQuery[512];
+			format( szQuery, 511, "INSERT INTO `wc3_players` ( `player_id` , `%s` , `time` ) VALUES ( NULL , '%s', NOW() );", szKeyName, szKey );
+			SQL_ThreadQuery( g_DBTuple, "_MYSQLX_InsertNewPlayer", szQuery, data, 1 );
+		}
+
+		// They have been here before - store their ID
+		else
+		{
+			client_print( data[0], print_chat, "[DEBUG]-- _MYSQLX_FetchUniqueID" );
+			server_print( "[DEBUG]-- _MYSQLX_FetchUniqueID %d", data[0] );
+
+			g_iDBPlayerUniqueID[data[0]] = SQL_ReadResult( query, 0 );
+		}
+
+		// Free the last handle!
 		SQL_FreeHandle( query );
 	}
 
-	return;
 }
+
+public _MYSQLX_InsertNewPlayer( failstate, Handle:query, error[], errnum, data[], size )
+{
+	client_print( data[0], print_chat, "[DEBUG] _MYSQLX_InsertNewPlayer" );
+	server_print( "[DEBUG] _MYSQLX_InsertNewPlayer %d", data[0] );
+
+	// Error during the query
+	if ( failstate )
+	{
+		new szQuery[256];
+		
+		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 1 );
+	}
+	
+	// Query successful
+	else
+	{
+		g_iDBPlayerUniqueID[data[0]] = SQL_GetInsertId( query );
+
+		SQL_FreeHandle( query );
+	}
+}*/
 
 MYSQLX_Save( id )
 {
-	new szPlayerIP[20], szPlayerName[66], szPlayerID[32];
-	get_user_name(		id, szPlayerName	, 65 );
-	get_user_ip(		id, szPlayerIP		, 19 );
-	get_user_authid(	id, szPlayerID		, 31 );
+	// Prepare for the query (playername is 66 in case all 33 characters are ')
+	new szKey[66];
 
-	// Prepare name for the query (playername is 66 in case all 33 characters are ')
-	DB_FormatString( szPlayerName, 65 );
+	DB_GetKey( id, szKey, 65 );
 
-	new iSkillLevels[4];
+	/*
+	INSERT INTO `wc3_players` ( `player_id` , `player_steamid` , `player_ip` , `player_name` , `time` )
+VALUES (
+NULL , 'STEAM:0:0:1234', '123123', 'aslkjdfhdf', NOW( )
+);*/
+
+/*	new iSkillLevels[4];
 	iSkillLevels[0] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_1 ) );
 	iSkillLevels[1] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_2 ) );
 	iSkillLevels[2] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_3 ) );
@@ -198,7 +230,7 @@ MYSQLX_Save( id )
 	format( szQuery, 511, "REPLACE INTO `%s` (`playerid`, `playerip`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', '%s', %d, %d, %d, %d, %d, %d)", g_DBTableName, szPlayerID, szPlayerIP, szPlayerName, p_data[id][P_XP], p_data[id][P_RACE], iSkillLevels[0], iSkillLevels[1], iSkillLevels[2], iSkillLevels[3] );
 	
 	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save", szQuery )
-
+*/
 	return;
 }
 

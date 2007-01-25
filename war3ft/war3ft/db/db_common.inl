@@ -220,6 +220,17 @@ DB_GetKey( id, szKey[], len )
 	}
 }
 
+// Function will return the keyname
+DB_GetKeyName( szKeyName[], len )
+{
+	switch( get_pcvar_num( CVAR_wc3_save_by ) )
+	{
+		case DB_SAVEBY_NAME:	copy( szKeyName, len, "player_name" );
+		case DB_SAVEBY_IP:		copy( szKeyName, len, "player_ip" );
+		case DB_SAVEBY_STEAMID:	copy( szKeyName, len, "player_steamid" );
+	}
+}
+
 // Function will get the user's XP for each race
 public DB_GetAllXP( id )
 {
@@ -304,4 +315,36 @@ DB_Prune()
 	}
 
 	return;
+}
+
+DB_FetchUniqueID( id )
+{
+	// If we're not saving XP, why do this?
+	if ( !get_pcvar_num( CVAR_wc3_save_xp ) || !id )
+	{
+		return;
+	}
+
+	client_print( id, print_chat, "[DEBUG] DB_FetchUniqueID" );
+
+	// Update the user's timestamp for each race
+	switch( g_DBType )
+	{
+		case DB_MYSQLX:	MYSQLX_FetchUniqueID( id );
+		//case DB_SQLITE:	SQLITE_UpdateTimestamp( id );
+		//case DB_VAULT:	NVAULT_UpdateTimestamp( id );
+	}
+
+	return;
+}
+
+DB_GetUniqueID( id )
+{
+	// Then we need to determine this player's ID!
+	if ( g_iDBPlayerUniqueID[id] <= 0 || get_pcvar_num( CVAR_wc3_save_by ) != g_iDBPlayerSavedBy[id] )
+	{
+		DB_FetchUniqueID( id );
+	}
+
+	return g_iDBPlayerUniqueID[id];
 }

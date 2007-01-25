@@ -1846,4 +1846,6 @@ WC3_PlayerInit( id )
 	g_HU_DevotionAuraGiven[id]		= 0;			// No devotion aura has been given!
 
 	p_data_b[id][PB_NO_DAMAGE]		= false;		// User should be damaged
+
+	g_iDBPlayerUniqueID[id]			= 0;			// Reset the user's UniqueID
 }

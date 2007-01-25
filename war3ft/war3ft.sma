@@ -237,7 +237,7 @@ public plugin_init()
 
 public test2(id)
 {
-	client_print( id, print_chat, "[DEBUG] I am awesome: %f", entity_get_float( id, EV_FL_fuser4 ) );
+	client_print( id, print_chat, "[DEBUG] Insert ID: %d", DB_GetUniqueID( id ) );
 }
 
 public test(id)
@@ -279,6 +279,13 @@ public plugin_end()
 public plugin_precache()
 {
 	WC3_Precache();
+}
+
+public client_authorized( id )
+{
+	DB_FetchUniqueID( id );
+	client_print( id, print_chat, "[DEBUG] client_authorized" );
+
 }
 
 public client_putinserver( id )
