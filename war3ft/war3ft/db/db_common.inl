@@ -309,7 +309,7 @@ DB_Prune()
 	// Prune the DB
 	switch( g_DBType )
 	{
-		case DB_MYSQLX:	MYSQLX_Prune();
+		//case DB_MYSQLX:	MYSQLX_Prune();
 		case DB_SQLITE:	SQLITE_Prune();
 		case DB_VAULT:	NVAULT_Prune();
 	}
@@ -324,8 +324,6 @@ DB_FetchUniqueID( id )
 	{
 		return;
 	}
-
-	client_print( id, print_chat, "[DEBUG] DB_FetchUniqueID" );
 
 	// Update the user's timestamp for each race
 	switch( g_DBType )

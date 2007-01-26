@@ -37,6 +37,10 @@ new g_Vault[MAX_RACES+1];
 new g_iDBPlayerUniqueID[33];
 new g_iDBPlayerSavedBy[33];
 
+// Lets us store what level the skill was the last time we saved (so we don't save more than necessary)
+new g_iDBPlayerSkillStore[33][MAX_SKILLS];
+new g_iDBPlayerXPInfoStore[33][MAX_RACES];
+
 // Function Declarations
 forward DB_DetermineType();
 forward DB_Init();

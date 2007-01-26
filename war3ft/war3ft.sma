@@ -281,13 +281,6 @@ public plugin_precache()
 	WC3_Precache();
 }
 
-public client_authorized( id )
-{
-	DB_FetchUniqueID( id );
-	client_print( id, print_chat, "[DEBUG] client_authorized" );
-
-}
-
 public client_putinserver( id )
 {
 	if ( !WC3_Check() )
@@ -304,6 +297,12 @@ public client_putinserver( id )
 	{
 		client_cmd(id, "reconnect");
 	}
+
+	// Get the user's ID!
+	DB_FetchUniqueID( id );
+
+	// Update the user's timestamps for each race if we're saving XP
+	DB_UpdateTimestamp( id );
 
 	p_data_b[id][PB_ISCONNECTED] = true;
 	
@@ -354,9 +353,6 @@ public client_connect( id )
 	// User should have no items on connect...
 	g_iShopMenuItems[id][0] = -1;
 	g_iShopMenuItems[id][1] = -1;
-
-	// Update the user's timestamps for each race if we're saving XP
-	DB_UpdateTimestamp( id );
 
 	// Automatically set their XP if it's enabled
 	if ( get_pcvar_num( CVAR_wc3_xp_auto_average ) && !get_pcvar_num( CVAR_wc3_save_xp ) )
