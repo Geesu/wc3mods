@@ -32,6 +32,8 @@ new g_DBType = -1;
 
 // NVault
 new g_Vault[MAX_RACES+1];
+new g_VaultPlayerInfo;
+new g_MaxVaultID = 0;
 
 // Player's Unique ID
 new g_iDBPlayerUniqueID[33];

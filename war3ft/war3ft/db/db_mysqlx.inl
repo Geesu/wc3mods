@@ -45,7 +45,6 @@ MYSQLX_Init()
 MYSQLX_CreateTables()
 {
 
-
 	// Create the default table if we need to
 	new szQuery[512];
 	format( szQuery, 511, "CREATE TABLE IF NOT EXISTS `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playerip` VARCHAR(20) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL, PRIMARY KEY (`playerid`, `race`))", g_DBTableName );
@@ -275,8 +274,15 @@ public _MYSQLX_SetData( failstate, Handle:query, error[], errnum, data[], size )
 
 MYSQLX_Close()
 {
-	SQL_FreeHandle( g_DBTuple );
-	SQL_FreeHandle( g_DBConn );
+	if ( g_DBTuple )
+	{
+		SQL_FreeHandle( g_DBTuple );
+	}
+
+	if ( g_DBConn )
+	{
+		SQL_FreeHandle( g_DBConn );
+	}
 }
 
 // The id should be a unique number, so we know what function called it (useful for debugging)

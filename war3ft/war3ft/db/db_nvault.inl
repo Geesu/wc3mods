@@ -30,6 +30,37 @@ NVAULT_Init()
 		}
 	}
 
+	// We will use this to store player info
+	g_VaultPlayerInfo = nvault_open( "war3ft" );
+
+	if ( g_VaultPlayerInfo == -1 )
+	{
+		log_amx( "[NVAULT] Error when opening 'war3ft', defaulting to short-term XP" );
+
+		set_pcvar_num( CVAR_wc3_save_xp, 0 );
+		
+		return;
+	}
+
+	new szMaxID[32], iTimestamp;
+
+	// Check for max player ID
+	if ( nvault_lookup( g_VaultPlayerInfo, "g_MaxVaultID", szMaxID, 31, iTimestamp ) == 0 )
+	{
+		g_MaxVaultID = 0;
+
+		nvault_set( g_VaultPlayerInfo, "g_MaxVaultID", "0" );
+	}
+
+	// We have a value!
+	else
+	{
+		g_MaxVaultID = str_to_num( szMaxID );
+
+		server_print( "g_MaxVaultID: %d", g_MaxVaultID );
+	}
+
+
 	return;
 }
 

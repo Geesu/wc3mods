@@ -121,12 +121,6 @@ public DB_Init()
 public DB_Close()
 {
 	
-	// Then we shouldn't have a connection to close
-	if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
-	{
-		return;
-	}
-
 	// Close our connections
 	switch( g_DBType )
 	{
@@ -141,7 +135,11 @@ public DB_Close()
 // Save the user's XP
 public DB_SaveXP( id )
 {
-	
+	if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
+	{
+		return;
+	}
+
 	if ( id >= TASK_SAVE )
 	{
 		id -= TASK_SAVE;
@@ -152,12 +150,8 @@ public DB_SaveXP( id )
 		return;
 	}
 
-	new iRaceID = p_data[id][P_RACE];
 
-	if ( iRaceID == 0 || !get_pcvar_num( CVAR_wc3_save_xp ) || p_data[id][P_XP] == 0 )
-	{
-		return;
-	}
+	new iRaceID = p_data[id][P_RACE];
 
 	// Allow bot's XP to be saved if we're saving by name
 	if ( is_user_bot( id ) && get_pcvar_num( CVAR_wc3_save_by ) != DB_SAVEBY_NAME )
