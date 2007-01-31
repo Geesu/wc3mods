@@ -786,6 +786,15 @@ public _ITEM_Glove_Give( id )
 		return;
 	}
 
+	// Giving a grenade if they already have one?
+	if ( SHARED_HasGrenade( id ) )
+	{
+		// Try again in a little
+		set_task( get_pcvar_float( CVAR_wc3_glove_timer ), "_ITEM_Glove_Give", TASK_ITEM_GLOVES + index );
+
+		return;
+	}
+
 	// Counter-Strike or Condition Zero grenade
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
