@@ -6,9 +6,9 @@
 
 new const szTablesSQLite[TOTAL_SQLITE_TABLES][] = 
 {
-	"CREATE TABLE `wc3_player` ( `player_id` int(8) unsigned NOT NULL auto_increment, `player_steamid` varchar(25) NOT NULL default '', `player_ip` varchar(20) NOT NULL default '', `player_name` varchar(35) NOT NULL default '', `time` timestamp(14) NOT NULL, PRIMARY KEY  (`player_id`), KEY `player_name` (`player_name`), KEY `player_ip` (`player_ip`), KEY `player_steamid` (`player_steamid`) ) TYPE=MyISAM;",
-	"CREATE TABLE `wc3_player_race` ( `player_id` int(8) unsigned NOT NULL default '0', `race_id` tinyint(4) unsigned NOT NULL default '0', `race_xp` int(8) default NULL, PRIMARY KEY  (`player_id`,`race_id`) ) TYPE=MyISAM;",
-	"CREATE TABLE `wc3_player_skill` ( `player_id` int(8) unsigned NOT NULL default '0', `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_level` tinyint(4) unsigned NOT NULL default '0', PRIMARY KEY  (`player_id`,`skill_id`) ) TYPE=MyISAM;"
+	"CREATE TABLE `wc3_player` ( `player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `player_steamid` varchar(25) NOT NULL default '', `player_ip` varchar(20) NOT NULL default '', `player_name` varchar(35) NOT NULL default '', `time` timestamp(14) NOT NULL );",
+	"CREATE TABLE `wc3_player_race` ( `player_id` int(8) NOT NULL default '0', `race_id` tinyint(4) NOT NULL default '0', `race_xp` int(8) default NULL, PRIMARY KEY  (`player_id`,`race_id`) );",
+	"CREATE TABLE `wc3_player_skill` ( `player_id` int(8) NOT NULL default '0', `skill_id` tinyint(4) NOT NULL default '0', `skill_level` tinyint(4) NOT NULL default '0', PRIMARY KEY  (`player_id`,`skill_id`) );"
 };
 
 new const szTableNames[TOTAL_SQLITE_TABLES][] = 
@@ -21,11 +21,10 @@ new const szTableNames[TOTAL_SQLITE_TABLES][] =
 // Initiate the connection to the SQLite database
 SQLITE_Init()
 {
-	new szDB[] = "addons/amxmodx/data/war3ft.db";
 	new szError[256];
 
 	// Attempt the Connection
-	g_DB = dbi_connect( "", "", "", szDB, szError, 255 );
+	g_DB = dbi_connect( "", "", "", "war3ft", szError, 255 );
 
 	// Verify our database connection has worked
 	if ( !SQLITE_Check_Connection() )
@@ -35,9 +34,7 @@ SQLITE_Init()
 		return;
 	}
 
-	server_print( "%s database connection successful with handle %d", g_szDBType, g_DB );
-
-	get_pcvar_string( CVAR_wc3_sql_tbname, g_DBTableName, 63 );
+	server_print( "[WAR3FT] SQLite database connection successful" );
 
 	// Create all tables if we need to
 	for ( new i = 0; i < TOTAL_SQLITE_TABLES; i++ )
@@ -102,58 +99,6 @@ SQLITE_Init()
 	// Do some synchronous crap
 	format( szQuery, 127, "PRAGMA synchronous = %d", SQLITE_SYNC_OFF );
 	dbi_query( g_DB, szQuery );
-
-	// Run an upgrade if we need to
-	SQLITE_Upgrade();
-
-}
-
-SQLITE_Upgrade()
-{
-
-	new szQuery[256];
-	//format( szQuery, 255, "SELECT sql FROM sqlite_master" );
-	format( szQuery, 255, "SELECT * FROM sqlite_master WHERE type = 'table' AND name = '%s';", g_DBTableName );
-
-	new Result:res = dbi_query( g_DB, szQuery );
-	
-	// We have a result, lets check to see if 'playerip' is in the result
-	new szResultData[512];
-	new bool:bFound = false;
-
-	if ( res && dbi_nextrow( res ) > 0 )
-	{
-		for ( new i = 1; i <= dbi_num_fields( res ); i++ )
-		{
-			dbi_result( res, "sql", szResultData, 511 );
-
-			if ( containi( szResultData, "playerip" ) != -1 )
-			{
-				bFound = true;
-			}
-		}
-	}
-
-	// Free the result
-	dbi_free_result( res );
-
-	
-	// We didn't find the field, we need to add it
-	if ( !bFound )
-	{
-		format( szQuery, 255, "ALTER TABLE `%s` ADD `playerip` VARCHAR( 20 ) NOT NULL DEFAULT '';", g_DBTableName );
-		
-		new Result:ret = dbi_query( g_DB, szQuery );
-
-		if ( ret < RESULT_NONE )
-		{
-			SQLITE_Error( ret, szQuery, 3 );
-
-			return;
-		}
-	}
-
-	return;
 }
 
 // Close the SQLite connection

@@ -19,7 +19,6 @@
 // Variable Declaration
 new g_szDBType[16];
 new g_szDBKey[32];
-new g_DBTableName[64]
 
 // SQLX
 new Handle:g_DBTuple;

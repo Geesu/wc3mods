@@ -96,7 +96,6 @@ MYSQLX_Init()
 	get_pcvar_string( CVAR_wc3_sql_dbuser	, szUser		, 31	);
 	get_pcvar_string( CVAR_wc3_sql_dbpass	, szPass		, 31	);
 	get_pcvar_string( CVAR_wc3_sql_dbname	, szDB			, 127	);
-	get_pcvar_string( CVAR_wc3_sql_tbname	, g_DBTableName	, 63	);
 
 	// Set up the tuple that will be used for threading
 	g_DBTuple = SQL_MakeDbTuple( szHost, szUser, szPass, szDB )

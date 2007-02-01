@@ -45,7 +45,6 @@ new CVAR_wc3_save_by;
 new CVAR_wc3_save_xp_db;
 
 // Database CVARs
-new CVAR_wc3_sql_tbname;
 new CVAR_wc3_sql_dbhost;
 new CVAR_wc3_sql_dbuser;
 new CVAR_wc3_sql_dbpass;
@@ -160,7 +159,6 @@ public CVAR_Init()
 
 	// Database CVARs
 
-	CVAR_wc3_sql_tbname				= register_cvar( "wc3_sql_tbname"			, "war3users"					);
 	CVAR_wc3_sql_dbhost				= register_cvar( "wc3_sql_dbhost"			, "127.0.0.1"					);
 	CVAR_wc3_sql_dbuser				= register_cvar( "wc3_sql_dbuser"			, "root"						);
 	CVAR_wc3_sql_dbpass				= register_cvar( "wc3_sql_dbpass"			, ""							);
