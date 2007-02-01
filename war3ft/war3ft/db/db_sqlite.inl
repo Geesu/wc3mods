@@ -2,6 +2,22 @@
 *	SQLite
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
+#define TOTAL_SQLITE_TABLES		3
+
+new const szTablesSQLite[TOTAL_SQLITE_TABLES][] = 
+{
+	"CREATE TABLE `wc3_player` ( `player_id` int(8) unsigned NOT NULL auto_increment, `player_steamid` varchar(25) NOT NULL default '', `player_ip` varchar(20) NOT NULL default '', `player_name` varchar(35) NOT NULL default '', `time` timestamp(14) NOT NULL, PRIMARY KEY  (`player_id`), KEY `player_name` (`player_name`), KEY `player_ip` (`player_ip`), KEY `player_steamid` (`player_steamid`) ) TYPE=MyISAM;",
+	"CREATE TABLE `wc3_player_race` ( `player_id` int(8) unsigned NOT NULL default '0', `race_id` tinyint(4) unsigned NOT NULL default '0', `race_xp` int(8) default NULL, PRIMARY KEY  (`player_id`,`race_id`) ) TYPE=MyISAM;",
+	"CREATE TABLE `wc3_player_skill` ( `player_id` int(8) unsigned NOT NULL default '0', `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_level` tinyint(4) unsigned NOT NULL default '0', PRIMARY KEY  (`player_id`,`skill_id`) ) TYPE=MyISAM;"
+};
+
+new const szTableNames[TOTAL_SQLITE_TABLES][] = 
+{
+	"wc3_player",
+	"wc3_player_race",
+	"wc3_player_skill"
+};
+
 // Initiate the connection to the SQLite database
 SQLITE_Init()
 {
@@ -23,20 +39,20 @@ SQLITE_Init()
 
 	get_pcvar_string( CVAR_wc3_sql_tbname, g_DBTableName, 63 );
 
-	new szQuery[512];
-
-	// Make sure the SQLite table exists, if not, create it
-	if ( !sqlite_table_exists( g_DB, g_DBTableName ) )
+	// Create all tables if we need to
+	for ( new i = 0; i < TOTAL_SQLITE_TABLES; i++ )
 	{
-		format( szQuery, 511, "CREATE TABLE `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playerip` VARCHAR(20) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`playerid`, `race`))"
-			, g_DBTableName );
-		new Result:ret = dbi_query( g_DB, szQuery );
-
-		if ( ret < RESULT_NONE )
+		// Then create it!
+		if ( !sqlite_table_exists( g_DB, szTableNames[i] ) )
 		{
-			SQLITE_Error( ret, szQuery, 1 );
+			new Result:ret = dbi_query( g_DB, szTablesSQLite[i] );
 
-			return;
+			if ( ret < RESULT_NONE )
+			{
+				SQLITE_Error( ret, szTablesSQLite[i], 1 );
+
+				return;
+			}
 		}
 	}
 
@@ -52,8 +68,8 @@ SQLITE_Init()
 		PRAGMA commands don't return anything so no need to check the result of the query
 	*/	
 
-	new szIntegrityCheck[64];
-	format(szQuery, 511, "PRAGMA integrity_check");
+	new szIntegrityCheck[64], szQuery[128];
+	format(szQuery, 127, "PRAGMA integrity_check");
 	new Result:res = dbi_query( g_DB, szQuery );
 	
 	// Check for an error
@@ -84,7 +100,7 @@ SQLITE_Init()
 	}
 		
 	// Do some synchronous crap
-	format( szQuery, 511, "PRAGMA synchronous = %d", SQLITE_SYNC_OFF );
+	format( szQuery, 127, "PRAGMA synchronous = %d", SQLITE_SYNC_OFF );
 	dbi_query( g_DB, szQuery );
 
 	// Run an upgrade if we need to

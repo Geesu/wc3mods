@@ -41,7 +41,7 @@ new const WC3DATE[] =		__DATE__
 #pragma reqlib		engine
 #pragma reqlib		fun
 #pragma reqlib		fakemeta
-#pragma reqlib		nvault
+#pragma reqlib		sqlite
 #pragma reqlib		cstrike
 #pragma reqlib		dodfun
 
