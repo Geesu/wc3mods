@@ -12,3 +12,4 @@ forward SQLITE_Check_Connection();
 forward SQLITE_Error( Result:res, query[], id );
 forward SQLITE_Prune();
 forward SQLITE_UpdateTimestamp( id );
+forward SQLITE_FetchUniqueID( id );

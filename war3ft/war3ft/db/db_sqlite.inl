@@ -6,7 +6,7 @@
 
 new const szTablesSQLite[TOTAL_SQLITE_TABLES][] = 
 {
-	"CREATE TABLE `wc3_player` ( `player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `player_steamid` varchar(25) NOT NULL default '', `player_ip` varchar(20) NOT NULL default '', `player_name` varchar(35) NOT NULL default '', `time` timestamp(14) NOT NULL );",
+	"CREATE TABLE `wc3_player` ( `player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `player_steamid` varchar(25) NOT NULL default '', `player_ip` varchar(20) NOT NULL default '', `player_name` varchar(35) NOT NULL default '', `time` timestamp(14) NOT NULL DEFAULT CURRENT_TIMESTAMP );",
 	"CREATE TABLE `wc3_player_race` ( `player_id` int(8) NOT NULL default '0', `race_id` tinyint(4) NOT NULL default '0', `race_xp` int(8) default NULL, PRIMARY KEY  (`player_id`,`race_id`) );",
 	"CREATE TABLE `wc3_player_skill` ( `player_id` int(8) NOT NULL default '0', `skill_id` tinyint(4) NOT NULL default '0', `skill_level` tinyint(4) NOT NULL default '0', PRIMARY KEY  (`player_id`,`skill_id`) );"
 };
@@ -110,6 +110,76 @@ SQLITE_Close()
 	}
 }
 
+SQLITE_FetchUniqueID( id )
+{
+	// Verify we have a database connection
+	if ( !SQLITE_Check_Connection() )
+	{
+		return;
+	}
+
+	// Remember how we got this ID
+	g_iDBPlayerSavedBy[id] = get_pcvar_num( CVAR_wc3_save_by );
+
+	new szKey[66], szKeyName[32];
+	DB_GetKey( id, szKey, 65 );
+	DB_GetKeyName( szKeyName, 31 );
+
+	new szQuery[512];
+	format( szQuery, 511, "SELECT `player_id` FROM `wc3_player` WHERE `%s` = '%s';", szKeyName, szKey );
+	new Result:res = dbi_query( g_DB, szQuery );
+	
+	// Verify we have a result
+	if ( res < RESULT_NONE )
+	{
+		SQLITE_Error( res, szQuery, 3 );
+
+		return;
+	}
+
+	// If no rows we need to insert!
+	if ( res == RESULT_NONE )
+	{
+		// Free the last handle!
+		dbi_free_result( res );
+
+		// Insert this player!
+		format( szQuery, 511, "INSERT INTO `wc3_player` ( `player_id` , `%s` , `time` ) VALUES ( NULL , '%s', julianday('now') );", szKeyName, szKey );
+		res = dbi_query( g_DB, szQuery );
+
+		// Verify we have a result
+		if ( res < RESULT_NONE )
+		{
+			SQLITE_Error( res, szQuery, 4 );
+
+			return;
+		}
+
+		// Free the last handle!
+		dbi_free_result( res );
+		
+		// Now we need to get the insert ID
+		format( szQuery, 511, "SELECT `player_id` FROM `wc3_player` WHERE `%s` = '%s';", szKeyName, szKey );
+		res = dbi_query( g_DB, szQuery );
+
+		// Verify we have a result
+		if ( res < RESULT_NONE )
+		{
+			SQLITE_Error( res, szQuery, 5 );
+
+			return;
+		}
+	}
+
+	new szID[12];
+	dbi_result( res, "player_id", szID, 11 );
+
+	g_iDBPlayerUniqueID[id] = str_to_num( szID );
+
+	// Free the last handle!
+	dbi_free_result( res );
+}
+
 SQLITE_Save( id )
 {
 	// Verify we have a database connection
@@ -117,33 +187,43 @@ SQLITE_Save( id )
 	{
 		return;
 	}
-	
-	new szPlayerIP[20], szPlayerName[66], szPlayerID[32];
-	get_user_name(		id, szPlayerName	, 65 );
-	get_user_ip(		id, szPlayerIP		, 19 );
-	get_user_authid(	id, szPlayerID		, 31 );
 
-	// Prepare name for the query (playername is 66 in case all 33 characters are ')
-	DB_FormatString( szPlayerName, 65 );
+	new iUniqueID = DB_GetUniqueID( id );
 
-	new iSkillLevels[4];
-	iSkillLevels[0] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_1 ) );
-	iSkillLevels[1] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_2 ) );
-	iSkillLevels[2] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_3 ) );
-	iSkillLevels[3] = SM_GetSkillLevel( id, SM_GetSkillByPos( id, SKILL_POS_4 ) );
-
-	// Save the data
+	// Save the user's XP!
 	new szQuery[512];
-	format( szQuery, 511, "REPLACE INTO `%s` (`playerid`, `playerip`, `playername`, `xp`, `race`, `skill1`, `skill2`, `skill3`, `skill4`) VALUES ('%s', '%s', '%s', %d, %d, %d, %d, %d, %d)", g_DBTableName, szPlayerID, szPlayerIP, szPlayerName, p_data[id][P_XP], p_data[id][P_RACE], iSkillLevels[0], iSkillLevels[1], iSkillLevels[2], iSkillLevels[3] );
-
+	format( szQuery, 511, "REPLACE INTO `wc3_player_race` ( `player_id` , `race_id` , `race_xp` ) VALUES ( '%d', '%d', '%d');", iUniqueID, p_data[id][P_RACE], p_data[id][P_XP] );
 	new Result:res = dbi_query( g_DB, szQuery );
-	
+
 	// Verify we have a result
 	if ( res < RESULT_NONE )
 	{
-		SQLITE_Error( res, szQuery, 4 );
+		SQLITE_Error( res, szQuery, 6 );
 
 		return;
+	}
+
+	static iCurrentLevel;
+
+	// Now we need to save the skill levels!
+	for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
+	{
+		iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
+
+		// Then we need to save this!
+		if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
+		{
+			format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
+			res = dbi_query( g_DB, szQuery );
+
+			// Verify we have a result
+			if ( res < RESULT_NONE )
+			{
+				SQLITE_Error( res, szQuery, 7 );
+
+				return;
+			}
+		}
 	}
 
 	return;
@@ -157,28 +237,32 @@ SQLITE_GetAllXP( id )
 		return;
 	}
 
-	new szKey[66];
-	DB_GetKey( id, szKey, 65 );
-
 	new szQuery[256];
-	format(szQuery, 255, "SELECT `xp`, `race` FROM `%s` WHERE (`%s` = '%s')", g_DBTableName, g_szDBKey, szKey );
+	format(szQuery, 255, "SELECT `race_id`, `race_xp` FROM `wc3_player_race` WHERE ( `player_id` = '%d' );", DB_GetUniqueID( id ) );
 	
 	new Result:res = dbi_query( g_DB, szQuery );
-	
-	// Make sure we have a result
+
+	// Verify we have a result
 	if ( res < RESULT_NONE )
 	{
-		SQLITE_Error( res, szQuery, 5 );
-		
+		SQLITE_Error( res, szQuery, 8 );
+
 		return;
 	}
 
+	// Set last saved XP to 0
+	for ( new i = 0; i < MAX_RACES; i++ )
+	{
+		g_iDBPlayerXPInfoStore[id][i] = 0;
+	}
+
+	new iXP, iRace, szXP[8], szRace[2];
+
 	// Loop through all of the records to find the XP data
-	new szXP[8], szRace[2], iXP, iRace, iRaceXP[MAX_RACES] = {0};
 	while ( res && dbi_nextrow( res ) > 0 )
 	{
-		dbi_result( res, "xp", szXP, 7 );
-		dbi_result( res, "race", szRace, 1 );
+		dbi_result( res, "race_xp", szXP, 7 );
+		dbi_result( res, "race_id", szRace, 1 );
 
 		iXP		= str_to_num( szXP		);
 		iRace	= str_to_num( szRace	);
@@ -186,15 +270,15 @@ SQLITE_GetAllXP( id )
 		// Save the user's XP in an array
 		if ( iRace > 0 && iRace < MAX_RACES + 1 )
 		{
-			iRaceXP[iRace-1] = iXP;
+			g_iDBPlayerXPInfoStore[id][iRace-1] = iXP;
 		}
 	}
-	
-	// Free the result set
+
+	// Free the handle
 	dbi_free_result( res );
 
 	// Call the function that will display the "select a race" menu
-	WC3_ChangeRaceShowMenu( id, iRaceXP );
+	WC3_ChangeRaceShowMenu( id, g_iDBPlayerXPInfoStore[id] );
 
 	return;
 }
@@ -207,60 +291,40 @@ SQLITE_SetData( id )
 		return;
 	}
 
-	new szKey[66];
-	DB_GetKey( id, szKey, 65 );
-
 	new szQuery[256];
-	format( szQuery, 255, "SELECT `xp`, `skill1`, `skill2`, `skill3`, `skill4` FROM `%s` WHERE (`%s` = '%s' AND `race` = %d)", g_DBTableName, g_szDBKey, szKey );
-
+	format( szQuery, 255, "SELECT `skill_id`, `skill_level` FROM `wc3_player_skill` WHERE `player_id` = '%d';", DB_GetUniqueID( id ) );
 	new Result:res = dbi_query( g_DB, szQuery );
 	
 	// Verify we have a result
 	if ( res < RESULT_NONE )
 	{
-		SQLITE_Error( res, szQuery, 6 );
+		SQLITE_Error( res, szQuery, 9 );
 
 		return;
 	}
-	
-	new iSkillIDs[4];
-	iSkillIDs[0] = SM_GetSkillByPos( id, SKILL_POS_1 );
-	iSkillIDs[1] = SM_GetSkillByPos( id, SKILL_POS_2 );
-	iSkillIDs[2] = SM_GetSkillByPos( id, SKILL_POS_3 );
-	iSkillIDs[3] = SM_GetSkillByPos( id, SKILL_POS_4 );
 
-	// Then we have data in the database
-	if ( res && dbi_nextrow( res ) > 0 )
+	// Set the user's XP!
+	p_data[id][P_XP] = g_iDBPlayerXPInfoStore[id][p_data[id][P_RACE]-1];
+
+	// Reset all skill data to 0!
+	for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
 	{
-		new szXP[8], szSkill1[2], szSkill2[2], szSkill3[2], szSkill4[2];
-
-		dbi_result( res, "xp"		, szXP		, 7 );
-		dbi_result( res, "skill1"	, szSkill1	, 1 );
-		dbi_result( res, "skill2"	, szSkill2	, 1 );
-		dbi_result( res, "skill3"	, szSkill3	, 1 );
-		dbi_result( res, "skill4"	, szSkill4	, 1 );			
-
-		p_data[id][P_XP]		= str_to_num( szXP		);
-		SM_SetSkillLevel( id, iSkillIDs[0], str_to_num( szSkill1 ) );
-		SM_SetSkillLevel( id, iSkillIDs[1], str_to_num( szSkill2 ) );
-		SM_SetSkillLevel( id, iSkillIDs[2], str_to_num( szSkill3 ) );
-		SM_SetSkillLevel( id, iSkillIDs[3], str_to_num( szSkill4 ) );
+		SM_SetSkillLevel( id, iSkillID, 0 );
 	}
 
-	// The user has no record, start them at 0
-	else
+	new szSkillID[4], szSkillLevel[4];
+	// While we have a result!
+	while ( res && dbi_nextrow( res ) > 0 )
 	{
-		p_data[id][P_XP]		= 0;
-		SM_SetSkillLevel( id, iSkillIDs[0], 0 );
-		SM_SetSkillLevel( id, iSkillIDs[1], 0 );
-		SM_SetSkillLevel( id, iSkillIDs[2], 0 );
-		SM_SetSkillLevel( id, iSkillIDs[3], 0 );
+		dbi_result( res, "skill_id"		, szSkillID		, 3 );
+		dbi_result( res, "skill_level"	, szSkillLevel	, 3 );
 
+		SM_SetSkillLevel( id, str_to_num( szSkillID ), str_to_num( szSkillLevel ) );
 	}
-	
-	// Free the result
+
+	// Free the handle
 	dbi_free_result( res );
-
+	
 	// Set the race up
 	WC3_SetRaceUp( id );
 
@@ -297,34 +361,45 @@ SQLITE_Error( Result:res, query[], id )
 	}
 }
 
+#define SQLITE_TOTAL_PRUNE_QUERY 3
+new const szPruneQuery[SQLITE_TOTAL_PRUNE_QUERY][] = 
+{
+	"DELETE FROM wc3_player_race  WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( (julianday(`time`) + %d) < julianday('now') ) );",
+	"DELETE FROM wc3_player_skill WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( (julianday(`time`) + %d) < julianday('now') ) );",
+	"DELETE FROM wc3_player WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( (julianday(`time`) + %d) < julianday('now') ) );"
+};
+
 SQLITE_Prune()
 {
 	new szQuery[256];
-	format( szQuery, 255, "DELETE FROM `%s` WHERE ((julianday(`time`) + %d) < julianday('now'))", g_DBTableName, get_pcvar_num( CVAR_wc3_days_before_delete ) );
 
-	new Result:ret = dbi_query( g_DB, szQuery );
-
-	if ( ret < RESULT_NONE )
+	// Need to run all 3 queries
+	for ( new i = 0; i < SQLITE_TOTAL_PRUNE_QUERY; i++ )
 	{
-		SQLITE_Error( ret, szQuery, 7 );
+		formatex( szQuery, 255, szPruneQuery[i], get_pcvar_num( CVAR_wc3_days_before_delete ) );
+		server_print( szQuery );
 
-		return;
+		new Result:res = dbi_query( g_DB, szQuery );
+
+		if ( res < RESULT_NONE )
+		{
+			SQLITE_Error( res, szQuery, 10 );
+
+			return;
+		}
 	}
 }
 
 SQLITE_UpdateTimestamp( id )
 {
-	new szKey[66];
-	DB_GetKey( id, szKey, 65 );
-
 	new szQuery[256];
-	format( szQuery, 255, "UPDATE `%s` SET time = NOW() WHERE (`%s` = '%s')", g_DBTableName, g_szDBKey, szKey );
+	format( szQuery, 255, "UPDATE `wc3_player` SET time = julianday('now') WHERE ( `player_id` = '%d' )", g_iDBPlayerUniqueID[id] );
 
 	new Result:ret = dbi_query( g_DB, szQuery );
 
 	if ( ret < RESULT_NONE )
 	{
-		SQLITE_Error( ret, szQuery, 8 );
+		SQLITE_Error( ret, szQuery, 11 );
 
 		return;
 	}

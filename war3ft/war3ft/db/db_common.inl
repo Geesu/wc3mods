@@ -287,7 +287,7 @@ DB_Prune()
 	return;
 }
 
-DB_FetchUniqueID( id )
+public DB_FetchUniqueID( id )
 {
 	// If we're not saving XP, why do this?
 	if ( !get_pcvar_num( CVAR_wc3_save_xp ) || !id )
@@ -299,7 +299,14 @@ DB_FetchUniqueID( id )
 	switch( g_DBType )
 	{
 		case DB_MYSQLX:	MYSQLX_FetchUniqueID( id );
-		//case DB_SQLITE:	SQLITE_UpdateTimestamp( id );
+		case DB_SQLITE:	SQLITE_FetchUniqueID( id );
+	}
+
+	// Nothing was found - try again in a bit
+	if ( g_iDBPlayerUniqueID[id] == 0 )
+	{
+		set_task( 1.0, "DB_FetchUniqueID", id );
+
 	}
 
 	return;

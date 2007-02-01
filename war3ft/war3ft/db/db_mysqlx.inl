@@ -174,10 +174,6 @@ MYSQLX_FetchUniqueID( id )
 		// Free the last handle!
 		SQL_FreeHandle( query );
 
-		new szKey[66], szKeyName[32];
-		DB_GetKey( id, szKey, 65 );
-		DB_GetKeyName( szKeyName, 31 );
-
 		// Insert this player!
 		new szQuery[512];
 		format( szQuery, 511, "INSERT INTO `wc3_player` ( `player_id` , `%s` , `time` ) VALUES ( NULL , '%s', NOW() );", szKeyName, szKey );
@@ -212,7 +208,7 @@ MYSQLX_Save( id )
 	format( szQuery, 511, "REPLACE INTO `wc3_player_race` ( `player_id` , `race_id` , `race_xp` ) VALUES ( '%d', '%d', '%d');", iUniqueID, p_data[id][P_RACE], p_data[id][P_XP] );
 	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save", szQuery );
 
-	new iCurrentLevel;
+	static iCurrentLevel;
 
 	// Now we need to save the skill levels!
 	for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
