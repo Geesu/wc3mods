@@ -13,9 +13,8 @@
 #define DB_SAVEBY_NAME				2
 
 // Used with g_DBType
-#define DB_VAULT			0
+#define DB_SQLITE			0
 #define DB_MYSQLX			1
-#define DB_SQLITE			2
 
 // Variable Declaration
 new g_szDBType[16];
@@ -29,11 +28,6 @@ new Handle:g_DBConn;
 // SQLite
 new Sql:g_DB;
 new g_DBType = -1;
-
-// NVault
-new g_Vault[MAX_RACES+1];
-new g_VaultPlayerInfo;
-new g_MaxVaultID = 0;
 
 // Player's Unique ID
 new g_iDBPlayerUniqueID[33];

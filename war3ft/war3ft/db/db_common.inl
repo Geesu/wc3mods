@@ -7,17 +7,35 @@ public DB_DetermineType()
 
 	new iDatabaseType = get_pcvar_num( CVAR_wc3_save_xp_db );
 
-	// See if we can save with SQLite
-	if ( iDatabaseType == DB_SQLITE )
+	// See if we can save with MySQL
+	if ( iDatabaseType == DB_MYSQLX )
+	{
+	
+		// Then we can't save using mysql
+		if ( !LibraryExists( "sqlx", LibType_Class ) )
+		{
+			log_amx( "[WARNING] Unable to saving using MySQL, please enable the mysql module" );
+			log_amx( "[WARNING] Saving (possibly) will be done by using SQLite" );
+
+			set_pcvar_num( CVAR_wc3_save_xp_db, 0 );
+		}
+
+		// OK we can save!
+		else
+		{
+			g_DBType = DB_MYSQLX;
+			copy( g_szDBType, 15, "MySQLX" );
+		}
+	}
+
+	// See if we can save with SQLite if MySQLX didn't work
+	if ( g_DBType == -1 )
 	{
 		
 		// Then we can't save w/this!!!
 		if ( !LibraryExists( "dbi", LibType_Class )  )
 		{
 			log_amx( "[WARNING] Unable to saving using SQLite, please enable the sqlite module" );
-			log_amx( "[WARNING] Saving will be done using NVault" );
-
-			set_pcvar_num( CVAR_wc3_save_xp_db, 0 );
 		}
 		
 		// OK we can save
@@ -34,57 +52,22 @@ public DB_DetermineType()
 				copy( g_szDBType, 15, "SQLite" );
 			}
 
-			// Using an unsupported DB Type - lets default to vault
+			// Using an unsupported DB Type - we can't save XP!
 			else
 			{
 				log_amx( "[WARNING] Unsupported database type loaded: %s, please enable the sqlite module", szDBIType );
-				log_amx( "[WARNING] Saving will be done using NVault" );
 
-				set_pcvar_num( CVAR_wc3_save_xp_db, 0 );
+				set_pcvar_num( CVAR_wc3_save_xp, 0 );
 			}
 		}
 	}
-
-	// See if we can save with MySQL
-	if ( iDatabaseType == DB_MYSQLX )
-	{
 	
-		// Then we can't save using mysql
-		if ( !LibraryExists( "sqlx", LibType_Class ) )
-		{
-			log_amx( "[WARNING] Unable to saving using MySQL, please enable the mysql module" );
-			log_amx( "[WARNING] Saving will be done using NVault" );
-
-			set_pcvar_num( CVAR_wc3_save_xp_db, 0 );
-		}
-
-		// OK we can save!
-		else
-		{
-			g_DBType = DB_MYSQLX;
-			copy( g_szDBType, 15, "MySQLX" );
-		}
-	}
-	
-	// Then we don't have a DB Type yet set up for saving! Use vault?
+	// Then we don't have a DB Type yet set up for saving! Disable saving
 	if ( g_DBType == -1 )
 	{
+		set_pcvar_num( CVAR_wc3_save_xp, 0 );
 
-		// We can use the nvault if it's loaded
-		if ( LibraryExists( "nvault" , LibType_Library ) )
-		{
-			g_DBType = DB_VAULT;
-		}
-
-		// Otherwise we aren't going to be saving :/
-		else
-		{
-			set_pcvar_num( CVAR_wc3_save_xp, 0 );
-
-			log_amx( "Unable to save XP, please enable nvault or a sql module." );
-
-			return;
-		}
+		log_amx( "[ERROR] Unable to save XP, please enable SQLite or MySQL X (mysql requires additional configuration)" );
 	}
 
 	return;
@@ -111,7 +94,6 @@ public DB_Init()
 	{
 		case DB_MYSQLX:	MYSQLX_Init();
 		case DB_SQLITE:	SQLITE_Init();
-		case DB_VAULT:	NVAULT_Init();
 	}
 
 	return;
@@ -126,7 +108,6 @@ public DB_Close()
 	{
 		case DB_MYSQLX:	MYSQLX_Close();
 		case DB_SQLITE:	SQLITE_Close();
-		case DB_VAULT:	NVAULT_Close();
 	}
 
 	return;
@@ -170,7 +151,6 @@ public DB_SaveXP( id )
 	{
 		case DB_MYSQLX:	MYSQLX_Save( id );
 		case DB_SQLITE:	SQLITE_Save( id );
-		case DB_VAULT:	NVAULT_Save( id );
 	}
 
 	return;
@@ -239,7 +219,6 @@ public DB_GetAllXP( id )
 	{
 		case DB_MYSQLX:	MYSQLX_GetAllXP( id );
 		case DB_SQLITE:	SQLITE_GetAllXP( id );
-		case DB_VAULT:	NVAULT_GetAllXP( id );
 	}
 
 	return;
@@ -259,7 +238,6 @@ public DB_SetDataForRace( id )
 	{
 		case DB_MYSQLX:	MYSQLX_SetData( id );
 		case DB_SQLITE:	SQLITE_SetData( id );
-		case DB_VAULT:	NVAULT_SetData( id );
 	}
 
 	return;
@@ -285,7 +263,6 @@ DB_UpdateTimestamp( id )
 	{
 		case DB_MYSQLX:	MYSQLX_UpdateTimestamp( id );
 		case DB_SQLITE:	SQLITE_UpdateTimestamp( id );
-		case DB_VAULT:	NVAULT_UpdateTimestamp( id );
 	}
 
 	return;
@@ -305,7 +282,6 @@ DB_Prune()
 	{
 		//case DB_MYSQLX:	MYSQLX_Prune();
 		case DB_SQLITE:	SQLITE_Prune();
-		case DB_VAULT:	NVAULT_Prune();
 	}
 
 	return;
@@ -324,7 +300,6 @@ DB_FetchUniqueID( id )
 	{
 		case DB_MYSQLX:	MYSQLX_FetchUniqueID( id );
 		//case DB_SQLITE:	SQLITE_UpdateTimestamp( id );
-		//case DB_VAULT:	NVAULT_UpdateTimestamp( id );
 	}
 
 	return;

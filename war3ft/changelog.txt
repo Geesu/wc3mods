@@ -16,6 +16,7 @@ v3.0 RC6
  - Bug Fix: Changerace menu not appearing when joining server on listen server (thanks DesasterUK)
  - Change: Respawn time from 1.5 seconds to 0.2 (by ability or item)
  - Change: Bots skin will change now if they mole or buy chameleon
+ - Removed: NVault support - default is now SQLite
  - Re-write: How ultimate icons are handled
 
  - To Test: crypt lord auto-find-new-target
