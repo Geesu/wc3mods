@@ -99,6 +99,8 @@ SQLITE_Init()
 	// Do some synchronous crap
 	format( szQuery, 127, "PRAGMA synchronous = %d", SQLITE_SYNC_OFF );
 	dbi_query( g_DB, szQuery );
+
+	bDBAvailable = true;
 }
 
 // Close the SQLite connection
@@ -362,23 +364,22 @@ SQLITE_Error( Result:res, query[], id )
 }
 
 #define SQLITE_TOTAL_PRUNE_QUERY 3
-new const szPruneQuery[SQLITE_TOTAL_PRUNE_QUERY][] = 
-{
-	"DELETE FROM wc3_player_race  WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( (julianday(`time`) + %d) < julianday('now') ) );",
-	"DELETE FROM wc3_player_skill WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( (julianday(`time`) + %d) < julianday('now') ) );",
-	"DELETE FROM wc3_player WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( (julianday(`time`) + %d) < julianday('now') ) );"
-};
 
 SQLITE_Prune()
 {
+	new const szPruneQuery[SQLITE_TOTAL_PRUNE_QUERY][] = 
+	{
+		"DELETE FROM wc3_player_race  WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( (julianday(`time`) + %d) < julianday('now') ) );",
+		"DELETE FROM wc3_player_skill WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( (julianday(`time`) + %d) < julianday('now') ) );",
+		"DELETE FROM wc3_player WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( (julianday(`time`) + %d) < julianday('now') ) );"
+	};
+
 	new szQuery[256];
 
 	// Need to run all 3 queries
 	for ( new i = 0; i < SQLITE_TOTAL_PRUNE_QUERY; i++ )
 	{
 		formatex( szQuery, 255, szPruneQuery[i], get_pcvar_num( CVAR_wc3_days_before_delete ) );
-		server_print( szQuery );
-
 		new Result:res = dbi_query( g_DB, szQuery );
 
 		if ( res < RESULT_NONE )

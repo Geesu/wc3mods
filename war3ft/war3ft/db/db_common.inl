@@ -272,7 +272,7 @@ DB_Prune()
 {
 	
 	// If we're not saving or pruning is disabled, we don't want to be here
-	if ( !get_pcvar_num( CVAR_wc3_save_pruning ) || !get_pcvar_num( CVAR_wc3_save_xp ) )
+	if ( !get_pcvar_num( CVAR_wc3_save_pruning ) || !get_pcvar_num( CVAR_wc3_save_xp ) || !get_pcvar_num( CVAR_wc3_days_before_delete ) )
 	{
 		return;
 	}
@@ -280,7 +280,7 @@ DB_Prune()
 	// Prune the DB
 	switch( g_DBType )
 	{
-		//case DB_MYSQLX:	MYSQLX_Prune();
+		case DB_MYSQLX:	MYSQLX_Prune();
 		case DB_SQLITE:	SQLITE_Prune();
 	}
 

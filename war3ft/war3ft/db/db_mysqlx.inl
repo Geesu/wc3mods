@@ -6,11 +6,11 @@
 
 new const szTables[TOTAL_TABLES][] = 
 {
-	"CREATE TABLE IF NOT EXISTS `wc3_player` ( `player_id` int(8) unsigned NOT NULL auto_increment, `player_steamid` varchar(25) NOT NULL default '', `player_ip` varchar(20) NOT NULL default '', `player_name` varchar(35) NOT NULL default '', `time` timestamp(14) NOT NULL, PRIMARY KEY  (`player_id`), KEY `player_name` (`player_name`), KEY `player_ip` (`player_ip`), KEY `player_steamid` (`player_steamid`) ) TYPE=MyISAM;",
-	"CREATE TABLE IF NOT EXISTS `wc3_player_race` ( `player_id` int(8) unsigned NOT NULL default '0', `race_id` tinyint(4) unsigned NOT NULL default '0', `race_xp` int(8) default NULL, PRIMARY KEY  (`player_id`,`race_id`) ) TYPE=MyISAM;",
-	"CREATE TABLE IF NOT EXISTS `wc3_player_skill` ( `player_id` int(8) unsigned NOT NULL default '0', `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_level` tinyint(4) unsigned NOT NULL default '0', PRIMARY KEY  (`player_id`,`skill_id`) ) TYPE=MyISAM;",
-	"CREATE TABLE IF NOT EXISTS `wc3_web_race` ( `race_id` tinyint(4) unsigned NOT NULL default '0', `race_lang` char(2) NOT NULL default '', `race_name` varchar(100) default NULL, PRIMARY KEY  (`race_id`,`race_lang`) ) TYPE=MyISAM;",
-	"CREATE TABLE IF NOT EXISTS `wc3_web_skill` ( `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_lang` char(2) NOT NULL default '', `skill_name` varchar(100) default NULL, PRIMARY KEY  (`skill_id`,`skill_lang`) ) TYPE=MyISAM;"
+	"CREATE TABLE IF NOT EXISTS `wc3_player` ( `player_id` int(8) unsigned NOT NULL auto_increment, `player_steamid` varchar(25) NOT NULL default '', `player_ip` varchar(20) NOT NULL default '', `player_name` varchar(35) NOT NULL default '', `time` timestamp(14) NOT NULL, PRIMARY KEY  (`player_id`), KEY `player_name` (`player_name`), KEY `player_ip` (`player_ip`), KEY `player_steamid` (`player_steamid`) );",
+	"CREATE TABLE IF NOT EXISTS `wc3_player_race` ( `player_id` int(8) unsigned NOT NULL default '0', `race_id` tinyint(4) unsigned NOT NULL default '0', `race_xp` int(8) default NULL, PRIMARY KEY  (`player_id`,`race_id`) );",
+	"CREATE TABLE IF NOT EXISTS `wc3_player_skill` ( `player_id` int(8) unsigned NOT NULL default '0', `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_level` tinyint(4) unsigned NOT NULL default '0', PRIMARY KEY  (`player_id`,`skill_id`) );",
+	"CREATE TABLE IF NOT EXISTS `wc3_web_race` ( `race_id` tinyint(4) unsigned NOT NULL default '0', `race_lang` char(2) NOT NULL default '', `race_name` varchar(100) default NULL, PRIMARY KEY  (`race_id`,`race_lang`) );",
+	"CREATE TABLE IF NOT EXISTS `wc3_web_skill` ( `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_lang` char(2) NOT NULL default '', `skill_name` varchar(100) default NULL, PRIMARY KEY  (`skill_id`,`skill_lang`) );"
 };
 
 /*
@@ -118,13 +118,19 @@ MYSQLX_Init()
 	// Do we need to update the skills/races ?
 	MYSQLX_UpdateWebTable();
 
-	// Set the key
-	switch ( get_pcvar_num( CVAR_wc3_save_by ) )
+	bDBAvailable = true;
+}
+
+// Verifies that the database connection is ok
+MYSQLX_Check_Connection()
+{
+	
+	if ( !bDBAvailable )
 	{
-		case DB_SAVEBY_STEAMID:		copy( g_szDBKey, 31, "playerid" );
-		case DB_SAVEBY_IP:			copy( g_szDBKey, 31, "playerip" );
-		case DB_SAVEBY_NAME:		copy( g_szDBKey, 31, "playername" );
+		return false;
 	}
+
+	return true;
 }
 
 // Create all of our tables!
@@ -132,9 +138,21 @@ MYSQLX_CreateTables()
 {
 	new Handle:query;
 
-	// Create the default tables if we need to
-	for ( new i = 0; i < TOTAL_TABLES; i++ )
+	query = SQL_PrepareQuery( g_DBConn, "CREATE TABLE IF NOT EXISTS `wc3_player` ( `player_id` int(8) unsigned NOT NULL auto_increment, `player_steamid` varchar(25) NOT NULL default '', `player_ip` varchar(20) NOT NULL default '', `player_name` varchar(35) NOT NULL default '', `time` timestamp(14) NOT NULL, PRIMARY KEY  (`player_id`), KEY `player_name` (`player_name`), KEY `player_ip` (`player_ip`), KEY `player_steamid` (`player_steamid`) );" );
+
+	if ( !SQL_Execute( query ) )
 	{
+		MYSQLX_Error( query, "Ah, we got the same error again, yay!", 1 );
+			return;
+	}
+
+	SQL_FreeHandle( query );
+
+	// Create the default tables if we need to
+	/*for ( new i = 0; i < TOTAL_TABLES; i++ )
+	{
+		log_amx( szTables[i] );
+
 		query = SQL_PrepareQuery( g_DBConn, szTables[i] );
 
 		if ( !SQL_Execute( query ) )
@@ -145,11 +163,17 @@ MYSQLX_CreateTables()
 		}
 
 		SQL_FreeHandle( query );
-	}
+	}*/
 }
 
 MYSQLX_FetchUniqueID( id )
 {
+	// Make sure our connection is working
+	if ( !MYSQLX_Check_Connection() )
+	{
+		return;
+	}
+
 	// Remember how we got this ID
 	g_iDBPlayerSavedBy[id] = get_pcvar_num( CVAR_wc3_save_by );
 
@@ -201,6 +225,12 @@ MYSQLX_FetchUniqueID( id )
 
 MYSQLX_Save( id )
 {
+	// Make sure our connection is working
+	if ( !MYSQLX_Check_Connection() )
+	{
+		return;
+	}
+
 	new iUniqueID = DB_GetUniqueID( id );
 
 	// Save the user's XP!
@@ -241,6 +271,12 @@ public _MYSQLX_Save( failstate, Handle:query, error[], errnum, data[], size )
 
 MYSQLX_GetAllXP( id )
 {
+	// Make sure our connection is working
+	if ( !MYSQLX_Check_Connection() )
+	{
+		return;
+	}
+
 	new szQuery[256], data[1];
 	format(szQuery, 255, "SELECT `race_id`, `race_xp` FROM `wc3_player_race` WHERE ( `player_id` = '%d' );", DB_GetUniqueID( id ) );
 	
@@ -303,6 +339,12 @@ public _MYSQLX_GetAllXP( failstate, Handle:query, error[], errnum, data[], size 
 
 MYSQLX_SetData( id )
 {
+	// Make sure our connection is working
+	if ( !MYSQLX_Check_Connection() )
+	{
+		return;
+	}
+
 	new szQuery[256], data[1];
 	format( szQuery, 255, "SELECT `skill_id`, `skill_level` FROM `wc3_player_skill` WHERE `player_id` = '%d';", DB_GetUniqueID( id ) );
 
@@ -408,6 +450,12 @@ MYSQLX_ThreadError( Handle:query, szQuery[], szError[], iErrNum, failstate, id )
 
 MYSQLX_UpdateTimestamp( id )
 {
+	// Make sure our connection is working
+	if ( !MYSQLX_Check_Connection() )
+	{
+		return;
+	}
+
 	new szKey[66];
 	DB_GetKey( id, szKey, 65 );
 
@@ -442,6 +490,12 @@ public _MYSQLX_UpdateTimestamp( failstate, Handle:query, error[], errnum, data[]
 
 MYSQLX_UpdateWebTable()
 {
+	// Make sure our connection is working
+	if ( !MYSQLX_Check_Connection() )
+	{
+		return;
+	}
+
 	new iTotalLanguages = get_langsnum();
 	new lang[3], iLang, i;
 	new szQuery[256], szName[64];
@@ -500,21 +554,41 @@ public _MYSQLX_UpdateWebTable( failstate, Handle:query, error[], errnum, data[],
 	return;
 }
 
+#define MYSQL_TOTAL_PRUNE_QUERY 3
+
 // Prune the MySQL database
-/*MYSQLX_Prune()
+MYSQLX_Prune()
 {
-	new szQuery[256];
-	format( szQuery, 255, "DELETE FROM `%s` WHERE DATE_SUB(CURDATE(), INTERVAL %d DAY) > time;", g_DBTableName, get_pcvar_num( CVAR_wc3_days_before_delete ) );
-
-	new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
-
-	if ( !SQL_Execute( query ) )
+	// Make sure our connection is working
+	if ( !MYSQLX_Check_Connection() )
 	{
-		MYSQLX_Error( query, szQuery, 6 );
-
 		return;
 	}
-}*/
+
+	new const szPruneQuery[MYSQL_TOTAL_PRUNE_QUERY][] = 
+	{
+		"DELETE FROM wc3_player_race  WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time );",
+		"DELETE FROM wc3_player_skill WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time );",
+		"DELETE FROM wc3_player WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time );"
+	};
+	new szQuery[256];
+
+	// Need to run all 3 queries
+	for ( new i = 0; i < MYSQL_TOTAL_PRUNE_QUERY; i++ )
+	{
+		formatex( szQuery, 255, szPruneQuery[i], get_pcvar_num( CVAR_wc3_days_before_delete ) );
+		server_print( szQuery );
+
+		new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+		if ( !SQL_Execute( query ) )
+		{
+			MYSQLX_Error( query, szQuery, 6 );
+
+			return;
+		}
+	}
+}
 
 /*MYSQLX_FetchUniqueID( id )
 {

@@ -16,9 +16,11 @@
 #define DB_SQLITE			0
 #define DB_MYSQLX			1
 
+// Lets us know that the DB is ready
+new bool:bDBAvailable = false;
+
 // Variable Declaration
 new g_szDBType[16];
-new g_szDBKey[32];
 
 // SQLX
 new Handle:g_DBTuple;
