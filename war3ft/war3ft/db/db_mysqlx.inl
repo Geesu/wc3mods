@@ -2,6 +2,89 @@
 *	MYSQLX
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
+#define TOTAL_TABLES		5
+
+new const szTables[TOTAL_TABLES][] = 
+{
+	"CREATE TABLE IF NOT EXISTS `wc3_player` ( `player_id` int(8) unsigned NOT NULL auto_increment, `player_steamid` varchar(25) NOT NULL default '', `player_ip` varchar(20) NOT NULL default '', `player_name` varchar(35) NOT NULL default '', `time` timestamp(14) NOT NULL, PRIMARY KEY  (`player_id`), KEY `player_name` (`player_name`), KEY `player_ip` (`player_ip`), KEY `player_steamid` (`player_steamid`) ) TYPE=MyISAM;",
+	"CREATE TABLE IF NOT EXISTS `wc3_player_race` ( `player_id` int(8) unsigned NOT NULL default '0', `race_id` tinyint(4) unsigned NOT NULL default '0', `race_xp` int(8) default NULL, PRIMARY KEY  (`player_id`,`race_id`) ) TYPE=MyISAM;",
+	"CREATE TABLE IF NOT EXISTS `wc3_player_skill` ( `player_id` int(8) unsigned NOT NULL default '0', `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_level` tinyint(4) unsigned NOT NULL default '0', PRIMARY KEY  (`player_id`,`skill_id`) ) TYPE=MyISAM;",
+	"CREATE TABLE IF NOT EXISTS `wc3_web_race` ( `race_id` tinyint(4) unsigned NOT NULL default '0', `race_lang` char(2) NOT NULL default '', `race_name` varchar(100) default NULL, PRIMARY KEY  (`race_id`,`race_lang`) ) TYPE=MyISAM;",
+	"CREATE TABLE IF NOT EXISTS `wc3_web_skill` ( `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_lang` char(2) NOT NULL default '', `skill_name` varchar(100) default NULL, PRIMARY KEY  (`skill_id`,`skill_lang`) ) TYPE=MyISAM;"
+};
+
+/*
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `wc3_player`
+-- 
+
+CREATE TABLE IF NOT EXISTS `wc3_player` (
+  `player_id` int(8) unsigned NOT NULL auto_increment,
+  `player_steamid` varchar(25) NOT NULL default '',
+  `player_ip` varchar(20) NOT NULL default '',
+  `player_name` varchar(35) NOT NULL default '',
+  `time` timestamp(14) NOT NULL,
+  PRIMARY KEY  (`player_id`),
+  KEY `player_name` (`player_name`),
+  KEY `player_ip` (`player_ip`),
+  KEY `player_steamid` (`player_steamid`)
+) TYPE=MyISAM;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `wc3_player_race`
+-- 
+
+CREATE TABLE IF NOT EXISTS `wc3_player_race` (
+  `player_id` int(8) unsigned NOT NULL default '0',
+  `race_id` tinyint(4) unsigned NOT NULL default '0',
+  `race_xp` int(8) default NULL,
+  PRIMARY KEY  (`player_id`,`race_id`)
+) TYPE=MyISAM;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `wc3_player_skill`
+-- 
+
+CREATE TABLE IF NOT EXISTS `wc3_player_skill` (
+  `player_id` int(8) unsigned NOT NULL default '0',
+  `skill_id` tinyint(4) unsigned NOT NULL default '0',
+  `skill_level` tinyint(4) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`player_id`,`skill_id`)
+) TYPE=MyISAM;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `wc3_web_race`
+-- 
+
+CREATE TABLE IF NOT EXISTS `wc3_web_race` (
+  `race_id` tinyint(4) unsigned NOT NULL default '0',
+  `race_lang` char(2) NOT NULL default '',
+  `race_name` varchar(100) default NULL,
+  PRIMARY KEY  (`race_id`,`race_lang`)
+) TYPE=MyISAM;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `wc3_web_skill`
+-- 
+
+CREATE TABLE IF NOT EXISTS `wc3_web_skill` (
+  `skill_id` tinyint(4) unsigned NOT NULL default '0',
+  `skill_lang` char(2) NOT NULL default '',
+  `skill_name` varchar(100) default NULL,
+  PRIMARY KEY  (`skill_id`, `skill_lang`)
+) TYPE=MyISAM;
+
+*/
 
 // Initiate the connection to the MySQL database
 MYSQLX_Init()
@@ -30,7 +113,11 @@ MYSQLX_Init()
 
 	server_print( "[WAR3FT] %s database connection successful", g_szDBType );
 
+	// Create tables!
 	MYSQLX_CreateTables();
+
+	// Do we need to update the skills/races ?
+	MYSQLX_UpdateWebTable();
 
 	// Set the key
 	switch ( get_pcvar_num( CVAR_wc3_save_by ) )
@@ -44,21 +131,22 @@ MYSQLX_Init()
 // Create all of our tables!
 MYSQLX_CreateTables()
 {
+	new Handle:query;
 
-	// Create the default table if we need to
-	new szQuery[512];
-	format( szQuery, 511, "CREATE TABLE IF NOT EXISTS `%s` (`playerid` VARCHAR(35) NOT NULL DEFAULT '', `playerip` VARCHAR(20) NOT NULL DEFAULT '', `playername` VARCHAR(35) NOT NULL DEFAULT '', `xp` INT(11) NOT NULL DEFAULT 0, `race` TINYINT(4) NOT NULL DEFAULT 0, `skill1` TINYINT(4) NOT NULL DEFAULT 0, `skill2` TINYINT(4) NOT NULL DEFAULT 0, `skill3` TINYINT(4) NOT NULL DEFAULT 0, `skill4` TINYINT(4) NOT NULL DEFAULT 0, `time` TIMESTAMP(14) NOT NULL, PRIMARY KEY (`playerid`, `race`))", g_DBTableName );
-
-	new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
-
-	if ( !SQL_Execute( query ) )
+	// Create the default tables if we need to
+	for ( new i = 0; i < TOTAL_TABLES; i++ )
 	{
-		MYSQLX_Error( query, szQuery, 1 );
+		query = SQL_PrepareQuery( g_DBConn, szTables[i] );
 
-		return;
+		if ( !SQL_Execute( query ) )
+		{
+			MYSQLX_Error( query, szTables[i], 1 );
+
+			return;
+		}
+
+		SQL_FreeHandle( query );
 	}
-
-	SQL_FreeHandle( query );
 }
 
 MYSQLX_FetchUniqueID( id )
@@ -135,7 +223,6 @@ MYSQLX_Save( id )
 		// Then we need to save this!
 		if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
 		{
-			new szQuery[512];
 			format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
 			SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save", szQuery );
 		}
@@ -151,6 +238,7 @@ public _MYSQLX_Save( failstate, Handle:query, error[], errnum, data[], size )
 	if ( failstate )
 	{
 		new szQuery[256];
+		SQL_GetQueryString( query, szQuery, 255 );
 		
 		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 1 );
 	}
@@ -183,6 +271,7 @@ public _MYSQLX_GetAllXP( failstate, Handle:query, error[], errnum, data[], size 
 	if ( failstate )
 	{
 		new szQuery[256];
+		SQL_GetQueryString( query, szQuery, 255 );
 		
 		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 2 );
 	}
@@ -238,6 +327,7 @@ public _MYSQLX_SetData( failstate, Handle:query, error[], errnum, data[], size )
 	if ( failstate )
 	{
 		new szQuery[256];
+		SQL_GetQueryString( query, szQuery, 255 );
 		
 		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 3 );
 	}
@@ -340,6 +430,67 @@ public _MYSQLX_UpdateTimestamp( failstate, Handle:query, error[], errnum, data[]
 	if ( failstate )
 	{
 		new szQuery[256];
+		SQL_GetQueryString( query, szQuery, 255 );
+		
+		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 4 );
+	}
+
+	// Query successful, we can do stuff!
+	else
+	{
+		// Free the handle
+		SQL_FreeHandle( query );
+	}
+
+	return;
+}
+
+MYSQLX_UpdateWebTable()
+{
+	new iTotalLanguages = get_langsnum();
+	new lang[3], iLang, i;
+	new szQuery[256], szName[64];
+
+	// Loop through all languages
+	for ( iLang = 0; iLang < iTotalLanguages; iLang++ )
+	{
+		get_lang ( iLang, lang );
+		
+		// We have a valid language
+		if ( lang_exists( lang ) )
+		{
+
+			// Check all races
+			for ( i = 1; i <= MAX_RACES; i++ )
+			{
+				lang_GetRaceName ( i, iLang, szName, 63 );
+
+				formatex( szQuery, 255, "REPLACE INTO `wc3_web_race` ( `race_id` , `race_lang` , `race_name` ) VALUES ( '%d', '%s', '%s' );", i, lang, szName );
+
+				SQL_ThreadQuery( g_DBTuple, "_MYSQLX_UpdateWebTable", szQuery );	
+			}
+
+			// Check all skills
+			for ( i = 0; i < MAX_SKILLS; i++ )
+			{
+				LANG_GetSkillName ( i, iLang, szName, 63, 200 );
+
+				formatex( szQuery, 255, "REPLACE INTO `wc3_web_skill` ( `skill_id` , `skill_lang` , `skill_name` ) VALUES ( '%d', '%s', '%s' );", i, lang, szName );
+
+				SQL_ThreadQuery( g_DBTuple, "_MYSQLX_UpdateWebTable", szQuery );	
+			}
+
+		}
+	}// End language loop
+}
+
+public _MYSQLX_UpdateWebTable( failstate, Handle:query, error[], errnum, data[], size )
+{
+	// Error during the query
+	if ( failstate )
+	{
+		new szQuery[256];
+		SQL_GetQueryString( query, szQuery, 255 );
 		
 		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 5 );
 	}

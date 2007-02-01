@@ -790,7 +790,7 @@ public _ITEM_Glove_Give( id )
 	if ( SHARED_HasGrenade( id ) )
 	{
 		// Try again in a little
-		set_task( get_pcvar_float( CVAR_wc3_glove_timer ), "_ITEM_Glove_Give", TASK_ITEM_GLOVES + index );
+		set_task( get_pcvar_float( CVAR_wc3_glove_timer ), "_ITEM_Glove_Give", TASK_ITEM_GLOVES + id );
 
 		return;
 	}
