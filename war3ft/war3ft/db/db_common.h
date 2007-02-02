@@ -19,15 +19,12 @@
 // Lets us know that the DB is ready
 new bool:bDBAvailable = false;
 
-// Variable Declaration
-new g_szDBType[16];
-
 // SQLX
 new Handle:g_DBTuple;
 new Handle:g_DBConn;
 
 // SQLite
-new Sql:g_DB;
+//new Sql:g_DB;
 new g_DBType = -1;
 
 // Player's Unique ID

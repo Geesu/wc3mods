@@ -21,36 +21,42 @@ new const szTableNames[TOTAL_SQLITE_TABLES][] =
 // Initiate the connection to the SQLite database
 SQLITE_Init()
 {
-	new szError[256];
+	new szError[256], iErrNum;
 
-	// Attempt the Connection
-	g_DB = dbi_connect( "", "", "", "war3ft", szError, 255 );
+	// Set up the tuple that will be used for threading
+	g_DBTuple = SQL_MakeDbTuple( "", "", "", "war3ft" );
 
-	// Verify our database connection has worked
-	if ( !SQLITE_Check_Connection() )
+	// Attempt to connect
+	g_DBConn = SQL_Connect( g_DBTuple, iErrNum, szError, 255 );
+
+	if ( !g_DBConn )
 	{
-		log_amx( "Error: %s", szError );
+		log_amx( "[SQLITE] Database Connection Failed: [%d] %s", iErrNum, szError );
 
 		return;
 	}
 
+
 	server_print( "[WAR3FT] SQLite database connection successful" );
 
-	// Create all tables if we need to
+	new Handle:query;
+
+	// Create the default tables if we need to
 	for ( new i = 0; i < TOTAL_SQLITE_TABLES; i++ )
 	{
-		// Then create it!
-		if ( !sqlite_table_exists( g_DB, szTableNames[i] ) )
-		{
-			new Result:ret = dbi_query( g_DB, szTablesSQLite[i] );
+		query = SQL_PrepareQuery( g_DBConn, szTablesSQLite[i] );
 
-			if ( ret < RESULT_NONE )
+		if ( !sqlite_TableExists( g_DBConn, szTableNames[i] ) )
+		{
+			if ( !SQL_Execute( query ) )
 			{
-				SQLITE_Error( ret, szTablesSQLite[i], 1 );
+				SQLITE_Error( query, szTablesSQLite[i], 1 );
 
 				return;
 			}
 		}
+
+		SQL_FreeHandle( query );
 	}
 
 	/*
@@ -65,25 +71,24 @@ SQLITE_Init()
 		PRAGMA commands don't return anything so no need to check the result of the query
 	*/	
 
-	new szIntegrityCheck[64], szQuery[128];
-	format(szQuery, 127, "PRAGMA integrity_check");
-	new Result:res = dbi_query( g_DB, szQuery );
+	query = SQL_PrepareQuery( g_DBConn, "PRAGMA integrity_check" );
 	
-	// Check for an error
-	if ( res < RESULT_NONE )
+	if ( !SQL_Execute( query ) )
 	{
-		SQLITE_Error( res, szQuery, 2 );
+		SQLITE_Error( query, "PRAGMA integrity_check", 1 );
+
 		return;
 	}
 	
 	// Get the integrity check value
-	while ( res && dbi_nextrow(res) > 0 )
+	new szIntegrityCheck[64];
+	if ( SQL_NumResults( query ) > 0 )
 	{
-		dbi_result( res, "integrity_check", szIntegrityCheck, 63 );
+		SQL_ReadResult( query, 0, szIntegrityCheck, 63 )
 	}
 
 	// Free the result
-	dbi_free_result( res );
+	SQL_FreeHandle( query );
 
 	// Check to make sure the integrity check passed
 	if ( !equali(szIntegrityCheck, "ok") )
@@ -95,10 +100,18 @@ SQLITE_Init()
 
 		return;
 	}
-		
+	
 	// Do some synchronous crap
+	new szQuery[128];
 	format( szQuery, 127, "PRAGMA synchronous = %d", SQLITE_SYNC_OFF );
-	dbi_query( g_DB, szQuery );
+	query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+	if ( !SQL_Execute( query ) )
+	{
+		SQLITE_Error( query, szQuery, 1 );
+
+		return;
+	}
 
 	bDBAvailable = true;
 }
@@ -106,15 +119,20 @@ SQLITE_Init()
 // Close the SQLite connection
 SQLITE_Close()
 {
-	if ( g_DB )
+	if ( g_DBTuple )
 	{
-		dbi_close( g_DB );
+		SQL_FreeHandle( g_DBTuple );
+	}
+
+	if ( g_DBConn )
+	{
+		SQL_FreeHandle( g_DBConn );
 	}
 }
 
 SQLITE_FetchUniqueID( id )
 {
-	// Verify we have a database connection
+	// Make sure our connection is working
 	if ( !SQLITE_Check_Connection() )
 	{
 		return;
@@ -129,62 +147,49 @@ SQLITE_FetchUniqueID( id )
 
 	new szQuery[512];
 	format( szQuery, 511, "SELECT `player_id` FROM `wc3_player` WHERE `%s` = '%s';", szKeyName, szKey );
-	new Result:res = dbi_query( g_DB, szQuery );
-	
-	// Verify we have a result
-	if ( res < RESULT_NONE )
+	new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+	if ( !SQL_Execute( query ) )
 	{
-		SQLITE_Error( res, szQuery, 3 );
+		SQLITE_Error( query, szQuery, 1 );
 
 		return;
 	}
 
 	// If no rows we need to insert!
-	if ( res == RESULT_NONE )
+	if ( SQL_NumResults( query ) == 0 )
 	{
 		// Free the last handle!
-		dbi_free_result( res );
+		SQL_FreeHandle( query );
 
 		// Insert this player!
+		new szQuery[512];
 		format( szQuery, 511, "INSERT INTO `wc3_player` ( `player_id` , `%s` , `time` ) VALUES ( NULL , '%s', julianday('now') );", szKeyName, szKey );
-		res = dbi_query( g_DB, szQuery );
+		new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
 
-		// Verify we have a result
-		if ( res < RESULT_NONE )
+		if ( !SQL_Execute( query ) )
 		{
-			SQLITE_Error( res, szQuery, 4 );
+			SQLITE_Error( query, szQuery, 1 );
 
 			return;
 		}
 
-		// Free the last handle!
-		dbi_free_result( res );
-		
-		// Now we need to get the insert ID
-		format( szQuery, 511, "SELECT `player_id` FROM `wc3_player` WHERE `%s` = '%s';", szKeyName, szKey );
-		res = dbi_query( g_DB, szQuery );
-
-		// Verify we have a result
-		if ( res < RESULT_NONE )
-		{
-			SQLITE_Error( res, szQuery, 5 );
-
-			return;
-		}
+		g_iDBPlayerUniqueID[id] = SQL_GetInsertId( query );
 	}
 
-	new szID[12];
-	dbi_result( res, "player_id", szID, 11 );
-
-	g_iDBPlayerUniqueID[id] = str_to_num( szID );
+	// They have been here before - store their ID
+	else
+	{
+		g_iDBPlayerUniqueID[id] = SQL_ReadResult( query, 0 );
+	}
 
 	// Free the last handle!
-	dbi_free_result( res );
+	SQL_FreeHandle( query );
 }
 
 SQLITE_Save( id )
 {
-	// Verify we have a database connection
+	// Make sure our connection is working
 	if ( !SQLITE_Check_Connection() )
 	{
 		return;
@@ -195,15 +200,7 @@ SQLITE_Save( id )
 	// Save the user's XP!
 	new szQuery[512];
 	format( szQuery, 511, "REPLACE INTO `wc3_player_race` ( `player_id` , `race_id` , `race_xp` ) VALUES ( '%d', '%d', '%d');", iUniqueID, p_data[id][P_RACE], p_data[id][P_XP] );
-	new Result:res = dbi_query( g_DB, szQuery );
-
-	// Verify we have a result
-	if ( res < RESULT_NONE )
-	{
-		SQLITE_Error( res, szQuery, 6 );
-
-		return;
-	}
+	SQL_ThreadQuery( g_DBTuple, "_SQLITE_Save", szQuery );
 
 	static iCurrentLevel;
 
@@ -216,41 +213,48 @@ SQLITE_Save( id )
 		if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
 		{
 			format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
-			res = dbi_query( g_DB, szQuery );
-
-			// Verify we have a result
-			if ( res < RESULT_NONE )
-			{
-				SQLITE_Error( res, szQuery, 7 );
-
-				return;
-			}
+			SQL_ThreadQuery( g_DBTuple, "_SQLITE_Save", szQuery );
 		}
 	}
 
 	return;
 }
 
+public _SQLITE_Save( failstate, Handle:query, error[], errnum, data[], size )
+{
+
+	// Error during the query
+	if ( failstate )
+	{
+		new szQuery[256];
+		SQL_GetQueryString( query, szQuery, 255 );
+		
+		SQLITE_ThreadError( query, szQuery, error, errnum, failstate, 1 );
+	}
+}
+
 SQLITE_GetAllXP( id )
 {
-	// Verify we have a database connection
+	// Make sure our connection is working
 	if ( !SQLITE_Check_Connection() )
 	{
 		return;
 	}
 
-	new szQuery[256];
+	new szQuery[256], data[1];
 	format(szQuery, 255, "SELECT `race_id`, `race_xp` FROM `wc3_player_race` WHERE ( `player_id` = '%d' );", DB_GetUniqueID( id ) );
 	
-	new Result:res = dbi_query( g_DB, szQuery );
+	data[0] = id;
 
-	// Verify we have a result
-	if ( res < RESULT_NONE )
-	{
-		SQLITE_Error( res, szQuery, 8 );
+	SQL_ThreadQuery( g_DBTuple, "_SQLITE_GetAllXP", szQuery, data, 1 )	
 
-		return;
-	}
+	return;
+}
+
+// Callback function that is executed when MySQL X Thread has completed
+public _SQLITE_GetAllXP( failstate, Handle:query, error[], errnum, data[], size )
+{
+	new id = data[0];
 
 	// Set last saved XP to 0
 	for ( new i = 0; i < MAX_RACES; i++ )
@@ -258,26 +262,38 @@ SQLITE_GetAllXP( id )
 		g_iDBPlayerXPInfoStore[id][i] = 0;
 	}
 
-	new iXP, iRace, szXP[8], szRace[2];
-
-	// Loop through all of the records to find the XP data
-	while ( res && dbi_nextrow( res ) > 0 )
+	// Error during the query
+	if ( failstate )
 	{
-		dbi_result( res, "race_xp", szXP, 7 );
-		dbi_result( res, "race_id", szRace, 1 );
-
-		iXP		= str_to_num( szXP		);
-		iRace	= str_to_num( szRace	);
+		new szQuery[256];
+		SQL_GetQueryString( query, szQuery, 255 );
 		
-		// Save the user's XP in an array
-		if ( iRace > 0 && iRace < MAX_RACES + 1 )
-		{
-			g_iDBPlayerXPInfoStore[id][iRace-1] = iXP;
-		}
+		SQLITE_ThreadError( query, szQuery, error, errnum, failstate, 2 );
 	}
 
-	// Free the handle
-	dbi_free_result( res );
+	// Query successful, we can do stuff!
+	else
+	{
+		new iXP, iRace;
+
+		// Loop through all of the records to find the XP data
+		while ( SQL_MoreResults( query ) )
+		{
+			iRace	= SQL_ReadResult( query, 0 );
+			iXP		= SQL_ReadResult( query, 1 );
+			
+			// Save the user's XP in an array
+			if ( iRace > 0 && iRace < MAX_RACES + 1 )
+			{
+				g_iDBPlayerXPInfoStore[id][iRace-1] = iXP;
+			}
+
+			SQL_NextRow( query );
+		}
+
+		// Free the handle
+		SQL_FreeHandle( query );
+	}
 
 	// Call the function that will display the "select a race" menu
 	WC3_ChangeRaceShowMenu( id, g_iDBPlayerXPInfoStore[id] );
@@ -287,48 +303,62 @@ SQLITE_GetAllXP( id )
 
 SQLITE_SetData( id )
 {
-	// Verify we have a database connection
+	// Make sure our connection is working
 	if ( !SQLITE_Check_Connection() )
 	{
 		return;
 	}
 
-	new szQuery[256];
+	new szQuery[256], data[1];
 	format( szQuery, 255, "SELECT `skill_id`, `skill_level` FROM `wc3_player_skill` WHERE `player_id` = '%d';", DB_GetUniqueID( id ) );
-	new Result:res = dbi_query( g_DB, szQuery );
-	
-	// Verify we have a result
-	if ( res < RESULT_NONE )
-	{
-		SQLITE_Error( res, szQuery, 9 );
 
-		return;
+	data[0] = id;
+
+	SQL_ThreadQuery( g_DBTuple, "_SQLITE_SetData", szQuery, data, 1 );
+
+	return;
+}
+
+// Callback function once MySQL X Thread has completed
+public _SQLITE_SetData( failstate, Handle:query, error[], errnum, data[], size )
+{
+	new id = data[0];
+
+	// Error during the query
+	if ( failstate )
+	{
+		new szQuery[256];
+		SQL_GetQueryString( query, szQuery, 255 );
+		
+		SQLITE_ThreadError( query, szQuery, error, errnum, failstate, 3 );
 	}
 
-	// Set the user's XP!
-	p_data[id][P_XP] = g_iDBPlayerXPInfoStore[id][p_data[id][P_RACE]-1];
-
-	// Reset all skill data to 0!
-	for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
+	// Query successful, we can do stuff!
+	else
 	{
-		SM_SetSkillLevel( id, iSkillID, 0 );
+		// Set the user's XP!
+		p_data[id][P_XP] = g_iDBPlayerXPInfoStore[id][p_data[id][P_RACE]-1];
+
+		// Reset all skill data to 0!
+		for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
+		{
+			SM_SetSkillLevel( id, iSkillID, 0 );
+		}
+
+		// While we have a result!
+		while ( SQL_MoreResults( query ) )
+		{
+			SM_SetSkillLevel( id, SQL_ReadResult( query, 0 ), SQL_ReadResult( query, 1 ) );
+			
+			SQL_NextRow( query );
+		}
+
+		// Free the handle
+		SQL_FreeHandle( query );
+		
+		// Set the race up
+		WC3_SetRaceUp( id );
 	}
-
-	new szSkillID[4], szSkillLevel[4];
-	// While we have a result!
-	while ( res && dbi_nextrow( res ) > 0 )
-	{
-		dbi_result( res, "skill_id"		, szSkillID		, 3 );
-		dbi_result( res, "skill_level"	, szSkillLevel	, 3 );
-
-		SM_SetSkillLevel( id, str_to_num( szSkillID ), str_to_num( szSkillLevel ) );
-	}
-
-	// Free the handle
-	dbi_free_result( res );
-	
-	// Set the race up
-	WC3_SetRaceUp( id );
 
 	return;
 }
@@ -336,31 +366,12 @@ SQLITE_SetData( id )
 // Verifies that the database connection is ok
 SQLITE_Check_Connection()
 {
-	
-	if ( g_DB < SQL_OK )
+	if ( !bDBAvailable )
 	{
 		return false;
 	}
 
 	return true;
-}
-
-// The id should be a unique number, so we know what function called it (useful for debugging)
-SQLITE_Error( Result:res, query[], id )
-{
-
-	// Get the error message and log it
-	new szError[256];
-	new iError = dbi_error( g_DB, szError, 255 );
-	log_amx( "[SQLITE] Error in querying database, location: %d", id );
-	log_amx( "[SQLITE] Message: %s (%d)", szError, iError );
-	log_amx( "[SQLITE] Query statement: %s ", query );
-
-	// Free the result
-	if ( res > RESULT_FAILED )
-	{
-		dbi_free_result( res );
-	}
 }
 
 #define SQLITE_TOTAL_PRUNE_QUERY 3
@@ -377,14 +388,16 @@ SQLITE_Prune()
 	new szQuery[256];
 
 	// Need to run all 3 queries
-	for ( new i = 0; i < SQLITE_TOTAL_PRUNE_QUERY; i++ )
+	for ( new i = 0; i < MYSQL_TOTAL_PRUNE_QUERY; i++ )
 	{
 		formatex( szQuery, 255, szPruneQuery[i], get_pcvar_num( CVAR_wc3_days_before_delete ) );
-		new Result:res = dbi_query( g_DB, szQuery );
+		server_print( szQuery );
 
-		if ( res < RESULT_NONE )
+		new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+		if ( !SQL_Execute( query ) )
 		{
-			SQLITE_Error( res, szQuery, 10 );
+			MYSQLX_Error( query, szQuery, 6 );
 
 			return;
 		}
@@ -393,15 +406,74 @@ SQLITE_Prune()
 
 SQLITE_UpdateTimestamp( id )
 {
+	// Make sure our connection is working
+	if ( !SQLITE_Check_Connection() )
+	{
+		return;
+	}
+
+	new szKey[66];
+	DB_GetKey( id, szKey, 65 );
+
 	new szQuery[256];
 	format( szQuery, 255, "UPDATE `wc3_player` SET time = julianday('now') WHERE ( `player_id` = '%d' )", g_iDBPlayerUniqueID[id] );
 
-	new Result:ret = dbi_query( g_DB, szQuery );
+	SQL_ThreadQuery( g_DBTuple, "_SQLITE_UpdateTimestamp", szQuery );	
+}
 
-	if ( ret < RESULT_NONE )
+public _SQLITE_UpdateTimestamp( failstate, Handle:query, error[], errnum, data[], size )
+{
+	// Error during the query
+	if ( failstate )
 	{
-		SQLITE_Error( ret, szQuery, 11 );
-
-		return;
+		new szQuery[256];
+		SQL_GetQueryString( query, szQuery, 255 );
+		
+		SQLITE_ThreadError( query, szQuery, error, errnum, failstate, 4 );
 	}
+
+	// Query successful, we can do stuff!
+	else
+	{
+		// Free the handle
+		SQL_FreeHandle( query );
+	}
+
+	return;
+}
+
+// The id should be a unique number, so we know what function called it (useful for debugging)
+SQLITE_Error( Handle:query, szQuery[], id )
+{
+	new szError[256];
+	new iErrNum = SQL_QueryError( query, szError, 255 );
+
+	log_amx( "[SQLITE] Error in querying database, location: %d", id );
+	log_amx( "[SQLITE] Message: %s (%d)", szError, iErrNum );
+	log_amx( "[SQLITE] Query statement: %s ", szQuery );
+
+	// Free the handle
+	SQL_FreeHandle( query );
+}
+
+SQLITE_ThreadError( Handle:query, szQuery[], szError[], iErrNum, failstate, id )
+{
+	log_amx( "[SQLITE] Threaded query error, location: %d", id );
+	log_amx( "[SQLITE] Message: %s (%d)", szError, iErrNum );
+	log_amx( "[SQLITE] Query statement: %s ", szQuery );
+
+	// Connection failed
+	if ( failstate == TQUERY_CONNECT_FAILED )
+	{	
+		log_amx( "[SQLITE] Fail state: Connection Failed" );
+	}
+
+	// Query failed
+	else if ( failstate == TQUERY_QUERY_FAILED )
+	{
+		log_amx( "[SQLITE] Fail state: Query Failed" );
+	}
+
+	// Free the handle
+	SQL_FreeHandle( query );
 }

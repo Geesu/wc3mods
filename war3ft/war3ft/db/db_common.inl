@@ -24,7 +24,9 @@ public DB_DetermineType()
 		else
 		{
 			g_DBType = DB_MYSQLX;
-			copy( g_szDBType, 15, "MySQLX" );
+
+			// Make sure affinity is set correctly!
+			SQL_SetAffinity( "mysql" );
 		}
 	}
 
@@ -33,7 +35,7 @@ public DB_DetermineType()
 	{
 		
 		// Then we can't save w/this!!!
-		if ( !LibraryExists( "dbi", LibType_Class )  )
+		if ( !LibraryExists( "sqlx", LibType_Class )  )
 		{
 			log_amx( "[WARNING] Unable to saving using SQLite, please enable the sqlite module" );
 		}
@@ -41,24 +43,11 @@ public DB_DetermineType()
 		// OK we can save
 		else
 		{
-			// Get the DB Type
-			new szDBIType[16];
-			dbi_type( szDBIType, 15 );
-
 			// We're using SQLite
-			if ( equali( szDBIType, "SQLite" ) )
-			{
-				g_DBType = DB_SQLITE;
-				copy( g_szDBType, 15, "SQLite" );
-			}
+			g_DBType = DB_SQLITE;
 
-			// Using an unsupported DB Type - we can't save XP!
-			else
-			{
-				log_amx( "[WARNING] Unsupported database type loaded: %s, please enable the sqlite module", szDBIType );
-
-				set_pcvar_num( CVAR_wc3_save_xp, 0 );
-			}
+			// Make sure affinity is set correctly!
+			SQL_SetAffinity( "sqlite" );
 		}
 	}
 	

@@ -44,6 +44,7 @@ new const WC3DATE[] =		__DATE__
 #pragma reqlib		cstrike
 #pragma reqlib		dodfun
 #pragma loadlib		sqlite
+#pragma loadlib		mysql
 
 #include <amxmodx>
 #include <amxmisc>

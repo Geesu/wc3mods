@@ -6,11 +6,11 @@
 
 new const szTables[TOTAL_TABLES][] = 
 {
-	"CREATE TABLE IF NOT EXISTS `wc3_player` ( `player_id` int(8) unsigned NOT NULL auto_increment, `player_steamid` varchar(25) NOT NULL default '', `player_ip` varchar(20) NOT NULL default '', `player_name` varchar(35) NOT NULL default '', `time` timestamp(14) NOT NULL, PRIMARY KEY  (`player_id`), KEY `player_name` (`player_name`), KEY `player_ip` (`player_ip`), KEY `player_steamid` (`player_steamid`) );",
-	"CREATE TABLE IF NOT EXISTS `wc3_player_race` ( `player_id` int(8) unsigned NOT NULL default '0', `race_id` tinyint(4) unsigned NOT NULL default '0', `race_xp` int(8) default NULL, PRIMARY KEY  (`player_id`,`race_id`) );",
-	"CREATE TABLE IF NOT EXISTS `wc3_player_skill` ( `player_id` int(8) unsigned NOT NULL default '0', `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_level` tinyint(4) unsigned NOT NULL default '0', PRIMARY KEY  (`player_id`,`skill_id`) );",
-	"CREATE TABLE IF NOT EXISTS `wc3_web_race` ( `race_id` tinyint(4) unsigned NOT NULL default '0', `race_lang` char(2) NOT NULL default '', `race_name` varchar(100) default NULL, PRIMARY KEY  (`race_id`,`race_lang`) );",
-	"CREATE TABLE IF NOT EXISTS `wc3_web_skill` ( `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_lang` char(2) NOT NULL default '', `skill_name` varchar(100) default NULL, PRIMARY KEY  (`skill_id`,`skill_lang`) );"
+	"CREATE TABLE IF NOT EXISTS `wc3_player` ( `player_id` int(8) unsigned NOT NULL auto_increment, `player_steamid` varchar(25) NOT NULL default '', `player_ip` varchar(20) NOT NULL default '', `player_name` varchar(35) NOT NULL default '', `time` timestamp(14) NOT NULL, PRIMARY KEY  (`player_id`), KEY `player_name` (`player_name`), KEY `player_ip` (`player_ip`), KEY `player_steamid` (`player_steamid`) ) TYPE=MyISAM;",
+	"CREATE TABLE IF NOT EXISTS `wc3_player_race` ( `player_id` int(8) unsigned NOT NULL default '0', `race_id` tinyint(4) unsigned NOT NULL default '0', `race_xp` int(8) default NULL, PRIMARY KEY  (`player_id`,`race_id`) ) TYPE=MyISAM;",
+	"CREATE TABLE IF NOT EXISTS `wc3_player_skill` ( `player_id` int(8) unsigned NOT NULL default '0', `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_level` tinyint(4) unsigned NOT NULL default '0', PRIMARY KEY  (`player_id`,`skill_id`) ) TYPE=MyISAM;",
+	"CREATE TABLE IF NOT EXISTS `wc3_web_race` ( `race_id` tinyint(4) unsigned NOT NULL default '0', `race_lang` char(2) NOT NULL default '', `race_name` varchar(100) default NULL, PRIMARY KEY  (`race_id`,`race_lang`) ) TYPE=MyISAM;",
+	"CREATE TABLE IF NOT EXISTS `wc3_web_skill` ( `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_lang` char(2) NOT NULL default '', `skill_name` varchar(100) default NULL, PRIMARY KEY  (`skill_id`,`skill_lang`) ) TYPE=MyISAM;"
 };
 
 /*
@@ -98,7 +98,7 @@ MYSQLX_Init()
 	get_pcvar_string( CVAR_wc3_sql_dbname	, szDB			, 127	);
 
 	// Set up the tuple that will be used for threading
-	g_DBTuple = SQL_MakeDbTuple( szHost, szUser, szPass, szDB )
+	g_DBTuple = SQL_MakeDbTuple( szHost, szUser, szPass, szDB );
 
 	// Attempt to connect
 	g_DBConn = SQL_Connect( g_DBTuple, iErrNum, szError, 255 );
@@ -110,7 +110,7 @@ MYSQLX_Init()
 		return;
 	}
 
-	server_print( "[WAR3FT] %s database connection successful", g_szDBType );
+	server_print( "[WAR3FT] MySQL X database connection successful" );
 
 	// Create tables!
 	MYSQLX_CreateTables();
@@ -138,21 +138,9 @@ MYSQLX_CreateTables()
 {
 	new Handle:query;
 
-	query = SQL_PrepareQuery( g_DBConn, "CREATE TABLE IF NOT EXISTS `wc3_player` ( `player_id` int(8) unsigned NOT NULL auto_increment, `player_steamid` varchar(25) NOT NULL default '', `player_ip` varchar(20) NOT NULL default '', `player_name` varchar(35) NOT NULL default '', `time` timestamp(14) NOT NULL, PRIMARY KEY  (`player_id`), KEY `player_name` (`player_name`), KEY `player_ip` (`player_ip`), KEY `player_steamid` (`player_steamid`) );" );
-
-	if ( !SQL_Execute( query ) )
-	{
-		MYSQLX_Error( query, "Ah, we got the same error again, yay!", 1 );
-			return;
-	}
-
-	SQL_FreeHandle( query );
-
 	// Create the default tables if we need to
-	/*for ( new i = 0; i < TOTAL_TABLES; i++ )
+	for ( new i = 0; i < TOTAL_TABLES; i++ )
 	{
-		log_amx( szTables[i] );
-
 		query = SQL_PrepareQuery( g_DBConn, szTables[i] );
 
 		if ( !SQL_Execute( query ) )
@@ -163,7 +151,7 @@ MYSQLX_CreateTables()
 		}
 
 		SQL_FreeHandle( query );
-	}*/
+	}
 }
 
 MYSQLX_FetchUniqueID( id )
