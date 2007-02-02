@@ -450,8 +450,6 @@ MYSQLX_UpdateTimestamp( id )
 	new szQuery[256];
 	format( szQuery, 255, "UPDATE `wc3_player` SET time = NOW() WHERE ( `player_id` = '%d' );", DB_GetUniqueID( id ) );
 
-	server_print( "Updating: '%s'", szQuery );
-
 	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_UpdateTimestamp", szQuery );	
 }
 
