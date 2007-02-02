@@ -475,7 +475,6 @@ new bool:g_bLevitation[33];
 
 new bool:g_bOrcNadesDisabled = false;
 new bool:g_bGlovesDisabled = false;
-new bool:g_bMoleBuyZoneDisabled = false;
 
 // ***************************
 // Skill Information

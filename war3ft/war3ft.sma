@@ -33,7 +33,7 @@
 
 new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
 new const WC3AUTHOR[] =		"Geesu & Avanderik"
-new const WC3VERSION[] =	"3.0 RC6"
+new const WC3VERSION[] =	"3.0 RC6 Beta 4"
 new const WC3DATE[] =		__DATE__
 
 // Let AMX X know that we NEED these modules (as of amx x 1.75)
@@ -84,7 +84,7 @@ new const WC3DATE[] =		__DATE__
 #include "war3ft/race_crypt.inl"			// Crypt Lord       - 8
 #include "war3ft/race_chameleon.inl"		// Chameleon		- 9
 
-
+#include "war3ft/forwards.inl"
 #include "war3ft/effects.inl"
 #include "war3ft/XP.inl"
 #include "war3ft/db/db_mysqlx.inl"
@@ -267,6 +267,7 @@ public plugin_end()
 		return;
 	}
 	
+	fwd_destroy();
 	DB_SaveAll();
 	DB_Prune();
 	DB_Close();

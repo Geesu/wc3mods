@@ -417,27 +417,6 @@ public WC3_Init()
 	// Lets find out if we should disable orc nades or gloves of warmth
 	g_bOrcNadesDisabled		= WC3_MapDisableCheck( "skill_orc_nade.cfg" );
 	g_bGlovesDisabled		= WC3_MapDisableCheck( "item_gloves.cfg" );
-	g_bMoleBuyZoneDisabled	= WC3_MapDisableCheck( "skill_mole_shopzone.cfg" );
-
-	// We need to check to see if the buyzone creation of buyzone should be disabled (why create a buyzone if one doesn't exist on the map!)
-	for ( i = 0; i <= get_global_int( GL_maxEntities ); i++ )
-	{
-		// We need to skip this ent since it isn't valid
-		if ( !is_valid_ent( i ) )
-		{
-			continue;
-		}
-
-		new szClassName[64];
-		entity_get_string( i, EV_SZ_classname, szClassName, 63 );
-		
-		// We found a buyzone
-		if ( equal( szClassName, "func_buyzone") )	
-		{
-			g_bMoleBuyZoneDisabled = true;
-			break;
-		}
-	}
 }
 
 public _WC3_RunAfterConfig()
@@ -1367,6 +1346,10 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 
 public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 {
+	new szWpnName[64];
+	UTIL_GetWeaponName( iWeapon, szWpnName, 63 );
+	ExecuteForward( fwd_ReportKill, iKiller, iVictim, iWeapon, szWpnName );
+
 	// Save stats information?
 	if ( get_pcvar_num( CVAR_wc3_psychostats ) )
 	{
@@ -1694,6 +1677,12 @@ WC3_NewSession( id )
 			// Now lets set the bot's race!
 			WC3_SetRace( id, p_data[id][P_RACE] );
 		}
+	}
+
+	// Reset Assist XP handler!
+	for ( new i = 0; i < MAXPLAYERS; i++ )
+	{
+		g_iDamageDealt[id][i] = 0;
 	}
 
 	// Ultimate cooldown on session start!

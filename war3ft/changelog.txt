@@ -2,6 +2,7 @@ v3.0 RC6
  - Addition: levitation console command
  - Addition: Message now displayed when human's ultimate is blocked
  - Addition: Check for correct race when using /levitation
+ - Addition: Forward - wc3_reportkill
  - Bug Fix: Possible for ultimate icon to stay after a searching ultimate was used (if on last second of search)
  - Bug Fix: Message to warden regarding Blink could be repeated
  - Bug Fix: Ultimate icons not always showing
@@ -14,9 +15,11 @@ v3.0 RC6
  - Bug Fix: Human health set to 190 w/listen servers (thanks DesasterUK)
  - Bug Fix: Invisibility disappearing after use of Big Bad Voodoo (thanks mattypee)
  - Bug Fix: Changerace menu not appearing when joining server on listen server (thanks DesasterUK)
+ - Bug Fix: Assist XP giving too much
  - Change: Respawn time from 1.5 seconds to 0.2 (by ability or item)
  - Change: Bots skin will change now if they mole or buy chameleon
  - Removed: NVault support - default is now SQLite
+ - Removed: Purchasing items when moling (was removing buyzones for others)
  - Re-write: How ultimate icons are handled
 
  - To Test: crypt lord auto-find-new-target

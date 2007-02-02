@@ -86,9 +86,6 @@ CL_ULT_LocustSwarm( id )
 	// Flash their ultimate!
 	ULT_Icon( id, ICON_FLASH );
 
-	// Reset the user's ultimate - but we don't want to hide the icon yet!!
-	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ), false );
-
 	new parm[10];
 	parm[0] = id;		// caster
 	parm[1] = iVictim;	// victim
@@ -247,6 +244,11 @@ CL_HLP_Diff( iNum, iNum2 )
 
 CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 {
+	if ( !p_data_b[iVictim][PB_ISCONNECTED] || !p_data_b[iAttacker][PB_ISCONNECTED] )
+	{
+		return;
+	}
+
 	static iSkillLevel;
 
 	// Orb of Annihilation
@@ -332,6 +334,11 @@ CL_SkillsOffensive( iAttacker, iVictim, iHitPlace )
 
 CL_SkillsDefensive( iAttacker, iVictim, iDamage, iHitPlace )
 {
+	if ( !p_data_b[iVictim][PB_ISCONNECTED] || !p_data_b[iAttacker][PB_ISCONNECTED] )
+	{
+		return;
+	}
+
 	static iSkillLevel;
 
 	// Spiked Carapace
