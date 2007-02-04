@@ -553,9 +553,9 @@ MYSQLX_Prune()
 
 	new const szPruneQuery[MYSQL_TOTAL_PRUNE_QUERY][] = 
 	{
-		"DELETE FROM wc3_player_race  WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time );",
-		"DELETE FROM wc3_player_skill WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time );",
-		"DELETE FROM wc3_player WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time );"
+		"DELETE FROM wc3_player_race  WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time ) );",
+		"DELETE FROM wc3_player_skill WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time ) );",
+		"DELETE FROM wc3_player WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time ) );"
 	};
 	new szQuery[256];
 
@@ -563,7 +563,6 @@ MYSQLX_Prune()
 	for ( new i = 0; i < MYSQL_TOTAL_PRUNE_QUERY; i++ )
 	{
 		formatex( szQuery, 255, szPruneQuery[i], get_pcvar_num( CVAR_wc3_days_before_delete ) );
-		server_print( szQuery );
 
 		new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
 
@@ -575,87 +574,3 @@ MYSQLX_Prune()
 		}
 	}
 }
-
-/*MYSQLX_FetchUniqueID( id )
-{
-	client_print( id, print_chat, "[DEBUG] MYSQLX_FetchUniqueID" );
-	server_print( "[DEBUG] MYSQLX_FetchUniqueID %d", id );
-
-	new szKey[66], szKeyName[32];
-	DB_GetKey( id, szKey, 65 );
-	DB_GetKeyName( szKeyName, 31 );
-
-	new parm[1];
-	parm[0] = id;
-
-	new szQuery[512];
-	format( szQuery, 511, "SELECT `player_id` FROM `wc3_players` WHERE `%s` = '%s';", szKeyName, szKey );
-	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_FetchUniqueID", szQuery, parm, 1 );
-}
-
-public _MYSQLX_FetchUniqueID( failstate, Handle:query, error[], errnum, data[], size )
-{
-
-	server_print( "[DEBUG] _MYSQLX_FetchUniqueID %d", data[0] );
-	client_print( data[0], print_chat, "[DEBUG] _MYSQLX_FetchUniqueID" );
-
-	// Error during the query
-	if ( failstate )
-	{
-		new szQuery[256];
-		
-		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 1 );
-	}
-	
-	// Query successful
-	else
-	{
-		// If no rows we need to insert!
-		if ( SQL_NumResults( query ) == 0 )
-		{
-			new szKey[66], szKeyName[32];
-			DB_GetKey( data[0], szKey, 65 );
-			DB_GetKeyName( szKeyName, 31 );
-
-			// Insert this player!
-			new szQuery[512];
-			format( szQuery, 511, "INSERT INTO `wc3_players` ( `player_id` , `%s` , `time` ) VALUES ( NULL , '%s', NOW() );", szKeyName, szKey );
-			SQL_ThreadQuery( g_DBTuple, "_MYSQLX_InsertNewPlayer", szQuery, data, 1 );
-		}
-
-		// They have been here before - store their ID
-		else
-		{
-			client_print( data[0], print_chat, "[DEBUG]-- _MYSQLX_FetchUniqueID" );
-			server_print( "[DEBUG]-- _MYSQLX_FetchUniqueID %d", data[0] );
-
-			g_iDBPlayerUniqueID[data[0]] = SQL_ReadResult( query, 0 );
-		}
-
-		// Free the last handle!
-		SQL_FreeHandle( query );
-	}
-
-}
-
-public _MYSQLX_InsertNewPlayer( failstate, Handle:query, error[], errnum, data[], size )
-{
-	client_print( data[0], print_chat, "[DEBUG] _MYSQLX_InsertNewPlayer" );
-	server_print( "[DEBUG] _MYSQLX_InsertNewPlayer %d", data[0] );
-
-	// Error during the query
-	if ( failstate )
-	{
-		new szQuery[256];
-		
-		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 1 );
-	}
-	
-	// Query successful
-	else
-	{
-		g_iDBPlayerUniqueID[data[0]] = SQL_GetInsertId( query );
-
-		SQL_FreeHandle( query );
-	}
-}*/

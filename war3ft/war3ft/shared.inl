@@ -184,12 +184,6 @@ SHARED_SetUserMoney( id, money, show = 1 )
 	// Check for Counter-Strike or Condition Zero
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		// Don't allow the user to have more than 16000
-		if ( money > 16000 )
-		{
-			money = 16000;
-		}
-
 		cs_set_user_money( id, money, show );
 	}
 

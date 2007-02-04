@@ -311,6 +311,9 @@ public WC3_Init()
 	// Register the player menus
 	LANG_SetMenus();
 
+	// Register any forwards
+	FWD_Register();
+
 	// Register our menus
 	MENU_BuildAll();
 
