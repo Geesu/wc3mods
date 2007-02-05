@@ -84,6 +84,9 @@ CREATE TABLE IF NOT EXISTS `wc3_web_skill` (
   PRIMARY KEY  (`skill_id`, `skill_lang`)
 ) TYPE=MyISAM;
 
+insert into wc3_player select "", playerid, playerip, playername, time from war3users group by playerid;
+
+insert into wc3_player_race select wc3_player.player_id, war3users.race, war3users.xp from wc3_player, war3users where wc3_player.player_steamid=war3users.playerid;
 */
 
 // Initiate the connection to the MySQL database
