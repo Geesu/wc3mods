@@ -115,13 +115,13 @@ MYSQLX_Init()
 
 	server_print( "[WAR3FT] MySQL X database connection successful" );
 
+	bDBAvailable = true;
+
 	// Create tables!
 	MYSQLX_CreateTables();
 
 	// Do we need to update the skills/races ?
 	MYSQLX_UpdateWebTable();
-
-	bDBAvailable = true;
 }
 
 // Verifies that the database connection is ok
@@ -479,6 +479,7 @@ public _MYSQLX_UpdateTimestamp( failstate, Handle:query, error[], errnum, data[]
 
 MYSQLX_UpdateWebTable()
 {
+
 	// Make sure our connection is working
 	if ( !MYSQLX_Check_Connection() )
 	{
@@ -536,6 +537,8 @@ public _MYSQLX_UpdateWebTable( failstate, Handle:query, error[], errnum, data[],
 	// Query successful, we can do stuff!
 	else
 	{
+		server_print( "Done" );
+
 		// Free the handle
 		SQL_FreeHandle( query );
 	}

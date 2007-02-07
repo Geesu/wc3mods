@@ -300,9 +300,6 @@ public client_putinserver( id )
 	// Get the user's ID!
 	DB_FetchUniqueID( id );
 
-	// Update the user's timestamps for each race if we're saving XP
-	DB_UpdateTimestamp( id );
-
 	p_data_b[id][PB_ISCONNECTED] = true;
 	
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
@@ -400,6 +397,9 @@ public client_disconnect(id)
 	{
 		return;
 	}
+
+	// Update the user's timestamps for each race if we're saving XP
+	DB_UpdateTimestamp( id );
 
 	// Remove the money task when a user disconnects
 	if ( g_MOD == GAME_DOD )
