@@ -1349,9 +1349,9 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 
 public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 {
-	new szWpnName[64];
+	new szWpnName[64], iRet = 0;
 	UTIL_GetWeaponName( iWeapon, szWpnName, 63 );
-	ExecuteForward( fwd_ReportKill, iKiller, iVictim, iWeapon, szWpnName );
+	ExecuteForward( fwd_ReportKill, iRet, iKiller, iVictim, iWeapon, szWpnName );
 
 	// Save stats information?
 	if ( get_pcvar_num( CVAR_wc3_psychostats ) )

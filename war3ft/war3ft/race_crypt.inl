@@ -93,6 +93,9 @@ CL_ULT_LocustSwarm( id )
 	parm[3] = vCasterOrigin[1];
 	parm[4] = vCasterOrigin[2];
 
+	// Reset the cooldown
+	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ), false );
+
 	// Start the effects!!
 	_CL_ULT_LocustEffect( parm );
 
@@ -216,10 +219,11 @@ public _CL_ULT_LocustEffect( parm[] )
 		new iDamage = random_num( LOCUSTSWARM_DMG_MIN, LOCUSTSWARM_DMG_MAX );
 
 		WC3_Damage( iVictim, iAttacker, iDamage, CSW_LOCUSTS, -1 );
+		
+		// Hide icon
+		ULT_Icon( iAttacker, ICON_HIDE );
 
 		emit_sound( iVictim, CHAN_STATIC, g_szSounds[SOUND_LOCUSTSWARM], 1.0, ATTN_NORM, 0, PITCH_NORM );
-
-		ULT_ResetCooldown( iAttacker, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 		
 		new szName[32];
 		get_user_name( iVictim, szName, 31 );

@@ -489,38 +489,78 @@ MYSQLX_UpdateWebTable()
 	new iTotalLanguages = get_langsnum();
 	new lang[3], iLang, i;
 	new szQuery[256], szName[64];
+	new Float:fTimer = 0.0;
 
 	// Loop through all languages
-	for ( iLang = 0; iLang < iTotalLanguages; iLang++ )
+	/*for ( iLang = 0; iLang < iTotalLanguages; iLang++ )
 	{
 		get_lang ( iLang, lang );
 		
 		// We have a valid language
 		if ( lang_exists( lang ) )
-		{
+		{*/
+
+		// Just use server default
+		iLang = LANG_SERVER;
+		get_lang ( iLang, lang );
+		new Handle:query;
 
 			// Check all races
 			for ( i = 1; i <= MAX_RACES; i++ )
 			{
+				//fTimer += 0.9;
+
 				lang_GetRaceName ( i, iLang, szName, 63 );
 
 				formatex( szQuery, 255, "REPLACE INTO `wc3_web_race` ( `race_id` , `race_lang` , `race_name` ) VALUES ( '%d', '%s', '%s' );", i, lang, szName );
 
-				SQL_ThreadQuery( g_DBTuple, "_MYSQLX_UpdateWebTable", szQuery );	
+				query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+				if ( !SQL_Execute( query ) )
+				{
+					MYSQLX_Error( query, szQuery, 6 );
+
+					return;
+				}
+
+				//SQL_ThreadQuery( g_DBTuple, "_MYSQLX_UpdateWebTable", szQuery );	
+				//set_task( fTimer, "_MYSQLX_ExecuteUpdateWebTable", 0, szQuery, 255 );
 			}
 
 			// Check all skills
 			for ( i = 0; i < MAX_SKILLS; i++ )
 			{
+				//fTimer += 0.9;
+
 				LANG_GetSkillName ( i, iLang, szName, 63, 200 );
 
 				formatex( szQuery, 255, "REPLACE INTO `wc3_web_skill` ( `skill_id` , `skill_lang` , `skill_name` ) VALUES ( '%d', '%s', '%s' );", i, lang, szName );
 
-				SQL_ThreadQuery( g_DBTuple, "_MYSQLX_UpdateWebTable", szQuery );	
+				query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+				if ( !SQL_Execute( query ) )
+				{
+					MYSQLX_Error( query, szQuery, 6 );
+
+					return;
+				}
+				//SQL_ThreadQuery( g_DBTuple, "_MYSQLX_UpdateWebTable", szQuery );	
+				//set_task( fTimer, "_MYSQLX_ExecuteUpdateWebTable", 0, szQuery, 255 );
 			}
 
-		}
-	}// End language loop
+		//}
+	//}// End language loop
+}
+
+public _MYSQLX_ExecuteUpdateWebTable( szQuery[] )
+{
+	// Make sure our connection is working
+	if ( !MYSQLX_Check_Connection() )
+	{
+		return;
+	}
+
+	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_UpdateWebTable", szQuery );	
 }
 
 public _MYSQLX_UpdateWebTable( failstate, Handle:query, error[], errnum, data[], size )
@@ -537,8 +577,6 @@ public _MYSQLX_UpdateWebTable( failstate, Handle:query, error[], errnum, data[],
 	// Query successful, we can do stuff!
 	else
 	{
-		server_print( "Done" );
-
 		// Free the handle
 		SQL_FreeHandle( query );
 	}

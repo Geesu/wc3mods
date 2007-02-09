@@ -23,9 +23,6 @@ v3.0 RC6
  - Removed: Purchasing items when moling (was removing buyzones for others)
  - Re-write: How ultimate icons are handled
 
- - To Test: crypt lord auto-find-new-target
- - bug setting wc3_save_xp after start
-
 v3.0 RC5
  - Bug Fix: Getting more health than you should with Devotion Aura
  - Bug Fix: Run-time errors from RC4 which made it unplayable

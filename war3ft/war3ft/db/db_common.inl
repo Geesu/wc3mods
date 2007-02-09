@@ -295,7 +295,6 @@ public DB_FetchUniqueID( id )
 	if ( g_iDBPlayerUniqueID[id] == 0 )
 	{
 		set_task( 1.0, "DB_FetchUniqueID", id );
-
 	}
 
 	return;
