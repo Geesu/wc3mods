@@ -2,15 +2,17 @@
 *	MYSQLX
 ´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
 
-#define TOTAL_TABLES		5
+#define TOTAL_TABLES		6
 
 new const szTables[TOTAL_TABLES][] = 
 {
 	"CREATE TABLE IF NOT EXISTS `wc3_player` ( `player_id` int(8) unsigned NOT NULL auto_increment, `player_steamid` varchar(25) NOT NULL default '', `player_ip` varchar(20) NOT NULL default '', `player_name` varchar(35) NOT NULL default '', `time` timestamp(14) NOT NULL, PRIMARY KEY  (`player_id`), KEY `player_name` (`player_name`), KEY `player_ip` (`player_ip`), KEY `player_steamid` (`player_steamid`) ) TYPE=MyISAM;",
 	"CREATE TABLE IF NOT EXISTS `wc3_player_race` ( `player_id` int(8) unsigned NOT NULL default '0', `race_id` tinyint(4) unsigned NOT NULL default '0', `race_xp` int(8) default NULL, PRIMARY KEY  (`player_id`,`race_id`) ) TYPE=MyISAM;",
 	"CREATE TABLE IF NOT EXISTS `wc3_player_skill` ( `player_id` int(8) unsigned NOT NULL default '0', `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_level` tinyint(4) unsigned NOT NULL default '0', PRIMARY KEY  (`player_id`,`skill_id`) ) TYPE=MyISAM;",
-	"CREATE TABLE IF NOT EXISTS `wc3_web_race` ( `race_id` tinyint(4) unsigned NOT NULL default '0', `race_lang` char(2) NOT NULL default '', `race_name` varchar(100) default NULL, PRIMARY KEY  (`race_id`,`race_lang`) ) TYPE=MyISAM;",
-	"CREATE TABLE IF NOT EXISTS `wc3_web_skill` ( `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_lang` char(2) NOT NULL default '', `skill_name` varchar(100) default NULL, PRIMARY KEY  (`skill_id`,`skill_lang`) ) TYPE=MyISAM;"
+	"CREATE TABLE IF NOT EXISTS `wc3_web_race` ( `race_id` tinyint(4) unsigned NOT NULL default '0', `race_lang` char(2) NOT NULL default '', `race_name` varchar(100) default NULL, `race_description` text NOT NULL, PRIMARY KEY  (`race_id`,`race_lang`) ) TYPE=MyISAM;",
+	"CREATE TABLE IF NOT EXISTS `wc3_web_skill` ( `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_lang` char(2) NOT NULL default '', `skill_name` varchar(100) default NULL, `skill_description` text NOT NULL, PRIMARY KEY  (`skill_id`,`skill_lang`) ) TYPE=MyISAM;",
+	"CREATE TABLE `wc3_config` ( `config_id` varchar(50) NOT NULL, `config_value` varchar(255) NOT NULL ) TYPE=MyISAM;"
+
 };
 
 /*
@@ -83,6 +85,16 @@ CREATE TABLE IF NOT EXISTS `wc3_web_skill` (
   `skill_name` varchar(100) default NULL,
   PRIMARY KEY  (`skill_id`, `skill_lang`)
 ) TYPE=MyISAM;
+
+
+-- 
+-- Table structure for table `wc3_config`
+-- 
+
+CREATE TABLE `wc3_config` (
+  `config_id` varchar(50) NOT NULL,
+  `config_value` varchar(255) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 insert into wc3_player select "", playerid, playerip, playername, time from war3users group by playerid;
 
