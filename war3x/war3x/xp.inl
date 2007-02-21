@@ -108,6 +108,9 @@ public Set_LevelXp() {
 
 public XP_Give( id, iOldXp, iNewXp ) {
 
+	if ( iNewXp <= iOldXp )
+		return PLUGIN_HANDLED;
+
 	new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 	new iRaceNum = g_PlayerInfo[id][CURRENT_RACE] - 1;
 
@@ -136,6 +139,9 @@ public XP_Give( id, iOldXp, iNewXp ) {
 // Calculate / Give XP Loss
 
 public XP_Remove( id, iOldXp, iNewXp ) {
+
+	if ( iNewXp >= iOldXp )
+		return PLUGIN_HANDLED;
 
 	new iLevel = WAR3_get_level( g_PlayerInfo[id][CURRENT_XP] );
 
