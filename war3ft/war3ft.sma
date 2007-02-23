@@ -145,14 +145,14 @@ public plugin_init()
 	register_clcmd( "jointeam"			, "cmd_Jointeam"	, -1 );
 
 	// Admin Commands
-	register_concmd( "wc3_givexp"		, "ADMIN_Handler"		, 0 , " -- Gives XP to players"				);
-	register_concmd( "wc3_setlevel"	    , "ADMIN_Handler"		, 0 , " -- Sets a player's level"			);
-	register_concmd( "wc3_giveitem"		, "ADMIN_Handler"		, 0 , " -- Gives an item to a player"		);
-	register_concmd( "wc3_enable"		, "ADMIN_Handler"		, 0 , " -- Enables war3ft"					);
-	register_concmd( "wc3_disable"		, "ADMIN_Handler"		, 0 , " -- Disables war3ft"					);
+	register_concmd( "wc3_givexp"		, "ADMIN_Handler"		, -1 , " -- Gives XP to players"				);
+	register_concmd( "wc3_setlevel"	    , "ADMIN_Handler"		, -1 , " -- Sets a player's level"				);
+	register_concmd( "wc3_giveitem"		, "ADMIN_Handler"		, -1 , " -- Gives an item to a player"			);
+	register_concmd( "wc3_enable"		, "ADMIN_Handler"		, -1 , " -- Enables war3ft"						);
+	register_concmd( "wc3_disable"		, "ADMIN_Handler"		, -1 , " -- Disables war3ft"					);
 
 	// Depreciated Admin Commands
-	register_concmd( "amx_givexp"		, "ADMIN_Handler"		, 0 , " -- Gives XP to players"				);
+	register_concmd( "amx_givexp"		, "ADMIN_Handler"		, -1 , " -- Gives XP to players"				);
 
 	// Server Admin Commands (used by external plugins)
 	register_srvcmd( "amx_takexp"		, "ADMIN_ServerHandler"	);

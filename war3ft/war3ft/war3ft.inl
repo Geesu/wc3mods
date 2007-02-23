@@ -1487,7 +1487,7 @@ bool:WC3_MapDisableCheck( szFileName[] )
 	// Format the Orc Nade Disable File
 	new szFile[128];
 	get_configsdir( szFile, 127 );
-	formatex( szFile, 63, "%s/war3ft/disable/%s", szFile, szFileName );
+	formatex( szFile, 127, "%s/war3ft/disable/%s", szFile, szFileName );
 
 	if ( !file_exists( szFile ) )
 		return false;

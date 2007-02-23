@@ -169,7 +169,7 @@ public ITEM_Buy( id, iItem )
 				{
 					g_iFutureItem[id] = iItem;
 
-					MENU_ReplaceItem( id )
+					MENU_ReplaceItem( id );
 
 					return;
 				}
@@ -183,8 +183,6 @@ public ITEM_Buy( id, iItem )
 		SHARED_SetUserMoney( id, iNewMoney );
 
 		ITEM_GiveItem( id, iItem );
-
-		WC3_ShowBar( id );
 	}
 
 	return;
@@ -254,6 +252,8 @@ ITEM_GiveItem( id, iItem )
 		// Play purchase sound
 		emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_PICKUPITEM], 1.0, ATTN_NORM, 0, PITCH_NORM );
 	}
+
+	WC3_ShowBar( id );
 
 	return;
 }
@@ -476,7 +476,7 @@ ITEM_Equip( id, iItem )
 {
 	new iItemSlot = ITEM_GetSlot( id );
 
-	// Items are full
+	// Items are not full
 	if ( iItemSlot != ITEM_SLOT_FULL )
 	{
 
@@ -484,6 +484,9 @@ ITEM_Equip( id, iItem )
 
 		if ( iItem == iOldItem || ITEM_Has( id, iItem ) > ITEM_NONE )
 		{
+			// Might hit this if we added charges - we want to update the user's HUD
+			WC3_ShowBar( id );
+
 			return;
 		}
 
@@ -496,6 +499,8 @@ ITEM_Equip( id, iItem )
 		// Set their new item
 		g_iShopMenuItems[id][iItemSlot] = iItem;
 	}
+
+	WC3_ShowBar( id );
 
 	return;
 }
@@ -822,6 +827,19 @@ public _ITEM_Glove_Give( id )
 
 ITEM_BuyRings( id )
 {
+
+	new iItemSlot = ITEM_GetSlot( id );
+
+	// Items are full
+	if ( iItemSlot == ITEM_SLOT_FULL && ITEM_Has( id, ITEM_RING ) == ITEM_NONE )
+	{
+		g_iFutureItem[id] = -3;
+
+		MENU_ReplaceItem( id );
+
+		return;
+	}
+
 	new iMoney;
 	new iAdditionalRings = 0;
 	

@@ -11,7 +11,7 @@ new const szTables[TOTAL_TABLES][] =
 	"CREATE TABLE IF NOT EXISTS `wc3_player_skill` ( `player_id` int(8) unsigned NOT NULL default '0', `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_level` tinyint(4) unsigned NOT NULL default '0', PRIMARY KEY  (`player_id`,`skill_id`) ) TYPE=MyISAM;",
 	"CREATE TABLE IF NOT EXISTS `wc3_web_race` ( `race_id` tinyint(4) unsigned NOT NULL default '0', `race_lang` char(2) NOT NULL default '', `race_name` varchar(100) default NULL, `race_description` text NOT NULL, PRIMARY KEY  (`race_id`,`race_lang`) ) TYPE=MyISAM;",
 	"CREATE TABLE IF NOT EXISTS `wc3_web_skill` ( `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_lang` char(2) NOT NULL default '', `skill_name` varchar(100) default NULL, `skill_description` text NOT NULL, PRIMARY KEY  (`skill_id`,`skill_lang`) ) TYPE=MyISAM;",
-	"CREATE TABLE `wc3_config` ( `config_id` varchar(50) NOT NULL, `config_value` varchar(255) NOT NULL ) TYPE=MyISAM;"
+	"CREATE TABLE IF NOT EXISTS `wc3_config` ( `config_id` varchar(50) NOT NULL, `config_value` varchar(255) NOT NULL, PRIMARY KEY  (`config_id`) ) TYPE=MyISAM;"
 
 };
 
@@ -93,7 +93,8 @@ CREATE TABLE IF NOT EXISTS `wc3_web_skill` (
 
 CREATE TABLE `wc3_config` (
   `config_id` varchar(50) NOT NULL,
-  `config_value` varchar(255) NOT NULL
+  `config_value` varchar(255) NOT NULL,
+  PRIMARY KEY  (`config_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 insert into wc3_player select "", playerid, playerip, playername, time from war3users group by playerid;
@@ -498,30 +499,62 @@ MYSQLX_UpdateWebTable()
 		return;
 	}
 
+	// Check to see if we even need an update!
+	new szQuery[256], Handle:query;
+	formatex ( szQuery, 255, "SELECT `config_value` FROM `wc3_config` WHERE `config_id` = 'version' AND `config_value` = '%s';", WC3VERSION );
+	query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+	if ( !SQL_Execute( query ) )
+	{
+		MYSQLX_Error( query, szQuery, 6 );
+
+		return;
+	}
+
+	// Then we don't need to update because we already have!
+	if ( SQL_NumResults( query ) == 1 )
+	{
+		SQL_FreeHandle( query );
+
+		return;
+	}
+
+	// We haven't update yet! Lets store the version
+	else
+	{
+		// Free the last handle
+		SQL_FreeHandle( query );
+
+		// Insert current version!
+		formatex ( szQuery, 255, "REPLACE INTO `wc3_config` ( `config_id` , `config_value` ) VALUES ( 'version', '%s' );", WC3VERSION );
+		query = SQL_PrepareQuery( g_DBConn, szQuery );
+		
+		if ( !SQL_Execute( query ) )
+		{
+			MYSQLX_Error( query, szQuery, 6 );
+
+			return;
+		}
+	}
+
+	server_print( "Updating web tables... %d", get_systime() );
+
 	new iTotalLanguages = get_langsnum();
 	new lang[3], iLang, i;
-	new szQuery[256], szName[64];
-	new Float:fTimer = 0.0;
+	new szName[64];
 
 	// Loop through all languages
-	/*for ( iLang = 0; iLang < iTotalLanguages; iLang++ )
+	for ( iLang = 0; iLang < iTotalLanguages; iLang++ )
 	{
 		get_lang ( iLang, lang );
 		
 		// We have a valid language
 		if ( lang_exists( lang ) )
-		{*/
-
-		// Just use server default
-		iLang = LANG_SERVER;
-		get_lang ( iLang, lang );
-		new Handle:query;
+		{
 
 			// Check all races
 			for ( i = 1; i <= MAX_RACES; i++ )
 			{
-				//fTimer += 0.9;
-
 				lang_GetRaceName ( i, iLang, szName, 63 );
 
 				formatex( szQuery, 255, "REPLACE INTO `wc3_web_race` ( `race_id` , `race_lang` , `race_name` ) VALUES ( '%d', '%s', '%s' );", i, lang, szName );
@@ -534,16 +567,11 @@ MYSQLX_UpdateWebTable()
 
 					return;
 				}
-
-				//SQL_ThreadQuery( g_DBTuple, "_MYSQLX_UpdateWebTable", szQuery );	
-				//set_task( fTimer, "_MYSQLX_ExecuteUpdateWebTable", 0, szQuery, 255 );
 			}
 
 			// Check all skills
 			for ( i = 0; i < MAX_SKILLS; i++ )
 			{
-				//fTimer += 0.9;
-
 				LANG_GetSkillName ( i, iLang, szName, 63, 200 );
 
 				formatex( szQuery, 255, "REPLACE INTO `wc3_web_skill` ( `skill_id` , `skill_lang` , `skill_name` ) VALUES ( '%d', '%s', '%s' );", i, lang, szName );
@@ -556,44 +584,11 @@ MYSQLX_UpdateWebTable()
 
 					return;
 				}
-				//SQL_ThreadQuery( g_DBTuple, "_MYSQLX_UpdateWebTable", szQuery );	
-				//set_task( fTimer, "_MYSQLX_ExecuteUpdateWebTable", 0, szQuery, 255 );
 			}
+		}
+	}// End language loop
 
-		//}
-	//}// End language loop
-}
-
-public _MYSQLX_ExecuteUpdateWebTable( szQuery[] )
-{
-	// Make sure our connection is working
-	if ( !MYSQLX_Check_Connection() )
-	{
-		return;
-	}
-
-	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_UpdateWebTable", szQuery );	
-}
-
-public _MYSQLX_UpdateWebTable( failstate, Handle:query, error[], errnum, data[], size )
-{
-	// Error during the query
-	if ( failstate )
-	{
-		new szQuery[256];
-		SQL_GetQueryString( query, szQuery, 255 );
-		
-		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 5 );
-	}
-
-	// Query successful, we can do stuff!
-	else
-	{
-		// Free the handle
-		SQL_FreeHandle( query );
-	}
-
-	return;
+	server_print( "Done... %d", get_systime() );
 }
 
 #define MYSQL_TOTAL_PRUNE_QUERY 3

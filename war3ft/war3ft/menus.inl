@@ -713,7 +713,15 @@ public _menu_ReplaceItem( id, iKey )
 		ITEM_Remove( id, ITEM_SLOT_TWO )
 	}
 
-	ITEM_Buy( id, g_iFutureItem[id] );
+	// Then the user typed "rings"
+	if ( g_iFutureItem[id] == -3 )
+	{
+		ITEM_BuyRings( id );
+	}
+	else
+	{
+		ITEM_Buy( id, g_iFutureItem[id] );
+	}
 
 	return PLUGIN_HANDLED;
 }

@@ -159,6 +159,11 @@ public ADMIN_Handler( id )
 			ADMIN_Print( id, "%s Plugin disabled!", g_MODclient );
 		}
 	}
+	
+	new szArgs[128];
+	read_args( szArgs, 127 );
+
+	ADMIN_Log( id, "%s", szArgs );
 
 	return PLUGIN_HANDLED;
 }
@@ -454,3 +459,48 @@ ADMIN_Print( id, text[], {Float,_}:...)
 		return;
 	}
 }  
+
+// Adapted from war3x's log file (I was lazy)
+ADMIN_Log( id, szCommand[], {Float,_}:... )
+{
+
+	new szLogFile[128];
+	get_configsdir( szLogFile, 127 );
+	formatex( szLogFile, 127, "%s/war3ft/wc3_admin.log", szLogFile );
+
+	new szFormattedText[128];
+	format_args( szFormattedText, 127, 1 );
+
+	if ( !file_exists( szLogFile ) )
+	{
+		write_file( szLogFile, "WC3 : Frozen Throne", -1 );
+		write_file( szLogFile, "Logging of admin commands", -1 );
+		write_file( szLogFile, " ", -1 );
+	}
+
+	new szAdminName[32], szSteamID[32];
+	if ( id > 0 )
+	{
+		get_user_name( id, szAdminName, 31 );
+		get_user_authid( id, szSteamID, 31 );
+	}
+	else
+	{
+		copy( szAdminName, 31, "SERVER" );
+		copy( szSteamID, 31, "SERVER" );
+	}
+
+	new szCurrentTime[32];
+	get_time( "%m.%d.%Y %H:%M:%S", szCurrentTime, 31 );
+
+	new szLogEntry[256];
+	formatex( szLogEntry, 255, "[%s] %s (%s) used command: '%s'", szCurrentTime, szAdminName, szSteamID, szFormattedText );
+
+	write_file( szLogFile, szLogEntry, -1 );
+
+	// Gets rid of compiler warning
+	if ( szCommand[0] == 0 )
+	{
+		return;
+	}
+}
