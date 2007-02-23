@@ -49,7 +49,7 @@ public client_score( index, score, total )
 	SHARED_SetUserMoney( index, SHARED_GetUserMoney( index ) + iBonusMoney, 1 );
 
 	// Award the user XP
-	new iXP = score * xpgiven[p_data[index][P_LEVEL]];
+	new iXP = score * XP_GivenByLevel( p_data[index][P_LEVEL] );
 
 	iXP = XP_Give( index, iXP );
 

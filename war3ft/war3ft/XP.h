@@ -45,7 +45,9 @@ new bool:bHasBegunPlantingOrDefusing[33];
 new Float:fWpnXPMultiplier[62] =		{1.0};
 
 // Amount of XP needed to gain a level
-new xplevel[11] =						{0,150,300,600,1000,1500,2100,2800,3400,4500,5500};
+new iXPLevelShortTerm[11]				= {0,150,300,600,1000,1500,2100,2800,3400,4500,5500};
+new iXPLevelSaved[11]					= {0,100,200,400,800,1600,3200,6400,12800,25600,51200};
 
 // Amount of XP awarded when killing a user of this level
-new xpgiven[11] =						{10,15,25,35,40,50,60,70,80,90,95};
+new iXPGivenShortTerm[11]				= {10,15,25,35,40,50,60,70,80,90,95};
+new iXPGivenSaved[11]					= {6,8,10,12,14,16,18,20,24,28,32};

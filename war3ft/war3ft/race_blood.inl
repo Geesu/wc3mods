@@ -305,10 +305,12 @@ BM_SkillsDefensive( iAttacker, iVictim, iDamage )
 	if ( iSkillLevel > 0 )
 	{
 		new iBonusHealth = floatround( float( iDamage ) * p_resistant[p_data[iVictim][P_LEVEL]] );
-
-		set_user_health( iVictim, get_user_health( iVictim ) + iBonusHealth );
+		
+		if ( p_data_b[iVictim][PB_ISCONNECTED] )
+		{
+			set_user_health( iVictim, get_user_health( iVictim ) + iBonusHealth );
+		}
 	}
-
 
 	// Banish
 	iSkillLevel = SM_GetSkillLevel( iVictim, SKILL_BANISH );

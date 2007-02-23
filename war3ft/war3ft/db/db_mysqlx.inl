@@ -537,8 +537,6 @@ MYSQLX_UpdateWebTable()
 		}
 	}
 
-	server_print( "Updating web tables... %d", get_systime() );
-
 	new iTotalLanguages = get_langsnum();
 	new lang[3], iLang, i;
 	new szName[64];
@@ -587,11 +585,9 @@ MYSQLX_UpdateWebTable()
 			}
 		}
 	}// End language loop
-
-	server_print( "Done... %d", get_systime() );
 }
 
-#define MYSQL_TOTAL_PRUNE_QUERY 3
+#define MYSQL_TOTAL_PRUNE_QUERY 2
 
 // Prune the MySQL database
 MYSQLX_Prune()
@@ -605,8 +601,7 @@ MYSQLX_Prune()
 	new const szPruneQuery[MYSQL_TOTAL_PRUNE_QUERY][] = 
 	{
 		"DELETE FROM wc3_player_race  WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time ) );",
-		"DELETE FROM wc3_player_skill WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time ) );",
-		"DELETE FROM wc3_player WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time ) );"
+		"DELETE FROM wc3_player_skill WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time ) );"
 	};
 	new szQuery[256];
 

@@ -429,7 +429,7 @@ CMD_Handle( id, szCmd[] )
 			DB_SaveXP( id );
 	
 			// OK give them level 10
-			p_data[id][P_XP] = xplevel[10];
+			p_data[id][P_XP] = XP_GetByLevel( 10 );
 
 			XP_Check( id );
 			

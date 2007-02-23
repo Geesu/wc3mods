@@ -376,6 +376,25 @@ XP_WinRound( iWinner )
 	}
 }
 
+XP_GetByLevel( iLevel )
+{
+	if ( iLevel < 0 || iLevel > 10 )
+	{
+		return 0;
+	}
+
+	// Change based on XP multiplier!
+	new Float:fXPMult = get_pcvar_float( CVAR_wc3_xp_multiplier );
+
+	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
+	{
+		return floatround( iXPLevelSaved[iLevel] * fXPMult );
+	}
+
+	return floatround( iXPLevelShortTerm[iLevel] * fXPMult );
+}
+
+
 XP_GivenByLevel( iLevel )
 {
 	if ( iLevel < 0 || iLevel > 10 )
@@ -383,7 +402,12 @@ XP_GivenByLevel( iLevel )
 		return 0;
 	}
 
-	return xpgiven[iLevel];
+	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
+	{
+		return iXPGivenSaved[iLevel];
+	}
+
+	return iXPGivenShortTerm[iLevel];
 }
 
 bool:XP_MinPlayers()
@@ -411,7 +435,7 @@ XP_Check( id, bShowGained = true )
 	for ( i = 0; i <= MAX_LEVELS; i++ )
 	{
 		// User has enough XP to advance to the next level
-		if ( p_data[id][P_XP] >= xplevel[i] )
+		if ( p_data[id][P_XP] >= XP_GetByLevel( i ) )
 		{
 			p_data[id][P_LEVEL] = i;
 		}
@@ -504,21 +528,6 @@ XP_Check( id, bShowGained = true )
 
 XP_Configure()
 {
-
-	// If we're saving XP, we want to set the max. amount of XP higher and the amount gained per kill/objective lower
-	if ( get_pcvar_num( CVAR_wc3_save_xp ) )
-	{
-		xpgiven = {6,8,10,12,14,16,18,20,24,28,32};
-		xplevel = {0,100,200,400,800,1600,3200,6400,12800,25600,51200};
-	}
-
-	// Set the XP multiplier
-	new i, Float:fXPMult = get_pcvar_float( CVAR_wc3_xp_multiplier );
-
-	for ( i = 0; i < 11; i++ )
-	{
-		xplevel[i] = floatround( xplevel[i] * fXPMult );
-	}
 
 	// Configure based on weapon multiplier
 
@@ -693,3 +702,4 @@ stock XP_Give( id, iBonusXP )
 
 	return 0;
 }
+

@@ -374,15 +374,14 @@ SQLITE_Check_Connection()
 	return true;
 }
 
-#define SQLITE_TOTAL_PRUNE_QUERY 3
+#define SQLITE_TOTAL_PRUNE_QUERY 2
 
 SQLITE_Prune()
 {
 	new const szPruneQuery[SQLITE_TOTAL_PRUNE_QUERY][] = 
 	{
 		"DELETE FROM wc3_player_race  WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( (julianday(`time`) + %d) < julianday('now') ) );",
-		"DELETE FROM wc3_player_skill WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( (julianday(`time`) + %d) < julianday('now') ) );",
-		"DELETE FROM wc3_player WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( (julianday(`time`) + %d) < julianday('now') ) );"
+		"DELETE FROM wc3_player_skill WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( (julianday(`time`) + %d) < julianday('now') ) );"
 	};
 
 	new szQuery[256];
@@ -391,7 +390,6 @@ SQLITE_Prune()
 	for ( new i = 0; i < MYSQL_TOTAL_PRUNE_QUERY; i++ )
 	{
 		formatex( szQuery, 255, szPruneQuery[i], get_pcvar_num( CVAR_wc3_days_before_delete ) );
-		server_print( szQuery );
 
 		new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
 

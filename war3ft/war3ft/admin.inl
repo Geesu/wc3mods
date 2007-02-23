@@ -187,7 +187,7 @@ ADMIN_SetXP( id, iXP )
 ADMIN_SetLevel( id, szTarget[], iLevel )
 {
 
-	new iXP = xplevel[iLevel];
+	new iXP = XP_GetByLevel( iLevel );
 
 	new iTarget = 0, bool:bTargetFound = false;
 
@@ -216,7 +216,7 @@ ADMIN_GiveXP( id, szTarget[], iXP )
 	// Do this while we continue having a target!
 	while ( ( iTarget = FindTarget( iTarget, szTarget ) ) > 0 )
 	{
-		ADMIN_SetXP( iTarget, p_data[id][P_XP] + iXP );
+		ADMIN_SetXP( iTarget, p_data[iTarget][P_XP] + iXP );
 
 		client_print( iTarget, print_chat, "%s %L", g_MODclient, iTarget, "THE_ADMIN_GAVE_YOU_EXPERIENCE", iXP );
 

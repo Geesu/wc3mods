@@ -698,15 +698,15 @@ WC3_ShowBar( id )
 			// User is level 0
 			if ( p_data[id][P_LEVEL] == 0 )
 			{
-				pos += formatex( szRaceInfo[pos], 255, "%s  XP: %d/%d ", szRaceName, p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
-				formatex( szXPInfo, 31, "XP: %d/%d", p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
+				pos += formatex( szRaceInfo[pos], 255, "%s  XP: %d/%d ", szRaceName, p_data[id][P_XP], XP_GetByLevel( p_data[id][P_LEVEL]+1 ) );
+				formatex( szXPInfo, 31, "XP: %d/%d", p_data[id][P_XP], XP_GetByLevel( p_data[id][P_LEVEL]+1 ) );
 			}
 
 			// User is under level 10
 			else if ( p_data[id][P_LEVEL] < 10 )
 			{
-				pos += formatex( szRaceInfo[pos], 255, "%s %L: %d   XP: %d/%d ", szShortRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
-				formatex( szXPInfo, 31, "%L: %d   XP: %d/%d", id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
+				pos += formatex( szRaceInfo[pos], 255, "%s %L: %d   XP: %d/%d ", szShortRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP], XP_GetByLevel( p_data[id][P_LEVEL]+1) );
+				formatex( szXPInfo, 31, "%L: %d   XP: %d/%d", id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP], XP_GetByLevel( p_data[id][P_LEVEL]+1 ) );
 			}			
 				
 			// User is level 10
@@ -733,13 +733,13 @@ WC3_ShowBar( id )
 			// User is level 0
 			if ( p_data[id][P_LEVEL] == 0 )
 			{
-				pos += formatex( szRaceInfo[pos], 255, "%s^nXP: %d/%d^n", szRaceName, p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
+				pos += formatex( szRaceInfo[pos], 255, "%s^nXP: %d/%d^n", szRaceName, p_data[id][P_XP], XP_GetByLevel( p_data[id][P_LEVEL]+1 ) );
 			}
 
 			// User is under level 10
 			else if ( p_data[id][P_LEVEL] < 10 )
 			{
-				pos += formatex( szRaceInfo[pos], 255, "%s %L: %d^nXP: %d/%d^n", szShortRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP], xplevel[p_data[id][P_LEVEL]+1] );
+				pos += formatex( szRaceInfo[pos], 255, "%s %L: %d^nXP: %d/%d^n", szShortRaceName, id, "WORD_LEVEL", p_data[id][P_LEVEL], p_data[id][P_XP], XP_GetByLevel( p_data[id][P_LEVEL]+1) );
 			
 			}			
 				
@@ -947,13 +947,13 @@ WC3_ShowSpecInfo( id, iTargetID )
 	// User is level 0
 	if ( p_data[iTargetID][P_LEVEL] == 0 )
 	{
-		iMsgPos += formatex( szMsg, 511, "%s  XP: %d/%d", szRaceName, p_data[iTargetID][P_XP], xplevel[p_data[iTargetID][P_LEVEL]+1] );
+		iMsgPos += formatex( szMsg, 511, "%s  XP: %d/%d", szRaceName, p_data[iTargetID][P_XP], XP_GetByLevel( p_data[iTargetID][P_LEVEL]+1 ) );
 	}
 
 	// User is under level 10
 	else if ( p_data[iTargetID][P_LEVEL] < 10 )
 	{
-		iMsgPos += formatex( szMsg, 511, "%s %L: %d   XP: %d/%d", szRaceName, id, "WORD_LEVEL", p_data[iTargetID][P_LEVEL], p_data[iTargetID][P_XP], xplevel[p_data[iTargetID][P_LEVEL]+1] );
+		iMsgPos += formatex( szMsg, 511, "%s %L: %d   XP: %d/%d", szRaceName, id, "WORD_LEVEL", p_data[iTargetID][P_LEVEL], p_data[iTargetID][P_XP], XP_GetByLevel( p_data[iTargetID][P_LEVEL]+1 ) );
 	}			
 		
 	// User is level 10
@@ -1669,7 +1669,7 @@ WC3_NewSession( id )
 		// Give the bot some random XP if we're saving XP
 		if ( get_pcvar_num( CVAR_wc3_save_xp ) && !p_data[id][P_XP] )
 		{
-			p_data[id][P_XP] = xplevel[floatround(random_float(0.0,3.16)*random_float(0.0,3.16))];
+			p_data[id][P_XP] = XP_GetByLevel( floatround(random_float(0.0,3.16)*random_float(0.0,3.16)) );
 		}
 
 		// Set the bot's race?
@@ -1843,6 +1843,8 @@ WC3_PlayerInit( id )
 
 	for ( new i = 0; i < MAXPLAYERS; i++ )
 	{
-		g_iDamageDealt[id][i] = 0;			// Reset damage dealt
+		g_iDamageDealt[id][i] = 0;					// Reset damage dealt
 	}
+
+	p_data[id][P_CHANGERACE] = 0;					// User shouldn't have a changerace pending
 }
