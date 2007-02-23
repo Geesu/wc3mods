@@ -91,6 +91,9 @@ public bomb_planted( planter )
 
 	g_iPlayerRole[planter] = 0;
 	p_data_b[planter][PB_ISPLANTING] = false;
+
+	// Serpent Ward Check
+	SH_BombPlanted();
 }
 
 // Called on certain player events

@@ -11,8 +11,8 @@
 #define SH_CONCOCTION_DAMAGE	  15		// Damage done by Unstable Concoction
 #define SH_CONCOCTION_RADIUS	  300
 
-
 new g_SH_SerpentGiven[33];
+new bool:bWardBombCheck = false;
 
 // ****************************************
 // Shadow Hunter's Healing Wave
@@ -204,6 +204,20 @@ public SH_PlaceSerpentWard( id )
 	}
 }
 
+// Called when the bomb is planted
+SH_BombPlanted()
+{
+	bWardBombCheck = true;
+
+	set_task( 1.0, "_SH_ResetBombCheck", 0 );
+}
+
+
+public _SH_ResetBombCheck()
+{
+	bWardBombCheck = false;
+}
+
 public _SH_DrawSerpentWard( parm[5] )
 {
 
@@ -220,7 +234,6 @@ public _SH_DrawSerpentWard( parm[5] )
 		return;
 	}
 
-
 	// User is no longer alive, don't draw wards
 	if ( !is_user_alive( id ) )
 	{
@@ -231,6 +244,17 @@ public _SH_DrawSerpentWard( parm[5] )
 	if ( SM_GetSkillLevel( id, SKILL_SERPENTWARD ) <= 0 )
 	{
 		return;
+	}
+
+	// Don't allow the ward to be by a hostage or the bom
+	if ( bWardBombCheck )
+	{
+		if ( !SH_CanPlaceWard( id ) )
+		{
+			client_print( id, print_chat, "%s Serpent ward removed, you can't have them near bombs or hostages!", g_MODclient );
+
+			return;
+		}
 	}
 
 	new origin[3], start[3], end[3], red, blue, green
