@@ -557,7 +557,7 @@ MYSQLX_UpdateWebTable()
 			{
 				lang_GetRaceName ( i, iLang, szName, 63 );
 
-				formatex( szQuery, 255, "REPLACE INTO `wc3_web_race` ( `race_id` , `race_lang` , `race_name` ) VALUES ( '%d', '%s', '%s' );", i, lang, szName );
+				formatex( szQuery, 255, "REPLACE INTO `wc3_web_race` ( `race_id` , `race_lang` , `race_name`, `race_description` ) VALUES ( '%d', '%s', '%s', '' );", i, lang, szName );
 
 				query = SQL_PrepareQuery( g_DBConn, szQuery );
 
@@ -574,7 +574,7 @@ MYSQLX_UpdateWebTable()
 			{
 				LANG_GetSkillName ( i, iLang, szName, 63, 200 );
 
-				formatex( szQuery, 255, "REPLACE INTO `wc3_web_skill` ( `skill_id` , `skill_lang` , `skill_name` ) VALUES ( '%d', '%s', '%s' );", i, lang, szName );
+				formatex( szQuery, 255, "REPLACE INTO `wc3_web_skill` ( `skill_id` , `skill_lang` , `skill_name`, `skill_description` ) VALUES ( '%d', '%s', '%s', '' );", i, lang, szName );
 
 				query = SQL_PrepareQuery( g_DBConn, szQuery );
 

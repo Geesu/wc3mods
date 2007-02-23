@@ -332,12 +332,6 @@ public EVENT_PlayerInitialSpawn( id )
 
 	WC3_NewSession( id );
 
-	// Need to reset damage dealt since it's a new round
-	for ( new i = 0; i < MAXPLAYERS; i++ )
-	{
-		g_iDamageDealt[id][i] = 0;
-	}
-
 	return;
 }
 

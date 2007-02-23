@@ -1840,4 +1840,9 @@ WC3_PlayerInit( id )
 	p_data_b[id][PB_NO_DAMAGE]		= false;		// User should be damaged
 
 	g_iDBPlayerUniqueID[id]			= 0;			// Reset the user's UniqueID
+
+	for ( new i = 0; i < MAXPLAYERS; i++ )
+	{
+		g_iDamageDealt[id][i] = 0;			// Reset damage dealt
+	}
 }
