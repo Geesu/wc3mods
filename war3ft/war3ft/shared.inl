@@ -825,7 +825,7 @@ public SHARED_SetSpeed( id )
 			// Then just apply the bonus!
 			if ( fNewSpeed > 0.0 )
 			{
-				fNewSpeed *= ITEM_BOOT_INCREASE;
+				fNewSpeed *= ( 1.0 + get_pcvar_float( CVAR_wc3_boots ) );
 			}
 			
 			// User only has boots
@@ -834,17 +834,17 @@ public SHARED_SetSpeed( id )
 				// Give them the bonus
 				if ( g_iPlayerRole[id] == PLR_VIP )
 				{
-					fNewSpeed = CS_SPEED_VIP * ITEM_BOOT_INCREASE;
+					fNewSpeed = CS_SPEED_VIP * ( 1.0 + get_pcvar_float( CVAR_wc3_boots ) );
 				}
 				// Player zoomed in
 				else if ( g_bPlayerZoomed[id] )
 				{
-					fNewSpeed = CS_WEAPON_SPEED_ZOOM[iWeapon] * ITEM_BOOT_INCREASE;
+					fNewSpeed = CS_WEAPON_SPEED_ZOOM[iWeapon] * ( 1.0 + get_pcvar_float( CVAR_wc3_boots ) );
 				}
 				// Regular
 				else
 				{
-					fNewSpeed = CS_WEAPON_SPEED[iWeapon] * ITEM_BOOT_INCREASE;
+					fNewSpeed = CS_WEAPON_SPEED[iWeapon] * ( 1.0 + get_pcvar_float( CVAR_wc3_boots ) );
 				}
 			}
 		}

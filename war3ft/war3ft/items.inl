@@ -273,7 +273,7 @@ ITEM_DisplayMessage( id, iItem )
 		{
 			if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 			{
-				client_print( id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_2", ( ( ITEM_BOOT_INCREASE - 1.00 ) * 100.00 ) );
+				client_print( id, print_chat,"%s %L", g_MODclient, id, "INFO_SHOPMENU_2", ( ( get_pcvar_float( CVAR_wc3_boots ) ) * 100.00 ) );
 			}
 
 			else if ( g_MOD == GAME_DOD )

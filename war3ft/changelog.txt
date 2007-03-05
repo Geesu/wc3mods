@@ -4,6 +4,7 @@ v3.0 RC6
  - Addition: Check for correct race when using /levitation
  - Addition: Forward - wc3_reportkill
  - Addition: Admin logging added (/configs/war3ft/wc3_admin.log)
+ - Addition: Boot cvar
  - Bug Fix: Possible for ultimate icon to stay after a searching ultimate was used (if on last second of search)
  - Bug Fix: Message to warden regarding Blink could be repeated
  - Bug Fix: Ultimate icons not always showing

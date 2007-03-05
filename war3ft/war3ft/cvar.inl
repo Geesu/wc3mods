@@ -59,6 +59,7 @@ new CVAR_wc3_blink_dizziness;
 
 // Items
 new CVAR_wc3_tome;
+new CVAR_wc3_boots;
 new CVAR_wc3_claw;
 new CVAR_wc3_health;
 new CVAR_wc3_frost;
@@ -138,6 +139,7 @@ public CVAR_Init()
 	// Item CVARs
 
 	CVAR_wc3_tome					= register_cvar( "wc3_tome"					, "50"							);
+	CVAR_wc3_boots					= register_cvar( "wc3_boots"				, "0.10"						);
 	CVAR_wc3_claw					= register_cvar( "wc3_claw"					, "6"							);
 	CVAR_wc3_health					= register_cvar( "wc3_health"				, "15"							);
 	CVAR_wc3_frost					= register_cvar( "wc3_frost"				, "125"							);
