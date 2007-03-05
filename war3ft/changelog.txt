@@ -20,6 +20,9 @@ v3.0 RC6
  - Bug Fix: Pending changerace never reset when a player disconnected (thanks kevlartester)
  - Bug Fix: When giving Xp through admin command it wasn't always set correctly (thanks EchoSide)
  - Bug Fix: Changing wc3_save_xp or wc3_xp_multiplier in game will no longer require a map restart to take affect
+ - Bug Fix: (B6) Loss of XP when changerace menu wouldn't appear
+ - Bug Fix: (B6) cs_deagle5 issue with weapon reincarnation
+ - Change: (B6) Changerace screen will now load instantly (not using threaded query)
  - Change: Respawn time from 1.5 seconds to 0.2 (by ability or item)
  - Change: Bots skin will change now if they mole or buy chameleon
  - Change: (B5) No longer set maximum money to 16000 when setting money

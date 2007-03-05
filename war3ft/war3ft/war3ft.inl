@@ -1847,4 +1847,6 @@ WC3_PlayerInit( id )
 	}
 
 	p_data[id][P_CHANGERACE] = 0;					// User shouldn't have a changerace pending
+
+	bDBXPRetrieved[id] = false;						// User hasn't gotten his/her XP since he's being reset right?
 }

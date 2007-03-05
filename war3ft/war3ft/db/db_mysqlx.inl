@@ -280,21 +280,19 @@ MYSQLX_GetAllXP( id )
 	{
 		return;
 	}
-
-	new szQuery[256], data[1];
-	format(szQuery, 255, "SELECT `race_id`, `race_xp` FROM `wc3_player_race` WHERE ( `player_id` = '%d' );", DB_GetUniqueID( id ) );
 	
-	data[0] = id;
+	new szQuery[256];
+	format(szQuery, 255, "SELECT `race_id`, `race_xp` FROM `wc3_player_race` WHERE ( `player_id` = '%d' );", DB_GetUniqueID( id ) );
+	new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
 
-	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_GetAllXP", szQuery, data, 1 )	
+	if ( !SQL_Execute( query ) )
+	{
+		client_print( id, print_chat, "%s Error, unable to retrieve XP, please contact a server administrator", g_MODclient );
 
-	return;
-}
+		MYSQLX_Error( query, szQuery, 1 );
 
-// Callback function that is executed when MySQL X Thread has completed
-public _MYSQLX_GetAllXP( failstate, Handle:query, error[], errnum, data[], size )
-{
-	new id = data[0];
+		return;
+	}
 
 	// Set last saved XP to 0
 	for ( new i = 0; i < MAX_RACES; i++ )
@@ -302,38 +300,26 @@ public _MYSQLX_GetAllXP( failstate, Handle:query, error[], errnum, data[], size 
 		g_iDBPlayerXPInfoStore[id][i] = 0;
 	}
 
-	// Error during the query
-	if ( failstate )
+	// Get the XP!
+	new iXP, iRace;
+
+	// Loop through all of the records to find the XP data
+	while ( SQL_MoreResults( query ) )
 	{
-		new szQuery[256];
-		SQL_GetQueryString( query, szQuery, 255 );
+		iRace	= SQL_ReadResult( query, 0 );
+		iXP		= SQL_ReadResult( query, 1 );
 		
-		MYSQLX_ThreadError( query, szQuery, error, errnum, failstate, 2 );
-	}
-
-	// Query successful, we can do stuff!
-	else
-	{
-		new iXP, iRace;
-
-		// Loop through all of the records to find the XP data
-		while ( SQL_MoreResults( query ) )
+		// Save the user's XP in an array
+		if ( iRace > 0 && iRace < MAX_RACES + 1 )
 		{
-			iRace	= SQL_ReadResult( query, 0 );
-			iXP		= SQL_ReadResult( query, 1 );
-			
-			// Save the user's XP in an array
-			if ( iRace > 0 && iRace < MAX_RACES + 1 )
-			{
-				g_iDBPlayerXPInfoStore[id][iRace-1] = iXP;
-			}
-
-			SQL_NextRow( query );
+			g_iDBPlayerXPInfoStore[id][iRace-1] = iXP;
 		}
 
-		// Free the handle
-		SQL_FreeHandle( query );
+		SQL_NextRow( query );
 	}
+
+	// Free the handle
+	SQL_FreeHandle( query );
 
 	// Call the function that will display the "select a race" menu
 	WC3_ChangeRaceShowMenu( id, g_iDBPlayerXPInfoStore[id] );
@@ -398,6 +384,9 @@ public _MYSQLX_SetData( failstate, Handle:query, error[], errnum, data[], size )
 		
 		// Set the race up
 		WC3_SetRaceUp( id );
+
+		// This user's XP has been set + retrieved! We can save now
+		bDBXPRetrieved[id] = true;
 	}
 
 	return;

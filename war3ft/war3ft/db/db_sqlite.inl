@@ -358,6 +358,9 @@ public _SQLITE_SetData( failstate, Handle:query, error[], errnum, data[], size )
 		
 		// Set the race up
 		WC3_SetRaceUp( id );
+
+		// This user's XP has been retrieved! We can save now
+		bDBXPRetrieved[id] = true;
 	}
 
 	return;

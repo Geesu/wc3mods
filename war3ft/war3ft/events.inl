@@ -215,6 +215,12 @@ public on_CurWeapon( id )
 
 	new iCurWeapon = read_data( 2 );
 
+	// Then a weapon strip was triggered - we don't want to save now do we?
+	if ( iCurWeapon == 0 && read_data( 1 ) == 0 && read_data( 3 ) == 0 )
+	{
+		return;
+	}
+
 	// Record the last time a shot was fired
 	fLastShotFired[id] = halflife_time();
 	

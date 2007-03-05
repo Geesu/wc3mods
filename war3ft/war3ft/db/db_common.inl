@@ -120,6 +120,11 @@ public DB_SaveXP( id )
 		return;
 	}
 
+	// Can't save if user's XP hasn't been retrieved yet!
+	if ( !bDBXPRetrieved[id] )
+	{
+		return;
+	}
 
 	new iRaceID = p_data[id][P_RACE];
 

@@ -19,6 +19,9 @@
 // Lets us know that the DB is ready
 new bool:bDBAvailable = false;
 
+// Has the user's XP been retrieved since he joined?
+new bool:bDBXPRetrieved[33];
+
 // SQLX
 new Handle:g_DBTuple;
 new Handle:g_DBConn;

@@ -8,7 +8,6 @@ forward MYSQLX_UpdateKey();
 forward MYSQLX_Save( id );
 forward _MYSQLX_Save( failstate, Handle:query, error[], errnum, data[], size );
 forward MYSQLX_GetAllXP( id );
-forward _MYSQLX_GetAllXP( failstate, Handle:query, error[], errnum, data[], size );
 forward MYSQLX_SetData( id );
 forward _MYSQLX_SetData( failstate, Handle:query, error[], errnum, data[], size );
 forward MYSQLX_Close();
