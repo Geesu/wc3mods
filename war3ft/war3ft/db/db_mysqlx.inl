@@ -237,6 +237,17 @@ MYSQLX_Save( id )
 
 	new iUniqueID = DB_GetUniqueID( id );
 
+	// Error checking when saving
+	if ( iUniqueID <= 0 )
+	{
+		new szName[128];
+		get_user_name( id, szName, 127 );
+
+		log_amx( "Unable to save XP for user '%s', unique ID: %d", szName, iUniqueID );
+
+		return;
+	}
+
 	// Save the user's XP!
 	new szQuery[512];
 	format( szQuery, 511, "REPLACE INTO `wc3_player_race` ( `player_id` , `race_id` , `race_xp` ) VALUES ( '%d', '%d', '%d');", iUniqueID, p_data[id][P_RACE], p_data[id][P_XP] );
@@ -600,6 +611,39 @@ MYSQLX_Prune()
 		formatex( szQuery, 255, szPruneQuery[i], get_pcvar_num( CVAR_wc3_days_before_delete ) );
 
 		new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+		if ( !SQL_Execute( query ) )
+		{
+			MYSQLX_Error( query, szQuery, 6 );
+
+			return;
+		}
+	}
+}
+
+#define MYSQL_TOTAL_CONVERSION_QUERY 2
+MYSQLX_Convert()
+{
+	// Make sure our connection is working
+	if ( !MYSQLX_Check_Connection() )
+	{
+		return;
+	}
+
+	new const szConversionQuery[MYSQL_TOTAL_CONVERSION_QUERY][] = 
+	{
+		"INSERT INTO wc3_player select "", playerid, playerip, playername, time FROM `war3users` GROUP BY playerid;",
+		"INSERT INTO wc3_player_race select wc3_player.player_id, war3users.race, war3users.xp FROM `wc3_player`, `war3users` WHERE wc3_player.player_steamid=war3users.playerid;"
+	};
+
+	//SELECT * FROM `war3users` WHERE `playerid` = '-1' AND `playerip` = '-1' AND `playername` = '-1' AND `xp` = '-1' AND `race` = '-1' AND `skill1` = '-1' AND `skill2` = '-1' AND `skill3` = '-1' AND `skill4` = '-1';
+	//INSERT INTO `war3users` ( `playerid` , `playerip` , `playername` , `xp` , `race` , `skill1` , `skill2` , `skill3` , `skill4` , `time` ) VALUES ( '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', NOW( ));
+
+
+	// Need to run all 3 queries
+	for ( new i = 0; i < MYSQL_TOTAL_CONVERSION_QUERY; i++ )
+	{
+		new Handle:query = SQL_PrepareQuery( g_DBConn, szConversionQuery[i] );
 
 		if ( !SQL_Execute( query ) )
 		{
