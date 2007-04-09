@@ -632,7 +632,7 @@ MYSQLX_Convert()
 
 	new const szConversionQuery[MYSQL_TOTAL_CONVERSION_QUERY][] = 
 	{
-		"INSERT INTO wc3_player select "", playerid, playerip, playername, time FROM `war3users` GROUP BY playerid;",
+		"INSERT INTO wc3_player select '', playerid, playerip, playername, time FROM `war3users` GROUP BY playerid;",
 		"INSERT INTO wc3_player_race select wc3_player.player_id, war3users.race, war3users.xp FROM `wc3_player`, `war3users` WHERE wc3_player.player_steamid=war3users.playerid;"
 	};
 

@@ -23,6 +23,7 @@ v3.0 RC6
  - Bug Fix: Changing wc3_save_xp or wc3_xp_multiplier in game will no longer require a map restart to take affect
  - Bug Fix: (B6) Loss of XP when changerace menu wouldn't appear
  - Bug Fix: (B6) cs_deagle5 issue with weapon reincarnation
+ - Bug Fix: (B6) Being able to get XP after the round has ended (thanks Krazy)
  - Change: (B6) Changerace screen will now load instantly (not using threaded query)
  - Change: Respawn time from 1.5 seconds to 0.2 (by ability or item)
  - Change: Bots skin will change now if they mole or buy chameleon
@@ -34,9 +35,6 @@ v3.0 RC6
 v3.0 RC5
  - Bug Fix: Getting more health than you should with Devotion Aura
  - Bug Fix: Run-time errors from RC4 which made it unplayable
-
-To Do:
- - all menus wait for other menus to disappear?
 
 v3.0 RC4
  - Addition: Changerace will now work with CSDM

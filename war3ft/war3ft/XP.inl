@@ -117,6 +117,11 @@ public on_PlayerAction()
 		return;
 	}
 
+	// If the round is over do not award XP!
+	if ( g_EndRound )
+	{
+		return;
+	}
 
 	// Spawned with the bomb 
 	if (equal(sAction,"Spawned_With_The_Bomb"))
