@@ -1,3 +1,7 @@
+v3.0 RC7
+ - Addition: wc3_ignore_bots CVAR which works with wc3_min_players (thanks Krazy)
+ - Bug Fix: Gloves not always working correctly
+
 v3.0 RC6
  - Addition: levitation console command
  - Addition: Message now displayed when human's ultimate is blocked

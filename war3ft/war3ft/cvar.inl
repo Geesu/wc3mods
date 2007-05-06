@@ -31,6 +31,7 @@ new CVAR_wc3_admin_flag;
 
 // XP CVARs
 new CVAR_wc3_min_players;
+new CVAR_wc3_ignore_bots;
 new CVAR_wc3_xp_multiplier;
 new CVAR_wc3_xp_auto_average;
 new CVAR_wc3_show_kill_obj;
@@ -168,6 +169,7 @@ public CVAR_Init()
 	// XP Modifier CVARs
 
 	CVAR_wc3_min_players			= register_cvar( "wc3_min_players"			, "2"							);
+	CVAR_wc3_ignore_bots			= register_cvar( "wc3_ignore_bots"			, "0"							);
 	CVAR_wc3_show_kill_obj			= register_cvar( "wc3_show_kill_obj"		, "0"							);
 	CVAR_wc3_show_objectives		= register_cvar( "wc3_show_objectives"		, "1"							);
 	CVAR_wc3_xp_multiplier			= register_cvar( "wc3_xp_multiplier"		, "1.0"		, FCVAR_SERVER		);

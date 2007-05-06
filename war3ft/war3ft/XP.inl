@@ -417,7 +417,22 @@ XP_GivenByLevel( iLevel )
 
 bool:XP_MinPlayers()
 {
-	if ( get_playersnum() < get_pcvar_num( CVAR_wc3_min_players ) )
+	new iNum;
+
+	// Don't ignore bots
+	if ( get_pcvar_num( CVAR_wc3_ignore_bots ) == 0 )
+	{
+		iNum = get_playersnum();
+	}
+
+	// Ignore bots
+	else
+	{
+		new players[32];
+		get_players( players, iNum, "ch" ); 
+	}
+
+	if ( iNum < get_pcvar_num( CVAR_wc3_min_players ) )
 	{
 		return false;
 	}

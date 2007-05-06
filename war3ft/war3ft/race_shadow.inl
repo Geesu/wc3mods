@@ -383,8 +383,10 @@ bool:SH_CanPlaceWard( id )
 
 public SH_Ult_BigBadVoodoo( id )
 {
-	if( !p_data_b[id][PB_ISCONNECTED] )
-		return PLUGIN_HANDLED;
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
 
 	p_data_b[id][PB_GODMODE] = true;
 
@@ -413,7 +415,7 @@ public SH_Ult_BigBadVoodoo( id )
 
 	set_task( float( SH_BIGBADVOODOO_DURATION ), "SH_Ult_Remove", TASK_RESETGOD + id );
 
-	return PLUGIN_HANDLED;
+	return;
 }
 
 public SH_Ult_Remove( id )
@@ -433,7 +435,7 @@ public SH_Ult_Remove( id )
 
 	set_user_godmode( id, 0 );
 
-	return PLUGIN_HANDLED;
+	return;
 }
 
 SH_SkillsOffensive( iAttacker, iVictim )
