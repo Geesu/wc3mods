@@ -677,6 +677,7 @@ new bool:g_bExtraSpritesEnabled = false
 #define HUD_SKILL				3	// i.e. "you have evaded a shot"
 #define HUD_XP					3	// Used to show the user their xp/items when dead
 #define HUD_AUTO				-1	// Automatically choose one!
+#define HUD_TIMER				1	// Timer
 
 #define FADE_OUT                0x0000          // Fade out from max alpha
 #define FADE_IN                 0x0001          // Fade in to max alpha

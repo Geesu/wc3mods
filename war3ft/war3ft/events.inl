@@ -8,13 +8,9 @@ public grenade_throw( index, greindex, wId )
 		return;
 	}
 	
-	client_print( index, print_chat, "[DEBUG] You threw a grenade?  thats flipping sweet! Ammo: %d", cs_get_user_bpammo( index, CSW_HEGRENADE ) );
-
 	// User has gloves!  Do we need to give them another grenade?
 	if ( ITEM_Has( index, ITEM_GLOVES ) > ITEM_NONE )
 	{
-		client_print( index, print_chat, "[DEBUG] OMG and you have gloves too? srsly?" );
-
 		ITEM_Glove_Begin( index );
 	}
 

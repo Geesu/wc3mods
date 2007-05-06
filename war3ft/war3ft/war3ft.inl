@@ -1072,6 +1072,12 @@ WC3_StatusText( id, iType, const fmt[], ... )
 			set_hudmessage( 0, 0, 255, 0.75, 0.85, HUDMESSAGE_FX_FADEIN, 6.0, 3.0, 0.2, 0.7, HUD_SKILL );
 		}
 
+		// I.E.
+		else if ( iType == TXT_TIMER )
+		{
+			set_hudmessage( 0, 100, 0, 0.05, 0.65, HUDMESSAGE_FX_WRITEOUT, 0.02, 10.0, 0.01, 0.1, HUD_TIMER );	
+		}
+
 		// All other cases
 		else
 		{

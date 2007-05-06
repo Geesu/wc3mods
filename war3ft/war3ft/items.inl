@@ -781,7 +781,7 @@ ITEM_Glove_Begin( id )
 	// Then lets start a timer to give them a grenade!
 	g_iGloveTimer[id] = get_pcvar_num( CVAR_wc3_glove_timer );
 
-	client_print( id, print_chat, "[DEBUG] Starting timer @ %d seconds", g_iGloveTimer[id] );
+	WC3_StatusText( id, TXT_TIMER, "%d second(s) until your next grenade", g_iGloveTimer[id] );
 
 	g_iGloveTimer[id]--;
 
@@ -800,21 +800,20 @@ public _ITEM_Glove_Give( id )
 		id -= TASK_ITEM_GLOVES;
 	}
 
-	SHARED_SaveWeapons( id );
-	client_print( id, print_chat, "[DEBUG] After: Has nade? %d", SHARED_HasGrenade( id ) );
-
 	if ( !p_data_b[id][PB_ISCONNECTED] || !is_user_alive( id ) )
 	{
 		return;
 	}
 
-	client_print( id, print_chat, "[DEBUG] Ammo: %d", cs_get_user_bpammo( id, CSW_HEGRENADE ) );
+	// Only need to save once! - this is b/c I'm not sure when the loss of a grenade is updated - and I wanted SHARED_HasGrenade to work @ all times!
+	if ( g_iGloveTimer[id] == get_pcvar_num( CVAR_wc3_glove_timer ) - 1 )
+	{
+		SHARED_SaveWeapons( id );
+	}
 
 	// If somehow they already got a grenade - stop this!
 	if ( cs_get_user_bpammo( id, CSW_HEGRENADE ) > 0 )
 	{
-		client_print( id, print_chat, "[DEBUG] Somehow you got a grenade?  Gloves stopping!" );
-
 		g_iGloveTimer[id] = 0;
 
 		return;
@@ -822,9 +821,7 @@ public _ITEM_Glove_Give( id )
 
 	if ( g_iGloveTimer[id] > 0 )
 	{
-		client_print( id, print_chat, "[DEBUG] You will receive a grenade in %d seconds", g_iGloveTimer[id] );
-
-		WC3_StatusText( id, TXT_SKILL, "You will receive a grenade in %d seconds", g_iGloveTimer[id] );
+		WC3_StatusText( id, TXT_TIMER, "%d second(s) until your next grenade", g_iGloveTimer[id] );
 
 		g_iGloveTimer[id]--;
 
@@ -851,11 +848,9 @@ public _ITEM_Glove_Give( id )
 			give_item( id, "weapon_stickgrenade" );
 		}
 	}
-	
-	client_print( id, print_chat, "[DEBUG] Enjoy your grenade bitch" );
 
 	// Display a message to the user
-	WC3_StatusText( id, TXT_TOP_CENTER, "%L", id, "ENJOY_A_GRENADE" )
+	WC3_StatusText( id, TXT_TIMER, "%L", id, "ENJOY_A_GRENADE" )
 
 	return;
 }		
