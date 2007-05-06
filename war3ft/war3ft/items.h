@@ -52,6 +52,8 @@ new g_iHelmCharges[33];								// Holds the number of charges left in the player
 new bool:g_bPlayerBoughtAnkh[33];					// Set to true when a user buys an ankh
 new bool:g_bPlayerBoughtMole[33];					// Set to true when a user buys a mole
 
+new g_iGloveTimer[33];								// Keeps track of how much time is left to give a user a grenade
+
 new ITEM_COST[MAX_SHOPMENU_ITEMS];                  // Holds the price of an item
 
 #define ITEM_CHARGEABLE		1

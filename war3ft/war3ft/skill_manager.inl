@@ -284,6 +284,14 @@ SM_SetSkillLevel( id, skill_id, iLevel )
 
 		return;
 	}
+
+	// Technically we shouldn't have a skill level EVER greater than 3 right?
+	if ( iLevel > 3 )
+	{
+		log_error( AMX_ERR_NATIVE, "Setting skill %d to %d wtf??", skill_id, iLevel );
+
+		return;
+	}
 	
 	//static iLastSkillLevel;
 	//iLastSkillLevel = g_PlayerSkillLevel[id][skill_id];

@@ -2,19 +2,20 @@
 // Forwards from the CSX module and DODX module
 public grenade_throw( index, greindex, wId )
 {
-
+	
 	if ( !WC3_Check() )
 	{
 		return;
 	}
+	
+	client_print( index, print_chat, "[DEBUG] You threw a grenade?  thats flipping sweet! Ammo: %d", cs_get_user_bpammo( index, CSW_HEGRENADE ) );
 
+	// User has gloves!  Do we need to give them another grenade?
 	if ( ITEM_Has( index, ITEM_GLOVES ) > ITEM_NONE )
 	{
-		new Float:fTimer = get_pcvar_float( CVAR_wc3_glove_timer );
+		client_print( index, print_chat, "[DEBUG] OMG and you have gloves too? srsly?" );
 
-		set_task( fTimer, "_ITEM_Glove_Give", TASK_ITEM_GLOVES + index );
-
-		//client_print( index, print_chat, "[DEBUG] You will receive another grenade in %f seconds", fTimer );
+		ITEM_Glove_Begin( index );
 	}
 
 	static iSkillLevel;

@@ -768,10 +768,24 @@ ITEM_Gloves( id )
 
 	if ( !SHARED_HasGrenade( id ) )
 	{
+		g_iGloveTimer[id] = 0;
+
 		_ITEM_Glove_Give( id );
 	}
 
 	return;
+}
+
+ITEM_Glove_Begin( id )
+{
+	// Then lets start a timer to give them a grenade!
+	g_iGloveTimer[id] = get_pcvar_num( CVAR_wc3_glove_timer );
+
+	client_print( id, print_chat, "[DEBUG] Starting timer @ %d seconds", g_iGloveTimer[id] );
+
+	g_iGloveTimer[id]--;
+
+	set_task( 1.0, "_ITEM_Glove_Give", TASK_ITEM_GLOVES + id );
 }
 
 public _ITEM_Glove_Give( id )
@@ -786,16 +800,35 @@ public _ITEM_Glove_Give( id )
 		id -= TASK_ITEM_GLOVES;
 	}
 
+	SHARED_SaveWeapons( id );
+	client_print( id, print_chat, "[DEBUG] After: Has nade? %d", SHARED_HasGrenade( id ) );
+
 	if ( !p_data_b[id][PB_ISCONNECTED] || !is_user_alive( id ) )
 	{
 		return;
 	}
 
-	// Giving a grenade if they already have one?
-	if ( SHARED_HasGrenade( id ) )
+	client_print( id, print_chat, "[DEBUG] Ammo: %d", cs_get_user_bpammo( id, CSW_HEGRENADE ) );
+
+	// If somehow they already got a grenade - stop this!
+	if ( cs_get_user_bpammo( id, CSW_HEGRENADE ) > 0 )
 	{
-		// Try again in a little
-		set_task( get_pcvar_float( CVAR_wc3_glove_timer ), "_ITEM_Glove_Give", TASK_ITEM_GLOVES + id );
+		client_print( id, print_chat, "[DEBUG] Somehow you got a grenade?  Gloves stopping!" );
+
+		g_iGloveTimer[id] = 0;
+
+		return;
+	}
+
+	if ( g_iGloveTimer[id] > 0 )
+	{
+		client_print( id, print_chat, "[DEBUG] You will receive a grenade in %d seconds", g_iGloveTimer[id] );
+
+		WC3_StatusText( id, TXT_SKILL, "You will receive a grenade in %d seconds", g_iGloveTimer[id] );
+
+		g_iGloveTimer[id]--;
+
+		set_task( 1.0, "_ITEM_Glove_Give", TASK_ITEM_GLOVES + id );
 
 		return;
 	}
@@ -819,6 +852,8 @@ public _ITEM_Glove_Give( id )
 		}
 	}
 	
+	client_print( id, print_chat, "[DEBUG] Enjoy your grenade bitch" );
+
 	// Display a message to the user
 	WC3_StatusText( id, TXT_TOP_CENTER, "%L", id, "ENJOY_A_GRENADE" )
 
