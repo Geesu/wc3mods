@@ -1858,4 +1858,6 @@ WC3_PlayerInit( id )
 	p_data[id][P_CHANGERACE] = 0;					// User shouldn't have a changerace pending
 
 	bDBXPRetrieved[id] = false;						// User hasn't gotten his/her XP since he's being reset right?
+
+	p_data_b[id][PB_BIGBAD_ATTACKER]	= false;	// User isn't allowed to attack someone running it duh!
 }

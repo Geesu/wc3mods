@@ -410,115 +410,154 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 		client_print( iVictim, print_chat, "( %0.0f, %0.0f, %0.0f )", fVecEndPos[0], fVecEndPos[1], fVecEndPos[2] );
 		client_print( iAttacker, print_chat, "( %0.0f, %0.0f, %0.0f )", fVecEndPos[0], fVecEndPos[1], fVecEndPos[2] );
 */
-		// This is a check for ultimates that need to "search" for a target
-		if ( SHARED_ValidPlayer( iAttacker ) && p_data_b[iAttacker][PB_ISSEARCHING] )
+		// We need to have a valid player!
+		if ( SHARED_ValidPlayer( iAttacker ) )
 		{
-
-			// Now lets make sure the person he's looking at is in view and isn't on the same team
-			if ( get_user_team( iAttacker ) != get_user_team( iVictim ) && UTIL_EntInView( iAttacker, iVictim ) )
+			// This is a check for ultimates that need to "search" for a target
+			if ( p_data_b[iAttacker][PB_ISSEARCHING] )
 			{
-				
-				// Check to see if the user should block this ultimate!
-				if ( ULT_IsImmune( iVictim ) )
+
+				// Now lets make sure the person he's looking at is in view and isn't on the same team
+				if ( get_user_team( iAttacker ) != get_user_team( iVictim ) && UTIL_EntInView( iAttacker, iVictim ) )
 				{
-					ULT_Blocked( iAttacker );
+					
+					// Check to see if the user should block this ultimate!
+					if ( ULT_IsImmune( iVictim ) )
+					{
+						ULT_Blocked( iAttacker );
+					}
+
+					// Then the user's ult should work!
+					else
+					{
+						// Well we do have a target so lets execute the user's ultimate!!
+						if ( SM_GetSkillLevel( iAttacker, ULTIMATE_CHAINLIGHTNING ) > 0 )
+						{
+							OR_ULT_ChainLightning( iAttacker, iVictim, iHitZone );
+						}
+						else if ( SM_GetSkillLevel( iAttacker, ULTIMATE_ENTANGLE ) > 0 )
+						{
+							NE_ULT_Entangle( iAttacker, iVictim );
+						}
+						else if ( SM_GetSkillLevel( iAttacker, ULTIMATE_IMMOLATE ) > 0 )
+						{
+							BM_ULT_Immolate( iAttacker, iVictim );
+						}
+					}
+
+					// No longer searching since we found a target
+					p_data_b[iAttacker][PB_ISSEARCHING]	= false;
+
+					// Set up the user's ultimate delay
+					ULT_ResetCooldown( iAttacker, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 				}
-
-				// Then the user's ult should work!
-				else
-				{
-					// Well we do have a target so lets execute the user's ultimate!!
-					if ( SM_GetSkillLevel( iAttacker, ULTIMATE_CHAINLIGHTNING ) > 0 )
-					{
-						OR_ULT_ChainLightning( iAttacker, iVictim, iHitZone );
-					}
-					else if ( SM_GetSkillLevel( iAttacker, ULTIMATE_ENTANGLE ) > 0 )
-					{
-						NE_ULT_Entangle( iAttacker, iVictim );
-					}
-					else if ( SM_GetSkillLevel( iAttacker, ULTIMATE_IMMOLATE ) > 0 )
-					{
-						BM_ULT_Immolate( iAttacker, iVictim );
-					}
-				}
-
-				// No longer searching since we found a target
-				p_data_b[iAttacker][PB_ISSEARCHING]	= false;
-
-				// Set up the user's ultimate delay
-				ULT_ResetCooldown( iAttacker, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 			}
-		}
 
-		// This is a nice check for Helm of Excellence
-		if ( ITEM_Has( iVictim, ITEM_HELM ) > ITEM_NONE )
-		{
-			// If its a headshot then we want to block it
-			if ( iHitZone & (1 << 1) )
+			// This is a nice check for Helm of Excellence
+			if ( ITEM_Has( iVictim, ITEM_HELM ) > ITEM_NONE )
 			{
-				set_tr( TR_flFraction, 1.0 );
-				
-				// Make sure we have a valid attacker!
-				if ( SHARED_ValidPlayer( iAttacker ) )
-				{
-					// Do the check to see if we should flash the screen orange
-					new Float:fTime = halflife_time();
-					new Float:fDifference = fTime - fLastShotFired[iAttacker];
-
-					if ( fDifference < 0.1 && fDifference > 0.0 )
-					{
-						Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 0, 0, 255, 150 );
-
-						// Lets remove a charge from the helm!
-						ITEM_RemoveCharge( iVictim, ITEM_HELM );
-					}
-				}
-				
-				return FMRES_SUPERCEDE;
-			}
-		}
-
-		// Check to see if this user has night elf's evasion
-		if ( SM_GetSkillLevel( iVictim, SKILL_EVASION ) > 0 && SHARED_ValidPlayer( iAttacker ) )
-		{
-			// Do the check to see if we should "evade" this shot
-			new Float:fTime = halflife_time();
-			new Float:fDifference = fTime - fLastShotFired[iAttacker];
-
-			if ( SHARED_ValidPlayer( iAttacker ) && fDifference < 0.1 && fDifference > 0.0 )
-			{
-
-				// Basically if friendly fire is on, we want to block ALL shots, otherwise we only block shots from enemies
-				if ( !get_pcvar_num( CVAR_mp_friendlyfire ) )
-				{
-					if ( get_user_team( iAttacker ) == get_user_team( iVictim ) )
-					{
-						return FMRES_IGNORED;
-					}
-				}
-				
-				// Then we should evade this shot!
-				if ( NE_Evasion( iVictim, iHitZone ) )
+				// If its a headshot then we want to block it
+				if ( iHitZone & (1 << 1) )
 				{
 					set_tr( TR_flFraction, 1.0 );
 					
-					WC3_StatusText( iVictim, TXT_SKILL, "You have evaded a shot!" );
+					// Make sure we have a valid attacker!
+					if ( SHARED_ValidPlayer( iAttacker ) )
+					{
+						// Do the check to see if we should flash the screen orange
+						new Float:fTime = halflife_time();
+						new Float:fDifference = fTime - fLastShotFired[iAttacker];
 
+						if ( fDifference < 0.1 && fDifference > 0.0 )
+						{
+							Create_ScreenFade( iVictim, (1<<10), (1<<10), (1<<12), 0, 0, 255, 150 );
+
+							// Lets remove a charge from the helm!
+							ITEM_RemoveCharge( iVictim, ITEM_HELM );
+						}
+					}
+					
 					return FMRES_SUPERCEDE;
 				}
 			}
-		}
-		
-		// Mole protectant
-		if ( SHARED_ValidPlayer( iAttacker ) && p_data_b[iAttacker][PB_MOLE] && ITEM_Has( iVictim, ITEM_PROTECTANT ) > ITEM_NONE )
-		{	
-			new Float:fTime = halflife_time();
 
-			if ( fTime - fLastShotFired[iAttacker] < 0.1  )
+			// Check to see if this user has night elf's evasion
+			if ( SM_GetSkillLevel( iVictim, SKILL_EVASION ) > 0 )
 			{
-				client_print( iVictim, print_chat, "%s %L", g_MODclient, iVictim, "SHOT_DEFLECTED" );
+				// Do the check to see if we should "evade" this shot
+				new Float:fTime = halflife_time();
+				new Float:fDifference = fTime - fLastShotFired[iAttacker];
 
-				set_tr( TR_flFraction, 1.0 );
+				if ( SHARED_ValidPlayer( iAttacker ) && fDifference < 0.1 && fDifference > 0.0 )
+				{
+
+					// Basically if friendly fire is on, we want to block ALL shots, otherwise we only block shots from enemies
+					if ( !get_pcvar_num( CVAR_mp_friendlyfire ) )
+					{
+						if ( get_user_team( iAttacker ) == get_user_team( iVictim ) )
+						{
+							return FMRES_IGNORED;
+						}
+					}
+					
+					// Then we should evade this shot!
+					if ( NE_Evasion( iVictim, iHitZone ) )
+					{
+						set_tr( TR_flFraction, 1.0 );
+						
+						WC3_StatusText( iVictim, TXT_SKILL, "You have evaded a shot!" );
+
+						return FMRES_SUPERCEDE;
+					}
+				}
+			}
+			
+			// Mole protectant
+			if ( p_data_b[iAttacker][PB_MOLE] && ITEM_Has( iVictim, ITEM_PROTECTANT ) > ITEM_NONE )
+			{	
+				new Float:fTime = halflife_time();
+
+				if ( fTime - fLastShotFired[iAttacker] < 0.1  )
+				{
+					client_print( iVictim, print_chat, "%s %L", g_MODclient, iVictim, "SHOT_DEFLECTED" );
+
+					set_tr( TR_flFraction, 1.0 );
+				}
+			}
+
+			// Check for Big Bad Voodoo's ultimate!
+			if ( p_data_b[iVictim][PB_GODMODE] )
+			{
+				
+				new bool:bBlockDamage = false;
+
+				// Do we allow this person to be attacked by this player?
+				if ( p_data_b[iAttacker][PB_BIGBAD_ATTACKER] )
+				{
+					bBlockDamage = true;
+				}
+
+				// Check to see if immunity is available for the attacker
+				else if ( ULT_IsImmune( iAttacker ) )
+				{
+					ULT_Blocked( iVictim );
+
+					// This user can attack someone with big bad voodoo!
+					p_data_b[iAttacker][PB_BIGBAD_ATTACKER] = true;
+
+					bBlockDamage = true;
+
+					// Reset the attacker dmg
+					set_task( get_pcvar_float( CVAR_wc3_ult_cooldown ), "_SH_ResetBigBadAttacker", TASK_BIGBADATTACKER + iAttacker );
+
+					client_print( iAttacker, print_chat, "%s You can now damage players with Big Bad Voodoo activated!", g_MODclient );
+				}
+
+				// Block the damage!
+				if ( bBlockDamage )
+				{
+					set_tr( TR_flFraction, 1.0 );
+				}
 			}
 		}
 	}

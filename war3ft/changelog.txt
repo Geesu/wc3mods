@@ -1,6 +1,8 @@
 v3.0 RC7
  - Addition: wc3_ignore_bots CVAR which works with wc3_min_players (thanks Krazy)
+ - Addition: It is now possible do deal damage against a SH w/Big Bad Voodoo if you have immunity
  - Bug Fix: Gloves not always working correctly
+ - Bug Fix: XP Loss at map change
 
 v3.0 RC6
  - Addition: levitation console command

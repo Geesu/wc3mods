@@ -411,8 +411,6 @@ public SH_Ult_BigBadVoodoo( id )
 
 	Create_TE_ELIGHT( id, vOrigin, 100, 255, 245, 200, SH_BIGBADVOODOO_DURATION, 0 );
 
-	set_user_godmode( id, 1 );
-
 	set_task( float( SH_BIGBADVOODOO_DURATION ), "SH_Ult_Remove", TASK_RESETGOD + id );
 
 	return;
@@ -432,8 +430,6 @@ public SH_Ult_Remove( id )
 	ULT_Icon( id, ICON_HIDE );
 
 	SHARED_INVIS_Set( id );
-
-	set_user_godmode( id, 0 );
 
 	return;
 }
@@ -543,4 +539,28 @@ SH_SkillsDefensive( iAttacker, iVictim )
 			iStatsShots[iVictim][WEAPON]++;
 		}
 	}
+}
+
+// This function is called to reset the ability of an attacker to attack a user running big bad voodoo
+public _SH_ResetBigBadAttacker( id )
+{
+
+	if ( !WC3_Check() )
+	{
+		return;
+	}
+
+	if ( id > TASK_GETINPUT )
+	{
+		id -= TASK_GETINPUT;
+	}
+
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
+
+	p_data_b[id][PB_BIGBAD_ATTACKER] = false;
+
+	client_print( id, print_chat, "%s You can no longer damage players with Big Bad Voodoo activated", g_MODclient );
 }

@@ -26,7 +26,7 @@
 #define	TASK_RESETGOD		608		// Reset god mode
 #define	TASK_BLINKCHECK		640		// Check to see if the player teleported into an invalid location
 #define	TASK_BLINKSTUCK		672		// Checks to see if a user is stuck after blinking
-//#define	TASK_TELEMENU		704		// Telemenu function
+#define	TASK_BIGBADATTACKER	704		// _SH_ResetBigBadAttacker
 //#define	TASK_TELEWAITSTOP	736		// Calls telewaitstop function
 //#define	TASK_TELEPORT		768		// Teleports the player
 //#define	TASK_TELEFADEIN		800		// Calls telefadein function
@@ -325,7 +325,7 @@
 	#define PB_CAN_RENDER			24
 
 	#define PB_NO_DAMAGE			25
-	//#define PB_REINCARNATION_SKIP	26
+	#define PB_BIGBAD_ATTACKER		26		// This user is allowed to attack a user running big bad voodoo!
 
 	#define PB_ISPLANTING			27		// Set to true if the user is planting the bomb
 
