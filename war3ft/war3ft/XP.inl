@@ -656,11 +656,12 @@ XP_Configure()
 public XP_Reset(id)
 {
 
-	DB_SaveXP( id );
-
 	p_data[id][P_LEVEL]		= 0;
 	p_data[id][P_XP]		= 0;
 	SM_ResetSkillLevels( id );
+
+	// Save after resetting the user's XP
+	DB_SaveXP( id, true );
 
 	WC3_ShowBar( id );
 

@@ -268,7 +268,7 @@ public plugin_end()
 	}
 	
 	FWD_Destroy();
-	DB_SaveAll();
+	DB_SaveAll( false );
 	DB_Prune();
 	DB_Close();
 
@@ -423,7 +423,7 @@ public client_disconnect(id)
 	// Save the user's XP if we have XP to save
 	if ( get_pcvar_num( CVAR_wc3_save_xp ) && !is_user_bot(id) && p_data[id][P_RACE] && p_data[id][P_XP] )
 	{
-		DB_SaveXP( id );
+		DB_SaveXP( id, true );
 	}
 
 	if ( get_pcvar_num( CVAR_wc3_psychostats ) )

@@ -6,6 +6,7 @@ forward SQLITE_Init();
 forward SQLITE_Upgrade();
 forward SQLITE_Close();
 forward SQLITE_Save( id );
+forward SQLITE_Save_T( id );
 forward SQLITE_GetAllXP( id );
 forward SQLITE_SetData( id );
 forward SQLITE_Check_Connection();

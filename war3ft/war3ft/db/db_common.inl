@@ -103,7 +103,7 @@ public DB_Close()
 }
 
 // Save the user's XP
-public DB_SaveXP( id )
+public DB_SaveXP( id, bThreaded )
 {
 	if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
 	{
@@ -140,18 +140,33 @@ public DB_SaveXP( id )
 		return;
 	}
 	
-	// Save the XP	
-	switch( g_DBType )
+	// Save the XP - use threaded!
+	if ( bThreaded )
 	{
-		case DB_MYSQLX:	MYSQLX_Save( id );
-		case DB_SQLITE:	SQLITE_Save( id );
+		switch( g_DBType )
+		{
+			case DB_MYSQLX:	MYSQLX_Save_T( id );
+			case DB_SQLITE:	SQLITE_Save_T( id );
+		}
 	}
+
+	// Don't save with threaded!
+	else
+	{
+		switch( g_DBType )
+		{
+			case DB_MYSQLX:	MYSQLX_Save( id );
+			case DB_SQLITE:	SQLITE_Save( id );
+		}
+	}
+
+
 
 	return;
 }
 
 // This function will save the XP for all players
-public DB_SaveAll()
+public DB_SaveAll( bThreaded )
 {
 
 	if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
@@ -164,7 +179,7 @@ public DB_SaveAll()
 
 	for ( i = 0; i < numofplayers; i++ )
 	{
-		DB_SaveXP( players[i] );
+		DB_SaveXP( players[i], bThreaded );
 	}
 
 	return;

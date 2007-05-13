@@ -426,7 +426,7 @@ CMD_Handle( id, szCmd[] )
 		{
 			
 			// Save their XP now, b/c we're not going to later
-			DB_SaveXP( id );
+			DB_SaveXP( id, true );
 	
 			// OK give them level 10
 			p_data[id][P_XP] = XP_GetByLevel( 10 );

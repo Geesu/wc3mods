@@ -251,7 +251,16 @@ MYSQLX_Save( id )
 	// Save the user's XP!
 	new szQuery[512];
 	format( szQuery, 511, "REPLACE INTO `wc3_player_race` ( `player_id` , `race_id` , `race_xp` ) VALUES ( '%d', '%d', '%d');", iUniqueID, p_data[id][P_RACE], p_data[id][P_XP] );
-	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save", szQuery );
+	new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+	if ( !SQL_Execute( query ) )
+	{
+		client_print( id, print_chat, "%s Error, unable to save your XP, please contact a server administrator", g_MODclient );
+
+		MYSQLX_Error( query, szQuery, 1 );
+
+		return;
+	}
 
 	static iCurrentLevel;
 
@@ -264,14 +273,67 @@ MYSQLX_Save( id )
 		if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
 		{
 			format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
-			SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save", szQuery );
+			query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+			if ( !SQL_Execute( query ) )
+			{
+				client_print( id, print_chat, "%s Error, unable to save your XP, please contact a server administrator", g_MODclient );
+
+				MYSQLX_Error( query, szQuery, 1 );
+
+				return;
+			}
 		}
 	}
 
 	return;
 }
 
-public _MYSQLX_Save( failstate, Handle:query, error[], errnum, data[], size )
+MYSQLX_Save_T( id )
+{
+	// Make sure our connection is working
+	if ( !MYSQLX_Check_Connection() )
+	{
+		return;
+	}
+
+	new iUniqueID = DB_GetUniqueID( id );
+
+	// Error checking when saving
+	if ( iUniqueID <= 0 )
+	{
+		new szName[128];
+		get_user_name( id, szName, 127 );
+
+		log_amx( "Unable to save XP for user '%s', unique ID: %d", szName, iUniqueID );
+
+		return;
+	}
+
+	// Save the user's XP!
+	new szQuery[512];
+	format( szQuery, 511, "REPLACE INTO `wc3_player_race` ( `player_id` , `race_id` , `race_xp` ) VALUES ( '%d', '%d', '%d');", iUniqueID, p_data[id][P_RACE], p_data[id][P_XP] );
+	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save_T", szQuery );
+
+	static iCurrentLevel;
+
+	// Now we need to save the skill levels!
+	for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
+	{
+		iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
+
+		// Then we need to save this!
+		if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
+		{
+			format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
+			SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save_T", szQuery );
+		}
+	}
+
+	return;
+}
+
+public _MYSQLX_Save_T( failstate, Handle:query, error[], errnum, data[], size )
 {
 
 	// Error during the query

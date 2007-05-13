@@ -200,6 +200,53 @@ SQLITE_Save( id )
 	// Save the user's XP!
 	new szQuery[512];
 	format( szQuery, 511, "REPLACE INTO `wc3_player_race` ( `player_id` , `race_id` , `race_xp` ) VALUES ( '%d', '%d', '%d');", iUniqueID, p_data[id][P_RACE], p_data[id][P_XP] );
+	new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+	if ( !SQL_Execute( query ) )
+	{
+		MYSQLX_Error( query, szQuery, 6 );
+
+		return;
+	}
+
+	static iCurrentLevel;
+
+	// Now we need to save the skill levels!
+	for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
+	{
+		iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
+
+		// Then we need to save this!
+		if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
+		{
+			format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
+			query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+			if ( !SQL_Execute( query ) )
+			{
+				MYSQLX_Error( query, szQuery, 6 );
+
+				return;
+			}
+		}
+	}
+
+	return;
+}
+
+SQLITE_Save_T( id )
+{
+	// Make sure our connection is working
+	if ( !SQLITE_Check_Connection() )
+	{
+		return;
+	}
+
+	new iUniqueID = DB_GetUniqueID( id );
+
+	// Save the user's XP!
+	new szQuery[512];
+	format( szQuery, 511, "REPLACE INTO `wc3_player_race` ( `player_id` , `race_id` , `race_xp` ) VALUES ( '%d', '%d', '%d');", iUniqueID, p_data[id][P_RACE], p_data[id][P_XP] );
 	SQL_ThreadQuery( g_DBTuple, "_SQLITE_Save", szQuery );
 
 	static iCurrentLevel;
@@ -220,7 +267,7 @@ SQLITE_Save( id )
 	return;
 }
 
-public _SQLITE_Save( failstate, Handle:query, error[], errnum, data[], size )
+public _SQLITE_Save_T( failstate, Handle:query, error[], errnum, data[], size )
 {
 
 	// Error during the query
@@ -337,6 +384,13 @@ public _SQLITE_SetData( failstate, Handle:query, error[], errnum, data[], size )
 	else
 	{
 		// Set the user's XP!
+		if ( !SHARED_ValidPlayer( id ) || !p_data_b[id][PB_ISCONNECTED] || p_data[id][P_RACE] <=0 || p_data[id][P_RACE] > MAX_RACES )
+		{
+			log_error( AMX_ERR_NATIVE, "[ERROR] WTF MATE?!? %d", id );
+
+			return;
+		}
+
 		p_data[id][P_XP] = g_iDBPlayerXPInfoStore[id][p_data[id][P_RACE]-1];
 
 		// Reset all skill data to 0!

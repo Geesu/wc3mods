@@ -329,7 +329,7 @@ public WC3_Init()
 	// cl_minmodels check
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		set_task( 0.7, "_CS_MinModelsLoop", TASK_MOLEFIX, "", 0, "b" );
+		//set_task( 0.7, "_CS_MinModelsLoop", TASK_MOLEFIX, "", 0, "b" );
 	}
 
 	// Set up the spawn entities

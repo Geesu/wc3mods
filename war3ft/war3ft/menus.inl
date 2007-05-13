@@ -253,7 +253,7 @@ public _menu_Admin_Options(id,key){
 			g_menuSettings[id] = 50
 			menu_TeamXP_Options(id)
 		}
-		case 2: DB_SaveAll();
+		case 2: DB_SaveAll( false );
 		case 8: MENU_War3Menu(id)
 	}
 
@@ -610,7 +610,7 @@ public _MENU_ChangeRace( id, key )
 	}
 
 	// Save the current race data before we change
-	DB_SaveXP( id );
+	DB_SaveXP( id, true );
 
 	new iRace, iAutoSelectKey = KEY_0;
 	

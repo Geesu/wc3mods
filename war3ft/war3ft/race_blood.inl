@@ -239,6 +239,11 @@ BM_PhoenixDOD( id )
 public _BM_BanishReturn( parm[] )
 {
 	new id = parm[0];
+	
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
 
 	// If the round is over we want to move the player back - otherwise they might be moved after they have respawned - that'd be bad
 	if ( parm[1] > 0 && !g_EndRound )

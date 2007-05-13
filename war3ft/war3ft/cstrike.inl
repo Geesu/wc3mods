@@ -16,7 +16,8 @@ public on_EndRound()
 	// Save XP at the end of the round?
 	if ( get_pcvar_num( CVAR_wc3_save_end_round ) )
 	{
-		DB_SaveAll();
+		// Threaded saves on end round!
+		DB_SaveAll( true );
 	}
 	
 	return;
@@ -324,8 +325,9 @@ public on_GameRestart()
 	{
 		return;
 	}
-
-	DB_SaveAll();
+	
+	// Save all XP on game restart - do not do this threaded or it might take 300 years
+	DB_SaveAll( false );
 
 	g_GameRestarting = true;
 
