@@ -1622,6 +1622,9 @@ WC3_PostSpawn( id )
 	// Do we need to give the user a gravity boost?
 	SHARED_SetGravity( id );
 
+	// Set the user's speed!
+	SHARED_SetSpeed( id );
+
 	// Give the user their item bonuses!
 	ITEM_GiveAllBonuses( id );
 

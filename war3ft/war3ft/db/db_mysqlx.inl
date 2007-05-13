@@ -135,6 +135,9 @@ MYSQLX_Init()
 
 	// Do we need to update the skills/races ?
 	MYSQLX_UpdateWebTable();
+
+	// Do we need to run a conversion?
+	MYSQLX_Convert();
 }
 
 // Verifies that the database connection is ok
@@ -597,56 +600,57 @@ MYSQLX_UpdateWebTable()
 
 			return;
 		}
-	}
-
-	new iTotalLanguages = get_langsnum();
-	new lang[3], iLang, i;
-	new szName[64];
-
-	// Loop through all languages
-	for ( iLang = 0; iLang < iTotalLanguages; iLang++ )
-	{
-		get_lang ( iLang, lang );
 		
-		// We have a valid language
-		if ( lang_exists( lang ) )
+		// Now lets add the language information to the DB!
+		new iTotalLanguages = get_langsnum();
+		new lang[3], iLang, i;
+		new szName[64];
+
+		// Loop through all languages
+		for ( iLang = 0; iLang < iTotalLanguages; iLang++ )
 		{
-
-			// Check all races
-			for ( i = 1; i <= MAX_RACES; i++ )
+			get_lang ( iLang, lang );
+			
+			// We have a valid language
+			if ( lang_exists( lang ) )
 			{
-				lang_GetRaceName ( i, iLang, szName, 63 );
 
-				formatex( szQuery, 255, "REPLACE INTO `wc3_web_race` ( `race_id` , `race_lang` , `race_name`, `race_description` ) VALUES ( '%d', '%s', '%s', '' );", i, lang, szName );
-
-				query = SQL_PrepareQuery( g_DBConn, szQuery );
-
-				if ( !SQL_Execute( query ) )
+				// Check all races
+				for ( i = 1; i <= MAX_RACES; i++ )
 				{
-					MYSQLX_Error( query, szQuery, 6 );
+					lang_GetRaceName ( i, iLang, szName, 63 );
 
-					return;
+					formatex( szQuery, 255, "REPLACE INTO `wc3_web_race` ( `race_id` , `race_lang` , `race_name`, `race_description` ) VALUES ( '%d', '%s', '%s', '' );", i, lang, szName );
+
+					query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+					if ( !SQL_Execute( query ) )
+					{
+						MYSQLX_Error( query, szQuery, 6 );
+
+						return;
+					}
+				}
+
+				// Check all skills
+				for ( i = 0; i < MAX_SKILLS; i++ )
+				{
+					LANG_GetSkillName ( i, iLang, szName, 63, 200 );
+
+					formatex( szQuery, 255, "REPLACE INTO `wc3_web_skill` ( `skill_id` , `skill_lang` , `skill_name`, `skill_description` ) VALUES ( '%d', '%s', '%s', '' );", i, lang, szName );
+
+					query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+					if ( !SQL_Execute( query ) )
+					{
+						MYSQLX_Error( query, szQuery, 6 );
+
+						return;
+					}
 				}
 			}
-
-			// Check all skills
-			for ( i = 0; i < MAX_SKILLS; i++ )
-			{
-				LANG_GetSkillName ( i, iLang, szName, 63, 200 );
-
-				formatex( szQuery, 255, "REPLACE INTO `wc3_web_skill` ( `skill_id` , `skill_lang` , `skill_name`, `skill_description` ) VALUES ( '%d', '%s', '%s', '' );", i, lang, szName );
-
-				query = SQL_PrepareQuery( g_DBConn, szQuery );
-
-				if ( !SQL_Execute( query ) )
-				{
-					MYSQLX_Error( query, szQuery, 6 );
-
-					return;
-				}
-			}
-		}
-	}// End language loop
+		}// End language loop
+	}
 }
 
 #define MYSQL_TOTAL_PRUNE_QUERY 2
@@ -697,21 +701,57 @@ MYSQLX_Convert()
 		"INSERT INTO wc3_player select '', playerid, playerip, playername, time FROM `war3users` GROUP BY playerid;",
 		"INSERT INTO wc3_player_race select wc3_player.player_id, war3users.race, war3users.xp FROM `wc3_player`, `war3users` WHERE wc3_player.player_steamid=war3users.playerid;"
 	};
+	
+	// We need to check to see if the conversion has already been ran
+	new szQuery[256], Handle:query;
+	formatex ( szQuery, 255, "SELECT `config_value` FROM `wc3_config` WHERE `config_id` = 'sql_conversion' AND `config_value` = '1';" );
+	query = SQL_PrepareQuery( g_DBConn, szQuery );
 
-	//SELECT * FROM `war3users` WHERE `playerid` = '-1' AND `playerip` = '-1' AND `playername` = '-1' AND `xp` = '-1' AND `race` = '-1' AND `skill1` = '-1' AND `skill2` = '-1' AND `skill3` = '-1' AND `skill4` = '-1';
-	//INSERT INTO `war3users` ( `playerid` , `playerip` , `playername` , `xp` , `race` , `skill1` , `skill2` , `skill3` , `skill4` , `time` ) VALUES ( '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', NOW( ));
-
-
-	// Need to run all 3 queries
-	for ( new i = 0; i < MYSQL_TOTAL_CONVERSION_QUERY; i++ )
+	if ( !SQL_Execute( query ) )
 	{
-		new Handle:query = SQL_PrepareQuery( g_DBConn, szConversionQuery[i] );
+		MYSQLX_Error( query, szQuery, 6 );
 
+		return;
+	}
+
+	// Then we don't need to run the conversion because we already have!
+	if ( SQL_NumResults( query ) == 1 )
+	{
+		SQL_FreeHandle( query );
+
+		return;
+	}
+
+	// We haven't ran the conversion yet - run it!
+	else
+	{
+		// Free the last handle
+		SQL_FreeHandle( query );
+
+		// Insert that we ran the conversion!
+		formatex ( szQuery, 255, "REPLACE INTO `wc3_config` ( `config_id` , `config_value` ) VALUES ( 'sql_conversion', '1' );" );
+		query = SQL_PrepareQuery( g_DBConn, szQuery );
+		
 		if ( !SQL_Execute( query ) )
 		{
 			MYSQLX_Error( query, szQuery, 6 );
 
 			return;
 		}
+
+		// Need to run all the queries
+		for ( new i = 0; i < MYSQL_TOTAL_CONVERSION_QUERY; i++ )
+		{
+			new Handle:query = SQL_PrepareQuery( g_DBConn, szConversionQuery[i] );
+
+			if ( !SQL_Execute( query ) )
+			{
+				MYSQLX_Error( query, szQuery, 6 );
+
+				return;
+			}
+		}
+
+		log_amx( "[MYSQLX] MySQL Conversion to 3.0 DB Format ran successfully" );
 	}
 }
