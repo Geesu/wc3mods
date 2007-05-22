@@ -111,11 +111,6 @@ public plugin_init()
 {
 	register_plugin( WC3NAME, WC3VERSION, WC3AUTHOR );
 	
-	new szCurMap[32];
-	get_mapname( szCurMap, 31 );
-	WC3_Log( false, "Map '%s' started", szCurMap );
-	WC3_Log( false, "Plugin version: '%s' ", WC3VERSION );
-
 	WC3_DetermineGame();
 
 	gmsgDeathMsg		= get_user_msgid( "DeathMsg"	);
@@ -618,7 +613,7 @@ public error_filter( error_code, bool:debugging, message[] )
 	new szBuffer[256];
 	dbg_fmt_error( szBuffer, 255 );
 
-	WC3_Log( true, "[ERROR] '%s' '%d' '%d' '%s'", message, error_code, debugging, szBuffer );
+	log_amx( "[ERROR] '%s' '%d' '%d' '%s'", message, error_code, debugging, szBuffer );
 
 	//L 12/27/2006 - 16:48:08: [war3ft.amxx] [ERROR] '[CSTRIKE] Invalid player 5' '10' '1' 'Run time error 10: native error (native "cs_set_user_money")'
 

@@ -420,6 +420,11 @@ public WC3_Init()
 	// Lets find out if we should disable orc nades or gloves of warmth
 	g_bOrcNadesDisabled		= WC3_MapDisableCheck( "skill_orc_nade.cfg" );
 	g_bGlovesDisabled		= WC3_MapDisableCheck( "item_gloves.cfg" );
+
+	new szCurMap[32];
+	get_mapname( szCurMap, 31 );
+	WC3_Log( false, "Map '%s' started", szCurMap );
+	WC3_Log( false, "Plugin version: '%s' ", WC3VERSION );
 }
 
 public _WC3_RunAfterConfig()
@@ -1866,7 +1871,7 @@ WC3_PlayerInit( id )
 WC3_Log( bool:bAmxx, const fmt[], ... )
 {
 	static szFormattedText[512];
-	vformat( szFormattedText, 511, fmt, 2 );
+	vformat( szFormattedText, 511, fmt, 3 );
 
 	// Write to amxx log file
 	if ( bAmxx )
