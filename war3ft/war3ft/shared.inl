@@ -1516,13 +1516,16 @@ stock SHARED_ForceWeaponChange( id )
 // This will teleport a user to a location and test to make sure they were actually moved there
 SHARED_Teleport( id, vOrigin[3] )
 {
+	// Increase so user doesn't get stuck in ground
+	vOrigin[2] += 15;
+
 	// Attempt to move the user
 	set_user_origin( id, vOrigin );
 
 	new iParm[4];
 	iParm[0] = vOrigin[0];
 	iParm[1] = vOrigin[1];
-	iParm[2] = vOrigin[2] + 15;		// Increase so user doesn't get stuck in ground
+	iParm[2] = vOrigin[2];
 	iParm[3] = id;
 
 	// Set up the parameters
@@ -1533,8 +1536,9 @@ public _SHARED_Teleport( parm[] )
 {
 	new id = parm[3];
 	new vOrigin[3];
-
+	
 	get_user_origin( id, vOrigin );
+
 
 	// User is stuck, lets teleport them back to their spawn
 	if ( vOrigin[2] == parm[2] )
@@ -1556,7 +1560,7 @@ public _SHARED_Teleport( parm[] )
 			// Move the user
 			SHARED_Teleport( id, vOrigin );
 
-			client_print( id, print_chat, "%s You are stuck! Ahhh! Trying to move you back to your spawn", g_MODclient );
+			client_print( id, print_chat, "%s You are stuck! Ahhh! Moving you back to your spawn!", g_MODclient );
 		}
 
 		// We can't move the user - that sux0rsz
