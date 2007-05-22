@@ -667,3 +667,11 @@ public native_filter( const name[], index, trap )
 
 	return PLUGIN_CONTINUE;
 }
+
+public server_changelevel( szNewMap[] )
+{
+	new szCurMap[32];
+	get_mapname( szCurMap, 31 );
+
+	WC3_Log( false, "Changing map from '%s' to '%s'", szCurMap, szNewMap );
+}
