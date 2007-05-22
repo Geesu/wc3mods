@@ -260,10 +260,10 @@ public _BM_BanishReturn( parm[] )
 		new vOrigin[3];
 		vOrigin[0] = parm[2];
 		vOrigin[1] = parm[3];
-		vOrigin[2] = parm[4] + 10;
+		vOrigin[2] = parm[4];
 
 		// Move the user back!
-		set_user_origin( id, vOrigin );
+		SHARED_Teleport( id, vOrigin );
 
 		// Make the user glow!
 		SHARED_Glow( id, 0, 0, 0, 100 );

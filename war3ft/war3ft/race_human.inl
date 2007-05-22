@@ -145,8 +145,9 @@ public _HU_ULT_BlinkStuck( parm[] )
 
 		//set_hudmessage( 255, 255, 10, -1.0, -0.4, 1, 0.5, BLINK_COOLDOWN, 0.2, 0.2, 5 );
 		WC3_StatusText( id, 0, "%L", id, "TELEPORT_FAILED_BAD_DESTINATION" );
-
-		set_user_origin( id, vOldLocation )	;
+		
+		// This will try to move the user back - if this fails then they will be teleported back to their spawn instead of left stuck!
+		SHARED_Teleport( id, vOldLocation );
 
 		ULT_ResetCooldown( id, floatround(BLINK_COOLDOWN) );
 	}

@@ -288,8 +288,20 @@ SQLITE_GetAllXP( id )
 		return;
 	}
 
+	new iUniqueID = DB_GetUniqueID( id );
+
+	// Then we have a problem and cannot retreive the user's XP
+	if ( iUniqueID <= 0 )
+	{
+		client_print( id, print_chat, "%s Unable to retreive your XP from the database, please attempt to changerace later", g_MODclient );
+
+		log_amx( "[ERROR] Unable to retreive user's Unique ID" );
+
+		return;
+	}
+
 	new szQuery[256], data[1];
-	format(szQuery, 255, "SELECT `race_id`, `race_xp` FROM `wc3_player_race` WHERE ( `player_id` = '%d' );", DB_GetUniqueID( id ) );
+	format(szQuery, 255, "SELECT `race_id`, `race_xp` FROM `wc3_player_race` WHERE ( `player_id` = '%d' );", iUniqueID );
 	
 	data[0] = id;
 

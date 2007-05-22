@@ -27,7 +27,7 @@
 #define	TASK_BLINKCHECK		640		// Check to see if the player teleported into an invalid location
 #define	TASK_BLINKSTUCK		672		// Checks to see if a user is stuck after blinking
 #define	TASK_BIGBADATTACKER	704		// _SH_ResetBigBadAttacker
-//#define	TASK_TELEWAITSTOP	736		// Calls telewaitstop function
+#define	TASK_TELEPORT		736		// For teleporting someone w00t
 //#define	TASK_TELEPORT		768		// Teleports the player
 //#define	TASK_TELEFADEIN		800		// Calls telefadein function
 //#define	TASK_UNSTICK		832		// "Unsticks" a stuck teleported player

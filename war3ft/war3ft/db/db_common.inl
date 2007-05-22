@@ -314,6 +314,8 @@ public DB_FetchUniqueID( id )
 	// Nothing was found - try again in a bit
 	if ( g_iDBPlayerUniqueID[id] == 0 )
 	{
+		log_amx( "[ERROR] Unable to retreive user's (%d) Unique ID, trying again...", id );
+
 		set_task( 1.0, "DB_FetchUniqueID", id );
 	}
 

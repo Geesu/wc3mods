@@ -1512,3 +1512,57 @@ stock SHARED_ForceWeaponChange( id )
 
 	return;
 }
+
+// This will teleport a user to a location and test to make sure they were actually moved there
+SHARED_Teleport( id, vOrigin[3] )
+{
+	// Attempt to move the user
+	set_user_origin( id, vOrigin );
+
+	new iParm[4];
+	iParm[0] = vOrigin[0];
+	iParm[1] = vOrigin[1];
+	iParm[2] = vOrigin[2] + 15;		// Increase so user doesn't get stuck in ground
+	iParm[3] = id;
+
+	// Set up the parameters
+	set_task( 0.1, "_SHARED_Teleport", TASK_TELEPORT + id, iParm, 4 );
+}
+
+public _SHARED_Teleport( parm[] )
+{
+	new id = parm[3];
+	new vOrigin[3];
+
+	get_user_origin( id, vOrigin );
+
+	// User is stuck, lets teleport them back to their spawn
+	if ( vOrigin[2] == parm[2] )
+	{
+		// Find a spawn - ignore immunity and team reversal
+		new iSpawnEnt = SHARED_FindFreeSpawn( id, false, false );
+		
+		// We can move the user yay!
+		if ( iSpawnEnt > 0 )
+		{
+			new Float:fSpawnOrigin[3], vOrigin[3];
+			
+			// Get the origin of the spawn point
+			entity_get_vector( iSpawnEnt, EV_VEC_origin, fSpawnOrigin );
+
+			// Convert float vector to int vector
+			FVecIVec( fSpawnOrigin, vOrigin );
+			
+			// Move the user
+			SHARED_Teleport( id, vOrigin );
+
+			client_print( id, print_chat, "%s You are stuck! Ahhh! Trying to move you back to your spawn", g_MODclient );
+		}
+
+		// We can't move the user - that sux0rsz
+		else
+		{
+			client_print( id, print_chat, "%s Sorry, I know you're stuck, but I can't move you right now :/", g_MODclient );
+		}
+	}
+}
