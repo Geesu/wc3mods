@@ -518,7 +518,7 @@ ITEM_RemoveID( id, iItem )
 	return;
 }
 
-public ITEM_Remove( id, iItemSlot )
+ITEM_Remove( id, iItemSlot, bResetAnkhMole = true )
 {
 	new iItem = g_iShopMenuItems[id][iItemSlot];
 
@@ -526,6 +526,14 @@ public ITEM_Remove( id, iItemSlot )
 
 	switch( iItem )
 	{
+		case ITEM_ANKH:
+		{
+			if ( bResetAnkhMole )
+			{
+				g_bPlayerBoughtAnkh[id] = false;
+			}
+		}
+
 		case ITEM_BOOTS:
 		{
 			SHARED_SetSpeed( id );
@@ -583,6 +591,14 @@ public ITEM_Remove( id, iItemSlot )
 		case ITEM_CHAMELEON:
 		{
 			SHARED_ChangeSkin( id, SKIN_RESET );
+		}
+
+		case ITEM_MOLE:
+		{
+			if ( bResetAnkhMole )
+			{
+				g_bPlayerBoughtMole[id] = false;
+			}
 		}
 	}
 
@@ -663,12 +679,12 @@ ITEM_UserDied( id )
 	// The user just died, remove all items
 	if ( g_iShopMenuItems[id][ITEM_SLOT_ONE] > ITEM_NONE )
 	{
-		ITEM_Remove( id, ITEM_SLOT_ONE );
+		ITEM_Remove( id, ITEM_SLOT_ONE, false );
 	}
 
 	if ( g_iShopMenuItems[id][ITEM_SLOT_TWO] > ITEM_NONE )
 	{
-		ITEM_Remove( id, ITEM_SLOT_TWO );
+		ITEM_Remove( id, ITEM_SLOT_TWO, false );
 	}
 }
 

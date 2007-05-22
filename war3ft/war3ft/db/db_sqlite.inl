@@ -31,7 +31,7 @@ SQLITE_Init()
 
 	if ( !g_DBConn )
 	{
-		log_amx( "[SQLITE] Database Connection Failed: [%d] %s", iErrNum, szError );
+		WC3_Log( true, "[SQLITE] Database Connection Failed: [%d] %s", iErrNum, szError );
 
 		return;
 	}
@@ -75,7 +75,7 @@ SQLITE_Init()
 	
 	if ( !SQL_Execute( query ) )
 	{
-		SQLITE_Error( query, "PRAGMA integrity_check", 1 );
+		SQLITE_Error( query, "PRAGMA integrity_check", 2 );
 
 		return;
 	}
@@ -94,7 +94,7 @@ SQLITE_Init()
 	if ( !equali(szIntegrityCheck, "ok") )
 	{
 		// Should we disable saving here?
-		log_amx( "[SQLITE] SQL Lite integrity check failed, disabling saving XP." );
+		WC3_Log( true, "[SQLITE] SQL Lite integrity check failed, disabling saving XP." );
 
 		set_pcvar_num( CVAR_wc3_save_xp, 0 );
 
@@ -108,7 +108,7 @@ SQLITE_Init()
 
 	if ( !SQL_Execute( query ) )
 	{
-		SQLITE_Error( query, szQuery, 1 );
+		SQLITE_Error( query, szQuery, 3 );
 
 		return;
 	}
@@ -151,7 +151,7 @@ SQLITE_FetchUniqueID( id )
 
 	if ( !SQL_Execute( query ) )
 	{
-		SQLITE_Error( query, szQuery, 1 );
+		SQLITE_Error( query, szQuery, 4 );
 
 		return;
 	}
@@ -169,7 +169,7 @@ SQLITE_FetchUniqueID( id )
 
 		if ( !SQL_Execute( query ) )
 		{
-			SQLITE_Error( query, szQuery, 1 );
+			SQLITE_Error( query, szQuery, 5 );
 
 			return;
 		}
@@ -295,7 +295,7 @@ SQLITE_GetAllXP( id )
 	{
 		client_print( id, print_chat, "%s Unable to retreive your XP from the database, please attempt to changerace later", g_MODclient );
 
-		log_amx( "[ERROR] Unable to retreive user's Unique ID" );
+		WC3_Log( true, "[ERROR] Unable to retreive user's Unique ID" );
 
 		return;
 	}
@@ -398,7 +398,7 @@ public _SQLITE_SetData( failstate, Handle:query, error[], errnum, data[], size )
 		// Set the user's XP!
 		if ( !SHARED_ValidPlayer( id ) || !p_data_b[id][PB_ISCONNECTED] || p_data[id][P_RACE] <=0 || p_data[id][P_RACE] > MAX_RACES )
 		{
-			log_error( AMX_ERR_NATIVE, "[ERROR] WTF MATE?!? %d", id );
+			WC3_Log( true, "[ERROR] WTF MATE?!? %d", id );
 
 			return;
 		}
@@ -515,9 +515,9 @@ SQLITE_Error( Handle:query, szQuery[], id )
 	new szError[256];
 	new iErrNum = SQL_QueryError( query, szError, 255 );
 
-	log_amx( "[SQLITE] Error in querying database, location: %d", id );
-	log_amx( "[SQLITE] Message: %s (%d)", szError, iErrNum );
-	log_amx( "[SQLITE] Query statement: %s ", szQuery );
+	WC3_Log( true, "[SQLITE] Error in querying database, location: %d", id );
+	WC3_Log( true, "[SQLITE] Message: %s (%d)", szError, iErrNum );
+	WC3_Log( true, "[SQLITE] Query statement: %s ", szQuery );
 
 	// Free the handle
 	SQL_FreeHandle( query );
@@ -525,20 +525,20 @@ SQLITE_Error( Handle:query, szQuery[], id )
 
 SQLITE_ThreadError( Handle:query, szQuery[], szError[], iErrNum, failstate, id )
 {
-	log_amx( "[SQLITE] Threaded query error, location: %d", id );
-	log_amx( "[SQLITE] Message: %s (%d)", szError, iErrNum );
-	log_amx( "[SQLITE] Query statement: %s ", szQuery );
+	WC3_Log( true, "[SQLITE] Threaded query error, location: %d", id );
+	WC3_Log( true, "[SQLITE] Message: %s (%d)", szError, iErrNum );
+	WC3_Log( true, "[SQLITE] Query statement: %s ", szQuery );
 
 	// Connection failed
 	if ( failstate == TQUERY_CONNECT_FAILED )
 	{	
-		log_amx( "[SQLITE] Fail state: Connection Failed" );
+		WC3_Log( true, "[SQLITE] Fail state: Connection Failed" );
 	}
 
 	// Query failed
 	else if ( failstate == TQUERY_QUERY_FAILED )
 	{
-		log_amx( "[SQLITE] Fail state: Query Failed" );
+		WC3_Log( true, "[SQLITE] Fail state: Query Failed" );
 	}
 
 	// Free the handle

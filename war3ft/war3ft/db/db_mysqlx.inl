@@ -121,7 +121,7 @@ MYSQLX_Init()
 
 	if ( !g_DBConn )
 	{
-		log_amx( "[MYSQLX] Database Connection Failed: [%d] %s", iErrNum, szError );
+		WC3_Log( true, "[MYSQLX] Database Connection Failed: [%d] %s", iErrNum, szError );
 
 		return;
 	}
@@ -194,7 +194,7 @@ MYSQLX_FetchUniqueID( id )
 
 	if ( !SQL_Execute( query ) )
 	{
-		MYSQLX_Error( query, szQuery, 1 );
+		MYSQLX_Error( query, szQuery, 2 );
 
 		return;
 	}
@@ -212,7 +212,7 @@ MYSQLX_FetchUniqueID( id )
 
 		if ( !SQL_Execute( query ) )
 		{
-			MYSQLX_Error( query, szQuery, 1 );
+			MYSQLX_Error( query, szQuery, 3 );
 
 			return;
 		}
@@ -246,7 +246,7 @@ MYSQLX_Save( id )
 		new szName[128];
 		get_user_name( id, szName, 127 );
 
-		log_amx( "Unable to save XP for user '%s', unique ID: %d", szName, iUniqueID );
+		WC3_Log( true, "Unable to save XP for user '%s', unique ID: %d", szName, iUniqueID );
 
 		return;
 	}
@@ -260,7 +260,7 @@ MYSQLX_Save( id )
 	{
 		client_print( id, print_chat, "%s Error, unable to save your XP, please contact a server administrator", g_MODclient );
 
-		MYSQLX_Error( query, szQuery, 1 );
+		MYSQLX_Error( query, szQuery, 4 );
 
 		return;
 	}
@@ -282,7 +282,7 @@ MYSQLX_Save( id )
 			{
 				client_print( id, print_chat, "%s Error, unable to save your XP, please contact a server administrator", g_MODclient );
 
-				MYSQLX_Error( query, szQuery, 1 );
+				MYSQLX_Error( query, szQuery, 5 );
 
 				return;
 			}
@@ -308,7 +308,7 @@ MYSQLX_Save_T( id )
 		new szName[128];
 		get_user_name( id, szName, 127 );
 
-		log_amx( "Unable to save XP for user '%s', unique ID: %d", szName, iUniqueID );
+		WC3_Log( true, "Unable to save XP for user '%s', unique ID: %d", szName, iUniqueID );
 
 		return;
 	}
@@ -364,7 +364,7 @@ MYSQLX_GetAllXP( id )
 	{
 		client_print( id, print_chat, "%s Unable to retreive your XP from the database, please attempt to changerace later", g_MODclient );
 
-		log_amx( "[ERROR] Unable to retreive user's Unique ID" );
+		WC3_Log( true, "[ERROR] Unable to retreive user's Unique ID" );
 
 		return;
 	}
@@ -377,7 +377,7 @@ MYSQLX_GetAllXP( id )
 	{
 		client_print( id, print_chat, "%s Error, unable to retrieve XP, please contact a server administrator", g_MODclient );
 
-		MYSQLX_Error( query, szQuery, 1 );
+		MYSQLX_Error( query, szQuery, 6 );
 
 		return;
 	}
@@ -499,9 +499,9 @@ MYSQLX_Error( Handle:query, szQuery[], id )
 	new szError[256];
 	new iErrNum = SQL_QueryError( query, szError, 255 );
 
-	log_amx( "[MYSQLX] Error in querying database, location: %d", id );
-	log_amx( "[MYSQLX] Message: %s (%d)", szError, iErrNum );
-	log_amx( "[MYSQLX] Query statement: %s ", szQuery );
+	WC3_Log( true, "[MYSQLX] Error in querying database, location: %d", id );
+	WC3_Log( true, "[MYSQLX] Message: %s (%d)", szError, iErrNum );
+	WC3_Log( true, "[MYSQLX] Query statement: %s ", szQuery );
 
 	// Free the handle
 	SQL_FreeHandle( query );
@@ -509,20 +509,20 @@ MYSQLX_Error( Handle:query, szQuery[], id )
 
 MYSQLX_ThreadError( Handle:query, szQuery[], szError[], iErrNum, failstate, id )
 {
-	log_amx( "[MYSQLX] Threaded query error, location: %d", id );
-	log_amx( "[MYSQLX] Message: %s (%d)", szError, iErrNum );
-	log_amx( "[MYSQLX] Query statement: %s ", szQuery );
+	WC3_Log( true, "[MYSQLX] Threaded query error, location: %d", id );
+	WC3_Log( true, "[MYSQLX] Message: %s (%d)", szError, iErrNum );
+	WC3_Log( true, "[MYSQLX] Query statement: %s ", szQuery );
 
 	// Connection failed
 	if ( failstate == TQUERY_CONNECT_FAILED )
 	{	
-		log_amx( "[MYSQLX] Fail state: Connection Failed" );
+		WC3_Log( true, "[MYSQLX] Fail state: Connection Failed" );
 	}
 
 	// Query failed
 	else if ( failstate == TQUERY_QUERY_FAILED )
 	{
-		log_amx( "[MYSQLX] Fail state: Query Failed" );
+		WC3_Log( true, "[MYSQLX] Fail state: Query Failed" );
 	}
 
 	// Free the handle
@@ -583,7 +583,7 @@ MYSQLX_UpdateWebTable()
 
 	if ( !SQL_Execute( query ) )
 	{
-		MYSQLX_Error( query, szQuery, 6 );
+		MYSQLX_Error( query, szQuery, 7 );
 
 		return;
 	}
@@ -608,7 +608,7 @@ MYSQLX_UpdateWebTable()
 		
 		if ( !SQL_Execute( query ) )
 		{
-			MYSQLX_Error( query, szQuery, 6 );
+			MYSQLX_Error( query, szQuery, 8 );
 
 			return;
 		}
@@ -638,7 +638,7 @@ MYSQLX_UpdateWebTable()
 
 					if ( !SQL_Execute( query ) )
 					{
-						MYSQLX_Error( query, szQuery, 6 );
+						MYSQLX_Error( query, szQuery, 9 );
 
 						return;
 					}
@@ -655,7 +655,7 @@ MYSQLX_UpdateWebTable()
 
 					if ( !SQL_Execute( query ) )
 					{
-						MYSQLX_Error( query, szQuery, 6 );
+						MYSQLX_Error( query, szQuery, 10 );
 
 						return;
 					}
@@ -692,7 +692,7 @@ MYSQLX_Prune()
 
 		if ( !SQL_Execute( query ) )
 		{
-			MYSQLX_Error( query, szQuery, 6 );
+			MYSQLX_Error( query, szQuery, 11 );
 
 			return;
 		}
@@ -725,7 +725,7 @@ MYSQLX_Convert()
 
 	if ( !SQL_Execute( query ) )
 	{
-		MYSQLX_Error( query, szQuery, 6 );
+		MYSQLX_Error( query, szQuery, 12 );
 
 		return;
 	}
@@ -748,7 +748,7 @@ MYSQLX_Convert()
 
 	if ( !SQL_Execute( query ) )
 	{
-		MYSQLX_Error( query, szQuery, 6 );
+		MYSQLX_Error( query, szQuery, 13 );
 
 		return;
 	}
@@ -773,7 +773,7 @@ MYSQLX_Convert()
 		
 		if ( !SQL_Execute( query ) )
 		{
-			MYSQLX_Error( query, szQuery, 6 );
+			MYSQLX_Error( query, szQuery, 14 );
 
 			return;
 		}
@@ -785,12 +785,12 @@ MYSQLX_Convert()
 
 			if ( !SQL_Execute( query ) )
 			{
-				MYSQLX_Error( query, szQuery, 6 );
+				MYSQLX_Error( query, szQuery, 15 );
 
 				return;
 			}
 		}
 
-		log_amx( "[MYSQLX] MySQL Conversion to 3.0 DB Format ran successfully" );
+		WC3_Log( true, "[MYSQLX] MySQL Conversion to 3.0 DB Format ran successfully" );
 	}
 }

@@ -253,6 +253,8 @@ public test(id)
 		
 		log_amx( " ", szName );
 	}
+
+	WC3_Log( true, "test log!" );
 }
 
 public plugin_end()

@@ -16,7 +16,7 @@ public WC3_Precache()
 	// Precache wc3.css (if it exists!)
 	if ( !file_exists( "wc3.css" ) )
 	{
-		log_amx( "[ERROR] Missing file 'wc3.css'" );
+		WC3_Log( true, "[ERROR] Missing file 'wc3.css'" );
 
 		set_fail_state( "A required file is missing, unable to load plugin" );
 	}
@@ -71,7 +71,7 @@ public WC3_Precache()
 
 			if ( !file_exists( szTmp ) )
 			{
-				log_amx( "[ERROR] Missing sound file '%s'", szTmp );
+				WC3_Log( true, "[ERROR] Missing sound file '%s'", szTmp );
 
 				bError = true;
 			}
@@ -173,7 +173,7 @@ public WC3_Precache()
 		{
 			if ( !file_exists( g_szSprites[i] ) )
 			{
-				log_amx( "[ERROR] Missing sprite file '%s'", g_szSprites[i] );
+				WC3_Log( true, "[ERROR] Missing sprite file '%s'", g_szSprites[i] );
 
 				bError = true;
 			}
@@ -185,7 +185,7 @@ public WC3_Precache()
 	{
 		if ( !file_exists( g_szRaceSprites[i] ) )
 		{
-			log_amx( "[ERROR] Missing sprite file '%s'", g_szRaceSprites[i] );
+			WC3_Log( true, "[ERROR] Missing sprite file '%s'", g_szRaceSprites[i] );
 
 			bError = true;
 		}
@@ -197,7 +197,7 @@ public WC3_Precache()
 	{
 		if ( !file_exists( g_szLevelSprites[i] ) )
 		{
-			log_amx( "[ERROR] Missing sprite file '%s'", g_szLevelSprites[i] );
+			WC3_Log( true, "[ERROR] Missing sprite file '%s'", g_szLevelSprites[i] );
 
 			bError = true;
 		}
@@ -368,7 +368,7 @@ public WC3_Init()
 		// More than were necessary was found
 		if ( g_iTotalObjectiveEnts >= MAX_OBJECTIVES )
 		{
-			log_amx( "Woa we found more than 11" );
+			WC3_Log( true, "Woa we found more than 11" );
 			break;
 		}
 
@@ -1860,4 +1860,24 @@ WC3_PlayerInit( id )
 	bDBXPRetrieved[id] = false;						// User hasn't gotten his/her XP since he's being reset right?
 
 	p_data_b[id][PB_BIGBAD_ATTACKER]	= false;	// User isn't allowed to attack someone running it duh!
+}
+
+// Function will simply log to a file as well as amxx log
+WC3_Log( bool:bAmxx, const fmt[], ... )
+{
+	static szFormattedText[512];
+	vformat( szFormattedText, 511, fmt, 2 );
+
+	// Write to amxx log file
+	if ( bAmxx )
+	{
+		log_amx( szFormattedText );
+	}
+
+	new szLogFile[128];
+	get_configsdir( szLogFile, 127 );
+	formatex( szLogFile, 127, "%s/war3ft/wc3_error.log", szLogFile );
+
+	// Write to the war3ft log file as well
+	log_to_file( szLogFile, szFormattedText );
 }

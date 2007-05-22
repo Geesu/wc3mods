@@ -241,6 +241,8 @@ SM_GetSkillLevel( id, skill_id )
 {
 	if ( !SM_IsValidSkill( skill_id ) )
 	{
+		WC3_Log( false, "[0] Invalid skill: %d", skill_id );
+
 		log_error( AMX_ERR_NATIVE, "[0] Invalid skill: %d", skill_id );
 
 		return 0;
@@ -266,6 +268,8 @@ SM_SetSkillLevel( id, skill_id, iLevel )
 {
 	if ( !SM_IsValidSkill( skill_id ) )
 	{
+		WC3_Log( false, "[1] Invalid skill: %d", skill_id );
+
 		log_error( AMX_ERR_NATIVE, "[1] Invalid skill: %d", skill_id );
 
 		return;
@@ -280,6 +284,8 @@ SM_SetSkillLevel( id, skill_id, iLevel )
 	// We shouldn't be setting a passive skill's level!
 	if ( g_SkillType[skill_id] == SKILL_TYPE_PASSIVE )
 	{
+		WC3_Log( false, "Setting a passive skill's level %d to %d", skill_id, iLevel );
+
 		log_error( AMX_ERR_NATIVE, "Setting a passive skill's level %d to %d", skill_id, iLevel );
 
 		return;
@@ -288,6 +294,8 @@ SM_SetSkillLevel( id, skill_id, iLevel )
 	// Technically we shouldn't have a skill level EVER greater than 3 right?
 	if ( iLevel > 3 )
 	{
+		WC3_Log( false, "Setting skill %d to %d wtf??", skill_id, iLevel );
+
 		log_error( AMX_ERR_NATIVE, "Setting skill %d to %d wtf??", skill_id, iLevel );
 
 		return;
@@ -386,6 +394,8 @@ SM_GetSkillType( skill_id )
 {
 	if ( !SM_IsValidSkill( skill_id ) )
 	{
+		WC3_Log( false, "[2] Invalid skill: %d", skill_id );
+
 		log_error( AMX_ERR_NATIVE, "[2] Invalid skill: %d", skill_id );
 
 		return 0;
@@ -447,40 +457,40 @@ SM_DebugPrint( id )
 
 
 	// **** Trainable ****
-	log_amx( "=== Trainable ===" );
+	WC3_Log( true, "=== Trainable ===" );
 	
 	iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_TRAINABLE );
 	while ( iSkillID != -1 )
 	{
 		LANG_GetSkillName( iSkillID, LANG_SERVER, szSkillName, 31, 5 );
 
-		log_amx( "[%d] %s", iSkillID, szSkillName );
+		WC3_Log( true, "[%d] %s", iSkillID, szSkillName );
 
 		iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_TRAINABLE, iSkillID + 1 );
 	}
 
 	// **** Ultimates ****
-	log_amx( "=== Ultimates ===" );
+	WC3_Log( true, "=== Ultimates ===" );
 	
 	iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
 	while ( iSkillID != -1 )
 	{
 		LANG_GetSkillName( iSkillID, LANG_SERVER, szSkillName, 31, 6 );
 
-		log_amx( "[%d] %s", iSkillID, szSkillName );
+		WC3_Log( true, "[%d] %s", iSkillID, szSkillName );
 
 		iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE, iSkillID + 1 );
 	}
 
 	// **** Passive ****
-	log_amx( "=== Passive ===" );
+	WC3_Log( true, "=== Passive ===" );
 	
 	iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_PASSIVE );
 	while ( iSkillID != -1 )
 	{
 		LANG_GetSkillName( iSkillID, LANG_SERVER, szSkillName, 31, 7 );
 
-		log_amx( "[%d] %s", iSkillID, szSkillName );
+		WC3_Log( true, "[%d] %s", iSkillID, szSkillName );
 
 		iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_PASSIVE, iSkillID + 1 );
 	}
@@ -491,6 +501,8 @@ SM_SetSkill( id, iSkillID )
 {
 	if ( !SM_IsValidSkill( iSkillID ) )
 	{
+		WC3_Log( false, "[40] Invalid skill: %d", iSkillID );
+
 		log_error( AMX_ERR_NATIVE, "[40] Invalid skill: %d", iSkillID );
 
 		return;
@@ -501,7 +513,7 @@ SM_SetSkill( id, iSkillID )
 
 	if ( iCurrentLevel + 1 > MAX_SKILL_LEVEL )
 	{
-		log_amx( "Attempted to increase skill %d to %d", iSkillID, iCurrentLevel + 1 );
+		WC3_Log( true, "Attempted to increase skill %d to %d", iSkillID, iCurrentLevel + 1 );
 
 		return;
 	}

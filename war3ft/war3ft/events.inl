@@ -529,12 +529,12 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 			if ( p_data_b[iVictim][PB_GODMODE] )
 			{
 				
-				new bool:bBlockDamage = false;
+				new bool:bBlockDamage = true;
 
 				// Do we allow this person to be attacked by this player?
 				if ( p_data_b[iAttacker][PB_BIGBAD_ATTACKER] )
 				{
-					bBlockDamage = true;
+					bBlockDamage = false;
 				}
 
 				// Check to see if immunity is available for the attacker
@@ -545,7 +545,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 					// This user can attack someone with big bad voodoo!
 					p_data_b[iAttacker][PB_BIGBAD_ATTACKER] = true;
 
-					bBlockDamage = true;
+					bBlockDamage = false;
 
 					// Reset the attacker dmg
 					set_task( get_pcvar_float( CVAR_wc3_ult_cooldown ), "_SH_ResetBigBadAttacker", TASK_BIGBADATTACKER + iAttacker );

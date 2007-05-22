@@ -165,7 +165,7 @@ LANG_GetSkillName( skill_id, id, skill_name[], len, func_id )
 	// Handle everything else
 	if ( skill_id < 0 || skill_id >= MAX_SKILLS )
 	{
-		log_amx( "[%d] Invalid skill: %d", func_id, skill_id );
+		WC3_Log( true, "[%d] Invalid skill: %d", func_id, skill_id );
 		return;
 	}
 

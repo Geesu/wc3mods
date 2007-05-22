@@ -219,7 +219,8 @@ public _CVAR_ExecuteConfig()
 	}
 	else
 	{
-		log_amx( "[ERROR] Config file '%s' missing!", szConfigFile );
+		WC3_Log( true, "[ERROR] Config file '%s' missing!", szConfigFile );
+
 		set_fail_state( "Config file is missing, unable to load plugin" );
 	}
 }

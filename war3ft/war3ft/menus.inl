@@ -529,7 +529,7 @@ public MENU_ChangeRace( id, iRaceXP[MAX_RACES] )
 				// Check to see if there was an increase that was necessary
 				if ( iRaceLimit > get_pcvar_num( CVAR_wc3_race_limit ) )
 				{
-					log_amx( "Error, increase wc3_race_limit to at least %d", iRaceLimit );
+					WC3_Log( true, "Error, increase wc3_race_limit to at least %d", iRaceLimit );
 				}
 
 				if ( iTotal[i+1] >= iRaceLimit )
@@ -587,7 +587,7 @@ public MENU_ChangeRace( id, iRaceXP[MAX_RACES] )
 	new iTotal = 0;
 	for ( new i = 1; i <= get_pcvar_num( CVAR_wc3_races ); i++ )
 	{
-		log_amx( "%d", i );
+		WC3_Log( true, "%d", i );
 		iTotal += iTotalRaces[i];
 	}
 

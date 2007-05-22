@@ -102,7 +102,7 @@ CHAM_Configure()
 		{
 			if ( !CHAM_ValidSkill( g_ChamSkills[i], SKILL_TYPE_TRAINABLE ) )
 			{
-				log_amx( "Invalid trainable skill for cvar wc3_cham_skill%d: %d", i+1, g_ChamSkills[i] );
+				WC3_Log( true, "Invalid trainable skill for cvar wc3_cham_skill%d: %d", i+1, g_ChamSkills[i] );
 				bError = true;
 			}
 		}
@@ -110,14 +110,14 @@ CHAM_Configure()
 		// Check Ultimate
 		if ( !CHAM_ValidSkill( g_ChamSkills[3], SKILL_TYPE_ULTIMATE ) )
 		{
-			log_amx( "Invalid ultimate skill for cvar wc3_cham_ultimate: %d", g_ChamSkills[3] );
+			WC3_Log( true, "Invalid ultimate skill for cvar wc3_cham_ultimate: %d", g_ChamSkills[3] );
 			bError = true;
 		}
 
 		// Check Passive
 		if ( !CHAM_ValidSkill( g_ChamSkills[4], SKILL_TYPE_PASSIVE ) )
 		{
-			log_amx( "Invalid passive skill for cvar wc3_cham_passive: %d", g_ChamSkills[4] );
+			WC3_Log( true, "Invalid passive skill for cvar wc3_cham_passive: %d", g_ChamSkills[4] );
 			bError = true;
 		}
 

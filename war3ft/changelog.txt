@@ -1,11 +1,15 @@
 v3.0 RC7
  - Addition: wc3_ignore_bots CVAR which works with wc3_min_players (thanks Krazy)
  - Addition: It is now possible do deal damage against a SH w/Big Bad Voodoo if you have immunity
+ - Addition: Log file for war3ft exclusive use
  - Bug Fix: Gloves not always working correctly
  - Bug Fix: XP Loss at map change
  - Bug Fix: (B2) cl_minmodels check failing at certain times (thanks DesasterUK)
  - Bug Fix: (B2) Conversion issue when war3users table didn't exist (thanks Coksnuss)
  - Bug Fix: (B2) Getting stuck in a wall from Banish or failed Teleport - you should now be teleported back to your spawn (if possible) instead of left stuck
+ - Bug Fix: (B2) Big Bad Voodoo works now - opps
+ - Bug Fix: (B2) Ankh/Mole will no longer work if you replace the item
+ - Bug Fix: (B2) Saving by IP will not strip the port from the address
 
 v3.0 RC6
  - Addition: levitation console command

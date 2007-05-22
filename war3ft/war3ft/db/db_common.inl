@@ -14,8 +14,8 @@ public DB_DetermineType()
 		// Then we can't save using mysql
 		if ( !LibraryExists( "sqlx", LibType_Class ) )
 		{
-			log_amx( "[WARNING] Unable to saving using MySQL, please enable the mysql module" );
-			log_amx( "[WARNING] Saving (possibly) will be done by using SQLite" );
+			WC3_Log( true, "[WARNING] Unable to saving using MySQL, please enable the mysql module" );
+			WC3_Log( true, "[WARNING] Saving (possibly) will be done by using SQLite" );
 
 			set_pcvar_num( CVAR_wc3_save_xp_db, 0 );
 		}
@@ -37,7 +37,7 @@ public DB_DetermineType()
 		// Then we can't save w/this!!!
 		if ( !LibraryExists( "sqlx", LibType_Class )  )
 		{
-			log_amx( "[WARNING] Unable to saving using SQLite, please enable the sqlite module" );
+			WC3_Log( true, "[WARNING] Unable to saving using SQLite, please enable the sqlite module" );
 		}
 		
 		// OK we can save
@@ -56,7 +56,7 @@ public DB_DetermineType()
 	{
 		set_pcvar_num( CVAR_wc3_save_xp, 0 );
 
-		log_amx( "[ERROR] Unable to save XP, please enable SQLite or MySQL X (mysql requires additional configuration)" );
+		WC3_Log( true, "[ERROR] Unable to save XP, please enable SQLite or MySQL X (mysql requires additional configuration)" );
 	}
 
 	return;
@@ -198,7 +198,7 @@ DB_GetKey( id, szKey[], len )
 			DB_FormatString( szKey, len );
 		}
 
-		case DB_SAVEBY_IP:		get_user_ip( id, szKey, len );
+		case DB_SAVEBY_IP:		get_user_ip( id, szKey, len, 1 );
 		case DB_SAVEBY_STEAMID:	get_user_authid( id, szKey, len );
 	}
 }
@@ -314,7 +314,7 @@ public DB_FetchUniqueID( id )
 	// Nothing was found - try again in a bit
 	if ( g_iDBPlayerUniqueID[id] == 0 )
 	{
-		log_amx( "[ERROR] Unable to retreive user's (%d) Unique ID, trying again...", id );
+		WC3_Log( true, "[ERROR] Unable to retreive user's (%d) Unique ID, trying again...", id );
 
 		set_task( 1.0, "DB_FetchUniqueID", id );
 	}
