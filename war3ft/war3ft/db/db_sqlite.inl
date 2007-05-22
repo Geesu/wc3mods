@@ -247,7 +247,7 @@ SQLITE_Save_T( id )
 	// Save the user's XP!
 	new szQuery[512];
 	format( szQuery, 511, "REPLACE INTO `wc3_player_race` ( `player_id` , `race_id` , `race_xp` ) VALUES ( '%d', '%d', '%d');", iUniqueID, p_data[id][P_RACE], p_data[id][P_XP] );
-	SQL_ThreadQuery( g_DBTuple, "_SQLITE_Save", szQuery );
+	SQL_ThreadQuery( g_DBTuple, "_SQLITE_Save_T", szQuery );
 
 	static iCurrentLevel;
 
@@ -260,7 +260,7 @@ SQLITE_Save_T( id )
 		if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
 		{
 			format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
-			SQL_ThreadQuery( g_DBTuple, "_SQLITE_Save", szQuery );
+			SQL_ThreadQuery( g_DBTuple, "_SQLITE_Save_T", szQuery );
 		}
 	}
 

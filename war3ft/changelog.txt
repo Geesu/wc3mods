@@ -3,6 +3,8 @@ v3.0 RC7
  - Addition: It is now possible do deal damage against a SH w/Big Bad Voodoo if you have immunity
  - Bug Fix: Gloves not always working correctly
  - Bug Fix: XP Loss at map change
+ - Bug Fix: (B2) cl_minmodels check failing at certain times (thanks DesasterUK)
+ - Bug Fix: (B2) Conversion issue when war3users table didn't exist (thanks Coksnuss)
 
 v3.0 RC6
  - Addition: levitation console command

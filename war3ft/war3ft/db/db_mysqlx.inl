@@ -702,8 +702,35 @@ MYSQLX_Convert()
 		"INSERT INTO wc3_player_race select wc3_player.player_id, war3users.race, war3users.xp FROM `wc3_player`, `war3users` WHERE wc3_player.player_steamid=war3users.playerid;"
 	};
 	
-	// We need to check to see if the conversion has already been ran
 	new szQuery[256], Handle:query;
+
+
+	// Check to see if the table even exists!
+	new szDB[128];
+	get_pcvar_string( CVAR_wc3_sql_dbname	, szDB			, 127	);
+	formatex ( szQuery, 255, "SELECT count(*) FROM information_schema.tables WHERE table_schema = '%s' AND table_name = 'war3users';", szDB );
+	query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+	if ( !SQL_Execute( query ) )
+	{
+		MYSQLX_Error( query, szQuery, 6 );
+
+		return;
+	}
+
+	// Weird this shouldn't occur as we should always have a count!
+	if ( SQL_NumResults( query ) <= 0 )
+	{
+		return;
+	}
+
+	// Find out if the count is 1, if it's not then we need to return
+	if ( SQL_ReadResult( query, 0 ) != 1 )
+	{
+		return;
+	}
+
+	// Now we need to check to see if the conversion has already been ran
 	formatex ( szQuery, 255, "SELECT `config_value` FROM `wc3_config` WHERE `config_id` = 'sql_conversion' AND `config_value` = '1';" );
 	query = SQL_PrepareQuery( g_DBConn, szQuery );
 
