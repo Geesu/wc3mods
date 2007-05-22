@@ -2,6 +2,7 @@ v3.0 RC7
  - Addition: wc3_ignore_bots CVAR which works with wc3_min_players (thanks Krazy)
  - Addition: It is now possible do deal damage against a SH w/Big Bad Voodoo if you have immunity
  - Addition: Log file for war3ft exclusive use
+ - Addition: (B2) [FS#7] When you respawn with weapons your silence/burst mode will be remembered and set
  - Bug Fix: Gloves not always working correctly
  - Bug Fix: XP Loss at map change
  - Bug Fix: (B2) cl_minmodels check failing at certain times (thanks DesasterUK)
@@ -10,6 +11,7 @@ v3.0 RC7
  - Bug Fix: (B2) Big Bad Voodoo works now - opps
  - Bug Fix: (B2) Ankh/Mole will no longer work if you replace the item
  - Bug Fix: (B2) Saving by IP will not strip the port from the address
+ - Bug Fix: (B2) [FS#14] Locust swarm icon continuously blink in a certain situation
 
 v3.0 RC6
  - Addition: levitation console command

@@ -40,7 +40,7 @@
 #define TASK_SPAWNPLAYER	1056	// Used to spawn a player (final spawn call)
 #define TASK_GIVEITEMS		1088	// Used to give a player his items after spawning
 #define	TASK_ITEM_RING	1120	// Used with rings of regeneration
-//#define	TASK_TESPRAY		1152	// Used with flamethrower
+#define	TASK_SILENCEBURST	1152
 //#define	TASK_ONFIRE			1184	// Used with flamethrower
 //#define	TASK_HEALNOW		1226	// Used with Healing Waves
 #define	TASK_HEALNEXT		1258	// Used with Healing Waves
@@ -302,6 +302,11 @@
 	#define PB_DEFUSE				4		// Player had a defuse kit when he/she died?
 	#define PB_SHIELD				5		// Player had a shield when he/she died?
 	#define PB_NIGHTVISION			6		// Player had nightvision when he/she died?
+	#define PB_USP_SILENCED			28		// USP silenced on death?
+	#define PB_M4A1_SILENCED		29		// M4A1 silenced on death?
+	#define PB_GLOCK_BURST			30		// Glock in burst mode on death?
+	#define PB_FAMAS_BURST			31		// Famas in burst mode on death?
+
 
 	// Used by various ultimates/abilities
 	#define PB_GIVEITEMS			7		// Tells weapon controller function to give the player his items after respawning
@@ -331,7 +336,7 @@
 
 //	#define PB_CHAM_CONFIGURED		28		// Has chameleon been configured?
 
-	#define PB_LAST					29
+	#define PB_LAST					32
 	// ***************************
 	//		End of info for player_data_bool
 	// ***************************

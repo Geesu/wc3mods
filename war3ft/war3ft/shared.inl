@@ -634,7 +634,7 @@ public _SHARED_CS_GiveWeapons(id)
 
 	if ( p_data_b[id][PB_NIGHTVISION] )
 	{
-		cs_set_user_nvg(id, 1);
+		cs_set_user_nvg( id, 1 );
 	}
 
 	// Give the user a bomb
@@ -700,7 +700,47 @@ public _SHARED_CS_GiveWeapons(id)
 		p_data[id][P_FLASHCOUNT]--;
 	}
 
+	set_task( 0.4, "_SHARED_SetSilenceBurst", TASK_SILENCEBURST + id );
+
 	return;
+}
+
+public _SHARED_SetSilenceBurst( id )
+{
+	if ( id > TASK_SILENCEBURST )
+	{
+		id -= TASK_SILENCEBURST;
+	}
+
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
+
+
+	new iWeaponEnt = find_ent_by_owner( -1, "weapon_m4a1", id );
+	if ( is_valid_ent( iWeaponEnt ) )
+	{
+		cs_set_weapon_silen( iWeaponEnt, p_data_b[id][PB_M4A1_SILENCED], 1 );
+	}
+
+	iWeaponEnt = find_ent_by_owner( -1, "weapon_usp", id );
+	if ( is_valid_ent( iWeaponEnt ) )
+	{
+		cs_set_weapon_silen( iWeaponEnt, p_data_b[id][PB_USP_SILENCED], 1 );
+	}
+
+	iWeaponEnt = find_ent_by_owner( -1, "weapon_famas", id );
+	if ( is_valid_ent( iWeaponEnt ) )
+	{
+		cs_set_weapon_burst( iWeaponEnt, p_data_b[id][PB_FAMAS_BURST] );
+	}
+
+	iWeaponEnt = find_ent_by_owner( -1, "weapon_glock18", id );
+	if ( is_valid_ent( iWeaponEnt ) )
+	{
+		cs_set_weapon_burst( iWeaponEnt, p_data_b[id][PB_GLOCK_BURST] );
+	}
 }
 
 public SHARED_SaveWeapons( id )

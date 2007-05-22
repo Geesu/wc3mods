@@ -132,6 +132,8 @@ public _CL_ULT_LocustEffect( parm[] )
 		// Ultimate was blocked - do nothing
 		else if ( iVictim == -2 )
 		{
+			ULT_Icon( iAttacker, ICON_HIDE );
+
 			return;
 		}
 

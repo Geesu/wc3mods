@@ -163,6 +163,35 @@ public on_Death( iVictim, iAttacker, iWeaponID, iHeadshot )
 
 		// Save the number of flash grenades the user has
 		p_data[iVictim][P_FLASHCOUNT]		= cs_get_user_bpammo( iVictim, CSW_FLASHBANG );
+		
+		// Check to see if weapons were silenced on death
+		new iWeaponUSPEnt = find_ent_by_owner( -1, "weapon_usp", iVictim );
+		new iWeaponM4A1Ent = find_ent_by_owner( -1, "weapon_m4a1", iVictim );
+		
+		if ( is_valid_ent( iWeaponUSPEnt ) )
+		{
+			p_data_b[iVictim][PB_USP_SILENCED]	= cs_get_weapon_silen( iWeaponUSPEnt ) ? true : false;
+		}
+
+		if ( is_valid_ent( iWeaponM4A1Ent ) )
+		{
+			p_data_b[iVictim][PB_M4A1_SILENCED]	= cs_get_weapon_silen( iWeaponM4A1Ent ) ? true : false;
+		}
+
+
+		// Check to see if weapons were in burst mode on death
+		new iWeaponGlock18Ent = find_ent_by_owner( -1, "weapon_glock18", iVictim );
+		new iWeaponFamasEnt = find_ent_by_owner( -1, "weapon_famas", iVictim );
+
+		if ( is_valid_ent( iWeaponGlock18Ent ) )
+		{
+			p_data_b[iVictim][PB_GLOCK_BURST]	= cs_get_weapon_burst( iWeaponGlock18Ent ) ? true : false;
+		}
+
+		if ( is_valid_ent( iWeaponFamasEnt ) )
+		{
+			p_data_b[iVictim][PB_FAMAS_BURST]	= cs_get_weapon_burst( iWeaponFamasEnt ) ? true : false;
+		}
 	}
 	
 	// Day of Defeat Checks
