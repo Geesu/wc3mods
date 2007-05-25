@@ -11,7 +11,7 @@ new const szTables[TOTAL_TABLES][] =
 	"CREATE TABLE IF NOT EXISTS `wc3_player_race` ( `player_id` int(8) unsigned NOT NULL default '0', `race_id` tinyint(4) unsigned NOT NULL default '0', `race_xp` int(8) default NULL, PRIMARY KEY  (`player_id`,`race_id`) ) TYPE=MyISAM;",
 	"CREATE TABLE IF NOT EXISTS `wc3_player_skill` ( `player_id` int(8) unsigned NOT NULL default '0', `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_level` tinyint(4) unsigned NOT NULL default '0', PRIMARY KEY  (`player_id`,`skill_id`) ) TYPE=MyISAM;",
 	"CREATE TABLE IF NOT EXISTS `wc3_web_race` ( `race_id` tinyint(4) unsigned NOT NULL default '0', `race_lang` char(2) NOT NULL default '', `race_name` varchar(100) default NULL, `race_description` text NOT NULL, PRIMARY KEY  (`race_id`,`race_lang`) ) TYPE=MyISAM;",
-	"CREATE TABLE IF NOT EXISTS `wc3_web_skill` ( `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_lang` char(2) NOT NULL default '', `skill_name` varchar(100) default NULL, `skill_description` text NOT NULL, PRIMARY KEY  (`skill_id`,`skill_lang`) ) TYPE=MyISAM;",
+	"CREATE TABLE IF NOT EXISTS `wc3_web_skill` ( `skill_id` tinyint(4) unsigned NOT NULL default '0', `skill_lang` char(2) NOT NULL default '', `skill_name` varchar(100) default NULL, `skill_description` text NOT NULL, `skill_type` tinyint(4) unsigned NOT NULL default '0', `skill_owner` tinyint(4) unsigned NOT NULL default '0', PRIMARY KEY  (`skill_id`,`skill_lang`) ) TYPE=MyISAM;",
 	"CREATE TABLE IF NOT EXISTS `wc3_config` ( `config_id` varchar(50) NOT NULL, `config_value` varchar(255) NOT NULL, PRIMARY KEY  (`config_id`) ) TYPE=MyISAM;"
 };
 
@@ -509,7 +509,7 @@ MYSQLX_UpdateWebTable()
 	}
 
 	// Check to see if we even need an update!
-	new szQuery[256], Handle:query;
+	new szQuery[1024], Handle:query;
 	formatex ( szQuery, 255, "SELECT `config_value` FROM `wc3_config` WHERE `config_id` = 'version' AND `config_value` = '%s';", WC3VERSION );
 	query = SQL_PrepareQuery( g_DBConn, szQuery );
 
@@ -535,7 +535,7 @@ MYSQLX_UpdateWebTable()
 		SQL_FreeHandle( query );
 
 		// Insert current version!
-		formatex ( szQuery, 255, "REPLACE INTO `wc3_config` ( `config_id` , `config_value` ) VALUES ( 'version', '%s' );", WC3VERSION );
+		formatex ( szQuery, 1023, "REPLACE INTO `wc3_config` ( `config_id` , `config_value` ) VALUES ( 'version', '%s' );", WC3VERSION );
 		query = SQL_PrepareQuery( g_DBConn, szQuery );
 		
 		if ( !SQL_Execute( query ) )
@@ -548,7 +548,7 @@ MYSQLX_UpdateWebTable()
 		// Now lets add the language information to the DB!
 		new iTotalLanguages = get_langsnum();
 		new lang[3], iLang, i;
-		new szName[64];
+		new szName[64], szDescription[512];
 
 		// Loop through all languages
 		for ( iLang = 0; iLang < iTotalLanguages; iLang++ )
@@ -564,7 +564,7 @@ MYSQLX_UpdateWebTable()
 				{
 					lang_GetRaceName ( i, iLang, szName, 63 );
 
-					formatex( szQuery, 255, "REPLACE INTO `wc3_web_race` ( `race_id` , `race_lang` , `race_name`, `race_description` ) VALUES ( '%d', '%s', '%s', '' );", i, lang, szName );
+					formatex( szQuery, 1023, "REPLACE INTO `wc3_web_race` ( `race_id` , `race_lang` , `race_name`, `race_description` ) VALUES ( '%d', '%s', '%s', '' );", i, lang, szName );
 
 					query = SQL_PrepareQuery( g_DBConn, szQuery );
 
@@ -580,8 +580,12 @@ MYSQLX_UpdateWebTable()
 				for ( i = 0; i < MAX_SKILLS; i++ )
 				{
 					LANG_GetSkillName ( i, iLang, szName, 63, 200 );
+					LANG_GetSkillInfo( i, iLang, szDescription, 255 );		// Intentionally only 255 - technically this could be all '
+					DB_FormatString( szDescription, 511 );
 
-					formatex( szQuery, 255, "REPLACE INTO `wc3_web_skill` ( `skill_id` , `skill_lang` , `skill_name`, `skill_description` ) VALUES ( '%d', '%s', '%s', '' );", i, lang, szName );
+					formatex( szQuery, 1023, "REPLACE INTO `wc3_web_skill` ( `skill_id` , `skill_lang` , `skill_name`, `skill_description`, `skill_type`, `skill_owner` ) VALUES ( '%d', '%s', '%s', '%s', '%d', '%d' );", i, lang, szName, szDescription, g_SkillType[i], g_SkillOwner[i] );
+					
+					WC3_Log( false, szQuery );
 
 					query = SQL_PrepareQuery( g_DBConn, szQuery );
 
