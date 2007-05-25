@@ -137,7 +137,7 @@ MYSQLX_FetchUniqueID( id )
 		//  (this will only be used for the webpage)
 		new szName[70], szSteamID[30], szIP[20];
 		get_user_name( id, szName, 69 );
-		DB_FormatString( szKey, 69 );
+		DB_FormatString( szName, 69 );
 		get_user_ip( id, szIP, 19, 1 );
 		get_user_authid( id, szSteamID, 29 );
 
