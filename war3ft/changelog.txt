@@ -13,6 +13,8 @@ v3.0 RC7
  - Bug Fix: (B2) Saving by IP will not strip the port from the address
  - Bug Fix: (B2) [FS#14] Locust swarm icon continuously blink in a certain situation
  - Bug Fix: (B2) Admin logging wasn't logging the actual command
+ - Bug Fix: (B2) Passive skills were being saved to the database
+ - Bug Fix: (B2) Was incorrectly calculating the player's ID in _SH_ResetBigBadAttacker (thanks [DumB]SGR)
 Note: Please delete your wc3_web_skill table if you had a previous version of 3.0 running and are using MySQL
 
 v3.0 RC6

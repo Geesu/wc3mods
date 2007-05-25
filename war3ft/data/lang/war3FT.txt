@@ -280,6 +280,7 @@ say /changerace - Allows you to change your race<br>
 say /itemsinfo - Shows you a list of items and what they do<br>
 say /itemsinfo2 - Shows you more items<br>
 say /level - Shows you what race, level and skills you have<br>
+say /levitation - Disable/Enable levitation if you are undead<br>
 say /movespeed - Shows your current movespeed<br>
 say /playerskills - Shows you what skills other players have chosen<br>
 say /resetskills - resets your skills<br>		

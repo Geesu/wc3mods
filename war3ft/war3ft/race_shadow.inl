@@ -550,9 +550,9 @@ public _SH_ResetBigBadAttacker( id )
 		return;
 	}
 
-	if ( id > TASK_GETINPUT )
+	if ( id > TASK_BIGBADATTACKER )
 	{
-		id -= TASK_GETINPUT;
+		id -= TASK_BIGBADATTACKER;
 	}
 
 	if ( !p_data_b[id][PB_ISCONNECTED] )

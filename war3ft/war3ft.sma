@@ -29,12 +29,13 @@
 *  version.
 */
 
-#pragma tabsize 0
+#pragma tabsize			0
+//#pragma semicolon		1
 
-new const WC3NAME[] =		"Warcraft 3 Frozen Throne"
-new const WC3AUTHOR[] =		"Geesu & Avanderik"
-new const WC3VERSION[] =	"3.0 RC7 Beta 2"
-new const WC3DATE[] =		__DATE__
+new const WC3NAME[]		=	"Warcraft 3 Frozen Throne";
+new const WC3AUTHOR[]	=	"Geesu & Avanderik";
+new const WC3VERSION[]	=	"3.0 RC7 Beta 2";
+new const WC3DATE[]		=	__DATE__;
 
 // Let AMX X know that we NEED these modules (as of amx x 1.75)
 #pragma reqclass	xstats
@@ -297,7 +298,7 @@ public client_putinserver( id )
 	// Then the player doesn't have a steam id, lets make them reconnect
 	if ( equal(szPlayerID, "STEAM_ID_PENDING") )
 	{
-		client_cmd(id, "reconnect");
+		client_cmd( id, "reconnect" );
 	}
 
 	// Get the user's ID!

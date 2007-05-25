@@ -202,21 +202,24 @@ MYSQLX_Save( id )
 	// Now we need to save the skill levels!
 	for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
 	{
-		iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
-
-		// Then we need to save this!
-		if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
+		if ( g_SkillType[iSkillID] != SKILL_TYPE_PASSIVE )
 		{
-			format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
-			query = SQL_PrepareQuery( g_DBConn, szQuery );
+			iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
 
-			if ( !SQL_Execute( query ) )
+			// Then we need to save this!
+			if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
 			{
-				client_print( id, print_chat, "%s Error, unable to save your XP, please contact a server administrator", g_MODclient );
+				format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
+				query = SQL_PrepareQuery( g_DBConn, szQuery );
 
-				MYSQLX_Error( query, szQuery, 5 );
+				if ( !SQL_Execute( query ) )
+				{
+					client_print( id, print_chat, "%s Error, unable to save your XP, please contact a server administrator", g_MODclient );
 
-				return;
+					MYSQLX_Error( query, szQuery, 5 );
+
+					return;
+				}
 			}
 		}
 	}
@@ -255,13 +258,16 @@ MYSQLX_Save_T( id )
 	// Now we need to save the skill levels!
 	for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
 	{
-		iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
-
-		// Then we need to save this!
-		if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
+		if ( g_SkillType[iSkillID] != SKILL_TYPE_PASSIVE )
 		{
-			format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
-			SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save_T", szQuery );
+			iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
+
+			// Then we need to save this!
+			if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
+			{
+				format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
+				SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save_T", szQuery );
+			}
 		}
 	}
 
@@ -388,7 +394,10 @@ public _MYSQLX_SetData( failstate, Handle:query, error[], errnum, data[], size )
 		// Reset all skill data to 0!
 		for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
 		{
-			SM_SetSkillLevel( id, iSkillID, 0, 2 );
+			if ( g_SkillType[iSkillID] != SKILL_TYPE_PASSIVE )
+			{
+				SM_SetSkillLevel( id, iSkillID, 0, 2 );
+			}
 		}
 
 		// While we have a result!
@@ -508,8 +517,26 @@ MYSQLX_UpdateWebTable()
 		return;
 	}
 
-	// Check to see if we even need an update!
+	
 	new szQuery[1024], Handle:query;
+
+	// No matter what always update the XP levels
+	for ( new iLevel = 0; iLevel <= MAX_LEVELS; iLevel++ )
+	{
+		formatex( szQuery, 255, "REPLACE INTO `wc3_config` ( `config_id`, `config_value` ) VALUES ( 'level%d_xp', '%d' );", iLevel, XP_GetByLevel( iLevel ) );
+		query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+		if ( !SQL_Execute( query ) )
+		{
+			MYSQLX_Error( query, szQuery, 7 );
+
+			return;
+		}
+	}
+
+
+
+	// Check to see if we even need an update!
 	formatex ( szQuery, 255, "SELECT `config_value` FROM `wc3_config` WHERE `config_id` = 'version' AND `config_value` = '%s';", WC3VERSION );
 	query = SQL_PrepareQuery( g_DBConn, szQuery );
 
