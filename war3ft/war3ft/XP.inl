@@ -495,7 +495,7 @@ XP_Check( id, bShowGained = true )
 			if ( SM_GetSkillLevel( id, iUltimateID ) == 1 )
 			{
 				// Remove the ult
-				SM_SetSkillLevel( id, iUltimateID, 0 );
+				SM_SetSkillLevel( id, iUltimateID, 0, 0 );
 
 				bSkillRemoved = true;
 
@@ -521,7 +521,7 @@ XP_Check( id, bShowGained = true )
 		}
 		
 		// OK at this point we have a valid skill, lets remove a level!
-		SM_SetSkillLevel( id, iSkillID, iSkillLevel - 1 );
+		SM_SetSkillLevel( id, iSkillID, iSkillLevel - 1, 1 );
 
 		bSkillRemoved = true;
 

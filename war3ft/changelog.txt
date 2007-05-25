@@ -12,6 +12,7 @@ v3.0 RC7
  - Bug Fix: (B2) Ankh/Mole will no longer work if you replace the item
  - Bug Fix: (B2) Saving by IP will not strip the port from the address
  - Bug Fix: (B2) [FS#14] Locust swarm icon continuously blink in a certain situation
+ - Bug Fix: (B2) Admin logging wasn't logging the actual command
 
 v3.0 RC6
  - Addition: levitation console command

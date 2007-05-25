@@ -408,13 +408,13 @@ public _SQLITE_SetData( failstate, Handle:query, error[], errnum, data[], size )
 		// Reset all skill data to 0!
 		for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
 		{
-			SM_SetSkillLevel( id, iSkillID, 0 );
+			SM_SetSkillLevel( id, iSkillID, 0, 4 );
 		}
 
 		// While we have a result!
 		while ( SQL_MoreResults( query ) )
 		{
-			SM_SetSkillLevel( id, SQL_ReadResult( query, 0 ), SQL_ReadResult( query, 1 ) );
+			SM_SetSkillLevel( id, SQL_ReadResult( query, 0 ), SQL_ReadResult( query, 1 ), 5 );
 			
 			SQL_NextRow( query );
 		}

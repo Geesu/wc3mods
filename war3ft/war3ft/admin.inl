@@ -494,7 +494,7 @@ ADMIN_Log( id, szCommand[], {Float,_}:... )
 	get_time( "%m.%d.%Y %H:%M:%S", szCurrentTime, 31 );
 
 	new szLogEntry[256];
-	formatex( szLogEntry, 255, "[%s] %s (%s) used command: '%s'", szCurrentTime, szAdminName, szSteamID, szFormattedText );
+	formatex( szLogEntry, 255, "[%s] %s (%s) used command: '%s %s'", szCurrentTime, szAdminName, szSteamID, szCommand, szFormattedText );
 
 	write_file( szLogFile, szLogEntry, -1 );
 

@@ -264,13 +264,13 @@ SM_GetSkillLevel( id, skill_id )
 }
 
 // Set the user's skill level for a given skill
-SM_SetSkillLevel( id, skill_id, iLevel )
+SM_SetSkillLevel( id, skill_id, iLevel, iDebugID )
 {
 	if ( !SM_IsValidSkill( skill_id ) )
 	{
-		WC3_Log( false, "[1] Invalid skill: %d", skill_id );
+		WC3_Log( false, "[1] Invalid skill: %d (%d)", skill_id, iDebugID );
 
-		log_error( AMX_ERR_NATIVE, "[1] Invalid skill: %d", skill_id );
+		log_error( AMX_ERR_NATIVE, "[1] Invalid skill: %d (%d)", skill_id, iDebugID );
 
 		return;
 	}
@@ -284,9 +284,9 @@ SM_SetSkillLevel( id, skill_id, iLevel )
 	// We shouldn't be setting a passive skill's level!
 	if ( g_SkillType[skill_id] == SKILL_TYPE_PASSIVE )
 	{
-		WC3_Log( false, "Setting a passive skill's level %d to %d", skill_id, iLevel );
+		WC3_Log( false, "Setting a passive skill's level %d to %d (%d)", skill_id, iLevel, iDebugID );
 
-		log_error( AMX_ERR_NATIVE, "Setting a passive skill's level %d to %d", skill_id, iLevel );
+		log_error( AMX_ERR_NATIVE, "Setting a passive skill's level %d to %d (%d)", skill_id, iLevel, iDebugID );
 
 		return;
 	}
@@ -294,9 +294,9 @@ SM_SetSkillLevel( id, skill_id, iLevel )
 	// Technically we shouldn't have a skill level EVER greater than 3 right?
 	if ( iLevel > 3 )
 	{
-		WC3_Log( false, "Setting skill %d to %d wtf??", skill_id, iLevel );
+		WC3_Log( false, "Setting skill %d to %d wtf?? (%d)", skill_id, iLevel, iDebugID );
 
-		log_error( AMX_ERR_NATIVE, "Setting skill %d to %d wtf??", skill_id, iLevel );
+		log_error( AMX_ERR_NATIVE, "Setting skill %d to %d wtf?? (%d)", skill_id, iLevel, iDebugID );
 
 		return;
 	}
@@ -519,7 +519,7 @@ SM_SetSkill( id, iSkillID )
 	}
 
 	// Add one to their level!
-	SM_SetSkillLevel( id, iSkillID, iCurrentLevel + 1 );
+	SM_SetSkillLevel( id, iSkillID, iCurrentLevel + 1, 6 );
 
 	// User selected an ultimate + global cooldown is done
 	if ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_ULTIMATE )
