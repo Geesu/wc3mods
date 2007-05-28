@@ -1557,7 +1557,8 @@ WC3_InitPlayerSkills( id )
 	WA_Blink( id );
 
 	// Stop all ultimates if the user shouldn't have an ultimate!
-	if ( SM_GetSkillLevel( id, SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE ), 9 ) <= 0 )
+	new iUltimateID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
+	if ( iUltimateID > -1 && SM_GetSkillLevel( id, iUltimateID, 9 ) <= 0 )
 	{
 		ULT_Reset( id );
 	}

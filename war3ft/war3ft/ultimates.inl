@@ -51,7 +51,8 @@ ULT_IconHandler( id )
 	new bool:bShowIcon = true;
 
 	// User has no ultimate!
-	if ( SM_GetSkillLevel( id, SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE ), 6 ) <= 0 )
+	new iUltimateID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
+	if ( iUltimateID > -1 && SM_GetSkillLevel( id, iUltimateID, 6 ) <= 0 )
 	{
 		bShowIcon = false;
 	}
