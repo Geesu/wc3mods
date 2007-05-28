@@ -259,7 +259,7 @@ public plugin_end()
 {
 	new szCurMap[32];
 	get_mapname( szCurMap, 31 );
-	WC3_Log( false, "Map '%s' ended", szCurMap );
+	WC3_Log( false, "** Map '%s' ended", szCurMap );
 
 	if ( !WC3_Check() )
 	{

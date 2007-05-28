@@ -216,7 +216,7 @@ SQLITE_Save( id )
 	{
 		if ( g_SkillType[iSkillID] != SKILL_TYPE_PASSIVE )
 		{
-			iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
+			iCurrentLevel = SM_GetSkillLevel( id, iSkillID, 16 );
 
 			// Then we need to save this!
 			if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
@@ -259,7 +259,7 @@ SQLITE_Save_T( id )
 	{
 		if ( g_SkillType[iSkillID] != SKILL_TYPE_PASSIVE )
 		{
-			iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
+			iCurrentLevel = SM_GetSkillLevel( id, iSkillID, 17 );
 
 			// Then we need to save this!
 			if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )

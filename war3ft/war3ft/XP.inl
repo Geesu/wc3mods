@@ -492,7 +492,7 @@ XP_Check( id, bShowGained = true )
 			new iUltimateID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
 			
 			// Then we need to remove this!
-			if ( SM_GetSkillLevel( id, iUltimateID ) == 1 )
+			if ( SM_GetSkillLevel( id, iUltimateID, 0 ) == 1 )
 			{
 				// Remove the ult
 				SM_SetSkillLevel( id, iUltimateID, 0, 0 );
@@ -511,12 +511,12 @@ XP_Check( id, bShowGained = true )
 		}
 
 		iSkillID = SM_GetRandomSkill( id );
-		iSkillLevel = SM_GetSkillLevel( id, iSkillID );
+		iSkillLevel = SM_GetSkillLevel( id, iSkillID, 1 );
 
 		// We don't want a passive skill or a skill that is level 0 so keep trying
 		while ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_PASSIVE || iSkillLevel == 0 )
 		{
-			iSkillLevel = SM_GetSkillLevel( id, iSkillID );
+			iSkillLevel = SM_GetSkillLevel( id, iSkillID, 2 );
 			iSkillID = SM_GetRandomSkill( id );
 		}
 		

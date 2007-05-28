@@ -423,8 +423,8 @@ public WC3_Init()
 
 	new szCurMap[32];
 	get_mapname( szCurMap, 31 );
-	WC3_Log( false, "Map '%s' started", szCurMap );
-	WC3_Log( false, "Plugin version: '%s' ", WC3VERSION );
+	WC3_Log( false, "** Map '%s' started", szCurMap );
+	WC3_Log( false, "** Plugin version: '%s' ", WC3VERSION );
 }
 
 public _WC3_RunAfterConfig()
@@ -841,7 +841,7 @@ WC3_ShowRaceInfo( id )
 		for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
 		{
 			// Get the skill's level
-			iSkillLevel = SM_GetSkillLevel( id, iSkillID );
+			iSkillLevel = SM_GetSkillLevel( id, iSkillID, 8 );
 
 			// If the skill level is > 0 then the user has this skill!
 			if ( iSkillLevel > 0 )
@@ -1557,7 +1557,7 @@ WC3_InitPlayerSkills( id )
 	WA_Blink( id );
 
 	// Stop all ultimates if the user shouldn't have an ultimate!
-	if ( SM_GetSkillLevel( id, SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE ) ) <= 0 )
+	if ( SM_GetSkillLevel( id, SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE ), 9 ) <= 0 )
 	{
 		ULT_Reset( id );
 	}

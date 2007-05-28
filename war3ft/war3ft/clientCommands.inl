@@ -87,7 +87,7 @@ public cmd_Ultimate(id)
 	}
 
 	new iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
-	new iSkillLevel = SM_GetSkillLevel( id, iSkillID );
+	new iSkillLevel = SM_GetSkillLevel( id, iSkillID, 3 );
 
 	// User can't use their ultimate when they're hexed
 	if ( p_data_b[id][PB_HEXED] )

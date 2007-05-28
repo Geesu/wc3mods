@@ -51,7 +51,7 @@ ULT_IconHandler( id )
 	new bool:bShowIcon = true;
 
 	// User has no ultimate!
-	if ( SM_GetSkillLevel( id, SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE ) ) <= 0 )
+	if ( SM_GetSkillLevel( id, SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE ), 6 ) <= 0 )
 	{
 		bShowIcon = false;
 	}
@@ -204,7 +204,7 @@ ULT_Available( id )
 	if ( p_data[id][P_ULTIMATEDELAY] <= 0 && g_iUltimateDelay <= 0 )
 	{
 		new iSkillID = SM_GetSkillOfType( id, SKILL_TYPE_ULTIMATE );
-		new iSkillLevel = SM_GetSkillLevel( id, iSkillID );
+		new iSkillLevel = SM_GetSkillLevel( id, iSkillID, 7 );
 		
 		if ( iSkillLevel > 0 )
 		{

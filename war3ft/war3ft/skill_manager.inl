@@ -237,13 +237,13 @@ SM_GetSkillByPos( id, iPos )
 }
 
 // Returns the user's level for a certain skill
-SM_GetSkillLevel( id, skill_id )
+SM_GetSkillLevel( id, skill_id, debug_id = -1 )
 {
 	if ( !SM_IsValidSkill( skill_id ) )
 	{
-		WC3_Log( false, "[0] Invalid skill: %d", skill_id );
+		WC3_Log( false, "[0] Invalid skill: %d [%d]", skill_id, debug_id );
 
-		log_error( AMX_ERR_NATIVE, "[0] Invalid skill: %d", skill_id );
+		log_error( AMX_ERR_NATIVE, "[0] Invalid skill: %d [%d]", skill_id, debug_id );
 
 		return 0;
 	}
@@ -509,7 +509,7 @@ SM_SetSkill( id, iSkillID )
 	}
 
 	// Get the user's current skill level
-	new iCurrentLevel = SM_GetSkillLevel( id, iSkillID );
+	new iCurrentLevel = SM_GetSkillLevel( id, iSkillID, 10 );
 
 	if ( iCurrentLevel + 1 > MAX_SKILL_LEVEL )
 	{
@@ -545,7 +545,7 @@ SM_GiveRandomSkillPoint( id )
 	{
 		new iUltSkill = SM_GetRandomSkillByType( id, SKILL_TYPE_ULTIMATE );
 		
-		if ( iUltSkill != -1 && SM_GetSkillLevel( id, iUltSkill ) == 0 )
+		if ( iUltSkill != -1 && SM_GetSkillLevel( id, iUltSkill, 11 ) == 0 )
 		{
 			// Set up the skill...
 			SM_SetSkill( id, iUltSkill );
@@ -557,7 +557,7 @@ SM_GiveRandomSkillPoint( id )
 	}
 	
 	new iRandomSkill = SM_GetRandomSkillByType( id, SKILL_TYPE_TRAINABLE );
-	new iSkillLevel = SM_GetSkillLevel( id, iRandomSkill );
+	new iSkillLevel = SM_GetSkillLevel( id, iRandomSkill, 12 );
 
 	// Sweetest conditional statement ever
 	while ( iSkillLevel + 1 > MAX_SKILL_LEVEL || p_data[id][P_LEVEL] <= 2 * iSkillLevel )
@@ -565,7 +565,7 @@ SM_GiveRandomSkillPoint( id )
 		//server_print( "[%d:%d] %d >= %d || %d <= %d", iRandomSkill, iSkillLevel, iSkillLevel + 1, MAX_SKILL_LEVEL, p_data[id][P_LEVEL], 2 * iSkillLevel );
 
 		iRandomSkill = SM_GetRandomSkillByType( id, SKILL_TYPE_TRAINABLE );
-		iSkillLevel = SM_GetSkillLevel( id, iRandomSkill );
+		iSkillLevel = SM_GetSkillLevel( id, iRandomSkill, 13 );
 	}
 			
 	// Set up the skill...

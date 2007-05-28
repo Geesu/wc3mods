@@ -871,7 +871,7 @@ public MENU_SelectSkill( id )
 
 	while ( iSkillID != -1 )
 	{
-		iSkillLevel = SM_GetSkillLevel( id, iSkillID );
+		iSkillLevel = SM_GetSkillLevel( id, iSkillID, 4 );
 
 		LANG_GetSkillName( iSkillID , id, szSkillName, 63, 1 );
 		
