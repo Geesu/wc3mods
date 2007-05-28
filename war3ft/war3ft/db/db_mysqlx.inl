@@ -353,7 +353,7 @@ MYSQLX_GetAllXP( id )
 	return;
 }
 
-MYSQLX_SetData( id )
+MYSQLX_SetDataForRace( id )
 {
 	// Make sure our connection is working
 	if ( !MYSQLX_Check_Connection() )
@@ -366,13 +366,13 @@ MYSQLX_SetData( id )
 
 	data[0] = id;
 
-	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_SetData", szQuery, data, 1 );
+	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_SetDataForRace", szQuery, data, 1 );
 
 	return;
 }
 
 // Callback function once MySQL X Thread has completed
-public _MYSQLX_SetData( failstate, Handle:query, error[], errnum, data[], size )
+public _MYSQLX_SetDataForRace( failstate, Handle:query, error[], errnum, data[], size )
 {
 	new id = data[0];
 

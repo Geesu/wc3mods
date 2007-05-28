@@ -8,7 +8,7 @@ forward MYSQLX_UpdateKey();
 forward MYSQLX_Save( id );
 forward MYSQLX_Save_T( id );
 forward MYSQLX_GetAllXP( id );
-forward MYSQLX_SetData( id );
+forward MYSQLX_SetDataForRace( id );
 forward MYSQLX_Close();
 forward MYSQLX_Error( Handle:query, szQuery[], id );
 forward MYSQLX_ThreadError( Handle:query, szQuery[], szError[], iErrNum, failstate, id );

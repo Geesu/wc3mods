@@ -640,6 +640,15 @@ WC3_SetRace( id, race )
 // Function called right after the user's race information is set
 WC3_SetRaceUp( id )
 {
+	// Do we need to give this user XP?
+	new iStartLevel = get_pcvar_num( CVAR_wc3_start_level );
+	if ( p_data[id][P_XP] == 0 && iStartLevel > 0 && iStartLevel <= 10 )
+	{
+		p_data[id][P_XP] = XP_GetByLevel( iStartLevel );
+
+		client_print( id, print_chat, "%s Your race has started off at level %d!", g_MODclient, iStartLevel );
+	}
+
 	// Need to check the exception here for randomized chameleon!
 	if ( p_data[id][P_RACE] == RACE_CHAMELEON && get_pcvar_num( CVAR_wc3_cham_random ) )
 	{

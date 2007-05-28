@@ -366,7 +366,7 @@ public _SQLITE_GetAllXP( failstate, Handle:query, error[], errnum, data[], size 
 	return;
 }
 
-SQLITE_SetData( id )
+SQLITE_SetDataForRace( id )
 {
 	// Make sure our connection is working
 	if ( !SQLITE_Check_Connection() )
@@ -379,13 +379,13 @@ SQLITE_SetData( id )
 
 	data[0] = id;
 
-	SQL_ThreadQuery( g_DBTuple, "_SQLITE_SetData", szQuery, data, 1 );
+	SQL_ThreadQuery( g_DBTuple, "_SQLITE_SetDataForRace", szQuery, data, 1 );
 
 	return;
 }
 
 // Callback function once MySQL X Thread has completed
-public _SQLITE_SetData( failstate, Handle:query, error[], errnum, data[], size )
+public _SQLITE_SetDataForRace( failstate, Handle:query, error[], errnum, data[], size )
 {
 	new id = data[0];
 

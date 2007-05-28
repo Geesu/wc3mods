@@ -245,8 +245,8 @@ public DB_SetDataForRace( id )
 	// Set the user's race information
 	switch( g_DBType )
 	{
-		case DB_MYSQLX:	MYSQLX_SetData( id );
-		case DB_SQLITE:	SQLITE_SetData( id );
+		case DB_MYSQLX:	MYSQLX_SetDataForRace( id );
+		case DB_SQLITE:	SQLITE_SetDataForRace( id );
 	}
 
 	return;

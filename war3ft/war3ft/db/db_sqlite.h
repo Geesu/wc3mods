@@ -8,7 +8,7 @@ forward SQLITE_Close();
 forward SQLITE_Save( id );
 forward SQLITE_Save_T( id );
 forward SQLITE_GetAllXP( id );
-forward SQLITE_SetData( id );
+forward SQLITE_SetDataForRace( id );
 forward SQLITE_Check_Connection();
 forward SQLITE_Prune();
 forward SQLITE_UpdateTimestamp( id );
