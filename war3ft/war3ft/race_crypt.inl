@@ -146,7 +146,7 @@ public _CL_ULT_LocustEffect( parm[] )
 		parm[3] = vCasterOrigin[1];
 		parm[4] = vCasterOrigin[2];
 
-		client_print( iAttacker, print_chat, "[DEBUG] Victim is no longer targetable, try casting again!" );
+		client_print( iAttacker, print_chat, "%s Victim is no longer targetable, try casting again!", g_MODclient );
 		
 		/*client_print( iAttacker, print_chat, "%s Victim is no longer targetable, try casting again!", g_MODclient );
 
