@@ -34,7 +34,7 @@
 
 new const WC3NAME[]		=	"Warcraft 3 Frozen Throne";
 new const WC3AUTHOR[]	=	"Geesu & Avanderik";
-new const WC3VERSION[]	=	"3.0 RC7";
+new const WC3VERSION[]	=	"3.0 RC8 Beta 1";
 new const WC3DATE[]		=	__DATE__;
 
 // Let AMX X know that we NEED these modules (as of amx x 1.75)
