@@ -610,7 +610,7 @@ public _MENU_ChangeRace( id, key )
 	}
 
 	// Save the current race data before we change
-	DB_SaveXP( id, true );
+	DB_SaveXP( id, false );
 
 	new iRace, iAutoSelectKey = KEY_0;
 	

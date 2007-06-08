@@ -306,7 +306,7 @@ SQLITE_GetAllXP( id )
 		return;
 	}
 
-	new szQuery[256], data[1];
+	new szQuery[256];
 	format(szQuery, 255, "SELECT `race_id`, `race_xp` FROM `wc3_player_race` WHERE ( `player_id` = '%d' );", iUniqueID );
 	new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
 

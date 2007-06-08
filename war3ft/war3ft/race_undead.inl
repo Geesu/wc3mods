@@ -164,6 +164,11 @@ UD_SkillsOffensive( iAttacker, iDamage )
 {
 	static iSkillLevel;
 
+	if ( !p_data_b[iAttacker][PB_ISCONNECTED] )
+	{
+		return;
+	}
+
 	// Vampiric Aura
 	iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_VAMPIRICAURA );
 	if ( iSkillLevel > 0 )

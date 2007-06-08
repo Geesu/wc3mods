@@ -163,7 +163,7 @@ public ADMIN_Handler( id )
 	new szArgs[128];
 	read_args( szArgs, 127 );
 
-	ADMIN_Log( id, "%s", szArgs );
+	ADMIN_Log( id, szCmd, "%s", szArgs );
 
 	return PLUGIN_HANDLED;
 }

@@ -125,7 +125,7 @@ public CVAR_Init()
 
 	CVAR_wc3_save_xp				= register_cvar( "wc3_save_xp"				, "0"		, FCVAR_SERVER		);
 	CVAR_wc3_save_pruning			= register_cvar( "wc3_save_pruning"			, "0"		, FCVAR_SERVER		);
-	CVAR_wc3_days_before_delete		= register_cvar( "SAVE_Expire_Time"			, "31"							);
+	CVAR_wc3_days_before_delete		= register_cvar( "wc3_days_before_delete"	, "31"							);
 	CVAR_wc3_save_end_round			= register_cvar( "wc3_save_end_round"		, "1"							);
 	CVAR_wc3_save_xp_db				= register_cvar( "wc3_save_xp_db"			, "0"							);
 	CVAR_wc3_save_by				= register_cvar( "wc3_save_by"				, "0"							);
