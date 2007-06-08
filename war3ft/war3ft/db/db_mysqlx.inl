@@ -353,7 +353,62 @@ MYSQLX_GetAllXP( id )
 	return;
 }
 
+
 MYSQLX_SetDataForRace( id )
+{
+	// Make sure our connection is working
+	if ( !MYSQLX_Check_Connection() )
+	{
+		return;
+	}
+
+	new szQuery[256];
+	format( szQuery, 255, "SELECT `skill_id`, `skill_level` FROM `wc3_player_skill` WHERE `player_id` = '%d';", DB_GetUniqueID( id ) );
+	new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+	if ( !SQL_Execute( query ) )
+	{
+		client_print( id, print_chat, "%s Error, unable to retrieve XP, please contact a server administrator", g_MODclient );
+
+		MYSQLX_Error( query, szQuery, 6 );
+
+		return;
+	}
+
+	// Set the user's XP!
+	p_data[id][P_XP] = g_iDBPlayerXPInfoStore[id][p_data[id][P_RACE]-1];
+
+	// Reset all skill data to 0!
+	for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
+	{
+		if ( g_SkillType[iSkillID] != SKILL_TYPE_PASSIVE )
+		{
+			SM_SetSkillLevel( id, iSkillID, 0, 2 );
+		}
+	}
+
+	// While we have a result!
+	while ( SQL_MoreResults( query ) )
+	{
+		SM_SetSkillLevel( id, SQL_ReadResult( query, 0 ), SQL_ReadResult( query, 1 ), 3 );
+		
+		SQL_NextRow( query );
+	}
+
+	// Free the handle
+	SQL_FreeHandle( query );
+	
+	// Set the race up
+	WC3_SetRaceUp( id );
+
+	// This user's XP has been set + retrieved! We can save now
+	bDBXPRetrieved[id] = true;
+
+
+	return;
+}
+
+/*MYSQLX_SetDataForRace_T( id )
 {
 	// Make sure our connection is working
 	if ( !MYSQLX_Check_Connection() )
@@ -366,13 +421,13 @@ MYSQLX_SetDataForRace( id )
 
 	data[0] = id;
 
-	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_SetDataForRace", szQuery, data, 1 );
+	SQL_ThreadQuery( g_DBTuple, "_MYSQLX_SetDataForRace_T", szQuery, data, 1 );
 
 	return;
 }
 
 // Callback function once MySQL X Thread has completed
-public _MYSQLX_SetDataForRace( failstate, Handle:query, error[], errnum, data[], size )
+public _MYSQLX_SetDataForRace_T( failstate, Handle:query, error[], errnum, data[], size )
 {
 	new id = data[0];
 
@@ -419,7 +474,7 @@ public _MYSQLX_SetDataForRace( failstate, Handle:query, error[], errnum, data[],
 	}
 
 	return;
-}
+}*/
 
 MYSQLX_Close()
 {

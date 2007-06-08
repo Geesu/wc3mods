@@ -10,6 +10,9 @@
 *		Top Banner by nightscream
 *************************************************/
 
+require("");
+asdfsadf rquire config file!!
+
 // 4HM Forums database
 $config->dbuser 		= "root";
 $config->dbpassword 	= "";
