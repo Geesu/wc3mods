@@ -1,3 +1,6 @@
+v3.0 RC8
+ - Bug Fix: [FS#25] Warden's Shadow Strike had wrong percentage at level 1
+
 v3.0 RC7
  - Addition: wc3_ignore_bots CVAR which works with wc3_min_players (thanks Krazy)
  - Addition: It is now possible do deal damage against a SH w/Big Bad Voodoo if you have immunity
