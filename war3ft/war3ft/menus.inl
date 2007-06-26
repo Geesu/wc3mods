@@ -382,7 +382,7 @@ public _menu_TeamXP_Options(id,key){
 	switch(key){
 		case 0:
 		{
-			ADMIN_GiveXP( id, "@TERRORIST", g_menuSettings[id] );
+			ADMIN_GiveXP( id, "@T", g_menuSettings[id] );
 			menu_TeamXP_Options(id)
 		}
 		case 1:{

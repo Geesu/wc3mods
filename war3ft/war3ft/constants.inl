@@ -272,7 +272,7 @@
 
 	// Used by various ultimates/abilities
 	#define P_TELEMENU				16		// Used by teleport
-	//#define P_CARRIONCOUNT			17		// Number of carrion beetles the player has left
+	#define P_TEAM					17		// Stores the player's team ID
 	//#define P_SHADOWCOUNT			18		// Number of shadow strikes the player has left
 	#define P_SERPENTCOUNT			19		// Number of serpent wards the player has left
 	#define P_RINGS					20

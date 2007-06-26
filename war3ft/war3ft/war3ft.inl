@@ -1867,14 +1867,19 @@ WC3_PlayerInit( id )
 
 	for ( new i = 0; i < MAXPLAYERS; i++ )
 	{
-		g_iDamageDealt[id][i] = 0;					// Reset damage dealt
+		g_iDamageDealt[id][i]		= 0;			// Reset damage dealt
 	}
 
-	p_data[id][P_CHANGERACE] = 0;					// User shouldn't have a changerace pending
+	p_data[id][P_CHANGERACE]		= 0;			// User shouldn't have a changerace pending
 
-	bDBXPRetrieved[id] = false;						// User hasn't gotten his/her XP since he's being reset right?
+	bDBXPRetrieved[id]				= false;		// User hasn't gotten his/her XP since he's being reset right?
 
 	p_data_b[id][PB_BIGBAD_ATTACKER]	= false;	// User isn't allowed to attack someone running it duh!
+
+	// Reset charges!
+	g_iTotalRings[id]				= 0;
+	g_iNecklaceCharges[id]			= 0;
+	g_iHelmCharges[id]				= 0;
 }
 
 // Function will simply log to a file as well as amxx log

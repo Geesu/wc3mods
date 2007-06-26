@@ -455,7 +455,10 @@ CMD_Handle( id, szCmd[] )
 
 		else if ( CMD_Equal( id,  szCmd, "rings" ) )
 		{
-			ITEM_BuyRings( id );
+			if ( ITEM_MenuCanBuyCheck( id ) )
+			{
+				ITEM_BuyRings( id );
+			}
 		}
 
 		else if ( CMD_Equal( id,  szCmd, "ability" ) )
