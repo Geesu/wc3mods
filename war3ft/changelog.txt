@@ -3,6 +3,7 @@ v3.0 RC8
  - Bug Fix: [FS#31] Reset item charges when a player joins the server
  - Bug Fix: [FS#28] rings console command not going through proper checks
  - Bug Fix: [FS#32] Giving XP to terrorists in admin menu would not work
+ - Bug Fix: [FS#21] Friendly fire no longer affects charges for helm of excellence
 
 v3.0 RC7
  - Addition: wc3_ignore_bots CVAR which works with wc3_min_players (thanks Krazy)

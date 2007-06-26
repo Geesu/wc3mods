@@ -701,3 +701,6 @@ new bool:g_bExtraSpritesEnabled = false
 #define SPEC_HOLDTIME		10.0
 new g_iSpectatingID[33];
 new Float:g_fLastSpecDisplay[33];
+
+// Lets keep track of what team the player is on!
+new g_iPlayerTeam[33];

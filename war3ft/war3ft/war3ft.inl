@@ -1880,6 +1880,8 @@ WC3_PlayerInit( id )
 	g_iTotalRings[id]				= 0;
 	g_iNecklaceCharges[id]			= 0;
 	g_iHelmCharges[id]				= 0;
+
+	g_iPlayerTeam[id]				= -1;			// Player doesn't have a team yet! So reset it!
 }
 
 // Function will simply log to a file as well as amxx log

@@ -306,6 +306,9 @@ public on_ResetHud( id )
 		return PLUGIN_CONTINUE;
 	}
 
+	// Store the player's team!
+	g_iPlayerTeam[id] = get_user_team( id );
+
 	// We're forcibly respawning the player - so lets just return
 	if ( bIgnorePlayerSpawning[id] )
 	{
@@ -432,13 +435,6 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 	// Make sure we have a valid victim
 	if ( SHARED_ValidPlayer( iVictim ) )
 	{
-/*
-		new Float:fVecEndPos[3];
-		get_tr( TR_vecEndPos, fVecEndPos );
-
-		client_print( iVictim, print_chat, "( %0.0f, %0.0f, %0.0f )", fVecEndPos[0], fVecEndPos[1], fVecEndPos[2] );
-		client_print( iAttacker, print_chat, "( %0.0f, %0.0f, %0.0f )", fVecEndPos[0], fVecEndPos[1], fVecEndPos[2] );
-*/
 		// We need to have a valid player!
 		if ( SHARED_ValidPlayer( iAttacker ) )
 		{
@@ -485,6 +481,15 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 			// This is a nice check for Helm of Excellence
 			if ( ITEM_Has( iVictim, ITEM_HELM ) > ITEM_NONE )
 			{
+				// Friendly fire is off! - This means same team shouldn't remove a charge!
+				if ( !get_pcvar_num( CVAR_mp_friendlyfire ) )
+				{
+					if ( g_iPlayerTeam[iAttacker] == g_iPlayerTeam[iVictim] )
+					{
+						return FMRES_IGNORED;
+					}
+				}
+
 				// If its a headshot then we want to block it
 				if ( iHitZone & (1 << 1) )
 				{
@@ -520,10 +525,10 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				if ( SHARED_ValidPlayer( iAttacker ) && fDifference < 0.1 && fDifference > 0.0 )
 				{
 
-					// Basically if friendly fire is on, we want to block ALL shots, otherwise we only block shots from enemies
+					// Friendly fire is off! - This means we shouldn't evade since no damage will be done!
 					if ( !get_pcvar_num( CVAR_mp_friendlyfire ) )
 					{
-						if ( get_user_team( iAttacker ) == get_user_team( iVictim ) )
+						if ( g_iPlayerTeam[iAttacker] == g_iPlayerTeam[iVictim] )
 						{
 							return FMRES_IGNORED;
 						}
