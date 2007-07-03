@@ -286,6 +286,9 @@ XP_onDeath( iVictim, iAttacker, iWeaponIndex, iHeadshot )
 				{
 					client_print( i, print_chat, "%s You have been awarded %d XP for a kill assist!", g_MODclient, iBonusXP );
 				}
+
+				// victim may respawn, so reset the counter
+				g_iDamageDealt[i][iVictim] = 0;
 			}
 		}
 
