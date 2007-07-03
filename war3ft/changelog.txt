@@ -4,6 +4,9 @@ v3.0 RC8
  - Bug Fix: [FS#28] rings console command not going through proper checks
  - Bug Fix: [FS#32] Giving XP to terrorists in admin menu would not work
  - Bug Fix: [FS#21] Friendly fire no longer affects charges for helm of excellence
+ - Bug Fix: [FS#37] Undead ultimate run time error
+ - Bug Fix: [FS#38] Grenade trail created on orc's death when grenade drops
+ - Bug Fix: [FS#40] Assist XP awarded twice if a user would respawn
 
 v3.0 RC7
  - Addition: wc3_ignore_bots CVAR which works with wc3_min_players (thanks Krazy)
