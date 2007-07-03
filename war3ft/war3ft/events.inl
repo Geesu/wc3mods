@@ -8,6 +8,12 @@ public grenade_throw( index, greindex, wId )
 		return;
 	}
 	
+	// If user isn't alive do nothing!
+	if ( !is_user_alive( index ) )
+	{
+		return;
+	}
+
 	// User has gloves!  Do we need to give them another grenade?
 	if ( ITEM_Has( index, ITEM_GLOVES ) > ITEM_NONE )
 	{
