@@ -1437,13 +1437,16 @@ public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 	// Update frags ( realtime )
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		new iKillerDeaths = get_user_deaths( iKiller );
-		
-		// Updates realtime
-		Create_ScoreInfo( iKiller, iKillerFrags, iKillerDeaths, 0, iKillerTeam );
+		if ( is_user_alive( iKiller ) )
+		{
+			new iKillerDeaths = get_user_deaths( iKiller );
+			
+			// If we don't do this then next round the number of kills will go back to what it was
+			set_user_frags( iKiller, iKillerFrags );
 
-		// If we don't do this then next round the number of kills will go back to what it was
-		set_user_frags( iKiller, iKillerFrags );
+			// Updates realtime
+			Create_ScoreInfo( iKiller, iKillerFrags, iKillerDeaths, 0, iKillerTeam );
+		}
 	}
 
     // Create Death Message
