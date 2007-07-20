@@ -1326,7 +1326,17 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 	// Suicide Bomber should go off when the user dies
 	if ( SM_GetSkillLevel( iVictim, ULTIMATE_SUICIDE ) > 0 )
 	{	
-		UD_Suicide( iVictim );
+		// User can't use their ultimate when they're hexed
+		if ( p_data_b[iVictim][PB_HEXED] )
+		{
+			WC3_StatusText( iVictim, TXT_ULTIMATE, "%L", iVictim, "HEX_NO_ABILITY" );
+
+			client_cmd( iVictim, "speak %s", g_szSounds[SOUND_ERROR] );
+		}
+		else
+		{
+			UD_Suicide( iVictim );
+		}
 	}
 	
 
