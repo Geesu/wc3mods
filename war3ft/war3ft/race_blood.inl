@@ -68,7 +68,7 @@ public BM_ULT_Immolate_DoT( parm_DoT[3] )
 
 	// Do the DoT damage
 
-	WC3_Damage( iTarget, iCaster, IMMOLATE_DOT, CSW_IMMOLATE, -1 )
+	WC3_Damage( iTarget, iCaster, IMMOLATE_DOT_DAMAGE, CSW_IMMOLATE, -1 )
 
 	// If the target is still alive after this, make their screen glow orange and start the task again
 
