@@ -1361,7 +1361,15 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 			{
 				client_print( iVictim, print_chat, "%s You will not respawn because your killer has immunity", g_MODclient );
 			}
-
+			
+			// User can't use their ultimate when they're hexed
+			else if ( p_data_b[iVictim][PB_HEXED] )
+			{
+				WC3_StatusText( iVictim, TXT_ULTIMATE, "%L", iVictim, "HEX_NO_ABILITY" );
+			
+				client_cmd( iVictim, "speak %s", g_szSounds[SOUND_ERROR] );
+			}
+			
 			// Otherwise lets spawn them!!!
 			else
 			{
