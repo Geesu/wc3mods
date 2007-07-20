@@ -239,6 +239,8 @@ SQLITE_Save( id )
 
 SQLITE_Save_T( id )
 {
+	SQLITE_Save( id );
+	/*
 	// Make sure our connection is working
 	if ( !SQLITE_Check_Connection() )
 	{
@@ -269,6 +271,7 @@ SQLITE_Save_T( id )
 			}
 		}
 	}
+	*/
 
 	return;
 }
