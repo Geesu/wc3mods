@@ -151,7 +151,7 @@ WA_HardenedSkin( iVictim, iDamage )
 		static iLevel;
 		iLevel = p_data[iVictim][P_LEVEL];
 
-		return ( floatround( float( iDamage ) * p_harden[iLevel] ) );
+		return ( floatround( float( iDamage ) * ( 1 - p_harden[iLevel] ) ) );
 	}
 
 	return iDamage;	
