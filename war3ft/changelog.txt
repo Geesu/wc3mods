@@ -1,3 +1,8 @@
+v3.0 RC9
+ - Bug Fix: [FS#46] Immolate not doing the proper amount of damage
+ - Bug Fix: [FS#47] Warden's Hardened skin was not working correctly
+ - Bug Fix: [FS#48] Fixed undead's ultimate going off when hexed
+
 v3.0 RC8
  - Bug Fix: [FS#25] Warden's Shadow Strike had wrong percentage at level 1
  - Bug Fix: [FS#31] Reset item charges when a player joins the server
