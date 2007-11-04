@@ -9,4 +9,3 @@
 #define MAX_MENUS			32
 
 
-new g_Menu[MAX_MENUS];
