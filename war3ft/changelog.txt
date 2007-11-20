@@ -15,6 +15,7 @@ v3.0 RC9
  - Bug Fix: [FS#54] Sock item always set gravity to 0.5 (wc3_sock value ignored)
  - Bug Fix: [FS#53] Deselected skills are no longer saved to database (will be saved as skill level as 0)
  - Bug Fix: [FS#35] Player couldn't respawn after WC3_Kill (generally after warden ultimate)
+ - Bug Fix: [FS#26] If warden is killed last and immunity check should not occur (i.e. killer shouldn't lose a necklace charge)
 
 v3.0 RC8
  - Bug Fix: [FS#25] Warden's Shadow Strike had wrong percentage at level 1

@@ -453,7 +453,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				{
 					
 					// Check to see if the user should block this ultimate!
-					if ( ULT_IsImmune( iVictim ) )
+					if ( !g_EndRound && ULT_IsImmune( iVictim ) )
 					{
 						ULT_Blocked( iAttacker );
 					}
