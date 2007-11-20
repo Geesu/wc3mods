@@ -467,7 +467,7 @@ public WC3_GetUserInput( id )
 		return;
 	}
 
-	if ( id > TASK_GETINPUT )
+	if ( id >= TASK_GETINPUT )
 	{
 		id -= TASK_GETINPUT;
 	}
@@ -1419,12 +1419,41 @@ public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 
 	// Remove all ultimate icons since the user is going to be killed...
 	ULT_ClearIcons( iVictim );
-	
-	// Call all war3 functions when the user dies
- 	WC3_Death( iVictim, iKiller, iWeapon, iHeadshot );
 
 	new iVictimTeam = get_user_team( iVictim );
 	new iKillerTeam = get_user_team( iKiller );
+
+	// Create Death Message
+	if ( is_user_alive( iVictim ) )
+	{
+		// Kill Victim
+		WC3_KillUser( iVictim, iKiller, iWeapon );
+
+		// Update frags ( realtime )
+		new iVictimFrags = get_user_frags( iVictim ) + 1;
+		set_user_frags( iVictim, iVictimFrags );
+
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			new iVictimDeaths = get_user_deaths( iVictim );
+
+			Create_ScoreInfo( iVictim, iVictimFrags, iVictimDeaths, 0, iVictimTeam );
+
+			// Get the weapon name
+			new szWeaponName[32];
+			UTIL_GetWeaponName( iWeapon, szWeaponName, 31 );
+
+			Create_DeathMsg_CS( iKiller, iVictim, iHeadshot, szWeaponName );
+		}
+
+		else if ( g_MOD == GAME_DOD )
+		{
+			Create_DeathMsg_DOD( iKiller, iVictim, iWeapon );
+		}
+	}
+
+	// Call all war3 functions when the user dies
+ 	WC3_Death( iVictim, iKiller, iWeapon, iHeadshot );
 
 	// Award $300 for a Kill
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
@@ -1461,35 +1490,6 @@ public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 
 			// Updates realtime
 			Create_ScoreInfo( iKiller, iKillerFrags, iKillerDeaths, 0, iKillerTeam );
-		}
-	}
-
-    // Create Death Message
-	if ( is_user_alive( iVictim ) )
-	{
-        // Kill Victim
-		WC3_KillUser( iVictim, iKiller, iWeapon );
-
-		// Update frags ( realtime )
-		new iVictimFrags = get_user_frags( iVictim ) + 1;
-		set_user_frags( iVictim, iVictimFrags );
-		
-		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
-		{
-			new iVictimDeaths = get_user_deaths( iVictim );
-
-			Create_ScoreInfo( iVictim, iVictimFrags, iVictimDeaths, 0, iVictimTeam );
-
-			// Get the weapon name
-			new szWeaponName[32];
-			UTIL_GetWeaponName( iWeapon, szWeaponName, 31 );
-
-			Create_DeathMsg_CS( iKiller, iVictim, iHeadshot, szWeaponName );
-		}
-
-		else if ( g_MOD == GAME_DOD )
-		{
-			Create_DeathMsg_DOD( iKiller, iVictim, iWeapon );
 		}
 	}
 

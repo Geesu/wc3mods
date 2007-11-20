@@ -601,7 +601,7 @@ public SHARED_CS_Reincarnation( id )
 public _SHARED_CS_GiveWeapons(id)
 {
 
-	if ( id > TASK_GIVEITEMS )
+	if ( id >= TASK_GIVEITEMS )
 	{
 		id -= TASK_GIVEITEMS;
 	}
@@ -709,7 +709,7 @@ public _SHARED_CS_GiveWeapons(id)
 
 public _SHARED_SetSilenceBurst( id )
 {
-	if ( id > TASK_SILENCEBURST )
+	if ( id >= TASK_SILENCEBURST )
 	{
 		id -= TASK_SILENCEBURST;
 	}
@@ -1059,14 +1059,6 @@ public SHARED_SetGravity( id )
 		return;
 	}
 	
-	// This user doesn't want their gravity to be changed! - Make sure it's 1.0!
-	if ( !g_bLevitation[id] )
-	{
-		set_user_gravity( id, 1.0 );
-
-		return;
-	}
-
 	// If gravity is less than this, lets not change per-user b/c it BLOWS ASS in game
 	if ( CVAR_sv_gravity == 0 || get_pcvar_num( CVAR_sv_gravity ) > 650 )
 	{
@@ -1075,8 +1067,8 @@ public SHARED_SetGravity( id )
 
 		new Float:fGravityLevel = 1.0;
 
-		// Our gravity level bonus because of undead's levitation
-		if ( iSkillLevel > 0 )
+		// If this user does want their gravity to be changed!
+		if ( ( iSkillLevel > 0 ) && g_bLevitation[id] ) 
 		{
 			fGravityLevel = p_levitation[iSkillLevel-1];
 		}
@@ -1086,7 +1078,7 @@ public SHARED_SetGravity( id )
 		{
 			
 			// User has levitation + sock, give them an extra bonus
-			if ( fGravityLevel > 0.0 )
+			if ( fGravityLevel < 1.0 )
 			{
 				fGravityLevel /= 2.0;
 

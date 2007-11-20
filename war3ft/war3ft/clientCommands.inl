@@ -344,9 +344,9 @@ CMD_Handle( id, szCmd[] )
 
 	else if ( CMD_Equal( id, szCmd, "levitation" ) )
 	{
-		if ( p_data[id][P_RACE] != RACE_UNDEAD )
+		if ( SM_GetSkillLevel( id, SKILL_LEVITATION ) <= 0 )
 		{
-			client_print( id, print_chat, "%s You are not undead!", g_MODclient );
+			client_print( id, print_chat, "%s You do not have levitation!", g_MODclient );
 
 			return;
 		}
@@ -444,6 +444,52 @@ CMD_Handle( id, szCmd[] )
 			client_print( id, print_chat, "%s Hey I've already given you level 10 for this race!!", g_MODclient );
 		}
 	}
+	
+	// Ability to buy items through console commands
+	else if ( CMD_Equal( id, szCmd, "ankh" ) )
+	{
+		if ( ITEM_MenuCanBuyCheck(id) )ITEM_Buy( id, ITEM_ANKH );
+	}
+
+	else if ( CMD_Equal( id, szCmd, "boots" ) )
+	{
+		if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_BOOTS );
+	}
+
+	else if ( CMD_Equal( id, szCmd, "claws" ) )
+	{
+		if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_CLAWS );
+	}
+
+	else if ( CMD_Equal( id, szCmd, "cloak" ) )
+	{
+		if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_CLOAK );
+	}
+
+	else if ( CMD_Equal( id, szCmd, "mask" ) )
+	{
+		if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_MASK );
+	}
+
+	else if ( CMD_Equal( id, szCmd, "necklace" ) )
+	{
+		if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_NECKLACE );
+	}
+
+	else if ( CMD_Equal( id, szCmd, "frost" ) )
+	{
+		if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_FROST );
+	}
+
+	else if ( CMD_Equal( id, szCmd, "health" ) )
+	{
+		if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_HEALTH );
+	}
+
+	else if ( CMD_Equal( id, szCmd, "tome" ) )
+	{
+		if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_TOME );
+	}
 
 	if ( get_pcvar_num( CVAR_wc3_races ) > 4 )
 	{
@@ -452,13 +498,44 @@ CMD_Handle( id, szCmd[] )
 		{
 			MOTD_ItemsInfo( id, 9 );
 		}
+		else if ( CMD_Equal( id, szCmd, "scroll" ) )
+		{
+			if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_SCROLL );
+		}
+
+		else if ( CMD_Equal( id, szCmd, "helm" ) )
+		{
+			if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_HELM );
+		}
+
+		else if ( CMD_Equal( id, szCmd, "amulet" ) )
+		{
+			if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_AMULET );
+		}
+
+		else if ( CMD_Equal( id, szCmd, "socks" ) )
+		{
+			if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_SOCK );
+		}
+
+		else if ( CMD_Equal( id, szCmd, "gloves" ) )
+		{
+			if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_GLOVES );
+		}
 
 		else if ( CMD_Equal( id,  szCmd, "rings" ) )
 		{
-			if ( ITEM_MenuCanBuyCheck( id ) )
-			{
-				ITEM_BuyRings( id );
-			}
+			if ( ITEM_MenuCanBuyCheck( id ) ) ITEM_BuyRings( id );
+		}
+
+		else if ( CMD_Equal( id, szCmd, "chameleon" ) )
+		{
+			if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_CHAMELEON );
+		}
+
+		else if ( CMD_Equal( id, szCmd, "mole" ) )
+		{
+			if (ITEM_MenuCanBuyCheck(id)) ITEM_Buy( id, ITEM_MOLE );
 		}
 
 		else if ( CMD_Equal( id,  szCmd, "ability" ) )

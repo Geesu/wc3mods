@@ -251,7 +251,7 @@ SM_GetSkillLevel( id, skill_id, debug_id = -1 )
 	// User doesn't have this skill
 	if ( !g_bPlayerSkills[id][skill_id] )
 	{
-		return 0;
+		return -1;
 	}
 
 	// If it's a passive skill, we'll just return the player's current level

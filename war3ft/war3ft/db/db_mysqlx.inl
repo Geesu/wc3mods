@@ -207,8 +207,9 @@ MYSQLX_Save( id )
 			iCurrentLevel = SM_GetSkillLevel( id, iSkillID, 14 );
 
 			// Then we need to save this!
-			if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
+			if ( iCurrentLevel >= 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
 			{
+				g_iDBPlayerSkillStore[id][iSkillID] = iCurrentLevel;
 				format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
 				query = SQL_PrepareQuery( g_DBConn, szQuery );
 
@@ -263,8 +264,9 @@ MYSQLX_Save_T( id )
 			iCurrentLevel = SM_GetSkillLevel( id, iSkillID, 15 );
 
 			// Then we need to save this!
-			if ( iCurrentLevel > 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
+			if ( iCurrentLevel >= 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
 			{
+				g_iDBPlayerSkillStore[id][iSkillID] = iCurrentLevel;
 				format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
 				SQL_ThreadQuery( g_DBTuple, "_MYSQLX_Save_T", szQuery );
 			}
@@ -386,12 +388,16 @@ MYSQLX_SetDataForRace( id )
 			SM_SetSkillLevel( id, iSkillID, 0, 2 );
 		}
 	}
-
+	
+	new iSkillID, iSkillLevel;
 	// While we have a result!
 	while ( SQL_MoreResults( query ) )
 	{
-		SM_SetSkillLevel( id, SQL_ReadResult( query, 0 ), SQL_ReadResult( query, 1 ), 3 );
-		
+		iSkillID = SQL_ReadResult( query, 0 );
+		iSkillLevel = SQL_ReadResult( query, 1 );
+		SM_SetSkillLevel( id, iSkillID, iSkillLevel, 3 );
+		g_iDBPlayerSkillStore[id][iSkillID] = iSkillLevel;
+
 		SQL_NextRow( query );
 	}
 

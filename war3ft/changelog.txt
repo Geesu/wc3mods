@@ -1,4 +1,5 @@
 v3.0 RC9
+ - Addition: [FS#29] Client console commands for all items
  - Bug Fix: [FS#46] Immolate not doing the proper amount of damage
  - Bug Fix: [FS#47] Warden's Hardened skin was not working correctly
  - Bug Fix: [FS#48] Fixed undead's ultimate going off when hexed
@@ -10,6 +11,10 @@ v3.0 RC9
  - Bug Fix: Respawn failing with AMXX 1.80
  - Bug Fix: Menus not working with AMXX 1.80
  - Bug Fix: [FS#65] Stuck protection triggered after new round started
+ - Bug Fix: [FS#55] Command /levitation now available for any race with skill levitation
+ - Bug Fix: [FS#54] Sock item always set gravity to 0.5 (wc3_sock value ignored)
+ - Bug Fix: [FS#53] Deselected skills are no longer saved to database (will be saved as skill level as 0)
+ - Bug Fix: [FS#35] Player couldn't respawn after WC3_Kill (generally after warden ultimate)
 
 v3.0 RC8
  - Bug Fix: [FS#25] Warden's Shadow Strike had wrong percentage at level 1

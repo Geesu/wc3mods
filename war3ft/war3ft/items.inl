@@ -712,7 +712,7 @@ ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 		new iVampiricBonus = SM_GetSkillLevel( iAttacker, SKILL_VAMPIRICAURA );
 		
 		// Then the user already gets a bonus, lets lower the total amount the user is going to get
-		if ( iVampiricBonus )
+		if ( iVampiricBonus > 0 )
 		{
 			iBonusHealth /= iVampiricBonus;
 		}
