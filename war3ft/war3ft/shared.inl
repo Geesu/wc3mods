@@ -323,8 +323,10 @@ public _SHARED_Spawn( id )
 	bIgnorePlayerSpawning[id] = true;
 
 	// Spawn the player
-	spawn( id );
-	spawn( id );
+	//spawn( id );
+	//spawn( id );
+	cs_user_spawn( id );
+
 
 	p_data_b[id][PB_SLOWED]		= false;
 	p_data_b[id][PB_STUNNED]	= false;
@@ -368,7 +370,7 @@ public _SHARED_Spawn_Final( id )
 	// OK lets do something on this spawn!
 	bIgnorePlayerSpawning[id] = false;
 
-	spawn( id );
+	//spawn( id );
 	
 	bIgnoreArmorSet[id] = false;
 
