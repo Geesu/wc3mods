@@ -2,6 +2,14 @@ v3.0 RC9
  - Bug Fix: [FS#46] Immolate not doing the proper amount of damage
  - Bug Fix: [FS#47] Warden's Hardened skin was not working correctly
  - Bug Fix: [FS#48] Fixed undead's ultimate going off when hexed
+ - Bug Fix: [FS#66] Server crash when using wc3_giveitem with item_id over 17
+ - Bug Fix: [FS#63] Server crash on given maps b/c of sprite count
+ - Bug Fix: [FS#57] cl_minmodels check failure
+ - Bug Fix: [FS#70] g_iSpawnReserved index out of bounds
+ - Bug Fix: [FS#67] Mole is shown to spectators when mole is in slot2
+ - Bug Fix: Respawn failing with AMXX 1.80
+ - Bug Fix: Menus not working with AMXX 1.80
+ - Bug Fix: [FS#65] Stuck protection triggered after new round started
 
 v3.0 RC8
  - Bug Fix: [FS#25] Warden's Shadow Strike had wrong percentage at level 1

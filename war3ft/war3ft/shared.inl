@@ -1135,7 +1135,8 @@ public SHARED_IsOnTeam( id )
 public _SHARED_SpawnReset()
 {
 	new i;
-
+	
+	g_iSpawnInc = 0;
 	for ( i = 0; i < TOTAL_SPAWNS; i++ )
 	{
 		g_iSpawnReserved[i] = 0;

@@ -110,7 +110,17 @@ public ADMIN_Handler( id )
 			return PLUGIN_HANDLED;
 		}
 
-		new iItemID = FindItem( szArg2 );
+		new iItemID;
+		if ( is_str_num( szArg2 ) )
+		{
+			iItemID = str_to_num( szArg2 );
+			if ( iItemID > 17 || iItemID < 0 )
+			{
+				ADMIN_Print( id, "%s Error, item id must be in between (or equal to) 0 and 17", g_MODclient );
+
+				return PLUGIN_HANDLED;
+			}
+		}
 
 		ADMIN_GiveItem( id, szArg1, iItemID );
 	}
@@ -253,12 +263,6 @@ ADMIN_GiveItem( id, szTarget[], iItemID )
 	{
 		ADMIN_NoTargetFound( id, szTarget, ( iTarget == -2 ) );
 	}
-}
-
-// Attempt to find out what item this is
-FindItem( szItem[] )
-{
-	return str_to_num( szItem );
 }
 
 // Find a user based on szTarget

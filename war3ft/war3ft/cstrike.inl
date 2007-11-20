@@ -269,7 +269,7 @@ public _CS_MinModelsLoop()
 
 public _CS_CheckMinModelsValue( id, const cvar[], const value[] )
 {
-	if ( equali( cvar,"cl_minmodels" ) && str_to_float( value ) > 0.0 )
+	if ( equali( cvar,"cl_minmodels" ) && strcmp( value, "0" ) )
 	{
 		client_cmd( id, "echo ^"======== Warcraft 3 Frozen Throne ========^"" );
 		client_cmd( id, "echo ^"You were kicked because cl_minmodels is set to 1 on your client, please change this to 0.^"" );

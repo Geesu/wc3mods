@@ -42,7 +42,7 @@ new g_iPlayerRole[33];
 new bool:bHasBegunPlantingOrDefusing[33];
 
 // Holds the XP Multipliers per weapon
-new Float:fWpnXPMultiplier[62] =		{1.0};
+new Float:fWpnXPMultiplier[CSW_WAR3_MAX+1] =		{1.0};
 
 // Amount of XP needed to gain a level
 new iXPLevelShortTerm[11]				= {0,150,300,600,1000,1500,2100,2800,3400,4500,5500};

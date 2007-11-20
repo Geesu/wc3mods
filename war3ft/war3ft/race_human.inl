@@ -111,7 +111,11 @@ HU_ULT_Blink( id )
 	parm[3] = vOldLocation[2];
 	parm[4] = vNewLocation[2];
 	
-	set_task( 0.1, "_HU_ULT_BlinkStuck", TASK_BLINKSTUCK + id, parm, 5 );
+	// [FS#65]
+	if ( !g_EndRound )
+	{
+		set_task( 0.1, "_HU_ULT_BlinkStuck", TASK_BLINKSTUCK + id, parm, 5 );
+	}
 	
 	ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 

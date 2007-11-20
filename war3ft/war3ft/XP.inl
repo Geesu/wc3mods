@@ -420,7 +420,7 @@ XP_GivenByLevel( iLevel )
 
 bool:XP_MinPlayers()
 {
-	new iNum;
+	new iNum = 0;
 
 	// Don't ignore bots
 	if ( get_pcvar_num( CVAR_wc3_ignore_bots ) == 0 )
@@ -428,11 +428,25 @@ bool:XP_MinPlayers()
 		iNum = get_playersnum();
 	}
 
-	// Ignore bots
+	// Ignore bots, spectators, and HLTV
 	else
 	{
 		new players[32];
-		get_players( players, iNum, "ch" ); 
+		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+		{
+			new iNumCT;
+			get_players( players, iNum, "ce", "TERRORIST" );
+			get_players( players, iNumCT, "ce", "CT" );
+			iNum += iNumCT;
+		}
+
+		else if ( g_MOD == GAME_DOD )
+		{
+			new iNumAxis;
+			get_players( players, iNum, "ce", "Allies" );
+			get_players( players, iNumAxis, "ce", "Axis" );
+			iNum += iNumAxis;
+		}
 	}
 
 	if ( iNum < get_pcvar_num( CVAR_wc3_min_players ) )
@@ -653,6 +667,7 @@ XP_Configure()
 	fWpnXPMultiplier[CSW_CARRION		]	= 1.0;
 	fWpnXPMultiplier[CSW_ORB			]	= 1.0;
 	fWpnXPMultiplier[CSW_CONCOCTION		]	= 1.0;
+	fWpnXPMultiplier[CSW_BANISH			]	= 1.0;
 }
 
 // Reset the user's XP to 0

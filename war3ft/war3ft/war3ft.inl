@@ -222,7 +222,7 @@ public WC3_Precache()
 			new szMapName[32];
 			get_mapname( szMapName, 31 );
 
-			if ( !equali( szMapName, "de_inferno_cz" ) )
+			if ( !equali( szMapName, "de_inferno_cz" ) && !equali( szMapName, "fun_matrix_reloaded" ) && !equali( szMapName, "de_rats-xl" ) )
 			{
 				g_bExtraSpritesEnabled	= true;
 
@@ -989,7 +989,7 @@ WC3_ShowSpecInfo( id, iTargetID )
 	}
 
 	// User has another item
-	if ( g_iShopMenuItems[iTargetID][ITEM_SLOT_TWO] > ITEM_NONE && g_iShopMenuItems[iTargetID][ITEM_SLOT_ONE] != ITEM_MOLE )
+	if ( g_iShopMenuItems[iTargetID][ITEM_SLOT_TWO] > ITEM_NONE && g_iShopMenuItems[iTargetID][ITEM_SLOT_TWO] != ITEM_MOLE )
 	{
 		// Then the string isn't empty and we have information in it (so we have a first item)
 		if ( szItemInfo[0] )
