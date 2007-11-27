@@ -1,6 +1,6 @@
-/*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
+/*
 *	Race: Shadow Hunter Functions
-´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
+*/
 
 #define SH_HEX_LENGTH			  5.0		// Length that hex lasts in seconds
 #define SH_HEX_SPEED			  175.0		// Speed hexed player will move at

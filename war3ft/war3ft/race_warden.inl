@@ -1,6 +1,6 @@
-/*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
+/*
 *	Race: Warden Functions
-´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
+*/
 
 #define VENGEANCE_HEALTH		50			// Health the user should have after using his ult
 #define SHADOWSTRIKE_DAMAGE		10			// Amount of damage dealt with shadow strike

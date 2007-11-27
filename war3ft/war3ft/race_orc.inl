@@ -1,6 +1,6 @@
-/*´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.
+/*
 *	Race: Orcish Horde Functions
-´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.´¯`·.¸¸.*/
+*/
 
 #define CHAINLIGHTNING_DAMAGE			50		// Initial ultimate damage
 #define CHAINLIGHTNING_LINEWIDTH		80		// Width of the lightning sprite
