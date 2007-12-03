@@ -28,6 +28,11 @@ $config->show_steam_id = true;
 // The amount to display per page
 $config->limit = 100;
 
+// What mode?
+//   - "traditional"	- Like you're used to seeing, listed based on xp per race
+//	 - "total"			- Will list players based on TOTAL XP over all races 
+$config->mode = "traditional";
+
 /***********************************/
 /*** DO NOT EDIT BELOW THIS LINE ***/
 /***********************************/

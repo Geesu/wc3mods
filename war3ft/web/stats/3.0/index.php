@@ -19,7 +19,7 @@
 	{
 		$race_id		= addslashes( get_var( "race_id" ) );
 		$player_name	= addslashes( get_var( "player_name" ) );
-		$player_steamid	= addslashes( get_var( "player_name" ) );
+		$player_steamid	= addslashes( get_var( "player_steamid" ) );
 		
 		// Page number set?
 		if ( get_var( "page_num" ) != '' )
@@ -35,30 +35,63 @@
 		
 		$start_limit = ($_SESSION['page_num'] - 1) * $config->limit;
 
-		// Search by player name!
-		if ( $player_name != '' )
+
+		if ( $config->mode == 'traditional' )
 		{
-			$sql = "SELECT wc3_player.player_id, wc3_player_race.race_id, wc3_player_race.race_xp, wc3_web_race.race_name, wc3_player_extra.player_name FROM wc3_player INNER JOIN wc3_player_race ON wc3_player.player_id = wc3_player_race.player_id INNER JOIN wc3_web_race ON wc3_player_race.race_id = wc3_web_race.race_id INNER JOIN wc3_player_extra on wc3_player.player_id = wc3_player_extra.player_id WHERE wc3_player_race.race_xp > 0 AND wc3_web_race.race_lang = '$config->lang' AND wc3_player.player_name LIKE '%$player_name%' ORDER BY race_xp DESC";
+			// Search by player name!
+			if ( $player_name != '' )
+			{
+				$sql = "SELECT wc3_player.player_id, wc3_player_race.race_id, wc3_player_race.race_xp, wc3_web_race.race_name, wc3_player_extra.player_name FROM wc3_player INNER JOIN wc3_player_race ON wc3_player.player_id = wc3_player_race.player_id INNER JOIN wc3_web_race ON wc3_player_race.race_id = wc3_web_race.race_id INNER JOIN wc3_player_extra on wc3_player.player_id = wc3_player_extra.player_id WHERE wc3_player_race.race_xp > 0 AND wc3_web_race.race_lang = '$config->lang' AND wc3_player_extra.player_name LIKE '%$player_name%' ORDER BY race_xp DESC";
+			}
+			
+			// Search by player id!
+			else if ( $player_steamid != '' )
+			{
+				$sql = "SELECT wc3_player.player_id, wc3_player_race.race_id, wc3_player_race.race_xp, wc3_web_race.race_name, wc3_player_extra.player_name FROM wc3_player INNER JOIN wc3_player_race ON wc3_player.player_id = wc3_player_race.player_id INNER JOIN wc3_web_race ON wc3_player_race.race_id = wc3_web_race.race_id INNER JOIN wc3_player_extra on wc3_player.player_id = wc3_player_extra.player_id WHERE wc3_player_race.race_xp > 0 AND wc3_web_race.race_lang = '$config->lang' AND wc3_player_extra.player_steamid LIKE '%$player_steamid%' ORDER BY race_xp DESC";
+			}
+			
+			// Show all
+			else
+			{
+				$sql = "SELECT wc3_player.player_id, wc3_player_race.race_id, wc3_player_race.race_xp, wc3_web_race.race_name, wc3_player_extra.player_name FROM wc3_player INNER JOIN wc3_player_race ON wc3_player.player_id = wc3_player_race.player_id INNER JOIN wc3_web_race ON wc3_player_race.race_id = wc3_web_race.race_id INNER JOIN wc3_player_extra on wc3_player.player_id = wc3_player_extra.player_id WHERE wc3_player_race.race_xp > 0 AND wc3_web_race.race_lang = '$config->lang'" . ( $_SESSION['race_id'] != -1 ? " AND wc3_player_race.race_id = '" . $_SESSION['race_id'] . "'" : '' ) . " ORDER BY race_xp DESC";
+			}
 		}
-		
-		// Search by player id!
-		else if ( $player_steamid != '' )
+		else if ( $config->mode == 'total' )
 		{
-			$sql = "SELECT wc3_player.player_id, wc3_player_race.race_id, wc3_player_race.race_xp, wc3_web_race.race_name, wc3_player_extra.player_name FROM wc3_player INNER JOIN wc3_player_race ON wc3_player.player_id = wc3_player_race.player_id INNER JOIN wc3_web_race ON wc3_player_race.race_id = wc3_web_race.race_id INNER JOIN wc3_player_extra on wc3_player.player_id = wc3_player_extra.player_id WHERE wc3_player_race.race_xp > 0 AND wc3_web_race.race_lang = '$config->lang' AND wc3_player.player_steamid LIKE '%$player_steamid%' ORDER BY race_xp DESC";
+			// Search by player name!
+			if ( $player_name != '' )
+			{
+				$sql = "SELECT wc3_player.player_id, SUM( wc3_player_race.race_xp ) AS race_xp, wc3_web_race.race_name, wc3_player_extra.player_name FROM wc3_player INNER JOIN wc3_player_race ON wc3_player.player_id = wc3_player_race.player_id INNER JOIN wc3_web_race ON wc3_player_race.race_id = wc3_web_race.race_id INNER JOIN wc3_player_extra on wc3_player.player_id = wc3_player_extra.player_id WHERE wc3_player_race.race_xp > 0 AND wc3_web_race.race_lang = '$config->lang' AND wc3_player_extra.player_name LIKE '%$player_name%' GROUP BY wc3_player.player_id ORDER BY race_xp DESC";
+			}
+			
+			// Search by player id!
+			else if ( $player_steamid != '' )
+			{
+				$sql = "SELECT wc3_player.player_id, SUM( wc3_player_race.race_xp ) AS race_xp, wc3_web_race.race_name, wc3_player_extra.player_name FROM wc3_player INNER JOIN wc3_player_race ON wc3_player.player_id = wc3_player_race.player_id INNER JOIN wc3_web_race ON wc3_player_race.race_id = wc3_web_race.race_id INNER JOIN wc3_player_extra on wc3_player.player_id = wc3_player_extra.player_id WHERE wc3_player_race.race_xp > 0 AND wc3_web_race.race_lang = '$config->lang' AND wc3_player_extra.player_steamid LIKE '%$player_steamid%' GROUP BY wc3_player.player_id ORDER BY race_xp DESC";
+			}
+			
+			// Show all
+			else
+			{
+				$sql = "SELECT wc3_player.player_id, SUM( wc3_player_race.race_xp ) AS race_xp, wc3_web_race.race_name, wc3_player_extra.player_name FROM wc3_player INNER JOIN wc3_player_race ON wc3_player.player_id = wc3_player_race.player_id INNER JOIN wc3_web_race ON wc3_player_race.race_id = wc3_web_race.race_id INNER JOIN wc3_player_extra on wc3_player.player_id = wc3_player_extra.player_id WHERE wc3_player_race.race_xp > 0 AND wc3_web_race.race_lang = '$config->lang' GROUP BY wc3_player.player_id ORDER BY race_xp DESC";
+			}
 		}
-		
-		// Show all
-		else
-		{
-			$sql = "SELECT wc3_player.player_id, wc3_player_race.race_id, wc3_player_race.race_xp, wc3_web_race.race_name, wc3_player_extra.player_name FROM wc3_player INNER JOIN wc3_player_race ON wc3_player.player_id = wc3_player_race.player_id INNER JOIN wc3_web_race ON wc3_player_race.race_id = wc3_web_race.race_id INNER JOIN wc3_player_extra on wc3_player.player_id = wc3_player_extra.player_id WHERE wc3_player_race.race_xp > 0 AND wc3_web_race.race_lang = '$config->lang'" . ( $_SESSION['race_id'] != -1 ? " AND wc3_player_race.race_id = '" . $_SESSION['race_id'] . "'" : '' ) . " ORDER BY race_xp DESC";
-		}
-		
+
 		// Determine max # of rows
 		$db->query( $sql );
 		$num_rows = $db->num_rows;
-		
+
 		// Get players
-		$sql .= " LIMIT $start_limit, $config->limit;";
+		if ( $player_name == "" && $player_steamid == "" )
+		{
+			$sql .= " LIMIT $start_limit, $config->limit;";
+		}
+		// Reset page number to 1 after a search!
+		else
+		{
+			$_SESSION['page_num'] = 1;
+		}
+
 		$players = $db->get_results( $sql );
 	}
 	
@@ -170,9 +203,15 @@
 					<td>Rank</td>
 					<td>Player Name</td>
 					<td>XP</td>
+<?php			if ( $config->mode == 'traditional' )
+				{
+?>
 					<td>Race</td>
+<?php
+				}
+?>
 				</tr>
-				<tr style="height:4px; background-color:#000000; font-size:4px;"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+				<tr style="height:4px; background-color:#000000; font-size:4px;"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><?php if ( $config->mode == 'traditional' ) { ?><td>&nbsp;</td><?php } ?></tr>
 
 
 <?php
@@ -180,7 +219,15 @@
 	
 		foreach ( $players as $player )
 		{
-			echo "<tr class=\"" . ( ( $i % 2 == 0 ) ? "tbl-shade2" : "tbl-shade3" ) . "\"><td>" . $i++ . "</td><td><b><a href=\"" . $_SERVER['PHP_SELF'] . "?id=$player->player_id\">" . htmlspecialchars( $player->player_name ) . "</a></b></td><td>$player->race_xp</td><td>$player->race_name</td></tr>\n\r";
+			echo "<tr class=\"" . ( ( $i % 2 == 0 ) ? "tbl-shade2" : "tbl-shade3" ) . "\">\n\r";
+			echo "<td>" . $i++ . "</td>\n\r";
+			echo "<td><b><a href=\"" . $_SERVER['PHP_SELF'] . "?id=$player->player_id\">" . htmlspecialchars( $player->player_name ) . "</a></b></td>\n\r";
+			echo "<td>$player->race_xp</td>\n\r";
+			if ( $config->mode == 'traditional' )
+			{
+				echo "<td>$player->race_name</td>\n\r";
+			}
+			echo "</tr>\n\r";
 		}
 ?>
 			</table>
