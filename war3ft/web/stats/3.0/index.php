@@ -397,7 +397,8 @@
 </div>
 
 <div class="cBottom">
-	<br /><font size="1">Powered by <a href="http://wc3mods.net/" target="_blank">Warcraft 3 Mods</a> v1.2</font><br /><br />
+	<br /><font size="1">Powered by <a href="http://wc3mods.net/" target="_blank">Warcraft 3 Mods</a> v1.2.1</font><br />
+	<font size="1"><a href="http://war3ft.com/downloads.php" target="_blank">Get this for your site!</a></font><br /><br />
 </div>
 </form>
 </body>
