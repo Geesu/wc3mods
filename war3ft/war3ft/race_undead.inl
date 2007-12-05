@@ -100,8 +100,10 @@ public _UD_SuicideExplode( parm[5] )
 		if ( iDistance < EXPLOSION_RANGE && iTeam != get_user_team( iTargetID ) && !bIgnoreDmg[iTargetID] )
 		{
 
-			if ( ULT_IsImmune( iTargetID ) )
+			if ( ULT_CanUserBlockUlt( iTargetID ) )
 			{
+				ULT_RemoveCharge( iTargetID );
+
 				ULT_Blocked( id );
 				
 				bIgnoreDmg[iTargetID] = true;

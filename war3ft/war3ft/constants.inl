@@ -704,3 +704,5 @@ new Float:g_fLastSpecDisplay[33];
 
 // Lets keep track of what team the player is on!
 new g_iPlayerTeam[33];
+
+#define BOT_CAST_ULT_CHANCE		0.10

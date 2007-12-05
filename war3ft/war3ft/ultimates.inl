@@ -216,32 +216,42 @@ ULT_Available( id )
 	return false;
 }
 
-ULT_IsImmune( id )
+// This will simply CHECK if a user can block an ultimate!
+bool:ULT_CanUserBlockUlt( id )
 {
-
-	new bool:bBlocked = false;
+	new bool:bCanBlock = false;
 
 	if ( p_data_b[id][PB_WARDENBLINK] )
 	{
-		bBlocked = true;
+		bCanBlock = true;
 	}
 
 	else if ( ITEM_Has( id, ITEM_NECKLACE ) > ITEM_NONE )
 	{
-		ITEM_RemoveCharge( id, ITEM_NECKLACE );
-
-		bBlocked = true;
+		bCanBlock = true;
 	}
 
-	if ( bBlocked )
+	return bCanBlock;
+}
+
+ULT_RemoveCharge( id )
+{
+
+	if ( ITEM_Has( id, ITEM_NECKLACE ) > ITEM_NONE )
 	{
-		client_print( id, print_chat, "%s You have blocked an enemy's ultimate!", g_MODclient );
-
-		// Play ultimate blocked sound
-		emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_SPELLSHIELD], 1.0, ATTN_NORM, 0, PITCH_NORM );
+		ITEM_RemoveCharge( id, ITEM_NECKLACE );
+	}
+	else if ( p_data_b[id][PB_WARDENBLINK] )
+	{}
+	else
+	{
+		WC3_Log( true, "We should never be here!!!" );
 	}
 
-	return bBlocked;
+	client_print( id, print_chat, "%s You have blocked an enemy's ultimate!", g_MODclient );
+
+	// Play ultimate blocked sound
+	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_SPELLSHIELD], 1.0, ATTN_NORM, 0, PITCH_NORM );
 }
 
 ULT_Blocked( id )

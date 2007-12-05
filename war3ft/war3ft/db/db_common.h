@@ -53,3 +53,4 @@ forward DB_Prune();
 forward DB_FetchUniqueID( id );
 forward DB_GetUniqueID( id );
 forward DB_SaveAll( bThreaded );
+forward bool:DB_Connection_Available();

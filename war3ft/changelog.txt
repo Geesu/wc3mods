@@ -1,3 +1,14 @@
+v3.0 RC10
+ - Bug Fix: MYSQLX error function was being called from within SQLITE
+ - Bug Fix: [FS#72] Run time error in items.inl
+ - Bug Fix: [FS#62] Level 10 sprite wasn't being precached
+ - Bug Fix: [FS#60][DOD] Server crash when buying flaming gloves of warmth
+ - Bug Fix: Bots casting their ultimate is actually random now, not everytime they attack
+ - Bug Fix: If chain lightning was blocked, the wrong person would be notified
+ - Bug Fix: [FS#17] Big Bad Voodoo never working
+ - Bug Fix: Mole protectant not working
+ - Bug Fix: Database spamming problem when a user's ID couldn't be retreived
+
 v3.0 RC9
  - Addition: [FS#29] Client console commands for all items
  - Addition: [FS#59][WEB] Rank based on TOTAL XP - "total" option added to config file

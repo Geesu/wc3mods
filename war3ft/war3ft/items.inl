@@ -121,7 +121,7 @@ public ITEM_CanBuy( id, iItem )
 	}
 
 	// User is already going to reincarnate weapons because they bought an ankh earlier (probably lost it when died)
-	else if ( ( iItem == ITEM_ANKH && g_bPlayerBoughtAnkh[id] ) || ( iItem == ITEM_MOLE && g_bPlayerBoughtMole[id] ))
+	else if ( ( iItem == ITEM_ANKH && g_bPlayerBoughtAnkh[id] ) || ( iItem == ITEM_MOLE && g_bPlayerBoughtMole[id] ) )
 	{
 		client_print( id, print_center, "%L", id, "ALREADY_OWN_THAT_ITEM" );
 
@@ -191,7 +191,16 @@ public ITEM_Buy( id, iItem )
 // Item Buy Functions
 bool:ITEM_MenuCanBuyCheck( id )
 {
-	if ( !get_pcvar_num( CVAR_wc3_buy_dead ) && !is_user_alive( id ) )
+	// Duh how can they buy if they're dead!
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return false;
+	}
+
+	new isPlayerAlive		= is_user_alive( id );
+	new isPlayerInBuyZone	= cs_get_user_buyzone( id )
+
+	if ( !get_pcvar_num( CVAR_wc3_buy_dead ) && !isPlayerAlive )
 	{
 		client_print( id, print_center, "%L", id, "NOT_BUY_ITEMS_WHEN_DEAD" );
 		
@@ -208,7 +217,7 @@ bool:ITEM_MenuCanBuyCheck( id )
 			return false;
 		}
 		
-		else if ( get_pcvar_num( CVAR_wc3_buy_zone ) && !cs_get_user_buyzone( id ) && is_user_alive( id ) )
+		else if ( get_pcvar_num( CVAR_wc3_buy_zone ) && !isPlayerInBuyZone && isPlayerAlive )
 		{
 			client_print( id, print_center, "%L", id, "MUST_BE_IN_BUYZONE" );
 			
@@ -828,12 +837,36 @@ public _ITEM_Glove_Give( id )
 	}
 
 	// If somehow they already got a grenade - stop this!
-	if ( cs_get_user_bpammo( id, CSW_HEGRENADE ) > 0 )
+	/*new bool:bHasGrenade = false;
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		g_iGloveTimer[id] = 0;
-
-		return;
+		if ( cs_get_user_bpammo( id, CSW_HEGRENADE ) > 0 )
+		{
+			bHasGrenade = true;
+		}
 	}
+
+	// Lets not check in DOD b/c I *believe* you can have 2 grenades with a certain class
+	else if ( g_MOD == GAME_DOD )
+	{
+		if ( dod_get_user_ammo( id, DODW_HANDGRENADE ) > 0 || dod_get_user_ammo( id, DODW_STICKGRENADE ) > 0 )
+		{
+			bHasGrenade = true;
+		}
+	}*/
+
+	// Lets do CS/CZ only
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		// Already have a grenade!!
+		if ( SHARED_HasGrenade( id ) )
+		{
+			g_iGloveTimer[id] = 0;
+
+			return;
+		}
+	}
+
 
 	if ( g_iGloveTimer[id] > 0 )
 	{

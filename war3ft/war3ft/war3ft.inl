@@ -233,7 +233,7 @@ public WC3_Precache()
 				}
 
 				// Precache level sprites
-				for ( i = 0; i <= MAX_RACES; i++ )
+				for ( i = 0; i <= MAX_LEVELS; i++ )
 				{
 					g_iLevelSprites[i] = precache_model( g_szLevelSprites[i] );
 				}
@@ -913,7 +913,7 @@ WC3_IsImmunePlayerNear( id, vOrigin[3] )
 			{
 
 				// Does this player have a necklace or warden's blink?
-				if ( ULT_IsImmune( players[i] ) )
+				if ( ULT_CanUserBlockUlt( players[i] ) )
 				{
 					return true;
 				}
@@ -1351,11 +1351,13 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 		}
 
 		// Should we respawn for Vengeance?
-		if ( SM_GetSkillLevel( iVictim, ULTIMATE_VENGEANCE ) > 0 && iKiller != iVictim )
+		if ( SM_GetSkillLevel( iVictim, ULTIMATE_VENGEANCE ) > 0 && iKiller != iVictim && !g_EndRound )
 		{
 			// Killer has immunity, user shouldn't respawn :/
-			if ( ULT_IsImmune( iKiller ) )
+			if ( ULT_CanUserBlockUlt( iKiller ) )
 			{
+				ULT_RemoveCharge( iKiller );
+
 				client_print( iVictim, print_chat, "%s You will not respawn because your killer has immunity", g_MODclient );
 			}
 			

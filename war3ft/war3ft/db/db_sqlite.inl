@@ -133,7 +133,7 @@ SQLITE_Close()
 SQLITE_FetchUniqueID( id )
 {
 	// Make sure our connection is working
-	if ( !SQLITE_Check_Connection() )
+	if ( !SQLITE_Connection_Available() )
 	{
 		return;
 	}
@@ -190,7 +190,7 @@ SQLITE_FetchUniqueID( id )
 SQLITE_Save( id )
 {
 	// Make sure our connection is working
-	if ( !SQLITE_Check_Connection() )
+	if ( !SQLITE_Connection_Available() )
 	{
 		return;
 	}
@@ -204,7 +204,7 @@ SQLITE_Save( id )
 
 	if ( !SQL_Execute( query ) )
 	{
-		MYSQLX_Error( query, szQuery, 6 );
+		SQLITE_Error( query, szQuery, 6 );
 
 		return;
 	}
@@ -227,7 +227,7 @@ SQLITE_Save( id )
 
 				if ( !SQL_Execute( query ) )
 				{
-					MYSQLX_Error( query, szQuery, 6 );
+					SQLITE_Error( query, szQuery, 7 );
 
 					return;
 				}
@@ -243,7 +243,7 @@ SQLITE_Save_T( id )
 	SQLITE_Save( id );
 	/*
 	// Make sure our connection is working
-	if ( !SQLITE_Check_Connection() )
+	if ( !SQLITE_Connection_Available() )
 	{
 		return;
 	}
@@ -294,7 +294,7 @@ public _SQLITE_Save_T( failstate, Handle:query, error[], errnum, data[], size )
 SQLITE_GetAllXP( id )
 {
 	// Make sure our connection is working
-	if ( !SQLITE_Check_Connection() )
+	if ( !SQLITE_Connection_Available() )
 	{
 		return;
 	}
@@ -317,7 +317,7 @@ SQLITE_GetAllXP( id )
 
 	if ( !SQL_Execute( query ) )
 	{
-		MYSQLX_Error( query, szQuery, 6 );
+		SQLITE_Error( query, szQuery, 8 );
 
 		return;
 	}
@@ -357,7 +357,7 @@ SQLITE_GetAllXP( id )
 SQLITE_SetDataForRace( id )
 {
 	// Make sure our connection is working
-	if ( !SQLITE_Check_Connection() )
+	if ( !SQLITE_Connection_Available() )
 	{
 		return;
 	}
@@ -368,7 +368,7 @@ SQLITE_SetDataForRace( id )
 
 	if ( !SQL_Execute( query ) )
 	{
-		MYSQLX_Error( query, szQuery, 6 );
+		SQLITE_Error( query, szQuery, 9 );
 
 		return;
 	}
@@ -412,7 +412,7 @@ SQLITE_SetDataForRace( id )
 /*SQLITE_SetDataForRace_T( id )
 {
 	// Make sure our connection is working
-	if ( !SQLITE_Check_Connection() )
+	if ( !SQLITE_Connection_Available() )
 	{
 		return;
 	}
@@ -427,7 +427,7 @@ SQLITE_SetDataForRace( id )
 	return;
 }
 
-// Callback function once MySQL X Thread has completed
+// Callback function once SQLITE Thread has completed
 public _SQLITE_SetDataForRace_T( failstate, Handle:query, error[], errnum, data[], size )
 {
 	new id = data[0];
@@ -485,7 +485,7 @@ public _SQLITE_SetDataForRace_T( failstate, Handle:query, error[], errnum, data[
 }*/
 
 // Verifies that the database connection is ok
-SQLITE_Check_Connection()
+bool:SQLITE_Connection_Available()
 {
 	if ( !bDBAvailable )
 	{
@@ -508,7 +508,7 @@ SQLITE_Prune()
 	new szQuery[256];
 
 	// Need to run all 3 queries
-	for ( new i = 0; i < MYSQL_TOTAL_PRUNE_QUERY; i++ )
+	for ( new i = 0; i < SQLITE_TOTAL_PRUNE_QUERY; i++ )
 	{
 		formatex( szQuery, 255, szPruneQuery[i], get_pcvar_num( CVAR_wc3_days_before_delete ) );
 
@@ -516,7 +516,7 @@ SQLITE_Prune()
 
 		if ( !SQL_Execute( query ) )
 		{
-			MYSQLX_Error( query, szQuery, 6 );
+			SQLITE_Error( query, szQuery, 10 );
 
 			return;
 		}
@@ -526,7 +526,7 @@ SQLITE_Prune()
 SQLITE_UpdateTimestamp( id )
 {
 	// Make sure our connection is working
-	if ( !SQLITE_Check_Connection() )
+	if ( !SQLITE_Connection_Available() )
 	{
 		return;
 	}

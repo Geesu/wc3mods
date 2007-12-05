@@ -310,11 +310,16 @@ public DB_FetchUniqueID( id )
 		case DB_MYSQLX:	MYSQLX_FetchUniqueID( id );
 		case DB_SQLITE:	SQLITE_FetchUniqueID( id );
 	}
-
+	
 	// Nothing was found - try again in a bit
 	if ( g_iDBPlayerUniqueID[id] == 0 )
 	{
-		WC3_Log( true, "[ERROR] Unable to retreive user's (%d) Unique ID, trying again...", id );
+		// No connection available!
+		if ( !DB_Connection_Available() )
+		{
+			return;
+		}
+		//WC3_Log( true, "[ERROR] Unable to retreive user's (%d) Unique ID, trying again...", id );
 
 		set_task( 1.0, "DB_FetchUniqueID", id );
 	}
@@ -331,4 +336,22 @@ DB_GetUniqueID( id )
 	}
 
 	return g_iDBPlayerUniqueID[id];
+}
+
+bool:DB_Connection_Available()
+{
+	// If we're not saving XP, why do this?
+	if ( !get_pcvar_num( CVAR_wc3_save_xp ) )
+	{
+		return false;
+	}
+
+	// Update the user's timestamp for each race
+	switch( g_DBType )
+	{
+		case DB_MYSQLX:	return MYSQLX_Connection_Available();
+		case DB_SQLITE:	return SQLITE_Connection_Available();
+	}
+
+	return false;
 }

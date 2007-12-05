@@ -9,7 +9,7 @@ forward SQLITE_Save( id );
 forward SQLITE_Save_T( id );
 forward SQLITE_GetAllXP( id );
 forward SQLITE_SetDataForRace( id );
-forward SQLITE_Check_Connection();
+forward bool:SQLITE_Connection_Available();
 forward SQLITE_Prune();
 forward SQLITE_UpdateTimestamp( id );
 forward SQLITE_FetchUniqueID( id );

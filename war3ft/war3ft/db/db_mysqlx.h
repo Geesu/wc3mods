@@ -14,3 +14,4 @@ forward MYSQLX_Error( Handle:query, szQuery[], id );
 forward MYSQLX_ThreadError( Handle:query, szQuery[], szError[], iErrNum, failstate, id );
 forward	MYSQLX_Prune();
 forward MYSQLX_UpdateTimestamp( id );
+forward bool:MYSQLX_Connection_Available();

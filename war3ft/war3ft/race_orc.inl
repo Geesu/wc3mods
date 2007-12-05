@@ -74,9 +74,12 @@ public _OR_ULT_ChainLightning( parm[5] )
 			{
 
 				// Make sure target isn't immune!
-				if ( ULT_IsImmune( iTarget )  )
+				if ( ULT_CanUserBlockUlt( iTarget )  )
 				{
-					ULT_Blocked( iTarget );
+					ULT_RemoveCharge( iTarget );
+					
+					// Let the caster know the ultimate was blocked!
+					ULT_Blocked( iCaster );
 					
 					// Just say the user was hit so they aren't tried to be hit the next round (possibility of removing multiple charges)
 					p_data_b[iTarget][PB_LIGHTNINGHIT] = true;

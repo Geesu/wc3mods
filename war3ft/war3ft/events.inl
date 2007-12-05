@@ -60,7 +60,7 @@ public client_damage( iAttacker, iVictim, iDamage, iWeapon, iHitPlace, TA )
 	g_iDamageDealt[iAttacker][iVictim] += iDamage;
 
 	// Bot should "auto" cast his/her ultimate on random
-	if ( SHARED_ValidPlayer( iAttacker) && is_user_bot( iAttacker ) )
+	if ( SHARED_ValidPlayer( iAttacker ) && is_user_bot( iAttacker ) && random_num( 0, 100 ) <= ( BOT_CAST_ULT_CHANCE * 100 ) )
 	{
 		// Check for an actual ultimate is done in this function, why do it twice?
 		cmd_Ultimate( iAttacker );
@@ -453,8 +453,9 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				{
 					
 					// Check to see if the user should block this ultimate!
-					if ( !g_EndRound && ULT_IsImmune( iVictim ) )
+					if ( !g_EndRound && ULT_CanUserBlockUlt( iVictim ) )
 					{
+						ULT_RemoveCharge( iVictim );
 						ULT_Blocked( iAttacker );
 					}
 
@@ -562,6 +563,8 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 					client_print( iVictim, print_chat, "%s %L", g_MODclient, iVictim, "SHOT_DEFLECTED" );
 
 					set_tr( TR_flFraction, 1.0 );
+
+					return FMRES_SUPERCEDE;
 				}
 			}
 
@@ -578,25 +581,27 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				}
 
 				// Check to see if immunity is available for the attacker
-				else if ( ULT_IsImmune( iAttacker ) )
+				else if ( ULT_CanUserBlockUlt( iAttacker ) )
 				{
+					// Remove charge and display message to attacker
+					ULT_RemoveCharge( iAttacker );
+
+					// Display message about user's ultimate being blocked!
 					ULT_Blocked( iVictim );
 
 					// This user can attack someone with big bad voodoo!
 					p_data_b[iAttacker][PB_BIGBAD_ATTACKER] = true;
 
-					bBlockDamage = false;
-
 					// Reset the attacker dmg
 					set_task( get_pcvar_float( CVAR_wc3_ult_cooldown ), "_SH_ResetBigBadAttacker", TASK_BIGBADATTACKER + iAttacker );
-
-					client_print( iAttacker, print_chat, "%s You can now damage players with Big Bad Voodoo activated!", g_MODclient );
 				}
 
 				// Block the damage!
 				if ( bBlockDamage )
 				{
 					set_tr( TR_flFraction, 1.0 );
+
+					return FMRES_SUPERCEDE;
 				}
 			}
 		}

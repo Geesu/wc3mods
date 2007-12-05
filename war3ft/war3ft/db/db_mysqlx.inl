@@ -54,10 +54,9 @@ MYSQLX_Init()
 }
 
 // Verifies that the database connection is ok
-MYSQLX_Check_Connection()
+bool:MYSQLX_Connection_Available()
 {
-	
-	if ( !bDBAvailable )
+	if ( !bDBAvailable || !g_DBConn )
 	{
 		return false;
 	}
@@ -89,7 +88,7 @@ MYSQLX_CreateTables()
 MYSQLX_FetchUniqueID( id )
 {
 	// Make sure our connection is working
-	if ( !MYSQLX_Check_Connection() )
+	if ( !MYSQLX_Connection_Available() )
 	{
 		return;
 	}
@@ -165,7 +164,7 @@ MYSQLX_FetchUniqueID( id )
 MYSQLX_Save( id )
 {
 	// Make sure our connection is working
-	if ( !MYSQLX_Check_Connection() )
+	if ( !MYSQLX_Connection_Available() )
 	{
 		return;
 	}
@@ -231,7 +230,7 @@ MYSQLX_Save( id )
 MYSQLX_Save_T( id )
 {
 	// Make sure our connection is working
-	if ( !MYSQLX_Check_Connection() )
+	if ( !MYSQLX_Connection_Available() )
 	{
 		return;
 	}
@@ -292,7 +291,7 @@ public _MYSQLX_Save_T( failstate, Handle:query, error[], errnum, data[], size )
 MYSQLX_GetAllXP( id )
 {
 	// Make sure our connection is working
-	if ( !MYSQLX_Check_Connection() )
+	if ( !MYSQLX_Connection_Available() )
 	{
 		return;
 	}
@@ -359,7 +358,7 @@ MYSQLX_GetAllXP( id )
 MYSQLX_SetDataForRace( id )
 {
 	// Make sure our connection is working
-	if ( !MYSQLX_Check_Connection() )
+	if ( !MYSQLX_Connection_Available() )
 	{
 		return;
 	}
@@ -466,7 +465,7 @@ MYSQLX_ThreadError( Handle:query, szQuery[], szError[], iErrNum, failstate, id )
 MYSQLX_UpdateTimestamp( id )
 {
 	// Make sure our connection is working
-	if ( !MYSQLX_Check_Connection() )
+	if ( !MYSQLX_Connection_Available() )
 	{
 		return;
 	}
@@ -505,7 +504,7 @@ MYSQLX_UpdateWebTable()
 {
 
 	// Make sure our connection is working
-	if ( !MYSQLX_Check_Connection() )
+	if ( !MYSQLX_Connection_Available() )
 	{
 		return;
 	}
@@ -605,8 +604,6 @@ MYSQLX_UpdateWebTable()
 
 					formatex( szQuery, 1023, "REPLACE INTO `wc3_web_skill` ( `skill_id` , `skill_lang` , `skill_name`, `skill_description`, `skill_type`, `skill_owner` ) VALUES ( '%d', '%s', '%s', '%s', '%d', '%d' );", i, lang, szName, szDescription, g_SkillType[i], g_SkillOwner[i] );
 					
-					WC3_Log( false, szQuery );
-
 					query = SQL_PrepareQuery( g_DBConn, szQuery );
 
 					if ( !SQL_Execute( query ) )
@@ -627,7 +624,7 @@ MYSQLX_UpdateWebTable()
 MYSQLX_Prune()
 {
 	// Make sure our connection is working
-	if ( !MYSQLX_Check_Connection() )
+	if ( !MYSQLX_Connection_Available() )
 	{
 		return;
 	}
@@ -659,7 +656,7 @@ MYSQLX_Prune()
 MYSQLX_Convert()
 {
 	// Make sure our connection is working
-	if ( !MYSQLX_Check_Connection() )
+	if ( !MYSQLX_Connection_Available() )
 	{
 		return;
 	}
