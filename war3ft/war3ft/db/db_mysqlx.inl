@@ -424,6 +424,10 @@ MYSQLX_Close()
 	{
 		SQL_FreeHandle( g_DBConn );
 	}
+
+	g_DBConn = 0;
+	g_DBTuple = 0;
+	bDBAvailable = 0;
 }
 
 // The id should be a unique number, so we know what function called it (useful for debugging)
@@ -438,6 +442,17 @@ MYSQLX_Error( Handle:query, szQuery[], id )
 
 	// Free the handle
 	SQL_FreeHandle( query );
+
+	// MySQL server has gone away (2006)
+	if ( iErrNum == 2006 )
+	{
+		WC3_Log( true, "[MYSQLX] Attempting to re-establish connection to MySQL server" );
+		// Close the connection
+		MYSQLX_Close();
+
+		// Re-open the connection
+		MYSQLX_Init();
+	}
 }
 
 MYSQLX_ThreadError( Handle:query, szQuery[], szError[], iErrNum, failstate, id )
