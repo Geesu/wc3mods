@@ -158,7 +158,7 @@ NE_Evasion( id, iHitZone )
 	// Check to see if they should evade this shot?
 	iSkillLevel = SM_GetSkillLevel( id, SKILL_EVASION );
 
-	if ( iSkillLevel > 0 && random_float( 0.0, 1.0 ) <= p_evasion[iSkillLevel-1] )
+	if ( !p_data_b[id][PB_HEXED] && iSkillLevel > 0 && random_float( 0.0, 1.0 ) <= p_evasion[iSkillLevel-1] )
 	{
 		new iGlowIntensity = random_num( 20, 50 );
 		

@@ -1065,12 +1065,12 @@ public SHARED_SetGravity( id )
 	if ( CVAR_sv_gravity == 0 || get_pcvar_num( CVAR_sv_gravity ) > 650 )
 	{
 		static iSkillLevel;
-		iSkillLevel = SM_GetSkillLevel( id, SKILL_LEVITATION );
+		iSkillLevel = p_data_b[id][PB_HEXED] ? 0 : SM_GetSkillLevel( id, SKILL_LEVITATION );
 
 		new Float:fGravityLevel = 1.0;
 
 		// If this user does want their gravity to be changed!
-		if ( ( iSkillLevel > 0 ) && g_bLevitation[id] ) 
+		if ( ( iSkillLevel > 0 ) && g_bLevitation[id] && !p_data_b[id][PB_HEXED] )
 		{
 			fGravityLevel = p_levitation[iSkillLevel-1];
 		}

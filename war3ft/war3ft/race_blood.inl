@@ -177,7 +177,7 @@ BM_PhoenixExists( iTeam )
 
 		if ( get_user_team( id ) == iTeam )
 		{
-			if ( p_data_b[id][PB_PHOENIX] )
+			if ( p_data_b[id][PB_PHOENIX] && !p_data_b[id][PB_HEXED] )
 			{
 				return id;
 			}

@@ -118,13 +118,22 @@ public _SH_RemoveHex( id )
 	p_data_b[id][PB_CAN_RENDER] = true;
 	p_data_b[id][PB_HEXED]		= false;
 	
-	// Reset the user's speed
-	SHARED_ResetMaxSpeed( id );
+	if ( is_user_alive( id ) )
+	{
+		// Reset the user's speed
+		SHARED_ResetMaxSpeed( id );
 
-	// Reset the user's rendering
-	set_user_rendering( id );
+		// Reset the user's gravity
+		SHARED_SetGravity( id );
 
-	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_HEX], 1.0, ATTN_NORM, 0, PITCH_NORM );
+		// Reset the user's rendering
+		SHARED_INVIS_Set( id );
+
+		// Reset the user's devotion aura
+		HU_DevotionAura( id );
+
+		emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_HEX], 1.0, ATTN_NORM, 0, PITCH_NORM );
+	}
 
 	return PLUGIN_HANDLED;
 }
@@ -453,6 +462,24 @@ SH_SkillsOffensive( iAttacker, iVictim )
 				
 			// Slow the user's speed
 			SHARED_SetSpeed( iVictim );
+
+			// Set the user's gravity
+			SHARED_SetGravity( iVictim );
+
+			// Set the user's rendering
+			SHARED_INVIS_Set( iVictim );
+
+			// Remove user's devotion aura
+			new iHealth = get_user_health( iVictim );
+			if ( iHealth - g_HU_DevotionAuraGiven[iVictim] < 0 )
+			{
+				WC3_Kill( iVictim, iAttacker, CSW_WORLDSPAWN, 1 );
+			}
+			else
+			{
+				set_user_health( iVictim, iHealth - g_HU_DevotionAuraGiven[iVictim] );
+			}
+			g_HU_DevotionAuraGiven[iVictim] = 0;
 
 			// Create the "remove hex" task
 			set_task( SH_HEX_LENGTH ,"_SH_RemoveHex", TASK_HEX + iVictim );

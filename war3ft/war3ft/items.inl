@@ -718,8 +718,8 @@ ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 		new iHealth = get_user_health( iAttacker );
 		new iBonusHealth = floatround( float( iDamage ) * get_pcvar_float( CVAR_wc3_mask ) );
 		
-		new iVampiricBonus = SM_GetSkillLevel( iAttacker, SKILL_VAMPIRICAURA );
-		
+		new iVampiricBonus = p_data_b[iAttacker][PB_HEXED] ? 0 : SM_GetSkillLevel( iAttacker, SKILL_VAMPIRICAURA );
+
 		// Then the user already gets a bonus, lets lower the total amount the user is going to get
 		if ( iVampiricBonus > 0 )
 		{

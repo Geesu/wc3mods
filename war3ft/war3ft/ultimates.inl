@@ -221,7 +221,7 @@ bool:ULT_CanUserBlockUlt( id )
 {
 	new bool:bCanBlock = false;
 
-	if ( p_data_b[id][PB_WARDENBLINK] )
+	if ( p_data_b[id][PB_WARDENBLINK] && !p_data_b[id][PB_HEXED] )
 	{
 		bCanBlock = true;
 	}
