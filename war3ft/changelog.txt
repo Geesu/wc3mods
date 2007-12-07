@@ -1,4 +1,5 @@
 v3.0 RC10
+ - Addition: [FS#68] Playerskills will now print to console if called from console
  - Bug Fix: MYSQLX error function was being called from within SQLITE
  - Bug Fix: [FS#72] Run time error in items.inl
  - Bug Fix: [FS#62] Level 10 sprite wasn't being precached

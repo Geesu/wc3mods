@@ -30,7 +30,7 @@ public MOTD_ItemsInfo( id, iStart )
 	show_motd( id, szTmpMsg, szTmp );
 }
 
-public MOTD_PlayerSkills( id )
+public MOTD_PlayerSkills( id, bool:bThroughSay )
 {
 
 	new iPlayers[32], iNumPlayers, i;
@@ -49,12 +49,12 @@ public MOTD_PlayerSkills( id )
 	new pos = 0, iTeam, k, szTeamColor[2];
 
 	// Then we have a player, and we're not on the server console
-	if ( id != 0 )
+	if ( id != 0 && bThroughSay )
 	{
 		pos += formatex( szTmpMsg[pos], 2047 - pos, "%s", MOTD_header );
 	}
 
-	new szTmpName[64];
+	new szTmpName[64], szTeamName[32];
 	// Loop through each race
 	for ( iRaceID = 1; iRaceID < get_pcvar_num( CVAR_wc3_races ) + 1; iRaceID++ )
 	{
@@ -67,7 +67,7 @@ public MOTD_PlayerSkills( id )
 			lang_GetRaceName ( iRaceID, id, szTmpName, 63 );
 
 			// Player
-			if ( id != 0 )
+			if ( id != 0 && bThroughSay )
 			{
 				pos += formatex( szTmpMsg[pos], 2047 - pos, "<b>%s</b><ul>", szTmpName );
 			}
@@ -75,7 +75,14 @@ public MOTD_PlayerSkills( id )
 			// Server Console
 			else
 			{
-				server_print( "**** %s ****", szTmpName );
+				if ( id == 0 )
+				{
+					server_print( "**** %s ****", szTmpName );
+				}
+				else
+				{
+					console_print( id, "**** %s ****", szTmpName );
+				}
 			}
 
 
@@ -121,9 +128,10 @@ public MOTD_PlayerSkills( id )
 					{
 
 						get_user_name( iTargetID, szTmpName, 63 );
+						get_user_team( iTargetID, szTeamName, 31 );
 						
 						// Player
-						if ( id != 0 )
+						if ( id != 0 && bThroughSay )
 						{
 							pos += formatex( szTmpMsg[pos], 2047 - pos, "<li id='%s'>(%d) %s</li>", szTeamColor, p_data[iTargetID][P_LEVEL], szTmpName );
 						}
@@ -131,14 +139,21 @@ public MOTD_PlayerSkills( id )
 						// Server Console
 						else
 						{
-							server_print( "   (%d) %s", p_data[iTargetID][P_LEVEL], szTmpName );
+							if ( id == 0 )
+							{
+								server_print( "  [%s]:%d %s", szTeamName, p_data[iTargetID][P_LEVEL], szTmpName );
+							}
+							else
+							{
+								console_print( id, "  [%s]:%d %s", szTeamName, p_data[iTargetID][P_LEVEL], szTmpName );
+							}
 						}
 					}
 				}//end player loop
 			}//end team loop
 
 			// Player
-			if ( id != 0 )
+			if ( id != 0 && bThroughSay )
 			{
 				pos += formatex( szTmpMsg[pos], 2047 - pos, "</ul>" );
 			}
@@ -146,7 +161,7 @@ public MOTD_PlayerSkills( id )
 	}//end race loop
 
 	// Player
-	if ( id != 0 )
+	if ( id != 0 && bThroughSay )
 	{
 		new szTitle[128];
 		formatex( szTitle, 127, "%L", id, "PLAYER_SKILLS" );

@@ -251,7 +251,7 @@ public CMD_Handler( id )
 
 	read_argv( 0, szCmd, 31 );
 
-	CMD_Handle( id, szCmd );
+	CMD_Handle( id, szCmd, false );
 
 	return PLUGIN_HANDLED;
 }
@@ -264,13 +264,13 @@ public cmd_Say( id )
 
 	remove_quotes( szSaid );
 
-	CMD_Handle( id, szSaid );
+	CMD_Handle( id, szSaid, true );
 
 	return;
 }
 
 // Command handler
-CMD_Handle( id, szCmd[] )
+CMD_Handle( id, szCmd[], bool:bThroughSay )
 {
 	// Change the user's race
 	if ( CMD_Equal( id,  szCmd, "changerace" ) )
@@ -286,7 +286,7 @@ CMD_Handle( id, szCmd[] )
 
 	else if ( CMD_Equal( id,  szCmd, "playerskills" ) )
 	{
-		MOTD_PlayerSkills( id );
+		MOTD_PlayerSkills( id, bThroughSay );
 	}
 
 	else if ( CMD_Equal( id,  szCmd, "ms" ) || CMD_Equal( id,  szCmd, "movespeed" ) )
