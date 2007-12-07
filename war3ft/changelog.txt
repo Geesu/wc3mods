@@ -10,6 +10,7 @@ v3.0 RC10
  - Bug Fix: Mole protectant not working
  - Bug Fix: Database spamming problem when a user's ID couldn't be retreived
  - Bug Fix: [FS#76] Hex wasn't disabling all skills
+ - Bug Fix: When checking a user's skills the level and skill id were not being matched correctly (in XP_Check)
 
 v3.0 RC9
  - Addition: [FS#29] Client console commands for all items

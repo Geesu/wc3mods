@@ -533,8 +533,8 @@ XP_Check( id, bShowGained = true )
 		// We don't want a passive skill or a skill that is level 0 so keep trying
 		while ( SM_GetSkillType( iSkillID ) == SKILL_TYPE_PASSIVE || iSkillLevel == 0 )
 		{
-			iSkillLevel = SM_GetSkillLevel( id, iSkillID, 2 );
 			iSkillID = SM_GetRandomSkill( id );
+			iSkillLevel = SM_GetSkillLevel( id, iSkillID, 2 );
 		}
 		
 		// OK at this point we have a valid skill, lets remove a level!
