@@ -432,6 +432,11 @@ public SH_Ult_Remove( id )
 		id -= TASK_RESETGOD;
 	}
 
+	if ( !p_data_b[id][PB_ISCONNECTED] )
+	{
+		return;
+	}
+
 	p_data_b[id][PB_CAN_RENDER] = true;
 
 	p_data_b[id][PB_GODMODE] = false;
