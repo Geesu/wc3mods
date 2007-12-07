@@ -251,7 +251,12 @@ public plugin_init()
 
 public test2(id)
 {
-	client_print( id, print_chat, "[DEBUG] Insert ID: %d", DB_GetUniqueID( id ) );
+	/*WC3_Log( true, "[MYSQLX] Attempting to re-establish connection to MySQL server" );
+		// Close the connection
+		MYSQLX_Close();
+
+		// Re-open the connection
+		MYSQLX_Init();*/
 }
 
 public test(id)

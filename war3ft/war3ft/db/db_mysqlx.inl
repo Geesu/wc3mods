@@ -425,9 +425,7 @@ MYSQLX_Close()
 		SQL_FreeHandle( g_DBConn );
 	}
 
-	g_DBConn = 0;
-	g_DBTuple = 0;
-	bDBAvailable = 0;
+	bDBAvailable = false;
 }
 
 // The id should be a unique number, so we know what function called it (useful for debugging)
