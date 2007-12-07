@@ -1290,17 +1290,6 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 			SHARED_SetUserMoney( iKiller, SHARED_GetUserMoney( iKiller ) + 300, 1 );
 		}
 	}
-		
-	// Remove hex if the user is hexed
-	if ( p_data_b[iVictim][PB_HEXED] )
-	{
-		if ( task_exists( TASK_HEX + iVictim) )
-		{
-			remove_task( TASK_HEX + iVictim );
-		}
-
-		_SH_RemoveHex( iVictim + TASK_HEX );
-	}
 
 	// Give the bot a chance to respawn
 	if ( is_user_bot( iVictim ) )
@@ -1375,6 +1364,17 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 				WA_ULT_Vengeance( iVictim );
 			}
 		}
+	}
+
+	// Remove hex if the user is hexed
+	if ( p_data_b[iVictim][PB_HEXED] )
+	{
+		if ( task_exists( TASK_HEX + iVictim) )
+		{
+			remove_task( TASK_HEX + iVictim );
+		}
+
+		_SH_RemoveHex( iVictim + TASK_HEX );
 	}
 
 	ITEM_UserDied( iVictim );
