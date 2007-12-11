@@ -644,7 +644,7 @@ MYSQLX_Prune()
 
 	new const szPruneQuery[MYSQL_TOTAL_PRUNE_QUERY][] = 
 	{
-		"DELETE FROM wc3_player_race  WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time ) )";,
+		"DELETE FROM wc3_player_race  WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time ) )",
 		"DELETE FROM wc3_player_skill WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time ) );"
 	};
 
