@@ -914,13 +914,13 @@ WC3_IsImmunePlayerNear( id, vOrigin[3] )
 				// Does this player have a necklace or warden's blink?
 				if ( ULT_CanUserBlockUlt( players[i] ) )
 				{
-					return true;
+					return players[i];
 				}
 			}
 		}
 	}
 
-	return false;
+	return 0;
 }
 
 WC3_ResetSkills( id )

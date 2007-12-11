@@ -30,11 +30,23 @@ HU_ULT_Blink( id )
 	// Play the blink sound!
 	emit_sound( id, CHAN_STATIC, g_szSounds[SOUND_BLINK], 1.0, ATTN_NORM, 0, PITCH_NORM );
 
+	new iPlayerOldCheck = WC3_IsImmunePlayerNear( id, vOldLocation );
+	new iPlayerNewCheck = WC3_IsImmunePlayerNear( id, vNewLocation );
+	new iLosesCharge = 0;
+	if ( iPlayerOldCheck > 0 )
+	{
+		iLosesCharge = iPlayerOldCheck;
+	}
+	else if ( iPlayerNewCheck > 0 )
+	{
+		iLosesCharge = iPlayerNewCheck;
+	}
+
 	// Make sure a nearby enemy doesn't have immunity
-	if ( WC3_IsImmunePlayerNear( id, vOldLocation ) || WC3_IsImmunePlayerNear( id, vNewLocation ) )
+	if ( iLosesCharge > 0 )
 	{
 		// Remove charge since player blocked it!
-		ULT_RemoveCharge( id, 3 );
+		ULT_RemoveCharge( iLosesCharge, 3 );
 
 		//set_hudmessage( 255, 255, 10, -1.0, -0.4, 1, 0.5, BLINK_COOLDOWN, 0.2, 0.2 ,-1 );
 		WC3_StatusText( id, 0, "%L", id, "TELEPORT_FAILED_ENEMY_IMMUNITY" );

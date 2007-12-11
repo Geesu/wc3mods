@@ -644,9 +644,30 @@ MYSQLX_Prune()
 
 	new const szPruneQuery[MYSQL_TOTAL_PRUNE_QUERY][] = 
 	{
-		"DELETE FROM wc3_player_race  WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time ) );",
+		"DELETE FROM wc3_player_race  WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time ) )";,
 		"DELETE FROM wc3_player_skill WHERE player_id IN ( SELECT `player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL %d DAY) > time ) );"
 	};
+
+
+	/*
+	CREATE TEMPORARY TABLE `wc3_expired` SELECT * FROM wc3_player WHERE ( DATE_SUB(CURDATE(), INTERVAL 10 DAY) > `time` );# Affected rows: 4179
+	DELETE `wc3_player_race` FROM `wc3_player_race` INNER JOIN wc3_expired ON wc3_player_race.player_id = wc3_expired.player_id;# MySQL returned an empty result set (i.e. zero rows).
+
+
+
+CREATE TEMPORARY TABLE tmptable
+SELECT A.* FROM table1 AS A, table1 AS B
+WHERE A.username LIKE '%2'
+AND A.ID = B.ID
+AND A.username <> B.username;
+
+DELETE table1 FROM table1
+INNER JOIN tmptable
+ON table1.username = tmptable.username;
+*/
+
+	//SELECT `wc3_player`.`player_id` FROM `wc3_player` WHERE ( DATE_SUB(CURDATE(), INTERVAL 14 DAY) > `wc3_player`.`time` )
+
 	new szQuery[256];
 
 	// Need to run all queries
@@ -656,7 +677,7 @@ MYSQLX_Prune()
 
 		new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
 
-		//WC3_Log( true, szQuery );
+		WC3_Log( true, szQuery );
 
 		if ( !SQL_Execute( query ) )
 		{
@@ -665,8 +686,6 @@ MYSQLX_Prune()
 			return;
 		}
 	}
-
-	WC3_Log( true, "Database pruned successfully" );
 }
 
 #define MYSQL_TOTAL_CONVERSION_QUERY 2
