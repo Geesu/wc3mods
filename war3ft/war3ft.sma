@@ -297,6 +297,7 @@ public plugin_end()
 	DB_Prune();
 	DB_Close();
 
+
 	return;
 }
 

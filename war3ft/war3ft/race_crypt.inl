@@ -48,7 +48,7 @@ CL_ULT_LocustGetTarget( id )
 	// Then the user's ultimate was blocked :/
 	if ( ULT_CanUserBlockUlt( iVictim ) )
 	{
-		ULT_RemoveCharge( iVictim );
+		ULT_RemoveCharge( iVictim, 2 );
 		ULT_Blocked( id );
 
 		// Reset the user's ultimate

@@ -34,7 +34,7 @@ HU_ULT_Blink( id )
 	if ( WC3_IsImmunePlayerNear( id, vOldLocation ) || WC3_IsImmunePlayerNear( id, vNewLocation ) )
 	{
 		// Remove charge since player blocked it!
-		ULT_RemoveCharge( id );
+		ULT_RemoveCharge( id, 3 );
 
 		//set_hudmessage( 255, 255, 10, -1.0, -0.4, 1, 0.5, BLINK_COOLDOWN, 0.2, 0.2 ,-1 );
 		WC3_StatusText( id, 0, "%L", id, "TELEPORT_FAILED_ENEMY_IMMUNITY" );

@@ -1221,7 +1221,7 @@ SHARED_FindFreeSpawn( id, bImmunityCheck = false, bReverseTeam = false )
 						// Immune found
 						if ( WC3_IsImmunePlayerNear( id, vOrigin ) )
 						{
-							ULT_RemoveCharge( id );
+							ULT_RemoveCharge( id, 6 );
 
 							bImmunityNear = true;
 						}

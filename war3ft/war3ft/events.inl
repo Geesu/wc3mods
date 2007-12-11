@@ -455,7 +455,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 					// Check to see if the user should block this ultimate!
 					if ( !g_EndRound && ULT_CanUserBlockUlt( iVictim ) )
 					{
-						ULT_RemoveCharge( iVictim );
+						ULT_RemoveCharge( iVictim, 0 );
 						ULT_Blocked( iAttacker );
 					}
 
@@ -584,7 +584,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 				else if ( ULT_CanUserBlockUlt( iAttacker ) )
 				{
 					// Remove charge and display message to attacker
-					ULT_RemoveCharge( iAttacker );
+					ULT_RemoveCharge( iAttacker, 1 );
 
 					// Display message about user's ultimate being blocked!
 					ULT_Blocked( iVictim );

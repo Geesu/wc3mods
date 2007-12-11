@@ -234,7 +234,7 @@ bool:ULT_CanUserBlockUlt( id )
 	return bCanBlock;
 }
 
-ULT_RemoveCharge( id )
+ULT_RemoveCharge( id, iFuncID )
 {
 
 	if ( ITEM_Has( id, ITEM_NECKLACE ) > ITEM_NONE )
@@ -245,7 +245,7 @@ ULT_RemoveCharge( id )
 	{}
 	else
 	{
-		WC3_Log( true, "We should never be here!!!" );
+		WC3_Log( true, "We should never be here!!! (%d)", iFuncID );
 	}
 
 	client_print( id, print_chat, "%s You have blocked an enemy's ultimate!", g_MODclient );

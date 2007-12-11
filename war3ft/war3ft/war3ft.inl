@@ -1344,7 +1344,7 @@ public WC3_Death( iVictim, iKiller, iWeaponID, iHeadshot )
 			// Killer has immunity, user shouldn't respawn :/
 			if ( ULT_CanUserBlockUlt( iKiller ) )
 			{
-				ULT_RemoveCharge( iKiller );
+				ULT_RemoveCharge( iKiller, 7 );
 
 				client_print( iVictim, print_chat, "%s You will not respawn because your killer has immunity", g_MODclient );
 			}

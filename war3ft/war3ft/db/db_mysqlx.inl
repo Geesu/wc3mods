@@ -649,12 +649,14 @@ MYSQLX_Prune()
 	};
 	new szQuery[256];
 
-	// Need to run all 3 queries
+	// Need to run all queries
 	for ( new i = 0; i < MYSQL_TOTAL_PRUNE_QUERY; i++ )
 	{
 		formatex( szQuery, 255, szPruneQuery[i], get_pcvar_num( CVAR_wc3_days_before_delete ) );
 
 		new Handle:query = SQL_PrepareQuery( g_DBConn, szQuery );
+
+		//WC3_Log( true, szQuery );
 
 		if ( !SQL_Execute( query ) )
 		{
@@ -663,6 +665,8 @@ MYSQLX_Prune()
 			return;
 		}
 	}
+
+	WC3_Log( true, "Database pruned successfully" );
 }
 
 #define MYSQL_TOTAL_CONVERSION_QUERY 2

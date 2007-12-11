@@ -76,7 +76,7 @@ public _OR_ULT_ChainLightning( parm[5] )
 				// Make sure target isn't immune!
 				if ( ULT_CanUserBlockUlt( iTarget )  )
 				{
-					ULT_RemoveCharge( iTarget );
+					ULT_RemoveCharge( iTarget, 4 );
 					
 					// Let the caster know the ultimate was blocked!
 					ULT_Blocked( iCaster );

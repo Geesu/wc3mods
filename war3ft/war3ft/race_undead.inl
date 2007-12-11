@@ -102,7 +102,7 @@ public _UD_SuicideExplode( parm[5] )
 
 			if ( ULT_CanUserBlockUlt( iTargetID ) )
 			{
-				ULT_RemoveCharge( iTargetID );
+				ULT_RemoveCharge( iTargetID, 5 );
 
 				ULT_Blocked( id );
 				
