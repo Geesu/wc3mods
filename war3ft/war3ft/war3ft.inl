@@ -1562,6 +1562,9 @@ WC3_InitPlayerSkills( id )
 	
 	// Human's Invisibility
 	SHARED_INVIS_Set( id );
+	
+	// Human's Health
+    HU_DevotionAura( id );
 
 	// Blood Mage's Phoenix
 	BM_PhoenixCheck( id );
@@ -1877,8 +1880,6 @@ WC3_PlayerInit( id )
 	g_bPlayerBoughtMole[id]			= false;		// User didn't buy mole!
 
 	p_data_b[id][PB_LIGHTNINGHIT]	= false;		// User wasn't hit by lightning!  They just joined!
-
-	g_HU_DevotionAuraGiven[id]		= 0;			// No devotion aura has been given!
 
 	p_data_b[id][PB_NO_DAMAGE]		= false;		// User should be damaged
 

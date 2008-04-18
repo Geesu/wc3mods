@@ -401,20 +401,33 @@ HU_DevotionAura( id )
 		return;
 	}
 
-	static iSkillLevel;
-	iSkillLevel = SM_GetSkillLevel( id, SKILL_DEVOTION );
-	
-	// Then the user has devotion aura + hasn't lost some skill levels!
+	static iSkillLevel, DevotionAuraGiven, iHealth;
+ 	iSkillLevel = SM_GetSkillLevel( id, SKILL_DEVOTION );
+ 	
+	// Already given
+	DevotionAuraGiven = g_HU_DevotionAuraGiven[id];
+		
+	// Then the user has devotion aura
 	if ( iSkillLevel > 0 )
 	{
-		
-		while ( g_HU_DevotionAuraGiven[id] < p_devotion * iSkillLevel )
-		{
-			// Increase the user's health
-			set_user_health( id, get_user_health( id ) + p_devotion );
-
-			g_HU_DevotionAuraGiven[id] += p_devotion;
-		}
+		g_HU_DevotionAuraGiven[id] = p_devotion * iSkillLevel;
+	}
+	else
+	{
+		g_HU_DevotionAuraGiven[id] = 0;
+	}
+ 
+	// Player may even lose HP because of this
+	DevotionAuraGiven = g_HU_DevotionAuraGiven[id] - DevotionAuraGiven;
+	
+	iHealth = get_user_health( id );
+	if (iHealth + DevotionAuraGiven < 0)
+	{
+		set_user_health( id, 1 );
+ 	}
+	else
+	{
+		set_user_health( id, iHealth + DevotionAuraGiven );
 	}
 }
 
