@@ -5,6 +5,7 @@ v3.0 RC11
  - Bug Fix: [FS#85] Add alive check before kill by SH (patch FS#76)
  - Bug Fix: [FS#88] Always allow chameleon to buy ankh
  - Bug Fix: [FS#95] ITEM_MOLE should disappear when used
+ - Bug Fix: Fixed Admin Commands reporting back incorrectly in wc3_admin.log
 
 v3.0 RC10
  - Addition: [FS#68] Playerskills will now print to console if called from console

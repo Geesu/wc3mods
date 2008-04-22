@@ -473,7 +473,7 @@ ADMIN_Log( id, szCommand[], {Float,_}:... )
 	formatex( szLogFile, 127, "%s/war3ft/wc3_admin.log", szLogFile );
 
 	new szFormattedText[128];
-	format_args( szFormattedText, 127, 1 );
+	format_args( szFormattedText, 127, 2 );
 
 	if ( !file_exists( szLogFile ) )
 	{
