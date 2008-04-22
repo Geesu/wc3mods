@@ -371,7 +371,7 @@ MYSQLX_SetDataForRace( id )
 	{
 		client_print( id, print_chat, "%s Error, unable to retrieve XP, please contact a server administrator", g_MODclient );
 
-		MYSQLX_Error( query, szQuery, 6 );
+		MYSQLX_Error( query, szQuery, 21 );
 
 		return;
 	}
@@ -547,7 +547,7 @@ MYSQLX_UpdateWebTable()
 
 	if ( !SQL_Execute( query ) )
 	{
-		MYSQLX_Error( query, szQuery, 7 );
+		MYSQLX_Error( query, szQuery, 22 );
 
 		return;
 	}
@@ -774,7 +774,7 @@ MYSQLX_Convert()
 
 			if ( !SQL_Execute( query ) )
 			{
-				MYSQLX_Error( query, szQuery, 15 );
+				MYSQLX_Error( query, szConversionQuery[i], 15 );
 
 				return;
 			}
