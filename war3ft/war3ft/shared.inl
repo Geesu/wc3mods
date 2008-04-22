@@ -1291,7 +1291,7 @@ SHARED_MoleCheck( id, bItemOnly = false )
 		{
 			parm[1] = 2;
 			
-			Item_RemoveID(id, ITEM_MOLE);
+			ITEM_RemoveID(id, ITEM_MOLE);
 			g_bPlayerBoughtMole[id] = false;
 		}
 	}
