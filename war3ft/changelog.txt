@@ -1,6 +1,10 @@
 v3.0 RC11
  - Bug Fix: [FS#97] Removing Human's devotion aura
  - Bug Fix: MySQLX error logging incorrect in some places (reporting wrong query)
+ - Bug Fix: [FS#83] Respawn within a player. Respawn dead
+ - Bug Fix: [FS#85] Add alive check before kill by SH (patch FS#76)
+ - Bug Fix: [FS#88] Always allow chameleon to buy ankh
+ - Bug Fix: [FS#95] ITEM_MOLE should disappear when used
 
 v3.0 RC10
  - Addition: [FS#68] Playerskills will now print to console if called from console

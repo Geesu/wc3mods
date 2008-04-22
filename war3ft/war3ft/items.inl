@@ -97,7 +97,7 @@ public ITEM_CanBuy( id, iItem )
 	}
 
 	// User doesn't need an ankh if they're going to reincarnate
-	else if ( iItem == ITEM_ANKH && SM_GetSkillLevel( id, SKILL_REINCARNATION ) == 3 && !p_data[id][P_CHANGERACE] )
+	else if ( iItem == ITEM_ANKH && SM_GetSkillLevel( id, SKILL_REINCARNATION ) == 3 && !p_data[id][P_CHANGERACE] && p_data[id][P_RACE] != RACE_CHAMELEON )
 	{
 		client_print( id, print_center, "You will already reincarnate your weapons through one of your skills!" );
 

@@ -478,7 +478,8 @@ SH_SkillsOffensive( iAttacker, iVictim )
 			new iHealth = get_user_health( iVictim );
 			if ( iHealth - g_HU_DevotionAuraGiven[iVictim] < 0 )
 			{
-				WC3_Kill( iVictim, iAttacker, CSW_WORLDSPAWN, 1 );
+				if (is_user_alive(iVictim))
+					set_user_health( iVictim, 1 );
 			}
 			else
 			{
