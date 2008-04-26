@@ -492,7 +492,12 @@ public _SHARED_DOD_Reincarnation_Check( id )
 			
 			// Get the origin of the spawn point
 			entity_get_vector( ent, EV_VEC_origin, fSpawnOrigin );
-
+			
+			// Set the right angles
+			entity_get_vector( ent, EV_VEC_angles, fSpawnOrigin );
+			entity_set_vector( id, EV_VEC_angles, fSpawnOrigin );
+			entity_set_int( id, EV_INT_fixangle, 1)
+			
 			// Convert float vector to int vector
 			FVecIVec( fSpawnOrigin, vOrigin );
 			
