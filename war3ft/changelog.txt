@@ -8,7 +8,8 @@ v3.0 RC11
  - Bug Fix: Fixed Admin Commands reporting back incorrectly in wc3_admin.log
  - Bug Fix: [FS#96] CT Chameleons with backpack
  - Bug Fix: [FS#90] Locust Swarm didn't attack after finding new target
- - Bug Fix: [FS#89] - allow pov-targeting ultimate to work quickly
+ - Bug Fix: [FS#89] allow pov-targeting ultimate to work quickly
+ - Bug Fix: [FS#102] Chain Lightning actually hits only one enemy
 
 v3.0 RC10
  - Addition: [FS#68] Playerskills will now print to console if called from console
