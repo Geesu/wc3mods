@@ -154,9 +154,8 @@ public _CL_ULT_LocustEffect( parm[] )
 		p_data[iAttacker][P_ULTIMATEDELAY] = 0;
 
 		Ultimate_Ready( iAttacker );
-		*/
 
-		return;
+		return;*/
 	}
 
 	new MULTIPLIER = 150 // the lower the number the faster it reaches the target

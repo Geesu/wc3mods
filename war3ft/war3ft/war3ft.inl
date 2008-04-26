@@ -1683,6 +1683,11 @@ WC3_PostSpawn( id )
 		// Reincarnation?
 		SHARED_DOD_Reincarnation( id );
 	}	
+	
+	// Check for bomb on the back of chameleon
+	if ( p_data_b[id][PB_SKINSWITCHED] )
+		entity_set_int(id, EV_INT_body, 0);
+
 
 	// If the user is a bot they should have a chance to buy an item
 	if ( is_user_bot( id ) )

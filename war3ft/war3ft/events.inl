@@ -439,7 +439,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 	new iHitZone = (1 << get_tr(TR_iHitgroup));
 	
 	// Make sure we have a valid victim
-	if ( SHARED_ValidPlayer( iVictim ) )
+	if ( SHARED_ValidPlayer( iVictim ) && p_data_b[iVictim][PB_ISCONNECTED] )
 	{
 		// We need to have a valid player!
 		if ( SHARED_ValidPlayer( iAttacker ) )
@@ -449,7 +449,7 @@ public TRIGGER_TraceLine( Float:v1[3], Float:v2[3], noMonsters, pentToSkip )
 			{
 
 				// Now lets make sure the person he's looking at is in view and isn't on the same team
-				if ( get_user_team( iAttacker ) != get_user_team( iVictim ) && UTIL_EntInView( iAttacker, iVictim ) )
+				if ( get_user_team( iAttacker ) != get_user_team( iVictim ) ) //&& UTIL_EntInView( iAttacker, iVictim ) )
 				{
 					
 					// Check to see if the user should block this ultimate!

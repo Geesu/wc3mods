@@ -6,6 +6,9 @@ v3.0 RC11
  - Bug Fix: [FS#88] Always allow chameleon to buy ankh
  - Bug Fix: [FS#95] ITEM_MOLE should disappear when used
  - Bug Fix: Fixed Admin Commands reporting back incorrectly in wc3_admin.log
+ - Bug Fix: [FS#96] CT Chameleons with backpack
+ - Bug Fix: [FS#90] Locust Swarm didn't attack after finding new target
+ - Bug Fix: [FS#89] - allow pov-targeting ultimate to work quickly
 
 v3.0 RC10
  - Addition: [FS#68] Playerskills will now print to console if called from console

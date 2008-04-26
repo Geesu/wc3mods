@@ -633,6 +633,10 @@ public _SHARED_CS_GiveWeapons(id)
 	if ( p_data_b[id][PB_DEFUSE] )
 	{
 		give_item(id, "item_thighpack");
+		// Check for bomb on the back of chameleon
+		if ( p_data_b[id][PB_SKINSWITCHED] )
+			entity_set_int(id, EV_INT_body, 0);
+
 	}
 
 	if ( p_data_b[id][PB_NIGHTVISION] )
@@ -1015,6 +1019,8 @@ public SHARED_ChangeSkin( id, iFlag )
 			}
 
 			cs_set_user_model( id, szSkin );
+			if (cs_get_user_defuse(id))
+				entity_set_int(id, EV_INT_body, 0);
 		}
 
 		// For Day of Defeat
