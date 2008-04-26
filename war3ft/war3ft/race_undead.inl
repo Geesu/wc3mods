@@ -173,7 +173,7 @@ UD_SkillsOffensive( iAttacker, iDamage )
 
 	// Vampiric Aura
 	iSkillLevel = SM_GetSkillLevel( iAttacker, SKILL_VAMPIRICAURA );
-	if ( iSkillLevel > 0 )
+	if ( iSkillLevel > 0 && p_data_b[iAttacker][PB_ISCONNECTED])
 	{
 		static iHealth, iMaxHealth, iBonusHealth;
 

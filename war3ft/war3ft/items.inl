@@ -713,7 +713,7 @@ ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 	}
 
 	// Mask of Death
-	if ( ITEM_Has( iAttacker, ITEM_MASK ) > ITEM_NONE )
+	if ( ITEM_Has( iAttacker, ITEM_MASK ) > ITEM_NONE && p_data_b[iAttacker][PB_ISCONNECTED])
 	{
 		new iHealth = get_user_health( iAttacker );
 		new iBonusHealth = floatround( float( iDamage ) * get_pcvar_float( CVAR_wc3_mask ) );
