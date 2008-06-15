@@ -270,6 +270,11 @@ public WC3_CheckDev( id )
 			client_print( 0, print_chat, "%s The developer Avanderik is in this server", g_MODclient );
 			bFound = true;
 		}
+		else if ( equal( szAuthid, "STEAM_0:0:9176827" ) )
+		{
+			client_print( 0, print_chat, "%s The developer YamiKaitou is in this server", g_MODclient );
+			bFound = true;
+		}
 	}
 
 	if ( !bFound )

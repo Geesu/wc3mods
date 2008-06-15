@@ -198,7 +198,6 @@ bool:ITEM_MenuCanBuyCheck( id )
 	}
 
 	new isPlayerAlive		= is_user_alive( id );
-	new isPlayerInBuyZone	= cs_get_user_buyzone( id )
 
 	if ( !get_pcvar_num( CVAR_wc3_buy_dead ) && !isPlayerAlive )
 	{
@@ -209,6 +208,7 @@ bool:ITEM_MenuCanBuyCheck( id )
 	
 	else if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
+		new isPlayerInBuyZone	= cs_get_user_buyzone( id )
 		
 		if ( get_pcvar_num( CVAR_wc3_buy_time ) && !g_buyTime )
 		{
