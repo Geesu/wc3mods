@@ -682,22 +682,17 @@ public _menu_ReplaceItem( id, iKey )
 public MENU_Shopmenu( id, iStart )
 {
 
-	WC3_Log( true, "MENU_Shopmenu 1" );
-
 	if ( !ITEM_MenuCanBuyCheck( id ) )
 	{
+		WC3_Log( true, "MENU_Shopmenu Buy");
 		return;
 	}
-
-	WC3_Log( true, "MENU_Shopmenu 2" );
 
 	// Shopmenu2 can't display if we don't have the correct number of races!
 	if ( iStart == MAX_PAGE_ITEMS && get_pcvar_num( CVAR_wc3_races ) <= 4 )
 	{
 		return;
 	}
-
-	WC3_Log( true, "MENU_Shopmenu 3" );
 
 	new szMenu[512], szItemName[64], pos = 0, i, iItemID;
 	new iKeys = (1<<9);
@@ -713,8 +708,6 @@ public MENU_Shopmenu( id, iStart )
 	{
 		pos += format( szMenu[pos], 511-pos, "%L", id, "MENU_BUY_ITEM2" );
 	}
-
-	WC3_Log( true, "MENU_Shopmenu 4" );
 
 	// Lets add the items to the menu!
 	for ( i = 0; i < MAX_PAGE_ITEMS; i++ )
@@ -738,15 +731,9 @@ public MENU_Shopmenu( id, iStart )
 
 	}
 
-	WC3_Log( true, "MENU_Shopmenu 5" );
-
 	pos += format( szMenu[pos], 511-pos, "^n\w0. %L", id, "WORD_EXIT" );
 
-	WC3_Log( true, "%d:%d:%s", id, iKeys, szMenu );
-
 	show_menu( id, iKeys, szMenu, -1 );
-
-	WC3_Log( true, "MENU_Shopmenu 6" );
 }
 
 public _MENU_Shopmenu1( id, iKey )

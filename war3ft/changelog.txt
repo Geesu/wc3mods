@@ -1,3 +1,6 @@
+v3.0 RC11b
+ - Bug Fix: [FS#109] DoD crash on shopmenu
+
 v3.0 RC11
  - Addition: [FS#92] solution against detecting moles (angle of view)
  - Bug Fix: [FS#97] Removing Human's devotion aura
