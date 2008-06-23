@@ -39,6 +39,13 @@ string 	weapon
 bool 	headshot*/
 public Action:Event_player_death(Handle:event, const String:name[], bool:dontBroadcast)
 {
+
+	if (!IsGameRunning())
+	{
+		return;
+	}
+
+
 	new victim = GetClientOfUserId(GetEventInt(event,"userid"));
 	new attacker = GetClientOfUserId(GetEventInt(event,"attacker"));
 

@@ -43,3 +43,9 @@ new OffSet_LifeState;
 
 //**************** MENUS ****************
 new Handle:g_MenuChangeRace = INVALID_HANDLE;
+
+
+
+
+
+new bool:g_IsGameRunning = true;

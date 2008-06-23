@@ -43,6 +43,25 @@ public OnPluginStart()
 	HookEvent("round_start", Event_round_start);
 	HookEvent("round_freeze_end", Event_round_freeze_end);
 
+	HookEvent("bomb_beginplant", Event_bomb_beginplant);
+	HookEvent("bomb_abortplant", Event_bomb_abortplant);
+	HookEvent("bomb_planted", Event_bomb_planted);
+	HookEvent("bomb_defused", Event_bomb_defused);
+	HookEvent("bomb_exploded", Event_bomb_exploded);
+	HookEvent("bomb_dropped", Event_bomb_dropped);
+	HookEvent("bomb_pickup", Event_bomb_pickup);
+	HookEvent("bomb_begindefuse", Event_bomb_begindefuse);
+	HookEvent("bomb_abortdefuse", Event_bomb_abortdefuse);
+	HookEvent("hostage_follows", Event_hostage_follows);
+	HookEvent("hostage_hurt", Event_hostage_hurt);
+	HookEvent("hostage_killed", Event_hostage_killed);
+	HookEvent("hostage_rescued", Event_hostage_rescued);
+	HookEvent("hostage_rescued_all", Event_hostage_rescued_all);
+	HookEvent("hostage_stops_following", Event_hostage_stops_following);
+	HookEvent("hostage_call_for_help", Event_hostage_call_for_help);
+	HookEvent("vip_escaped", Event_vip_escaped);
+	HookEvent("vip_killed", Event_vip_killed);
+
 	FindOffsets();
 
 //	RegisterHook(HK_OnTakeDamage, Event_OnTakeDamage, false);
