@@ -20,8 +20,8 @@
 public Plugin:myinfo =
 {
 	name = "Warcraft 3: Frozen Throne",
-	author = "Geesu",
-	description = "Warcraft 3: Frozen THrone",
+	author = "Geesu & Avanderik",
+	description = "Warcraft 3: Frozen Throne",
 	version = "0.0.0.1",
 	url = "http://source.wc3mods.net/"
 };

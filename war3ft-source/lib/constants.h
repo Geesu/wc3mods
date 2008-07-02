@@ -16,12 +16,19 @@
 #define FFADE_STAYOUT		0x0008		// ignores the duration, stays faded out until new ScreenFade message received
 #define FFADE_PURGE			0x0010		// Purges all other fades, replacing them with this one
 
-new g_PlayerCurrentRace[MAXPLAYERS+1] = {0};
-new g_PlayerXP[MAXPLAYERS+1];
-new g_PlayerLevel[MAXPLAYERS+1]; 
+// Player Data Indexes
+#define PLAYER_RACE         0
+#define PLAYER_XP           1
+#define PLAYER_LEVEL        2
+#define PLAYER_CHANGERACE   3
+#define PLAYER_END          4
 
-// Stores if a player has a changerace pending!
-new g_bChangeRacePending[MAXPLAYERS+1] = {false};
+// Player Status Indexes
+#define STATUS_PLANTING     0
+#define STATUS_END          1
+
+new g_PlayerData[MAXPLAYERS + 1][PLAYER_END];
+new g_PlayerStatus[MAXPLAYERS + 1][STATUS_END];
 
 // ************************
 // Round State

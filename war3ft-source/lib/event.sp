@@ -6,31 +6,16 @@ public Action:Event_player_spawn(Handle:event, const String:name[], bool:dontBro
 	{
 
 		// Player needs to choose a race!
-		if(g_PlayerCurrentRace[client] == 0 || g_bChangeRacePending[client])
+		if(g_PlayerData[client][PLAYER_RACE] == 0 || g_PlayerData[client][PLAYER_CHANGERACE])
 		{
 			DisplayMenu(g_MenuChangeRace, client, MENU_TIME_FOREVER);
 
 			// Reset so we don't try to change the user's race next round!
-			g_bChangeRacePending[client] = false;
+			g_PlayerData[client][PLAYER_CHANGERACE] = false;
 		}
 	}
 
 	return Plugin_Continue;
-}
-
-public Event_round_end(Handle:event,const String:name[],bool:dontBroadcast)
-{
-	g_RoundState = RoundState:RoundState_End;
-}
-
-public Event_round_freeze_end(Handle:event,const String:name[],bool:dontBroadcast)
-{
-	g_RoundState = RoundState:RoundState_InProgress;
-}
-
-public Event_round_start(Handle:event,const String:name[],bool:dontBroadcast)
-{
-	g_RoundState = RoundState:RoundState_InFreezeTime;
 }
 
 /* short 	 userid
@@ -50,7 +35,7 @@ public Action:Event_player_death(Handle:event, const String:name[], bool:dontBro
 	new attacker = GetClientOfUserId(GetEventInt(event,"attacker"));
 
 	// Award experience to the attacker
-	new victim_level = g_PlayerLevel[victim];
+	new victim_level = g_PlayerData[victim][PLAYER_LEVEL];
 	new xp = g_XPAwardedByLevel[victim_level];
 	XP_Award( attacker, xp );
 
@@ -118,3 +103,62 @@ public Action:Event_player_hurt(Handle:event, const String:name[], bool:dontBroa
 	PrintToChat(client, "attacker: %d", attacker);
 	PrintToChat(client, "weapon: %s", weapon);*/
 }
+
+public Event_round_end(Handle:event,const String:name[],bool:dontBroadcast)
+{
+	g_RoundState = RoundState:RoundState_End;
+}
+
+public Event_round_freeze_end(Handle:event,const String:name[],bool:dontBroadcast)
+{
+	g_RoundState = RoundState:RoundState_InProgress;
+}
+
+public Event_round_start(Handle:event,const String:name[],bool:dontBroadcast)
+{
+	g_RoundState = RoundState:RoundState_InFreezeTime;
+}
+
+public Event_bomb_beginplant(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new client = GetClientOfUserId(GetEventInt(event,"userid"));
+	g_PlayerStatus[client][STATUS_PLANTING] = true;
+}
+
+public Event_bomb_abortplant(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new client = GetClientOfUserId(GetEventInt(event,"userid"));
+	g_PlayerStatus[client][STATUS_PLANTING] = false;
+}
+
+public Event_bomb_planted(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new client = GetClientOfUserId(GetEventInt(event,"userid"));
+	// Award xp
+}
+
+public Event_bomb_defused(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new client = GetClientOfUserId(GetEventInt(event,"userid"));
+	// Award xp
+}
+
+public Event_bomb_exploded(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	// T's won, give them xp
+}
+
+public Event_bomb_dropped(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new client = GetClientOfUserId(GetEventInt(event,"userid"));
+	// dunno what happens =(
+}
+
+public Event_bomb_pickup(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new client = GetClientOfUserId(GetEventInt(event,"userid"));
+	// give xp
+}
+
+
+
