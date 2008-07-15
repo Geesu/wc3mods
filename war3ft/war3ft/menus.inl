@@ -684,7 +684,6 @@ public MENU_Shopmenu( id, iStart )
 
 	if ( !ITEM_MenuCanBuyCheck( id ) )
 	{
-		WC3_Log( true, "MENU_Shopmenu Buy");
 		return;
 	}
 
