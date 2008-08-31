@@ -1,3 +1,6 @@
+v3.0 RC12
+ - Bug Fix: [FS#121] Humans can teleport while planting
+
 v3.0 RC11b
  - Bug Fix: [FS#109] DoD crash on shopmenu
 

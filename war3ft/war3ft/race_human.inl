@@ -11,6 +11,13 @@ new g_HU_DevotionAuraGiven[33];
 HU_ULT_Blink( id )
 {
 	
+	// User can't use ultimate while planting or defusing!
+	if ( p_data_b[id][PB_ISPLANTING] )
+	{
+		client_print( id, print_center, "You cannot use your ultimate while planting the bomb!" );
+		return;
+	}
+	
 	// User can't Blink when he/she's stunned
 	if ( p_data_b[id][PB_STUNNED] )
 	{
