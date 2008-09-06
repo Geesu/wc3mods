@@ -255,7 +255,12 @@ public DB_SetDataForRace( id )
 // Prepares text for database insertion
 public DB_FormatString( text[], len )
 {
-	replace_all( text, len, "'", "\'" );
+	switch( g_DBType )
+	{
+		case DB_MYSQLX:	replace_all( text, len, "'", "\'" );
+		case DB_SQLITE:	replace_all( text, len, "'", "''" );
+	}
+	
 }
 
 DB_UpdateTimestamp( id )
