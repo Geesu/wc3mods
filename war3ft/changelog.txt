@@ -1,5 +1,7 @@
 v3.0 RC12
  - Bug Fix: [FS#121] Humans can teleport while planting
+ - Bug Fix: [FS#81-6] Wrong ultimate charge was being removed (it attempted to remove it from the caster vs. the nearby player with immunity)
+
 
 v3.0 RC11b
  - Bug Fix: [FS#109] DoD crash on shopmenu

@@ -1167,7 +1167,7 @@ bool:SHARED_SpawnReserved( ent )
 SHARED_FindFreeSpawn( id, bImmunityCheck = false, bReverseTeam = false )
 {
 
-	new iPlayersInVicinity, iSpawnID, iEntList[1], vOrigin[3];
+	new iPlayersInVicinity, iSpawnID, iEntList[1], vOrigin[3], iNearbyPlayer;
 	new ent = -1;
 	new Float:fSpawnOrigin[3];
 	new Float:fVicinity = 96.0;
@@ -1228,10 +1228,12 @@ SHARED_FindFreeSpawn( id, bImmunityCheck = false, bReverseTeam = false )
 					// We need to make sure there isn't anyone nearby that is immune
 					if ( bImmunityCheck )
 					{
+						iNearbyPlayer = WC3_IsImmunePlayerNear( id, vOrigin );
+
 						// Immune found
-						if ( WC3_IsImmunePlayerNear( id, vOrigin ) )
+						if ( iNearbyPlayer > 0 )
 						{
-							ULT_RemoveCharge( id, 6 );
+							ULT_RemoveCharge( iNearbyPlayer, 6 );
 
 							bImmunityNear = true;
 						}

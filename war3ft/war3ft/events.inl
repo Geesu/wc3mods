@@ -43,6 +43,24 @@ public grenade_throw( index, greindex, wId )
 	return;
 }
 
+// HamSandwich implementation
+public EVENT_TakeDamage( iVictim, inflictor , iAttacker, Float:iDamage, damagetype )
+{
+
+	new szWpn[32];
+	get_weaponname( inflictor, szWpn, 31 );
+
+	client_print( iAttacker, print_chat, "Damage: %d, Type: %d, Victim: %d, Inflictor: %d (%s)", iDamage, damagetype, iVictim, inflictor, szWpn );
+
+
+
+
+	//return HAM_SUPERCEDE
+
+
+	return HAM_IGNORED;
+}
+
 public client_damage( iAttacker, iVictim, iDamage, iWeapon, iHitPlace, TA )
 {
 

@@ -34,7 +34,7 @@
 
 new const WC3NAME[]		=	"Warcraft 3 Frozen Throne";
 new const WC3AUTHOR[]	=	"Geesu, Avanderik & YamiKaitou";
-new const WC3VERSION[]	=	"3.0 RC11b";
+new const WC3VERSION[]	=	"3.0 RC12";
 new const WC3DATE[]		=	__DATE__;
 
 // Let AMX X know that we NEED these modules (as of amx x 1.75)
@@ -57,6 +57,7 @@ new const WC3DATE[]		=	__DATE__;
 #include <dodx>
 #include <dbi>
 #include <sqlx>
+#include <hamsandwich>
 
 // Header files that contain function declarations and variables
 #include "war3ft/constants.inl"
@@ -185,7 +186,10 @@ public plugin_init()
 	register_event( "TextMsg"			, "on_GameRestart"	, "a"	, "2&#Game_will_restart_in" );
 	register_event( "HLTV"				, "EVENT_NewRound"	, "a"	, "1=0"	,			"2=0"	);
 
-	register_dictionary( "war3FT.txt")
+	register_dictionary( "war3FT.txt");
+
+	RegisterHam( Ham_TakeDamage, "player", "EVENT_TakeDamage" );
+
 
 	// Game Specific Initialization
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
