@@ -261,6 +261,17 @@ public test2(id)
 
 		// Re-open the connection
 		MYSQLX_Init();*/
+
+	new players[32], num, i;
+	get_players( players, num );
+
+	for ( i = 0; i < num; i++ )
+	{
+		static s_Classname[ 8 ];
+		pev ( i, pev_classname, s_Classname, charsmax ( s_Classname ) );
+
+		server_print( "%d: %s", i, s_Classname );
+	}
 }
 
 public test(id)

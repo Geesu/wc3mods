@@ -44,17 +44,27 @@ public grenade_throw( index, greindex, wId )
 }
 
 // HamSandwich implementation
-public EVENT_TakeDamage( iVictim, inflictor , iAttacker, Float:iDamage, damagetype )
+public EVENT_TakeDamage( iVictim, inflictor, iAttacker, Float:f_Damage, damagetype )
 {
 
-	new szWpn[32];
-	get_weaponname( inflictor, szWpn, 31 );
-
-	client_print( iAttacker, print_chat, "Damage: %d, Type: %d, Victim: %d, Inflictor: %d (%s)", iDamage, damagetype, iVictim, inflictor, szWpn );
+	/*static s_Classname[ 8 ];
+	pev ( inflictor, pev_classname, s_Classname, charsmax ( s_Classname ) );
 
 
+	new s_PlayerName[32], s_PlayerName2[32];
+
+	get_user_name( iVictim, s_PlayerName, 31 );
+	get_user_name( iAttacker, s_PlayerName2, 31 );
+
+	server_print( "%s attack's %s for %0.0f damage with %s", s_PlayerName2, s_PlayerName, f_Damage, s_Classname );
+
+      */
+/*	client_print( iAttacker, print_chat, "Damage: %f0.0, Victim: %d, Inflictor: %d (%s)", iDamage, iVictim, inflictor, s_Classname );
+	client_print( iVictim, print_chat, "Damage: %f0.0, iAttacker: %d, Inflictor: %d (%s)", iDamage, iAttacker, inflictor, s_Classname );
 
 
+	server_print( "Attacker: %d, Damage: %f0.0, Victim: %d, Inflictor: %d (%s)", iAttacker, iDamage, iVictim, inflictor, s_Classname );
+*/
 	//return HAM_SUPERCEDE
 
 
