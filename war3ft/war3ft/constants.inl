@@ -706,3 +706,5 @@ new Float:g_fLastSpecDisplay[33];
 new g_iPlayerTeam[33];
 
 #define BOT_CAST_ULT_CHANCE		0.10
+
+new bool:g_bCZBotRegisterHam

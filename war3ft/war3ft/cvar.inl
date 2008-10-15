@@ -81,6 +81,7 @@ new CVAR_wc3_cham_passive;
 
 // Bot CVARs
 new CVAR_wc3_bot_buy_item;
+new CVAR_bot_quota;
 
 // DOD CVARs
 new CVAR_wc3_dod_start_money;
@@ -180,9 +181,12 @@ public CVAR_Init()
 	// Bot CVARs
 
 	CVAR_wc3_bot_buy_item			= register_cvar( "wc3_bot_buy_item"			, "0.33"						);
+	CVAR_wc3_bot_buy_item			= register_cvar( "wc3_bot_buy_item"			, "0.33"						);
 
 	// MOD specific CVARs
 	CVAR_wc3_dod_start_money		= register_cvar( "wc3_dod_start_money"		, "800"							);
+
+	CVAR_bot_quota					= get_cvar_pointer( "bot_quota" );
 
 }
 

@@ -368,3 +368,21 @@ public on_BombStopPlanting( id )
 {
 	p_data_b[id][PB_ISPLANTING] = false;
 }
+
+public CZ_BotHookHam( id )
+{
+    // Thx to Avalanche and GunGame of which this method is based off of
+    if ( g_bCZBotRegisterHam || !is_user_connected(id) || g_MOD != GAME_CZERO )
+		return;
+
+
+    // Recheck for safety.
+    if ( (pev(id, pev_flags) & FL_FAKECLIENT) && get_pcvar_num(CVAR_bot_quota) > 0 )
+	{
+        // Post spawn fix for cz bots, since RegisterHam does not work for them
+        RegisterHamFromEntity( Ham_TakeDamage, id, "EVENT_TakeDamage", 1 );
+
+        // Only needs to run once after ham is registed ignore.
+        g_bCZBotRegisterHam = true;
+    }
+}

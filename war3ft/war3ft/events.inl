@@ -47,7 +47,7 @@ public grenade_throw( index, greindex, wId )
 public EVENT_TakeDamage( iVictim, inflictor, iAttacker, Float:f_Damage, damagetype )
 {
 
-	/*static s_Classname[ 8 ];
+	static s_Classname[ 8 ];
 	pev ( inflictor, pev_classname, s_Classname, charsmax ( s_Classname ) );
 
 
@@ -56,9 +56,9 @@ public EVENT_TakeDamage( iVictim, inflictor, iAttacker, Float:f_Damage, damagety
 	get_user_name( iVictim, s_PlayerName, 31 );
 	get_user_name( iAttacker, s_PlayerName2, 31 );
 
-	server_print( "%s attack's %s for %0.0f damage with %s", s_PlayerName2, s_PlayerName, f_Damage, s_Classname );
+	//server_print( "%s:%d attack's %s:%d for %0.0f damage with %s:%d", s_PlayerName2, iAttacker, s_PlayerName, iVictim, f_Damage, s_Classname, inflictor );
 
-      */
+      
 /*	client_print( iAttacker, print_chat, "Damage: %f0.0, Victim: %d, Inflictor: %d (%s)", iDamage, iVictim, inflictor, s_Classname );
 	client_print( iVictim, print_chat, "Damage: %f0.0, iAttacker: %d, Inflictor: %d (%s)", iDamage, iAttacker, inflictor, s_Classname );
 

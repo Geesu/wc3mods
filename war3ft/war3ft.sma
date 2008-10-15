@@ -190,7 +190,6 @@ public plugin_init()
 
 	RegisterHam( Ham_TakeDamage, "player", "EVENT_TakeDamage" );
 
-
 	// Game Specific Initialization
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
@@ -349,6 +348,17 @@ public client_putinserver( id )
 		if ( !is_user_bot( id ) && !is_amd64_server() )
 		{
 			query_client_cvar( id, "cl_minmodels", "_CS_CheckMinModelsValue" );
+		}
+
+		if ( g_MOD == GAME_CZERO )
+		{
+			// Only want to run this if: mod is CZ (zbot not supported), client is a bot,
+			// these are CZ bots (bot_quota), and the ham has not been registed yet.
+			if ( (pev(id, pev_flags) & FL_FAKECLIENT) && get_pcvar_num(CVAR_bot_quota) > 0 && !g_bCZBotRegisterHam )
+			{
+				// Delay for private data to initialize
+				set_task( 0.1, "CZ_BotHookHam", id )
+			}
 		}
 	}
 
