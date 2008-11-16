@@ -258,7 +258,7 @@ public _SH_DrawSerpentWard( parm[5] )
 	// Don't allow the ward to be by a hostage or the bom
 	if ( bWardBombCheck )
 	{
-		if ( !SH_CanPlaceWard( id ) )
+		if ( !SH_CheckWard( parm ) )
 		{
 			client_print( id, print_chat, "%s Serpent ward removed, you can't have them near bombs or hostages!", g_MODclient );
 
@@ -380,6 +380,36 @@ bool:SH_CanPlaceWard( id )
     	if ( get_distance( vPlayerOrigin, vEntityOrigin ) < 250 )
 		{
     		return false;
+		}
+	}
+	
+	return true;
+}
+
+bool:SH_CheckWard( parm[5] )
+{
+	new vPlayerOrigin[3];
+	
+	vPlayerOrigin[0] = parm[0];
+	vPlayerOrigin[1] = parm[1];
+	vPlayerOrigin[2] = parm[2];
+	
+	new Float:vEntOrigin[3];
+	new vEntityOrigin[3];
+	
+	new iEnt = find_ent_by_model( -1, "grenade", "models/w_c4.mdl" );
+	
+	if ( iEnt && is_valid_ent( iEnt ) )
+	{
+		entity_get_vector( iEnt, EV_VEC_origin, vEntOrigin )
+		
+		vEntityOrigin[0] = floatround( vEntOrigin[0] );
+		vEntityOrigin[1] = floatround( vEntOrigin[1] );
+		vEntityOrigin[2] = floatround( vEntOrigin[2] );
+		
+		if ( get_distance( vPlayerOrigin, vEntityOrigin ) < 250 )
+		{
+			return false;
 		}
 	}
 	

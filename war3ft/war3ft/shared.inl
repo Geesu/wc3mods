@@ -323,10 +323,8 @@ public _SHARED_Spawn( id )
 	bIgnorePlayerSpawning[id] = true;
 
 	// Spawn the player
-	set_pev(id, pev_spawnflags, 3);
-	dllfunc(DLLFunc_Spawn, id);
-	set_pev(id, pev_iuser1, 0);
-
+	ExecuteHam(Ham_CS_RoundRespawn,id);
+	
 	p_data_b[id][PB_SLOWED]		= false;
 	p_data_b[id][PB_STUNNED]	= false;
 	p_data_b[id][PB_GIVEITEMS]	= true;
@@ -369,9 +367,9 @@ public _SHARED_Spawn_Final( id )
 	// OK lets do something on this spawn!
 	bIgnorePlayerSpawning[id] = false;
 
-	set_pev(id, pev_spawnflags, 3);
-	dllfunc(DLLFunc_Spawn, id);
-	set_pev(id, pev_iuser1, 0);
+//	set_pev(id, pev_spawnflags, 3);
+//	dllfunc(DLLFunc_Spawn, id);
+//	set_pev(id, pev_iuser1, 0);
 	
 	bIgnoreArmorSet[id] = false;
 
