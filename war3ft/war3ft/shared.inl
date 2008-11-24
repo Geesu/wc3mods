@@ -323,7 +323,7 @@ public _SHARED_Spawn( id )
 	bIgnorePlayerSpawning[id] = true;
 
 	// Spawn the player
-	ExecuteHam(Ham_CS_RoundRespawn,id);
+	ExecuteHamB(Ham_CS_RoundRespawn,id);
 	
 	p_data_b[id][PB_SLOWED]		= false;
 	p_data_b[id][PB_STUNNED]	= false;
