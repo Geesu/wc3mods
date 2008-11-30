@@ -325,6 +325,54 @@ public on_Drop( id )
 	return;
 }
 
+// HamSandwich implementation
+public EVENT_Spawn( id )
+{
+
+	if ( !WC3_Check() )
+	{
+		return HAM_HANDLED;
+	}
+
+	// ResetHUD can be called when the user is not alive, lets ignore those calls
+	if ( !is_user_alive( id ) )
+	{
+		return HAM_HANDLED;
+	}
+
+	// Store the player's team!
+	g_iPlayerTeam[id] = get_user_team( id );
+
+	// Prespawn call
+	//   - Purpose is to have a spawn call that happens before everything else!
+	WC3_PreSpawn( id );
+	
+	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
+	{
+		
+		// This is the first time the user has spawned this round
+		if ( !p_data_b[id][PB_HAS_SPAWNED] )
+		{	
+			EVENT_PlayerInitialSpawn( id );
+
+			p_data_b[id][PB_HAS_SPAWNED] = true;
+		}
+	}
+	
+	// Start a new session under the following conditions:
+	//		- Day of Defeat - need a new session per spawn!
+	//		- CSDM - rounds never end!!!
+	if ( g_MOD == GAME_DOD || ( CVAR_csdm_active > 0 && get_pcvar_num( CVAR_csdm_active ) == 1 ) )
+	{
+		WC3_NewSession( id );
+	}
+
+	// Should be called at the end of each spawn
+	WC3_PostSpawn( id );
+
+	return HAM_HANDLED;
+}
+
 // Function called EVERYTIME a user spawns!
 public on_ResetHud( id )
 {
