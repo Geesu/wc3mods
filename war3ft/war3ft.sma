@@ -189,7 +189,7 @@ public plugin_init()
 	register_dictionary( "war3FT.txt");
 
 	RegisterHam( Ham_TakeDamage, "player", "EVENT_TakeDamage" );
-	RegisterHam( Ham_Spawm, "player", "EVENT_Spawn", 1);
+	RegisterHam( Ham_Spawn, "player", "EVENT_Spawn", 1);
 
 	// Game Specific Initialization
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
