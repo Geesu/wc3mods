@@ -989,14 +989,14 @@ WC3_ShowSpecInfo( id, iTargetID )
 	new bool:ItemSlotOne = false;
 	new bool:HasMoreThanOneRing = false;
 	
-	if ( g_iTotlaRings[iTargetID] > 1 )
+	if ( g_iTotalRings[iTargetID] > 1 )
 		HasMoreThanOneRing = true;
 
 	// User has one item
 	if ( g_iShopMenuItems[iTargetID][ITEM_SLOT_ONE] > ITEM_NONE && g_iShopMenuItems[iTargetID][ITEM_SLOT_ONE] != ITEM_MOLE )
 	{
 		// Then they have rings, lets print how many there are
-		if ( HasMoreThanOneRing && g_iShotpMenuItems[iTargetID][ITEM_SLOT_ONE] == ITEM_RING )
+		if ( HasMoreThanOneRing && g_iShopMenuItems[iTargetID][ITEM_SLOT_ONE] == ITEM_RING )
 			iMsgPos += formatex( szMsg[iMsgPos], 512-iMsgPos, "^nItem: %s x%d", szItemName, g_iTotalRings[iTargetID] );
 		else
 			iMsgPos += formatex( szMsg[iMsgPos], 512-iMsgPos, "^nItem: %s", szItemName );
