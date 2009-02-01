@@ -381,6 +381,7 @@ public CZ_BotHookHam( id )
 	{
         // Post spawn fix for cz bots, since RegisterHam does not work for them
         RegisterHamFromEntity( Ham_TakeDamage, id, "EVENT_TakeDamage", 1 );
+		RegisterHamFromEntity( Ham_Spawn, id, "EVENT_Spawn", 1);
 
         // Only needs to run once after ham is registed ignore.
         g_bCZBotRegisterHam = true;

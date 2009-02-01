@@ -1334,6 +1334,11 @@ public _SHARED_Mole( parm[2] )
 	{
 		new vOrigin[3], Float:fSpawnOrigin[3];
 		
+		// Set the right angels
+		entity_get_vector( ent, EV_VEC_angles, fSpawnOrigin );
+		entity_set_vector( id, EV_VEC_angles, fSpawnOrigin );
+		entity_set_int( id, EV_INT_fixangle, 1 );
+		
 		// Get the origin of the spawn
 		entity_get_vector( ent, EV_VEC_origin, fSpawnOrigin );
 		

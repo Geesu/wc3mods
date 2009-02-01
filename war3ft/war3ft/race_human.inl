@@ -395,7 +395,7 @@ HU_ULT_BlinkProtection( id, vOrigin[3] )
 	if ( bSlay )
 	{
 		client_print( id, print_chat, "%s %L", g_MODclient, id, "SLAIN_FOR_TELEPORTING" );
-		user_kill( id );
+		user_kill( id, 1 );
 	}
 
 	return bSlay;

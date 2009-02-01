@@ -211,25 +211,29 @@ SQLITE_Save( id )
 
 	static iCurrentLevel;
 
-	// Now we need to save the skill levels!
-	for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
+	// Only save skill levels if the user does NOT play chameleon
+	if ( p_data[id][P_RACE] != RACE_CHAMELEON )
 	{
-		if ( g_SkillType[iSkillID] != SKILL_TYPE_PASSIVE )
+		// Now we need to save the skill levels!
+		for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
 		{
-			iCurrentLevel = SM_GetSkillLevel( id, iSkillID, 16 );
-
-			// Then we need to save this!
-			if ( iCurrentLevel >= 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
+			if ( g_SkillType[iSkillID] != SKILL_TYPE_PASSIVE )
 			{
-				g_iDBPlayerSkillStore[id][iSkillID] = iCurrentLevel;
-				format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
-				query = SQL_PrepareQuery( g_DBConn, szQuery );
-
-				if ( !SQL_Execute( query ) )
+				iCurrentLevel = SM_GetSkillLevel( id, iSkillID, 16 );
+	
+				// Then we need to save this!
+				if ( iCurrentLevel >= 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
 				{
-					SQLITE_Error( query, szQuery, 7 );
-
-					return;
+					g_iDBPlayerSkillStore[id][iSkillID] = iCurrentLevel;
+					format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
+					query = SQL_PrepareQuery( g_DBConn, szQuery );
+	
+					if ( !SQL_Execute( query ) )
+					{
+						SQLITE_Error( query, szQuery, 7 );
+	
+						return;
+					}
 				}
 			}
 		}
@@ -257,19 +261,23 @@ SQLITE_Save_T( id )
 
 	static iCurrentLevel;
 
-	// Now we need to save the skill levels!
-	for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
+	// Only save skill levels if the user does NOT play chameleon
+	if ( p_data[id][P_RACE] != RACE_CHAMELEON )
 	{
-		if ( g_SkillType[iSkillID] != SKILL_TYPE_PASSIVE )
+		// Now we need to save the skill levels!
+		for ( new iSkillID = 0; iSkillID < MAX_SKILLS; iSkillID++ )
 		{
-			iCurrentLevel = SM_GetSkillLevel( id, iSkillID, 17 );
-
-			// Then we need to save this!
-			if ( iCurrentLevel >= 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
+			if ( g_SkillType[iSkillID] != SKILL_TYPE_PASSIVE )
 			{
-				g_iDBPlayerSkillStore[id][iSkillID] = iCurrentLevel;
-				format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
-				SQL_ThreadQuery( g_DBTuple, "_SQLITE_Save_T", szQuery );
+				iCurrentLevel = SM_GetSkillLevel( id, iSkillID, 17 );
+	
+				// Then we need to save this!
+				if ( iCurrentLevel >= 0 && g_iDBPlayerSkillStore[id][iSkillID] != iCurrentLevel )
+				{
+					g_iDBPlayerSkillStore[id][iSkillID] = iCurrentLevel;
+					format( szQuery, 511, "REPLACE INTO `wc3_player_skill` ( `player_id` , `skill_id` , `skill_level` ) VALUES ( '%d', '%d', '%d' );", iUniqueID, iSkillID, iCurrentLevel );
+					SQL_ThreadQuery( g_DBTuple, "_SQLITE_Save_T", szQuery );
+				}
 			}
 		}
 	}

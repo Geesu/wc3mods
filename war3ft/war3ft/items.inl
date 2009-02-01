@@ -58,7 +58,7 @@ ITEM_Cost( id, iItem )
 	// Cost * ratio (ITEM_COST_RATIO to 1.0 dependent on level)
 	new Float:fRatio = (float( p_data[id][P_LEVEL] ) * fInc) + ITEM_COST_RATIO;
 
-	return floatround( float( ITEM_COST[iItem] ) * fRatio );
+	return ( p_data[id][P_RACE] != RACE_NONE ) ? floatround( float( ITEM_COST[iItem] ) * fRatio ) : ITEM_COST[iItem];
 }
 
 

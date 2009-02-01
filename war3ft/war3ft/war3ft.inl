@@ -978,43 +978,56 @@ WC3_ShowSpecInfo( id, iTargetID )
 	}
 	
 	// Reset our position counter
-	new pos = 0;
+	//new pos = 0;
 
-	new szItemInfo[256], szItemName[32], szItemName2[32];
+	new szItemName[32], szItemName2[32];
 
 	// Get the item and race names
 	LANG_GetItemName( g_iShopMenuItems[iTargetID][ITEM_SLOT_ONE], id, szItemName, 31, true );
 	LANG_GetItemName( g_iShopMenuItems[iTargetID][ITEM_SLOT_TWO], id, szItemName2, 31, true );
+	
+	new bool:ItemSlotOne = false;
+	new bool:HasMoreThanOneRing = false;
+	
+	if ( g_iTotlaRings[iTargetID] > 1 )
+		HasMoreThanOneRing = true;
 
 	// User has one item
 	if ( g_iShopMenuItems[iTargetID][ITEM_SLOT_ONE] > ITEM_NONE && g_iShopMenuItems[iTargetID][ITEM_SLOT_ONE] != ITEM_MOLE )
 	{
-		pos += formatex( szItemInfo[pos], 256-pos, "^n%s", szItemName );
+		// Then they have rings, lets print how many there are
+		if ( HasMoreThanOneRing && g_iShotpMenuItems[iTargetID][ITEM_SLOT_ONE] == ITEM_RING )
+			iMsgPos += formatex( szMsg[iMsgPos], 512-iMsgPos, "^nItem: %s x%d", szItemName, g_iTotalRings[iTargetID] );
+		else
+			iMsgPos += formatex( szMsg[iMsgPos], 512-iMsgPos, "^nItem: %s", szItemName );
+		
+		ItemSlotOne = true;
 	}
 
 	// User has another item
 	if ( g_iShopMenuItems[iTargetID][ITEM_SLOT_TWO] > ITEM_NONE && g_iShopMenuItems[iTargetID][ITEM_SLOT_TWO] != ITEM_MOLE )
 	{
 		// Then the string isn't empty and we have information in it (so we have a first item)
-		if ( szItemInfo[0] )
+		if ( ItemSlotOne )
 		{
-			pos += formatex( szItemInfo[pos], 256-pos, " %L %s", id, "WORD_AND", szItemName2 );
+			// Then they have rings, lets print how many there are
+            if (HasMoreThanOneRing && g_iShopMenuItems[iTargetID][ITEM_SLOT_TWO] == ITEM_RING)
+                iMsgPos += formatex( szMsg[iMsgPos], 512-iMsgPos, " %L %s x%d", id, "WORD_AND", szItemName2, g_iTotalRings[iTargetID] );
+            else
+                iMsgPos += formatex( szMsg[iMsgPos], 512-iMsgPos, " %L %s", id, "WORD_AND", szItemName2 );
 		}
 
 		// We don't need the word "and"
 		else
 		{
-			pos += formatex( szItemInfo[pos], 256-pos, "^n%s", szItemName2 );
+			// Then they have rings, lets print how many there are
+            if (HasMoreThanOneRing && g_iShopMenuItems[iTargetID][ITEM_SLOT_TWO] == ITEM_RING)
+                iMsgPos += formatex( szMsg[iMsgPos], 512-iMsgPos, "^nItem: %s x%d", szItemName2, g_iTotalRings[iTargetID] );
+            else
+                iMsgPos += formatex( szMsg[iMsgPos], 512-iMsgPos, "^nItem: %s", szItemName2 );
 		}
 		
-		// Then they have rings, lets print how many there are
-		if ( ITEM_Has( iTargetID, ITEM_RING ) > ITEM_NONE && p_data[iTargetID][P_RINGS] > 1 )
-		{
-			pos += formatex( szItemInfo[pos], 256-pos, " x%d", p_data[id][P_RINGS] );
-		}
 	}
-
-	add( szMsg, 511, szItemInfo );
 
 
 	// Add the Health + Armor to the message
@@ -1436,8 +1449,7 @@ public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 		WC3_KillUser( iVictim, iKiller, iWeapon );
 
 		// Update frags ( realtime )
-		new iVictimFrags = get_user_frags( iVictim ) + 1;
-		set_user_frags( iVictim, iVictimFrags );
+		new iVictimFrags = get_user_frags( iVictim );
 
 		if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 		{
@@ -1487,7 +1499,7 @@ public WC3_Kill( iVictim, iKiller, iWeapon, iHeadshot )
 	// Update frags ( realtime )
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		if ( is_user_alive( iKiller ) )
+		if ( is_user_connected( iKiller ) )
 		{
 			new iKillerDeaths = get_user_deaths( iKiller );
 			
@@ -1512,7 +1524,7 @@ public WC3_KillUser( iVictim, iKiller, iWeapon )
 
 	if ( g_MOD == GAME_CSTRIKE || g_MOD == GAME_CZERO )
 	{
-		user_kill( iVictim );
+		user_kill( iVictim, 1 );
 	}
 
 	else if ( g_MOD == GAME_DOD )

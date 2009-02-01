@@ -246,6 +246,7 @@ public _SH_DrawSerpentWard( parm[5] )
 	// User is no longer alive, don't draw wards
 	if ( !is_user_alive( id ) )
 	{
+		p_data[id][P_SERPENTCOUNT]++;
 		return;
 	}
 
@@ -341,7 +342,8 @@ public _SH_DrawSerpentWard( parm[5] )
 				client_cmd( targetid, "speak ambience/thunder_clap.wav" );
 
 				// Create screen fade on the owners screen
-				Create_ScreenFade( id, (1<<10), (1<<10), (1<<12), red, green, blue, 55 );
+				Create_ScreenFade( id, (1<<10), (1<<10), (1<<12), red, green, blue, 64 );
+				Create_ScreenFade( targetid, (1<<10), (1<<10), (1<<12), red, green, blue, 126 );
 			}
 		}
 	}
@@ -545,8 +547,8 @@ SH_SkillsDefensive( iAttacker, iVictim )
 		{
 			new vOrigin[3], vInitOrigin[3], vAxisOrigin[3], i;
 			
-			// Get origin of attacker
-			get_user_origin( iAttacker, vOrigin );
+			// Get origin of victim
+			get_user_origin( iVictim, vOrigin );
 			
 			// Play sound on attacker
 			emit_sound( iAttacker, CHAN_STATIC, g_szSounds[SOUND_CONCOCTION_CAST], 1.0, ATTN_NORM, 0, PITCH_NORM );

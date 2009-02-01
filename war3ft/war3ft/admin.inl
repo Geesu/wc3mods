@@ -482,11 +482,12 @@ ADMIN_Log( id, szCommand[], {Float,_}:... )
 		write_file( szLogFile, " ", -1 );
 	}
 
-	new szAdminName[32], szSteamID[32];
+	new szAdminName[32], szSteamID[32], szTeam[13];
 	if ( id > 0 )
 	{
 		get_user_name( id, szAdminName, 31 );
 		get_user_authid( id, szSteamID, 31 );
+		get_user_team( id, szTeam, 12 );
 	}
 	else
 	{
@@ -495,10 +496,10 @@ ADMIN_Log( id, szCommand[], {Float,_}:... )
 	}
 
 	new szCurrentTime[32];
-	get_time( "%m.%d.%Y %H:%M:%S", szCurrentTime, 31 );
+	get_time( "L %m/%d/%Y %H:%M:%:", szCurrentTime, 31 );
 
 	new szLogEntry[256];
-	formatex( szLogEntry, 255, "[%s] %s (%s) used command: '%s %s'", szCurrentTime, szAdminName, szSteamID, szCommand, szFormattedText );
+	formatex( szLogEntry, 255, "%s Cmd: ^"%s<%d><%s><%s>^" '%s %s'", szCurrentTime, szAdminName, get_user_userid( id ), szSteamID, szTeam, szCommand, szFormattedText );
 
 	write_file( szLogFile, szLogEntry, -1 );
 

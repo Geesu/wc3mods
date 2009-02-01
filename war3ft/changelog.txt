@@ -1,5 +1,14 @@
 v3.0 RC13
  - Bug Fix: [FS#83] Changed on_ResetHud to Ham_Spawn
+ - Bug Fix: [FS#132] Chameleon deletes skill selections
+ - Bug Fix: [FS#136] bots fix for cz
+ - Bug Fix: [FS#133] show player item fix
+ - Bug Fix: [FS#134] Cheating on item prices
+ - Bug Fix: [FS#92] solution against detecting moles (angle of view)
+ - Bug Fix: [FS#131] shadow hunter coconut fix
+ - Bug Fix: [FS#123] No serpent wards after respawning. 
+ - Change: Remade ADMIN_Log format to more AMXX like
+ - Addition: ScreenFade for both attacker and victim of Serpand Wards
 
 v3.0 RC12
  - Bug Fix: [FS#121] Humans can teleport while planting
