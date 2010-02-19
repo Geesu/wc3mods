@@ -496,7 +496,7 @@ ADMIN_Log( id, szCommand[], {Float,_}:... )
 	}
 
 	new szCurrentTime[32];
-	get_time( "L %m/%d/%Y %H:%M:%:", szCurrentTime, 31 );
+	get_time( "L %m/%d/%Y %H:%M:%:S", szCurrentTime, 31 );
 
 	new szLogEntry[256];
 	formatex( szLogEntry, 255, "%s Cmd: ^"%s<%d><%s><%s>^" '%s %s'", szCurrentTime, szAdminName, get_user_userid( id ), szSteamID, szTeam, szCommand, szFormattedText );
