@@ -1250,6 +1250,7 @@ public WC3_Damage( iVictim, iAttacker, iDamage, iWeapon, iBodyPart )
 	// Just do the damage
 	else
 	{
+		set_pev( iVictim, pev_dmg_inflictor, 0 );
 		set_user_health( iVictim, iHealth - iDamage );
 	}
 

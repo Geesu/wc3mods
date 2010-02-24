@@ -313,6 +313,7 @@ BM_SkillsDefensive( iAttacker, iVictim, iDamage )
 		
 		if ( p_data_b[iVictim][PB_ISCONNECTED] )
 		{
+			set_pev( iVictim, pev_dmg_inflictor, 0 );
 			set_user_health( iVictim, get_user_health( iVictim ) + iBonusHealth );
 		}
 	}

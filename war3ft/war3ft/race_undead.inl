@@ -188,12 +188,14 @@ UD_SkillsOffensive( iAttacker, iDamage )
 			// Then give the user his maximum health
 			if ( iHealth + iBonusHealth > iMaxHealth )
 			{
+				set_pev( iAttacker, pev_dmg_inflictor, 0 );
 				set_user_health( iAttacker, iMaxHealth );
 			}
 
 			// Otherwise just give iMaxHealth
 			else
 			{
+				set_pev( iAttacker, pev_dmg_inflictor, 0 );
 				set_user_health( iAttacker, iHealth + iBonusHealth );
 			}
 		}

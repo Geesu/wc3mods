@@ -97,6 +97,7 @@ WA_ULT_Vengeance( id )
 			Create_TE_TELEPORT( vOrigin );
 
 			// Change user's health
+			set_pev( id, pev_dmg_inflictor, 0 );
 			set_user_health( id, VENGEANCE_HEALTH );
 
 			// Play the Vengeance sound		

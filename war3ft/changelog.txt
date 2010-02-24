@@ -1,3 +1,7 @@
+v3.0 RC14
+ - Bug Fix: [FS#141] Admin command crash fix
+ - Addition: [FS#145] Compatibility with ATAC3.x
+
 v3.0 RC13
  - Bug Fix: [FS#83] Changed on_ResetHud to Ham_Spawn
  - Bug Fix: [FS#132] Chameleon deletes skill selections

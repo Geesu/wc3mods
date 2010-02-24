@@ -379,6 +379,7 @@ public _SHARED_Spawn_Final( id )
 	// Vengeance Check
 	if ( p_data[id][P_RESPAWNBY] == RESPAWN_VENGEANCE )
 	{
+		set_pev( id, pev_dmg_inflictor, 0 );
 		set_user_health( id, VENGEANCE_HEALTH );
 	}
 	

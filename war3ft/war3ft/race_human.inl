@@ -430,10 +430,12 @@ HU_DevotionAura( id )
 	iHealth = get_user_health( id );
 	if (iHealth + DevotionAuraGiven < 0)
 	{
+		set_pev( id, pev_dmg_inflictor, 0 );
 		set_user_health( id, 1 );
  	}
 	else
 	{
+		set_pev( id, pev_dmg_inflictor, 0 )
 		set_user_health( id, iHealth + DevotionAuraGiven );
 	}
 }

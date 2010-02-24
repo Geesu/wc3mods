@@ -432,6 +432,7 @@ ITEM_GiveBonuses( id, iItem )
 		{
 			new iHealth = get_pcvar_num( CVAR_wc3_health );
 			iHealth += get_user_health( id );
+			set_pev( id, pev_dmg_inflictor, 0 );
 			set_user_health( id, iHealth );
 		}
 
@@ -564,7 +565,8 @@ ITEM_Remove( id, iItemSlot, bResetAnkhMole = true )
 			
 			// Lets not kill the user, give them 1 health
 			iNewHealth = ( ( iNewHealth <= 0 ) ? 1 : iNewHealth );
-
+			
+			set_pev( id, pev_dmg_inflictor, 0 );
 			set_user_health( id, iNewHealth );
 		}
 
@@ -729,12 +731,14 @@ ITEM_Offensive( iAttacker, iVictim, iWeapon, iDamage, iHitPlace )
 		// User needs to be set to max health
 		if ( iHealth + iBonusHealth > get_user_maxhealth( iAttacker ) )
 		{
+			set_pev( iAttacker, pev_dmg_inflictor, 0 );
 			set_user_health( iAttacker, get_user_maxhealth( iAttacker ) );
 		}
 		
 		// Give them bonus
 		else
 		{
+			set_pev( iAttacker, pev_dmg_inflictor, 0 );
 			set_user_health( iAttacker, iHealth + iBonusHealth );
 		}
 
@@ -975,6 +979,7 @@ public _ITEM_Ring( id )
 
 		if ( iHealth <= get_user_maxhealth( id ) )
 		{
+			set_pev( id, pev_dmg_inflictor, 0 );
 			set_user_health( id, iHealth );
 		}
 

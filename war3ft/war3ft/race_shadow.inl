@@ -90,6 +90,7 @@ public _SH_HealingWave( id )
 				// User needs health
 				if ( get_user_health( targetid ) + 1 <= get_user_maxhealth( targetid ) )
 				{
+					set_pev( targetid, pev_dmg_inflictor, 0 )
 					set_user_health( targetid, get_user_health( targetid ) + 1 );
 
 					Create_TE_IMPLOSION( origin, 100, 8, 1 );
@@ -511,10 +512,14 @@ SH_SkillsOffensive( iAttacker, iVictim )
 			if ( iHealth - g_HU_DevotionAuraGiven[iVictim] < 0 )
 			{
 				if (is_user_alive(iVictim))
+				{
+					set_pev( iVictim, pev_dmg_inflictor, 0 );
 					set_user_health( iVictim, 1 );
+				}
 			}
 			else
 			{
+				set_pev( iVictim, pev_dmg_inflictor, 0 );
 				set_user_health( iVictim, iHealth - g_HU_DevotionAuraGiven[iVictim] );
 			}
 			g_HU_DevotionAuraGiven[iVictim] = 0;
