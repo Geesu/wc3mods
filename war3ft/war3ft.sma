@@ -34,7 +34,7 @@
 
 new const WC3NAME[]		=	"Warcraft 3 Frozen Throne";
 new const WC3AUTHOR[]	=	"Geesu, Avanderik & YamiKaitou";
-new const WC3VERSION[]	=	"3.0 RC14";
+//new const WC3VERSION[]	=	"3.0 RC14";
 new const WC3DATE[]		=	__DATE__;
 
 // Let AMX X know that we NEED these modules (as of amx x 1.75)
@@ -58,6 +58,9 @@ new const WC3DATE[]		=	__DATE__;
 #include <dbi>
 #include <sqlx>
 #include <hamsandwich>
+
+//Include Version file first
+#include "war3ft/version.inl"
 
 // Header files that contain function declarations and variables
 #include "war3ft/constants.inl"
@@ -111,7 +114,7 @@ new const WC3DATE[]		=	__DATE__;
 
 public plugin_init()
 {
-	register_plugin( WC3NAME, WC3VERSION, WC3AUTHOR );
+	register_plugin( WC3NAME, WC3FT_VERSION, WC3AUTHOR );
 	
 	WC3_DetermineGame();
 
@@ -120,7 +123,7 @@ public plugin_init()
 	gmsgScreenShake		= get_user_msgid( "ScreenShake"	);
 	gmsgScoreInfo		= get_user_msgid( "ScoreInfo"	);
 	
-
+	register_concmd( "war3_version"		, "CMD_Handler"		, -1 );
 	register_concmd( "playerskills"		, "CMD_Handler"		, -1 );
 
 	register_clcmd( "debug"				, "CMD_Handler"		, -1 );
@@ -251,6 +254,7 @@ public plugin_init()
 
 	register_concmd( "test", "test" );
 	register_concmd( "test2", "test2" );
+	
 }
 
 public test2(id)
@@ -318,6 +322,9 @@ public plugin_end()
 
 public plugin_precache()
 {
+	// Build version number first
+	formatex( WC3FT_VERSION, charsmax( WC3FT_VERSION ), "%d.%d.%d-dev", WC3FT_V_MAJOR, WC3FT_V_MINOR, WC3FT_V_RELEASE );
+	
 	WC3_Precache();
 }
 

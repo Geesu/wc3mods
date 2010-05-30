@@ -91,9 +91,9 @@ public CVAR_Init()
 	// Plugin Information CVARs
 
 	new szAmxCvar[32];
-	format( szAmxCvar, 31 , "%s %s", WC3NAME, WC3VERSION );
+	format( szAmxCvar, 31 , "%s %s", WC3NAME, WC3FT_VERSION );
 
-									 register_cvar( "War3: Frozen Throne"		, WC3VERSION	, FCVAR_SERVER );
+									 register_cvar( "War3: Frozen Throne"		, WC3FT_VERSION	, FCVAR_SERVER );
 									 register_cvar( "amx_war3_version"			, szAmxCvar		, FCVAR_SERVER );
 									 register_cvar( "amx_war3_date"				, WC3DATE		, FCVAR_SERVER );
 

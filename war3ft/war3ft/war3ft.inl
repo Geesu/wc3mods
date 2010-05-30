@@ -425,7 +425,7 @@ public WC3_Init()
 
 	new szCurMap[32];
 	get_mapname( szCurMap, 31 );
-	WC3_Log( false, "** Map %s started, version: '%s'", szCurMap, WC3VERSION );
+	WC3_Log( false, "** Map %s started, version: '%s'", szCurMap, WC3FT_VERSION );
 }
 
 public _WC3_RunAfterConfig()

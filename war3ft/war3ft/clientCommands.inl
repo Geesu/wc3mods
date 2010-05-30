@@ -272,8 +272,14 @@ public cmd_Say( id )
 // Command handler
 CMD_Handle( id, szCmd[], bool:bThroughSay )
 {
+	// Print full version info
+	if ( CMD_Equal( id, szCmd, "war3_version" ) )
+	{
+		console_print( id, "War3FT Version: %s (Build %s)", WC3FT_VERSION, WC3FT_V_BUILD );
+	}
+	
 	// Change the user's race
-	if ( CMD_Equal( id,  szCmd, "changerace" ) )
+	else if ( CMD_Equal( id,  szCmd, "changerace" ) )
 	{
 		WC3_ChangeRaceStart( id );
 	}

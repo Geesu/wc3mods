@@ -1,6 +1,7 @@
 v3.0 RC14
  - Bug Fix: [FS#141] Admin command crash fix
  - Addition: [FS#145] Compatibility with ATAC3.x
+ - Addition: Added command war3_version and changed the way the version is handled to support dev builds
 
 v3.0 RC13
  - Bug Fix: [FS#83] Changed on_ResetHud to Ham_Spawn
