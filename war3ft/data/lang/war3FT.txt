@@ -191,6 +191,7 @@ TELEPORT_FAILED_ENEMY_IMMUNITY = Teleport Failed^nEnemy has Immunity
 VENGEANCE_FAILED_ENEMY_IMMUNITY = Vengeance Failed^nEnemy has Immunity
 SLAIN_FOR_TELEPORTING = You have been slain for teleporting into a restricted area
 TELEPORT_FAILED_BAD_DESTINATION = Teleport Failed^nBad Destination
+TELEPORT_FAILED_RESTRICTED_AREA = Teleport Failed^nRestricted Area
 CANCEL_TELEMENU = ^n^n\w0. Cancel
 XP_IS_NOT_SAVED = Sorry XP is not saved on this server
 NOT_BUY_ITEMS_WHEN_DEAD = You may not buy items when you are dead.

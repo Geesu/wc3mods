@@ -58,6 +58,7 @@ new CVAR_wc3_ult_delay;
 new CVAR_wc3_ult_cooldown;
 new CVAR_wc3_blink_protection;
 new CVAR_wc3_blink_dizziness;
+new CVAR_wc3_blink_slay;
 
 // Items
 new CVAR_wc3_tome;
@@ -139,6 +140,7 @@ public CVAR_Init()
 	CVAR_wc3_ult_cooldown			= register_cvar( "wc3_ult_cooldown"			, "35.0"						);
 	CVAR_wc3_blink_protection		= register_cvar( "wc3_blink_protection"		, "1"							);
 	CVAR_wc3_blink_dizziness		= register_cvar( "wc3_blink_dizziness"		, "0"							);
+	CVAR_wc3_blink_slay				= register_cvar( "wc3_blink_slay"			, "0"							);
 
 	// Item CVARs
 

@@ -1,5 +1,7 @@
 v3.0 RC14
  - Bug Fix: [FS#141] Admin command crash fix
+ - Bug Fix: Registered cvar twice
+ - Bug Fix: [FS#137] - Human Teleport = Restricted Area! (New CVAR and ML Line)
  - Addition: [FS#145] Compatibility with ATAC3.x
  - Addition: Added command war3_version and changed the way the version is handled to support dev builds
 

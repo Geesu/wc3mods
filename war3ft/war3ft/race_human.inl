@@ -114,7 +114,7 @@ HU_ULT_Blink( id )
 	{
 
 		// Lets go ahead and make this check before they teleport...
-		if ( HU_ULT_BlinkProtection( id, vNewLocation ) )
+		if ( HU_ULT_BlinkProtection( id, vNewLocation, vOldLocation ) )
 		{
 			ULT_ResetCooldown( id, get_pcvar_num( CVAR_wc3_ult_cooldown ) );
 
@@ -208,7 +208,7 @@ public _HU_ULT_BlinkStuck( parm[] )
 
 
 // Function will make sure the user isn't in an invalid location in a map
-HU_ULT_BlinkProtection( id, vOrigin[3] )
+HU_ULT_BlinkProtection( id, vOrigin[3], vOldLocation[3] )
 {
 
 	new bool:bSlay = false;
@@ -394,8 +394,18 @@ HU_ULT_BlinkProtection( id, vOrigin[3] )
 	// Slay the user!!!
 	if ( bSlay )
 	{
-		client_print( id, print_chat, "%s %L", g_MODclient, id, "SLAIN_FOR_TELEPORTING" );
-		user_kill( id, 1 );
+		if ( get_pcvar_num( CVAR_wc3_blink_slay ) )
+		{
+			client_print( id, print_chat, "%s %L", g_MODclient, id, "SLAIN_FOR_TELEPORTING" );
+			user_kill( id, 1 );
+		}
+		else
+		{
+			SHARED_Teleport( id, vOldLocation );
+			ULT_ResetCooldown( id, floatround(BLINK_COOLDOWN), true );
+			WC3_StatusText( id, 0, "%L", id, "TELEPORT_FAILED_RESTRICTED_AREA" );
+			bSlay = false;
+		}
 	}
 
 	return bSlay;
