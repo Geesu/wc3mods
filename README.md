@@ -1,6 +1,4 @@
 wc3mods
 =======
 
-Warcraft mods for counter strike!
-
-http://wiki.wc3mods.net
+REPO HAS BEEN ARCHIVED. See https://github.com/wc3mods/
